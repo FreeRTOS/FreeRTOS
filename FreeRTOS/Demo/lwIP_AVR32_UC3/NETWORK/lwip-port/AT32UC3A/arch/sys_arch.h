@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief lwIP abstraction layer for AVR32 UC3.
@@ -47,12 +48,11 @@
 #include "queue.h"
 #include "semphr.h"
 
-#define SYS_MBOX_NULL (QueueHandle_t)0
-#define SYS_SEM_NULL  (SemaphoreHandle_t)0
+#define SYS_MBOX_NULL    ( QueueHandle_t ) 0
+#define SYS_SEM_NULL     ( SemaphoreHandle_t ) 0
 
-typedef SemaphoreHandle_t sys_sem_t;
-typedef QueueHandle_t sys_mbox_t;
-typedef TaskHandle_t sys_thread_t;
+typedef SemaphoreHandle_t   sys_sem_t;
+typedef QueueHandle_t       sys_mbox_t;
+typedef TaskHandle_t        sys_thread_t;
 
 #endif /* __SYS_RTXC_H__ */
-

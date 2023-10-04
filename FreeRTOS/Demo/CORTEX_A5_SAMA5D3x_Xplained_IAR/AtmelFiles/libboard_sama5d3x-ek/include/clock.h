@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -40,15 +40,14 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void CLOCK_SetConfig( uint8_t configuration ) ;
+extern void CLOCK_SetConfig( uint8_t configuration );
 
-extern void CLOCK_DisplayMenu( void ) ;
+extern void CLOCK_DisplayMenu( void );
 
-extern void CLOCK_UserChangeConfig( void ) ;
+extern void CLOCK_UserChangeConfig( void );
 
-extern uint16_t CLOCK_GetCurrMCK( void ) ;
+extern uint16_t CLOCK_GetCurrMCK( void );
 
-extern uint16_t CLOCK_GetCurrPCK( void ) ;
+extern uint16_t CLOCK_GetCurrPCK( void );
 
 #endif /* #ifndef _CLOCK_ */
-

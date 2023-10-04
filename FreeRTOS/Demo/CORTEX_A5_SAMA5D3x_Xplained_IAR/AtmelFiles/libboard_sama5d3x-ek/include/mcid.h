@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -63,7 +63,8 @@
  */
 
 #ifndef MCID_H
-#define MCID_H
+    #define MCID_H
+
 /** \addtogroup mcid_module
  *@{
  */
@@ -72,10 +73,10 @@
  *         Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
-#include <stdio.h>
+    #include <stdint.h>
+    #include <stdio.h>
 
 /** \addtogroup mcid_defines MCI Driver Defines
  *      @{*/
@@ -85,86 +86,94 @@
  *----------------------------------------------------------------------------*/
 
 /** MCI States */
-#define MCID_IDLE   0       /**< Idle */
-#define MCID_LOCKED 1       /**< Locked for specific slot */
-#define MCID_CMD    2       /**< Processing the command */
-#define MCID_ERROR  3       /**< Command error */
+    #define MCID_IDLE            0 /**< Idle */
+    #define MCID_LOCKED          1 /**< Locked for specific slot */
+    #define MCID_CMD             2 /**< Processing the command */
+    #define MCID_ERROR           3 /**< Command error */
 
 /** MCI Initialize clock 400K Hz */
-#define MCI_INITIAL_SPEED   400000
+    #define MCI_INITIAL_SPEED    400000
 
 /**     @}*/
 
 /*----------------------------------------------------------------------------
  *         Types
  *----------------------------------------------------------------------------*/
+
 /** \addtogroup mcid_structs MCI Driver Data Structs
  *      @{
  */
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /**
  *  \brief MCI Driver
  */
-typedef struct _Mcid
-{
-    /** Pointer to a MCI peripheral. */
-    Hsmci         *pMciHw;
-    /** Pointer to a DMA driver */
-    sDmad         *pDmad;
-    /** Pointer to currently executing command. */
-    void          *pCmd;
-    /** MCK source, Hz */
-    uint32_t       dwMck;
-    /** DMA transfer channel */
-    uint32_t       dwDmaCh;
-    /** DMA transferred data index (bytes) */
-    uint32_t       dwXfrNdx;
-    /** DMA transfer size (bytes) */
-    uint32_t       dwXSize;
-    /** MCI peripheral identifier. */
-    uint8_t        bID;
-    /** Polling mode */
-    uint8_t        bPolling;
-    /** Reserved */
-    uint8_t        reserved;
-    /** state. */
-    volatile uint8_t bState;
-} sMcid;
+    typedef struct _Mcid
+    {
+        /** Pointer to a MCI peripheral. */
+        Hsmci * pMciHw;
+        /** Pointer to a DMA driver */
+        sDmad * pDmad;
+        /** Pointer to currently executing command. */
+        void * pCmd;
+        /** MCK source, Hz */
+        uint32_t dwMck;
+        /** DMA transfer channel */
+        uint32_t dwDmaCh;
+        /** DMA transferred data index (bytes) */
+        uint32_t dwXfrNdx;
+        /** DMA transfer size (bytes) */
+        uint32_t dwXSize;
+        /** MCI peripheral identifier. */
+        uint8_t bID;
+        /** Polling mode */
+        uint8_t bPolling;
+        /** Reserved */
+        uint8_t reserved;
+        /** state. */
+        volatile uint8_t bState;
+    } sMcid;
 
 /**     @}*/
+
 /*----------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
+
 /** \addtogroup mcid_functions MCI Driver Functions
-        @{*/
-extern void MCID_Init(sMcid * pMcid,
-                      Hsmci * pMci, uint8_t bID, uint32_t dwMck,
-                      sDmad * pDmad,
-                      uint8_t bPolling);
+ *      @{*/
+    extern void MCID_Init( sMcid * pMcid,
+                           Hsmci * pMci,
+                           uint8_t bID,
+                           uint32_t dwMck,
+                           sDmad * pDmad,
+                           uint8_t bPolling );
 
-extern void MCID_Reset(sMcid * pMcid);
+    extern void MCID_Reset( sMcid * pMcid );
 
-extern uint32_t MCID_Lock(sMcid * pMcid, uint8_t bSlot);
+    extern uint32_t MCID_Lock( sMcid * pMcid,
+                               uint8_t bSlot );
 
-extern uint32_t MCID_Release(sMcid * pMcid);
+    extern uint32_t MCID_Release( sMcid * pMcid );
 
-extern void MCID_Handler(sMcid * pMcid);
+    extern void MCID_Handler( sMcid * pMcid );
 
-extern uint32_t MCID_SendCmd(sMcid * pMcid, void * pCmd);
+    extern uint32_t MCID_SendCmd( sMcid * pMcid,
+                                  void * pCmd );
 
-extern uint32_t MCID_CancelCmd(sMcid * pMcid);
+    extern uint32_t MCID_CancelCmd( sMcid * pMcid );
 
-extern uint32_t MCID_IsCmdCompleted(sMcid * pMcid);
+    extern uint32_t MCID_IsCmdCompleted( sMcid * pMcid );
 
-extern uint32_t MCID_IOCtrl(sMcid * pMcid,uint32_t bCtl,uint32_t param);
+    extern uint32_t MCID_IOCtrl( sMcid * pMcid,
+                                 uint32_t bCtl,
+                                 uint32_t param );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**     @}*/
 /**@}*/
 #endif //#ifndef HSMCID_H
-

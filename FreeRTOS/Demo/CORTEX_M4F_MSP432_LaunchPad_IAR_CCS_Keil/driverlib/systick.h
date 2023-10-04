@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -35,185 +35,185 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 #ifndef __SYSTICK_H__
-#define __SYSTICK_H__
+    #define __SYSTICK_H__
 
-//*****************************************************************************
-//
-//! \addtogroup systick_api
-//! @{
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/*! \addtogroup systick_api */
+/*! @{ */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-// If building with a C++ compiler, make all of the definitions in this header
-// have a C binding.
-//
-//*****************************************************************************
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#include <stdint.h>
+/****************************************************************************** */
+/* */
+/* If building with a C++ compiler, make all of the definitions in this header */
+/* have a C binding. */
+/* */
+/****************************************************************************** */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif
+    #include <stdint.h>
 
-//*****************************************************************************
-//
-// Prototypes for the APIs.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* Prototypes for the APIs. */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-//! Enables the SysTick counter.
-//!
-//! This function starts the SysTick counter.  If an interrupt handler has been
-//! registered, it is called when the SysTick counter rolls over.
-//!
-//! \note Calling this function causes the SysTick counter to (re)commence
-//! counting from its current value.  The counter is not automatically reloaded
-//! with the period as specified in a previous call to SysTick_setPeriod().  If
-//! an immediate reload is required, the \b NVIC_ST_CURRENT register must be
-//! written to force the reload.  Any write to this register clears the SysTick
-//! counter to 0 and causes a reload with the supplied period on the next
-//! clock.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_enableModule(void);
+/****************************************************************************** */
+/* */
+/*! Enables the SysTick counter. */
+/*! */
+/*! This function starts the SysTick counter.  If an interrupt handler has been */
+/*! registered, it is called when the SysTick counter rolls over. */
+/*! */
+/*! \note Calling this function causes the SysTick counter to (re)commence */
+/*! counting from its current value.  The counter is not automatically reloaded */
+/*! with the period as specified in a previous call to SysTick_setPeriod().  If */
+/*! an immediate reload is required, the \b NVIC_ST_CURRENT register must be */
+/*! written to force the reload.  Any write to this register clears the SysTick */
+/*! counter to 0 and causes a reload with the supplied period on the next */
+/*! clock. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_enableModule( void );
 
-//*****************************************************************************
-//
-//! Disables the SysTick counter.
-//!
-//! This function stops the SysTick counter.  If an interrupt handler has been
-//! registered, it is not called until SysTick is restarted.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_disableModule(void);
+/****************************************************************************** */
+/* */
+/*! Disables the SysTick counter. */
+/*! */
+/*! This function stops the SysTick counter.  If an interrupt handler has been */
+/*! registered, it is not called until SysTick is restarted. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_disableModule( void );
 
-//*****************************************************************************
-//
-//! Registers an interrupt handler for the SysTick interrupt.
-//!
-//! \param intHandler is a pointer to the function to be called when the
-//! SysTick interrupt occurs.
-//!
-//! This function registers the handler to be called when a SysTick interrupt
-//! occurs.
-//!
-//! \sa Interrupt_registerInterrupt() for important information about
-//! registering interrupt handlers.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_registerInterrupt(void (*intHandler)(void));
+/****************************************************************************** */
+/* */
+/*! Registers an interrupt handler for the SysTick interrupt. */
+/*! */
+/*! \param intHandler is a pointer to the function to be called when the */
+/*! SysTick interrupt occurs. */
+/*! */
+/*! This function registers the handler to be called when a SysTick interrupt */
+/*! occurs. */
+/*! */
+/*! \sa Interrupt_registerInterrupt() for important information about */
+/*! registering interrupt handlers. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_registerInterrupt( void ( * intHandler )( void ) );
 
-//*****************************************************************************
-//
-//! Unregisters the interrupt handler for the SysTick interrupt.
-//!
-//! This function unregisters the handler to be called when a SysTick interrupt
-//! occurs.
-//!
-//! \sa Interrupt_registerInterrupt() for important information about
-//! registering interrupt handlers.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_unregisterInterrupt(void);
+/****************************************************************************** */
+/* */
+/*! Unregisters the interrupt handler for the SysTick interrupt. */
+/*! */
+/*! This function unregisters the handler to be called when a SysTick interrupt */
+/*! occurs. */
+/*! */
+/*! \sa Interrupt_registerInterrupt() for important information about */
+/*! registering interrupt handlers. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_unregisterInterrupt( void );
 
-//*****************************************************************************
-//
-//! Enables the SysTick interrupt.
-//!
-//! This function enables the SysTick interrupt, allowing it to be
-//! reflected to the processor.
-//!
-//! \note The SysTick interrupt handler is not required to clear the SysTick
-//! interrupt source because it is cleared automatically by the NVIC when the
-//! interrupt handler is called.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_enableInterrupt(void);
+/****************************************************************************** */
+/* */
+/*! Enables the SysTick interrupt. */
+/*! */
+/*! This function enables the SysTick interrupt, allowing it to be */
+/*! reflected to the processor. */
+/*! */
+/*! \note The SysTick interrupt handler is not required to clear the SysTick */
+/*! interrupt source because it is cleared automatically by the NVIC when the */
+/*! interrupt handler is called. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_enableInterrupt( void );
 
-//*****************************************************************************
-//
-//! Disables the SysTick interrupt.
-//!
-//! This function disables the SysTick interrupt, preventing it from being
-//! reflected to the processor.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_disableInterrupt(void);
+/****************************************************************************** */
+/* */
+/*! Disables the SysTick interrupt. */
+/*! */
+/*! This function disables the SysTick interrupt, preventing it from being */
+/*! reflected to the processor. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_disableInterrupt( void );
 
-//*****************************************************************************
-//
-//! Sets the period of the SysTick counter.
-//!
-//! \param period is the number of clock ticks in each period of the SysTick
-//! counter and must be between 1 and 16,777,216, inclusive.
-//!
-//! This function sets the rate at which the SysTick counter wraps, which
-//! equates to the number of processor clocks between interrupts.
-//!
-//! \note Calling this function does not cause the SysTick counter to reload
-//! immediately.  If an immediate reload is required, the \b NVIC_ST_CURRENT
-//! register must be written.  Any write to this register clears the SysTick
-//! counter to 0 and causes a reload with the \e period supplied here on
-//! the next clock after SysTick is enabled.
-//!
-//! \return None.
-//
-//*****************************************************************************
-extern void SysTick_setPeriod(uint32_t period);
+/****************************************************************************** */
+/* */
+/*! Sets the period of the SysTick counter. */
+/*! */
+/*! \param period is the number of clock ticks in each period of the SysTick */
+/*! counter and must be between 1 and 16,777,216, inclusive. */
+/*! */
+/*! This function sets the rate at which the SysTick counter wraps, which */
+/*! equates to the number of processor clocks between interrupts. */
+/*! */
+/*! \note Calling this function does not cause the SysTick counter to reload */
+/*! immediately.  If an immediate reload is required, the \b NVIC_ST_CURRENT */
+/*! register must be written.  Any write to this register clears the SysTick */
+/*! counter to 0 and causes a reload with the \e period supplied here on */
+/*! the next clock after SysTick is enabled. */
+/*! */
+/*! \return None. */
+/* */
+/****************************************************************************** */
+    extern void SysTick_setPeriod( uint32_t period );
 
-//*****************************************************************************
-//
-//! Gets the period of the SysTick counter.
-//!
-//! This function returns the rate at which the SysTick counter wraps, which
-//! equates to the number of processor clocks between interrupts.
-//!
-//! \return Returns the period of the SysTick counter.
-//
-//*****************************************************************************
-extern uint32_t SysTick_getPeriod(void);
+/****************************************************************************** */
+/* */
+/*! Gets the period of the SysTick counter. */
+/*! */
+/*! This function returns the rate at which the SysTick counter wraps, which */
+/*! equates to the number of processor clocks between interrupts. */
+/*! */
+/*! \return Returns the period of the SysTick counter. */
+/* */
+/****************************************************************************** */
+    extern uint32_t SysTick_getPeriod( void );
 
-//*****************************************************************************
-//
-//! Gets the current value of the SysTick counter.
-//!
-//! This function returns the current value of the SysTick counter, which is
-//! a value between the period - 1 and zero, inclusive.
-//!
-//! \return Returns the current value of the SysTick counter.
-//
-//*****************************************************************************
-extern uint32_t SysTick_getValue(void);
+/****************************************************************************** */
+/* */
+/*! Gets the current value of the SysTick counter. */
+/*! */
+/*! This function returns the current value of the SysTick counter, which is */
+/*! a value between the period - 1 and zero, inclusive. */
+/*! */
+/*! \return Returns the current value of the SysTick counter. */
+/* */
+/****************************************************************************** */
+    extern uint32_t SysTick_getValue( void );
 
-//*****************************************************************************
-//
-// Mark the end of the C bindings section for C++ compilers.
-//
-//*****************************************************************************
-#ifdef __cplusplus
+/****************************************************************************** */
+/* */
+/* Mark the end of the C bindings section for C++ compilers. */
+/* */
+/****************************************************************************** */
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-//*****************************************************************************
-//
-// Close the Doxygen group.
-//! @}
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* Close the Doxygen group. */
+/*! @} */
+/* */
+/****************************************************************************** */
 
 #endif // __SYSTICK_H__

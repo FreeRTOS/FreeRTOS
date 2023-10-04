@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       CryptoCC32XX.h
  *
@@ -59,8 +60,8 @@
  *  CryptoCC32XX_Handle      handle;
  *
  *  handle = CryptoCC32XX_open(CryptoCC32XX_configIndexValue,   CryptoCC32XX_AES |
-                                                                CryptoCC32XX_DES |
-                                                                CryptoCC32XX_HMAC);
+ *                                                              CryptoCC32XX_DES |
+ *                                                              CryptoCC32XX_HMAC);
  *  if (!handle) {
  *      System_printf("CryptoCC32XX did not open");
  *  }
@@ -112,59 +113,59 @@
  */
 
 #ifndef ti_drivers_crypto_CryptoCC32XX__include
-#define ti_drivers_crypto_CryptoCC32XX__include
+    #define ti_drivers_crypto_CryptoCC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <ti/drivers/dpl/HwiP.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 
-#define CryptoCC32XX_CMD_RESERVED             32
+    #include <stdint.h>
+    #include <stddef.h>
+    #include <stdbool.h>
+    #include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
 
-#define CryptoCC32XX_STATUS_RESERVED          -32
+
+    #define CryptoCC32XX_CMD_RESERVED                  32
+
+    #define CryptoCC32XX_STATUS_RESERVED               -32
 
 /*!
  * @brief   Successful status code returned by Crypto Common functions.
  *
  */
-#define CryptoCC32XX_STATUS_SUCCESS           0
+    #define CryptoCC32XX_STATUS_SUCCESS                0
 
 /*!
  * @brief   Generic error status code returned by Crypto Common functions.
  *
  */
-#define CryptoCC32XX_STATUS_ERROR             -1
+    #define CryptoCC32XX_STATUS_ERROR                  -1
 
 /*!
  * @brief   An error status code returned by Crypto Common functions for undefined
  * command codes.
  *
  */
-#define CryptoCC32XX_STATUS_UNDEFINEDCMD      -2
+    #define CryptoCC32XX_STATUS_UNDEFINEDCMD           -2
 
 /*!
  * @brief   An error status code returned by CryptoCC32XX_verify for define error in
  * verifying a given Hash value.
  *
  */
-#define CryptoCC32XX_STATUS_ERROR_VERIFY      -3
+    #define CryptoCC32XX_STATUS_ERROR_VERIFY           -3
 
 /*!
  * @brief   An error status code returned by Crypto Common functions for define
  * cryptographic type not supported.
  *
  */
-#define CryptoCC32XX_STATUS_ERROR_NOT_SUPPORTED -4
+    #define CryptoCC32XX_STATUS_ERROR_NOT_SUPPORTED    -4
 
 
-#define CryptoCC32XX_MAX_TYPES                3
+    #define CryptoCC32XX_MAX_TYPES                     3
 
 
 /*!
@@ -172,12 +173,12 @@ extern "C" {
  *
  *  This enum defines bitwise Cryptography types.
  */
-typedef enum
-{
-    CryptoCC32XX_AES = 0x01,     /*!< Advanced Encryption Standard */
-    CryptoCC32XX_DES = 0x02,     /*!< Data Encryption Standard */
-    CryptoCC32XX_HMAC = 0x04,    /*!< Cryptographic hash function */
-}CryptoCC32XX_Type;
+    typedef enum
+    {
+        CryptoCC32XX_AES = 0x01,  /*!< Advanced Encryption Standard */
+        CryptoCC32XX_DES = 0x02,  /*!< Data Encryption Standard */
+        CryptoCC32XX_HMAC = 0x04, /*!< Cryptographic hash function */
+    } CryptoCC32XX_Type;
 
 /*!
  *  @brief  AES and DES Cryptography methods configuration
@@ -186,21 +187,20 @@ typedef enum
  *
  *  This enum defines the AES and DES Cryptography modes.
  */
-typedef enum
-{
-    CryptoCC32XX_AES_ECB = (CryptoCC32XX_AES << 8) | 1, /*!< AES Electronic CodeBook */
-    CryptoCC32XX_AES_CBC,                         /*!< AES Cipher Block Chaining */
-    CryptoCC32XX_AES_CTR,                         /*!< AES Counter */
-    CryptoCC32XX_AES_ICM,                         /*!< AES Integer Counter Mode */
-    CryptoCC32XX_AES_CFB,                         /*!< AES Cipher FeedBack */
-    CryptoCC32XX_AES_GCM,                         /*!< AES Galois/Counter Mode */
-    CryptoCC32XX_AES_CCM,                         /*!< AES Counter with CBC-MAC Mode */
+    typedef enum
+    {
+        CryptoCC32XX_AES_ECB = ( CryptoCC32XX_AES << 8 ) | 1, /*!< AES Electronic CodeBook */
+        CryptoCC32XX_AES_CBC,                                 /*!< AES Cipher Block Chaining */
+        CryptoCC32XX_AES_CTR,                                 /*!< AES Counter */
+        CryptoCC32XX_AES_ICM,                                 /*!< AES Integer Counter Mode */
+        CryptoCC32XX_AES_CFB,                                 /*!< AES Cipher FeedBack */
+        CryptoCC32XX_AES_GCM,                                 /*!< AES Galois/Counter Mode */
+        CryptoCC32XX_AES_CCM,                                 /*!< AES Counter with CBC-MAC Mode */
 
-    CryptoCC32XX_DES_ECB = (CryptoCC32XX_DES << 8) | 1, /*!< DES Electronic CodeBook */
-    CryptoCC32XX_DES_CBC,                         /*!< DES Cipher Block Chaining */
-    CryptoCC32XX_DES_CFB,                         /*!< DES Cipher FeedBack */
-
-}CryptoCC32XX_EncryptMethod;
+        CryptoCC32XX_DES_ECB = ( CryptoCC32XX_DES << 8 ) | 1, /*!< DES Electronic CodeBook */
+        CryptoCC32XX_DES_CBC,                                 /*!< DES Cipher Block Chaining */
+        CryptoCC32XX_DES_CFB,                                 /*!< DES Cipher FeedBack */
+    } CryptoCC32XX_EncryptMethod;
 
 /*!
  *  @brief  HMAC Cryptography methods configuration
@@ -209,39 +209,36 @@ typedef enum
  *
  *  This enum defines the HMAC HASH algorithms modes.
  */
-typedef enum
-{
-    CryptoCC32XX_HMAC_MD5 = (CryptoCC32XX_HMAC << 8) | 1,   /*!< MD5 used keyed-hash message authentication code */
-    CryptoCC32XX_HMAC_SHA1,                           /*!< SHA1 used keyed-hash message authentication code */
-    CryptoCC32XX_HMAC_SHA224,                         /*!< SHA224 used keyed-hash message authentication code */
-    CryptoCC32XX_HMAC_SHA256                          /*!< SHA256 used keyed-hash message authentication code */
-
-}CryptoCC32XX_HmacMethod;
+    typedef enum
+    {
+        CryptoCC32XX_HMAC_MD5 = ( CryptoCC32XX_HMAC << 8 ) | 1, /*!< MD5 used keyed-hash message authentication code */
+        CryptoCC32XX_HMAC_SHA1,                                 /*!< SHA1 used keyed-hash message authentication code */
+        CryptoCC32XX_HMAC_SHA224,                               /*!< SHA224 used keyed-hash message authentication code */
+        CryptoCC32XX_HMAC_SHA256                                /*!< SHA256 used keyed-hash message authentication code */
+    } CryptoCC32XX_HmacMethod;
 
 /*!
  *  @brief  AES Cryptography key size type configuration
  *
  *  This enum defines the AES key size types
  */
-typedef enum
-{
-    CryptoCC32XX_AES_KEY_SIZE_128BIT,
-    CryptoCC32XX_AES_KEY_SIZE_192BIT,
-    CryptoCC32XX_AES_KEY_SIZE_256BIT
-
-}CryptoCC32XX_AesKeySize;
+    typedef enum
+    {
+        CryptoCC32XX_AES_KEY_SIZE_128BIT,
+        CryptoCC32XX_AES_KEY_SIZE_192BIT,
+        CryptoCC32XX_AES_KEY_SIZE_256BIT
+    } CryptoCC32XX_AesKeySize;
 
 /*!
  *  @brief  DES Cryptography key size type configuration
  *
  *  This enum defines the DES key size types
  */
-typedef enum
-{
-    CryptoCC32XX_DES_KEY_SIZE_SINGLE,
-    CryptoCC32XX_DES_KEY_SIZE_TRIPLE
-
-}CryptoCC32XX_DesKeySize;
+    typedef enum
+    {
+        CryptoCC32XX_DES_KEY_SIZE_SINGLE,
+        CryptoCC32XX_DES_KEY_SIZE_TRIPLE
+    } CryptoCC32XX_DesKeySize;
 
 
 /*!
@@ -250,12 +247,12 @@ typedef enum
  *  This structure defines the AES Additional Authentication Data input parameters used for
  *  CryptoCC32XX_AES_GCM and CryptoCC32XX_AES_CCM
  */
-typedef struct
-{
-    uint8_t                 *pKey2;     /*!< pointer to AES second key (CryptoCC32XX_AES_CCM) */
-    CryptoCC32XX_AesKeySize       key2Size;   /*!< AES second Key size type (CryptoCC32XX_AES_CCM) */
-    size_t                  len;        /*!< length of the additional authentication data in bytes */
-}CryptoCC32XX_AesAadInputParams;
+    typedef struct
+    {
+        uint8_t * pKey2;                  /*!< pointer to AES second key (CryptoCC32XX_AES_CCM) */
+        CryptoCC32XX_AesKeySize key2Size; /*!< AES second Key size type (CryptoCC32XX_AES_CCM) */
+        size_t len;                       /*!< length of the additional authentication data in bytes */
+    } CryptoCC32XX_AesAadInputParams;
 
 /*!
  *  @brief  AES Additional Authentication Data Parameters
@@ -263,47 +260,47 @@ typedef struct
  *  This union defines the AES additional authentication parameters used for
  *  CryptoCC32XX_AES_GCM and CryptoCC32XX_AES_CCM
  */
-typedef union
-{
-    CryptoCC32XX_AesAadInputParams    input;   /*!<an input - additional authentication data */
-    uint8_t                     tag[16]; /*!<an output - pointer to a 4-word array where the hash tag is written */
-}CryptoCC32XX_AesAadParams;
+    typedef union
+    {
+        CryptoCC32XX_AesAadInputParams input; /*!<an input - additional authentication data */
+        uint8_t tag[ 16 ];                    /*!<an output - pointer to a 4-word array where the hash tag is written */
+    } CryptoCC32XX_AesAadParams;
 
 /*!
  *  @brief  AES Parameters
  *
  *  This structure defines the AES parameters used in CryptoCC32XX_encrypt and CryptoCC32XX_decrypt functions.
  */
-typedef struct
-{
-    const uint8_t           *pKey;       /*!< pointer to AES key */
-    CryptoCC32XX_AesKeySize       keySize;    /*!< AES Key size type */
-    void                    *pIV;       /*!< Pointer to AES Initialization Vector */
-    CryptoCC32XX_AesAadParams     aadParams;
-}CryptoCC32XX_AesParams;
+    typedef struct
+    {
+        const uint8_t * pKey;            /*!< pointer to AES key */
+        CryptoCC32XX_AesKeySize keySize; /*!< AES Key size type */
+        void * pIV;                      /*!< Pointer to AES Initialization Vector */
+        CryptoCC32XX_AesAadParams aadParams;
+    } CryptoCC32XX_AesParams;
 
 /*!
  *  @brief  DES Parameters
  *
  *  This structure defines the DES parameters used in CryptoCC32XX_encrypt and CryptoCC32XX_decrypt functions.
  */
-typedef struct
-{
-    const uint8_t           *pKey;       /*!< pointer to DES key */
-    CryptoCC32XX_DesKeySize       keySize;    /*!< DES Key size type */
-    void                    *pIV;       /*!< Pointer to DES Initialization Vector */
-}CryptoCC32XX_DesParams;
+    typedef struct
+    {
+        const uint8_t * pKey;            /*!< pointer to DES key */
+        CryptoCC32XX_DesKeySize keySize; /*!< DES Key size type */
+        void * pIV;                      /*!< Pointer to DES Initialization Vector */
+    } CryptoCC32XX_DesParams;
 
 /*!
  *  @brief  Cryptography Parameters
  *
  *  This union defines the AES and DES Cryptographic types
  */
-typedef union
-{
-    CryptoCC32XX_AesParams        aes;
-    CryptoCC32XX_DesParams        des;
-}CryptoCC32XX_EncryptParams;
+    typedef union
+    {
+        CryptoCC32XX_AesParams aes;
+        CryptoCC32XX_DesParams des;
+    } CryptoCC32XX_EncryptParams;
 
 /*!
  *  @brief  HMAC Parameters
@@ -311,17 +308,17 @@ typedef union
  *  This structure defines the Hmac parameters used in CryptoCC32XX_sign and CryptoCC32XX_verify functions.
  */
 
-typedef struct
-{
-    uint8_t                 *pKey; /*!< pointer to hash key */
-    uint8_t                 moreData;  /*!< True value will NOT reset the HMAC HW machine */
-    void                    *pContext;
-}CryptoCC32XX_HmacParams;
+    typedef struct
+    {
+        uint8_t * pKey;            /*!< pointer to hash key */
+        uint8_t moreData;          /*!< True value will NOT reset the HMAC HW machine */
+        void * pContext;
+    } CryptoCC32XX_HmacParams;
 
 /*!
  *  @brief      A handle that is returned from a CryptoCC32XX_open() call.
  */
-typedef struct CryptoCC32XX_Config    *CryptoCC32XX_Handle;
+    typedef struct CryptoCC32XX_Config * CryptoCC32XX_Handle;
 
 
 /*!
@@ -329,14 +326,15 @@ typedef struct CryptoCC32XX_Config    *CryptoCC32XX_Handle;
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct CryptoCC32XX_Object {
-    /* Interrupt handles */
-    HwiP_Handle     hwiHandle[CryptoCC32XX_MAX_TYPES];
-    /* flag to indicate module is open */
-    bool            isOpen;
-    /* Semaphore handles */
-    SemaphoreP_Handle   sem[CryptoCC32XX_MAX_TYPES];
-} CryptoCC32XX_Object;
+    typedef struct CryptoCC32XX_Object
+    {
+        /* Interrupt handles */
+        HwiP_Handle hwiHandle[ CryptoCC32XX_MAX_TYPES ];
+        /* flag to indicate module is open */
+        bool isOpen;
+        /* Semaphore handles */
+        SemaphoreP_Handle sem[ CryptoCC32XX_MAX_TYPES ];
+    } CryptoCC32XX_Object;
 
 
 /*!
@@ -350,12 +348,11 @@ typedef struct CryptoCC32XX_Object {
  *
  *  @sa     CryptoCC32XX_init()
  */
-typedef struct CryptoCC32XX_Config {
-
-    /*! Pointer to a driver specific data object */
-    void               *object;
-
-} CryptoCC32XX_Config;
+    typedef struct CryptoCC32XX_Config
+    {
+        /*! Pointer to a driver specific data object */
+        void * object;
+    } CryptoCC32XX_Config;
 
 
 /*!
@@ -368,7 +365,7 @@ typedef struct CryptoCC32XX_Config {
  *
  *  @sa     CryptoCC32XX_open()
  */
-void CryptoCC32XX_close(CryptoCC32XX_Handle handle);
+    void CryptoCC32XX_close( CryptoCC32XX_Handle handle );
 
 /*!
  *  @brief  Function to initializes the Crypto module
@@ -378,7 +375,7 @@ void CryptoCC32XX_close(CryptoCC32XX_Handle handle);
  *          any other Crypto driver APIs. This function call does not modify any
  *          peripheral registers.
  */
-void CryptoCC32XX_init(void);
+    void CryptoCC32XX_init( void );
 
 /*!
  *  @brief  Opens a Crypto object with a given index and returns a CryptoCC32XX_Handle.
@@ -396,7 +393,8 @@ void CryptoCC32XX_init(void);
  *  @sa     CryptoCC32XX_init()
  *  @sa     CryptoCC32XX_close()
  */
-CryptoCC32XX_Handle CryptoCC32XX_open(uint32_t index, uint32_t types);
+    CryptoCC32XX_Handle CryptoCC32XX_open( uint32_t index,
+                                           uint32_t types );
 
 /*!
  *  @brief Function which encrypt given data by a given AES or DES method.
@@ -421,9 +419,13 @@ CryptoCC32XX_Handle CryptoCC32XX_open(uint32_t index, uint32_t types);
  *
  *  @sa                 CryptoCC32XX_open()
  */
-int32_t CryptoCC32XX_encrypt(  CryptoCC32XX_Handle handle, CryptoCC32XX_EncryptMethod method ,
-                            void *pInBuff, size_t inLen,
-                            void *pOutBuff , size_t *outLen , CryptoCC32XX_EncryptParams *pParams);
+    int32_t CryptoCC32XX_encrypt( CryptoCC32XX_Handle handle,
+                                  CryptoCC32XX_EncryptMethod method,
+                                  void * pInBuff,
+                                  size_t inLen,
+                                  void * pOutBuff,
+                                  size_t * outLen,
+                                  CryptoCC32XX_EncryptParams * pParams );
 
 /*!
  *  @brief Function which decrypt given cipher data by a given AES or DES method.
@@ -448,9 +450,13 @@ int32_t CryptoCC32XX_encrypt(  CryptoCC32XX_Handle handle, CryptoCC32XX_EncryptM
  *
  *  @sa                 CryptoCC32XX_open()
  */
-int32_t CryptoCC32XX_decrypt(  CryptoCC32XX_Handle handle, CryptoCC32XX_EncryptMethod method ,
-                            void *pInBuff, size_t inLen,
-                            void *pOutBuff , size_t *outLen , CryptoCC32XX_EncryptParams *pParams);
+    int32_t CryptoCC32XX_decrypt( CryptoCC32XX_Handle handle,
+                                  CryptoCC32XX_EncryptMethod method,
+                                  void * pInBuff,
+                                  size_t inLen,
+                                  void * pOutBuff,
+                                  size_t * outLen,
+                                  CryptoCC32XX_EncryptParams * pParams );
 
 /*!
  *  @brief Function which generates the HMAC Hash value of given plain Text.
@@ -474,9 +480,12 @@ int32_t CryptoCC32XX_decrypt(  CryptoCC32XX_Handle handle, CryptoCC32XX_EncryptM
  *
  *  @sa                 CryptoCC32XX_open()
  */
-int32_t CryptoCC32XX_sign( CryptoCC32XX_Handle handle, CryptoCC32XX_HmacMethod method ,
-                        void *pBuff, size_t len,
-                        uint8_t *pSignature, CryptoCC32XX_HmacParams *pParams);
+    int32_t CryptoCC32XX_sign( CryptoCC32XX_Handle handle,
+                               CryptoCC32XX_HmacMethod method,
+                               void * pBuff,
+                               size_t len,
+                               uint8_t * pSignature,
+                               CryptoCC32XX_HmacParams * pParams );
 
 /*!
  *  @brief Function which verify a given Hash value on given plain Text.
@@ -500,13 +509,16 @@ int32_t CryptoCC32XX_sign( CryptoCC32XX_Handle handle, CryptoCC32XX_HmacMethod m
  *
  *  @sa                 CryptoCC32XX_open()
  */
-int32_t CryptoCC32XX_verify(   CryptoCC32XX_Handle handle, CryptoCC32XX_HmacMethod method ,
-                            void *pBuff, size_t len,
-                            uint8_t *pSignature, CryptoCC32XX_HmacParams *pParams);
+    int32_t CryptoCC32XX_verify( CryptoCC32XX_Handle handle,
+                                 CryptoCC32XX_HmacMethod method,
+                                 void * pBuff,
+                                 size_t len,
+                                 uint8_t * pSignature,
+                                 CryptoCC32XX_HmacParams * pParams );
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_CryptoCC32XX__include */

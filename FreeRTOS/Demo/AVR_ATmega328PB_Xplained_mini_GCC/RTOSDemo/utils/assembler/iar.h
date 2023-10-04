@@ -48,68 +48,68 @@
 
 /* clang-format off */
 
-ld_addr MACRO   reg, sym
-	mov     reg, LWRD sym
-	orh     reg, HWRD sym
-	ENDM
+ld_addr MACRO reg, sym
+mov reg, LWRD sym
+orh reg, HWRD sym
+ENDM
 
-call    MACRO   sym
-	rcall   sym
-	ENDM
+call MACRO sym
+rcall sym
+ENDM
 
-iar_begin_func  MACRO   name, sect, is_public, is_weak
-	MODULE  name
-	RSEG    CODE:CODE:NOROOT(1)
-	IF      is_weak == 1
-	PUBWEAK name
-	ELSEIF  is_public
-	PUBLIC  name
-	ENDIF
+iar_begin_func MACRO name, sect, is_public, is_weak
+MODULE name
+RSEG CODE: CODE: NOROOT( 1 )
+IF is_weak == 1
+PUBWEAK name
+ELSEIF is_public
+PUBLIC name
+ENDIF
 name:
-	ENDM
+ENDM
 
-iar_begin_func_segm  MACRO   name, sect, is_public, is_weak, segment
-	MODULE  name
-	RSEG    segment:CODE:NOROOT(1)
-	IF      is_weak == 1
-	PUBWEAK name
-	ELSEIF  is_public
-	PUBLIC  name
-	ENDIF
+iar_begin_func_segm MACRO name, sect, is_public, is_weak, segment
+MODULE name
+RSEG segment: CODE: NOROOT( 1 )
+IF is_weak == 1
+PUBWEAK name
+ELSEIF is_public
+PUBLIC name
+ENDIF
 name:
-	ENDM
+ENDM
 
-iar_weak_alias  MACRO   name, strong_name
-	PUBWEAK name
+iar_weak_alias MACRO name, strong_name
+PUBWEAK name
 name:
-	rjmp    strong_name
-	ENDM
+rjmp strong_name
+ENDM
 
-#define lo(x)   LWRD x
-#define hi(x)   HWRD x
+#define lo( x )                    LWRD x
+#define hi( x )                    HWRD x
 
-#define REPEAT(count)           REPT    count
-#define END_REPEAT()            ENDR
-#define SET_LOC(offset)         ORG     offset
-#define END_FILE()              END
+#define REPEAT( count )            REPT count
+#define END_REPEAT()               ENDR
+#define SET_LOC( offset )          ORG offset
+#define END_FILE()                 END
 
-#define FILL_BYTES(count)       DS8     count
+#define FILL_BYTES( count )        DS8 count
 
-#define L(name)                 name
-#define EXTERN_SYMBOL(name)             EXTERN  name
-#define FUNCTION(name)          iar_begin_func name, text_##name, 0, 0
-#define PUBLIC_FUNCTION(name)   iar_begin_func name, text_##name, 1, 0
-#define PUBLIC_FUNCTION_SEGMENT(name, segment)          \
-		iar_begin_func_segm name, text_##name, 1, 0, segment
-#define WEAK_FUNCTION(name)     iar_begin_func name, text_##name, 1, 1
-#define WEAK_FUNCTION_ALIAS(name, strong_name)          \
-		iar_weak_alias  name, strong_name
-#define END_FUNC(name)          ENDMOD
+#define L( name )                  name
+#define EXTERN_SYMBOL( name )      EXTERN name
+#define FUNCTION( name )           iar_begin_func name, text_ ## name, 0, 0
+#define PUBLIC_FUNCTION( name )    iar_begin_func name, text_ ## name, 1, 0
+#define PUBLIC_FUNCTION_SEGMENT( name, segment ) \
+    iar_begin_func_segm name, text_ ## name, 1, 0, segment
+#define WEAK_FUNCTION( name )      iar_begin_func name, text_ ## name, 1, 1
+#define WEAK_FUNCTION_ALIAS( name, strong_name ) \
+    iar_weak_alias name, strong_name
+#define END_FUNC( name )           ENDMOD
 
-#define TEXT_SECTION(name)      RSEG    name:CODE:NOROOT
-#define RODATA_SECTION(name)    RSEG    name:CONST:NOROOT
-#define DATA_SECTION(name)      RSEG    name:DATA:NOROOT
-#define BSS_SECTION(name)       RSEG    name:DATA:NOROOT
+#define TEXT_SECTION( name )       RSEG name: CODE: NOROOT
+#define RODATA_SECTION( name )     RSEG name: CONST: NOROOT
+#define DATA_SECTION( name )       RSEG name: DATA: NOROOT
+#define BSS_SECTION( name )        RSEG name: DATA: NOROOT
 
 /* clang-format on */
 

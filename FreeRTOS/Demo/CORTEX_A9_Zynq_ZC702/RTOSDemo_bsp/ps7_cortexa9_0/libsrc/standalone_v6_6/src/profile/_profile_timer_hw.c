@@ -41,127 +41,127 @@
 #include "xil_exception.h"
 
 #ifdef PROC_PPC
-#include "xtime_l.h"
-#include "xpseudo_asm.h"
+    #include "xtime_l.h"
+    #include "xpseudo_asm.h"
 #endif
 
 #ifdef TIMER_CONNECT_INTC
-#include "xintc_l.h"
-#include "xintc.h"
-#endif	/* TIMER_CONNECT_INTC */
+    #include "xintc_l.h"
+    #include "xintc.h"
+#endif /* TIMER_CONNECT_INTC */
 
 /* #ifndef PPC_PIT_INTERRUPT */
-#if (!defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9)
-#include "xtmrctr_l.h"
+#if ( !defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9 )
+    #include "xtmrctr_l.h"
 #endif
 
 /* extern u32 timer_clk_ticks, */
 
 #ifdef PROC_PPC405
-#ifdef PPC_PIT_INTERRUPT
-s32 ppc_pit_init( void );
-#endif
-s32 powerpc405_init()
-#endif	/* PROC_CORTEXA9 */
+    #ifdef PPC_PIT_INTERRUPT
+        s32 ppc_pit_init( void );
+    #endif
+    s32 powerpc405_init()
+#endif /* PROC_CORTEXA9 */
 
 #ifdef PROC_PPC440
-#ifdef PPC_PIT_INTERRUPT
-s32 ppc_dec_init( void );
-#endif
-s32 powerpc405_init(void);
-#endif	/* PROC_PPC440 */
+    #ifdef PPC_PIT_INTERRUPT
+        s32 ppc_dec_init( void );
+    #endif
+    s32 powerpc405_init( void );
+#endif /* PROC_PPC440 */
 
-#if (!defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9)
-s32 opb_timer_init( void );
+#if ( !defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9 )
+    s32 opb_timer_init( void );
 #endif
 
 #ifdef PROC_MICROBLAZE
-s32 microblaze_init(void);
-#endif	/* PROC_MICROBLAZE */
+    s32 microblaze_init( void );
+#endif /* PROC_MICROBLAZE */
 
 #ifdef PROC_CORTEXA9
-s32 scu_timer_init( void );
-s32 cortexa9_init(void);
-#endif	/* PROC_CORTEXA9 */
+    s32 scu_timer_init( void );
+    s32 cortexa9_init( void );
+#endif /* PROC_CORTEXA9 */
 
 
 /*--------------------------------------------------------------------
-  * PowerPC Target - Timer related functions
-  *-------------------------------------------------------------------- */
+ * PowerPC Target - Timer related functions
+ *-------------------------------------------------------------------- */
 #ifdef PROC_PPC405
 
 
 /*--------------------------------------------------------------------
-* PowerPC PIT Timer Init.
-*	Defined only if PIT Timer is used for Profiling
-*
-*-------------------------------------------------------------------- */
-#ifdef PPC_PIT_INTERRUPT
-int ppc_pit_init( void )
-{
-	/* 1. Register Profile_intr_handler as Interrupt handler */
-	/* 2. Set PIT Timer Interrupt and Enable it. */
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_PIT_INT,
-			    (Xil_ExceptionHandler)profile_intr_handler,NULL);
-	XTime_PITSetInterval( timer_clk_ticks ) ;
-	XTime_PITEnableAutoReload() ;
-	return 0;
-}
-#endif
+ * PowerPC PIT Timer Init.
+ *	Defined only if PIT Timer is used for Profiling
+ *
+ *-------------------------------------------------------------------- */
+    #ifdef PPC_PIT_INTERRUPT
+        int ppc_pit_init( void )
+        {
+            /* 1. Register Profile_intr_handler as Interrupt handler */
+            /* 2. Set PIT Timer Interrupt and Enable it. */
+            Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_PIT_INT,
+                                          ( Xil_ExceptionHandler ) profile_intr_handler, NULL );
+            XTime_PITSetInterval( timer_clk_ticks );
+            XTime_PITEnableAutoReload();
+            return 0;
+        }
+    #endif /* ifdef PPC_PIT_INTERRUPT */
 
 
 /* --------------------------------------------------------------------
-* PowerPC Timer Initialization functions.
-*	For PowerPC, PIT and opb_timer can be used for Profiling. This
-*	is selected by the user in standalone BSP
-*
-*-------------------------------------------------------------------- */
-s32 powerpc405_init()
-{
-	Xil_ExceptionInit() ;
-	Xil_ExceptionDisableMask( XIL_EXCEPTION_NON_CRITICAL ) ;
+ * PowerPC Timer Initialization functions.
+ *	For PowerPC, PIT and opb_timer can be used for Profiling. This
+ *	is selected by the user in standalone BSP
+ *
+ *-------------------------------------------------------------------- */
+    s32 powerpc405_init()
+    {
+        Xil_ExceptionInit();
+        Xil_ExceptionDisableMask( XIL_EXCEPTION_NON_CRITICAL );
 
-	/* Initialize the Timer.
-	  * 1. If PowerPC PIT Timer has to be used, initialize PIT timer.
-	  * 2. Else use opb_timer. It can be directly connected or thru intc to PowerPC */
-#ifdef PPC_PIT_INTERRUPT
-	ppc_pit_init();
-#else
-#ifdef TIMER_CONNECT_INTC
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
-			      (Xil_ExceptionHandler)XIntc_DeviceInterruptHandler,NULL);
-	XIntc_RegisterHandler( INTC_BASEADDR, PROFILE_TIMER_INTR_ID,
-			     (XInterruptHandler)profile_intr_handler,NULL);
-#else
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
-			      (Xil_ExceptionHandler)profile_intr_handler,NULL);
-#endif
-	/* Initialize the timer with Timer Ticks */
-	opb_timer_init() ;
-#endif
+        /* Initialize the Timer.
+         * 1. If PowerPC PIT Timer has to be used, initialize PIT timer.
+         * 2. Else use opb_timer. It can be directly connected or thru intc to PowerPC */
+        #ifdef PPC_PIT_INTERRUPT
+            ppc_pit_init();
+        #else
+            #ifdef TIMER_CONNECT_INTC
+                Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
+                                              ( Xil_ExceptionHandler ) XIntc_DeviceInterruptHandler, NULL );
+                XIntc_RegisterHandler( INTC_BASEADDR, PROFILE_TIMER_INTR_ID,
+                                       ( XInterruptHandler ) profile_intr_handler, NULL );
+            #else
+                Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
+                                              ( Xil_ExceptionHandler ) profile_intr_handler, NULL );
+            #endif
+            /* Initialize the timer with Timer Ticks */
+            opb_timer_init();
+        #endif /* ifdef PPC_PIT_INTERRUPT */
 
-	/* Enable Interrupts in the System, if Profile Timer is the only Interrupt
-	  * in the System. */
-#ifdef ENABLE_SYS_INTR
-#ifdef PPC_PIT_INTERRUPT
-	XTime_PITEnableInterrupt() ;
-#elif TIMER_CONNECT_INTC
-	XIntc_MasterEnable( INTC_BASEADDR );
-	XIntc_SetIntrSvcOption( INTC_BASEADDR, XIN_SVC_ALL_ISRS_OPTION);
-	XIntc_EnableIntr( INTC_BASEADDR, PROFILE_TIMER_INTR_MASK );
-#endif
-	Xil_ExceptionEnableMask( XIL_EXCEPTION_NON_CRITICAL ) ;
-#endif
-	return 0;
-}
+        /* Enable Interrupts in the System, if Profile Timer is the only Interrupt
+         * in the System. */
+        #ifdef ENABLE_SYS_INTR
+            #ifdef PPC_PIT_INTERRUPT
+                XTime_PITEnableInterrupt();
+            #elif TIMER_CONNECT_INTC
+                XIntc_MasterEnable( INTC_BASEADDR );
+                XIntc_SetIntrSvcOption( INTC_BASEADDR, XIN_SVC_ALL_ISRS_OPTION );
+                XIntc_EnableIntr( INTC_BASEADDR, PROFILE_TIMER_INTR_MASK );
+            #endif
+            Xil_ExceptionEnableMask( XIL_EXCEPTION_NON_CRITICAL );
+        #endif
+        return 0;
+    }
 
-#endif	/* PROC_PPC */
+#endif /* PROC_PPC */
 
 
 
 /*--------------------------------------------------------------------
-  * PowerPC440 Target - Timer related functions
-  * -------------------------------------------------------------------- */
+ * PowerPC440 Target - Timer related functions
+ * -------------------------------------------------------------------- */
 #ifdef PROC_PPC440
 
 
@@ -170,18 +170,18 @@ s32 powerpc405_init()
  *	Defined only if DEC Timer is used for Profiling
  *
  *-------------------------------------------------------------------- */
-#ifdef PPC_PIT_INTERRUPT
-s32 ppc_dec_init( void )
-{
-	/* 1. Register Profile_intr_handler as Interrupt handler */
-	/* 2. Set DEC Timer Interrupt and Enable it. */
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_DEC_INT,
-			    (Xil_ExceptionHandler)profile_intr_handler,NULL);
-	XTime_DECSetInterval( timer_clk_ticks ) ;
-	XTime_DECEnableAutoReload() ;
-	return 0;
-}
-#endif
+    #ifdef PPC_PIT_INTERRUPT
+        s32 ppc_dec_init( void )
+        {
+            /* 1. Register Profile_intr_handler as Interrupt handler */
+            /* 2. Set DEC Timer Interrupt and Enable it. */
+            Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_DEC_INT,
+                                          ( Xil_ExceptionHandler ) profile_intr_handler, NULL );
+            XTime_DECSetInterval( timer_clk_ticks );
+            XTime_DECEnableAutoReload();
+            return 0;
+        }
+    #endif /* ifdef PPC_PIT_INTERRUPT */
 
 
 /*--------------------------------------------------------------------
@@ -190,49 +190,49 @@ s32 ppc_dec_init( void )
  *	is selected by the user in standalone BSP
  *
  *-------------------------------------------------------------------- */
-s32 powerpc405_init(void)
-{
-	Xil_ExceptionInit();
-	Xil_ExceptionDisableMask( XIL_EXCEPTION_NON_CRITICAL ) ;
+    s32 powerpc405_init( void )
+    {
+        Xil_ExceptionInit();
+        Xil_ExceptionDisableMask( XIL_EXCEPTION_NON_CRITICAL );
 
-	/* Initialize the Timer.
-	 * 1. If PowerPC DEC Timer has to be used, initialize DEC timer.
-	 * 2. Else use opb_timer. It can be directly connected or thru intc to PowerPC */
-#ifdef PPC_PIT_INTERRUPT
-	ppc_dec_init();
-#else
-#ifdef TIMER_CONNECT_INTC
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_NON_CRITICAL_INT,
-				     (Xil_ExceptionHandler)XIntc_DeviceInterruptHandler,NULL);
+        /* Initialize the Timer.
+         * 1. If PowerPC DEC Timer has to be used, initialize DEC timer.
+         * 2. Else use opb_timer. It can be directly connected or thru intc to PowerPC */
+        #ifdef PPC_PIT_INTERRUPT
+            ppc_dec_init();
+        #else
+            #ifdef TIMER_CONNECT_INTC
+                Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
+                                              ( Xil_ExceptionHandler ) XIntc_DeviceInterruptHandler, NULL );
 
-	XIntc_RegisterHandler( INTC_BASEADDR, PROFILE_TIMER_INTR_ID,
-			     (XInterruptHandler)profile_intr_handler,NULL);
-#else
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
-			      (Xil_ExceptionHandler)profile_intr_handler,NULL);
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
-			      (Xil_ExceptionHandler)profile_intr_handler,NULL);
-#endif
-	/* Initialize the timer with Timer Ticks */
-	opb_timer_init() ;
-#endif
+                XIntc_RegisterHandler( INTC_BASEADDR, PROFILE_TIMER_INTR_ID,
+                                       ( XInterruptHandler ) profile_intr_handler, NULL );
+            #else
+                Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
+                                              ( Xil_ExceptionHandler ) profile_intr_handler, NULL );
+                Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_NON_CRITICAL_INT,
+                                              ( Xil_ExceptionHandler ) profile_intr_handler, NULL );
+            #endif
+            /* Initialize the timer with Timer Ticks */
+            opb_timer_init();
+        #endif /* ifdef PPC_PIT_INTERRUPT */
 
-	/* Enable Interrupts in the System, if Profile Timer is the only Interrupt
-	 * in the System. */
-#ifdef ENABLE_SYS_INTR
-#ifdef PPC_PIT_INTERRUPT
-	XTime_DECEnableInterrupt() ;
-#elif TIMER_CONNECT_INTC
-	XIntc_MasterEnable( INTC_BASEADDR );
-	XIntc_SetIntrSvcOption( INTC_BASEADDR, XIN_SVC_ALL_ISRS_OPTION);
-	XIntc_EnableIntr( INTC_BASEADDR, PROFILE_TIMER_INTR_MASK );
-#endif
-	Xil_ExceptionEnableMask( XEXC_NON_CRITICAL ) ;
-#endif
-	return 0;
-}
+        /* Enable Interrupts in the System, if Profile Timer is the only Interrupt
+         * in the System. */
+        #ifdef ENABLE_SYS_INTR
+            #ifdef PPC_PIT_INTERRUPT
+                XTime_DECEnableInterrupt();
+            #elif TIMER_CONNECT_INTC
+                XIntc_MasterEnable( INTC_BASEADDR );
+                XIntc_SetIntrSvcOption( INTC_BASEADDR, XIN_SVC_ALL_ISRS_OPTION );
+                XIntc_EnableIntr( INTC_BASEADDR, PROFILE_TIMER_INTR_MASK );
+            #endif
+            Xil_ExceptionEnableMask( XEXC_NON_CRITICAL );
+        #endif
+        return 0;
+    }
 
-#endif	/* PROC_PPC440 */
+#endif /* PROC_PPC440 */
 
 /* --------------------------------------------------------------------
  * opb_timer Initialization for PowerPC and MicroBlaze. This function
@@ -240,22 +240,22 @@ s32 powerpc405_init(void)
  *
  *-------------------------------------------------------------------- */
 /* #ifndef PPC_PIT_INTERRUPT */
-#if (!defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9)
-s32 opb_timer_init( void )
-{
-	/* set the number of cycles the timer counts before interrupting */
-	XTmrCtr_SetLoadReg((u32)PROFILE_TIMER_BASEADDR, (u16)0, (u32)timer_clk_ticks);
+#if ( !defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9 )
+    s32 opb_timer_init( void )
+    {
+        /* set the number of cycles the timer counts before interrupting */
+        XTmrCtr_SetLoadReg( ( u32 ) PROFILE_TIMER_BASEADDR, ( u16 ) 0, ( u32 ) timer_clk_ticks );
 
-	/* reset the timers, and clear interrupts */
-	XTmrCtr_SetControlStatusReg((u32)PROFILE_TIMER_BASEADDR, (u16)0,
-				     (u32)XTC_CSR_INT_OCCURED_MASK | (u32)XTC_CSR_LOAD_MASK );
+        /* reset the timers, and clear interrupts */
+        XTmrCtr_SetControlStatusReg( ( u32 ) PROFILE_TIMER_BASEADDR, ( u16 ) 0,
+                                     ( u32 ) XTC_CSR_INT_OCCURED_MASK | ( u32 ) XTC_CSR_LOAD_MASK );
 
-	/* start the timers */
-	XTmrCtr_SetControlStatusReg((u32)PROFILE_TIMER_BASEADDR, (u16)0, (u32)XTC_CSR_ENABLE_TMR_MASK
-			     | (u32)XTC_CSR_ENABLE_INT_MASK | (u32)XTC_CSR_AUTO_RELOAD_MASK | (u32)XTC_CSR_DOWN_COUNT_MASK);
-	return 0;
-}
-#endif
+        /* start the timers */
+        XTmrCtr_SetControlStatusReg( ( u32 ) PROFILE_TIMER_BASEADDR, ( u16 ) 0, ( u32 ) XTC_CSR_ENABLE_TMR_MASK
+                                     | ( u32 ) XTC_CSR_ENABLE_INT_MASK | ( u32 ) XTC_CSR_AUTO_RELOAD_MASK | ( u32 ) XTC_CSR_DOWN_COUNT_MASK );
+        return 0;
+    }
+#endif /* if ( !defined PPC_PIT_INTERRUPT && !defined PROC_CORTEXA9 ) */
 
 
 /*--------------------------------------------------------------------
@@ -269,47 +269,45 @@ s32 opb_timer_init( void )
  *	connected to MicroBlaze or connected through Interrupt Controller.
  *
  *-------------------------------------------------------------------- */
-s32 microblaze_init(void)
-{
-	/* Register profile_intr_handler
-	 * 1. If timer is connected to Interrupt Controller, register the handler
-	 *    to Interrupt Controllers vector table.
-	 * 2. If timer is directly connected to MicroBlaze, register the handler
-	 *    as Interrupt handler */
-	Xil_ExceptionInit();
+    s32 microblaze_init( void )
+    {
+        /* Register profile_intr_handler
+         * 1. If timer is connected to Interrupt Controller, register the handler
+         *    to Interrupt Controllers vector table.
+         * 2. If timer is directly connected to MicroBlaze, register the handler
+         *    as Interrupt handler */
+        Xil_ExceptionInit();
 
-#ifdef TIMER_CONNECT_INTC
-	XIntc_RegisterHandler( INTC_BASEADDR, PROFILE_TIMER_INTR_ID,
-			     (XInterruptHandler)profile_intr_handler,NULL);
-#else
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-				     (Xil_ExceptionHandler)profile_intr_handler,
-				     NULL) ;
-#endif
+        #ifdef TIMER_CONNECT_INTC
+            XIntc_RegisterHandler( INTC_BASEADDR, PROFILE_TIMER_INTR_ID,
+                                   ( XInterruptHandler ) profile_intr_handler, NULL );
+        #else
+            Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,
+                                          ( Xil_ExceptionHandler ) profile_intr_handler,
+                                          NULL );
+        #endif
 
-	/* Initialize the timer with Timer Ticks */
-	(void)opb_timer_init() ;
+        /* Initialize the timer with Timer Ticks */
+        ( void ) opb_timer_init();
 
-	/* Enable Interrupts in the System, if Profile Timer is the only Interrupt
-	 * in the System. */
-#ifdef ENABLE_SYS_INTR
-#ifdef TIMER_CONNECT_INTC
-	XIntc_MasterEnable((u32)INTC_BASEADDR );
-	XIntc_SetIntrSvcOption( INTC_BASEADDR, XIN_SVC_ALL_ISRS_OPTION);
-	XIntc_EnableIntr( (u32)INTC_BASEADDR, PROFILE_TIMER_INTR_MASK );
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-				     (Xil_ExceptionHandler)XIntc_DeviceInterruptHandler,NULL);
-#endif
+        /* Enable Interrupts in the System, if Profile Timer is the only Interrupt
+         * in the System. */
+        #ifdef ENABLE_SYS_INTR
+            #ifdef TIMER_CONNECT_INTC
+                XIntc_MasterEnable( ( u32 ) INTC_BASEADDR );
+                XIntc_SetIntrSvcOption( INTC_BASEADDR, XIN_SVC_ALL_ISRS_OPTION );
+                XIntc_EnableIntr( ( u32 ) INTC_BASEADDR, PROFILE_TIMER_INTR_MASK );
+                Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,
+                                              ( Xil_ExceptionHandler ) XIntc_DeviceInterruptHandler, NULL );
+            #endif
+        #endif
 
-#endif
+        Xil_ExceptionEnable();
 
-	Xil_ExceptionEnable();
+        return 0;
+    }
 
-	return 0;
-
-}
-
-#endif	/* PROC_MICROBLAZE */
+#endif /* PROC_MICROBLAZE */
 
 
 
@@ -323,65 +321,64 @@ s32 microblaze_init(void)
  *	The scu private timer is connected to the Scu GIC controller.
  *
  *-------------------------------------------------------------------- */
-s32 scu_timer_init( void )
-{
-	/* set the number of cycles the timer counts before interrupting
-	 * scu timer runs at half the cpu clock */
-	XScuTimer_SetLoadReg(PROFILE_TIMER_BASEADDR, timer_clk_ticks/2U);
+    s32 scu_timer_init( void )
+    {
+        /* set the number of cycles the timer counts before interrupting
+         * scu timer runs at half the cpu clock */
+        XScuTimer_SetLoadReg( PROFILE_TIMER_BASEADDR, timer_clk_ticks / 2U );
 
-	/* clear any pending interrupts */
-	XScuTimer_SetIntrReg(PROFILE_TIMER_BASEADDR, 1U);
+        /* clear any pending interrupts */
+        XScuTimer_SetIntrReg( PROFILE_TIMER_BASEADDR, 1U );
 
-	/* enable interrupts, auto-reload mode and start the timer */
-	XScuTimer_SetControlReg(PROFILE_TIMER_BASEADDR, XSCUTIMER_CONTROL_IRQ_ENABLE_MASK |
-				XSCUTIMER_CONTROL_AUTO_RELOAD_MASK | XSCUTIMER_CONTROL_ENABLE_MASK);
+        /* enable interrupts, auto-reload mode and start the timer */
+        XScuTimer_SetControlReg( PROFILE_TIMER_BASEADDR, XSCUTIMER_CONTROL_IRQ_ENABLE_MASK |
+                                 XSCUTIMER_CONTROL_AUTO_RELOAD_MASK | XSCUTIMER_CONTROL_ENABLE_MASK );
 
-	return 0;
-}
+        return 0;
+    }
 
-s32 cortexa9_init(void)
-{
+    s32 cortexa9_init( void )
+    {
+        Xil_ExceptionInit();
 
-	Xil_ExceptionInit();
+        XScuGic_DeviceInitialize( 0 );
 
-	XScuGic_DeviceInitialize(0);
+        /*
+         * Connect the interrupt controller interrupt handler to the hardware
+         * interrupt handling logic in the processor.
+         */
+        Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_IRQ_INT,
+                                      ( Xil_ExceptionHandler ) XScuGic_DeviceInterruptHandler,
+                                      NULL );
 
-	/*
-	 * Connect the interrupt controller interrupt handler to the hardware
-	 * interrupt handling logic in the processor.
-	 */
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT,
-				(Xil_ExceptionHandler)XScuGic_DeviceInterruptHandler,
-				NULL);
+        /*
+         * Connect the device driver handler that will be called when an
+         * interrupt for the device occurs, the handler defined above performs
+         * the specific interrupt processing for the device.
+         */
+        XScuGic_RegisterHandler( SCUGIC_CPU_BASEADDR,
+                                 PROFILE_TIMER_INTR_ID,
+                                 ( Xil_ExceptionHandler ) profile_intr_handler,
+                                 NULL );
 
-	/*
-	 * Connect the device driver handler that will be called when an
-	 * interrupt for the device occurs, the handler defined above performs
-	 * the specific interrupt processing for the device.
-	 */
-	XScuGic_RegisterHandler(SCUGIC_CPU_BASEADDR,
-				PROFILE_TIMER_INTR_ID,
-				(Xil_ExceptionHandler)profile_intr_handler,
-				NULL);
+        /*
+         * Enable the interrupt for scu timer.
+         */
+        XScuGic_EnableIntr( SCUGIC_DIST_BASEADDR, PROFILE_TIMER_INTR_ID );
 
-	/*
-	 * Enable the interrupt for scu timer.
-	 */
-	XScuGic_EnableIntr(SCUGIC_DIST_BASEADDR, PROFILE_TIMER_INTR_ID);
+        /*
+         * Enable interrupts in the Processor.
+         */
+        Xil_ExceptionEnableMask( XIL_EXCEPTION_IRQ );
 
-	/*
-	 * Enable interrupts in the Processor.
-	 */
-	Xil_ExceptionEnableMask(XIL_EXCEPTION_IRQ);
+        /*
+         * Initialize the timer with Timer Ticks
+         */
+        ( void ) scu_timer_init();
 
-	/*
-	 * Initialize the timer with Timer Ticks
-	 */
-	(void)scu_timer_init() ;
+        Xil_ExceptionEnable();
 
-	Xil_ExceptionEnable();
+        return 0;
+    }
 
-	return 0;
-}
-
-#endif	/* PROC_CORTEXA9 */
+#endif /* PROC_CORTEXA9 */

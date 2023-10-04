@@ -853,7 +853,7 @@ SYSTEM cpu
          {
             Settings_Summary = "Nios II/s
             <br>&nbsp;&nbsp;16-Kbyte Instruction Cache
-            
+
             <br>&nbsp;&nbsp;JTAG Debug Module
             ";
             MESSAGES 
@@ -2731,8 +2731,8 @@ SYSTEM cpu
             {
             }
             Settings_Summary = " 8-bit PIO using <br>
-					
-					
+
+
 					 output pins";
          }
       }
@@ -2891,8 +2891,8 @@ SYSTEM cpu
             {
             }
             Settings_Summary = " 14-bit PIO using <br>
-					
-					
+
+
 					 output pins";
          }
       }
@@ -3059,7 +3059,7 @@ SYSTEM cpu
             }
             Settings_Summary = " 32-bit PIO using <br>
 					 tri-state pins with edge type NONE and interrupt source NONE
-					
+
 					";
          }
       }
@@ -3204,7 +3204,7 @@ SYSTEM cpu
             {
             }
             Settings_Summary = " 9-bit PIO using <br>
-					
+
 					 input pins with edge type NONE and interrupt source NONE
 					";
          }
@@ -3647,7 +3647,7 @@ SYSTEM cpu
             }
             Settings_Summary = " 3-bit PIO using <br>
 					 tri-state pins with edge type NONE and interrupt source NONE
-					
+
 					";
          }
       }

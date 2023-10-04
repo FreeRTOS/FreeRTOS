@@ -78,11 +78,11 @@ static uint8_t previousDeviceState;
  *  Handle the USB suspend event, should be invoked whenever
  *  HW reports a suspend signal.
  */
-void USBD_SuspendHandler(void)
+void USBD_SuspendHandler( void )
 {
     /* Don't do anything if the device is already suspended */
-    if (deviceState != USBD_STATE_SUSPENDED) {
-
+    if( deviceState != USBD_STATE_SUSPENDED )
+    {
         /* Switch to the Suspended state */
         previousDeviceState = deviceState;
         deviceState = USBD_STATE_SUSPENDED;
@@ -91,8 +91,10 @@ void USBD_SuspendHandler(void)
         USBD_HAL_Suspend();
 
         /* Invoke the User Suspended callback (Suspend System?) */
-        if (NULL != USBDCallbacks_Suspended)
+        if( NULL != USBDCallbacks_Suspended )
+        {
             USBDCallbacks_Suspended();
+        }
     }
 }
 
@@ -100,17 +102,22 @@ void USBD_SuspendHandler(void)
  *  Handle the USB resume event, should be invoked whenever
  *  HW reports a resume signal.
  */
-void USBD_ResumeHandler(void)
+void USBD_ResumeHandler( void )
 {
     /* Don't do anything if the device was not suspended */
-    if (deviceState == USBD_STATE_SUSPENDED) {
+    if( deviceState == USBD_STATE_SUSPENDED )
+    {
         /* Active the device */
         USBD_HAL_Activate();
         deviceState = previousDeviceState;
-        if (deviceState >= USBD_STATE_DEFAULT) {
+
+        if( deviceState >= USBD_STATE_DEFAULT )
+        {
             /* Invoke the Resume callback */
-            if (NULL != USBDCallbacks_Resumed)
+            if( NULL != USBDCallbacks_Resumed )
+            {
                 USBDCallbacks_Resumed();
+            }
         }
     }
 }
@@ -127,11 +134,14 @@ void USBD_ResetHandler()
     /* Active the USB HW */
     USBD_HAL_Activate();
     /* Only EP0 enabled */
-    USBD_HAL_ResetEPs(0xFFFFFFFF, USBD_STATUS_RESET, 0);
-    USBD_ConfigureEndpoint(0);
+    USBD_HAL_ResetEPs( 0xFFFFFFFF, USBD_STATUS_RESET, 0 );
+    USBD_ConfigureEndpoint( 0 );
+
     /* Invoke the Reset callback */
-    if (NULL != USBDCallbacks_Reset)
+    if( NULL != USBDCallbacks_Reset )
+    {
         USBDCallbacks_Reset();
+    }
 }
 
 /**
@@ -140,15 +150,17 @@ void USBD_ResetHandler()
  *  \param bEndpoint Endpoint number.
  *  \param pRequest  Pointer to content of request.
  */
-void USBD_RequestHandler(uint8_t bEndpoint,
-                         const USBGenericRequest* pRequest)
+void USBD_RequestHandler( uint8_t bEndpoint,
+                          const USBGenericRequest * pRequest )
 {
-    if (bEndpoint != 0) {
-        TRACE_WARNING("EP%d request not supported, default EP only",
-                      bEndpoint);
+    if( bEndpoint != 0 )
+    {
+        TRACE_WARNING( "EP%d request not supported, default EP only",
+                       bEndpoint );
     }
-    else if (NULL != USBDCallbacks_RequestReceived) {
-        USBDCallbacks_RequestReceived(pRequest);
+    else if( NULL != USBDCallbacks_RequestReceived )
+    {
+        USBDCallbacks_RequestReceived( pRequest );
     }
 }
 
@@ -160,9 +172,9 @@ void USBD_RequestHandler(uint8_t bEndpoint,
  * Configures an endpoint according to its Endpoint Descriptor.
  * \param pDescriptor Pointer to an Endpoint descriptor.
  */
-void USBD_ConfigureEndpoint(const USBEndpointDescriptor *pDescriptor)
+void USBD_ConfigureEndpoint( const USBEndpointDescriptor * pDescriptor )
 {
-    USBD_HAL_ConfigureEP(pDescriptor);
+    USBD_HAL_ConfigureEP( pDescriptor );
 }
 
 /**
@@ -186,16 +198,17 @@ void USBD_ConfigureEndpoint(const USBEndpointDescriptor *pDescriptor)
  * \return USBD_STATUS_SUCCESS if the transfer has been started;
  *         otherwise, the corresponding error status code.
  */
-uint8_t USBD_Write( uint8_t          bEndpoint,
-                    const void       *pData,
-                    uint32_t         dLength,
+uint8_t USBD_Write( uint8_t bEndpoint,
+                    const void * pData,
+                    uint32_t dLength,
                     TransferCallback fCallback,
-                    void             *pArgument )
+                    void * pArgument )
 {
-    USBD_HAL_SetTransferCallback(bEndpoint, fCallback, pArgument);
-    return USBD_HAL_Write(bEndpoint, pData, dLength);
+    USBD_HAL_SetTransferCallback( bEndpoint, fCallback, pArgument );
+    return USBD_HAL_Write( bEndpoint, pData, dLength );
 }
 #if 0
+
 /**
  * Sends data frames through a USB endpoint. Sets up the transfer descriptor
  * list, writes one or two data payloads (depending on the number of FIFO bank
@@ -221,83 +234,91 @@ uint8_t USBD_Write( uint8_t          bEndpoint,
  *         otherwise, the corresponding error status code.
  * \see USBDTransferBuffer, MblTransferCallback, USBD_MblReuse
  */
-uint8_t USBD_MblWrite( uint8_t       bEndpoint,
-                    void                *pMbl,
-                    uint16_t      wListSize,
-                    uint8_t       bCircList,
-                    uint16_t      wStartNdx,
-                    MblTransferCallback fCallback,
-                    void                *pArgument )
-{
-    Endpoint    *pEndpoint = &(endpoints[bEndpoint]);
-    MblTransfer *pTransfer = (MblTransfer*)&(pEndpoint->transfer);
-    uint16_t i;
+    uint8_t USBD_MblWrite( uint8_t bEndpoint,
+                           void * pMbl,
+                           uint16_t wListSize,
+                           uint8_t bCircList,
+                           uint16_t wStartNdx,
+                           MblTransferCallback fCallback,
+                           void * pArgument )
+    {
+        Endpoint * pEndpoint = &( endpoints[ bEndpoint ] );
+        MblTransfer * pTransfer = ( MblTransfer * ) &( pEndpoint->transfer );
+        uint16_t i;
 
-    /* EP0 is not suitable for Mbl */
+        /* EP0 is not suitable for Mbl */
 
-    if (bEndpoint == 0) {
+        if( bEndpoint == 0 )
+        {
+            return USBD_STATUS_INVALID_PARAMETER;
+        }
 
-        return USBD_STATUS_INVALID_PARAMETER;
+        /* Check that the endpoint is in Idle state */
+
+        if( pEndpoint->state != UDP_ENDPOINT_IDLE )
+        {
+            return USBD_STATUS_LOCKED;
+        }
+
+        pEndpoint->state = UDP_ENDPOINT_SENDINGM;
+
+        TRACE_DEBUG_WP( "WriteM%d(0x%x,%d) ", bEndpoint, pMbl, wListSize );
+
+        /* Start from first if not circled list */
+
+        if( !bCircList )
+        {
+            wStartNdx = 0;
+        }
+
+        /* Setup the transfer descriptor */
+
+        pTransfer->pMbl = ( USBDTransferBuffer * ) pMbl;
+        pTransfer->listSize = wListSize;
+        pTransfer->fCallback = fCallback;
+        pTransfer->pArgument = pArgument;
+        pTransfer->currBuffer = wStartNdx;
+        pTransfer->freedBuffer = 0;
+        pTransfer->pLastLoaded = &( ( ( USBDTransferBuffer * ) pMbl )[ wStartNdx ] );
+        pTransfer->circList = bCircList;
+        pTransfer->allUsed = 0;
+
+        /* Clear all buffer */
+
+        for( i = 0; i < wListSize; i++ )
+        {
+            pTransfer->pMbl[ i ].transferred = 0;
+            pTransfer->pMbl[ i ].buffered = 0;
+            pTransfer->pMbl[ i ].remaining = pTransfer->pMbl[ i ].size;
+        }
+
+        /* Send the first packet */
+
+        while( ( UDP->UDP_CSR[ bEndpoint ] & UDP_CSR_TXPKTRDY ) == UDP_CSR_TXPKTRDY )
+        {
+        }
+
+        UDP_MblWriteFifo( bEndpoint );
+        SET_CSR( bEndpoint, UDP_CSR_TXPKTRDY );
+
+        /* If double buffering is enabled and there is data remaining, */
+
+        /* prepare another packet */
+
+        if( ( CHIP_USB_ENDPOINTS_BANKS( bEndpoint ) > 1 ) &&
+            ( pTransfer->pMbl[ pTransfer->currBuffer ].remaining > 0 ) )
+        {
+            UDP_MblWriteFifo( bEndpoint );
+        }
+
+        /* Enable interrupt on endpoint */
+
+        UDP->UDP_IER = 1 << bEndpoint;
+
+        return USBD_STATUS_SUCCESS;
     }
+#endif /* if 0 */
 
-    /* Check that the endpoint is in Idle state */
-
-    if (pEndpoint->state != UDP_ENDPOINT_IDLE) {
-
-        return USBD_STATUS_LOCKED;
-    }
-    pEndpoint->state = UDP_ENDPOINT_SENDINGM;
-
-    TRACE_DEBUG_WP("WriteM%d(0x%x,%d) ", bEndpoint, pMbl, wListSize);
-
-    /* Start from first if not circled list */
-
-    if (!bCircList) wStartNdx = 0;
-
-    /* Setup the transfer descriptor */
-
-    pTransfer->pMbl        = (USBDTransferBuffer*)pMbl;
-    pTransfer->listSize    = wListSize;
-    pTransfer->fCallback   = fCallback;
-    pTransfer->pArgument   = pArgument;
-    pTransfer->currBuffer  = wStartNdx;
-    pTransfer->freedBuffer = 0;
-    pTransfer->pLastLoaded = &(((USBDTransferBuffer*)pMbl)[wStartNdx]);
-    pTransfer->circList    = bCircList;
-    pTransfer->allUsed     = 0;
-
-    /* Clear all buffer */
-
-    for (i = 0; i < wListSize; i ++) {
-
-        pTransfer->pMbl[i].transferred = 0;
-        pTransfer->pMbl[i].buffered   = 0;
-        pTransfer->pMbl[i].remaining   = pTransfer->pMbl[i].size;
-    }
-
-    /* Send the first packet */
-
-    while((UDP->UDP_CSR[bEndpoint]&UDP_CSR_TXPKTRDY)==UDP_CSR_TXPKTRDY);
-    UDP_MblWriteFifo(bEndpoint);
-    SET_CSR(bEndpoint, UDP_CSR_TXPKTRDY);
-
-    /* If double buffering is enabled and there is data remaining, */
-
-    /* prepare another packet */
-
-    if ((CHIP_USB_ENDPOINTS_BANKS(bEndpoint) > 1)
-        && (pTransfer->pMbl[pTransfer->currBuffer].remaining > 0)) {
-
-        UDP_MblWriteFifo(bEndpoint);
-    }
-
-    /* Enable interrupt on endpoint */
-
-    UDP->UDP_IER = 1 << bEndpoint;
-
-    return USBD_STATUS_SUCCESS;
-}
-#endif
 /**
  * Reads incoming data on an USB endpoint This methods sets the transfer
  * descriptor and activate the endpoint interrupt. The actual transfer is
@@ -314,16 +335,17 @@ uint8_t USBD_MblWrite( uint8_t       bEndpoint,
  * \return USBD_STATUS_SUCCESS if the read operation has been started;
  *         otherwise, the corresponding error code.
  */
-uint8_t USBD_Read(uint8_t          bEndpoint,
-                  void             *pData,
-                  uint32_t         dLength,
-                  TransferCallback fCallback,
-                  void             *pArgument)
+uint8_t USBD_Read( uint8_t bEndpoint,
+                   void * pData,
+                   uint32_t dLength,
+                   TransferCallback fCallback,
+                   void * pArgument )
 {
-    USBD_HAL_SetTransferCallback(bEndpoint, fCallback, pArgument);
-    return USBD_HAL_Read(bEndpoint, pData, dLength);
+    USBD_HAL_SetTransferCallback( bEndpoint, fCallback, pArgument );
+    return USBD_HAL_Read( bEndpoint, pData, dLength );
 }
 #if 0
+
 /**
  * Reuse first used/released buffer with new buffer address and size to be used
  * in transfer again. Only valid when frame list is ringed. Can be used for
@@ -332,71 +354,78 @@ uint8_t USBD_Read(uint8_t          bEndpoint,
  * \param pNewBuffer Pointer to new buffer with data to send (0 to keep last).
  * \param wNewSize   Size of the data buffer
  */
-uint8_t USBD_MblReuse( uint8_t  bEndpoint,
-                    uint8_t  *pNewBuffer,
-                    uint16_t wNewSize )
-{
-    Endpoint *pEndpoint = &(endpoints[bEndpoint]);
-    MblTransfer *pTransfer = (MblTransfer*)&(pEndpoint->transfer);
-    USBDTransferBuffer *pBi = &(pTransfer->pMbl[pTransfer->freedBuffer]);
+    uint8_t USBD_MblReuse( uint8_t bEndpoint,
+                           uint8_t * pNewBuffer,
+                           uint16_t wNewSize )
+    {
+        Endpoint * pEndpoint = &( endpoints[ bEndpoint ] );
+        MblTransfer * pTransfer = ( MblTransfer * ) &( pEndpoint->transfer );
+        USBDTransferBuffer * pBi = &( pTransfer->pMbl[ pTransfer->freedBuffer ] );
 
-    TRACE_DEBUG_WP("MblReuse(%d), st%x, circ%d\n\r",
-        bEndpoint, pEndpoint->state, pTransfer->circList);
+        TRACE_DEBUG_WP( "MblReuse(%d), st%x, circ%d\n\r",
+                        bEndpoint, pEndpoint->state, pTransfer->circList );
 
-    /* Only for Multi-buffer-circle list */
+        /* Only for Multi-buffer-circle list */
 
-    if (bEndpoint != 0
-        && (pEndpoint->state == UDP_ENDPOINT_RECEIVINGM
-            || pEndpoint->state == UDP_ENDPOINT_SENDINGM)
-        && pTransfer->circList) {
+        if( ( bEndpoint != 0 ) &&
+            ( ( pEndpoint->state == UDP_ENDPOINT_RECEIVINGM ) ||
+              ( pEndpoint->state == UDP_ENDPOINT_SENDINGM ) ) &&
+            pTransfer->circList )
+        {
+        }
+        else
+        {
+            return USBD_STATUS_WRONG_STATE;
+        }
+
+        /* Check if there is freed buffer */
+
+        if( ( pTransfer->freedBuffer == pTransfer->currBuffer ) &&
+            !pTransfer->allUsed )
+        {
+            return USBD_STATUS_LOCKED;
+        }
+
+        /* Update transfer information */
+
+        if( ( ++pTransfer->freedBuffer ) == pTransfer->listSize )
+        {
+            pTransfer->freedBuffer = 0;
+        }
+
+        if( pNewBuffer )
+        {
+            pBi->pBuffer = pNewBuffer;
+            pBi->size = wNewSize;
+        }
+
+        pBi->buffered = 0;
+        pBi->transferred = 0;
+        pBi->remaining = pBi->size;
+
+        /* At least one buffer is not processed */
+
+        pTransfer->allUsed = 0;
+        return USBD_STATUS_SUCCESS;
     }
-    else {
+#endif /* if 0 */
 
-        return USBD_STATUS_WRONG_STATE;
-    }
-
-    /* Check if there is freed buffer */
-
-    if (pTransfer->freedBuffer == pTransfer->currBuffer
-        && !pTransfer->allUsed) {
-
-        return USBD_STATUS_LOCKED;
-   }
-
-    /* Update transfer information */
-
-    if ((++ pTransfer->freedBuffer) == pTransfer->listSize)
-        pTransfer->freedBuffer = 0;
-    if (pNewBuffer) {
-        pBi->pBuffer = pNewBuffer;
-        pBi->size    = wNewSize;
-    }
-    pBi->buffered    = 0;
-    pBi->transferred = 0;
-    pBi->remaining   = pBi->size;
-
-    /* At least one buffer is not processed */
-
-    pTransfer->allUsed = 0;
-    return USBD_STATUS_SUCCESS;
-}
-#endif
 /**
  * Sets the HALT feature on the given endpoint (if not already in this state).
  * \param bEndpoint Endpoint number.
  */
-void USBD_Halt(uint8_t bEndpoint)
+void USBD_Halt( uint8_t bEndpoint )
 {
-    USBD_HAL_Halt(bEndpoint, 1);
+    USBD_HAL_Halt( bEndpoint, 1 );
 }
 
 /**
  * Clears the Halt feature on the given endpoint.
  * \param bEndpoint Index of endpoint
  */
-void USBD_Unhalt(uint8_t bEndpoint)
+void USBD_Unhalt( uint8_t bEndpoint )
 {
-    USBD_HAL_Halt(bEndpoint, 0);
+    USBD_HAL_Halt( bEndpoint, 0 );
 }
 
 /**
@@ -404,16 +433,16 @@ void USBD_Unhalt(uint8_t bEndpoint)
  * \param bEndpoint Index of endpoint
  * \return 1 if the endpoint is currently halted; otherwise 0
  */
-uint8_t USBD_IsHalted(uint8_t bEndpoint)
+uint8_t USBD_IsHalted( uint8_t bEndpoint )
 {
-    return USBD_HAL_Halt(bEndpoint, 0xFF);
+    return USBD_HAL_Halt( bEndpoint, 0xFF );
 }
 
 /**
  * Indicates if the device is running in high or full-speed. Always returns 0
  * since UDP does not support high-speed mode.
  */
-uint8_t USBD_IsHighSpeed(void)
+uint8_t USBD_IsHighSpeed( void )
 {
     return USBD_HAL_IsHighSpeed();
 }
@@ -424,42 +453,51 @@ uint8_t USBD_IsHighSpeed(void)
  * \param bEndpoint Endpoint number.
  * \return USBD_STATUS_SUCCESS or USBD_STATUS_LOCKED.
  */
-uint8_t USBD_Stall(uint8_t bEndpoint)
+uint8_t USBD_Stall( uint8_t bEndpoint )
 
 {
-    return USBD_HAL_Stall(bEndpoint);
+    return USBD_HAL_Stall( bEndpoint );
 }
 
 /**
  * Sets the device address to the given value.
  * \param address New device address.
  */
-void USBD_SetAddress(uint8_t address)
+void USBD_SetAddress( uint8_t address )
 {
-    TRACE_INFO_WP("SetAddr(%d) ", address);
+    TRACE_INFO_WP( "SetAddr(%d) ", address );
 
-    USBD_HAL_SetAddress(address);
-    if (address == 0) deviceState = USBD_STATE_DEFAULT;
-    else              deviceState = USBD_STATE_ADDRESS;
+    USBD_HAL_SetAddress( address );
+
+    if( address == 0 )
+    {
+        deviceState = USBD_STATE_DEFAULT;
+    }
+    else
+    {
+        deviceState = USBD_STATE_ADDRESS;
+    }
 }
 
 /**
  * Sets the current device configuration.
  * \param cfgnum - Configuration number to set.
  */
-void USBD_SetConfiguration(uint8_t cfgnum)
+void USBD_SetConfiguration( uint8_t cfgnum )
 {
-    TRACE_INFO_WP("SetCfg(%d) ", cfgnum);
+    TRACE_INFO_WP( "SetCfg(%d) ", cfgnum );
 
-    USBD_HAL_SetConfiguration(cfgnum);
+    USBD_HAL_SetConfiguration( cfgnum );
 
-    if (cfgnum != 0) {
+    if( cfgnum != 0 )
+    {
         deviceState = USBD_STATE_CONFIGURED;
     }
-    else {
+    else
+    {
         deviceState = USBD_STATE_ADDRESS;
         /* Reset all endpoints but Control 0 */
-        USBD_HAL_ResetEPs(0xFFFFFFFE, USBD_STATUS_RESET, 0);
+        USBD_HAL_ResetEPs( 0xFFFFFFFE, USBD_STATUS_RESET, 0 );
     }
 }
 
@@ -470,14 +508,15 @@ void USBD_SetConfiguration(uint8_t cfgnum)
 /**
  * Starts a remote wake-up procedure.
  */
-void USBD_RemoteWakeUp(void)
+void USBD_RemoteWakeUp( void )
 {
     /* Device is NOT suspended */
-    if (deviceState != USBD_STATE_SUSPENDED) {
-
-        TRACE_INFO("USBD_RemoteWakeUp: Device is not suspended\n\r");
+    if( deviceState != USBD_STATE_SUSPENDED )
+    {
+        TRACE_INFO( "USBD_RemoteWakeUp: Device is not suspended\n\r" );
         return;
     }
+
     USBD_HAL_Activate();
     USBD_HAL_RemoteWakeUp();
 }
@@ -485,7 +524,7 @@ void USBD_RemoteWakeUp(void)
 /**
  * Connects the pull-up on the D+ line of the USB.
  */
-void USBD_Connect(void)
+void USBD_Connect( void )
 {
     USBD_HAL_Connect();
 }
@@ -493,19 +532,19 @@ void USBD_Connect(void)
 /**
  * Disconnects the pull-up from the D+ line of the USB.
  */
-void USBD_Disconnect(void)
+void USBD_Disconnect( void )
 {
     USBD_HAL_Disconnect();
 
     /* Device returns to the Powered state */
 
-    if (deviceState > USBD_STATE_POWERED) {
-
+    if( deviceState > USBD_STATE_POWERED )
+    {
         deviceState = USBD_STATE_POWERED;
     }
 
-    if (previousDeviceState > USBD_STATE_POWERED) {
-
+    if( previousDeviceState > USBD_STATE_POWERED )
+    {
         previousDeviceState = USBD_STATE_POWERED;
     }
 }
@@ -513,9 +552,9 @@ void USBD_Disconnect(void)
 /**
  * Initializes the USB driver.
  */
-void USBD_Init(void)
+void USBD_Init( void )
 {
-    TRACE_INFO_WP("USBD_Init\n\r");
+    TRACE_INFO_WP( "USBD_Init\n\r" );
 
     /* HW Layer Initialize */
     USBD_HAL_Init();
@@ -525,15 +564,17 @@ void USBD_Init(void)
     previousDeviceState = USBD_STATE_POWERED;
 
     /* Upper Layer Initialize */
-    if (NULL != USBDCallbacks_Initialized)
+    if( NULL != USBDCallbacks_Initialized )
+    {
         USBDCallbacks_Initialized();
+    }
 }
 
 /**
  * Returns the current state of the USB device.
  * \return Device current state.
  */
-uint8_t USBD_GetState(void)
+uint8_t USBD_GetState( void )
 {
     return deviceState;
 }
@@ -542,9 +583,9 @@ uint8_t USBD_GetState(void)
  * Certification test for High Speed device.
  * \param bIndex Test to be done
  */
-void USBD_Test(uint8_t bIndex)
+void USBD_Test( uint8_t bIndex )
 {
-    USBD_HAL_Test(bIndex);
+    USBD_HAL_Test( bIndex );
 }
 
 /**@}*/

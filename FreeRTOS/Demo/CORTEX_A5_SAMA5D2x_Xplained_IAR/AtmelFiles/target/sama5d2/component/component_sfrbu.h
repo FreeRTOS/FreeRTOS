@@ -36,23 +36,25 @@
 /** \addtogroup SAMA5D2_SFRBU Special Function Registers */
 /*@{*/
 
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#if !( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
 /** \brief Sfrbu hardware registers */
-typedef struct {
-  __IO uint32_t SFRBU_PSWBUCTRL; /**< \brief (Sfrbu Offset: 0x00) Power Switch BU Control Register */
-  __IO uint32_t SFRBU_TSRANGECFG;/**< \brief (Sfrbu Offset: 0x04) TS Range Configuration Register */
-  __I  uint32_t Reserved1[2];
-  __IO uint32_t SFRBU_DDRBUMCR;  /**< \brief (Sfrbu Offset: 0x10) DDR BU Mode Control Register */
-  __IO uint32_t SFRBU_RXLPPUCR;  /**< \brief (Sfrbu Offset: 0x14) RXLP Pull-Up Control Register */
-} Sfrbu;
+    typedef struct
+    {
+        __IO uint32_t SFRBU_PSWBUCTRL;  /**< \brief (Sfrbu Offset: 0x00) Power Switch BU Control Register */
+        __IO uint32_t SFRBU_TSRANGECFG; /**< \brief (Sfrbu Offset: 0x04) TS Range Configuration Register */
+        __I uint32_t Reserved1[ 2 ];
+        __IO uint32_t SFRBU_DDRBUMCR;   /**< \brief (Sfrbu Offset: 0x10) DDR BU Mode Control Register */
+        __IO uint32_t SFRBU_RXLPPUCR;   /**< \brief (Sfrbu Offset: 0x14) RXLP Pull-Up Control Register */
+    } Sfrbu;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* -------- SFRBU_DDRBUMCR : (Sfrbu Offset: 0x10) DDR BU Mode Control Register -------- */
+
 /* This bit is used to isolate the DDR Pads from the CPU domain (VCCCORE).
  * It has to be set after enabling the Self-refresh mode on the DDR memory
  * and before doing power-down on VCCCORE
  */
-#define SFRBU_DDRBUMCR_BUMEN (0x1<<0) /**< \brief (SFRBU_DDRBUMCR) DDR BU Mode Enable */
+#define SFRBU_DDRBUMCR_BUMEN    ( 0x1 << 0 ) /**< \brief (SFRBU_DDRBUMCR) DDR BU Mode Enable */
 
 /*@}*/
 

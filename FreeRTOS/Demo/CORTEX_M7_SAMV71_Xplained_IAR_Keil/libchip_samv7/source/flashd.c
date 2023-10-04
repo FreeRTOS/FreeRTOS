@@ -43,7 +43,7 @@
  *
  * Writing 8-bit and 16-bit data is not allowed and may lead to unpredictable data corruption.
  * A check of this validity and padding for 32-bit alignment should be done in write algorithm.
-
+ *
  * Lock/unlock range associated with the user address range is automatically translated.
  *
  * This security bit can be enabled through the command "Set General Purpose NVM Bit 0".
@@ -88,14 +88,14 @@
  *        Local variables
  *----------------------------------------------------------------------------*/
 
-static uint32_t _pdwPageBuffer[IFLASH_PAGE_SIZE/sizeof(uint32_t)] ;
+static uint32_t _pdwPageBuffer[ IFLASH_PAGE_SIZE / sizeof( uint32_t ) ];
 static uint32_t _dwUseIAP = 1; /* Use IAP interface by default. */
 
 /*----------------------------------------------------------------------------
  *        Local macros
  *----------------------------------------------------------------------------*/
 
-#define min( a, b ) (((a) < (b)) ? (a) : (b))
+#define min( a, b )    ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 
 /*----------------------------------------------------------------------------
  *        Local functions
@@ -110,34 +110,38 @@ static uint32_t _dwUseIAP = 1; /* Use IAP interface by default. */
  * \param pdwActualStart  Actual start address of lock range.
  * \param pdwActualEnd  Actual end address of lock range.
  */
-static void ComputeLockRange( uint32_t dwStart, uint32_t dwEnd, uint32_t *pdwActualStart, uint32_t *pdwActualEnd )
+static void ComputeLockRange( uint32_t dwStart,
+                              uint32_t dwEnd,
+                              uint32_t * pdwActualStart,
+                              uint32_t * pdwActualEnd )
 {
-    Efc* pStartEfc ;
-    Efc* pEndEfc ;
-    uint16_t wStartPage ;
-    uint16_t wEndPage ;
-    uint16_t wNumPagesInRegion ;
-    uint16_t wActualStartPage ;
-    uint16_t wActualEndPage ;
+    Efc * pStartEfc;
+    Efc * pEndEfc;
+    uint16_t wStartPage;
+    uint16_t wEndPage;
+    uint16_t wNumPagesInRegion;
+    uint16_t wActualStartPage;
+    uint16_t wActualEndPage;
 
     /* Convert start and end address in page numbers */
-    EFC_TranslateAddress( &pStartEfc, dwStart, &wStartPage, 0 ) ;
-    EFC_TranslateAddress( &pEndEfc, dwEnd, &wEndPage, 0 ) ;
+    EFC_TranslateAddress( &pStartEfc, dwStart, &wStartPage, 0 );
+    EFC_TranslateAddress( &pEndEfc, dwEnd, &wEndPage, 0 );
 
     /* Find out the first page of the first region to lock */
-    wNumPagesInRegion = IFLASH_LOCK_REGION_SIZE / IFLASH_PAGE_SIZE ;
-    wActualStartPage = wStartPage - (wStartPage % wNumPagesInRegion) ;
-    wActualEndPage = wEndPage ;
+    wNumPagesInRegion = IFLASH_LOCK_REGION_SIZE / IFLASH_PAGE_SIZE;
+    wActualStartPage = wStartPage - ( wStartPage % wNumPagesInRegion );
+    wActualEndPage = wEndPage;
 
-    if ( (wEndPage % wNumPagesInRegion) != 0 )
+    if( ( wEndPage % wNumPagesInRegion ) != 0 )
     {
-        wActualEndPage += wNumPagesInRegion - (wEndPage % wNumPagesInRegion) ;
+        wActualEndPage += wNumPagesInRegion - ( wEndPage % wNumPagesInRegion );
     }
+
     /* Store actual page numbers */
-    EFC_ComputeAddress( pStartEfc, wActualStartPage, 0, pdwActualStart ) ;
-    EFC_ComputeAddress( pEndEfc, wActualEndPage, 0, pdwActualEnd ) ;
+    EFC_ComputeAddress( pStartEfc, wActualStartPage, 0, pdwActualStart );
+    EFC_ComputeAddress( pEndEfc, wActualEndPage, 0, pdwActualEnd );
     TRACE_DEBUG( "Actual lock range is 0x%06X - 0x%06X\n\r",
-            (unsigned int)*pdwActualStart, (unsigned int)*pdwActualEnd ) ;
+                 ( unsigned int ) *pdwActualStart, ( unsigned int ) *pdwActualEnd );
 }
 
 
@@ -153,12 +157,13 @@ static void ComputeLockRange( uint32_t dwStart, uint32_t dwEnd, uint32_t *pdwAct
  *                  dwUseIAP should be set to 1 when running out of flash.
  */
 
-extern void FLASHD_Initialize( uint32_t dwMCk, uint32_t dwUseIAP )
+extern void FLASHD_Initialize( uint32_t dwMCk,
+                               uint32_t dwUseIAP )
 {
     dwMCk = dwMCk; /* avoid warnings */
 
-    EFC_DisableFrdyIt( EFC ) ;
-    _dwUseIAP = dwUseIAP ;
+    EFC_DisableFrdyIt( EFC );
+    _dwUseIAP = dwUseIAP;
 }
 
 /**
@@ -169,18 +174,18 @@ extern void FLASHD_Initialize( uint32_t dwMCk, uint32_t dwUseIAP )
  */
 extern uint32_t FLASHD_Erase( uint32_t dwAddress )
 {
-    Efc* pEfc ;
-    uint16_t wPage ;
-    uint16_t wOffset ;
-    uint32_t dwError ;
+    Efc * pEfc;
+    uint16_t wPage;
+    uint16_t wOffset;
+    uint32_t dwError;
 
-    assert( (dwAddress >=IFLASH_ADDR) || (dwAddress <= (IFLASH_ADDR + IFLASH_SIZE)) ) ;
+    assert( ( dwAddress >= IFLASH_ADDR ) || ( dwAddress <= ( IFLASH_ADDR + IFLASH_SIZE ) ) );
 
     /* Translate write address */
-    EFC_TranslateAddress( &pEfc, dwAddress, &wPage, &wOffset ) ;
-    dwError = EFC_PerformCommand( pEfc, EFC_FCMD_EA, 0, _dwUseIAP ) ;
+    EFC_TranslateAddress( &pEfc, dwAddress, &wPage, &wOffset );
+    dwError = EFC_PerformCommand( pEfc, EFC_FCMD_EA, 0, _dwUseIAP );
 
-    return dwError ;
+    return dwError;
 }
 
 /**
@@ -192,18 +197,18 @@ extern uint32_t FLASHD_Erase( uint32_t dwAddress )
  */
 extern uint32_t FLASHD_EraseSector( uint32_t dwAddress )
 {
-    Efc* pEfc ;
-    uint16_t wPage ;
-    uint16_t wOffset ;
-    uint32_t dwError ;
+    Efc * pEfc;
+    uint16_t wPage;
+    uint16_t wOffset;
+    uint32_t dwError;
 
-    assert( (dwAddress >=IFLASH_ADDR) || (dwAddress <= (IFLASH_ADDR + IFLASH_SIZE)) ) ;
+    assert( ( dwAddress >= IFLASH_ADDR ) || ( dwAddress <= ( IFLASH_ADDR + IFLASH_SIZE ) ) );
 
     /* Translate write address */
-    EFC_TranslateAddress( &pEfc, dwAddress, &wPage, &wOffset ) ;
-    dwError = EFC_PerformCommand( pEfc, EFC_FCMD_ES, wPage, _dwUseIAP ) ;
+    EFC_TranslateAddress( &pEfc, dwAddress, &wPage, &wOffset );
+    dwError = EFC_PerformCommand( pEfc, EFC_FCMD_ES, wPage, _dwUseIAP );
 
-    return dwError ;
+    return dwError;
 }
 
 /**
@@ -214,18 +219,19 @@ extern uint32_t FLASHD_EraseSector( uint32_t dwAddress )
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-extern uint32_t FLASHD_ErasePages( uint32_t dwAddress, uint32_t dwPageNum )
+extern uint32_t FLASHD_ErasePages( uint32_t dwAddress,
+                                   uint32_t dwPageNum )
 {
-    Efc* pEfc ;
-    uint16_t wPage ;
-    uint16_t wOffset ;
-    uint32_t dwError ;
-    static uint32_t dwFarg ;
+    Efc * pEfc;
+    uint16_t wPage;
+    uint16_t wOffset;
+    uint32_t dwError;
+    static uint32_t dwFarg;
 
-    assert( (dwAddress >=IFLASH_ADDR) || (dwAddress <= (IFLASH_ADDR + IFLASH_SIZE)) ) ;
+    assert( ( dwAddress >= IFLASH_ADDR ) || ( dwAddress <= ( IFLASH_ADDR + IFLASH_SIZE ) ) );
 
     /* Translate write address */
-    EFC_TranslateAddress( &pEfc, dwAddress, &wPage, &wOffset ) ;
+    EFC_TranslateAddress( &pEfc, dwAddress, &wPage, &wOffset );
 
     /* Get FARG field for EPA command:
      * The first page to be erased is specified in the FARG[15:2] field of
@@ -235,30 +241,30 @@ extern uint32_t FLASHD_ErasePages( uint32_t dwAddress, uint32_t dwPageNum )
      * The 2 lowest bits of the FARG field define the number of pages to
      * be erased (FARG[1:0]).
      */
-    if (dwPageNum == 32)
+    if( dwPageNum == 32 )
     {
-        wPage &= ~(32u - 1u);
-        dwFarg = (wPage << 2) | 3; /* 32 pages */
+        wPage &= ~( 32u - 1u );
+        dwFarg = ( wPage << 2 ) | 3; /* 32 pages */
     }
-    else if (dwPageNum == 16)
+    else if( dwPageNum == 16 )
     {
-        wPage &= ~(16u - 1u);
-        dwFarg = (wPage << 2) | 2; /* 16 pages */
+        wPage &= ~( 16u - 1u );
+        dwFarg = ( wPage << 2 ) | 2; /* 16 pages */
     }
-    else if (dwPageNum == 8)
+    else if( dwPageNum == 8 )
     {
-        wPage &= ~(8u - 1u);
-        dwFarg = (wPage << 2) | 1; /* 8 pages */
+        wPage &= ~( 8u - 1u );
+        dwFarg = ( wPage << 2 ) | 1; /* 8 pages */
     }
     else
     {
-        wPage &= ~(4u - 1u);
-        dwFarg = (wPage << 2) | 0; /* 4 pages */
+        wPage &= ~( 4u - 1u );
+        dwFarg = ( wPage << 2 ) | 0; /* 4 pages */
     }
 
-    dwError = EFC_PerformCommand( pEfc, EFC_FCMD_EPA, dwFarg, _dwUseIAP ) ;
+    dwError = EFC_PerformCommand( pEfc, EFC_FCMD_EPA, dwFarg, _dwUseIAP );
 
-    return dwError ;
+    return dwError;
 }
 
 
@@ -272,49 +278,53 @@ extern uint32_t FLASHD_ErasePages( uint32_t dwAddress, uint32_t dwPageNum )
  * \param size  Size of data buffer in bytes.
  * \return 0 if successful, otherwise returns an error code.
  */
-extern uint32_t FLASHD_Write( uint32_t dwAddress, const void *pvBuffer, uint32_t dwSize )
+extern uint32_t FLASHD_Write( uint32_t dwAddress,
+                              const void * pvBuffer,
+                              uint32_t dwSize )
 {
-    Efc* pEfc ;
-    uint16_t page ;
-    uint16_t offset ;
-    uint32_t writeSize ;
-    uint32_t pageAddress ;
-    uint16_t padding ;
-    uint32_t dwError ;
-    uint32_t dwIdx ;
-    uint32_t *pAlignedDestination ;
-    uint8_t  *pucPageBuffer = (uint8_t *)_pdwPageBuffer;
+    Efc * pEfc;
+    uint16_t page;
+    uint16_t offset;
+    uint32_t writeSize;
+    uint32_t pageAddress;
+    uint16_t padding;
+    uint32_t dwError;
+    uint32_t dwIdx;
+    uint32_t * pAlignedDestination;
+    uint8_t * pucPageBuffer = ( uint8_t * ) _pdwPageBuffer;
 
-    assert( pvBuffer ) ;
-    assert( dwAddress >=IFLASH_ADDR ) ;
-    assert( (dwAddress + dwSize) <= (IFLASH_ADDR + IFLASH_SIZE) ) ;
+    assert( pvBuffer );
+    assert( dwAddress >= IFLASH_ADDR );
+    assert( ( dwAddress + dwSize ) <= ( IFLASH_ADDR + IFLASH_SIZE ) );
 
     /* Translate write address */
-    EFC_TranslateAddress( &pEfc, dwAddress, &page, &offset ) ;
+    EFC_TranslateAddress( &pEfc, dwAddress, &page, &offset );
 
     /* Write all pages */
-    while ( dwSize > 0 )
+    while( dwSize > 0 )
     {
         /* Copy data in temporary buffer to avoid alignment problems */
-        writeSize = min((uint32_t)IFLASH_PAGE_SIZE - offset, dwSize ) ;
-        EFC_ComputeAddress(pEfc, page, 0, &pageAddress ) ;
-        padding = IFLASH_PAGE_SIZE - offset - writeSize ;
+        writeSize = min( ( uint32_t ) IFLASH_PAGE_SIZE - offset, dwSize );
+        EFC_ComputeAddress( pEfc, page, 0, &pageAddress );
+        padding = IFLASH_PAGE_SIZE - offset - writeSize;
 
         /* Pre-buffer data */
-        memcpy( pucPageBuffer, (void *) pageAddress, offset);
+        memcpy( pucPageBuffer, ( void * ) pageAddress, offset );
 
         /* Buffer data */
-        memcpy( pucPageBuffer + offset, pvBuffer, writeSize);
+        memcpy( pucPageBuffer + offset, pvBuffer, writeSize );
 
         /* Post-buffer data */
-        memcpy( pucPageBuffer + offset + writeSize, (void *) (pageAddress + offset + writeSize), padding);
+        memcpy( pucPageBuffer + offset + writeSize, ( void * ) ( pageAddress + offset + writeSize ), padding );
 
         /* Write page
          * Writing 8-bit and 16-bit data is not allowed and may lead to unpredictable data corruption
          */
-        pAlignedDestination = (uint32_t*)pageAddress ;
-        for (dwIdx = 0; dwIdx < (IFLASH_PAGE_SIZE / sizeof(uint32_t)); ++ dwIdx) {
-            *pAlignedDestination++ = _pdwPageBuffer[dwIdx];
+        pAlignedDestination = ( uint32_t * ) pageAddress;
+
+        for( dwIdx = 0; dwIdx < ( IFLASH_PAGE_SIZE / sizeof( uint32_t ) ); ++dwIdx )
+        {
+            *pAlignedDestination++ = _pdwPageBuffer[ dwIdx ];
         }
 
         /* Note for sam3s16 and sam4s:
@@ -323,21 +333,23 @@ extern uint32_t FLASHD_Write( uint32_t dwAddress, const void *pvBuffer, uint32_t
          * block, Erase them first then use Write page command.
          */
         /* Send writing command */
-        dwError = EFC_PerformCommand( pEfc, EFC_FCMD_WP, page, _dwUseIAP ) ;
-        if ( dwError )
+        dwError = EFC_PerformCommand( pEfc, EFC_FCMD_WP, page, _dwUseIAP );
+
+        if( dwError )
         {
-            return dwError ;
+            return dwError;
         }
 
         /* Progression */
-        pvBuffer = (void *)((uint32_t) pvBuffer + writeSize) ;
-        dwSize -= writeSize ;
+        pvBuffer = ( void * ) ( ( uint32_t ) pvBuffer + writeSize );
+        dwSize -= writeSize;
         page++;
         offset = 0;
     }
 
-    return 0 ;
+    return 0;
 }
+
 /**
  * \brief Locks all the regions in the given address range. The actual lock range is
  * reported through two output parameters.
@@ -348,41 +360,48 @@ extern uint32_t FLASHD_Write( uint32_t dwAddress, const void *pvBuffer, uint32_t
  * \param pActualEnd  End address of the actual lock range (optional).
  * \return 0 if successful, otherwise returns an error code.
  */
-extern uint32_t FLASHD_Lock( uint32_t start, uint32_t end, uint32_t *pActualStart, uint32_t *pActualEnd )
+extern uint32_t FLASHD_Lock( uint32_t start,
+                             uint32_t end,
+                             uint32_t * pActualStart,
+                             uint32_t * pActualEnd )
 {
-    Efc *pEfc ;
-    uint32_t actualStart, actualEnd ;
-    uint16_t startPage, endPage ;
-    uint32_t dwError ;
+    Efc * pEfc;
+    uint32_t actualStart, actualEnd;
+    uint16_t startPage, endPage;
+    uint32_t dwError;
     uint16_t numPagesInRegion = IFLASH_LOCK_REGION_SIZE / IFLASH_PAGE_SIZE;
 
     /* Compute actual lock range and store it */
-    ComputeLockRange( start, end, &actualStart, &actualEnd ) ;
-    if ( pActualStart != NULL )
+    ComputeLockRange( start, end, &actualStart, &actualEnd );
+
+    if( pActualStart != NULL )
     {
-        *pActualStart = actualStart ;
+        *pActualStart = actualStart;
     }
-    if ( pActualEnd != NULL )
+
+    if( pActualEnd != NULL )
     {
         *pActualEnd = actualEnd;
     }
 
     /* Compute page numbers */
-    EFC_TranslateAddress( &pEfc, actualStart, &startPage, 0 ) ;
-    EFC_TranslateAddress( 0, actualEnd, &endPage, 0 ) ;
+    EFC_TranslateAddress( &pEfc, actualStart, &startPage, 0 );
+    EFC_TranslateAddress( 0, actualEnd, &endPage, 0 );
 
     /* Lock all pages */
-    while ( startPage < endPage )
+    while( startPage < endPage )
     {
-        dwError = EFC_PerformCommand( pEfc, EFC_FCMD_SLB, startPage, _dwUseIAP ) ;
-        if ( dwError )
+        dwError = EFC_PerformCommand( pEfc, EFC_FCMD_SLB, startPage, _dwUseIAP );
+
+        if( dwError )
         {
-            return dwError ;
+            return dwError;
         }
+
         startPage += numPagesInRegion;
     }
 
-    return 0 ;
+    return 0;
 }
 
 /**
@@ -394,40 +413,48 @@ extern uint32_t FLASHD_Lock( uint32_t start, uint32_t end, uint32_t *pActualStar
  * \param pActualEnd  End address of the actual unlock range (optional).
  * \return 0 if successful, otherwise returns an error code.
  */
-extern uint32_t FLASHD_Unlock( uint32_t start, uint32_t end, uint32_t *pActualStart, uint32_t *pActualEnd )
+extern uint32_t FLASHD_Unlock( uint32_t start,
+                               uint32_t end,
+                               uint32_t * pActualStart,
+                               uint32_t * pActualEnd )
 {
-    Efc* pEfc ;
-    uint32_t actualStart, actualEnd ;
-    uint16_t startPage, endPage ;
-    uint32_t dwError ;
+    Efc * pEfc;
+    uint32_t actualStart, actualEnd;
+    uint16_t startPage, endPage;
+    uint32_t dwError;
     uint16_t numPagesInRegion = IFLASH_LOCK_REGION_SIZE / IFLASH_PAGE_SIZE;
 
     /* Compute actual unlock range and store it */
-    ComputeLockRange(start, end, &actualStart, &actualEnd);
-    if ( pActualStart != NULL )
+    ComputeLockRange( start, end, &actualStart, &actualEnd );
+
+    if( pActualStart != NULL )
     {
-        *pActualStart = actualStart ;
+        *pActualStart = actualStart;
     }
-    if ( pActualEnd != NULL )
+
+    if( pActualEnd != NULL )
     {
-        *pActualEnd = actualEnd ;
+        *pActualEnd = actualEnd;
     }
 
     /* Compute page numbers */
-    EFC_TranslateAddress( &pEfc, actualStart, &startPage, 0 ) ;
-    EFC_TranslateAddress( 0, actualEnd, &endPage, 0 ) ;
+    EFC_TranslateAddress( &pEfc, actualStart, &startPage, 0 );
+    EFC_TranslateAddress( 0, actualEnd, &endPage, 0 );
 
     /* Unlock all pages */
-    while ( startPage < endPage )
+    while( startPage < endPage )
     {
-        dwError = EFC_PerformCommand( pEfc, EFC_FCMD_CLB, startPage, _dwUseIAP ) ;
-        if ( dwError )
+        dwError = EFC_PerformCommand( pEfc, EFC_FCMD_CLB, startPage, _dwUseIAP );
+
+        if( dwError )
         {
-            return dwError ;
+            return dwError;
         }
-        startPage += numPagesInRegion ;
+
+        startPage += numPagesInRegion;
     }
-    return 0 ;
+
+    return 0;
 }
 
 /**
@@ -436,52 +463,57 @@ extern uint32_t FLASHD_Unlock( uint32_t start, uint32_t end, uint32_t *pActualSt
  * \param start  Start address of range
  * \param end    End address of range.
  */
-extern uint32_t FLASHD_IsLocked( uint32_t start, uint32_t end )
+extern uint32_t FLASHD_IsLocked( uint32_t start,
+                                 uint32_t end )
 {
     uint32_t i, j;
-    Efc *pEfc ;
-    uint16_t startPage, endPage ;
-    uint8_t startRegion, endRegion ;
-    uint32_t numPagesInRegion ;
-    uint32_t status[IFLASH_NB_OF_LOCK_BITS / 32u] ;
-    uint32_t numLockedRegions = 0 ;
+    Efc * pEfc;
+    uint16_t startPage, endPage;
+    uint8_t startRegion, endRegion;
+    uint32_t numPagesInRegion;
+    uint32_t status[ IFLASH_NB_OF_LOCK_BITS / 32u ];
+    uint32_t numLockedRegions = 0;
 
-    assert( end >= start ) ;
-    assert( (start >=IFLASH_ADDR) && (end <= IFLASH_ADDR + IFLASH_SIZE) ) ;
+    assert( end >= start );
+    assert( ( start >= IFLASH_ADDR ) && ( end <= IFLASH_ADDR + IFLASH_SIZE ) );
 
     /* Compute page numbers */
-    EFC_TranslateAddress( &pEfc, start, &startPage, 0 ) ;
-    EFC_TranslateAddress( 0, end, &endPage, 0 ) ;
+    EFC_TranslateAddress( &pEfc, start, &startPage, 0 );
+    EFC_TranslateAddress( 0, end, &endPage, 0 );
 
     /* Compute region numbers */
-    numPagesInRegion = IFLASH_LOCK_REGION_SIZE / IFLASH_PAGE_SIZE ;
-    startRegion = startPage / numPagesInRegion ;
-    endRegion = endPage / numPagesInRegion ;
-    if ((endPage % numPagesInRegion) != 0)
+    numPagesInRegion = IFLASH_LOCK_REGION_SIZE / IFLASH_PAGE_SIZE;
+    startRegion = startPage / numPagesInRegion;
+    endRegion = endPage / numPagesInRegion;
+
+    if( ( endPage % numPagesInRegion ) != 0 )
     {
-        endRegion++ ;
+        endRegion++;
     }
 
     /* Retrieve lock status */
-    EFC_PerformCommand( pEfc, EFC_FCMD_GLB, 0, _dwUseIAP ) ;
-    for (i = 0; i < (IFLASH_NB_OF_LOCK_BITS / 32u); i++)
+    EFC_PerformCommand( pEfc, EFC_FCMD_GLB, 0, _dwUseIAP );
+
+    for( i = 0; i < ( IFLASH_NB_OF_LOCK_BITS / 32u ); i++ )
     {
-        status[i] = EFC_GetResult( pEfc ) ;
+        status[ i ] = EFC_GetResult( pEfc );
     }
 
     /* Check status of each involved region */
-    while ( startRegion < endRegion )
+    while( startRegion < endRegion )
     {
         i = startRegion / 32u;
         j = startRegion % 32u;
-        if ( (status[i] & (1 << j)) != 0 )
+
+        if( ( status[ i ] & ( 1 << j ) ) != 0 )
         {
-            numLockedRegions++ ;
+            numLockedRegions++;
         }
-        startRegion++ ;
+
+        startRegion++;
     }
 
-    return numLockedRegions ;
+    return numLockedRegions;
 }
 
 /**
@@ -492,22 +524,22 @@ extern uint32_t FLASHD_IsLocked( uint32_t start, uint32_t end )
  */
 extern uint32_t FLASHD_IsGPNVMSet( uint8_t ucGPNVM )
 {
-    uint32_t dwStatus ;
+    uint32_t dwStatus;
 
-    assert( ucGPNVM < GPNVM_NUM_MAX ) ;
+    assert( ucGPNVM < GPNVM_NUM_MAX );
 
     /* Get GPNVMs status */
-    EFC_PerformCommand( EFC, EFC_FCMD_GFB, 0, _dwUseIAP ) ;
-    dwStatus = EFC_GetResult( EFC ) ;
+    EFC_PerformCommand( EFC, EFC_FCMD_GFB, 0, _dwUseIAP );
+    dwStatus = EFC_GetResult( EFC );
 
     /* Check if GPNVM is set */
-    if ( (dwStatus & (1 << ucGPNVM)) != 0 )
+    if( ( dwStatus & ( 1 << ucGPNVM ) ) != 0 )
     {
-        return 1 ;
+        return 1;
     }
     else
     {
-        return 0 ;
+        return 0;
     }
 }
 
@@ -519,15 +551,15 @@ extern uint32_t FLASHD_IsGPNVMSet( uint8_t ucGPNVM )
  */
 extern uint32_t FLASHD_SetGPNVM( uint8_t ucGPNVM )
 {
-    assert( ucGPNVM < GPNVM_NUM_MAX ) ;
+    assert( ucGPNVM < GPNVM_NUM_MAX );
 
-    if ( !FLASHD_IsGPNVMSet( ucGPNVM ) )
+    if( !FLASHD_IsGPNVMSet( ucGPNVM ) )
     {
-        return EFC_PerformCommand( EFC, EFC_FCMD_SFB, ucGPNVM, _dwUseIAP ) ;
+        return EFC_PerformCommand( EFC, EFC_FCMD_SFB, ucGPNVM, _dwUseIAP );
     }
     else
     {
-        return 0 ;
+        return 0;
     }
 }
 
@@ -539,15 +571,15 @@ extern uint32_t FLASHD_SetGPNVM( uint8_t ucGPNVM )
  */
 extern uint32_t FLASHD_ClearGPNVM( uint8_t ucGPNVM )
 {
-    assert( ucGPNVM < GPNVM_NUM_MAX ) ;
+    assert( ucGPNVM < GPNVM_NUM_MAX );
 
-    if ( FLASHD_IsGPNVMSet( ucGPNVM ) )
+    if( FLASHD_IsGPNVMSet( ucGPNVM ) )
     {
-        return EFC_PerformCommand( EFC, EFC_FCMD_CFB, ucGPNVM, _dwUseIAP ) ;
+        return EFC_PerformCommand( EFC, EFC_FCMD_CFB, ucGPNVM, _dwUseIAP );
     }
     else
     {
-        return 0 ;
+        return 0;
     }
 }
 
@@ -558,53 +590,54 @@ extern uint32_t FLASHD_ClearGPNVM( uint8_t ucGPNVM )
  * \returns 0 if successful; otherwise returns an error code.
  */
 #ifdef __ICCARM__
-extern __ramfunc uint32_t FLASHD_ReadUniqueID( uint32_t* pdwUniqueID )
+    extern __ramfunc uint32_t FLASHD_ReadUniqueID( uint32_t * pdwUniqueID )
 #else
-    __attribute__ ((section (".ramfunc")))
-uint32_t FLASHD_ReadUniqueID( uint32_t* pdwUniqueID )
+    __attribute__( ( section( ".ramfunc" ) ) )
+    uint32_t FLASHD_ReadUniqueID( uint32_t * pdwUniqueID )
 #endif
 {
-    uint32_t status ;
-    if (pdwUniqueID == NULL) {
+    uint32_t status;
+
+    if( pdwUniqueID == NULL )
+    {
         return 1;
     }
 
-    pdwUniqueID[0] = 0 ;
-    pdwUniqueID[1] = 0 ;
-    pdwUniqueID[2] = 0 ;
-    pdwUniqueID[3] = 0 ;
+    pdwUniqueID[ 0 ] = 0;
+    pdwUniqueID[ 1 ] = 0;
+    pdwUniqueID[ 2 ] = 0;
+    pdwUniqueID[ 3 ] = 0;
 
     /* Send the Start Read unique Identifier command (STUI) by writing the Flash
-       Command Register with the STUI command.*/
+     * Command Register with the STUI command.*/
     EFC->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EFC_FCMD_STUI;
 
     /* When the Unique Identifier is ready to be read, the FRDY bit in the Flash
-       Programming Status Register (EEFC_FSR) falls. */
+     * Programming Status Register (EEFC_FSR) falls. */
     do
     {
-        status = EFC->EEFC_FSR ;
-    } while ( (status & EEFC_FSR_FRDY) == EEFC_FSR_FRDY ) ;
+        status = EFC->EEFC_FSR;
+    } while( ( status & EEFC_FSR_FRDY ) == EEFC_FSR_FRDY );
 
     /* The Unique Identifier is located in the first 128 bits of the Flash
-       memory mapping. So, at the address 0x400000-0x40000F. */
-    pdwUniqueID[0] = *(uint32_t *)IFLASH_ADDR;
-    pdwUniqueID[1] = *(uint32_t *)(IFLASH_ADDR + 4);
-    pdwUniqueID[2] = *(uint32_t *)(IFLASH_ADDR + 8);
-    pdwUniqueID[3] = *(uint32_t *)(IFLASH_ADDR + 12);
+     * memory mapping. So, at the address 0x400000-0x40000F. */
+    pdwUniqueID[ 0 ] = *( uint32_t * ) IFLASH_ADDR;
+    pdwUniqueID[ 1 ] = *( uint32_t * ) ( IFLASH_ADDR + 4 );
+    pdwUniqueID[ 2 ] = *( uint32_t * ) ( IFLASH_ADDR + 8 );
+    pdwUniqueID[ 3 ] = *( uint32_t * ) ( IFLASH_ADDR + 12 );
 
     /* To stop the Unique Identifier mode, the user needs to send the Stop Read
-       unique Identifier command (SPUI) by writing the Flash Command Register
-       with the SPUI command. */
-    EFC->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EFC_FCMD_SPUI ;
+     * unique Identifier command (SPUI) by writing the Flash Command Register
+     * with the SPUI command. */
+    EFC->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EFC_FCMD_SPUI;
 
     /* When the Stop read Unique Unique Identifier command (SPUI) has been
-       performed, the FRDY bit in the Flash Programming Status Register (EEFC_FSR)
-       rises. */
+     * performed, the FRDY bit in the Flash Programming Status Register (EEFC_FSR)
+     * rises. */
     do
     {
-        status = EFC->EEFC_FSR ;
-    } while ( (status & EEFC_FSR_FRDY) != EEFC_FSR_FRDY ) ;
+        status = EFC->EEFC_FSR;
+    } while( ( status & EEFC_FSR_FRDY ) != EEFC_FSR_FRDY );
 
     return 0;
 }
-

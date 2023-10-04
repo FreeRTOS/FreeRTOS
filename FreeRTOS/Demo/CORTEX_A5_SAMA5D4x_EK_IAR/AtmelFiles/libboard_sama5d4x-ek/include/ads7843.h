@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -46,10 +46,11 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void ADS7843_Initialize( void ) ;
+extern void ADS7843_Initialize( void );
 
-extern void ADS7843_Reset( void ) ;
+extern void ADS7843_Reset( void );
 
-extern void ADS7843_GetPosition( uint32_t *px_pos, uint32_t *py_pos ) ;
+extern void ADS7843_GetPosition( uint32_t * px_pos,
+                                 uint32_t * py_pos );
 
 #endif /* #ifndef _ADS7843_H */

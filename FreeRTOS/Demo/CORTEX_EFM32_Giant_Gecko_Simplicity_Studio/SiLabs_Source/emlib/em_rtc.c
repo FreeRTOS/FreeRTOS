@@ -31,10 +31,10 @@
  ******************************************************************************/
 
 #include "em_rtc.h"
-#if defined(RTC_COUNT) && (RTC_COUNT > 0)
+#if defined( RTC_COUNT ) && ( RTC_COUNT > 0 )
 
-#include "em_assert.h"
-#include "em_bus.h"
+    #include "em_assert.h"
+    #include "em_bus.h"
 
 /***************************************************************************//**
  * @addtogroup EM_Library
@@ -54,7 +54,7 @@
 /** @cond DO_NOT_INCLUDE_WITH_DOXYGEN */
 
 /** Validation of valid comparator register for assert statements. */
-#define RTC_COMP_REG_VALID(reg)    (((reg) <= 1))
+    #define RTC_COMP_REG_VALID( reg )    ( ( ( reg ) <= 1 ) )
 
 /** @endcond */
 
@@ -65,7 +65,8 @@
 
 /** @cond DO_NOT_INCLUDE_WITH_DOXYGEN */
 
-#if defined(_EFM32_GECKO_FAMILY)
+    #if defined( _EFM32_GECKO_FAMILY )
+
 /***************************************************************************//**
  * @brief
  *   Wait for ongoing sync of register(s) to low frequency domain to complete.
@@ -81,19 +82,22 @@
  *   Bitmask corresponding to SYNCBUSY register defined bits, indicating
  *   registers that must complete any ongoing synchronization.
  ******************************************************************************/
-__STATIC_INLINE void regSync(uint32_t mask)
-{
-  /* Avoid deadlock if modifying the same register twice when freeze mode is */
-  /* activated. */
-  if (RTC->FREEZE & RTC_FREEZE_REGFREEZE)
-    return;
+        __STATIC_INLINE void regSync( uint32_t mask )
+        {
+            /* Avoid deadlock if modifying the same register twice when freeze mode is */
+            /* activated. */
+            if( RTC->FREEZE & RTC_FREEZE_REGFREEZE )
+            {
+                return;
+            }
 
-  /* Wait for any pending previous write operation to have been completed */
-  /* in low frequency domain. This is only required for the Gecko Family */
-  while (RTC->SYNCBUSY & mask)
-    ;
-}
-#endif
+            /* Wait for any pending previous write operation to have been completed */
+            /* in low frequency domain. This is only required for the Gecko Family */
+            while( RTC->SYNCBUSY & mask )
+            {
+            }
+        }
+    #endif /* if defined( _EFM32_GECKO_FAMILY ) */
 
 /** @endcond */
 
@@ -111,31 +115,31 @@ __STATIC_INLINE void regSync(uint32_t mask)
  * @return
  *   Compare register value, 0 if invalid register selected.
  ******************************************************************************/
-uint32_t RTC_CompareGet(unsigned int comp)
-{
-  uint32_t ret;
+    uint32_t RTC_CompareGet( unsigned int comp )
+    {
+        uint32_t ret;
 
-  EFM_ASSERT(RTC_COMP_REG_VALID(comp));
+        EFM_ASSERT( RTC_COMP_REG_VALID( comp ) );
 
-  /* Initialize selected compare value */
-  switch (comp)
-  {
-    case 0:
-      ret = RTC->COMP0;
-      break;
+        /* Initialize selected compare value */
+        switch( comp )
+        {
+            case 0:
+                ret = RTC->COMP0;
+                break;
 
-    case 1:
-      ret = RTC->COMP1;
-      break;
+            case 1:
+                ret = RTC->COMP1;
+                break;
 
-    default:
-      /* Unknown compare register selected */
-      ret = 0;
-      break;
-  }
+            default:
+                /* Unknown compare register selected */
+                ret = 0;
+                break;
+        }
 
-  return ret;
-}
+        return ret;
+    }
 
 
 /***************************************************************************//**
@@ -155,45 +159,48 @@ uint32_t RTC_CompareGet(unsigned int comp)
  * @param[in] value
  *   Initialization value (<= 0x00ffffff)
  ******************************************************************************/
-void RTC_CompareSet(unsigned int comp, uint32_t value)
-{
-  volatile uint32_t *compReg;
-#if defined(_EFM32_GECKO_FAMILY)
-  uint32_t          syncbusy;
-#endif
+    void RTC_CompareSet( unsigned int comp,
+                         uint32_t value )
+    {
+        volatile uint32_t * compReg;
 
-  EFM_ASSERT(RTC_COMP_REG_VALID(comp)
-             && ((value & ~(_RTC_COMP0_COMP0_MASK
-                            >> _RTC_COMP0_COMP0_SHIFT)) == 0));
+        #if defined( _EFM32_GECKO_FAMILY )
+            uint32_t syncbusy;
+        #endif
 
-  /* Initialize selected compare value */
-  switch (comp)
-  {
-    case 0:
-      compReg = &(RTC->COMP0);
-#if defined(_EFM32_GECKO_FAMILY)
-      syncbusy = RTC_SYNCBUSY_COMP0;
-#endif
-      break;
+        EFM_ASSERT( RTC_COMP_REG_VALID( comp ) &&
+                    ( ( value & ~( _RTC_COMP0_COMP0_MASK
+                                   >> _RTC_COMP0_COMP0_SHIFT ) ) == 0 ) );
 
-    case 1:
-      compReg = &(RTC->COMP1);
-#if defined(_EFM32_GECKO_FAMILY)
-      syncbusy = RTC_SYNCBUSY_COMP1;
-#endif
-      break;
+        /* Initialize selected compare value */
+        switch( comp )
+        {
+            case 0:
+                compReg = &( RTC->COMP0 );
+                #if defined( _EFM32_GECKO_FAMILY )
+                    syncbusy = RTC_SYNCBUSY_COMP0;
+                #endif
+                break;
 
-    default:
-      /* Unknown compare register selected, abort */
-      return;
-  }
-#if defined(_EFM32_GECKO_FAMILY)
-  /* LF register about to be modified require sync. busy check */
-  regSync(syncbusy);
-#endif
+            case 1:
+                compReg = &( RTC->COMP1 );
+                #if defined( _EFM32_GECKO_FAMILY )
+                    syncbusy = RTC_SYNCBUSY_COMP1;
+                #endif
+                break;
 
-  *compReg = value;
-}
+            default:
+                /* Unknown compare register selected, abort */
+                return;
+        }
+
+        #if defined( _EFM32_GECKO_FAMILY )
+            /* LF register about to be modified require sync. busy check */
+            regSync( syncbusy );
+        #endif
+
+        *compReg = value;
+    }
 
 
 /***************************************************************************//**
@@ -211,22 +218,23 @@ void RTC_CompareSet(unsigned int comp, uint32_t value)
  * @param[in] enable
  *   true to enable counting, false to disable.
  ******************************************************************************/
-void RTC_Enable(bool enable)
-{
-#if defined(_EFM32_GECKO_FAMILY)
-  /* LF register about to be modified require sync. busy check */
-  regSync(RTC_SYNCBUSY_CTRL);
-#endif
+    void RTC_Enable( bool enable )
+    {
+        #if defined( _EFM32_GECKO_FAMILY )
+            /* LF register about to be modified require sync. busy check */
+            regSync( RTC_SYNCBUSY_CTRL );
+        #endif
 
-  BUS_RegBitWrite(&(RTC->CTRL), _RTC_CTRL_EN_SHIFT, enable);
+        BUS_RegBitWrite( &( RTC->CTRL ), _RTC_CTRL_EN_SHIFT, enable );
 
-#if defined(_EFM32_GECKO_FAMILY)
-  /* Wait for CTRL to be updated before returning, because calling code may
-     depend upon that the CTRL register is updated after this function has
-     returned. */
-  regSync(RTC_SYNCBUSY_CTRL);
-#endif
-}
+        #if defined( _EFM32_GECKO_FAMILY )
+
+            /* Wait for CTRL to be updated before returning, because calling code may
+             * depend upon that the CTRL register is updated after this function has
+             * returned. */
+            regSync( RTC_SYNCBUSY_CTRL );
+        #endif
+    }
 
 
 /***************************************************************************//**
@@ -255,28 +263,29 @@ void RTC_Enable(bool enable)
  *   @li false - disables freeze, modified registers are propagated to LF
  *       domain
  ******************************************************************************/
-void RTC_FreezeEnable(bool enable)
-{
-  if (enable)
-  {
-#if defined(_EFM32_GECKO_FAMILY)
-    /* Wait for any ongoing LF synchronization to complete. This is just to */
-    /* protect against the rare case when a user                            */
-    /* - modifies a register requiring LF sync                              */
-    /* - then enables freeze before LF sync completed                       */
-    /* - then modifies the same register again                              */
-    /* since modifying a register while it is in sync progress should be    */
-    /* avoided.                                                             */
-    while (RTC->SYNCBUSY)
-      ;
-#endif
-    RTC->FREEZE = RTC_FREEZE_REGFREEZE;
-  }
-  else
-  {
-    RTC->FREEZE = 0;
-  }
-}
+    void RTC_FreezeEnable( bool enable )
+    {
+        if( enable )
+        {
+            #if defined( _EFM32_GECKO_FAMILY )
+                /* Wait for any ongoing LF synchronization to complete. This is just to */
+                /* protect against the rare case when a user                            */
+                /* - modifies a register requiring LF sync                              */
+                /* - then enables freeze before LF sync completed                       */
+                /* - then modifies the same register again                              */
+                /* since modifying a register while it is in sync progress should be    */
+                /* avoided.                                                             */
+                while( RTC->SYNCBUSY )
+                {
+                }
+            #endif /* if defined( _EFM32_GECKO_FAMILY ) */
+            RTC->FREEZE = RTC_FREEZE_REGFREEZE;
+        }
+        else
+        {
+            RTC->FREEZE = 0;
+        }
+    }
 
 
 /***************************************************************************//**
@@ -299,40 +308,40 @@ void RTC_FreezeEnable(bool enable)
  * @param[in] init
  *   Pointer to RTC initialization structure.
  ******************************************************************************/
-void RTC_Init(const RTC_Init_TypeDef *init)
-{
-  uint32_t tmp;
+    void RTC_Init( const RTC_Init_TypeDef * init )
+    {
+        uint32_t tmp;
 
-  if (init->enable)
-  {
-    tmp = RTC_CTRL_EN;
-  }
-  else
-  {
-    tmp = 0;
-  }
+        if( init->enable )
+        {
+            tmp = RTC_CTRL_EN;
+        }
+        else
+        {
+            tmp = 0;
+        }
 
-  /* Configure DEBUGRUN flag, sets whether or not counter should be
-   * updated when debugger is active */
-  if (init->debugRun)
-  {
-    tmp |= RTC_CTRL_DEBUGRUN;
-  }
+        /* Configure DEBUGRUN flag, sets whether or not counter should be
+         * updated when debugger is active */
+        if( init->debugRun )
+        {
+            tmp |= RTC_CTRL_DEBUGRUN;
+        }
 
-  /* Configure COMP0TOP, this will use the COMP0 compare value as an
-   * overflow value, instead of default 24-bit 0x00ffffff */
-  if (init->comp0Top)
-  {
-    tmp |= RTC_CTRL_COMP0TOP;
-  }
+        /* Configure COMP0TOP, this will use the COMP0 compare value as an
+         * overflow value, instead of default 24-bit 0x00ffffff */
+        if( init->comp0Top )
+        {
+            tmp |= RTC_CTRL_COMP0TOP;
+        }
 
-#if defined(_EFM32_GECKO_FAMILY)
-  /* LF register about to be modified require sync. busy check */
-  regSync(RTC_SYNCBUSY_CTRL);
-#endif
+        #if defined( _EFM32_GECKO_FAMILY )
+            /* LF register about to be modified require sync. busy check */
+            regSync( RTC_SYNCBUSY_CTRL );
+        #endif
 
-  RTC->CTRL = tmp;
-}
+        RTC->CTRL = tmp;
+    }
 
 
 
@@ -340,23 +349,24 @@ void RTC_Init(const RTC_Init_TypeDef *init)
  * @brief
  *   Restore RTC to reset state
  ******************************************************************************/
-void RTC_Reset(void)
-{
-  /* Restore all essential RTC register to default config */
-  RTC->FREEZE = _RTC_FREEZE_RESETVALUE;
-  RTC->CTRL   = _RTC_CTRL_RESETVALUE;
-  RTC->COMP0  = _RTC_COMP0_RESETVALUE;
-  RTC->COMP1  = _RTC_COMP1_RESETVALUE;
-  RTC->IEN    = _RTC_IEN_RESETVALUE;
-  RTC->IFC    = _RTC_IFC_RESETVALUE;
+    void RTC_Reset( void )
+    {
+        /* Restore all essential RTC register to default config */
+        RTC->FREEZE = _RTC_FREEZE_RESETVALUE;
+        RTC->CTRL = _RTC_CTRL_RESETVALUE;
+        RTC->COMP0 = _RTC_COMP0_RESETVALUE;
+        RTC->COMP1 = _RTC_COMP1_RESETVALUE;
+        RTC->IEN = _RTC_IEN_RESETVALUE;
+        RTC->IFC = _RTC_IFC_RESETVALUE;
 
-#if defined(_EFM32_GECKO_FAMILY)
-  /* Wait for CTRL, COMP0 and COMP1 to be updated before returning, because the
-     calling code may depend upon that the register values are updated after
-     this function has returned. */
-  regSync(RTC_SYNCBUSY_CTRL | RTC_SYNCBUSY_COMP0 | RTC_SYNCBUSY_COMP1);
-#endif
-}
+        #if defined( _EFM32_GECKO_FAMILY )
+
+            /* Wait for CTRL, COMP0 and COMP1 to be updated before returning, because the
+             * calling code may depend upon that the register values are updated after
+             * this function has returned. */
+            regSync( RTC_SYNCBUSY_CTRL | RTC_SYNCBUSY_COMP0 | RTC_SYNCBUSY_COMP1 );
+        #endif
+    }
 
 
 
@@ -364,12 +374,12 @@ void RTC_Reset(void)
  * @brief
  *   Restart RTC counter from zero
  ******************************************************************************/
-void RTC_CounterReset(void)
-{
-  /* A disable/enable sequnce will start the counter at zero */
-  RTC_Enable(false);
-  RTC_Enable(true);
-}
+    void RTC_CounterReset( void )
+    {
+        /* A disable/enable sequnce will start the counter at zero */
+        RTC_Enable( false );
+        RTC_Enable( true );
+    }
 
 
 /** @} (end addtogroup RTC) */

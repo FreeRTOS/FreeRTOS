@@ -46,29 +46,27 @@
 
 void vParTestInitialise( void )
 {
-	led_configure( 0 );
-	led_configure( 1 );
-	led_configure( 2 );
+    led_configure( 0 );
+    led_configure( 1 );
+    led_configure( 2 );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-	if( xValue == pdTRUE )
-	{
-		led_set( uxLED );
-	}
-	else
-	{
-		led_clear( uxLED );
-	}
+    if( xValue == pdTRUE )
+    {
+        led_set( uxLED );
+    }
+    else
+    {
+        led_clear( uxLED );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	led_toggle( uxLED );
+    led_toggle( uxLED );
 }
-
-
-

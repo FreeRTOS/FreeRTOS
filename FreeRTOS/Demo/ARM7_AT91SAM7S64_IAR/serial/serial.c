@@ -24,11 +24,11 @@
  *
  */
 
-/* 
-	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0. 
-*/
+/*
+ *  BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
+ */
 
-/* Standard includes. */ 
+/* Standard includes. */
 #include <stdlib.h>
 
 /* Scheduler includes. */
@@ -41,25 +41,25 @@
 /*-----------------------------------------------------------*/
 
 /* Location of the COM0 registers. */
-#define serCOM0							( ( AT91PS_USART ) AT91C_BASE_US0 )
+#define serCOM0               ( ( AT91PS_USART ) AT91C_BASE_US0 )
 
 /* Interrupt control macros. */
-#define serINTERRUPT_LEVEL				( 5 )
-#define vInterruptOn()					AT91F_US_EnableIt( serCOM0, AT91C_US_TXRDY | AT91C_US_RXRDY )
-#define vInterruptOff()					AT91F_US_DisableIt( serCOM0, AT91C_US_TXRDY )
+#define serINTERRUPT_LEVEL    ( 5 )
+#define vInterruptOn()     AT91F_US_EnableIt( serCOM0, AT91C_US_TXRDY | AT91C_US_RXRDY )
+#define vInterruptOff()    AT91F_US_DisableIt( serCOM0, AT91C_US_TXRDY )
 
 /* Misc constants. */
-#define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
-#define serHANDLE						( ( xComPortHandle ) 1 )
-#define serNO_BLOCK						( ( TickType_t ) 0 )
-#define serNO_TIMEGUARD					( ( unsigned long ) 0 )
-#define serNO_PERIPHERAL_B_SETUP		( ( unsigned long ) 0 )
+#define serINVALID_QUEUE            ( ( QueueHandle_t ) 0 )
+#define serHANDLE                   ( ( xComPortHandle ) 1 )
+#define serNO_BLOCK                 ( ( TickType_t ) 0 )
+#define serNO_TIMEGUARD             ( ( unsigned long ) 0 )
+#define serNO_PERIPHERAL_B_SETUP    ( ( unsigned long ) 0 )
 
 
 /* Queues used to hold received characters, and characters waiting to be
-transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+ * transmitted. */
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -74,167 +74,171 @@ __arm void vSerialISR( void );
 /*
  * See the serial2.h header file.
  */
-xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud,
+                                       unsigned portBASE_TYPE uxQueueLength )
 {
-xComPortHandle xReturn = serHANDLE;
-extern void ( vUART_ISR )( void );
+    xComPortHandle xReturn = serHANDLE;
 
-	/* Create the queues used to hold Rx and Tx characters. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+    extern void( vUART_ISR )( void );
 
-	/* If the queues were created correctly then setup the serial port 
-	hardware. */
-	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
-	{
-		portENTER_CRITICAL();
-		{
-			/* Enable the USART clock. */
-   			AT91F_PMC_EnablePeriphClock( AT91C_BASE_PMC, 1 << AT91C_ID_US0 );
+    /* Create the queues used to hold Rx and Tx characters. */
+    xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+    xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
-			AT91F_PIO_CfgPeriph( AT91C_BASE_PIOA, ( ( unsigned long ) AT91C_PA5_RXD0 ) | ( ( unsigned long ) AT91C_PA6_TXD0 ), serNO_PERIPHERAL_B_SETUP );
+    /* If the queues were created correctly then setup the serial port
+     * hardware. */
+    if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
+    {
+        portENTER_CRITICAL();
+        {
+            /* Enable the USART clock. */
+            AT91F_PMC_EnablePeriphClock( AT91C_BASE_PMC, 1 << AT91C_ID_US0 );
 
-			/* Set the required protocol. */
-			AT91F_US_Configure( serCOM0, configCPU_CLOCK_HZ, AT91C_US_ASYNC_MODE, ulWantedBaud, serNO_TIMEGUARD );
+            AT91F_PIO_CfgPeriph( AT91C_BASE_PIOA, ( ( unsigned long ) AT91C_PA5_RXD0 ) | ( ( unsigned long ) AT91C_PA6_TXD0 ), serNO_PERIPHERAL_B_SETUP );
 
-			/* Enable Rx and Tx. */
-			serCOM0->US_CR = AT91C_US_RXEN | AT91C_US_TXEN;
+            /* Set the required protocol. */
+            AT91F_US_Configure( serCOM0, configCPU_CLOCK_HZ, AT91C_US_ASYNC_MODE, ulWantedBaud, serNO_TIMEGUARD );
 
-			/* Enable the Rx interrupts.  The Tx interrupts are not enabled
-			until there are characters to be transmitted. */
-    		AT91F_US_EnableIt( serCOM0, AT91C_US_RXRDY );
+            /* Enable Rx and Tx. */
+            serCOM0->US_CR = AT91C_US_RXEN | AT91C_US_TXEN;
 
-			/* Enable the interrupts in the AIC. */
-			AT91F_AIC_ConfigureIt( AT91C_BASE_AIC, AT91C_ID_US0, serINTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_LEVEL_SENSITIVE, ( void (*)( void ) ) vSerialISREntry );
-			AT91F_AIC_EnableIt( AT91C_BASE_AIC, AT91C_ID_US0 );
-		}
-		portEXIT_CRITICAL();
-	}
-	else
-	{
-		xReturn = ( xComPortHandle ) 0;
-	}
+            /* Enable the Rx interrupts.  The Tx interrupts are not enabled
+             * until there are characters to be transmitted. */
+            AT91F_US_EnableIt( serCOM0, AT91C_US_RXRDY );
 
-	/* This demo file only supports a single port but we have to return 
-	something to comply with the standard demo header file. */
-	return xReturn;
+            /* Enable the interrupts in the AIC. */
+            AT91F_AIC_ConfigureIt( AT91C_BASE_AIC, AT91C_ID_US0, serINTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_LEVEL_SENSITIVE, ( void ( * )( void ) )vSerialISREntry );
+            AT91F_AIC_EnableIt( AT91C_BASE_AIC, AT91C_ID_US0 );
+        }
+        portEXIT_CRITICAL();
+    }
+    else
+    {
+        xReturn = ( xComPortHandle ) 0;
+    }
+
+    /* This demo file only supports a single port but we have to return
+     * something to comply with the standard demo header file. */
+    return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort,
+                                     signed char * pcRxedChar,
+                                     TickType_t xBlockTime )
 {
-	/* The port handle is not required as this driver only supports one port. */
-	( void ) pxPort;
+    /* The port handle is not required as this driver only supports one port. */
+    ( void ) pxPort;
 
-	/* Get the next character from the buffer.  Return false if no characters
-	are available, or arrive before xBlockTime expires. */
-	if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
-	{
-		return pdTRUE;
-	}
-	else
-	{
-		return pdFALSE;
-	}
+    /* Get the next character from the buffer.  Return false if no characters
+     * are available, or arrive before xBlockTime expires. */
+    if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
+    {
+        return pdTRUE;
+    }
+    else
+    {
+        return pdFALSE;
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
+void vSerialPutString( xComPortHandle pxPort,
+                       const signed char * const pcString,
+                       unsigned short usStringLength )
 {
-signed char *pxNext;
+    signed char * pxNext;
 
-	/* A couple of parameters that this port does not use. */
-	( void ) usStringLength;
-	( void ) pxPort;
+    /* A couple of parameters that this port does not use. */
+    ( void ) usStringLength;
+    ( void ) pxPort;
 
-	/* NOTE: This implementation does not handle the queue being full as no
-	block time is used! */
+    /* NOTE: This implementation does not handle the queue being full as no
+     * block time is used! */
 
-	/* The port handle is not required as this driver only supports UART0. */
-	( void ) pxPort;
+    /* The port handle is not required as this driver only supports UART0. */
+    ( void ) pxPort;
 
-	/* Send each character in the string, one at a time. */
-	pxNext = ( signed char * ) pcString;
-	while( *pxNext )
-	{
-		xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
-		pxNext++;
-	}
+    /* Send each character in the string, one at a time. */
+    pxNext = ( signed char * ) pcString;
+
+    while( *pxNext )
+    {
+        xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
+        pxNext++;
+    }
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort,
+                                     signed char cOutChar,
+                                     TickType_t xBlockTime )
 {
-	/* Place the character in the queue of characters to be transmitted. */
-	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
-	{
-		return pdFAIL;
-	}
+    /* Place the character in the queue of characters to be transmitted. */
+    if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
+    {
+        return pdFAIL;
+    }
 
-	/* Turn on the Tx interrupt so the ISR will remove the character from the
-	queue and send it.   This does not need to be in a critical section as
-	if the interrupt has already removed the character the next interrupt
-	will simply turn off the Tx interrupt again. */
-	vInterruptOn();
+    /* Turn on the Tx interrupt so the ISR will remove the character from the
+     * queue and send it.   This does not need to be in a critical section as
+     * if the interrupt has already removed the character the next interrupt
+     * will simply turn off the Tx interrupt again. */
+    vInterruptOn();
 
-	return pdPASS;
+    return pdPASS;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
 {
-	/* Not supported as not required by the demo application. */
+    /* Not supported as not required by the demo application. */
 }
 /*-----------------------------------------------------------*/
 
 /* Serial port ISR.  This can cause a context switch so is not defined as a
-standard ISR using the __irq keyword.  Instead a wrapper function is defined
-within serialISR.s79 which in turn calls this function.  See the port
-documentation on the FreeRTOS.org website for more information. */
+ * standard ISR using the __irq keyword.  Instead a wrapper function is defined
+ * within serialISR.s79 which in turn calls this function.  See the port
+ * documentation on the FreeRTOS.org website for more information. */
 __arm void vSerialISR( void )
 {
-unsigned long ulStatus;
-signed char cChar;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    unsigned long ulStatus;
+    signed char cChar;
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	/* What caused the interrupt? */
-	ulStatus = serCOM0->US_CSR &= serCOM0->US_IMR;
+    /* What caused the interrupt? */
+    ulStatus = serCOM0->US_CSR &= serCOM0->US_IMR;
 
-	if( ulStatus & AT91C_US_TXRDY )
-	{
-		/* The interrupt was caused by the THR becoming empty.  Are there any
-		more characters to transmit? */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
-		{
-			/* A character was retrieved from the queue so can be sent to the
-			THR now. */
-			serCOM0->US_THR = cChar;
-		}
-		else
-		{
-			/* Queue empty, nothing to send so turn off the Tx interrupt. */
-			vInterruptOff();
-		}		
-	}
+    if( ulStatus & AT91C_US_TXRDY )
+    {
+        /* The interrupt was caused by the THR becoming empty.  Are there any
+         * more characters to transmit? */
+        if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
+        {
+            /* A character was retrieved from the queue so can be sent to the
+             * THR now. */
+            serCOM0->US_THR = cChar;
+        }
+        else
+        {
+            /* Queue empty, nothing to send so turn off the Tx interrupt. */
+            vInterruptOff();
+        }
+    }
 
-	if( ulStatus & AT91C_US_RXRDY )
-	{
-		/* The interrupt was caused by a character being received.  Grab the
-		character from the RHR and place it in the queue or received 
-		characters. */
-		cChar = serCOM0->US_RHR;
-		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-	}
+    if( ulStatus & AT91C_US_RXRDY )
+    {
+        /* The interrupt was caused by a character being received.  Grab the
+         * character from the RHR and place it in the queue or received
+         * characters. */
+        cChar = serCOM0->US_RHR;
+        xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+    }
 
-	/* If a task was woken by either a character being received or a character 
-	being transmitted then we may need to switch to another task. */
-	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+    /* If a task was woken by either a character being received or a character
+     * being transmitted then we may need to switch to another task. */
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
-	/* End the interrupt in the AIC. */
-	AT91C_BASE_AIC->AIC_EOICR = 0;
+    /* End the interrupt in the AIC. */
+    AT91C_BASE_AIC->AIC_EOICR = 0;
 }
-
-
-
-
-	

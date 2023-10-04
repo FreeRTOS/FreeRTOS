@@ -21,39 +21,50 @@
 #include "xil_types.h"
 
 /************************** Function Prototypes ******************************/
-extern void print (const char8 *ptr);
-void putnum(u32 num);
+extern void print( const char8 * ptr );
+void putnum( u32 num );
 
-void putnum(u32 num)
+void putnum( u32 num )
 {
-  char8  buf[9];
-  s32  cnt;
-  s32 i;
-  char8  *ptr;
-  u32  digit;
-  for(i = 0; i<9; i++) {
-	buf[i] = '0';
-  }
+    char8 buf[ 9 ];
+    s32 cnt;
+    s32 i;
+    char8 * ptr;
+    u32 digit;
 
-  ptr = buf;
-  for (cnt = 7 ; cnt >= 0 ; cnt--) {
-    digit = (num >> (cnt * 4U)) & 0x0000000fU;
+    for( i = 0; i < 9; i++ )
+    {
+        buf[ i ] = '0';
+    }
 
-    if ((digit <= 9U) && (ptr != NULL)) {
-		digit += (u32)'0';
-		*ptr = ((char8) digit);
-		ptr += 1;
-	} else if (ptr != NULL) {
-		digit += ((u32)'a' - (u32)10);
-		*ptr = ((char8)digit);
-		ptr += 1;
-	} else {
-		/*Made for MisraC Compliance*/;
-	}
-  }
+    ptr = buf;
 
-  if(ptr != NULL) {
-	  *ptr = (char8) 0;
-  }
-  print (buf);
+    for( cnt = 7; cnt >= 0; cnt-- )
+    {
+        digit = ( num >> ( cnt * 4U ) ) & 0x0000000fU;
+
+        if( ( digit <= 9U ) && ( ptr != NULL ) )
+        {
+            digit += ( u32 ) '0';
+            *ptr = ( ( char8 ) digit );
+            ptr += 1;
+        }
+        else if( ptr != NULL )
+        {
+            digit += ( ( u32 ) 'a' - ( u32 ) 10 );
+            *ptr = ( ( char8 ) digit );
+            ptr += 1;
+        }
+        else
+        {
+            /*Made for MisraC Compliance*/
+        }
+    }
+
+    if( ptr != NULL )
+    {
+        *ptr = ( char8 ) 0;
+    }
+
+    print( buf );
 }

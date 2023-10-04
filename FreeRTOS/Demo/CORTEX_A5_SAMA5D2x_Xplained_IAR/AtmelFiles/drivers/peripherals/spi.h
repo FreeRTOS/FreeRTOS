@@ -35,26 +35,26 @@
  */
 
 #ifndef _SPI_
-#define _SPI_
+    #define _SPI_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
 /*----------------------------------------------------------------------------
  *        Macros
  *----------------------------------------------------------------------------*/
 
-#define SPI_KEEP_CS_OW    (0)
-#define SPI_RELEASE_CS_OW (1)
+    #define SPI_KEEP_CS_OW       ( 0 )
+    #define SPI_RELEASE_CS_OW    ( 1 )
 
 /*------------------------------------------------------------------------------ */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
@@ -65,14 +65,14 @@ extern "C" {
  *
  * \param spi  Pointer to an Spi instance.
  */
-extern void spi_enable(Spi * spi);
+    extern void spi_enable( Spi * spi );
 
 /**
  * \brief Disables a SPI peripheral.
  *
  * \param spi  Pointer to an Spi instance.
  */
-extern void spi_disable(Spi * spi);
+    extern void spi_disable( Spi * spi );
 
 /**
  * \brief Enables one or more interrupt sources of a SPI peripheral.
@@ -80,7 +80,8 @@ extern void spi_disable(Spi * spi);
  * \param spi  Pointer to an Spi instance.
  * \param dwSources Bitwise OR of selected interrupt sources.
  */
-extern void spi_enable_it(Spi * spi, uint32_t dwSources);
+    extern void spi_enable_it( Spi * spi,
+                               uint32_t dwSources );
 
 /**
  * \brief Disables one or more interrupt sources of a SPI peripheral.
@@ -88,7 +89,8 @@ extern void spi_enable_it(Spi * spi, uint32_t dwSources);
  * \param spi  Pointer to an Spi instance.
  * \param dwSources Bitwise OR of selected interrupt sources.
  */
-extern void spi_disable_it(Spi * spi, uint32_t dwSources);
+    extern void spi_disable_it( Spi * spi,
+                                uint32_t dwSources );
 
 /**
  * \brief Configures a SPI peripheral as specified. The configuration
@@ -98,7 +100,8 @@ extern void spi_disable_it(Spi * spi, uint32_t dwSources);
  * \param spi  Pointer to an Spi instance.
  * \param dwConfiguration  Value of the SPI configuration register.
  */
-extern void spi_configure(Spi * spi, uint32_t configuration);
+    extern void spi_configure( Spi * spi,
+                               uint32_t configuration );
 
 /**
  * \brief Configures SPI Mode Register.
@@ -106,7 +109,8 @@ extern void spi_configure(Spi * spi, uint32_t configuration);
  * \param spi  Pointer to an Spi instance.
  * \param dwConfiguration  Value of the SPI mode register.
  */
-extern void spi_set_mode(Spi * spi, uint32_t dwConfiguration);
+    extern void spi_set_mode( Spi * spi,
+                              uint32_t dwConfiguration );
 
 /**
  * \brief Configures SPI chip select.
@@ -114,14 +118,15 @@ extern void spi_set_mode(Spi * spi, uint32_t dwConfiguration);
  * \param spi  Pointer to an Spi instance.
  * \param cS  Chip select of NPSCx.
  */
-extern void spi_chip_select(Spi * spi, uint8_t cS);
+    extern void spi_chip_select( Spi * spi,
+                                 uint8_t cS );
 
 /**
  * \brief Configures SPI to release last used CS line.
  *
  * \param spi  Pointer to an Spi instance.
  */
-extern void spi_release_cs(Spi * spi);
+    extern void spi_release_cs( Spi * spi );
 
 /**
  * \brief Configures a chip select of a SPI peripheral.
@@ -134,9 +139,13 @@ extern void spi_release_cs(Spi * spi);
  * \param spi_mode
  * \param release_on_last
  */
-extern void spi_configure_cs(Spi * spi, uint32_t cs,uint32_t bitrate,
-			     uint32_t delay_dlybs, uint32_t delay_dlybct,
-			     uint32_t spi_mode, uint32_t release_on_last);
+    extern void spi_configure_cs( Spi * spi,
+                                  uint32_t cs,
+                                  uint32_t bitrate,
+                                  uint32_t delay_dlybs,
+                                  uint32_t delay_dlybct,
+                                  uint32_t spi_mode,
+                                  uint32_t release_on_last );
 
 /**
  * \brief Configures a chip select active mode of a SPI peripheral.
@@ -146,8 +155,9 @@ extern void spi_configure_cs(Spi * spi, uint32_t cs,uint32_t bitrate,
  * \param release_on_last CS controlled by last transfer.
  *                       spi_release_cs() is used to deactive CS.
  */
-extern void spi_configure_cs_mode(Spi * spi, uint32_t cs,
-				uint32_t release_on_last);
+    extern void spi_configure_cs_mode( Spi * spi,
+                                       uint32_t cs,
+                                       uint32_t release_on_last );
 
 /**
  * \brief Reads one data from SPI peripheral with a dummy write.
@@ -157,7 +167,8 @@ extern void spi_configure_cs_mode(Spi * spi, uint32_t cs,
  * \return readed data.
  */
 
-extern uint16_t spi_read(Spi * spi, uint8_t cs);
+    extern uint16_t spi_read( Spi * spi,
+                              uint8_t cs );
 
 /**
  * \brief Sends data through a SPI peripheral consuming reads.
@@ -167,8 +178,12 @@ extern uint16_t spi_read(Spi * spi, uint8_t cs);
  * \param cs  Chip select of the component to address (0, 1, 2 or 3).
  * \param data  Word of data to send.
  */
-extern void spi_write(Spi * spi, uint32_t cs, uint16_t data);
-extern void spi_write_last(Spi * spi, uint32_t cs, uint16_t data);
+    extern void spi_write( Spi * spi,
+                           uint32_t cs,
+                           uint16_t data );
+    extern void spi_write_last( Spi * spi,
+                                uint32_t cs,
+                                uint16_t data );
 
 /**
  * \brief Get the current status register of the given SPI peripheral.
@@ -179,7 +194,7 @@ extern void spi_write_last(Spi * spi, uint32_t cs, uint16_t data);
  * \param spi   Pointer to a Spi instance.
  * \return  SPI status register.
  */
-extern uint32_t spi_get_status(Spi * spi);
+    extern uint32_t spi_get_status( Spi * spi );
 
 
 /**
@@ -191,24 +206,29 @@ extern uint32_t spi_get_status(Spi * spi);
  * otherwise returns 0.
  */
 
-extern uint32_t spi_is_finished(Spi * spi);
+    extern uint32_t spi_is_finished( Spi * spi );
 
-#ifdef CONFIG_HAVE_SPI_FIFO
-extern void spi_fifo_configure(Spi* spi, uint8_t tx_thres,
-			uint8_t rx_thres,
-			uint32_t ready_modes);
-extern void spi_fifo_disable(Spi* spi);
+    #ifdef CONFIG_HAVE_SPI_FIFO
+        extern void spi_fifo_configure( Spi * spi,
+                                        uint8_t tx_thres,
+                                        uint8_t rx_thres,
+                                        uint32_t ready_modes );
+        extern void spi_fifo_disable( Spi * spi );
 
-extern uint32_t spi_fifo_rx_size(Spi *spi);
-extern uint32_t spi_fifo_tx_size(Spi *spi);
+        extern uint32_t spi_fifo_rx_size( Spi * spi );
+        extern uint32_t spi_fifo_tx_size( Spi * spi );
 
-extern uint32_t spi_read_stream(Spi *spi, uint32_t chip_select,
-				void *stream, uint32_t len);
-extern uint32_t spi_write_stream(Spi *spi, uint32_t chip_select,
-			  const void *stream, uint32_t len);
-#endif
+        extern uint32_t spi_read_stream( Spi * spi,
+                                         uint32_t chip_select,
+                                         void * stream,
+                                         uint32_t len );
+        extern uint32_t spi_write_stream( Spi * spi,
+                                          uint32_t chip_select,
+                                          const void * stream,
+                                          uint32_t len );
+    #endif /* ifdef CONFIG_HAVE_SPI_FIFO */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
-#endif  /* #ifndef _SPI_ */
+    #endif
+#endif /* #ifndef _SPI_ */

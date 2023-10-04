@@ -38,28 +38,33 @@ extern u8 _heap_end[];
 
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) caddr_t _sbrk ( s32 incr );
+__attribute__( ( weak ) ) caddr_t _sbrk( s32 incr );
 }
 #endif
 
-__attribute__((weak)) caddr_t _sbrk ( s32 incr )
+__attribute__( ( weak ) ) caddr_t _sbrk( s32 incr )
 {
-  static u8 *heap = NULL;
-  u8 *prev_heap;
-  static u8 *HeapEndPtr = (u8 *)&_heap_end;
-  caddr_t Status;
+    static u8 * heap = NULL;
+    u8 * prev_heap;
+    static u8 * HeapEndPtr = ( u8 * ) &_heap_end;
+    caddr_t Status;
 
-  if (heap == NULL) {
-    heap = (u8 *)&_heap_start;
-  }
-  prev_heap = heap;
+    if( heap == NULL )
+    {
+        heap = ( u8 * ) &_heap_start;
+    }
 
-  	if (((heap + incr) <= HeapEndPtr) && (prev_heap != NULL)) {
-  heap += incr;
-	  Status = (caddr_t) ((void *)prev_heap);
-  	} else {
-	  Status = (caddr_t) -1;
-  }
+    prev_heap = heap;
 
-  return Status;
+    if( ( ( heap + incr ) <= HeapEndPtr ) && ( prev_heap != NULL ) )
+    {
+        heap += incr;
+        Status = ( caddr_t ) ( ( void * ) prev_heap );
+    }
+    else
+    {
+        Status = ( caddr_t ) -1;
+    }
+
+    return Status;
 }

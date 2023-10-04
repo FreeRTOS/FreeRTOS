@@ -9,22 +9,21 @@
 #define __USPI_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- SPI Mode of USCI Controller -------------------------*/
+
 /**
-    @addtogroup USPI SPI Mode of USCI Controller(USPI)
-    Memory Mapped Structure for USPI Controller
-@{ */
+ *  @addtogroup USPI SPI Mode of USCI Controller(USPI)
+ *  Memory Mapped Structure for USPI Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var USPI_T::CTL
      * Offset: 0x00  USCI Control Register
@@ -423,238 +422,237 @@ typedef struct
      * |        |          |0 = Slave transmit under-run event does not occur.
      * |        |          |1 = Slave transmit under-run event occurs.
      */
-    __IO uint32_t CTL;                   /*!< [0x0000] USCI Control Register                                            */
-    __IO uint32_t INTEN;                 /*!< [0x0004] USCI Interrupt Enable Register                                   */
-    __IO uint32_t BRGEN;                 /*!< [0x0008] USCI Baud Rate Generator Register                                */
-    __I  uint32_t RESERVE0[1];
-    __IO uint32_t DATIN0;                /*!< [0x0010] USCI Input Data Signal Configuration Register 0                  */
-    __I  uint32_t RESERVE1[3];
-    __IO uint32_t CTLIN0;                /*!< [0x0020] USCI Input Control Signal Configuration Register 0               */
-    __I  uint32_t RESERVE2[1];
-    __IO uint32_t CLKIN;                 /*!< [0x0028] USCI Input Clock Signal Configuration Register                   */
-    __IO uint32_t LINECTL;               /*!< [0x002c] USCI Line Control Register                                       */
-    __O  uint32_t TXDAT;                 /*!< [0x0030] USCI Transmit Data Register                                      */
-    __I  uint32_t RXDAT;                 /*!< [0x0034] USCI Receive Data Register                                       */
-    __IO uint32_t BUFCTL;                /*!< [0x0038] USCI Transmit/Receive Buffer Control Register                    */
-    __IO uint32_t BUFSTS;                /*!< [0x003c] USCI Transmit/Receive Buffer Status Register                     */
-    __IO uint32_t PDMACTL;               /*!< [0x0040] USCI PDMA Control Register                                       */
-    __I  uint32_t RESERVE3[4];
-    __IO uint32_t WKCTL;                 /*!< [0x0054] USCI Wake-up Control Register                                    */
-    __IO uint32_t WKSTS;                 /*!< [0x0058] USCI Wake-up Status Register                                     */
-    __IO uint32_t PROTCTL;               /*!< [0x005c] USCI Protocol Control Register                                   */
-    __IO uint32_t PROTIEN;               /*!< [0x0060] USCI Protocol Interrupt Enable Register                          */
-    __IO uint32_t PROTSTS;               /*!< [0x0064] USCI Protocol Status Register                                    */
-
+    __IO uint32_t CTL;     /*!< [0x0000] USCI Control Register                                            */
+    __IO uint32_t INTEN;   /*!< [0x0004] USCI Interrupt Enable Register                                   */
+    __IO uint32_t BRGEN;   /*!< [0x0008] USCI Baud Rate Generator Register                                */
+    __I uint32_t RESERVE0[ 1 ];
+    __IO uint32_t DATIN0;  /*!< [0x0010] USCI Input Data Signal Configuration Register 0                  */
+    __I uint32_t RESERVE1[ 3 ];
+    __IO uint32_t CTLIN0;  /*!< [0x0020] USCI Input Control Signal Configuration Register 0               */
+    __I uint32_t RESERVE2[ 1 ];
+    __IO uint32_t CLKIN;   /*!< [0x0028] USCI Input Clock Signal Configuration Register                   */
+    __IO uint32_t LINECTL; /*!< [0x002c] USCI Line Control Register                                       */
+    __O uint32_t TXDAT;    /*!< [0x0030] USCI Transmit Data Register                                      */
+    __I uint32_t RXDAT;    /*!< [0x0034] USCI Receive Data Register                                       */
+    __IO uint32_t BUFCTL;  /*!< [0x0038] USCI Transmit/Receive Buffer Control Register                    */
+    __IO uint32_t BUFSTS;  /*!< [0x003c] USCI Transmit/Receive Buffer Status Register                     */
+    __IO uint32_t PDMACTL; /*!< [0x0040] USCI PDMA Control Register                                       */
+    __I uint32_t RESERVE3[ 4 ];
+    __IO uint32_t WKCTL;   /*!< [0x0054] USCI Wake-up Control Register                                    */
+    __IO uint32_t WKSTS;   /*!< [0x0058] USCI Wake-up Status Register                                     */
+    __IO uint32_t PROTCTL; /*!< [0x005c] USCI Protocol Control Register                                   */
+    __IO uint32_t PROTIEN; /*!< [0x0060] USCI Protocol Interrupt Enable Register                          */
+    __IO uint32_t PROTSTS; /*!< [0x0064] USCI Protocol Status Register                                    */
 } USPI_T;
 
 /**
-    @addtogroup USPI_CONST USPI Bit Field Definition
-    Constant Definitions for USPI Controller
-@{ */
+ *  @addtogroup USPI_CONST USPI Bit Field Definition
+ *  Constant Definitions for USPI Controller
+ * @{ */
 
-#define USPI_CTL_FUNMODE_Pos             (0)                                               /*!< USPI_T::CTL: FUNMODE Position          */
-#define USPI_CTL_FUNMODE_Msk             (0x7ul << USPI_CTL_FUNMODE_Pos)                   /*!< USPI_T::CTL: FUNMODE Mask              */
+#define USPI_CTL_FUNMODE_Pos         ( 0 )                                                 /*!< USPI_T::CTL: FUNMODE Position          */
+#define USPI_CTL_FUNMODE_Msk         ( 0x7ul << USPI_CTL_FUNMODE_Pos )                     /*!< USPI_T::CTL: FUNMODE Mask              */
 
-#define USPI_INTEN_TXSTIEN_Pos           (1)                                               /*!< USPI_T::INTEN: TXSTIEN Position        */
-#define USPI_INTEN_TXSTIEN_Msk           (0x1ul << USPI_INTEN_TXSTIEN_Pos)                 /*!< USPI_T::INTEN: TXSTIEN Mask            */
+#define USPI_INTEN_TXSTIEN_Pos       ( 1 )                                                 /*!< USPI_T::INTEN: TXSTIEN Position        */
+#define USPI_INTEN_TXSTIEN_Msk       ( 0x1ul << USPI_INTEN_TXSTIEN_Pos )                   /*!< USPI_T::INTEN: TXSTIEN Mask            */
 
-#define USPI_INTEN_TXENDIEN_Pos          (2)                                               /*!< USPI_T::INTEN: TXENDIEN Position       */
-#define USPI_INTEN_TXENDIEN_Msk          (0x1ul << USPI_INTEN_TXENDIEN_Pos)                /*!< USPI_T::INTEN: TXENDIEN Mask           */
+#define USPI_INTEN_TXENDIEN_Pos      ( 2 )                                                 /*!< USPI_T::INTEN: TXENDIEN Position       */
+#define USPI_INTEN_TXENDIEN_Msk      ( 0x1ul << USPI_INTEN_TXENDIEN_Pos )                  /*!< USPI_T::INTEN: TXENDIEN Mask           */
 
-#define USPI_INTEN_RXSTIEN_Pos           (3)                                               /*!< USPI_T::INTEN: RXSTIEN Position        */
-#define USPI_INTEN_RXSTIEN_Msk           (0x1ul << USPI_INTEN_RXSTIEN_Pos)                 /*!< USPI_T::INTEN: RXSTIEN Mask            */
+#define USPI_INTEN_RXSTIEN_Pos       ( 3 )                                                 /*!< USPI_T::INTEN: RXSTIEN Position        */
+#define USPI_INTEN_RXSTIEN_Msk       ( 0x1ul << USPI_INTEN_RXSTIEN_Pos )                   /*!< USPI_T::INTEN: RXSTIEN Mask            */
 
-#define USPI_INTEN_RXENDIEN_Pos          (4)                                               /*!< USPI_T::INTEN: RXENDIEN Position       */
-#define USPI_INTEN_RXENDIEN_Msk          (0x1ul << USPI_INTEN_RXENDIEN_Pos)                /*!< USPI_T::INTEN: RXENDIEN Mask           */
+#define USPI_INTEN_RXENDIEN_Pos      ( 4 )                                                 /*!< USPI_T::INTEN: RXENDIEN Position       */
+#define USPI_INTEN_RXENDIEN_Msk      ( 0x1ul << USPI_INTEN_RXENDIEN_Pos )                  /*!< USPI_T::INTEN: RXENDIEN Mask           */
 
-#define USPI_BRGEN_RCLKSEL_Pos           (0)                                               /*!< USPI_T::BRGEN: RCLKSEL Position        */
-#define USPI_BRGEN_RCLKSEL_Msk           (0x1ul << USPI_BRGEN_RCLKSEL_Pos)                 /*!< USPI_T::BRGEN: RCLKSEL Mask            */
+#define USPI_BRGEN_RCLKSEL_Pos       ( 0 )                                                 /*!< USPI_T::BRGEN: RCLKSEL Position        */
+#define USPI_BRGEN_RCLKSEL_Msk       ( 0x1ul << USPI_BRGEN_RCLKSEL_Pos )                   /*!< USPI_T::BRGEN: RCLKSEL Mask            */
 
-#define USPI_BRGEN_PTCLKSEL_Pos          (1)                                               /*!< USPI_T::BRGEN: PTCLKSEL Position       */
-#define USPI_BRGEN_PTCLKSEL_Msk          (0x1ul << USPI_BRGEN_PTCLKSEL_Pos)                /*!< USPI_T::BRGEN: PTCLKSEL Mask           */
+#define USPI_BRGEN_PTCLKSEL_Pos      ( 1 )                                                 /*!< USPI_T::BRGEN: PTCLKSEL Position       */
+#define USPI_BRGEN_PTCLKSEL_Msk      ( 0x1ul << USPI_BRGEN_PTCLKSEL_Pos )                  /*!< USPI_T::BRGEN: PTCLKSEL Mask           */
 
-#define USPI_BRGEN_SPCLKSEL_Pos          (2)                                               /*!< USPI_T::BRGEN: SPCLKSEL Position       */
-#define USPI_BRGEN_SPCLKSEL_Msk          (0x3ul << USPI_BRGEN_SPCLKSEL_Pos)                /*!< USPI_T::BRGEN: SPCLKSEL Mask           */
+#define USPI_BRGEN_SPCLKSEL_Pos      ( 2 )                                                 /*!< USPI_T::BRGEN: SPCLKSEL Position       */
+#define USPI_BRGEN_SPCLKSEL_Msk      ( 0x3ul << USPI_BRGEN_SPCLKSEL_Pos )                  /*!< USPI_T::BRGEN: SPCLKSEL Mask           */
 
-#define USPI_BRGEN_TMCNTEN_Pos           (4)                                               /*!< USPI_T::BRGEN: TMCNTEN Position        */
-#define USPI_BRGEN_TMCNTEN_Msk           (0x1ul << USPI_BRGEN_TMCNTEN_Pos)                 /*!< USPI_T::BRGEN: TMCNTEN Mask            */
+#define USPI_BRGEN_TMCNTEN_Pos       ( 4 )                                                 /*!< USPI_T::BRGEN: TMCNTEN Position        */
+#define USPI_BRGEN_TMCNTEN_Msk       ( 0x1ul << USPI_BRGEN_TMCNTEN_Pos )                   /*!< USPI_T::BRGEN: TMCNTEN Mask            */
 
-#define USPI_BRGEN_TMCNTSRC_Pos          (5)                                               /*!< USPI_T::BRGEN: TMCNTSRC Position       */
-#define USPI_BRGEN_TMCNTSRC_Msk          (0x1ul << USPI_BRGEN_TMCNTSRC_Pos)                /*!< USPI_T::BRGEN: TMCNTSRC Mask           */
+#define USPI_BRGEN_TMCNTSRC_Pos      ( 5 )                                                 /*!< USPI_T::BRGEN: TMCNTSRC Position       */
+#define USPI_BRGEN_TMCNTSRC_Msk      ( 0x1ul << USPI_BRGEN_TMCNTSRC_Pos )                  /*!< USPI_T::BRGEN: TMCNTSRC Mask           */
 
-#define USPI_BRGEN_CLKDIV_Pos            (16)                                              /*!< USPI_T::BRGEN: CLKDIV Position         */
-#define USPI_BRGEN_CLKDIV_Msk            (0x3fful << USPI_BRGEN_CLKDIV_Pos)                /*!< USPI_T::BRGEN: CLKDIV Mask             */
+#define USPI_BRGEN_CLKDIV_Pos        ( 16 )                                                /*!< USPI_T::BRGEN: CLKDIV Position         */
+#define USPI_BRGEN_CLKDIV_Msk        ( 0x3fful << USPI_BRGEN_CLKDIV_Pos )                  /*!< USPI_T::BRGEN: CLKDIV Mask             */
 
-#define USPI_DATIN0_SYNCSEL_Pos          (0)                                               /*!< USPI_T::DATIN0: SYNCSEL Position       */
-#define USPI_DATIN0_SYNCSEL_Msk          (0x1ul << USPI_DATIN0_SYNCSEL_Pos)                /*!< USPI_T::DATIN0: SYNCSEL Mask           */
+#define USPI_DATIN0_SYNCSEL_Pos      ( 0 )                                                 /*!< USPI_T::DATIN0: SYNCSEL Position       */
+#define USPI_DATIN0_SYNCSEL_Msk      ( 0x1ul << USPI_DATIN0_SYNCSEL_Pos )                  /*!< USPI_T::DATIN0: SYNCSEL Mask           */
 
-#define USPI_DATIN0_ININV_Pos            (2)                                               /*!< USPI_T::DATIN0: ININV Position         */
-#define USPI_DATIN0_ININV_Msk            (0x1ul << USPI_DATIN0_ININV_Pos)                  /*!< USPI_T::DATIN0: ININV Mask             */
+#define USPI_DATIN0_ININV_Pos        ( 2 )                                                 /*!< USPI_T::DATIN0: ININV Position         */
+#define USPI_DATIN0_ININV_Msk        ( 0x1ul << USPI_DATIN0_ININV_Pos )                    /*!< USPI_T::DATIN0: ININV Mask             */
 
-#define USPI_CTLIN0_SYNCSEL_Pos          (0)                                               /*!< USPI_T::CTLIN0: SYNCSEL Position       */
-#define USPI_CTLIN0_SYNCSEL_Msk          (0x1ul << USPI_CTLIN0_SYNCSEL_Pos)                /*!< USPI_T::CTLIN0: SYNCSEL Mask           */
+#define USPI_CTLIN0_SYNCSEL_Pos      ( 0 )                                                 /*!< USPI_T::CTLIN0: SYNCSEL Position       */
+#define USPI_CTLIN0_SYNCSEL_Msk      ( 0x1ul << USPI_CTLIN0_SYNCSEL_Pos )                  /*!< USPI_T::CTLIN0: SYNCSEL Mask           */
 
-#define USPI_CTLIN0_ININV_Pos            (2)                                               /*!< USPI_T::CTLIN0: ININV Position         */
-#define USPI_CTLIN0_ININV_Msk            (0x1ul << USPI_CTLIN0_ININV_Pos)                  /*!< USPI_T::CTLIN0: ININV Mask             */
+#define USPI_CTLIN0_ININV_Pos        ( 2 )                                                 /*!< USPI_T::CTLIN0: ININV Position         */
+#define USPI_CTLIN0_ININV_Msk        ( 0x1ul << USPI_CTLIN0_ININV_Pos )                    /*!< USPI_T::CTLIN0: ININV Mask             */
 
-#define USPI_CLKIN_SYNCSEL_Pos           (0)                                               /*!< USPI_T::CLKIN: SYNCSEL Position        */
-#define USPI_CLKIN_SYNCSEL_Msk           (0x1ul << USPI_CLKIN_SYNCSEL_Pos)                 /*!< USPI_T::CLKIN: SYNCSEL Mask            */
+#define USPI_CLKIN_SYNCSEL_Pos       ( 0 )                                                 /*!< USPI_T::CLKIN: SYNCSEL Position        */
+#define USPI_CLKIN_SYNCSEL_Msk       ( 0x1ul << USPI_CLKIN_SYNCSEL_Pos )                   /*!< USPI_T::CLKIN: SYNCSEL Mask            */
 
-#define USPI_LINECTL_LSB_Pos             (0)                                               /*!< USPI_T::LINECTL: LSB Position          */
-#define USPI_LINECTL_LSB_Msk             (0x1ul << USPI_LINECTL_LSB_Pos)                   /*!< USPI_T::LINECTL: LSB Mask              */
+#define USPI_LINECTL_LSB_Pos         ( 0 )                                                 /*!< USPI_T::LINECTL: LSB Position          */
+#define USPI_LINECTL_LSB_Msk         ( 0x1ul << USPI_LINECTL_LSB_Pos )                     /*!< USPI_T::LINECTL: LSB Mask              */
 
-#define USPI_LINECTL_DATOINV_Pos         (5)                                               /*!< USPI_T::LINECTL: DATOINV Position      */
-#define USPI_LINECTL_DATOINV_Msk         (0x1ul << USPI_LINECTL_DATOINV_Pos)               /*!< USPI_T::LINECTL: DATOINV Mask          */
+#define USPI_LINECTL_DATOINV_Pos     ( 5 )                                                 /*!< USPI_T::LINECTL: DATOINV Position      */
+#define USPI_LINECTL_DATOINV_Msk     ( 0x1ul << USPI_LINECTL_DATOINV_Pos )                 /*!< USPI_T::LINECTL: DATOINV Mask          */
 
-#define USPI_LINECTL_CTLOINV_Pos         (7)                                               /*!< USPI_T::LINECTL: CTLOINV Position      */
-#define USPI_LINECTL_CTLOINV_Msk         (0x1ul << USPI_LINECTL_CTLOINV_Pos)               /*!< USPI_T::LINECTL: CTLOINV Mask          */
+#define USPI_LINECTL_CTLOINV_Pos     ( 7 )                                                 /*!< USPI_T::LINECTL: CTLOINV Position      */
+#define USPI_LINECTL_CTLOINV_Msk     ( 0x1ul << USPI_LINECTL_CTLOINV_Pos )                 /*!< USPI_T::LINECTL: CTLOINV Mask          */
 
-#define USPI_LINECTL_DWIDTH_Pos          (8)                                               /*!< USPI_T::LINECTL: DWIDTH Position       */
-#define USPI_LINECTL_DWIDTH_Msk          (0xful << USPI_LINECTL_DWIDTH_Pos)                /*!< USPI_T::LINECTL: DWIDTH Mask           */
+#define USPI_LINECTL_DWIDTH_Pos      ( 8 )                                                 /*!< USPI_T::LINECTL: DWIDTH Position       */
+#define USPI_LINECTL_DWIDTH_Msk      ( 0xful << USPI_LINECTL_DWIDTH_Pos )                  /*!< USPI_T::LINECTL: DWIDTH Mask           */
 
-#define USPI_TXDAT_TXDAT_Pos             (0)                                               /*!< USPI_T::TXDAT: TXDAT Position          */
-#define USPI_TXDAT_TXDAT_Msk             (0xfffful << USPI_TXDAT_TXDAT_Pos)                /*!< USPI_T::TXDAT: TXDAT Mask              */
+#define USPI_TXDAT_TXDAT_Pos         ( 0 )                                                 /*!< USPI_T::TXDAT: TXDAT Position          */
+#define USPI_TXDAT_TXDAT_Msk         ( 0xfffful << USPI_TXDAT_TXDAT_Pos )                  /*!< USPI_T::TXDAT: TXDAT Mask              */
 
-#define USPI_TXDAT_PORTDIR_Pos           (16)                                              /*!< USPI_T::TXDAT: PORTDIR Position        */
-#define USPI_TXDAT_PORTDIR_Msk           (0x1ul << USPI_TXDAT_PORTDIR_Pos)                 /*!< USPI_T::TXDAT: PORTDIR Mask            */
+#define USPI_TXDAT_PORTDIR_Pos       ( 16 )                                                /*!< USPI_T::TXDAT: PORTDIR Position        */
+#define USPI_TXDAT_PORTDIR_Msk       ( 0x1ul << USPI_TXDAT_PORTDIR_Pos )                   /*!< USPI_T::TXDAT: PORTDIR Mask            */
 
-#define USPI_RXDAT_RXDAT_Pos             (0)                                               /*!< USPI_T::RXDAT: RXDAT Position          */
-#define USPI_RXDAT_RXDAT_Msk             (0xfffful << USPI_RXDAT_RXDAT_Pos)                /*!< USPI_T::RXDAT: RXDAT Mask              */
+#define USPI_RXDAT_RXDAT_Pos         ( 0 )                                                 /*!< USPI_T::RXDAT: RXDAT Position          */
+#define USPI_RXDAT_RXDAT_Msk         ( 0xfffful << USPI_RXDAT_RXDAT_Pos )                  /*!< USPI_T::RXDAT: RXDAT Mask              */
 
-#define USPI_BUFCTL_TXUDRIEN_Pos         (6)                                               /*!< USPI_T::BUFCTL: TXUDRIEN Position      */
-#define USPI_BUFCTL_TXUDRIEN_Msk         (0x1ul << USPI_BUFCTL_TXUDRIEN_Pos)               /*!< USPI_T::BUFCTL: TXUDRIEN Mask          */
+#define USPI_BUFCTL_TXUDRIEN_Pos     ( 6 )                                                 /*!< USPI_T::BUFCTL: TXUDRIEN Position      */
+#define USPI_BUFCTL_TXUDRIEN_Msk     ( 0x1ul << USPI_BUFCTL_TXUDRIEN_Pos )                 /*!< USPI_T::BUFCTL: TXUDRIEN Mask          */
 
-#define USPI_BUFCTL_TXCLR_Pos            (7)                                               /*!< USPI_T::BUFCTL: TXCLR Position         */
-#define USPI_BUFCTL_TXCLR_Msk            (0x1ul << USPI_BUFCTL_TXCLR_Pos)                  /*!< USPI_T::BUFCTL: TXCLR Mask             */
+#define USPI_BUFCTL_TXCLR_Pos        ( 7 )                                                 /*!< USPI_T::BUFCTL: TXCLR Position         */
+#define USPI_BUFCTL_TXCLR_Msk        ( 0x1ul << USPI_BUFCTL_TXCLR_Pos )                    /*!< USPI_T::BUFCTL: TXCLR Mask             */
 
-#define USPI_BUFCTL_RXOVIEN_Pos          (14)                                              /*!< USPI_T::BUFCTL: RXOVIEN Position       */
-#define USPI_BUFCTL_RXOVIEN_Msk          (0x1ul << USPI_BUFCTL_RXOVIEN_Pos)                /*!< USPI_T::BUFCTL: RXOVIEN Mask           */
+#define USPI_BUFCTL_RXOVIEN_Pos      ( 14 )                                                /*!< USPI_T::BUFCTL: RXOVIEN Position       */
+#define USPI_BUFCTL_RXOVIEN_Msk      ( 0x1ul << USPI_BUFCTL_RXOVIEN_Pos )                  /*!< USPI_T::BUFCTL: RXOVIEN Mask           */
 
-#define USPI_BUFCTL_RXCLR_Pos            (15)                                              /*!< USPI_T::BUFCTL: RXCLR Position         */
-#define USPI_BUFCTL_RXCLR_Msk            (0x1ul << USPI_BUFCTL_RXCLR_Pos)                  /*!< USPI_T::BUFCTL: RXCLR Mask             */
+#define USPI_BUFCTL_RXCLR_Pos        ( 15 )                                                /*!< USPI_T::BUFCTL: RXCLR Position         */
+#define USPI_BUFCTL_RXCLR_Msk        ( 0x1ul << USPI_BUFCTL_RXCLR_Pos )                    /*!< USPI_T::BUFCTL: RXCLR Mask             */
 
-#define USPI_BUFCTL_TXRST_Pos            (16)                                              /*!< USPI_T::BUFCTL: TXRST Position         */
-#define USPI_BUFCTL_TXRST_Msk            (0x1ul << USPI_BUFCTL_TXRST_Pos)                  /*!< USPI_T::BUFCTL: TXRST Mask             */
+#define USPI_BUFCTL_TXRST_Pos        ( 16 )                                                /*!< USPI_T::BUFCTL: TXRST Position         */
+#define USPI_BUFCTL_TXRST_Msk        ( 0x1ul << USPI_BUFCTL_TXRST_Pos )                    /*!< USPI_T::BUFCTL: TXRST Mask             */
 
-#define USPI_BUFCTL_RXRST_Pos            (17)                                              /*!< USPI_T::BUFCTL: RXRST Position         */
-#define USPI_BUFCTL_RXRST_Msk            (0x1ul << USPI_BUFCTL_RXRST_Pos)                  /*!< USPI_T::BUFCTL: RXRST Mask             */
+#define USPI_BUFCTL_RXRST_Pos        ( 17 )                                                /*!< USPI_T::BUFCTL: RXRST Position         */
+#define USPI_BUFCTL_RXRST_Msk        ( 0x1ul << USPI_BUFCTL_RXRST_Pos )                    /*!< USPI_T::BUFCTL: RXRST Mask             */
 
-#define USPI_BUFSTS_RXEMPTY_Pos          (0)                                               /*!< USPI_T::BUFSTS: RXEMPTY Position       */
-#define USPI_BUFSTS_RXEMPTY_Msk          (0x1ul << USPI_BUFSTS_RXEMPTY_Pos)                /*!< USPI_T::BUFSTS: RXEMPTY Mask           */
+#define USPI_BUFSTS_RXEMPTY_Pos      ( 0 )                                                 /*!< USPI_T::BUFSTS: RXEMPTY Position       */
+#define USPI_BUFSTS_RXEMPTY_Msk      ( 0x1ul << USPI_BUFSTS_RXEMPTY_Pos )                  /*!< USPI_T::BUFSTS: RXEMPTY Mask           */
 
-#define USPI_BUFSTS_RXFULL_Pos           (1)                                               /*!< USPI_T::BUFSTS: RXFULL Position        */
-#define USPI_BUFSTS_RXFULL_Msk           (0x1ul << USPI_BUFSTS_RXFULL_Pos)                 /*!< USPI_T::BUFSTS: RXFULL Mask            */
+#define USPI_BUFSTS_RXFULL_Pos       ( 1 )                                                 /*!< USPI_T::BUFSTS: RXFULL Position        */
+#define USPI_BUFSTS_RXFULL_Msk       ( 0x1ul << USPI_BUFSTS_RXFULL_Pos )                   /*!< USPI_T::BUFSTS: RXFULL Mask            */
 
-#define USPI_BUFSTS_RXOVIF_Pos           (3)                                               /*!< USPI_T::BUFSTS: RXOVIF Position        */
-#define USPI_BUFSTS_RXOVIF_Msk           (0x1ul << USPI_BUFSTS_RXOVIF_Pos)                 /*!< USPI_T::BUFSTS: RXOVIF Mask            */
+#define USPI_BUFSTS_RXOVIF_Pos       ( 3 )                                                 /*!< USPI_T::BUFSTS: RXOVIF Position        */
+#define USPI_BUFSTS_RXOVIF_Msk       ( 0x1ul << USPI_BUFSTS_RXOVIF_Pos )                   /*!< USPI_T::BUFSTS: RXOVIF Mask            */
 
-#define USPI_BUFSTS_TXEMPTY_Pos          (8)                                               /*!< USPI_T::BUFSTS: TXEMPTY Position       */
-#define USPI_BUFSTS_TXEMPTY_Msk          (0x1ul << USPI_BUFSTS_TXEMPTY_Pos)                /*!< USPI_T::BUFSTS: TXEMPTY Mask           */
+#define USPI_BUFSTS_TXEMPTY_Pos      ( 8 )                                                 /*!< USPI_T::BUFSTS: TXEMPTY Position       */
+#define USPI_BUFSTS_TXEMPTY_Msk      ( 0x1ul << USPI_BUFSTS_TXEMPTY_Pos )                  /*!< USPI_T::BUFSTS: TXEMPTY Mask           */
 
-#define USPI_BUFSTS_TXFULL_Pos           (9)                                               /*!< USPI_T::BUFSTS: TXFULL Position        */
-#define USPI_BUFSTS_TXFULL_Msk           (0x1ul << USPI_BUFSTS_TXFULL_Pos)                 /*!< USPI_T::BUFSTS: TXFULL Mask            */
+#define USPI_BUFSTS_TXFULL_Pos       ( 9 )                                                 /*!< USPI_T::BUFSTS: TXFULL Position        */
+#define USPI_BUFSTS_TXFULL_Msk       ( 0x1ul << USPI_BUFSTS_TXFULL_Pos )                   /*!< USPI_T::BUFSTS: TXFULL Mask            */
 
-#define USPI_BUFSTS_TXUDRIF_Pos          (11)                                              /*!< USPI_T::BUFSTS: TXUDRIF Position       */
-#define USPI_BUFSTS_TXUDRIF_Msk          (0x1ul << USPI_BUFSTS_TXUDRIF_Pos)                /*!< USPI_T::BUFSTS: TXUDRIF Mask           */
+#define USPI_BUFSTS_TXUDRIF_Pos      ( 11 )                                                /*!< USPI_T::BUFSTS: TXUDRIF Position       */
+#define USPI_BUFSTS_TXUDRIF_Msk      ( 0x1ul << USPI_BUFSTS_TXUDRIF_Pos )                  /*!< USPI_T::BUFSTS: TXUDRIF Mask           */
 
-#define USPI_PDMACTL_PDMARST_Pos         (0)                                               /*!< USPI_T::PDMACTL: PDMARST Position      */
-#define USPI_PDMACTL_PDMARST_Msk         (0x1ul << USPI_PDMACTL_PDMARST_Pos)               /*!< USPI_T::PDMACTL: PDMARST Mask          */
+#define USPI_PDMACTL_PDMARST_Pos     ( 0 )                                                 /*!< USPI_T::PDMACTL: PDMARST Position      */
+#define USPI_PDMACTL_PDMARST_Msk     ( 0x1ul << USPI_PDMACTL_PDMARST_Pos )                 /*!< USPI_T::PDMACTL: PDMARST Mask          */
 
-#define USPI_PDMACTL_TXPDMAEN_Pos        (1)                                               /*!< USPI_T::PDMACTL: TXPDMAEN Position     */
-#define USPI_PDMACTL_TXPDMAEN_Msk        (0x1ul << USPI_PDMACTL_TXPDMAEN_Pos)              /*!< USPI_T::PDMACTL: TXPDMAEN Mask         */
+#define USPI_PDMACTL_TXPDMAEN_Pos    ( 1 )                                                 /*!< USPI_T::PDMACTL: TXPDMAEN Position     */
+#define USPI_PDMACTL_TXPDMAEN_Msk    ( 0x1ul << USPI_PDMACTL_TXPDMAEN_Pos )                /*!< USPI_T::PDMACTL: TXPDMAEN Mask         */
 
-#define USPI_PDMACTL_RXPDMAEN_Pos        (2)                                               /*!< USPI_T::PDMACTL: RXPDMAEN Position     */
-#define USPI_PDMACTL_RXPDMAEN_Msk        (0x1ul << USPI_PDMACTL_RXPDMAEN_Pos)              /*!< USPI_T::PDMACTL: RXPDMAEN Mask         */
+#define USPI_PDMACTL_RXPDMAEN_Pos    ( 2 )                                                 /*!< USPI_T::PDMACTL: RXPDMAEN Position     */
+#define USPI_PDMACTL_RXPDMAEN_Msk    ( 0x1ul << USPI_PDMACTL_RXPDMAEN_Pos )                /*!< USPI_T::PDMACTL: RXPDMAEN Mask         */
 
-#define USPI_PDMACTL_PDMAEN_Pos          (3)                                               /*!< USPI_T::PDMACTL: PDMAEN Position       */
-#define USPI_PDMACTL_PDMAEN_Msk          (0x1ul << USPI_PDMACTL_PDMAEN_Pos)                /*!< USPI_T::PDMACTL: PDMAEN Mask           */
+#define USPI_PDMACTL_PDMAEN_Pos      ( 3 )                                                 /*!< USPI_T::PDMACTL: PDMAEN Position       */
+#define USPI_PDMACTL_PDMAEN_Msk      ( 0x1ul << USPI_PDMACTL_PDMAEN_Pos )                  /*!< USPI_T::PDMACTL: PDMAEN Mask           */
 
-#define USPI_WKCTL_WKEN_Pos              (0)                                               /*!< USPI_T::WKCTL: WKEN Position           */
-#define USPI_WKCTL_WKEN_Msk              (0x1ul << USPI_WKCTL_WKEN_Pos)                    /*!< USPI_T::WKCTL: WKEN Mask               */
+#define USPI_WKCTL_WKEN_Pos          ( 0 )                                                 /*!< USPI_T::WKCTL: WKEN Position           */
+#define USPI_WKCTL_WKEN_Msk          ( 0x1ul << USPI_WKCTL_WKEN_Pos )                      /*!< USPI_T::WKCTL: WKEN Mask               */
 
-#define USPI_WKCTL_WKADDREN_Pos          (1)                                               /*!< USPI_T::WKCTL: WKADDREN Position       */
-#define USPI_WKCTL_WKADDREN_Msk          (0x1ul << USPI_WKCTL_WKADDREN_Pos)                /*!< USPI_T::WKCTL: WKADDREN Mask           */
+#define USPI_WKCTL_WKADDREN_Pos      ( 1 )                                                 /*!< USPI_T::WKCTL: WKADDREN Position       */
+#define USPI_WKCTL_WKADDREN_Msk      ( 0x1ul << USPI_WKCTL_WKADDREN_Pos )                  /*!< USPI_T::WKCTL: WKADDREN Mask           */
 
-#define USPI_WKCTL_PDBOPT_Pos            (2)                                               /*!< USPI_T::WKCTL: PDBOPT Position         */
-#define USPI_WKCTL_PDBOPT_Msk            (0x1ul << USPI_WKCTL_PDBOPT_Pos)                  /*!< USPI_T::WKCTL: PDBOPT Mask             */
+#define USPI_WKCTL_PDBOPT_Pos        ( 2 )                                                 /*!< USPI_T::WKCTL: PDBOPT Position         */
+#define USPI_WKCTL_PDBOPT_Msk        ( 0x1ul << USPI_WKCTL_PDBOPT_Pos )                    /*!< USPI_T::WKCTL: PDBOPT Mask             */
 
-#define USPI_WKSTS_WKF_Pos               (0)                                               /*!< USPI_T::WKSTS: WKF Position            */
-#define USPI_WKSTS_WKF_Msk               (0x1ul << USPI_WKSTS_WKF_Pos)                     /*!< USPI_T::WKSTS: WKF Mask                */
+#define USPI_WKSTS_WKF_Pos           ( 0 )                                                 /*!< USPI_T::WKSTS: WKF Position            */
+#define USPI_WKSTS_WKF_Msk           ( 0x1ul << USPI_WKSTS_WKF_Pos )                       /*!< USPI_T::WKSTS: WKF Mask                */
 
-#define USPI_PROTCTL_SLAVE_Pos           (0)                                               /*!< USPI_T::PROTCTL: SLAVE Position        */
-#define USPI_PROTCTL_SLAVE_Msk           (0x1ul << USPI_PROTCTL_SLAVE_Pos)                 /*!< USPI_T::PROTCTL: SLAVE Mask            */
+#define USPI_PROTCTL_SLAVE_Pos       ( 0 )                                                 /*!< USPI_T::PROTCTL: SLAVE Position        */
+#define USPI_PROTCTL_SLAVE_Msk       ( 0x1ul << USPI_PROTCTL_SLAVE_Pos )                   /*!< USPI_T::PROTCTL: SLAVE Mask            */
 
-#define USPI_PROTCTL_SLV3WIRE_Pos        (1)                                               /*!< USPI_T::PROTCTL: SLV3WIRE Position     */
-#define USPI_PROTCTL_SLV3WIRE_Msk        (0x1ul << USPI_PROTCTL_SLV3WIRE_Pos)              /*!< USPI_T::PROTCTL: SLV3WIRE Mask         */
+#define USPI_PROTCTL_SLV3WIRE_Pos    ( 1 )                                                 /*!< USPI_T::PROTCTL: SLV3WIRE Position     */
+#define USPI_PROTCTL_SLV3WIRE_Msk    ( 0x1ul << USPI_PROTCTL_SLV3WIRE_Pos )                /*!< USPI_T::PROTCTL: SLV3WIRE Mask         */
 
-#define USPI_PROTCTL_SS_Pos              (2)                                               /*!< USPI_T::PROTCTL: SS Position           */
-#define USPI_PROTCTL_SS_Msk              (0x1ul << USPI_PROTCTL_SS_Pos)                    /*!< USPI_T::PROTCTL: SS Mask               */
+#define USPI_PROTCTL_SS_Pos          ( 2 )                                                 /*!< USPI_T::PROTCTL: SS Position           */
+#define USPI_PROTCTL_SS_Msk          ( 0x1ul << USPI_PROTCTL_SS_Pos )                      /*!< USPI_T::PROTCTL: SS Mask               */
 
-#define USPI_PROTCTL_AUTOSS_Pos          (3)                                               /*!< USPI_T::PROTCTL: AUTOSS Position       */
-#define USPI_PROTCTL_AUTOSS_Msk          (0x1ul << USPI_PROTCTL_AUTOSS_Pos)                /*!< USPI_T::PROTCTL: AUTOSS Mask           */
+#define USPI_PROTCTL_AUTOSS_Pos      ( 3 )                                                 /*!< USPI_T::PROTCTL: AUTOSS Position       */
+#define USPI_PROTCTL_AUTOSS_Msk      ( 0x1ul << USPI_PROTCTL_AUTOSS_Pos )                  /*!< USPI_T::PROTCTL: AUTOSS Mask           */
 
-#define USPI_PROTCTL_SCLKMODE_Pos        (6)                                               /*!< USPI_T::PROTCTL: SCLKMODE Position     */
-#define USPI_PROTCTL_SCLKMODE_Msk        (0x3ul << USPI_PROTCTL_SCLKMODE_Pos)              /*!< USPI_T::PROTCTL: SCLKMODE Mask         */
+#define USPI_PROTCTL_SCLKMODE_Pos    ( 6 )                                                 /*!< USPI_T::PROTCTL: SCLKMODE Position     */
+#define USPI_PROTCTL_SCLKMODE_Msk    ( 0x3ul << USPI_PROTCTL_SCLKMODE_Pos )                /*!< USPI_T::PROTCTL: SCLKMODE Mask         */
 
-#define USPI_PROTCTL_SUSPITV_Pos         (8)                                               /*!< USPI_T::PROTCTL: SUSPITV Position      */
-#define USPI_PROTCTL_SUSPITV_Msk         (0xful << USPI_PROTCTL_SUSPITV_Pos)               /*!< USPI_T::PROTCTL: SUSPITV Mask          */
+#define USPI_PROTCTL_SUSPITV_Pos     ( 8 )                                                 /*!< USPI_T::PROTCTL: SUSPITV Position      */
+#define USPI_PROTCTL_SUSPITV_Msk     ( 0xful << USPI_PROTCTL_SUSPITV_Pos )                 /*!< USPI_T::PROTCTL: SUSPITV Mask          */
 
-#define USPI_PROTCTL_TSMSEL_Pos          (12)                                              /*!< USPI_T::PROTCTL: TSMSEL Position       */
-#define USPI_PROTCTL_TSMSEL_Msk          (0x7ul << USPI_PROTCTL_TSMSEL_Pos)                /*!< USPI_T::PROTCTL: TSMSEL Mask           */
+#define USPI_PROTCTL_TSMSEL_Pos      ( 12 )                                                /*!< USPI_T::PROTCTL: TSMSEL Position       */
+#define USPI_PROTCTL_TSMSEL_Msk      ( 0x7ul << USPI_PROTCTL_TSMSEL_Pos )                  /*!< USPI_T::PROTCTL: TSMSEL Mask           */
 
-#define USPI_PROTCTL_SLVTOCNT_Pos        (16)                                              /*!< USPI_T::PROTCTL: SLVTOCNT Position     */
-#define USPI_PROTCTL_SLVTOCNT_Msk        (0x3fful << USPI_PROTCTL_SLVTOCNT_Pos)            /*!< USPI_T::PROTCTL: SLVTOCNT Mask         */
+#define USPI_PROTCTL_SLVTOCNT_Pos    ( 16 )                                                /*!< USPI_T::PROTCTL: SLVTOCNT Position     */
+#define USPI_PROTCTL_SLVTOCNT_Msk    ( 0x3fful << USPI_PROTCTL_SLVTOCNT_Pos )              /*!< USPI_T::PROTCTL: SLVTOCNT Mask         */
 
-#define USPI_PROTCTL_TXUDRPOL_Pos        (28)                                              /*!< USPI_T::PROTCTL: TXUDRPOL Position     */
-#define USPI_PROTCTL_TXUDRPOL_Msk        (0x1ul << USPI_PROTCTL_TXUDRPOL_Pos)              /*!< USPI_T::PROTCTL: TXUDRPOL Mask         */
+#define USPI_PROTCTL_TXUDRPOL_Pos    ( 28 )                                                /*!< USPI_T::PROTCTL: TXUDRPOL Position     */
+#define USPI_PROTCTL_TXUDRPOL_Msk    ( 0x1ul << USPI_PROTCTL_TXUDRPOL_Pos )                /*!< USPI_T::PROTCTL: TXUDRPOL Mask         */
 
-#define USPI_PROTCTL_PROTEN_Pos          (31)                                              /*!< USPI_T::PROTCTL: PROTEN Position       */
-#define USPI_PROTCTL_PROTEN_Msk          (0x1ul << USPI_PROTCTL_PROTEN_Pos)                /*!< USPI_T::PROTCTL: PROTEN Mask           */
+#define USPI_PROTCTL_PROTEN_Pos      ( 31 )                                                /*!< USPI_T::PROTCTL: PROTEN Position       */
+#define USPI_PROTCTL_PROTEN_Msk      ( 0x1ul << USPI_PROTCTL_PROTEN_Pos )                  /*!< USPI_T::PROTCTL: PROTEN Mask           */
 
-#define USPI_PROTIEN_SSINAIEN_Pos        (0)                                               /*!< USPI_T::PROTIEN: SSINAIEN Position     */
-#define USPI_PROTIEN_SSINAIEN_Msk        (0x1ul << USPI_PROTIEN_SSINAIEN_Pos)              /*!< USPI_T::PROTIEN: SSINAIEN Mask         */
+#define USPI_PROTIEN_SSINAIEN_Pos    ( 0 )                                                 /*!< USPI_T::PROTIEN: SSINAIEN Position     */
+#define USPI_PROTIEN_SSINAIEN_Msk    ( 0x1ul << USPI_PROTIEN_SSINAIEN_Pos )                /*!< USPI_T::PROTIEN: SSINAIEN Mask         */
 
-#define USPI_PROTIEN_SSACTIEN_Pos        (1)                                               /*!< USPI_T::PROTIEN: SSACTIEN Position     */
-#define USPI_PROTIEN_SSACTIEN_Msk        (0x1ul << USPI_PROTIEN_SSACTIEN_Pos)              /*!< USPI_T::PROTIEN: SSACTIEN Mask         */
+#define USPI_PROTIEN_SSACTIEN_Pos    ( 1 )                                                 /*!< USPI_T::PROTIEN: SSACTIEN Position     */
+#define USPI_PROTIEN_SSACTIEN_Msk    ( 0x1ul << USPI_PROTIEN_SSACTIEN_Pos )                /*!< USPI_T::PROTIEN: SSACTIEN Mask         */
 
-#define USPI_PROTIEN_SLVTOIEN_Pos        (2)                                               /*!< USPI_T::PROTIEN: SLVTOIEN Position     */
-#define USPI_PROTIEN_SLVTOIEN_Msk        (0x1ul << USPI_PROTIEN_SLVTOIEN_Pos)              /*!< USPI_T::PROTIEN: SLVTOIEN Mask         */
+#define USPI_PROTIEN_SLVTOIEN_Pos    ( 2 )                                                 /*!< USPI_T::PROTIEN: SLVTOIEN Position     */
+#define USPI_PROTIEN_SLVTOIEN_Msk    ( 0x1ul << USPI_PROTIEN_SLVTOIEN_Pos )                /*!< USPI_T::PROTIEN: SLVTOIEN Mask         */
 
-#define USPI_PROTIEN_SLVBEIEN_Pos        (3)                                               /*!< USPI_T::PROTIEN: SLVBEIEN Position     */
-#define USPI_PROTIEN_SLVBEIEN_Msk        (0x1ul << USPI_PROTIEN_SLVBEIEN_Pos)              /*!< USPI_T::PROTIEN: SLVBEIEN Mask         */
+#define USPI_PROTIEN_SLVBEIEN_Pos    ( 3 )                                                 /*!< USPI_T::PROTIEN: SLVBEIEN Position     */
+#define USPI_PROTIEN_SLVBEIEN_Msk    ( 0x1ul << USPI_PROTIEN_SLVBEIEN_Pos )                /*!< USPI_T::PROTIEN: SLVBEIEN Mask         */
 
-#define USPI_PROTSTS_TXSTIF_Pos          (1)                                               /*!< USPI_T::PROTSTS: TXSTIF Position       */
-#define USPI_PROTSTS_TXSTIF_Msk          (0x1ul << USPI_PROTSTS_TXSTIF_Pos)                /*!< USPI_T::PROTSTS: TXSTIF Mask           */
+#define USPI_PROTSTS_TXSTIF_Pos      ( 1 )                                                 /*!< USPI_T::PROTSTS: TXSTIF Position       */
+#define USPI_PROTSTS_TXSTIF_Msk      ( 0x1ul << USPI_PROTSTS_TXSTIF_Pos )                  /*!< USPI_T::PROTSTS: TXSTIF Mask           */
 
-#define USPI_PROTSTS_TXENDIF_Pos         (2)                                               /*!< USPI_T::PROTSTS: TXENDIF Position      */
-#define USPI_PROTSTS_TXENDIF_Msk         (0x1ul << USPI_PROTSTS_TXENDIF_Pos)               /*!< USPI_T::PROTSTS: TXENDIF Mask          */
+#define USPI_PROTSTS_TXENDIF_Pos     ( 2 )                                                 /*!< USPI_T::PROTSTS: TXENDIF Position      */
+#define USPI_PROTSTS_TXENDIF_Msk     ( 0x1ul << USPI_PROTSTS_TXENDIF_Pos )                 /*!< USPI_T::PROTSTS: TXENDIF Mask          */
 
-#define USPI_PROTSTS_RXSTIF_Pos          (3)                                               /*!< USPI_T::PROTSTS: RXSTIF Position       */
-#define USPI_PROTSTS_RXSTIF_Msk          (0x1ul << USPI_PROTSTS_RXSTIF_Pos)                /*!< USPI_T::PROTSTS: RXSTIF Mask           */
+#define USPI_PROTSTS_RXSTIF_Pos      ( 3 )                                                 /*!< USPI_T::PROTSTS: RXSTIF Position       */
+#define USPI_PROTSTS_RXSTIF_Msk      ( 0x1ul << USPI_PROTSTS_RXSTIF_Pos )                  /*!< USPI_T::PROTSTS: RXSTIF Mask           */
 
-#define USPI_PROTSTS_RXENDIF_Pos         (4)                                               /*!< USPI_T::PROTSTS: RXENDIF Position      */
-#define USPI_PROTSTS_RXENDIF_Msk         (0x1ul << USPI_PROTSTS_RXENDIF_Pos)               /*!< USPI_T::PROTSTS: RXENDIF Mask          */
+#define USPI_PROTSTS_RXENDIF_Pos     ( 4 )                                                 /*!< USPI_T::PROTSTS: RXENDIF Position      */
+#define USPI_PROTSTS_RXENDIF_Msk     ( 0x1ul << USPI_PROTSTS_RXENDIF_Pos )                 /*!< USPI_T::PROTSTS: RXENDIF Mask          */
 
-#define USPI_PROTSTS_SLVTOIF_Pos         (5)                                               /*!< USPI_T::PROTSTS: SLVTOIF Position      */
-#define USPI_PROTSTS_SLVTOIF_Msk         (0x1ul << USPI_PROTSTS_SLVTOIF_Pos)               /*!< USPI_T::PROTSTS: SLVTOIF Mask          */
+#define USPI_PROTSTS_SLVTOIF_Pos     ( 5 )                                                 /*!< USPI_T::PROTSTS: SLVTOIF Position      */
+#define USPI_PROTSTS_SLVTOIF_Msk     ( 0x1ul << USPI_PROTSTS_SLVTOIF_Pos )                 /*!< USPI_T::PROTSTS: SLVTOIF Mask          */
 
-#define USPI_PROTSTS_SLVBEIF_Pos         (6)                                               /*!< USPI_T::PROTSTS: SLVBEIF Position      */
-#define USPI_PROTSTS_SLVBEIF_Msk         (0x1ul << USPI_PROTSTS_SLVBEIF_Pos)               /*!< USPI_T::PROTSTS: SLVBEIF Mask          */
+#define USPI_PROTSTS_SLVBEIF_Pos     ( 6 )                                                 /*!< USPI_T::PROTSTS: SLVBEIF Position      */
+#define USPI_PROTSTS_SLVBEIF_Msk     ( 0x1ul << USPI_PROTSTS_SLVBEIF_Pos )                 /*!< USPI_T::PROTSTS: SLVBEIF Mask          */
 
-#define USPI_PROTSTS_SSINAIF_Pos         (8)                                               /*!< USPI_T::PROTSTS: SSINAIF Position      */
-#define USPI_PROTSTS_SSINAIF_Msk         (0x1ul << USPI_PROTSTS_SSINAIF_Pos)               /*!< USPI_T::PROTSTS: SSINAIF Mask          */
+#define USPI_PROTSTS_SSINAIF_Pos     ( 8 )                                                 /*!< USPI_T::PROTSTS: SSINAIF Position      */
+#define USPI_PROTSTS_SSINAIF_Msk     ( 0x1ul << USPI_PROTSTS_SSINAIF_Pos )                 /*!< USPI_T::PROTSTS: SSINAIF Mask          */
 
-#define USPI_PROTSTS_SSACTIF_Pos         (9)                                               /*!< USPI_T::PROTSTS: SSACTIF Position      */
-#define USPI_PROTSTS_SSACTIF_Msk         (0x1ul << USPI_PROTSTS_SSACTIF_Pos)               /*!< USPI_T::PROTSTS: SSACTIF Mask          */
+#define USPI_PROTSTS_SSACTIF_Pos     ( 9 )                                                 /*!< USPI_T::PROTSTS: SSACTIF Position      */
+#define USPI_PROTSTS_SSACTIF_Msk     ( 0x1ul << USPI_PROTSTS_SSACTIF_Pos )                 /*!< USPI_T::PROTSTS: SSACTIF Mask          */
 
-#define USPI_PROTSTS_SSLINE_Pos          (16)                                              /*!< USPI_T::PROTSTS: SSLINE Position       */
-#define USPI_PROTSTS_SSLINE_Msk          (0x1ul << USPI_PROTSTS_SSLINE_Pos)                /*!< USPI_T::PROTSTS: SSLINE Mask           */
+#define USPI_PROTSTS_SSLINE_Pos      ( 16 )                                                /*!< USPI_T::PROTSTS: SSLINE Position       */
+#define USPI_PROTSTS_SSLINE_Msk      ( 0x1ul << USPI_PROTSTS_SSLINE_Pos )                  /*!< USPI_T::PROTSTS: SSLINE Mask           */
 
-#define USPI_PROTSTS_BUSY_Pos            (17)                                              /*!< USPI_T::PROTSTS: BUSY Position         */
-#define USPI_PROTSTS_BUSY_Msk            (0x1ul << USPI_PROTSTS_BUSY_Pos)                  /*!< USPI_T::PROTSTS: BUSY Mask             */
+#define USPI_PROTSTS_BUSY_Pos        ( 17 )                                                /*!< USPI_T::PROTSTS: BUSY Position         */
+#define USPI_PROTSTS_BUSY_Msk        ( 0x1ul << USPI_PROTSTS_BUSY_Pos )                    /*!< USPI_T::PROTSTS: BUSY Mask             */
 
-#define USPI_PROTSTS_SLVUDR_Pos          (18)                                              /*!< USPI_T::PROTSTS: SLVUDR Position       */
-#define USPI_PROTSTS_SLVUDR_Msk          (0x1ul << USPI_PROTSTS_SLVUDR_Pos)                /*!< USPI_T::PROTSTS: SLVUDR Mask           */
+#define USPI_PROTSTS_SLVUDR_Pos      ( 18 )                                                /*!< USPI_T::PROTSTS: SLVUDR Position       */
+#define USPI_PROTSTS_SLVUDR_Msk      ( 0x1ul << USPI_PROTSTS_SLVUDR_Pos )                  /*!< USPI_T::PROTSTS: SLVUDR Mask           */
 
 /**@}*/ /* USPI_CONST */
 /**@}*/ /* end of USPI register group */

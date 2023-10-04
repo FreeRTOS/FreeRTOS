@@ -49,126 +49,130 @@ static void prvCreateTasks( void );
 
 int main( void )
 {
-	/* Initialize the hardware. */
-	prvSetupHardware();
+    /* Initialize the hardware. */
+    prvSetupHardware();
 
-	/* Print banner. */
-	printf( "\r\n" );
-	printf( "+---------------------------------------------+\r\n" );
-	printf( "|          Application is running ...         |\r\n" );
-	printf( "+---------------------------------------------+\r\n" );
+    /* Print banner. */
+    printf( "\r\n" );
+    printf( "+---------------------------------------------+\r\n" );
+    printf( "|          Application is running ...         |\r\n" );
+    printf( "+---------------------------------------------+\r\n" );
 
-	/* Create tasks. */
-	prvCreateTasks();
+    /* Create tasks. */
+    prvCreateTasks();
 
-	/* Start scheduler. */
-	vTaskStartScheduler();
+    /* Start scheduler. */
+    vTaskStartScheduler();
 
-	/* Will not get here if the scheduler starts successfully.  If you do end up
-	here then there wasn't enough heap memory available to start either the idle
-	task or the timer/daemon task.  https://www.freertos.org/a00111.html */
+    /* Will not get here if the scheduler starts successfully.  If you do end up
+     * here then there wasn't enough heap memory available to start either the idle
+     * task or the timer/daemon task.  https://www.freertos.org/a00111.html */
 
-	for( ; ; )
-	{
-	}
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	/* Unlock protected registers. */
-	SYS_UnlockReg();
+    /* Unlock protected registers. */
+    SYS_UnlockReg();
 
-	/* Init System Clock. */
-	/* Enable PLL */
-	CLK->PLLCTL = CLK_PLLCTL_64MHz_HIRC;
-	/* Wait for PLL to be stable. */
-	while( ( CLK->STATUS & CLK_STATUS_PLLSTB_Msk ) == 0 );
+    /* Init System Clock. */
+    /* Enable PLL */
+    CLK->PLLCTL = CLK_PLLCTL_64MHz_HIRC;
 
-	/* Set HCLK divider to 1. */
-	CLK->CLKDIV0 = ( CLK->CLKDIV0 & ( ~CLK_CLKDIV0_HCLKDIV_Msk ) );
+    /* Wait for PLL to be stable. */
+    while( ( CLK->STATUS & CLK_STATUS_PLLSTB_Msk ) == 0 )
+    {
+    }
 
-	/* Switch HCLK clock source to PLL. */
-	CLK->CLKSEL0 = ( CLK->CLKSEL0 & ( ~CLK_CLKSEL0_HCLKSEL_Msk ) ) | CLK_CLKSEL0_HCLKSEL_PLL;
+    /* Set HCLK divider to 1. */
+    CLK->CLKDIV0 = ( CLK->CLKDIV0 & ( ~CLK_CLKDIV0_HCLKDIV_Msk ) );
 
-	/* Initialize UART0 - It is used for debug output from the non-secure side. */
-	/* Enable UART0 clock. */
-	CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
+    /* Switch HCLK clock source to PLL. */
+    CLK->CLKSEL0 = ( CLK->CLKSEL0 & ( ~CLK_CLKSEL0_HCLKSEL_Msk ) ) | CLK_CLKSEL0_HCLKSEL_PLL;
 
-	/* Select UART0 clock source. */
-	CLK->CLKSEL1 = ( CLK->CLKSEL1 & ( ~CLK_CLKSEL1_UART0SEL_Msk ) ) | CLK_CLKSEL1_UART0SEL_HIRC;
+    /* Initialize UART0 - It is used for debug output from the non-secure side. */
+    /* Enable UART0 clock. */
+    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
 
-	/* Set multi-function pins for UART0 RXD and TXD. */
-	SYS->GPB_MFPH = ( SYS->GPB_MFPH & ( ~UART0_RXD_PB12_Msk ) ) | UART0_RXD_PB12;
-	SYS->GPB_MFPH = ( SYS->GPB_MFPH & ( ~UART0_TXD_PB13_Msk ) ) | UART0_TXD_PB13;
+    /* Select UART0 clock source. */
+    CLK->CLKSEL1 = ( CLK->CLKSEL1 & ( ~CLK_CLKSEL1_UART0SEL_Msk ) ) | CLK_CLKSEL1_UART0SEL_HIRC;
 
-	/* Initialize UART1 - It is used for debug output from the secure side. */
-	/* Enable UART1 clock. */
-	CLK->APBCLK0 |= CLK_APBCLK0_UART1CKEN_Msk;
+    /* Set multi-function pins for UART0 RXD and TXD. */
+    SYS->GPB_MFPH = ( SYS->GPB_MFPH & ( ~UART0_RXD_PB12_Msk ) ) | UART0_RXD_PB12;
+    SYS->GPB_MFPH = ( SYS->GPB_MFPH & ( ~UART0_TXD_PB13_Msk ) ) | UART0_TXD_PB13;
 
-	/* Select UART1 clock source. */
-	CLK->CLKSEL1 = ( CLK->CLKSEL1 & ( ~CLK_CLKSEL1_UART1SEL_Msk ) ) | CLK_CLKSEL1_UART1SEL_HIRC;
+    /* Initialize UART1 - It is used for debug output from the secure side. */
+    /* Enable UART1 clock. */
+    CLK->APBCLK0 |= CLK_APBCLK0_UART1CKEN_Msk;
 
-	/* Set multi-function pins for UART1 RXD and TXD. */
-	SYS->GPA_MFPL = ( SYS->GPA_MFPL & ( ~UART1_RXD_PA2_Msk ) ) | UART1_RXD_PA2;
-	SYS->GPA_MFPL = ( SYS->GPA_MFPL & ( ~UART1_TXD_PA3_Msk ) ) | UART1_TXD_PA3;
+    /* Select UART1 clock source. */
+    CLK->CLKSEL1 = ( CLK->CLKSEL1 & ( ~CLK_CLKSEL1_UART1SEL_Msk ) ) | CLK_CLKSEL1_UART1SEL_HIRC;
 
-	/* Update System Core Clock. */
-	PllClock		= 64000000;				/* PLL. */
-	SystemCoreClock	= 64000000 / 1;			/* HCLK. */
-	CyclesPerUs		= 64000000 / 1000000;	/* For SYS_SysTickDelay(). */
+    /* Set multi-function pins for UART1 RXD and TXD. */
+    SYS->GPA_MFPL = ( SYS->GPA_MFPL & ( ~UART1_RXD_PA2_Msk ) ) | UART1_RXD_PA2;
+    SYS->GPA_MFPL = ( SYS->GPA_MFPL & ( ~UART1_TXD_PA3_Msk ) ) | UART1_TXD_PA3;
 
-	/* Initialize the debug port. */
-	DEBUG_PORT->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
-	DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
+    /* Update System Core Clock. */
+    PllClock = 64000000;              /* PLL. */
+    SystemCoreClock = 64000000 / 1;   /* HCLK. */
+    CyclesPerUs = 64000000 / 1000000; /* For SYS_SysTickDelay(). */
 
-	/* Lock protected registers. */
-	SYS_LockReg();
+    /* Initialize the debug port. */
+    DEBUG_PORT->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER( __HIRC, 115200 );
+    DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
+
+    /* Lock protected registers. */
+    SYS_LockReg();
 }
 /*-----------------------------------------------------------*/
 
 static void prvCreateTasks( void )
 {
-	/* Create tasks for the MPU Demo. */
-	vStartMPUDemo();
+    /* Create tasks for the MPU Demo. */
+    vStartMPUDemo();
 
-	/* Create tasks for register tests. */
-	vStartRegTests();
+    /* Create tasks for register tests. */
+    vStartRegTests();
 }
 /*-----------------------------------------------------------*/
 
 /* Stack overflow hook. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * pcTaskName )
 {
-	/* Force an assert. */
-	configASSERT( pcTaskName == 0 );
+    /* Force an assert. */
+    configASSERT( pcTaskName == 0 );
 }
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
  * implementation of vApplicationGetIdleTaskMemory() to provide the memory that
  * is used by the Idle task. */
-void vApplicationGetIdleTaskMemory(	StaticTask_t ** ppxIdleTaskTCBBuffer,
-									StackType_t ** ppxIdleTaskStackBuffer,
-									uint32_t * pulIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize )
 {
-	/* If the buffers to be provided to the Idle task are declared inside this
-	 * function then they must be declared static - otherwise they will be
-	 * allocated on the stack and so not exists after this function exits. */
-	static StaticTask_t xIdleTaskTCB;
-	static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    /* If the buffers to be provided to the Idle task are declared inside this
+     * function then they must be declared static - otherwise they will be
+     * allocated on the stack and so not exists after this function exits. */
+    static StaticTask_t xIdleTaskTCB;
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Idle
-	 * task's state will be stored. */
-	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Idle
+     * task's state will be stored. */
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
-	/* Pass out the array that will be used as the Idle task's stack. */
-	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    /* Pass out the array that will be used as the Idle task's stack. */
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-	 * Note that, as the array is necessarily of type StackType_t,
-	 * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+     * Note that, as the array is necessarily of type StackType_t,
+     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
@@ -176,25 +180,25 @@ void vApplicationGetIdleTaskMemory(	StaticTask_t ** ppxIdleTaskTCBBuffer,
  * application must provide an implementation of vApplicationGetTimerTaskMemory()
  * to provide the memory that is used by the Timer service task. */
 void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
-									 StackType_t ** ppxTimerTaskStackBuffer,
-									 uint32_t * pulTimerTaskStackSize )
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     uint32_t * pulTimerTaskStackSize )
 {
-	/* If the buffers to be provided to the Timer task are declared inside this
-	 * function then they must be declared static - otherwise they will be
-	 * allocated on the stack and so not exists after this function exits. */
-	static StaticTask_t xTimerTaskTCB;
-	static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ] __attribute__( ( aligned( 32 ) ) );
+    /* If the buffers to be provided to the Timer task are declared inside this
+     * function then they must be declared static - otherwise they will be
+     * allocated on the stack and so not exists after this function exits. */
+    static StaticTask_t xTimerTaskTCB;
+    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ] __attribute__( ( aligned( 32 ) ) );
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Timer
-	 * task's state will be stored. */
-	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Timer
+     * task's state will be stored. */
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
 
-	/* Pass out the array that will be used as the Timer task's stack. */
-	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
+    /* Pass out the array that will be used as the Timer task's stack. */
+    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
-	 * Note that, as the array is necessarily of type StackType_t,
-	 * configTIMER_TASK_STACK_DEPTH is specified in words, not bytes. */
-	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+    /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+     * Note that, as the array is necessarily of type StackType_t,
+     * configTIMER_TASK_STACK_DEPTH is specified in words, not bytes. */
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/

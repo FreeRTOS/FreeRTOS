@@ -44,13 +44,13 @@
 #include <parts.h>
 
 #if XMEGA || MEGA
-#  include "interrupt/interrupt_avr8.h"
+    #include "interrupt/interrupt_avr8.h"
 #elif UC3
-#  include "interrupt/interrupt_avr32.h"
+    #include "interrupt/interrupt_avr32.h"
 #elif SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S
-#  include "interrupt/interrupt_sam_nvic.h"
+    #include "interrupt/interrupt_sam_nvic.h"
 #else
-#  error Unsupported device.
+    #error Unsupported device.
 #endif
 
 /**
@@ -61,7 +61,8 @@
  * @{
  */
 
-#if defined(__DOXYGEN__)
+#if defined( __DOXYGEN__ )
+
 /**
  * \def CONFIG_INTERRUPT_FORCE_INTC
  * \brief Force usage of the ASF INTC driver
@@ -70,11 +71,12 @@
  * This is useful to ensure compatibilty accross compilers and shall be used only when required
  * by the application needs.
  */
-#  define CONFIG_INTERRUPT_FORCE_INTC
+    #define CONFIG_INTERRUPT_FORCE_INTC
 #endif
 
-//! \name Global interrupt flags
-//@{
+/*! \name Global interrupt flags */
+/*@{ */
+
 /**
  * \typedef irqflags_t
  * \brief Type used for holding state of interrupt flag
@@ -125,9 +127,9 @@
  *
  * \return True if interrupts are enabled.
  */
-//@}
+/*@} */
 
-//! @}
+/*! @} */
 
 /**
  * \ingroup interrupt_group

@@ -42,41 +42,41 @@
 #include "demo_specific_io.h"
 
 /* Characters received from the UART are stored in this queue, ready to be
-received by the application.  ***NOTE*** Using a queue in this way is very
-convenient, but also very inefficient.  It can be used here because characters
-will only arrive slowly.  In a higher bandwidth system a circular RAM buffer or
-DMA should be used in place of this queue. */
+ * received by the application.  ***NOTE*** Using a queue in this way is very
+ * convenient, but also very inefficient.  It can be used here because characters
+ * will only arrive slowly.  In a higher bandwidth system a circular RAM buffer or
+ * DMA should be used in place of this queue. */
 static QueueHandle_t xRxQueue = NULL;
 
 /* When a task calls vSerialPutString() its handle is stored in xSendingTask,
-before being placed into the Blocked state (so does not use any CPU time) to
-wait for the transmission to end.  The task handle is then used from the UART
-transmit end interrupt to remove the task from the Blocked state. */
+ * before being placed into the Blocked state (so does not use any CPU time) to
+ * wait for the transmission to end.  The task handle is then used from the UART
+ * transmit end interrupt to remove the task from the Blocked state. */
 static TaskHandle_t xSendingTask = NULL;
 
 /* Callback function which is called from Renesas API's interrupt service routine. */
-void vSerialSciCallback( void *pvArgs )
+void vSerialSciCallback( void * pvArgs )
 {
-sci_cb_args_t *pxArgs = (sci_cb_args_t *)pvArgs;
+    sci_cb_args_t * pxArgs = ( sci_cb_args_t * ) pvArgs;
 
     /* Renesas API has a built-in queue but we will ignore it.  If the queue is not
-    full, a received character is passed with SCI_EVT_RX_CHAR event.  If the queue 
-    is full, a received character is passed with SCI_EVT_RXBUF_OVFL event. */
-    if( SCI_EVT_RX_CHAR == pxArgs->event || SCI_EVT_RXBUF_OVFL == pxArgs->event )
+     * full, a received character is passed with SCI_EVT_RX_CHAR event.  If the queue
+     * is full, a received character is passed with SCI_EVT_RXBUF_OVFL event. */
+    if( ( SCI_EVT_RX_CHAR == pxArgs->event ) || ( SCI_EVT_RXBUF_OVFL == pxArgs->event ) )
     {
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
         configASSERT( xRxQueue );
 
         /* Characters received from the UART are stored in this queue, ready to be
-        received by the application.  ***NOTE*** Using a queue in this way is very
-        convenient, but also very inefficient.  It can be used here because
-        characters will only arrive slowly.  In a higher bandwidth system a circular
-        RAM buffer or DMA should be used in place of this queue. */
+         * received by the application.  ***NOTE*** Using a queue in this way is very
+         * convenient, but also very inefficient.  It can be used here because
+         * characters will only arrive slowly.  In a higher bandwidth system a circular
+         * RAM buffer or DMA should be used in place of this queue. */
         xQueueSendFromISR( xRxQueue, &pxArgs->byte, &xHigherPriorityTaskWoken );
 
         /* See http://www.freertos.org/xQueueOverwriteFromISR.html for information
-        on the semantics of this ISR. */
+         * on the semantics of this ISR. */
         portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
     }
     /* Renesas API notifies the completion of transmission by SCI_EVT_TEI event. */
@@ -87,7 +87,7 @@ sci_cb_args_t *pxArgs = (sci_cb_args_t *)pvArgs;
         if( xSendingTask != NULL )
         {
             /* A task is waiting for the end of the Tx, unblock it now.
-            http://www.freertos.org/vTaskNotifyGiveFromISR.html */
+             * http://www.freertos.org/vTaskNotifyGiveFromISR.html */
             vTaskNotifyGiveFromISR( xSendingTask, &xHigherPriorityTaskWoken );
             xSendingTask = NULL;
 
@@ -97,36 +97,39 @@ sci_cb_args_t *pxArgs = (sci_cb_args_t *)pvArgs;
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+ * multiple different demo application. */
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud,
+                                       unsigned portBASE_TYPE uxQueueLength )
 {
     ( void ) ulWantedBaud;
     ( void ) uxQueueLength;
 
     /* Characters received from the UART are stored in this queue, ready to be
-    received by the application.  ***NOTE*** Using a queue in this way is very
-    convenient, but also very inefficient.  It can be used here because
-    characters will only arrive slowly.  In a higher bandwidth system a circular
-    RAM buffer or DMA should be used in place of this queue. */
+     * received by the application.  ***NOTE*** Using a queue in this way is very
+     * convenient, but also very inefficient.  It can be used here because
+     * characters will only arrive slowly.  In a higher bandwidth system a circular
+     * RAM buffer or DMA should be used in place of this queue. */
     xRxQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
     configASSERT( xRxQueue );
 
     /* Set interrupt priority. (Other UART settings had been initialized in the
-    src/smc_gen/general/r_cg_hardware_setup.c.) */
+     * src/smc_gen/general/r_cg_hardware_setup.c.) */
     uint8_t ucInterruptPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
     R_SCI_Control( xSerialSciHandle, SCI_CMD_SET_RXI_PRIORITY, ( void * ) &ucInterruptPriority );
     R_SCI_Control( xSerialSciHandle, SCI_CMD_SET_TXI_PRIORITY, ( void * ) &ucInterruptPriority );
 
     /* Only one UART is supported, so it doesn't matter what is returned
-    here. */
+     * here. */
     return 0;
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
+ * multiple different demo application. */
+void vSerialPutString( xComPortHandle pxPort,
+                       const signed char * const pcString,
+                       unsigned short usStringLength )
 {
-const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
+    const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
 
     /* Only one port is supported. */
     ( void ) pxPort;
@@ -135,11 +138,11 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
     if( ( xSendingTask == NULL ) && ( usStringLength > 0 ) )
     {
         /* Ensure the calling task's notification state is not already
-        pending. */
+         * pending. */
         xTaskNotifyStateClear( NULL );
 
         /* Store the handle of the transmitting task.  This is used to unblock
-        the task when the transmission has completed. */
+         * the task when the transmission has completed. */
         xSendingTask = xTaskGetCurrentTaskHandle();
 
         /* Send the string using the Renesas API with a workaround. */
@@ -149,25 +152,25 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
             dtc_cmd_arg_t xSerialTxDtcArg;
             dtc_transfer_data_cfg_t xSerialTxDtcConfig;
 
-            xSerialTxDtcArg.act_src                   = U_DTC_UART_CLI_TX_ACT;
-            xSerialTxDtcConfig.transfer_mode          = DTC_TRANSFER_MODE_NORMAL;
-            xSerialTxDtcConfig.data_size              = DTC_DATA_SIZE_BYTE;
-            xSerialTxDtcConfig.src_addr_mode          = DTC_SRC_ADDR_INCR;
-            xSerialTxDtcConfig.dest_addr_mode         = DTC_DES_ADDR_FIXED;
-            xSerialTxDtcConfig.response_interrupt     = DTC_INTERRUPT_AFTER_ALL_COMPLETE;
-            xSerialTxDtcConfig.repeat_block_side      = DTC_REPEAT_BLOCK_SOURCE;
-            xSerialTxDtcConfig.chain_transfer_enable  = DTC_CHAIN_TRANSFER_DISABLE;
-            xSerialTxDtcConfig.chain_transfer_mode    = (dtc_chain_transfer_mode_t)0;
-            xSerialTxDtcConfig.source_addr            = ( uint32_t ) pcString;
-            xSerialTxDtcConfig.dest_addr              = ( uint32_t ) &U_DTC_UART_CLI_TX_DR;
-            xSerialTxDtcConfig.transfer_count         = ( uint32_t ) usStringLength - 1;
-            xSerialTxDtcArg.chain_transfer_nr         = 0;
-            xSerialTxDtcArg.p_transfer_data           = &xSerialTxDtcInfo;
-            xSerialTxDtcArg.p_data_cfg                = &xSerialTxDtcConfig;
+            xSerialTxDtcArg.act_src = U_DTC_UART_CLI_TX_ACT;
+            xSerialTxDtcConfig.transfer_mode = DTC_TRANSFER_MODE_NORMAL;
+            xSerialTxDtcConfig.data_size = DTC_DATA_SIZE_BYTE;
+            xSerialTxDtcConfig.src_addr_mode = DTC_SRC_ADDR_INCR;
+            xSerialTxDtcConfig.dest_addr_mode = DTC_DES_ADDR_FIXED;
+            xSerialTxDtcConfig.response_interrupt = DTC_INTERRUPT_AFTER_ALL_COMPLETE;
+            xSerialTxDtcConfig.repeat_block_side = DTC_REPEAT_BLOCK_SOURCE;
+            xSerialTxDtcConfig.chain_transfer_enable = DTC_CHAIN_TRANSFER_DISABLE;
+            xSerialTxDtcConfig.chain_transfer_mode = ( dtc_chain_transfer_mode_t ) 0;
+            xSerialTxDtcConfig.source_addr = ( uint32_t ) pcString;
+            xSerialTxDtcConfig.dest_addr = ( uint32_t ) &U_DTC_UART_CLI_TX_DR;
+            xSerialTxDtcConfig.transfer_count = ( uint32_t ) usStringLength - 1;
+            xSerialTxDtcArg.chain_transfer_nr = 0;
+            xSerialTxDtcArg.p_transfer_data = &xSerialTxDtcInfo;
+            xSerialTxDtcArg.p_data_cfg = &xSerialTxDtcConfig;
 
             R_DTC_Create( xSerialTxDtcArg.act_src, &xSerialTxDtcInfo, &xSerialTxDtcConfig, 0 );
             R_DTC_Control( DTC_CMD_ACT_SRC_ENABLE, NULL, &xSerialTxDtcArg );
-            R_SCI_Send( xSerialSciHandle, ( uint8_t * ) (pcString + usStringLength - 1), 1 );
+            R_SCI_Send( xSerialSciHandle, ( uint8_t * ) ( pcString + usStringLength - 1 ), 1 );
         }
         else
         {
@@ -175,7 +178,7 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
         }
 
         /* Wait in the Blocked state (so not using any CPU time) until the
-        transmission has completed. */
+         * transmission has completed. */
         ulTaskNotifyTake( pdTRUE, xMaxBlockTime );
 
         /* A breakpoint can be set here for debugging. */
@@ -184,20 +187,24 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
+ * multiple different demo application. */
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort,
+                                     signed char * pcRxedChar,
+                                     TickType_t xBlockTime )
 {
     /* Only one UART is supported. */
     ( void ) pxPort;
 
     /* Return a received character, if any are available.  Otherwise block to
-    wait for a character. */
+     * wait for a character. */
     return xQueueReceive( xRxQueue, pcRxedChar, xBlockTime );
 }
 
 /* Function required in order to link UARTCommandConsole.c - which is used by
-multiple different demo application. */
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
+ * multiple different demo application. */
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort,
+                                     signed char cOutChar,
+                                     TickType_t xBlockTime )
 {
     /* Just mapped to vSerialPutString() so the block time is not used. */
     ( void ) xBlockTime;

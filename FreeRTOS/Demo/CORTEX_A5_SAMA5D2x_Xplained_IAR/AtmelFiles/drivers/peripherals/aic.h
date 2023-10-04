@@ -35,45 +35,52 @@
  *  Methods and definitions for configuring interrupts.
  *
  *  \section Usage
-  *  -# Enable or disable interrupt generation of a particular source with
+ *  -# Enable or disable interrupt generation of a particular source with
  *    IRQ_EnableIT and IRQ_DisableIT.
  */
 
 #ifndef AIC_H
-#define AIC_H
+    #define AIC_H
 
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
-typedef void(*aic_handler_t)(void);
+    typedef void (* aic_handler_t)( void );
 
 /*------------------------------------------------------------------------------
  *         Global functions
  *------------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-extern void aic_initialize(void);
-extern void aic_enable(uint32_t source);
-extern void aic_disable(uint32_t source);
-extern void aic_configure(uint32_t source, uint8_t mode);
-extern void aic_set_source_vector(uint32_t source, void (*handler)(void));
-extern void aic_set_spurious_vector(void (*handler)(void));
-extern void aic_set_or_clear(uint32_t source, uint8_t set);
-extern void aic_end_interrupt(Aic * aic);
-extern uint32_t aic_debug_config(Aic * aic, uint8_t protect, uint8_t mask);
-extern void aic_write_protection(Aic * aic, uint32_t enable);
-extern uint32_t aic_violation_occured(Aic * aic, uint32_t * pViolationSource);
+    extern void aic_initialize( void );
+    extern void aic_enable( uint32_t source );
+    extern void aic_disable( uint32_t source );
+    extern void aic_configure( uint32_t source,
+                               uint8_t mode );
+    extern void aic_set_source_vector( uint32_t source,
+                                       void ( * handler )( void ) );
+    extern void aic_set_spurious_vector( void ( * handler )( void ) );
+    extern void aic_set_or_clear( uint32_t source,
+                                  uint8_t set );
+    extern void aic_end_interrupt( Aic * aic );
+    extern uint32_t aic_debug_config( Aic * aic,
+                                      uint8_t protect,
+                                      uint8_t mask );
+    extern void aic_write_protection( Aic * aic,
+                                      uint32_t enable );
+    extern uint32_t aic_violation_occured( Aic * aic,
+                                           uint32_t * pViolationSource );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif //#ifndef AIC_H

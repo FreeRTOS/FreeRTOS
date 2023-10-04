@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       ClockP.h
  *
@@ -55,31 +56,33 @@
  */
 
 #ifndef ti_dpl_ClockP__include
-#define ti_dpl_ClockP__include
+    #define ti_dpl_ClockP__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <stddef.h>
 
 /*!
  *  @brief  Frequency-in-hertz struct
  */
-typedef struct ClockP_FreqHz {
-    uint32_t hi;      /*! most significant 32-bits of frequency */
-    uint32_t lo;      /*! least significant 32-bits of frequency */
-} ClockP_FreqHz;
+    typedef struct ClockP_FreqHz
+    {
+        uint32_t hi;  /*! most significant 32-bits of frequency */
+        uint32_t lo;  /*! least significant 32-bits of frequency */
+    } ClockP_FreqHz;
 
 /*!
  *  @brief    Status codes for ClockP APIs
  */
-typedef enum ClockP_Status {
-    ClockP_OK = 0,
-    ClockP_FAILURE = -1
-} ClockP_Status;
+    typedef enum ClockP_Status
+    {
+        ClockP_OK = 0,
+        ClockP_FAILURE = -1
+    } ClockP_Status;
 
 /*!
  *  @brief    Opaque client reference to an instance of a ClockP
@@ -88,12 +91,12 @@ typedef enum ClockP_Status {
  *  and then is used in the other instance based functions (e.g. ::ClockP_start,
  *  ::ClockP_stop, etc.).
  */
-typedef  void *ClockP_Handle;
+    typedef  void * ClockP_Handle;
 
 /*!
  *  @brief  Prototype for a ClockP function.
  */
-typedef void (*ClockP_Fxn)(uintptr_t arg);
+    typedef void (* ClockP_Fxn)( uintptr_t arg );
 
 /*!
  *  @brief    Basic ClockP Parameters
@@ -104,13 +107,14 @@ typedef void (*ClockP_Fxn)(uintptr_t arg);
  *  the fields manually. The ClockP default parameters are noted in
  *  ClockP_Params_init.
  */
-typedef struct ClockP_Params {
-    char     *name;     /*!< Name of the clock instance. Memory must
-                             persist for the life of the clock instance.
-                             This can be used for debugging purposes, or
-                             set to NULL if not needed. */
-    uintptr_t arg;       /*!< Argument passed into the clock function. */
-} ClockP_Params;
+    typedef struct ClockP_Params
+    {
+        char * name;    /*!< Name of the clock instance. Memory must
+                         *   persist for the life of the clock instance.
+                         *   This can be used for debugging purposes, or
+                         *   set to NULL if not needed. */
+        uintptr_t arg;  /*!< Argument passed into the clock function. */
+    } ClockP_Params;
 
 /*!
  *  @brief  Function to create a clock object.
@@ -124,8 +128,8 @@ typedef struct ClockP_Params {
  *  @return A ClockP_Handle on success or a NULL on an error.  This handle can
  *          be passed to ClockP_start()
  */
-extern ClockP_Handle ClockP_create(ClockP_Fxn clockFxn,
-                                   ClockP_Params *params);
+    extern ClockP_Handle ClockP_create( ClockP_Fxn clockFxn,
+                                        ClockP_Params * params );
 
 /*!
  *  @brief  Function to delete a clock.
@@ -136,21 +140,21 @@ extern ClockP_Handle ClockP_create(ClockP_Fxn clockFxn,
  *    - ClockP_OK: Deleted the clock instance
  *    - ClockP_FAILURE: Timed out waiting to delete the clock object.
  */
-extern ClockP_Status ClockP_delete(ClockP_Handle handle);
+    extern ClockP_Status ClockP_delete( ClockP_Handle handle );
 
 /*!
  *  @brief  Get CPU frequency in Hz
  *
  *  @param  freq  Pointer to the FreqHz structure
  */
-extern void ClockP_getCpuFreq(ClockP_FreqHz *freq);
+    extern void ClockP_getCpuFreq( ClockP_FreqHz * freq );
 
 /*!
  *  @brief  Get the system tick period in microseconds.
  *
  *  @return The kernel's system tick period in microseconds.
  */
-extern uint32_t ClockP_getSystemTickPeriod();
+    extern uint32_t ClockP_getSystemTickPeriod();
 
 /*!
  *  @brief  Get the current tick value
@@ -160,7 +164,7 @@ extern uint32_t ClockP_getSystemTickPeriod();
  *
  *  @return Time in system clock ticks
  */
-extern uint32_t ClockP_getSystemTicks();
+    extern uint32_t ClockP_getSystemTicks();
 
 /*!
  *  @brief  Initialize params structure to default values.
@@ -171,7 +175,7 @@ extern uint32_t ClockP_getSystemTicks();
  *
  *  @param params  Pointer to the instance configuration parameters.
  */
-extern void ClockP_Params_init(ClockP_Params *params);
+    extern void ClockP_Params_init( ClockP_Params * params );
 
 /*!
  *  @brief  Function to start a clock.
@@ -185,7 +189,8 @@ extern void ClockP_Params_init(ClockP_Params *params);
  *    - ClockP_OK: Scheduled the clock function successfully
  *    - ClockP_FAILURE: The API failed.
  */
-extern ClockP_Status ClockP_start(ClockP_Handle handle, uint32_t timeout);
+    extern ClockP_Status ClockP_start( ClockP_Handle handle,
+                                       uint32_t timeout );
 
 /*!
  *  @brief  Function to start a clock from an interrupt.
@@ -199,7 +204,8 @@ extern ClockP_Status ClockP_start(ClockP_Handle handle, uint32_t timeout);
  *    - ClockP_OK: Scheduled the clock function successfully
  *    - ClockP_FAILURE: The API failed.
  */
-extern ClockP_Status ClockP_startFromISR(ClockP_Handle handle, uint32_t timeout);
+    extern ClockP_Status ClockP_startFromISR( ClockP_Handle handle,
+                                              uint32_t timeout );
 
 /*!
  *  @brief  Function to stop a clock.
@@ -212,7 +218,7 @@ extern ClockP_Status ClockP_startFromISR(ClockP_Handle handle, uint32_t timeout)
  *    - ClockP_OK: Stopped the clock function successfully
  *    - ClockP_FAILURE: The API failed.
  */
-extern ClockP_Status ClockP_stop(ClockP_Handle handle);
+    extern ClockP_Status ClockP_stop( ClockP_Handle handle );
 
 /*!
  *  @brief  Function to stop a clock from an interrupt.
@@ -223,9 +229,9 @@ extern ClockP_Status ClockP_stop(ClockP_Handle handle);
  *    - ClockP_OK: Stopped the clock function successfully
  *    - ClockP_FAILURE: The API failed.
  */
-extern ClockP_Status ClockP_stopFromISR(ClockP_Handle handle);
+    extern ClockP_Status ClockP_stopFromISR( ClockP_Handle handle );
 
-extern ClockP_Status ClockP_timestamp(ClockP_Handle handle);
+    extern ClockP_Status ClockP_timestamp( ClockP_Handle handle );
 
 /*!
  *  @brief  Set delay in microseconds
@@ -234,7 +240,7 @@ extern ClockP_Status ClockP_timestamp(ClockP_Handle handle);
  *
  *  @return ClockP_OK
  */
-extern ClockP_Status ClockP_usleep(uint32_t usec);
+    extern ClockP_Status ClockP_usleep( uint32_t usec );
 
 /*!
  *  @brief  Set delay in seconds
@@ -243,10 +249,10 @@ extern ClockP_Status ClockP_usleep(uint32_t usec);
  *
  *  @return ClockP_OK
  */
-extern ClockP_Status ClockP_sleep(uint32_t sec);
+    extern ClockP_Status ClockP_sleep( uint32_t sec );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_dpl_ClockP__include */

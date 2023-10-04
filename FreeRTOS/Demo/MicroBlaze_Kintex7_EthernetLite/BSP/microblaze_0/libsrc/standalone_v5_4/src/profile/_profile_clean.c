@@ -42,6 +42,6 @@ void _profile_clean( void );
  */
 void _profile_clean( void )
 {
-	Xil_ExceptionDisable();
-	disable_timer();
+    Xil_ExceptionDisable();
+    disable_timer();
 }

@@ -46,29 +46,29 @@
  */
 
 #ifndef _SYSTEM_RV32M1_zero_riscy_H_
-#define _SYSTEM_RV32M1_zero_riscy_H_        /**< Symbol preventing repeated inclusion */
+    #define _SYSTEM_RV32M1_zero_riscy_H_    /**< Symbol preventing repeated inclusion */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
+    #include <stdint.h>
+    #include <stdbool.h>
 
 
-#ifndef DISABLE_WDOG
-  #define DISABLE_WDOG  1
-#endif
+    #ifndef DISABLE_WDOG
+        #define DISABLE_WDOG    1
+    #endif
 
 /* Define clock source values */
-#define CPU_XTAL_CLK_HZ                 8000000u            /* Value of the external crystal or oscillator clock frequency in Hz */
+    #define CPU_XTAL_CLK_HZ    8000000u                     /* Value of the external crystal or oscillator clock frequency in Hz */
 
 /* Low power mode enable */
 /* SMC_PMPROT: AHSRUN=1, AVLP=1,ALLS=1,AVLLS=0x3 */
-#define SYSTEM_SMC_PMPROT_VALUE        0xABu               /* SMC_PMPROT */
-#define SYSTEM_SMC_PMCTRL_VALUE        0x0u                /* SMC_PMCTRL */
+    #define SYSTEM_SMC_PMPROT_VALUE    0xABu               /* SMC_PMPROT */
+    #define SYSTEM_SMC_PMCTRL_VALUE    0x0u                /* SMC_PMCTRL */
 
-#define DEFAULT_SYSTEM_CLOCK           48000000u           /* Default System clock value */
+    #define DEFAULT_SYSTEM_CLOCK       48000000u           /* Default System clock value */
 
 
 
@@ -81,7 +81,7 @@ extern "C" {
  * query the frequency of the debug timer or configure the trace clock speed
  * SystemCoreClock is initialized with a correct predefined value.
  */
-extern uint32_t SystemCoreClock;
+    extern uint32_t SystemCoreClock;
 
 /**
  * @brief Setup the microcontroller system.
@@ -90,7 +90,7 @@ extern uint32_t SystemCoreClock;
  * microcontroller device. For systems with variable clock speed it also updates
  * the variable SystemCoreClock. SystemInit is called from startup_device file.
  */
-void SystemInit (void);
+    void SystemInit( void );
 
 /**
  * @brief Updates the SystemCoreClock variable.
@@ -99,7 +99,7 @@ void SystemInit (void);
  * execution. SystemCoreClockUpdate() evaluates the clock register settings and calculates
  * the current core clock.
  */
-void SystemCoreClockUpdate (void);
+    void SystemCoreClockUpdate( void );
 
 /**
  * @brief SystemInit function hook.
@@ -111,7 +111,7 @@ void SystemCoreClockUpdate (void);
  * NOTE: No global r/w variables can be used in this hook function because the
  * initialization of these variables happens after this function.
  */
-void SystemInitHook (void);
+    void SystemInitHook( void );
 
 /**
  * @brief System IRQ handler which dispatches specific IRQ to corresponding registered handler.
@@ -121,7 +121,7 @@ void SystemInitHook (void);
  *
  * @param mcause IRQ acknowledge value read from MCAUSE
  */
-void SystemIrqHandler(uint32_t mcause);
+    void SystemIrqHandler( uint32_t mcause );
 
 /**
  * @brief Get IRQ nesting level of current context.
@@ -130,7 +130,7 @@ void SystemIrqHandler(uint32_t mcause);
  *
  * @return IRQ nesting level
  */
-uint32_t SystemGetIRQNestingLevel (void);
+    uint32_t SystemGetIRQNestingLevel( void );
 
 /**
  * @brief Setup systick for RTOS system.
@@ -138,37 +138,39 @@ uint32_t SystemGetIRQNestingLevel (void);
  * @param tickRateHz Tick number per second
  * @param intPriority IRQ interrupt priority (the smaller, the higher priority)
  */
-void SystemSetupSystick (uint32_t tickRateHz, uint32_t intPriority);
+    void SystemSetupSystick( uint32_t tickRateHz,
+                             uint32_t intPriority );
 
 /**
  * @brief Clear systick flag status so that next tick interrupt may occur.
  */
-void SystemClearSystickFlag (void);
+    void SystemClearSystickFlag( void );
 
-#define SysTick_Handler LPIT1_IRQHandler
+    #define SysTick_Handler    LPIT1_IRQHandler
 
 /**
  * @brief Sysem is in ISR or not.
  */
-bool SystemInISR(void);
+    bool SystemInISR( void );
 
 /**
  * @brief Set interrupt priority in Event unit.
  */
-void EVENT_SetIRQPriority(IRQn_Type IRQn, uint8_t intPriority);
+    void EVENT_SetIRQPriority( IRQn_Type IRQn,
+                               uint8_t intPriority );
 
 /* Priority setting macro remap. */
-#define NVIC_SetPriority EVENT_SetIRQPriority
+    #define NVIC_SetPriority    EVENT_SetIRQPriority
 
 /**
  * @brief Reset the system.
  */
-void EVENT_SystemReset(void);
+    void EVENT_SystemReset( void );
 
-#define NVIC_SystemReset EVENT_SystemReset
+    #define NVIC_SystemReset    EVENT_SystemReset
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif  /* _SYSTEM_RV32M1_zero_riscy_H_ */
+#endif /* _SYSTEM_RV32M1_zero_riscy_H_ */

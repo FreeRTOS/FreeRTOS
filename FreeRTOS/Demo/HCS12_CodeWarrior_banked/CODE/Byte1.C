@@ -11,7 +11,7 @@
 **         This bean "ByteIO" implements an one-byte input/output.
 **         It uses one 8-bit port.
 **         Note: This bean is set to work in Output direction only.
-**         Methods of this bean are mostly implemented as a macros 
+**         Methods of this bean are mostly implemented as a macros
 **         (if supported by target langauage and compiler).
 **     Settings  :
 **         Port name                   : B
@@ -62,9 +62,9 @@
 #include "Cpu.h"
 
 /* Definition of DATA and CODE segments for this bean. User can specify where
-   these segments will be located on "Build options" tab of the selected CPU bean. */
-#pragma DATA_SEG Byte1_DATA            /* Data section for this module. */
-#pragma CODE_SEG Byte1_CODE            /* Code section for this module. */
+ * these segments will be located on "Build options" tab of the selected CPU bean. */
+#pragma DATA_SEG Byte1_DATA /* Data section for this module. */
+#pragma CODE_SEG Byte1_CODE /* Code section for this module. */
 
 /*
 ** ===================================================================
@@ -75,11 +75,11 @@
 **         only.
 ** ===================================================================
 */
-byte Byte1_Table[8]={ 1, 2, 4, 8, 16, 32, 64, 128 }; /* Table of mask constants */
+byte Byte1_Table[ 8 ] = { 1, 2, 4, 8, 16, 32, 64, 128 }; /* Table of mask constants */
 
-byte Byte1_GetMsk(byte Value)
+byte Byte1_GetMsk( byte Value )
 {
-  return((Value<8)?Byte1_Table[Value]:0); /* Return appropriate bit mask */
+    return( ( Value < 8 ) ? Byte1_Table[ Value ] : 0 ); /* Return appropriate bit mask */
 }
 
 /*
@@ -97,16 +97,21 @@ byte Byte1_GetMsk(byte Value)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Byte1_PutBit(byte BitNum, byte Value)
+void Byte1_PutBit( byte BitNum,
+                   byte Value )
 {
-  byte Mask=Byte1_GetMsk(BitNum);      /* Temporary variable - bit mask */
+    byte Mask = Byte1_GetMsk( BitNum ); /* Temporary variable - bit mask */
 
-  if (Mask)                            /* Is bit mask correct? */
-    if (Value) {                       /* Is it one to be written? */
-      PORTB |= Mask;                   /* Set appropriate bit on port */
-    }
-    else {                             /* Is it zero to be written? */
-      PORTB &= ~Mask;                  /* Clear appropriate bit on port */
+    if( Mask )                          /* Is bit mask correct? */
+    {
+        if( Value )                     /* Is it one to be written? */
+        {
+            PORTB |= Mask;              /* Set appropriate bit on port */
+        }
+        else                            /* Is it zero to be written? */
+        {
+            PORTB &= ~Mask;             /* Clear appropriate bit on port */
+        }
     }
 }
 
@@ -123,13 +128,14 @@ void Byte1_PutBit(byte BitNum, byte Value)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Byte1_NegBit(byte BitNum)
+void Byte1_NegBit( byte BitNum )
 {
-  byte Mask=Byte1_GetMsk(BitNum);      /* Temporary variable - bit mask */
+    byte Mask = Byte1_GetMsk( BitNum ); /* Temporary variable - bit mask */
 
-  if (Mask) {                          /* Is bit mask correct? */
-    PORTB ^= Mask;                     /* Negate appropriate bit on port */
-  }
+    if( Mask )                          /* Is bit mask correct? */
+    {
+        PORTB ^= Mask;                  /* Negate appropriate bit on port */
+    }
 }
 
 
@@ -138,7 +144,7 @@ void Byte1_NegBit(byte BitNum)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

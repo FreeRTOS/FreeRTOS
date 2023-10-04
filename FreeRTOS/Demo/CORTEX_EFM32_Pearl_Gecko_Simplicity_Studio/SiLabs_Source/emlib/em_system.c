@@ -55,30 +55,31 @@
  * @param[out] rev
  *   Location to place chip revision info.
  ******************************************************************************/
-void SYSTEM_ChipRevisionGet(SYSTEM_ChipRevision_TypeDef *rev)
+void SYSTEM_ChipRevisionGet( SYSTEM_ChipRevision_TypeDef * rev )
 {
-  uint8_t tmp;
+    uint8_t tmp;
 
-  EFM_ASSERT(rev);
+    EFM_ASSERT( rev );
 
-  /* CHIP FAMILY bit [5:2] */
-  tmp  = (((ROMTABLE->PID1 & _ROMTABLE_PID1_FAMILYMSB_MASK) >> _ROMTABLE_PID1_FAMILYMSB_SHIFT) << 2);
-  /* CHIP FAMILY bit [1:0] */
-  tmp |=  ((ROMTABLE->PID0 & _ROMTABLE_PID0_FAMILYLSB_MASK) >> _ROMTABLE_PID0_FAMILYLSB_SHIFT);
-  rev->family = tmp;
+    /* CHIP FAMILY bit [5:2] */
+    tmp = ( ( ( ROMTABLE->PID1 & _ROMTABLE_PID1_FAMILYMSB_MASK ) >> _ROMTABLE_PID1_FAMILYMSB_SHIFT ) << 2 );
+    /* CHIP FAMILY bit [1:0] */
+    tmp |= ( ( ROMTABLE->PID0 & _ROMTABLE_PID0_FAMILYLSB_MASK ) >> _ROMTABLE_PID0_FAMILYLSB_SHIFT );
+    rev->family = tmp;
 
-  /* CHIP MAJOR bit [3:0] */
-  rev->major = (ROMTABLE->PID0 & _ROMTABLE_PID0_REVMAJOR_MASK) >> _ROMTABLE_PID0_REVMAJOR_SHIFT;
+    /* CHIP MAJOR bit [3:0] */
+    rev->major = ( ROMTABLE->PID0 & _ROMTABLE_PID0_REVMAJOR_MASK ) >> _ROMTABLE_PID0_REVMAJOR_SHIFT;
 
-  /* CHIP MINOR bit [7:4] */
-  tmp  = (((ROMTABLE->PID2 & _ROMTABLE_PID2_REVMINORMSB_MASK) >> _ROMTABLE_PID2_REVMINORMSB_SHIFT) << 4);
-  /* CHIP MINOR bit [3:0] */
-  tmp |=  ((ROMTABLE->PID3 & _ROMTABLE_PID3_REVMINORLSB_MASK) >> _ROMTABLE_PID3_REVMINORLSB_SHIFT);
-  rev->minor = tmp;
+    /* CHIP MINOR bit [7:4] */
+    tmp = ( ( ( ROMTABLE->PID2 & _ROMTABLE_PID2_REVMINORMSB_MASK ) >> _ROMTABLE_PID2_REVMINORMSB_SHIFT ) << 4 );
+    /* CHIP MINOR bit [3:0] */
+    tmp |= ( ( ROMTABLE->PID3 & _ROMTABLE_PID3_REVMINORLSB_MASK ) >> _ROMTABLE_PID3_REVMINORLSB_SHIFT );
+    rev->minor = tmp;
 }
 
 
-#if defined(CALIBRATE)
+#if defined( CALIBRATE )
+
 /***************************************************************************//**
  * @brief
  *    Get factory calibration value for a given peripheral register.
@@ -89,32 +90,32 @@ void SYSTEM_ChipRevisionGet(SYSTEM_ChipRevision_TypeDef *rev)
  * @return
  *    Calibration value for the requested register.
  ******************************************************************************/
-uint32_t SYSTEM_GetCalibrationValue(volatile uint32_t *regAddress)
-{
-  int               regCount;
-  CALIBRATE_TypeDef *p;
-
-  regCount = 1;
-  p        = CALIBRATE;
-
-  for (;; )
-  {
-    if ((regCount > CALIBRATE_MAX_REGISTERS) ||
-        (p->VALUE == 0xFFFFFFFF))
+    uint32_t SYSTEM_GetCalibrationValue( volatile uint32_t * regAddress )
     {
-      EFM_ASSERT(false);
-      return 0;                 /* End of device calibration table reached. */
-    }
+        int regCount;
+        CALIBRATE_TypeDef * p;
 
-    if (p->ADDRESS == (uint32_t)regAddress)
-    {
-      return p->VALUE;          /* Calibration value found ! */
-    }
+        regCount = 1;
+        p = CALIBRATE;
 
-    p++;
-    regCount++;
-  }
-}
+        for( ; ; )
+        {
+            if( ( regCount > CALIBRATE_MAX_REGISTERS ) ||
+                ( p->VALUE == 0xFFFFFFFF ) )
+            {
+                EFM_ASSERT( false );
+                return 0;       /* End of device calibration table reached. */
+            }
+
+            if( p->ADDRESS == ( uint32_t ) regAddress )
+            {
+                return p->VALUE; /* Calibration value found ! */
+            }
+
+            p++;
+            regCount++;
+        }
+    }
 #endif /* defined (CALIBRATE) */
 
 /** @} (end addtogroup SYSTEM) */

@@ -28,14 +28,14 @@
 #include "task.h"
 #include "partest.h"
 
-/* 
- * ATmega328PB Xplained Mini board has a user LED at PB5. 
+/*
+ * ATmega328PB Xplained Mini board has a user LED at PB5.
  * Everything below is specific for this setup only.
  * LED is lit when PB5 is set to a high.
  */
-#define partestLED_PORTB_DATA_REG_BIT			( (uint8_t) 0x01 << 5 )
-#define partestLED_PORTB_DIR_REG_BIT			( (uint8_t) 0x01 << 5 )
-#define partestLED_ON							partestLED_PORTB_DIR_REG_BIT
+#define partestLED_PORTB_DATA_REG_BIT    ( ( uint8_t ) 0x01 << 5 )
+#define partestLED_PORTB_DIR_REG_BIT     ( ( uint8_t ) 0x01 << 5 )
+#define partestLED_ON                    partestLED_PORTB_DIR_REG_BIT
 
 static volatile uint8_t uCurrentLedOutputVal = ~partestLED_ON;
 
@@ -43,67 +43,67 @@ static volatile uint8_t uCurrentLedOutputVal = ~partestLED_ON;
 
 void vParTestInitialise( void )
 {
-	/* Turn on user LED. This function is not thread safe. */
-	DDRB |= partestLED_PORTB_DIR_REG_BIT;
-	PORTB |= partestLED_PORTB_DIR_REG_BIT;
-	uCurrentLedOutputVal = ~partestLED_ON;
+    /* Turn on user LED. This function is not thread safe. */
+    DDRB |= partestLED_PORTB_DIR_REG_BIT;
+    PORTB |= partestLED_PORTB_DIR_REG_BIT;
+    uCurrentLedOutputVal = ~partestLED_ON;
 }
 
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-	/* There's only one LED on this board. */
-	( void ) uxLED;
-	
-	/* Turn on user LED. 
-	The compound action is guaranteed to be not interrupted by other tasks. */
-	vTaskSuspendAll();
-	
-	if ( xValue == 0 )
-	{
-		/* Turn off, only when input value is zero. */
-		DDRB |= partestLED_PORTB_DIR_REG_BIT;
-		PORTB &= ~partestLED_PORTB_DIR_REG_BIT;
-		uCurrentLedOutputVal = ~partestLED_ON;
-	}
-	else
-	{
-		/* Turn on, when input value is none zero. */
-		DDRB |= partestLED_PORTB_DIR_REG_BIT;
-		PORTB |= partestLED_PORTB_DIR_REG_BIT;
-		uCurrentLedOutputVal = partestLED_ON;
-	}
-	
-	xTaskResumeAll();
+    /* There's only one LED on this board. */
+    ( void ) uxLED;
+
+    /* Turn on user LED.
+     * The compound action is guaranteed to be not interrupted by other tasks. */
+    vTaskSuspendAll();
+
+    if( xValue == 0 )
+    {
+        /* Turn off, only when input value is zero. */
+        DDRB |= partestLED_PORTB_DIR_REG_BIT;
+        PORTB &= ~partestLED_PORTB_DIR_REG_BIT;
+        uCurrentLedOutputVal = ~partestLED_ON;
+    }
+    else
+    {
+        /* Turn on, when input value is none zero. */
+        DDRB |= partestLED_PORTB_DIR_REG_BIT;
+        PORTB |= partestLED_PORTB_DIR_REG_BIT;
+        uCurrentLedOutputVal = partestLED_ON;
+    }
+
+    xTaskResumeAll();
 }
 
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( UBaseType_t uxLED )
 {
-	/* There's only one LED on this board. */
-	( void ) uxLED;
-	
-	/* Toggle user LED. 
-	The compound action is guaranteed to be not interrupted by other tasks. */
-	vTaskSuspendAll();
-	
-	if ( uCurrentLedOutputVal == partestLED_ON )
-	{
-		/* Turn off. */
-		DDRB |= partestLED_PORTB_DIR_REG_BIT;
-		PORTB &= ~partestLED_PORTB_DIR_REG_BIT;
-		uCurrentLedOutputVal = ~partestLED_ON;
-	}
-	else
-	{
-		/* Turn on. */
-		DDRB |= partestLED_PORTB_DIR_REG_BIT;
-		PORTB |= partestLED_PORTB_DIR_REG_BIT;
-		uCurrentLedOutputVal = partestLED_ON;
-	}
-		
-	xTaskResumeAll();
-}
+    /* There's only one LED on this board. */
+    ( void ) uxLED;
 
+    /* Toggle user LED.
+     * The compound action is guaranteed to be not interrupted by other tasks. */
+    vTaskSuspendAll();
+
+    if( uCurrentLedOutputVal == partestLED_ON )
+    {
+        /* Turn off. */
+        DDRB |= partestLED_PORTB_DIR_REG_BIT;
+        PORTB &= ~partestLED_PORTB_DIR_REG_BIT;
+        uCurrentLedOutputVal = ~partestLED_ON;
+    }
+    else
+    {
+        /* Turn on. */
+        DDRB |= partestLED_PORTB_DIR_REG_BIT;
+        PORTB |= partestLED_PORTB_DIR_REG_BIT;
+        uCurrentLedOutputVal = partestLED_ON;
+    }
+
+    xTaskResumeAll();
+}

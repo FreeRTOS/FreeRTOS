@@ -28,40 +28,40 @@
 #define __MON_H__
 
 
-#if defined(__ICCARM__)
-  #include <intrinsics.h>
+#if defined( __ICCARM__ )
+    #include <intrinsics.h>
 #endif
-   
-typedef struct {
-  unsigned int Mode_SPSR;
-  unsigned int Mode_SP;
-  unsigned int Mode_LR;
+
+typedef struct
+{
+    unsigned int Mode_SPSR;
+    unsigned int Mode_SP;
+    unsigned int Mode_LR;
 } Mode_Regs;
 
 typedef struct
 {
-    unsigned int        r4;
-    unsigned int        r5;
-    unsigned int        r6;
-    unsigned int        r7;
-    unsigned int        r8;
-    unsigned int        r9;
-    unsigned int        r10;
-    unsigned int        r11;
-    unsigned int        r12;
-    Mode_Regs           Mon;
-    Mode_Regs           Svc;
-    Mode_Regs           Fiq;
-    Mode_Regs           Irq;
-    
-} WorldContext, *pWorldContext;
-   
+    unsigned int r4;
+    unsigned int r5;
+    unsigned int r6;
+    unsigned int r7;
+    unsigned int r8;
+    unsigned int r9;
+    unsigned int r10;
+    unsigned int r11;
+    unsigned int r12;
+    Mode_Regs Mon;
+    Mode_Regs Svc;
+    Mode_Regs Fiq;
+    Mode_Regs Irq;
+} WorldContext, * pWorldContext;
 
-extern void monitor_init(void);
-extern void SecureMonitor_init(void);
-extern void nw_start(void);
-extern void InitMonitor(void);
-extern void SwitchToNormalWorld(void);
-extern void SwitchToSecureWorld(void);
 
-#endif
+extern void monitor_init( void );
+extern void SecureMonitor_init( void );
+extern void nw_start( void );
+extern void InitMonitor( void );
+extern void SwitchToNormalWorld( void );
+extern void SwitchToSecureWorld( void );
+
+#endif /* ifndef __MON_H__ */

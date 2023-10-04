@@ -5,31 +5,40 @@
 #include <metal/machine.h>
 #include <string.h>
 
-struct metal_led *metal_led_get_rgb(char *label, char *color) {
+struct metal_led * metal_led_get_rgb( char * label,
+                                      char * color )
+{
     int i;
-    struct metal_led *led;
-    char led_label[100];
+    struct metal_led * led;
+    char led_label[ 100 ];
 
-    if ((__METAL_DT_MAX_LEDS == 0) || (label == NULL) || (color == NULL)) {
+    if( ( __METAL_DT_MAX_LEDS == 0 ) || ( label == NULL ) || ( color == NULL ) )
+    {
         return NULL;
     }
 
-    strcpy(led_label, label);
-    strcat(led_label, color);
-    for (i = 0; i < __METAL_DT_MAX_LEDS; i++) {
-        led = (struct metal_led *)__metal_led_table[i];
-        if (led->vtable->led_exist(led, led_label)) {
+    strcpy( led_label, label );
+    strcat( led_label, color );
+
+    for( i = 0; i < __METAL_DT_MAX_LEDS; i++ )
+    {
+        led = ( struct metal_led * ) __metal_led_table[ i ];
+
+        if( led->vtable->led_exist( led, led_label ) )
+        {
             return led;
         }
     }
+
     return NULL;
 }
 
-struct metal_led *metal_led_get(char *label) {
-    return metal_led_get_rgb(label, "");
+struct metal_led * metal_led_get( char * label )
+{
+    return metal_led_get_rgb( label, "" );
 }
 
-extern __inline__ void metal_led_enable(struct metal_led *led);
-extern __inline__ void metal_led_on(struct metal_led *led);
-extern __inline__ void metal_led_off(struct metal_led *led);
-extern __inline__ void metal_led_toggle(struct metal_led *led);
+extern __inline__ void metal_led_enable( struct metal_led * led );
+extern __inline__ void metal_led_on( struct metal_led * led );
+extern __inline__ void metal_led_off( struct metal_led * led );
+extern __inline__ void metal_led_toggle( struct metal_led * led );

@@ -4,8 +4,8 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-int __wrap_unlink(const char* name)
+int __wrap_unlink( const char * name )
 {
-  return _stub(ENOENT);
+    return _stub( ENOENT );
 }
-weak_under_alias(unlink);
+weak_under_alias( unlink );

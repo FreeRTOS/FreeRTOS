@@ -71,13 +71,14 @@
 
 #include "chip.h"
 #include "stdlib.h"
-#include "string.h"   
+#include "string.h"
 
 #include <stdint.h>
 
 
 
-volatile uint8_t INSTRE_Flag =0;
+volatile uint8_t INSTRE_Flag = 0;
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -87,10 +88,13 @@ volatile uint8_t INSTRE_Flag =0;
  *
  * \param qspi  Pointer to an Qspi instance.
  */
-extern void QSPI_Enable( Qspi* qspi )
+extern void QSPI_Enable( Qspi * qspi )
 {
-    qspi->QSPI_CR = QSPI_CR_QSPIEN ;
-    while(!(qspi->QSPI_SR & QSPI_SR_QSPIENS));
+    qspi->QSPI_CR = QSPI_CR_QSPIEN;
+
+    while( !( qspi->QSPI_SR & QSPI_SR_QSPIENS ) )
+    {
+    }
 }
 
 /**
@@ -98,9 +102,9 @@ extern void QSPI_Enable( Qspi* qspi )
  *
  * \param qspi  Pointer to an Qspi instance.
  */
-extern void QSPI_Disable( Qspi* qspi )
+extern void QSPI_Disable( Qspi * qspi )
 {
-    qspi->QSPI_CR = QSPI_CR_QSPIDIS ;
+    qspi->QSPI_CR = QSPI_CR_QSPIDIS;
 }
 
 /**
@@ -108,10 +112,10 @@ extern void QSPI_Disable( Qspi* qspi )
  *
  * \param qspi  Pointer to an Qspi instance.
  */
-extern void QSPI_SwReset( Qspi* qspi )
+extern void QSPI_SwReset( Qspi * qspi )
 {
-    qspi->QSPI_CR = QSPI_CR_SWRST ;
-    qspi->QSPI_CR = QSPI_CR_SWRST ;
+    qspi->QSPI_CR = QSPI_CR_SWRST;
+    qspi->QSPI_CR = QSPI_CR_SWRST;
 }
 
 /**
@@ -120,9 +124,10 @@ extern void QSPI_SwReset( Qspi* qspi )
  * \param qspi  Pointer to an Qspi instance.
  * \param sources Bitwise OR of selected interrupt sources.
  */
-extern void QSPI_EnableIt( Qspi* qspi, uint32_t dwSources )
+extern void QSPI_EnableIt( Qspi * qspi,
+                           uint32_t dwSources )
 {
-    qspi->QSPI_IER = dwSources ;
+    qspi->QSPI_IER = dwSources;
 }
 
 /**
@@ -131,9 +136,10 @@ extern void QSPI_EnableIt( Qspi* qspi, uint32_t dwSources )
  * \param qspi  Pointer to an Qspi instance.
  * \param sources Bitwise OR of selected interrupt sources.
  */
-extern void QSPI_DisableIt( Qspi* qspi, uint32_t dwSources )
+extern void QSPI_DisableIt( Qspi * qspi,
+                            uint32_t dwSources )
 {
-    qspi->QSPI_IDR = dwSources ;
+    qspi->QSPI_IDR = dwSources;
 }
 
 /**
@@ -141,9 +147,9 @@ extern void QSPI_DisableIt( Qspi* qspi, uint32_t dwSources )
  *
  * \return Qspi interrupt mask register.
  */
-extern uint32_t QSPI_GetItMask( Qspi* qspi )
+extern uint32_t QSPI_GetItMask( Qspi * qspi )
 {
-    return (qspi->QSPI_IMR) ;
+    return( qspi->QSPI_IMR );
 }
 
 /**
@@ -154,13 +160,14 @@ extern uint32_t QSPI_GetItMask( Qspi* qspi )
  * \param id   Peripheral ID of the QSPI.
  * \param configuration  Value of the QSPI configuration register.
  */
-extern void QSPI_Configure( Qspi* qspi, uint32_t dwConfiguration )
+extern void QSPI_Configure( Qspi * qspi,
+                            uint32_t dwConfiguration )
 {
-    qspi->QSPI_CR = QSPI_CR_QSPIDIS ;
+    qspi->QSPI_CR = QSPI_CR_QSPIDIS;
 
     /* Execute a software reset of the QSPI twice */
-    QSPI_SwReset(qspi);
-    qspi->QSPI_MR = dwConfiguration ;
+    QSPI_SwReset( qspi );
+    qspi->QSPI_MR = dwConfiguration;
 }
 
 
@@ -172,9 +179,10 @@ extern void QSPI_Configure( Qspi* qspi, uint32_t dwConfiguration )
  * \param npcs  Chip select to configure (0, 1, 2 or 3).
  * \param configuration  Desired chip select configuration.
  */
-void QSPI_ConfigureClock( Qspi* qspi,uint32_t dwConfiguration )
+void QSPI_ConfigureClock( Qspi * qspi,
+                          uint32_t dwConfiguration )
 {
-    qspi->QSPI_SCR = dwConfiguration ;
+    qspi->QSPI_SCR = dwConfiguration;
 }
 
 /**
@@ -184,9 +192,9 @@ void QSPI_ConfigureClock( Qspi* qspi,uint32_t dwConfiguration )
  * \param qspi   Pointer to a Qspi instance.
  * \return  QSPI status register.
  */
-extern uint32_t QSPI_GetStatus( Qspi* qspi )
+extern uint32_t QSPI_GetStatus( Qspi * qspi )
 {
-    return qspi->QSPI_SR ;
+    return qspi->QSPI_SR;
 }
 
 /**
@@ -197,11 +205,13 @@ extern uint32_t QSPI_GetStatus( Qspi* qspi )
  *
  * \return readed data.
  */
-extern uint32_t QSPI_Read( Qspi* qspi )
+extern uint32_t QSPI_Read( Qspi * qspi )
 {
-    while ( (qspi->QSPI_SR & SPI_SR_RDRF) == 0 ) ;
+    while( ( qspi->QSPI_SR & SPI_SR_RDRF ) == 0 )
+    {
+    }
 
-    return qspi->QSPI_RDR & 0xFFFF ;
+    return qspi->QSPI_RDR & 0xFFFF;
 }
 
 /**
@@ -213,12 +223,19 @@ extern uint32_t QSPI_Read( Qspi* qspi )
  * \param npcs  Chip select of the component to address (0, 1, 2 or 3).
  * \param data  Word of data to send.
  */
-extern void QSPI_Write( Qspi* qspi, uint16_t wData )
+extern void QSPI_Write( Qspi * qspi,
+                        uint16_t wData )
 {
     /* Send data */
-    while ( (qspi->QSPI_SR & QSPI_SR_TXEMPTY) == 0 ) ;
-    qspi->QSPI_TDR = wData  ;
-    while ( (qspi->QSPI_SR & QSPI_SR_TDRE) == 0 ) ;
+    while( ( qspi->QSPI_SR & QSPI_SR_TXEMPTY ) == 0 )
+    {
+    }
+
+    qspi->QSPI_TDR = wData;
+
+    while( ( qspi->QSPI_SR & QSPI_SR_TDRE ) == 0 )
+    {
+    }
 }
 
 /**
@@ -230,13 +247,20 @@ extern void QSPI_Write( Qspi* qspi, uint16_t wData )
  * \param npcs  Chip select of the component to address (0, 1, 2 or 3).
  * \param data  Word of data to send.
  */
-extern void QSPI_WriteLast( Qspi* qspi,  uint16_t wData )
+extern void QSPI_WriteLast( Qspi * qspi,
+                            uint16_t wData )
 {
     /* Send data */
-    while ( (qspi->QSPI_SR & QSPI_SR_TXEMPTY) == 0 ) ;
-    qspi->QSPI_TDR = wData  ;
+    while( ( qspi->QSPI_SR & QSPI_SR_TXEMPTY ) == 0 )
+    {
+    }
+
+    qspi->QSPI_TDR = wData;
     qspi->QSPI_CR |= QSPI_CR_LASTXFER;
-    while ( (qspi->QSPI_SR & QSPI_SR_TDRE) == 0 ) ;
+
+    while( ( qspi->QSPI_SR & QSPI_SR_TDRE ) == 0 )
+    {
+    }
 }
 
 /**
@@ -244,15 +268,16 @@ extern void QSPI_WriteLast( Qspi* qspi,  uint16_t wData )
  * \param qspi   Pointer to a Qspi instance.
  * \param cs    QSPI chip select index.
  */
-extern void QSPI_ConfigureCs( Qspi* qspi, uint8_t spiCs )
+extern void QSPI_ConfigureCs( Qspi * qspi,
+                              uint8_t spiCs )
 {
     uint32_t dwSpiMr;
 
     /* Write to the MR register*/
-    dwSpiMr = qspi->QSPI_MR ;
-    dwSpiMr &= ~QSPI_MR_CSMODE_Msk ;
+    dwSpiMr = qspi->QSPI_MR;
+    dwSpiMr &= ~QSPI_MR_CSMODE_Msk;
     dwSpiMr |= spiCs;
-    qspi->QSPI_MR=dwSpiMr ;
+    qspi->QSPI_MR = dwSpiMr;
 }
 
 
@@ -265,9 +290,9 @@ extern void QSPI_ConfigureCs( Qspi* qspi, uint8_t spiCs )
  *
  * \return 1 if no data has been received else return return 0.
  */
-extern int QSPI_RxEmpty(Qspi *qspi)
+extern int QSPI_RxEmpty( Qspi * qspi )
 {
-    return ((qspi->QSPI_SR & QSPI_SR_RDRF) == 0);
+    return( ( qspi->QSPI_SR & QSPI_SR_RDRF ) == 0 );
 }
 
 /**
@@ -278,9 +303,9 @@ extern int QSPI_RxEmpty(Qspi *qspi)
  *
  * \return 1 if application can write to the QSPI_TDR register else return return 0.
  */
-extern int QSPI_TxRdy(Qspi *qspi)
+extern int QSPI_TxRdy( Qspi * qspi )
 {
-    return ((qspi->QSPI_SR & QSPI_SR_TDRE) != 0);
+    return( ( qspi->QSPI_SR & QSPI_SR_TDRE ) != 0 );
 }
 
 
@@ -292,9 +317,9 @@ extern int QSPI_TxRdy(Qspi *qspi)
  * \return Returns 1 if there is no pending write operation on the QSPI; otherwise
  * returns 0.
  */
-extern uint32_t QSPI_IsFinished( Qspi* qspi )
+extern uint32_t QSPI_IsFinished( Qspi * qspi )
 {
-    return ((qspi->QSPI_SR & QSPI_SR_TXEMPTY) != 0) ;
+    return( ( qspi->QSPI_SR & QSPI_SR_TXEMPTY ) != 0 );
 }
 
 /**
@@ -305,9 +330,9 @@ extern uint32_t QSPI_IsFinished( Qspi* qspi )
  * \return Returns 1 if tThe chip select is not asserted; otherwise
  * returns 0.
  */
-extern uint32_t QSPI_IsCsAsserted( Qspi* qspi )
+extern uint32_t QSPI_IsCsAsserted( Qspi * qspi )
 {
-    return ((qspi->QSPI_SR & QSPI_SR_CSS) != 0) ;
+    return( ( qspi->QSPI_SR & QSPI_SR_CSS ) != 0 );
 }
 
 /**
@@ -318,9 +343,9 @@ extern uint32_t QSPI_IsCsAsserted( Qspi* qspi )
  * \return Returns 1 if At least one chip select rise has been detected since the last read of QSPI_SR; otherwise
  * returns 0.
  */
-extern uint32_t QSPI_IsCsRise( Qspi* qspi )
+extern uint32_t QSPI_IsCsRise( Qspi * qspi )
 {
-    return ((qspi->QSPI_SR & QSPI_SR_CSR) != 0) ;
+    return( ( qspi->QSPI_SR & QSPI_SR_CSR ) != 0 );
 }
 
 
@@ -332,9 +357,9 @@ extern uint32_t QSPI_IsCsRise( Qspi* qspi )
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-extern uint32_t QSPI_IsEOFInst( Qspi* qspi )
+extern uint32_t QSPI_IsEOFInst( Qspi * qspi )
 {
-    return ((qspi->QSPI_SR & QSPI_SR_INSTRE) != 0) ;
+    return( ( qspi->QSPI_SR & QSPI_SR_INSTRE ) != 0 );
 }
 
 /**
@@ -345,63 +370,72 @@ extern uint32_t QSPI_IsEOFInst( Qspi* qspi )
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-extern void QSPI_SendFrame( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite)
-{  
+extern void QSPI_SendFrame( Qspi * qspi,
+                            qspiFrame * pFrame,
+                            AccesType ReadWrite )
+{
     uint32_t regIFR, regICR, DummyRead;
-    uint32_t *pQspiBuffer = (uint32_t *)QSPIMEM_ADDR;
+    uint32_t * pQspiBuffer = ( uint32_t * ) QSPIMEM_ADDR;
 
-    assert((qspi->QSPI_MR) & QSPI_MR_SMM);
+    assert( ( qspi->QSPI_MR ) & QSPI_MR_SMM );
 
-    regIFR = (pFrame->spiMode | QSPI_IFR_INSTEN | (pFrame->OptionLen << QSPI_IFR_OPTL_Pos) | (pFrame->DummyCycles << QSPI_IFR_NBDUM_Pos)  | (pFrame->ContinuousRead << 14)) ;
-    // Write the instruction to reg
-    regICR = ( QSPI_ICR_OPT(pFrame->Option) | QSPI_ICR_INST(pFrame->Instruction));
+    regIFR = ( pFrame->spiMode | QSPI_IFR_INSTEN | ( pFrame->OptionLen << QSPI_IFR_OPTL_Pos ) | ( pFrame->DummyCycles << QSPI_IFR_NBDUM_Pos ) | ( pFrame->ContinuousRead << 14 ) );
+    /* Write the instruction to reg */
+    regICR = ( QSPI_ICR_OPT( pFrame->Option ) | QSPI_ICR_INST( pFrame->Instruction ) );
 
-    if(pFrame->OptionEn)
+    if( pFrame->OptionEn )
     {
-        regIFR|=QSPI_IFR_OPTEN;
+        regIFR |= QSPI_IFR_OPTEN;
     }
 
-    /* Instruction frame without Data, only Instruction**/  
-    if(!(pFrame->DataSize))               
+    /* Instruction frame without Data, only Instruction**/
+    if( !( pFrame->DataSize ) )
     {
-        if(pFrame->InstAddrFlag)                            // If contain Address, put in IAr reg        
+        if( pFrame->InstAddrFlag ) /* If contain Address, put in IAr reg */
         {
             qspi->QSPI_IAR = pFrame->InstAddr;
             regIFR |= QSPI_IFR_ADDREN;
-        }    
-        qspi->QSPI_ICR = regICR;                            //  update Instruction code reg
-        qspi->QSPI_IFR = regIFR;                            // Instruction Frame reg 
-    }
-    else  /* Instruction frame with Data and Instruction**/
-    {    
-        regIFR |= QSPI_IFR_DATAEN;    
-        if(ReadWrite)
-        {
-            regIFR |= QSPI_IFR_TFRTYP_TRSFR_WRITE;      
-            qspi->QSPI_ICR = regICR;
-            qspi->QSPI_IFR = regIFR ;
-            DummyRead =  qspi->QSPI_IFR;                        // to synchronize system bus accesses   
-            if(pFrame->InstAddrFlag)
-            {
-                pQspiBuffer +=  pFrame->InstAddr;
-            }
-            memcpy(pQspiBuffer  ,pFrame->pData,  pFrame->DataSize); 
-        } 
-        else
-        {      
-            qspi->QSPI_ICR = regICR;
-            qspi->QSPI_IFR = regIFR ;
-            DummyRead =  qspi->QSPI_IFR;                        // to synchronize system bus accesses   
-            memcpy(pFrame->pData,  pQspiBuffer,  pFrame->DataSize); 
         }
 
+        qspi->QSPI_ICR = regICR; /*  update Instruction code reg */
+        qspi->QSPI_IFR = regIFR; /* Instruction Frame reg */
     }
+    else /* Instruction frame with Data and Instruction**/
+    {
+        regIFR |= QSPI_IFR_DATAEN;
+
+        if( ReadWrite )
+        {
+            regIFR |= QSPI_IFR_TFRTYP_TRSFR_WRITE;
+            qspi->QSPI_ICR = regICR;
+            qspi->QSPI_IFR = regIFR;
+            DummyRead = qspi->QSPI_IFR; /* to synchronize system bus accesses */
+
+            if( pFrame->InstAddrFlag )
+            {
+                pQspiBuffer += pFrame->InstAddr;
+            }
+
+            memcpy( pQspiBuffer, pFrame->pData, pFrame->DataSize );
+        }
+        else
+        {
+            qspi->QSPI_ICR = regICR;
+            qspi->QSPI_IFR = regIFR;
+            DummyRead = qspi->QSPI_IFR; /* to synchronize system bus accesses */
+            memcpy( pFrame->pData, pQspiBuffer, pFrame->DataSize );
+        }
+    }
+
     memory_barrier();
-    qspi->QSPI_CR = QSPI_CR_LASTXFER;                     // End transmission after all data has been sent
-    while(!(qspi->QSPI_SR & QSPI_SR_INSTRE));             // poll CR reg to know status if Intrustion has end
+    qspi->QSPI_CR = QSPI_CR_LASTXFER;            /* End transmission after all data has been sent */
+
+    while( !( qspi->QSPI_SR & QSPI_SR_INSTRE ) ) /* poll CR reg to know status if Intrustion has end */
 
 
 
+    {
+    }
 }
 
 
@@ -413,45 +447,51 @@ extern void QSPI_SendFrame( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite)
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-extern void QSPI_SendFrameToMem( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite)
+extern void QSPI_SendFrameToMem( Qspi * qspi,
+                                 qspiFrame * pFrame,
+                                 AccesType ReadWrite )
 {
-    uint32_t regIFR, regICR, DummyRead ;
-    uint8_t *pQspiMem = (uint8_t *)QSPIMEM_ADDR;
+    uint32_t regIFR, regICR, DummyRead;
+    uint8_t * pQspiMem = ( uint8_t * ) QSPIMEM_ADDR;
 
-    assert((qspi->QSPI_MR) & QSPI_MR_SMM);  
+    assert( ( qspi->QSPI_MR ) & QSPI_MR_SMM );
 
-    regIFR = (pFrame->spiMode | QSPI_IFR_INSTEN | QSPI_IFR_DATAEN | QSPI_IFR_ADDREN | (pFrame->OptionLen << QSPI_IFR_OPTL_Pos) | (pFrame->DummyCycles << QSPI_IFR_NBDUM_Pos) | (pFrame->ContinuousRead << 14)) ;
-    // Write the instruction to reg
-    regICR = ( QSPI_ICR_OPT(pFrame->Option) | QSPI_ICR_INST(pFrame->Instruction));
-    if(pFrame->OptionEn)
+    regIFR = ( pFrame->spiMode | QSPI_IFR_INSTEN | QSPI_IFR_DATAEN | QSPI_IFR_ADDREN | ( pFrame->OptionLen << QSPI_IFR_OPTL_Pos ) | ( pFrame->DummyCycles << QSPI_IFR_NBDUM_Pos ) | ( pFrame->ContinuousRead << 14 ) );
+    /* Write the instruction to reg */
+    regICR = ( QSPI_ICR_OPT( pFrame->Option ) | QSPI_ICR_INST( pFrame->Instruction ) );
+
+    if( pFrame->OptionEn )
     {
-        regIFR|=QSPI_IFR_OPTEN;
+        regIFR |= QSPI_IFR_OPTEN;
     }
-    pQspiMem +=  pFrame->InstAddr;
-    if(ReadWrite)
-    {   
+
+    pQspiMem += pFrame->InstAddr;
+
+    if( ReadWrite )
+    {
         regIFR |= QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY;
         memory_barrier();
         qspi->QSPI_ICR = regICR;
-        qspi->QSPI_IFR = regIFR ;
-        DummyRead =  qspi->QSPI_IFR;                // to synchronize system bus accesses  
+        qspi->QSPI_IFR = regIFR;
+        DummyRead = qspi->QSPI_IFR; /* to synchronize system bus accesses */
 
-        memcpy(pQspiMem  ,pFrame->pData,  pFrame->DataSize); 
-
+        memcpy( pQspiMem, pFrame->pData, pFrame->DataSize );
     }
     else
     {
         regIFR |= QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY;
         memory_barrier();
         qspi->QSPI_ICR = regICR;
-        qspi->QSPI_IFR = regIFR ;
-        DummyRead =  qspi->QSPI_IFR;                                                // to synchronize system bus accesses 
-        memcpy(pFrame->pData, pQspiMem , pFrame->DataSize);   //  Read QSPI AHB memory space 
+        qspi->QSPI_IFR = regIFR;
+        DummyRead = qspi->QSPI_IFR;                          /* to synchronize system bus accesses */
+        memcpy( pFrame->pData, pQspiMem, pFrame->DataSize ); /*  Read QSPI AHB memory space */
+    }
 
-    } 
     memory_barrier();
-    qspi->QSPI_CR = QSPI_CR_LASTXFER;             // End transmission after all data has been sent
-    while(!(qspi->QSPI_SR & QSPI_SR_INSTRE));     // poll CR reg to know status if Intrustion has end
+    qspi->QSPI_CR = QSPI_CR_LASTXFER;            /* End transmission after all data has been sent */
 
+    while( !( qspi->QSPI_SR & QSPI_SR_INSTRE ) ) /* poll CR reg to know status if Intrustion has end */
+
+    {
+    }
 }
-

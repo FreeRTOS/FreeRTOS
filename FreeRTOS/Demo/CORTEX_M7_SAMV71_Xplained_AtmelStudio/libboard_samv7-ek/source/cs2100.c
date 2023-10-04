@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -43,14 +43,16 @@
 /*----------------------------------------------------------------------------
  *        Type
  *----------------------------------------------------------------------------*/
-typedef struct {
-	uint16_t value;
-	uint8_t address;
-}CS2100_PARA;
+typedef struct
+{
+    uint16_t value;
+    uint8_t address;
+} CS2100_PARA;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
+
 /**
  * \brief Read data from CS2100 Register.
  *
@@ -59,16 +61,16 @@ typedef struct {
  * \param regAddr Register address to read.
  * \return value in the given register.
  */
-uint16_t CS2100_Read(Twid *pTwid,
-				uint32_t device,
-				uint32_t regAddr)
+uint16_t CS2100_Read( Twid * pTwid,
+                      uint32_t device,
+                      uint32_t regAddr )
 {
-	uint16_t bitsDataRegister;
-	uint8_t Tdata[2]={0,0};
+    uint16_t bitsDataRegister;
+    uint8_t Tdata[ 2 ] = { 0, 0 };
 
-	TWID_Read(pTwid, device, regAddr, 1, Tdata, 2, 0);
-	bitsDataRegister = (Tdata[0] << 8) | Tdata[1];
-	return bitsDataRegister;
+    TWID_Read( pTwid, device, regAddr, 1, Tdata, 2, 0 );
+    bitsDataRegister = ( Tdata[ 0 ] << 8 ) | Tdata[ 1 ];
+    return bitsDataRegister;
 }
 
 /**
@@ -79,15 +81,16 @@ uint16_t CS2100_Read(Twid *pTwid,
  * \param regAddr Register address to write.
  * \param data    Data to write
  */
-void CS2100_Write(Twid *pTwid,
-				uint32_t device,
-				uint32_t regAddr,
-				uint16_t data)
+void CS2100_Write( Twid * pTwid,
+                   uint32_t device,
+                   uint32_t regAddr,
+                   uint16_t data )
 {
-	uint8_t tmpData[2];
-	tmpData[0] = (data & 0xff00) >> 8;
-	tmpData[1] = data & 0xff;
-	TWID_Write(pTwid, device, regAddr, 1, tmpData, 2, 0);
+    uint8_t tmpData[ 2 ];
+
+    tmpData[ 0 ] = ( data & 0xff00 ) >> 8;
+    tmpData[ 1 ] = data & 0xff;
+    TWID_Write( pTwid, device, regAddr, 1, tmpData, 2, 0 );
 }
 
 /**
@@ -97,17 +100,24 @@ void CS2100_Write(Twid *pTwid,
  * \param device  Twi slave address.
  * \param PCK     Device programmable clock
  */
-uint8_t CS2100_Init(Twid *pTwid, uint32_t device,  uint32_t PCK)
+uint8_t CS2100_Init( Twid * pTwid,
+                     uint32_t device,
+                     uint32_t PCK )
 {
-	uint16_t data = 0;
-	// Reset (write Reg@0x0 to reset)
-	CS2100_Write(pTwid, device, 0, 0xFFFF);
+    uint16_t data = 0;
 
-	for(data = 0; data < 1000; data++);
-	//wait ready    
-	while(data!=0x8904)
-		data = CS2100_Read(pTwid, device, 0);
-	return 0;
+    /* Reset (write Reg@0x0 to reset) */
+    CS2100_Write( pTwid, device, 0, 0xFFFF );
+
+    for( data = 0; data < 1000; data++ )
+    {
+    }
+
+    /*wait ready */
+    while( data != 0x8904 )
+    {
+        data = CS2100_Read( pTwid, device, 0 );
+    }
+
+    return 0;
 }
-
-

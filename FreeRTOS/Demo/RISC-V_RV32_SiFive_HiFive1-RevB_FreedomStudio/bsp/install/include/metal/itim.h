@@ -15,6 +15,6 @@
  * Link a function into the ITIM (Instruction Tightly Integrated
  * Memory) if the ITIM is present on the target device.
  */
-#define METAL_PLACE_IN_ITIM __attribute__((section(".itim")))
+#define METAL_PLACE_IN_ITIM    __attribute__( ( section( ".itim" ) ) )
 
 #endif

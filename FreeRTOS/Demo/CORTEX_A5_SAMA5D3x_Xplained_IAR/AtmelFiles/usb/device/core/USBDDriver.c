@@ -58,18 +58,20 @@ static USBDDriver usbdDriver;
 /**
  * Send a NULL packet
  */
-static void TerminateCtrlInWithNull(void *pArg,
-                                    uint8_t status,
-                                    uint32_t transferred,
-                                    uint32_t remaining)
+static void TerminateCtrlInWithNull( void * pArg,
+                                     uint8_t status,
+                                     uint32_t transferred,
+                                     uint32_t remaining )
 {
-    pArg = pArg; status = status;
-    transferred = transferred; remaining = remaining;
-    USBD_Write(0, /* Endpoint #0 */
-               0, /* No data buffer */
-               0, /* No data buffer */
-               (TransferCallback) 0,
-               (void *)  0);
+    pArg = pArg;
+    status = status;
+    transferred = transferred;
+    remaining = remaining;
+    USBD_Write( 0, /* Endpoint #0 */
+                0, /* No data buffer */
+                0, /* No data buffer */
+                ( TransferCallback ) 0,
+                ( void * ) 0 );
 }
 
 /**
@@ -78,135 +80,145 @@ static void TerminateCtrlInWithNull(void *pArg,
  * \param pDriver  Pointer to a USBDDriver instance.
  * \param cfgnum  Configuration number to set.
  */
-static void SetConfiguration(USBDDriver *pDriver, uint8_t cfgnum)
+static void SetConfiguration( USBDDriver * pDriver,
+                              uint8_t cfgnum )
 {
-    USBEndpointDescriptor *pEndpoints[17];
-    const USBConfigurationDescriptor *pConfiguration;
+    USBEndpointDescriptor * pEndpoints[ 17 ];
+    const USBConfigurationDescriptor * pConfiguration;
 
     /* Use different descriptor depending on device speed */
-    if (   USBD_HAL_IsHighSpeed()
-        && pDriver->pDescriptors->pHsConfiguration) {
-
+    if( USBD_HAL_IsHighSpeed() &&
+        pDriver->pDescriptors->pHsConfiguration )
+    {
         pConfiguration = pDriver->pDescriptors->pHsConfiguration;
     }
-    else {
-
+    else
+    {
         pConfiguration = pDriver->pDescriptors->pFsConfiguration;
     }
 
     /* Set & save the desired configuration */
-    USBD_SetConfiguration(cfgnum);
+    USBD_SetConfiguration( cfgnum );
 
     pDriver->cfgnum = cfgnum;
     pDriver->isRemoteWakeUpEnabled =
-        ((pConfiguration->bmAttributes & 0x20) > 0);
+        ( ( pConfiguration->bmAttributes & 0x20 ) > 0 );
 
     /* If the configuration is not 0, configure endpoints */
-    if (cfgnum != 0) {
-
+    if( cfgnum != 0 )
+    {
         /* Parse configuration to get endpoint descriptors */
-        USBConfigurationDescriptor_Parse(pConfiguration, 0, pEndpoints, 0);
+        USBConfigurationDescriptor_Parse( pConfiguration, 0, pEndpoints, 0 );
 
         /* Configure endpoints */
         int i = 0;
-        while (pEndpoints[i] != 0) {
 
-            USBD_ConfigureEndpoint(pEndpoints[i]);
+        while( pEndpoints[ i ] != 0 )
+        {
+            USBD_ConfigureEndpoint( pEndpoints[ i ] );
             i++;
         }
     }
+
     /* Should be done before send the ZLP */
-    if (NULL != USBDDriverCallbacks_ConfigurationChanged)
-        USBDDriverCallbacks_ConfigurationChanged(cfgnum);
+    if( NULL != USBDDriverCallbacks_ConfigurationChanged )
+    {
+        USBDDriverCallbacks_ConfigurationChanged( cfgnum );
+    }
 
     /* Acknowledge the request */
-    USBD_Write(0, /* Endpoint #0 */
-               0, /* No data buffer */
-               0, /* No data buffer */
-               (TransferCallback) 0,
-               (void *)  0);
+    USBD_Write( 0, /* Endpoint #0 */
+                0, /* No data buffer */
+                0, /* No data buffer */
+                ( TransferCallback ) 0,
+                ( void * ) 0 );
 }
 
 /**
  * Sends the current configuration number to the host.
  * \param pDriver  Pointer to a USBDDriver instance.
  */
-static void GetConfiguration(const USBDDriver *pDriver)
+static void GetConfiguration( const USBDDriver * pDriver )
 {
-    unsigned long tmp;   // Coud be unsigned char : unsigned long has been chose to avoid any potential alignment issue with DMA 
-  
-    if( USBD_GetState() <  USBD_STATE_CONFIGURED) 
-        tmp = 0;    // If device is unconfigured, returned configuration must be 0 
-    else 
-        tmp = pDriver->cfgnum; 
+    unsigned long tmp; /* Coud be unsigned char : unsigned long has been chose to avoid any potential alignment issue with DMA */
 
-    USBD_Write(0, &tmp, 1, 0, 0); 
+    if( USBD_GetState() < USBD_STATE_CONFIGURED )
+    {
+        tmp = 0; /* If device is unconfigured, returned configuration must be 0 */
+    }
+    else
+    {
+        tmp = pDriver->cfgnum;
+    }
+
+    USBD_Write( 0, &tmp, 1, 0, 0 );
 }
 
 /**
  * Sends the current status of the device to the host.
  * \param pDriver  Pointer to a USBDDriver instance.
  */
-static void GetDeviceStatus(const USBDDriver *pDriver)
+static void GetDeviceStatus( const USBDDriver * pDriver )
 {
     static unsigned short data;
-    const USBConfigurationDescriptor *pConfiguration;
+    const USBConfigurationDescriptor * pConfiguration;
 
     data = 0;
     /* Use different configuration depending on device speed */
 
-    if (USBD_IsHighSpeed()) {
-
+    if( USBD_IsHighSpeed() )
+    {
         pConfiguration = pDriver->pDescriptors->pHsConfiguration;
     }
-    else {
-
+    else
+    {
         pConfiguration = pDriver->pDescriptors->pFsConfiguration;
     }
 
     /* Check current configuration for power mode (if device is configured) */
 
-    if (pDriver->cfgnum != 0) {
-
-        if (USBConfigurationDescriptor_IsSelfPowered(pConfiguration)) {
-
+    if( pDriver->cfgnum != 0 )
+    {
+        if( USBConfigurationDescriptor_IsSelfPowered( pConfiguration ) )
+        {
             data |= 1;
         }
     }
 
     /* Check if remote wake-up is enabled */
 
-    if (pDriver->isRemoteWakeUpEnabled) {
-
+    if( pDriver->isRemoteWakeUpEnabled )
+    {
         data |= 2;
     }
 
     /* Send the device status */
 
-    USBD_Write(0, &data, 2, 0, 0);
+    USBD_Write( 0, &data, 2, 0, 0 );
 }
 
 /**
  * Sends the current status of an endpoints to the USB host.
  * \param bEndpoint  Endpoint number.
  */
-static void GetEndpointStatus(uint8_t bEndpoint)
+static void GetEndpointStatus( uint8_t bEndpoint )
 {
     static unsigned short data;
 
     data = 0;
 
-    switch (USBD_HAL_Halt(bEndpoint, 0xFF)) {
-
+    switch( USBD_HAL_Halt( bEndpoint, 0xFF ) )
+    {
         case USBD_STATUS_INVALID_PARAMETER: /* the endpoint not exists */
-            USBD_Stall(0);
+            USBD_Stall( 0 );
             break;
 
         case 1:
             data = 1;
+
         case 0:
             /* Send the endpoint status */
-            USBD_Write(0, &data, 2, 0, 0);
+            USBD_Write( 0, &data, 2, 0, 0 );
             break;
     }
 }
@@ -219,19 +231,18 @@ static void GetEndpointStatus(uint8_t bEndpoint)
  * \param index  Index of the requested descriptor.
  * \param length  Maximum number of bytes to return.
  */
-static void GetDescriptor(
-    const USBDDriver *pDriver,
-    uint8_t type,
-    uint8_t indexRDesc,
-    uint32_t length)
+static void GetDescriptor( const USBDDriver * pDriver,
+                           uint8_t type,
+                           uint8_t indexRDesc,
+                           uint32_t length )
 {
-    const USBDeviceDescriptor *pDevice;
-    const USBConfigurationDescriptor *pConfiguration;
-    const USBDeviceQualifierDescriptor *pQualifier;
-    const USBConfigurationDescriptor *pOtherSpeed;
-    const USBGenericDescriptor **pStrings =
-        (const USBGenericDescriptor **) pDriver->pDescriptors->pStrings;
-    const USBGenericDescriptor *pString;
+    const USBDeviceDescriptor * pDevice;
+    const USBConfigurationDescriptor * pConfiguration;
+    const USBDeviceQualifierDescriptor * pQualifier;
+    const USBConfigurationDescriptor * pOtherSpeed;
+    const USBGenericDescriptor ** pStrings =
+        ( const USBGenericDescriptor ** ) pDriver->pDescriptors->pStrings;
+    const USBGenericDescriptor * pString;
     uint8_t numStrings = pDriver->pDescriptors->numStrings;
     uint8_t terminateWithNull = 0;
 
@@ -242,136 +253,151 @@ static void GetDescriptor(
     pConfiguration = pDriver->pDescriptors->pFsConfiguration;
 
     /* HS, we try HS values */
-    if (USBD_HAL_IsHighSpeed()) {
+    if( USBD_HAL_IsHighSpeed() )
+    {
+        TRACE_DEBUG_WP( "HS " );
 
-        TRACE_DEBUG_WP("HS ");
-        if (pDriver->pDescriptors->pHsDevice)
+        if( pDriver->pDescriptors->pHsDevice )
+        {
             pDevice = pDriver->pDescriptors->pHsDevice;
-        if (pDriver->pDescriptors->pHsConfiguration)
+        }
+
+        if( pDriver->pDescriptors->pHsConfiguration )
+        {
             pConfiguration = pDriver->pDescriptors->pHsConfiguration;
+        }
+
         pQualifier = pDriver->pDescriptors->pHsQualifier;
         pOtherSpeed = pDriver->pDescriptors->pHsOtherSpeed;
     }
-    else {
-
-        TRACE_DEBUG_WP("FS ");
+    else
+    {
+        TRACE_DEBUG_WP( "FS " );
         pQualifier = pDriver->pDescriptors->pFsQualifier;
         pOtherSpeed = pDriver->pDescriptors->pFsOtherSpeed;
     }
 
     /* Check the descriptor type */
 
-    switch (type) {
-
+    switch( type )
+    {
         case USBGenericDescriptor_DEVICE:
-            TRACE_INFO_WP("Dev ");
+            TRACE_INFO_WP( "Dev " );
 
             /* Adjust length and send descriptor */
 
-            if (length > USBGenericDescriptor_GetLength((USBGenericDescriptor *) pDevice)) {
-
-                length = USBGenericDescriptor_GetLength((USBGenericDescriptor *) pDevice);
+            if( length > USBGenericDescriptor_GetLength( ( USBGenericDescriptor * ) pDevice ) )
+            {
+                length = USBGenericDescriptor_GetLength( ( USBGenericDescriptor * ) pDevice );
             }
-            USBD_Write(0, pDevice, length, 0, 0);
+
+            USBD_Write( 0, pDevice, length, 0, 0 );
             break;
 
         case USBGenericDescriptor_CONFIGURATION:
-            TRACE_INFO_WP("Cfg ");
+            TRACE_INFO_WP( "Cfg " );
 
             /* Adjust length and send descriptor */
 
-            if (length > USBConfigurationDescriptor_GetTotalLength(pConfiguration)) {
-
-                length = USBConfigurationDescriptor_GetTotalLength(pConfiguration);
-                terminateWithNull = ((length % pDevice->bMaxPacketSize0) == 0);
+            if( length > USBConfigurationDescriptor_GetTotalLength( pConfiguration ) )
+            {
+                length = USBConfigurationDescriptor_GetTotalLength( pConfiguration );
+                terminateWithNull = ( ( length % pDevice->bMaxPacketSize0 ) == 0 );
             }
-            USBD_Write(0,
-                       pConfiguration,
-                       length,
-                       terminateWithNull ? TerminateCtrlInWithNull : 0,
-                       0);
+
+            USBD_Write( 0,
+                        pConfiguration,
+                        length,
+                        terminateWithNull ? TerminateCtrlInWithNull : 0,
+                        0 );
             break;
 
         case USBGenericDescriptor_DEVICEQUALIFIER:
-            TRACE_INFO_WP("Qua ");
+            TRACE_INFO_WP( "Qua " );
 
             /* Check if descriptor exists */
 
-            if (!pQualifier) {
-
-                USBD_Stall(0);
+            if( !pQualifier )
+            {
+                USBD_Stall( 0 );
             }
-            else {
-
+            else
+            {
                 /* Adjust length and send descriptor */
 
-                if (length > USBGenericDescriptor_GetLength((USBGenericDescriptor *) pQualifier)) {
-
-                    length = USBGenericDescriptor_GetLength((USBGenericDescriptor *) pQualifier);
+                if( length > USBGenericDescriptor_GetLength( ( USBGenericDescriptor * ) pQualifier ) )
+                {
+                    length = USBGenericDescriptor_GetLength( ( USBGenericDescriptor * ) pQualifier );
                 }
-                USBD_Write(0, pQualifier, length, 0, 0);
+
+                USBD_Write( 0, pQualifier, length, 0, 0 );
             }
+
             break;
 
         case USBGenericDescriptor_OTHERSPEEDCONFIGURATION:
-            TRACE_INFO_WP("OSC ");
+            TRACE_INFO_WP( "OSC " );
 
             /* Check if descriptor exists */
 
-            if (!pOtherSpeed) {
-
-                USBD_Stall(0);
+            if( !pOtherSpeed )
+            {
+                USBD_Stall( 0 );
             }
-            else {
-
+            else
+            {
                 /* Adjust length and send descriptor */
 
-                if (length > USBConfigurationDescriptor_GetTotalLength(pOtherSpeed)) {
-
-                    length = USBConfigurationDescriptor_GetTotalLength(pOtherSpeed);
-                    terminateWithNull = ((length % pDevice->bMaxPacketSize0) == 0);
+                if( length > USBConfigurationDescriptor_GetTotalLength( pOtherSpeed ) )
+                {
+                    length = USBConfigurationDescriptor_GetTotalLength( pOtherSpeed );
+                    terminateWithNull = ( ( length % pDevice->bMaxPacketSize0 ) == 0 );
                 }
-                USBD_Write(0,
-                           pOtherSpeed,
-                           length,
-                           terminateWithNull ? TerminateCtrlInWithNull : 0,
-                           0);
+
+                USBD_Write( 0,
+                            pOtherSpeed,
+                            length,
+                            terminateWithNull ? TerminateCtrlInWithNull : 0,
+                            0 );
             }
+
             break;
 
         case USBGenericDescriptor_STRING:
-            TRACE_INFO_WP("Str%d ", indexRDesc);
+            TRACE_INFO_WP( "Str%d ", indexRDesc );
 
             /* Check if descriptor exists */
 
-            if (indexRDesc >= numStrings) {
-
-                USBD_Stall(0);
+            if( indexRDesc >= numStrings )
+            {
+                USBD_Stall( 0 );
             }
-            else {
-
-                pString = pStrings[indexRDesc];
+            else
+            {
+                pString = pStrings[ indexRDesc ];
 
                 /* Adjust length and send descriptor */
 
-                if (length > USBGenericDescriptor_GetLength(pString)) {
-
-                    length = USBGenericDescriptor_GetLength(pString);
-                    terminateWithNull = ((length % pDevice->bMaxPacketSize0) == 0);
+                if( length > USBGenericDescriptor_GetLength( pString ) )
+                {
+                    length = USBGenericDescriptor_GetLength( pString );
+                    terminateWithNull = ( ( length % pDevice->bMaxPacketSize0 ) == 0 );
                 }
-                USBD_Write(0,
-                           pString,
-                           length,
-                           terminateWithNull ? TerminateCtrlInWithNull : 0,
-                           0);
+
+                USBD_Write( 0,
+                            pString,
+                            length,
+                            terminateWithNull ? TerminateCtrlInWithNull : 0,
+                            0 );
             }
+
             break;
 
         default:
             TRACE_WARNING(
-                      "USBDDriver_GetDescriptor: Unknown descriptor type (%d)\n\r",
-                      type);
-            USBD_Stall(0);
+                "USBDDriver_GetDescriptor: Unknown descriptor type (%d)\n\r",
+                type );
+            USBD_Stall( 0 );
     }
 }
 
@@ -383,31 +409,33 @@ static void GetDescriptor(
  * \parma infnum  Interface number.
  * \parma setting  New active setting for the interface.
  */
-static void SetInterface(
-    USBDDriver *pDriver,
-    uint8_t infnum,
-    uint8_t setting)
+static void SetInterface( USBDDriver * pDriver,
+                          uint8_t infnum,
+                          uint8_t setting )
 {
     /* Make sure alternate settings are supported */
 
-    if (!pDriver->pInterfaces) {
-
-        USBD_Stall(0);
+    if( !pDriver->pInterfaces )
+    {
+        USBD_Stall( 0 );
     }
-    else {
-
+    else
+    {
         /* Change the current setting of the interface and trigger the callback */
         /* if necessary */
-        if (pDriver->pInterfaces[infnum] != setting) {
+        if( pDriver->pInterfaces[ infnum ] != setting )
+        {
+            pDriver->pInterfaces[ infnum ] = setting;
 
-            pDriver->pInterfaces[infnum] = setting;
-            if (NULL != USBDDriverCallbacks_InterfaceSettingChanged)
-                USBDDriverCallbacks_InterfaceSettingChanged(infnum, setting);
+            if( NULL != USBDDriverCallbacks_InterfaceSettingChanged )
+            {
+                USBDDriverCallbacks_InterfaceSettingChanged( infnum, setting );
+            }
         }
 
         /* Acknowledge the request */
 
-        USBD_Write(0, 0, 0, 0, 0);
+        USBD_Write( 0, 0, 0, 0, 0 );
     }
 }
 
@@ -418,21 +446,20 @@ static void SetInterface(
  * \param pDriver  Pointer to a USBDDriver instance.
  * \param infnum  Interface number.
  */
-static void GetInterface(
-    const USBDDriver *pDriver,
-    uint8_t infnum)
+static void GetInterface( const USBDDriver * pDriver,
+                          uint8_t infnum )
 {
     /* Make sure alternate settings are supported, or STALL the control pipe */
 
-    if (!pDriver->pInterfaces) {
-
-        USBD_Stall(0);
+    if( !pDriver->pInterfaces )
+    {
+        USBD_Stall( 0 );
     }
-    else {
-
+    else
+    {
         /* Sends the current interface setting to the host */
 
-        USBD_Write(0, &(pDriver->pInterfaces[infnum]), 1, 0, 0);
+        USBD_Write( 0, &( pDriver->pInterfaces[ infnum ] ), 1, 0, 0 );
     }
 }
 
@@ -440,15 +467,17 @@ static void GetInterface(
  * Performs the selected test on the USB device (high-speed only).
  * \param test  Test selector value.
  */
-static void USBDDriver_Test(const USBDDriver *pDriver, uint8_t test)
+static void USBDDriver_Test( const USBDDriver * pDriver,
+                             uint8_t test )
 {
     pDriver = pDriver;
-    TRACE_DEBUG("UDPHS_Test\n\r");
+    TRACE_DEBUG( "UDPHS_Test\n\r" );
 
     /* the lower byte of wIndex must be zero
-       the most significant byte of wIndex is used to specify the specific test mode */
+     * the most significant byte of wIndex is used to specify the specific test mode */
 
-    switch (test) {
+    switch( test )
+    {
         case USBFeatureRequest_TESTPACKET:
             /*Test mode Test_Packet: */
             /*Upon command, a port must repetitively transmit the following test packet until */
@@ -463,11 +492,15 @@ static void USBDDriver_Test(const USBDDriver *pDriver, uint8_t test)
             /*no greater than 125 us. */
 
             /* Send ZLP */
-            USBD_Test(USBFeatureRequest_TESTSENDZLP);
+            USBD_Test( USBFeatureRequest_TESTSENDZLP );
             /* Tst PACKET */
-            USBD_Test(USBFeatureRequest_TESTPACKET);
-            while (1);
-            /*break; not reached */
+            USBD_Test( USBFeatureRequest_TESTPACKET );
+
+            while( 1 )
+            {
+            }
+
+        /*break; not reached */
 
 
         case USBFeatureRequest_TESTJ:
@@ -477,11 +510,15 @@ static void USBDDriver_Test(const USBDDriver *pDriver, uint8_t test)
             /*level on the D+ line. */
 
             /* Send ZLP */
-            USBD_Test(USBFeatureRequest_TESTSENDZLP);
+            USBD_Test( USBFeatureRequest_TESTSENDZLP );
             /* Tst J */
-            USBD_Test(USBFeatureRequest_TESTJ);
-            while (1);
-            /*break; not reached */
+            USBD_Test( USBFeatureRequest_TESTJ );
+
+            while( 1 )
+            {
+            }
+
+        /*break; not reached */
 
 
         case USBFeatureRequest_TESTK:
@@ -491,10 +528,14 @@ static void USBDDriver_Test(const USBDDriver *pDriver, uint8_t test)
             /*level on the D- line. */
 
             /* Send a ZLP */
-            USBD_Test(USBFeatureRequest_TESTSENDZLP);
-            USBD_Test(USBFeatureRequest_TESTK);
-            while (1);
-            /*break; not reached */
+            USBD_Test( USBFeatureRequest_TESTSENDZLP );
+            USBD_Test( USBFeatureRequest_TESTK );
+
+            while( 1 )
+            {
+            }
+
+        /*break; not reached */
 
 
         case USBFeatureRequest_TESTSE0NAK:
@@ -509,18 +550,22 @@ static void USBDDriver_Test(const USBDDriver *pDriver, uint8_t test)
             /*test for basic functional testing. */
 
             /* Send a ZLP */
-            USBD_Test(USBFeatureRequest_TESTSENDZLP);
+            USBD_Test( USBFeatureRequest_TESTSENDZLP );
             /* Test SE0_NAK */
-            USBD_Test(USBFeatureRequest_TESTSE0NAK);
-            while (1);
-            /*break; not reached */
+            USBD_Test( USBFeatureRequest_TESTSE0NAK );
+
+            while( 1 )
+            {
+            }
+
+        /*break; not reached */
 
 
         default:
-            USBD_Stall(0);
+            USBD_Stall( 0 );
             break;
-
     }
+
     /* The exit action is to power cycle the device. */
     /* The device must be disconnected from the host */
 }
@@ -532,7 +577,7 @@ static void USBDDriver_Test(const USBDDriver *pDriver, uint8_t test)
 /**
  * Return USBDDriver instance pointer for global usage.
  */
-USBDDriver *USBD_GetDriver(void)
+USBDDriver * USBD_GetDriver( void )
 {
     return &usbdDriver;
 }
@@ -546,12 +591,10 @@ USBDDriver *USBD_GetDriver(void)
  * \param pInterfaces  Pointer to an array for storing the current alternate
  *                     setting of each interface (optional).
  */
-void USBDDriver_Initialize(
-    USBDDriver *pDriver,
-    const USBDDriverDescriptors *pDescriptors,
-    uint8_t *pInterfaces)
+void USBDDriver_Initialize( USBDDriver * pDriver,
+                            const USBDDriverDescriptors * pDescriptors,
+                            uint8_t * pInterfaces )
 {
-
     pDriver->cfgnum = 0;
     pDriver->isRemoteWakeUpEnabled = 0;
 
@@ -560,9 +603,9 @@ void USBDDriver_Initialize(
 
     /* Initialize interfaces array if not null */
 
-    if (pInterfaces != 0) {
-
-        memset(pInterfaces, sizeof(pInterfaces), 0);
+    if( pInterfaces != 0 )
+    {
+        memset( pInterfaces, sizeof( pInterfaces ), 0 );
     }
 }
 
@@ -571,17 +614,22 @@ void USBDDriver_Initialize(
  * \param pDriver  Pointer to a USBDDriver instance.
  * \param cfgNum   Reserved.
  */
-USBConfigurationDescriptor *USBDDriver_GetCfgDescriptors(
-    USBDDriver *pDriver, uint8_t cfgNum)
+USBConfigurationDescriptor * USBDDriver_GetCfgDescriptors( USBDDriver * pDriver,
+                                                           uint8_t cfgNum )
 {
-    USBDDriverDescriptors *pDescList = (USBDDriverDescriptors *)pDriver->pDescriptors;
-    USBConfigurationDescriptor *pCfg;
+    USBDDriverDescriptors * pDescList = ( USBDDriverDescriptors * ) pDriver->pDescriptors;
+    USBConfigurationDescriptor * pCfg;
 
     cfgNum = cfgNum;
-    if (USBD_HAL_IsHighSpeed() && pDescList->pHsConfiguration)
-        pCfg = (USBConfigurationDescriptor *)pDescList->pHsConfiguration;
+
+    if( USBD_HAL_IsHighSpeed() && pDescList->pHsConfiguration )
+    {
+        pCfg = ( USBConfigurationDescriptor * ) pDescList->pHsConfiguration;
+    }
     else
-        pCfg = (USBConfigurationDescriptor *)pDescList->pFsConfiguration;
+    {
+        pCfg = ( USBConfigurationDescriptor * ) pDescList->pFsConfiguration;
+    }
 
     return pCfg;
 }
@@ -591,9 +639,8 @@ USBConfigurationDescriptor *USBDDriver_GetCfgDescriptors(
  * \param pDriver  Pointer to a USBDDriver instance.
  * \param pRequest  Pointer to a USBGenericRequest instance.
  */
-void USBDDriver_RequestHandler(
-    USBDDriver *pDriver,
-    const USBGenericRequest *pRequest)
+void USBDDriver_RequestHandler( USBDDriver * pDriver,
+                                const USBGenericRequest * pRequest )
 {
     uint8_t cfgnum;
     uint8_t infnum;
@@ -604,187 +651,194 @@ void USBDDriver_RequestHandler(
     uint32_t length;
     uint32_t address;
 
-    TRACE_INFO_WP("Std ");
+    TRACE_INFO_WP( "Std " );
 
     /* Check request code */
-    switch (USBGenericRequest_GetRequest(pRequest)) {
-
+    switch( USBGenericRequest_GetRequest( pRequest ) )
+    {
         case USBGenericRequest_GETDESCRIPTOR:
-            TRACE_INFO_WP("gDesc ");
+            TRACE_INFO_WP( "gDesc " );
 
             /* Send the requested descriptor */
-            type = USBGetDescriptorRequest_GetDescriptorType(pRequest);
-            indexDesc = USBGetDescriptorRequest_GetDescriptorIndex(pRequest);
-            length = USBGenericRequest_GetLength(pRequest);
-            GetDescriptor(pDriver, type, indexDesc, length);
+            type = USBGetDescriptorRequest_GetDescriptorType( pRequest );
+            indexDesc = USBGetDescriptorRequest_GetDescriptorIndex( pRequest );
+            length = USBGenericRequest_GetLength( pRequest );
+            GetDescriptor( pDriver, type, indexDesc, length );
             break;
 
         case USBGenericRequest_SETADDRESS:
-            TRACE_INFO_WP("sAddr ");
+            TRACE_INFO_WP( "sAddr " );
 
             /* Sends a zero-length packet and then set the device address */
-            address = USBSetAddressRequest_GetAddress(pRequest);
-            USBD_Write(0, 0, 0, (TransferCallback) USBD_SetAddress, (void *) address);
+            address = USBSetAddressRequest_GetAddress( pRequest );
+            USBD_Write( 0, 0, 0, ( TransferCallback ) USBD_SetAddress, ( void * ) address );
             break;
 
         case USBGenericRequest_SETCONFIGURATION:
-            TRACE_INFO_WP("sCfg ");
+            TRACE_INFO_WP( "sCfg " );
 
             /* Set the requested configuration */
-            cfgnum = USBSetConfigurationRequest_GetConfiguration(pRequest);
-            SetConfiguration(pDriver, cfgnum);
+            cfgnum = USBSetConfigurationRequest_GetConfiguration( pRequest );
+            SetConfiguration( pDriver, cfgnum );
             break;
 
         case USBGenericRequest_GETCONFIGURATION:
-            TRACE_INFO_WP("gCfg ");
+            TRACE_INFO_WP( "gCfg " );
 
             /* Send the current configuration number */
-            GetConfiguration(pDriver);
+            GetConfiguration( pDriver );
             break;
 
         case USBGenericRequest_GETSTATUS:
-            TRACE_INFO_WP("gSta ");
+            TRACE_INFO_WP( "gSta " );
 
             /* Check who is the recipient */
-            switch (USBGenericRequest_GetRecipient(pRequest)) {
-
+            switch( USBGenericRequest_GetRecipient( pRequest ) )
+            {
                 case USBGenericRequest_DEVICE:
-                    TRACE_INFO_WP("Dev ");
+                    TRACE_INFO_WP( "Dev " );
 
                     /* Send the device status */
-                    GetDeviceStatus(pDriver);
+                    GetDeviceStatus( pDriver );
                     break;
 
                 case USBGenericRequest_ENDPOINT:
-                    TRACE_INFO_WP("Ept ");
+                    TRACE_INFO_WP( "Ept " );
 
                     /* Send the endpoint status */
-                    eptnum = USBGenericRequest_GetEndpointNumber(pRequest);
-                    GetEndpointStatus(eptnum);
+                    eptnum = USBGenericRequest_GetEndpointNumber( pRequest );
+                    GetEndpointStatus( eptnum );
                     break;
 
                 default:
                     TRACE_WARNING(
-                              "USBDDriver_RequestHandler: Unknown recipient (%d)\n\r",
-                              USBGenericRequest_GetRecipient(pRequest));
-                    USBD_Stall(0);
+                        "USBDDriver_RequestHandler: Unknown recipient (%d)\n\r",
+                        USBGenericRequest_GetRecipient( pRequest ) );
+                    USBD_Stall( 0 );
             }
+
             break;
 
         case USBGenericRequest_CLEARFEATURE:
-            TRACE_INFO_WP("cFeat ");
+            TRACE_INFO_WP( "cFeat " );
 
             /* Check which is the requested feature */
-            switch (USBFeatureRequest_GetFeatureSelector(pRequest)) {
-
+            switch( USBFeatureRequest_GetFeatureSelector( pRequest ) )
+            {
                 case USBFeatureRequest_ENDPOINTHALT:
-                    TRACE_INFO_WP("Hlt ");
+                    TRACE_INFO_WP( "Hlt " );
 
                     /* Unhalt endpoint and send a zero-length packet */
-                    USBD_Unhalt(USBGenericRequest_GetEndpointNumber(pRequest));
-                    USBD_Write(0, 0, 0, 0, 0);
+                    USBD_Unhalt( USBGenericRequest_GetEndpointNumber( pRequest ) );
+                    USBD_Write( 0, 0, 0, 0, 0 );
                     break;
 
                 case USBFeatureRequest_DEVICEREMOTEWAKEUP:
-                    TRACE_INFO_WP("RmWU ");
+                    TRACE_INFO_WP( "RmWU " );
 
                     /* Disable remote wake-up and send a zero-length packet */
                     pDriver->isRemoteWakeUpEnabled = 0;
-                    USBD_Write(0, 0, 0, 0, 0);
+                    USBD_Write( 0, 0, 0, 0, 0 );
                     break;
 
                 default:
                     TRACE_WARNING(
-                              "USBDDriver_RequestHandler: Unknown feature selector (%d)\n\r",
-                              USBFeatureRequest_GetFeatureSelector(pRequest));
-                    USBD_Stall(0);
+                        "USBDDriver_RequestHandler: Unknown feature selector (%d)\n\r",
+                        USBFeatureRequest_GetFeatureSelector( pRequest ) );
+                    USBD_Stall( 0 );
             }
+
             break;
 
-    case USBGenericRequest_SETFEATURE:
-        TRACE_INFO_WP("sFeat ");
+        case USBGenericRequest_SETFEATURE:
+            TRACE_INFO_WP( "sFeat " );
 
-        /* Check which is the selected feature */
-        switch (USBFeatureRequest_GetFeatureSelector(pRequest)) {
+            /* Check which is the selected feature */
+            switch( USBFeatureRequest_GetFeatureSelector( pRequest ) )
+            {
+                case USBFeatureRequest_DEVICEREMOTEWAKEUP:
+                    TRACE_INFO_WP( "RmWU " );
 
-            case USBFeatureRequest_DEVICEREMOTEWAKEUP:
-                TRACE_INFO_WP("RmWU ");
+                    /* Enable remote wake-up and send a ZLP */
+                    pDriver->isRemoteWakeUpEnabled = 1;
+                    USBD_Write( 0, 0, 0, 0, 0 );
+                    break;
 
-                /* Enable remote wake-up and send a ZLP */
-                pDriver->isRemoteWakeUpEnabled = 1;
-                USBD_Write(0, 0, 0, 0, 0);
-                break;
+                case USBFeatureRequest_ENDPOINTHALT:
+                    TRACE_INFO_WP( "Halt " );
+                    /* Halt endpoint */
+                    USBD_Halt( USBGenericRequest_GetEndpointNumber( pRequest ) );
+                    USBD_Write( 0, 0, 0, 0, 0 );
+                    break;
 
-            case USBFeatureRequest_ENDPOINTHALT:
-                TRACE_INFO_WP("Halt ");
-                /* Halt endpoint */
-                USBD_Halt(USBGenericRequest_GetEndpointNumber(pRequest));
-                USBD_Write(0, 0, 0, 0, 0);
-                break;
+                case USBFeatureRequest_TESTMODE:
 
-            case USBFeatureRequest_TESTMODE:
-                /* 7.1.20 Test Mode Support, 9.4.9 Set Feature */
-                if ((USBGenericRequest_GetRecipient(pRequest) == USBGenericRequest_DEVICE)
-                    && ((USBGenericRequest_GetIndex(pRequest) & 0x000F) == 0)) {
+                    /* 7.1.20 Test Mode Support, 9.4.9 Set Feature */
+                    if( ( USBGenericRequest_GetRecipient( pRequest ) == USBGenericRequest_DEVICE ) &&
+                        ( ( USBGenericRequest_GetIndex( pRequest ) & 0x000F ) == 0 ) )
+                    {
+                        /* Handle test request */
+                        USBDDriver_Test( pDriver,
+                                         USBFeatureRequest_GetTestSelector( pRequest ) );
+                    }
+                    else
+                    {
+                        USBD_Stall( 0 );
+                    }
 
-                    /* Handle test request */
-                    USBDDriver_Test(pDriver,
-                                    USBFeatureRequest_GetTestSelector(pRequest));
-                }
-                else {
+                    break;
 
-                    USBD_Stall(0);
-                }
-                break;
+                    #if 0
+                        case USBFeatureRequest_OTG_B_HNP_ENABLE:
+                            TRACE_INFO_WP( "OTG_B_HNP_ENABLE " );
+                            pDriver->otg_features_supported |=
+                                1 << USBFeatureRequest_OTG_B_HNP_ENABLE;
+                            USBD_Write( 0, 0, 0, 0, 0 );
+                            break;
 
-#if 0
-            case USBFeatureRequest_OTG_B_HNP_ENABLE:
-                    TRACE_INFO_WP("OTG_B_HNP_ENABLE ");
-                    pDriver->otg_features_supported |=
-                        1<<USBFeatureRequest_OTG_B_HNP_ENABLE;
-                    USBD_Write(0, 0, 0, 0, 0);
-                break;
-            case USBFeatureRequest_OTG_A_HNP_SUPPORT:
-                    TRACE_INFO_WP("OTG_A_HNP_SUPPORT ");
-                    pDriver->otg_features_supported |=
-                        1<<USBFeatureRequest_OTG_A_HNP_SUPPORT;
-                    USBD_Write(0, 0, 0, 0, 0);
-                break;
-            case USBFeatureRequest_OTG_A_ALT_HNP_SUPPORT:
-                    TRACE_INFO_WP("OTG_A_ALT_HNP_SUPPORT ");
-                    pDriver->otg_features_supported |=
-                        1<<USBFeatureRequest_OTG_A_ALT_HNP_SUPPORT;
-                    USBD_Write(0, 0, 0, 0, 0);
-                break;
-#endif
-            default:
-                TRACE_WARNING(
-                          "USBDDriver_RequestHandler: Unknown feature selector (%d)\n\r",
-                          USBFeatureRequest_GetFeatureSelector(pRequest));
-                USBD_Stall(0);
-        }
-        break;
+                        case USBFeatureRequest_OTG_A_HNP_SUPPORT:
+                            TRACE_INFO_WP( "OTG_A_HNP_SUPPORT " );
+                            pDriver->otg_features_supported |=
+                                1 << USBFeatureRequest_OTG_A_HNP_SUPPORT;
+                            USBD_Write( 0, 0, 0, 0, 0 );
+                            break;
 
-    case USBGenericRequest_SETINTERFACE:
-        TRACE_INFO_WP("sInterface ");
+                        case USBFeatureRequest_OTG_A_ALT_HNP_SUPPORT:
+                            TRACE_INFO_WP( "OTG_A_ALT_HNP_SUPPORT " );
+                            pDriver->otg_features_supported |=
+                                1 << USBFeatureRequest_OTG_A_ALT_HNP_SUPPORT;
+                            USBD_Write( 0, 0, 0, 0, 0 );
+                            break;
+                    #endif /* if 0 */
+                default:
+                    TRACE_WARNING(
+                        "USBDDriver_RequestHandler: Unknown feature selector (%d)\n\r",
+                        USBFeatureRequest_GetFeatureSelector( pRequest ) );
+                    USBD_Stall( 0 );
+            }
 
-        infnum = USBInterfaceRequest_GetInterface(pRequest);
-        setting = USBInterfaceRequest_GetAlternateSetting(pRequest);
-        SetInterface(pDriver, infnum, setting);
-        break;
+            break;
 
-    case USBGenericRequest_GETINTERFACE:
-        TRACE_INFO_WP("gInterface ");
+        case USBGenericRequest_SETINTERFACE:
+            TRACE_INFO_WP( "sInterface " );
 
-        infnum = USBInterfaceRequest_GetInterface(pRequest);
-        GetInterface(pDriver, infnum);
-        break;
+            infnum = USBInterfaceRequest_GetInterface( pRequest );
+            setting = USBInterfaceRequest_GetAlternateSetting( pRequest );
+            SetInterface( pDriver, infnum, setting );
+            break;
 
-    default:
-        TRACE_WARNING(
-                  "USBDDriver_RequestHandler: Unknown request code (%d)\n\r",
-                  USBGenericRequest_GetRequest(pRequest));
-        USBD_Stall(0);
+        case USBGenericRequest_GETINTERFACE:
+            TRACE_INFO_WP( "gInterface " );
+
+            infnum = USBInterfaceRequest_GetInterface( pRequest );
+            GetInterface( pDriver, infnum );
+            break;
+
+        default:
+            TRACE_WARNING(
+                "USBDDriver_RequestHandler: Unknown request code (%d)\n\r",
+                USBGenericRequest_GetRequest( pRequest ) );
+            USBD_Stall( 0 );
     }
 }
 
@@ -795,7 +849,7 @@ void USBDDriver_RequestHandler(
  * \return 1 if remote wake up has been enabled by the host; otherwise, returns
  * 0
  */
-uint8_t USBDDriver_IsRemoteWakeUpEnabled(const USBDDriver *pDriver)
+uint8_t USBDDriver_IsRemoteWakeUpEnabled( const USBDDriver * pDriver )
 {
     return pDriver->isRemoteWakeUpEnabled;
 }
@@ -805,7 +859,7 @@ uint8_t USBDDriver_IsRemoteWakeUpEnabled(const USBDDriver *pDriver)
  * \param pDriver  Pointer to an USBDDriver instance.
  * \return the OTG features
  */
-uint8_t USBDDriver_returnOTGFeatures(const USBDDriver *pDriver)
+uint8_t USBDDriver_returnOTGFeatures( const USBDDriver * pDriver )
 {
     return pDriver->otg_features_supported;
 }
@@ -815,7 +869,7 @@ uint8_t USBDDriver_returnOTGFeatures(const USBDDriver *pDriver)
  * \param pDriver  Pointer to an USBDDriver instance.
  * \return none
  */
-void USBDDriver_clearOTGFeatures(USBDDriver *pDriver)
+void USBDDriver_clearOTGFeatures( USBDDriver * pDriver )
 {
     pDriver->otg_features_supported = 0;
 }

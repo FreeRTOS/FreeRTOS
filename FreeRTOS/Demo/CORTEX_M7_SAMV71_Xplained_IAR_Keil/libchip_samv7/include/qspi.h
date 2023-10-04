@@ -35,7 +35,7 @@
  */
 
 #ifndef _QSPI_
-#define _QSPI_
+    #define _QSPI_
 
 /*----------------------------------------------------------------------------
  *        Headers
@@ -59,78 +59,90 @@
 
 
 /** Calculates the value of the CSR SCBR field given the baudrate and MCK. */
-#define QSPI_SCBR(baudrate, masterClock) ((uint32_t) (masterClock / baudrate) << 8)
+    #define QSPI_SCBR( baudrate, masterClock )    ( ( uint32_t ) ( masterClock / baudrate ) << 8 )
 
 /** Calculates the value of the CSR DLYBS field given the desired delay (in ns) */
-#define QSPI_DLYBS(delay, masterClock) ((uint32_t) (((masterClock / 1000000) * delay) / 1000) << 16)
+    #define QSPI_DLYBS( delay, masterClock )      ( ( uint32_t ) ( ( ( masterClock / 1000000 ) * delay ) / 1000 ) << 16 )
 
 /** Calculates the value of the CSR DLYBCT field given the desired delay (in ns) */
-#define QSPI_DLYBCT(delay, masterClock) ((uint32_t) (((masterClock / 1000000) * delay) / 32000) << 24)
+    #define QSPI_DLYBCT( delay, masterClock )     ( ( uint32_t ) ( ( ( masterClock / 1000000 ) * delay ) / 32000 ) << 24 )
 
 /*------------------------------------------------------------------------------ */
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-   
-typedef enum{
-     Device_Read,
-     Device_Write
-}AccesType;
-       
 
-typedef struct {
-  uint8_t       Instruction;
-  uint8_t       InstAddrFlag;  
-  uint8_t       Option;
-  uint8_t       OptionEn;
-  uint8_t       OptionLen;
-  uint8_t       ContinuousRead;
-  uint8_t       DummyCycles;
-  uint8_t       spiMode;  
-  uint32_t      DataSize;
-  uint32_t      InstAddr;
-  uint8_t       *pData;
-}qspiFrame;
+    typedef enum
+    {
+        Device_Read,
+        Device_Write
+    } AccesType;
 
-extern volatile uint8_t INSTRE_Flag;
-extern void QSPI_Enable( Qspi* qspi ) ;
-extern void QSPI_Disable( Qspi* qspi ) ;
-extern void QSPI_EnableIt( Qspi* qspi, uint32_t dwSources ) ;
-extern void QSPI_DisableIt( Qspi* qspi, uint32_t dwSources ) ;
-extern uint32_t QSPI_GetItMask( Qspi* qspi );
 
-extern void QSPI_Configure( Qspi* qspi, uint32_t dwConfiguration ) ;
-void QSPI_ConfigureClock( Qspi* qspi,uint32_t dwConfiguration );
-extern void QSPI_SwReset( Qspi* qspi );
+    typedef struct
+    {
+        uint8_t Instruction;
+        uint8_t InstAddrFlag;
+        uint8_t Option;
+        uint8_t OptionEn;
+        uint8_t OptionLen;
+        uint8_t ContinuousRead;
+        uint8_t DummyCycles;
+        uint8_t spiMode;
+        uint32_t DataSize;
+        uint32_t InstAddr;
+        uint8_t * pData;
+    } qspiFrame;
 
-extern void QSPI_ConfigureCs( Qspi* qspi, uint8_t spiCs );
+    extern volatile uint8_t INSTRE_Flag;
+    extern void QSPI_Enable( Qspi * qspi );
+    extern void QSPI_Disable( Qspi * qspi );
+    extern void QSPI_EnableIt( Qspi * qspi,
+                               uint32_t dwSources );
+    extern void QSPI_DisableIt( Qspi * qspi,
+                                uint32_t dwSources );
+    extern uint32_t QSPI_GetItMask( Qspi * qspi );
 
-extern int QSPI_RxEmpty(Qspi *qspi);
-extern int QSPI_TxRdy(Qspi *qspi);
+    extern void QSPI_Configure( Qspi * qspi,
+                                uint32_t dwConfiguration );
+    void QSPI_ConfigureClock( Qspi * qspi,
+                              uint32_t dwConfiguration );
+    extern void QSPI_SwReset( Qspi * qspi );
 
-extern uint32_t QSPI_Read( Qspi* qspi ) ;
-extern void QSPI_Write( Qspi* qspi, uint16_t wData ) ;
-extern void QSPI_WriteLast( Qspi* qspi,  uint16_t wData );
+    extern void QSPI_ConfigureCs( Qspi * qspi,
+                                  uint8_t spiCs );
 
-extern uint32_t QSPI_GetStatus( Qspi* qspi ) ;
-extern uint32_t QSPI_IsFinished( Qspi* pQspi ) ;
+    extern int QSPI_RxEmpty( Qspi * qspi );
+    extern int QSPI_TxRdy( Qspi * qspi );
 
-extern uint32_t QSPI_IsEOFInst( Qspi* qspi );
-extern uint32_t QSPI_IsCsRise( Qspi* qspi );
-extern uint32_t QSPI_IsCsAsserted( Qspi* qspi );
+    extern uint32_t QSPI_Read( Qspi * qspi );
+    extern void QSPI_Write( Qspi * qspi,
+                            uint16_t wData );
+    extern void QSPI_WriteLast( Qspi * qspi,
+                                uint16_t wData );
 
-extern void QSPI_SendFrame( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite);
+    extern uint32_t QSPI_GetStatus( Qspi * qspi );
+    extern uint32_t QSPI_IsFinished( Qspi * pQspi );
 
-extern void QSPI_SendFrameToMem( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite );
+    extern uint32_t QSPI_IsEOFInst( Qspi * qspi );
+    extern uint32_t QSPI_IsCsRise( Qspi * qspi );
+    extern uint32_t QSPI_IsCsAsserted( Qspi * qspi );
 
-#ifdef __cplusplus
+    extern void QSPI_SendFrame( Qspi * qspi,
+                                qspiFrame * pFrame,
+                                AccesType ReadWrite );
+
+    extern void QSPI_SendFrameToMem( Qspi * qspi,
+                                     qspiFrame * pFrame,
+                                     AccesType ReadWrite );
+
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _QSPI_ */
-

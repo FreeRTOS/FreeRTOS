@@ -8,9 +8,9 @@
  * in the include folder list so that including patch files here is not recommended
  * when CC-RX is used.
  */
-#if defined(__GNUC__) || defined(__ICCRX__)
+#if defined( __GNUC__ ) || defined( __ICCRX__ )
 
-#include "FIT_patch2.h"
+    #include "FIT_patch2.h"
 
 #endif /* defined(__GNUC__) || defined(__ICCRX__) */
 

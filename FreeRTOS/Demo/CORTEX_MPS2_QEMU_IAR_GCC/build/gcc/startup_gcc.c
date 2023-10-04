@@ -28,10 +28,10 @@
 #include <stdio.h>
 
 /* UART peripheral register addresses and bits. */
-#define UART0_ADDR             ( ( UART_t * ) ( 0x40004000 ) )
-#define UART_DR( baseaddr )    ( *( uint32_t * ) ( baseaddr ) )
-#define UART_STATE( baseaddr ) ( *( uint32_t * ) ( baseaddr + 4 ) )
-#define UART_STATE_TXFULL      ( 1 << 0 )
+#define UART0_ADDR           ( ( UART_t * ) ( 0x40004000 ) )
+#define UART_DR( baseaddr )       ( *( uint32_t * ) ( baseaddr ) )
+#define UART_STATE( baseaddr )    ( *( uint32_t * ) ( baseaddr + 4 ) )
+#define UART_STATE_TXFULL    ( 1 << 0 )
 
 typedef struct UART_t
 {
@@ -59,24 +59,24 @@ extern int main( void );
 extern uint32_t _estack;
 
 /* Vector table. */
-const uint32_t* isr_vector[] __attribute__((section(".isr_vector"))) =
+const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
 {
     ( uint32_t * ) &_estack,
-    ( uint32_t * ) &Reset_Handler,     // Reset                -15
-    ( uint32_t * ) &Default_Handler,   // NMI_Handler          -14
-    ( uint32_t * ) &HardFault_Handler, // HardFault_Handler    -13
-    ( uint32_t * ) &Default_Handler,   // MemManage_Handler    -12
-    ( uint32_t * ) &Default_Handler,   // BusFault_Handler     -11
-    ( uint32_t * ) &Default_Handler,   // UsageFault_Handler   -10
-    0, // reserved
-    0, // reserved
-    0, // reserved
-    0, // reserved   -6
-    ( uint32_t * ) &vPortSVCHandler,    // SVC_Handler              -5
-    ( uint32_t * ) &Default_Handler,    // DebugMon_Handler         -4
-    0, // reserved
-    ( uint32_t * ) &xPortPendSVHandler, // PendSV handler    -2
-    ( uint32_t * ) &xPortSysTickHandler,// SysTick_Handler   -1
+    ( uint32_t * ) &Reset_Handler,       /* Reset                -15 */
+    ( uint32_t * ) &Default_Handler,     /* NMI_Handler          -14 */
+    ( uint32_t * ) &HardFault_Handler,   /* HardFault_Handler    -13 */
+    ( uint32_t * ) &Default_Handler,     /* MemManage_Handler    -12 */
+    ( uint32_t * ) &Default_Handler,     /* BusFault_Handler     -11 */
+    ( uint32_t * ) &Default_Handler,     /* UsageFault_Handler   -10 */
+    0,                                   /* reserved */
+    0,                                   /* reserved */
+    0,                                   /* reserved */
+    0,                                   /* reserved   -6 */
+    ( uint32_t * ) &vPortSVCHandler,     /* SVC_Handler              -5 */
+    ( uint32_t * ) &Default_Handler,     /* DebugMon_Handler         -4 */
+    0,                                   /* reserved */
+    ( uint32_t * ) &xPortPendSVHandler,  /* PendSV handler    -2 */
+    ( uint32_t * ) &xPortSysTickHandler, /* SysTick_Handler   -1 */
     0,
     0,
     0,
@@ -85,12 +85,12 @@ const uint32_t* isr_vector[] __attribute__((section(".isr_vector"))) =
     0,
     0,
     0,
-    ( uint32_t * ) TIMER0_Handler,     // Timer 0
-	( uint32_t * ) TIMER1_Handler,     // Timer 1
+    ( uint32_t * ) TIMER0_Handler, /* Timer 0 */
+    ( uint32_t * ) TIMER1_Handler, /* Timer 1 */
     0,
     0,
     0,
-    0, // Ethernet   13
+    0, /* Ethernet   13 */
 };
 
 void Reset_Handler( void )
@@ -106,14 +106,14 @@ volatile uint32_t r1;
 volatile uint32_t r2;
 volatile uint32_t r3;
 volatile uint32_t r12;
-volatile uint32_t lr; /* Link register. */
-volatile uint32_t pc; /* Program counter. */
-volatile uint32_t psr;/* Program status register. */
+volatile uint32_t lr;  /* Link register. */
+volatile uint32_t pc;  /* Program counter. */
+volatile uint32_t psr; /* Program status register. */
 
 /* Called from the hardfault handler to provide information on the processor
  * state at the time of the fault.
  */
-void prvGetRegistersFromStack( uint32_t *pulFaultStackAddress )
+void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
 {
     r0 = pulFaultStackAddress[ 0 ];
     r1 = pulFaultStackAddress[ 1 ];
@@ -129,7 +129,9 @@ void prvGetRegistersFromStack( uint32_t *pulFaultStackAddress )
     fflush( stdout );
 
     /* When the following line is hit, the variables contain the register values. */
-    for( ;; );
+    for( ; ; )
+    {
+    }
 }
 
 
@@ -163,5 +165,3 @@ void HardFault_Handler( void )
         " handler2_address_const: .word prvGetRegistersFromStack    \n"
     );
 }
-
-

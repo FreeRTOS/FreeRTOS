@@ -41,12 +41,14 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void LCDD_Initialize(uint8_t lcdMode, sXdmad * dmad, uint8_t cRotate);
+extern void LCDD_Initialize( uint8_t lcdMode,
+                             sXdmad * dmad,
+                             uint8_t cRotate );
 
-extern void LCDD_On(void);
+extern void LCDD_On( void );
 
-extern void LCDD_Off(void);
+extern void LCDD_Off( void );
 
-extern void LCDD_SetBacklight (uint32_t step);
+extern void LCDD_SetBacklight( uint32_t step );
 
 #endif /* #ifndef LCDD_H */

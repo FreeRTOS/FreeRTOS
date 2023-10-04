@@ -60,21 +60,21 @@ extern void vRegTest4Asm( void ) __attribute__( ( naked ) );
 /*
  * Priority of the check task.
  */
-#define CHECK_TASK_PRIORITY                 ( configMAX_PRIORITIES - 1 )
+#define CHECK_TASK_PRIORITY           ( configMAX_PRIORITIES - 1 )
 
 /*
  * Frequency of check task.
  */
-#define NO_ERROR_CHECK_TASK_PERIOD          ( pdMS_TO_TICKS( 5000UL ) )
-#define ERROR_CHECK_TASK_PERIOD             ( pdMS_TO_TICKS( 200UL ) )
+#define NO_ERROR_CHECK_TASK_PERIOD    ( pdMS_TO_TICKS( 5000UL ) )
+#define ERROR_CHECK_TASK_PERIOD       ( pdMS_TO_TICKS( 200UL ) )
 
 /*
  * Parameters passed to reg test tasks.
  */
-#define REG_TEST_TASK_1_PARAMETER           ( ( void * ) 0x12345678 )
-#define REG_TEST_TASK_2_PARAMETER           ( ( void * ) 0x87654321 )
-#define REG_TEST_TASK_3_PARAMETER           ( ( void * ) 0x12348765 )
-#define REG_TEST_TASK_4_PARAMETER           ( ( void * ) 0x43215678 )
+#define REG_TEST_TASK_1_PARAMETER     ( ( void * ) 0x12345678 )
+#define REG_TEST_TASK_2_PARAMETER     ( ( void * ) 0x87654321 )
+#define REG_TEST_TASK_3_PARAMETER     ( ( void * ) 0x12348765 )
+#define REG_TEST_TASK_4_PARAMETER     ( ( void * ) 0x43215678 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -95,83 +95,88 @@ volatile unsigned long ulCheckTaskLoops = 0UL;
 
 void vStartRegTests( void )
 {
-static StackType_t xRegTest1TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
-static StackType_t xRegTest2TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
-static StackType_t xRegTest3TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
-static StackType_t xRegTest4TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
-static StackType_t xCheckTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
+    static StackType_t xRegTest1TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
+    static StackType_t xRegTest2TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
+    static StackType_t xRegTest3TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
+    static StackType_t xRegTest4TaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
+    static StackType_t xCheckTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ) ) );
 
-TaskParameters_t xRegTest1TaskParameters =
-{
-    .pvTaskCode      = prvRegTest1Task,
-    .pcName          = "RegTest1",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
-    .pvParameters    = REG_TEST_TASK_1_PARAMETER,
-    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
-    .puxStackBuffer  = xRegTest1TaskStack,
-    .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 }
-                        }
-};
-TaskParameters_t xRegTest2TaskParameters =
-{
-    .pvTaskCode      = prvRegTest2Task,
-    .pcName          = "RegTest2",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
-    .pvParameters    = REG_TEST_TASK_2_PARAMETER,
-    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
-    .puxStackBuffer  = xRegTest2TaskStack,
-    .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 }
-                        }
-};
-TaskParameters_t xRegTest3TaskParameters =
-{
-    .pvTaskCode      = prvRegTest3Task,
-    .pcName          = "RegTest3",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
-    .pvParameters    = REG_TEST_TASK_3_PARAMETER,
-    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
-    .puxStackBuffer  = xRegTest3TaskStack,
-    .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 }
-                        }
-};
-TaskParameters_t xRegTest4TaskParameters =
-{
-    .pvTaskCode      = prvRegTest4Task,
-    .pcName          = "RegTest4",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
-    .pvParameters    = REG_TEST_TASK_4_PARAMETER,
-    .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
-    .puxStackBuffer  = xRegTest4TaskStack,
-    .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 }
-                        }
-};
+    TaskParameters_t xRegTest1TaskParameters =
+    {
+        .pvTaskCode     = prvRegTest1Task,
+        .pcName         = "RegTest1",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = REG_TEST_TASK_1_PARAMETER,
+        .uxPriority     = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+        .puxStackBuffer = xRegTest1TaskStack,
+        .xRegions       =
+        {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }
+        }
+    };
+    TaskParameters_t xRegTest2TaskParameters =
+    {
+        .pvTaskCode     = prvRegTest2Task,
+        .pcName         = "RegTest2",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = REG_TEST_TASK_2_PARAMETER,
+        .uxPriority     = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+        .puxStackBuffer = xRegTest2TaskStack,
+        .xRegions       =
+        {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }
+        }
+    };
+    TaskParameters_t xRegTest3TaskParameters =
+    {
+        .pvTaskCode     = prvRegTest3Task,
+        .pcName         = "RegTest3",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = REG_TEST_TASK_3_PARAMETER,
+        .uxPriority     = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+        .puxStackBuffer = xRegTest3TaskStack,
+        .xRegions       =
+        {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }
+        }
+    };
+    TaskParameters_t xRegTest4TaskParameters =
+    {
+        .pvTaskCode     = prvRegTest4Task,
+        .pcName         = "RegTest4",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = REG_TEST_TASK_4_PARAMETER,
+        .uxPriority     = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
+        .puxStackBuffer = xRegTest4TaskStack,
+        .xRegions       =
+        {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }
+        }
+    };
 
-TaskParameters_t xCheckTaskParameters =
-{
-    .pvTaskCode      = prvCheckTask,
-    .pcName          = "Check",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
-    .pvParameters    = NULL,
-    .uxPriority      = ( CHECK_TASK_PRIORITY | portPRIVILEGE_BIT ),
-    .puxStackBuffer  = xCheckTaskStack,
-    .xRegions        =    {
-                            { 0, 0, 0 },
-                            { 0, 0, 0 },
-                            { 0, 0, 0 }
-                        }
-};
+    TaskParameters_t xCheckTaskParameters =
+    {
+        .pvTaskCode     = prvCheckTask,
+        .pcName         = "Check",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = NULL,
+        .uxPriority     = ( CHECK_TASK_PRIORITY | portPRIVILEGE_BIT ),
+        .puxStackBuffer = xCheckTaskStack,
+        .xRegions       =
+        {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }
+        }
+    };
 
     xTaskCreateRestricted( &( xRegTest1TaskParameters ), NULL );
     xTaskCreateRestricted( &( xRegTest2TaskParameters ), NULL );
@@ -259,11 +264,11 @@ static void prvRegTest4Task( void * pvParameters )
 
 static void prvCheckTask( void * pvParameters )
 {
-TickType_t xDelayPeriod = NO_ERROR_CHECK_TASK_PERIOD;
-TickType_t xLastExecutionTime;
-unsigned long ulErrorFound = pdFALSE;
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
+    TickType_t xDelayPeriod = NO_ERROR_CHECK_TASK_PERIOD;
+    TickType_t xLastExecutionTime;
+    unsigned long ulErrorFound = pdFALSE;
+    static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+    static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
 
     /* Just to stop compiler warnings. */
     ( void ) pvParameters;
@@ -278,7 +283,7 @@ static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
      * mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has
      * the effect of increasing the rate at which the onboard LED toggles, and
      * in so doing gives visual feedback of the system status. */
-    for( ;; )
+    for( ; ; )
     {
         /* Delay until it is time to execute again. */
         vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
@@ -288,6 +293,7 @@ static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
         {
             ulErrorFound |= 1UL << 0UL;
         }
+
         ulLastRegTest1Value = ulRegTest1LoopCounter;
 
         /* Check that the register test 2 task is still running. */
@@ -295,6 +301,7 @@ static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
         {
             ulErrorFound |= 1UL << 1UL;
         }
+
         ulLastRegTest2Value = ulRegTest2LoopCounter;
 
         /* Check that the register test 3 task is still running. */
@@ -302,6 +309,7 @@ static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
         {
             ulErrorFound |= 1UL << 2UL;
         }
+
         ulLastRegTest3Value = ulRegTest3LoopCounter;
 
         /* Check that the register test 4 task is still running. */
@@ -309,6 +317,7 @@ static unsigned long ulLastRegTest3Value = 0, ulLastRegTest4Value = 0;
         {
             ulErrorFound |= 1UL << 3UL;
         }
+
         ulLastRegTest4Value = ulRegTest4LoopCounter;
 
 

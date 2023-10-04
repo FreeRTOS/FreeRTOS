@@ -40,19 +40,20 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "uart.h"
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
 /**
  * \defgroup sam_drivers_uart_group Universal Asynchronous Receiver Transceiver (UART)
@@ -88,33 +89,37 @@ extern "C" {
  * \retval 0 Success.
  * \retval 1 Bad baud rate generator value.
  */
-uint32_t uart_init(Uart *p_uart, const sam_uart_opt_t *p_uart_opt)
+uint32_t uart_init( Uart * p_uart,
+                    const sam_uart_opt_t * p_uart_opt )
 {
-	uint32_t cd = 0;
+    uint32_t cd = 0;
 
-	/* Reset and disable receiver & transmitter */
-	p_uart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX
-			| UART_CR_RXDIS | UART_CR_TXDIS;
+    /* Reset and disable receiver & transmitter */
+    p_uart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX
+                      | UART_CR_RXDIS | UART_CR_TXDIS;
 
-	/* Check and configure baudrate */
-	/* Asynchronous, no oversampling */
-	cd = (p_uart_opt->ul_mck / p_uart_opt->ul_baudrate) / UART_MCK_DIV;
-	if (cd < UART_MCK_DIV_MIN_FACTOR || cd > UART_MCK_DIV_MAX_FACTOR)
-		return 1;
+    /* Check and configure baudrate */
+    /* Asynchronous, no oversampling */
+    cd = ( p_uart_opt->ul_mck / p_uart_opt->ul_baudrate ) / UART_MCK_DIV;
 
-	p_uart->UART_BRGR = cd;
-	/* Configure mode */
-	p_uart->UART_MR = p_uart_opt->ul_mode;
+    if( ( cd < UART_MCK_DIV_MIN_FACTOR ) || ( cd > UART_MCK_DIV_MAX_FACTOR ) )
+    {
+        return 1;
+    }
 
-#if (!SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
-	/* Disable PDC channel */
-	p_uart->UART_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
-#endif
+    p_uart->UART_BRGR = cd;
+    /* Configure mode */
+    p_uart->UART_MR = p_uart_opt->ul_mode;
 
-	/* Enable receiver and transmitter */
-	p_uart->UART_CR = UART_CR_RXEN | UART_CR_TXEN;
+    #if ( !SAMV71 && !SAMV70 && !SAME70 && !SAMS70 )
+        /* Disable PDC channel */
+        p_uart->UART_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
+    #endif
 
-	return 0;
+    /* Enable receiver and transmitter */
+    p_uart->UART_CR = UART_CR_RXEN | UART_CR_TXEN;
+
+    return 0;
 }
 
 /**
@@ -122,10 +127,10 @@ uint32_t uart_init(Uart *p_uart, const sam_uart_opt_t *p_uart_opt)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_enable_tx(Uart *p_uart)
+void uart_enable_tx( Uart * p_uart )
 {
-	/* Enable transmitter */
-	p_uart->UART_CR = UART_CR_TXEN;
+    /* Enable transmitter */
+    p_uart->UART_CR = UART_CR_TXEN;
 }
 
 /**
@@ -133,10 +138,10 @@ void uart_enable_tx(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_disable_tx(Uart *p_uart)
+void uart_disable_tx( Uart * p_uart )
 {
-	/* Disable transmitter */
-	p_uart->UART_CR = UART_CR_TXDIS;
+    /* Disable transmitter */
+    p_uart->UART_CR = UART_CR_TXDIS;
 }
 
 /**
@@ -144,10 +149,10 @@ void uart_disable_tx(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_reset_tx(Uart *p_uart)
+void uart_reset_tx( Uart * p_uart )
 {
-	/* Reset transmitter */
-	p_uart->UART_CR = UART_CR_RSTTX | UART_CR_TXDIS;
+    /* Reset transmitter */
+    p_uart->UART_CR = UART_CR_RSTTX | UART_CR_TXDIS;
 }
 
 /**
@@ -155,10 +160,10 @@ void uart_reset_tx(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_enable_rx(Uart *p_uart)
+void uart_enable_rx( Uart * p_uart )
 {
-	/* Enable receiver */
-	p_uart->UART_CR = UART_CR_RXEN;
+    /* Enable receiver */
+    p_uart->UART_CR = UART_CR_RXEN;
 }
 
 /**
@@ -166,10 +171,10 @@ void uart_enable_rx(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_disable_rx(Uart *p_uart)
+void uart_disable_rx( Uart * p_uart )
 {
-	/* Disable receiver */
-	p_uart->UART_CR = UART_CR_RXDIS;
+    /* Disable receiver */
+    p_uart->UART_CR = UART_CR_RXDIS;
 }
 
 /**
@@ -177,10 +182,10 @@ void uart_disable_rx(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_reset_rx(Uart *p_uart)
+void uart_reset_rx( Uart * p_uart )
 {
-	/* Reset receiver */
-	p_uart->UART_CR = UART_CR_RSTRX | UART_CR_RXDIS;
+    /* Reset receiver */
+    p_uart->UART_CR = UART_CR_RSTRX | UART_CR_RXDIS;
 }
 
 /**
@@ -188,10 +193,10 @@ void uart_reset_rx(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_enable(Uart *p_uart)
+void uart_enable( Uart * p_uart )
 {
-	/* Enable receiver and transmitter */
-	p_uart->UART_CR = UART_CR_RXEN | UART_CR_TXEN;
+    /* Enable receiver and transmitter */
+    p_uart->UART_CR = UART_CR_RXEN | UART_CR_TXEN;
 }
 
 /**
@@ -199,10 +204,10 @@ void uart_enable(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_disable(Uart *p_uart)
+void uart_disable( Uart * p_uart )
 {
-	/* Disable receiver and transmitter */
-	p_uart->UART_CR = UART_CR_RXDIS | UART_CR_TXDIS;
+    /* Disable receiver and transmitter */
+    p_uart->UART_CR = UART_CR_RXDIS | UART_CR_TXDIS;
 }
 
 /**
@@ -210,11 +215,11 @@ void uart_disable(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_reset(Uart *p_uart)
+void uart_reset( Uart * p_uart )
 {
-	/* Reset and disable receiver & transmitter */
-	p_uart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX
-			| UART_CR_RXDIS | UART_CR_TXDIS;
+    /* Reset and disable receiver & transmitter */
+    p_uart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX
+                      | UART_CR_RXDIS | UART_CR_TXDIS;
 }
 
 /** \brief Enable UART interrupts.
@@ -222,9 +227,10 @@ void uart_reset(Uart *p_uart)
  * \param p_uart Pointer to a UART instance.
  *  \param ul_sources Interrupts to be enabled.
  */
-void uart_enable_interrupt(Uart *p_uart, uint32_t ul_sources)
+void uart_enable_interrupt( Uart * p_uart,
+                            uint32_t ul_sources )
 {
-	p_uart->UART_IER = ul_sources;
+    p_uart->UART_IER = ul_sources;
 }
 
 /** \brief Disable UART interrupts.
@@ -232,9 +238,10 @@ void uart_enable_interrupt(Uart *p_uart, uint32_t ul_sources)
  * \param p_uart Pointer to a UART instance.
  *  \param ul_sources Interrupts to be disabled.
  */
-void uart_disable_interrupt(Uart *p_uart, uint32_t ul_sources)
+void uart_disable_interrupt( Uart * p_uart,
+                             uint32_t ul_sources )
 {
-	p_uart->UART_IDR = ul_sources;
+    p_uart->UART_IDR = ul_sources;
 }
 
 /** \brief Read UART interrupt mask.
@@ -243,9 +250,9 @@ void uart_disable_interrupt(Uart *p_uart, uint32_t ul_sources)
  *
  *  \return The interrupt mask value.
  */
-uint32_t uart_get_interrupt_mask(Uart *p_uart)
+uint32_t uart_get_interrupt_mask( Uart * p_uart )
 {
-	return p_uart->UART_IMR;
+    return p_uart->UART_IMR;
 }
 
 /**
@@ -255,9 +262,9 @@ uint32_t uart_get_interrupt_mask(Uart *p_uart)
  *
  * \return The current UART status.
  */
-uint32_t uart_get_status(Uart *p_uart)
+uint32_t uart_get_status( Uart * p_uart )
 {
-	return p_uart->UART_SR;
+    return p_uart->UART_SR;
 }
 
 /**
@@ -265,9 +272,9 @@ uint32_t uart_get_status(Uart *p_uart)
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_reset_status(Uart *p_uart)
+void uart_reset_status( Uart * p_uart )
 {
-	p_uart->UART_CR = UART_CR_RSTSTA;
+    p_uart->UART_CR = UART_CR_RSTSTA;
 }
 
 /**
@@ -280,9 +287,9 @@ void uart_reset_status(Uart *p_uart)
  * \retval 1 Data has been transmitted.
  * \retval 0 Transmit is not ready, data pending.
  */
-uint32_t uart_is_tx_ready(Uart *p_uart)
+uint32_t uart_is_tx_ready( Uart * p_uart )
 {
-	return (p_uart->UART_SR & UART_SR_TXRDY) > 0;
+    return ( p_uart->UART_SR & UART_SR_TXRDY ) > 0;
 }
 
 /**
@@ -295,9 +302,9 @@ uint32_t uart_is_tx_ready(Uart *p_uart)
  * \retval 1 Transmitter is empty.
  * \retval 0 Transmitter is not empty.
  */
-uint32_t uart_is_tx_empty(Uart *p_uart)
+uint32_t uart_is_tx_empty( Uart * p_uart )
 {
-	return (p_uart->UART_SR & UART_SR_TXEMPTY) > 0;
+    return ( p_uart->UART_SR & UART_SR_TXEMPTY ) > 0;
 }
 
 /**
@@ -309,9 +316,9 @@ uint32_t uart_is_tx_empty(Uart *p_uart)
  * \retval 1 One data has been received.
  * \retval 0 No data has been received.
  */
-uint32_t uart_is_rx_ready(Uart *p_uart)
+uint32_t uart_is_rx_ready( Uart * p_uart )
 {
-	return (p_uart->UART_SR & UART_SR_RXRDY) > 0;
+    return ( p_uart->UART_SR & UART_SR_RXRDY ) > 0;
 }
 
 /**
@@ -322,9 +329,9 @@ uint32_t uart_is_rx_ready(Uart *p_uart)
  * \retval 1 Transmit buffer is empty.
  * \retval 0 Transmit buffer is not empty.
  */
-uint32_t uart_is_tx_buf_empty(Uart *p_uart)
+uint32_t uart_is_tx_buf_empty( Uart * p_uart )
 {
-	return (p_uart->UART_SR & UART_SR_TXEMPTY) > 0;
+    return ( p_uart->UART_SR & UART_SR_TXEMPTY ) > 0;
 }
 
 /**
@@ -334,9 +341,10 @@ uint32_t uart_is_tx_buf_empty(Uart *p_uart)
  * \param us_divisor Value to be set.
  *
  */
-void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor)
+void uart_set_clock_divisor( Uart * p_uart,
+                             uint16_t us_divisor )
 {
-	p_uart->UART_BRGR = us_divisor;
+    p_uart->UART_BRGR = us_divisor;
 }
 
 /**
@@ -349,15 +357,18 @@ void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor)
  * \retval 0 Success.
  * \retval 1 I/O Failure, UART is not ready.
  */
-uint32_t uart_write(Uart *p_uart, const uint8_t uc_data)
+uint32_t uart_write( Uart * p_uart,
+                     const uint8_t uc_data )
 {
-	/* Check if the transmitter is ready */
-	if (!(p_uart->UART_SR & UART_SR_TXRDY))
-		return 1;
+    /* Check if the transmitter is ready */
+    if( !( p_uart->UART_SR & UART_SR_TXRDY ) )
+    {
+        return 1;
+    }
 
-	/* Send character */
-	p_uart->UART_THR = uc_data;
-	return 0;
+    /* Send character */
+    p_uart->UART_THR = uc_data;
+    return 0;
 }
 
 /**
@@ -369,18 +380,22 @@ uint32_t uart_write(Uart *p_uart, const uint8_t uc_data)
  * \retval 0 Success.
  * \retval 1 I/O Failure, UART is not ready.
  */
-uint32_t uart_read(Uart *p_uart, uint8_t *puc_data)
+uint32_t uart_read( Uart * p_uart,
+                    uint8_t * puc_data )
 {
-	/* Check if the receiver is ready */
-	if ((p_uart->UART_SR & UART_SR_RXRDY) == 0)
-		return 1;
+    /* Check if the receiver is ready */
+    if( ( p_uart->UART_SR & UART_SR_RXRDY ) == 0 )
+    {
+        return 1;
+    }
 
-	/* Read character */
-	*puc_data = (uint8_t) p_uart->UART_RHR;
-	return 0;
+    /* Read character */
+    *puc_data = ( uint8_t ) p_uart->UART_RHR;
+    return 0;
 }
 
-#if (!SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
+#if ( !SAMV71 && !SAMV70 && !SAME70 && !SAMS70 )
+
 /**
  * \brief Check if one receive buffer is filled.
  *
@@ -389,10 +404,10 @@ uint32_t uart_read(Uart *p_uart, uint8_t *puc_data)
  * \retval 1 Receive is completed.
  * \retval 0 Receive is still pending.
  */
-uint32_t uart_is_rx_buf_end(Uart *p_uart)
-{
-	return (p_uart->UART_SR & UART_SR_ENDRX) > 0;
-}
+    uint32_t uart_is_rx_buf_end( Uart * p_uart )
+    {
+        return ( p_uart->UART_SR & UART_SR_ENDRX ) > 0;
+    }
 
 /**
  * \brief Check if one transmit buffer is sent out.
@@ -402,10 +417,10 @@ uint32_t uart_is_rx_buf_end(Uart *p_uart)
  * \retval 1 Transmit is completed.
  * \retval 0 Transmit is still pending.
  */
-uint32_t uart_is_tx_buf_end(Uart *p_uart)
-{
-	return (p_uart->UART_SR & UART_SR_ENDTX) > 0;
-}
+    uint32_t uart_is_tx_buf_end( Uart * p_uart )
+    {
+        return ( p_uart->UART_SR & UART_SR_ENDTX ) > 0;
+    }
 
 /**
  * \brief Check if both receive buffers are full.
@@ -415,10 +430,10 @@ uint32_t uart_is_tx_buf_end(Uart *p_uart)
  * \retval 1 Receive buffers are full.
  * \retval 0 Receive buffers are not full.
  */
-uint32_t uart_is_rx_buf_full(Uart *p_uart)
-{
-	return (p_uart->UART_SR & UART_SR_RXBUFF) > 0;
-}
+    uint32_t uart_is_rx_buf_full( Uart * p_uart )
+    {
+        return ( p_uart->UART_SR & UART_SR_RXBUFF ) > 0;
+    }
 
 /**
  * \brief Get UART PDC base address.
@@ -427,56 +442,65 @@ uint32_t uart_is_rx_buf_full(Uart *p_uart)
  *
  * \return UART PDC registers base for PDC driver to access.
  */
-Pdc *uart_get_pdc_base(Uart *p_uart)
-{
-	Pdc *p_pdc_base;
+    Pdc * uart_get_pdc_base( Uart * p_uart )
+    {
+        Pdc * p_pdc_base;
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
-	if (p_uart == UART0)
-		p_pdc_base = PDC_UART0;
-#elif (SAM3XA || SAM3U)
-	if (p_uart == UART)
-		p_pdc_base = PDC_UART;
-#else
-#error "Unsupported device"
-#endif
+        #if ( SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM )
+            if( p_uart == UART0 )
+            {
+                p_pdc_base = PDC_UART0;
+            }
+        #elif ( SAM3XA || SAM3U )
+            if( p_uart == UART )
+            {
+                p_pdc_base = PDC_UART;
+            }
+        #else
+        #error "Unsupported device"
+        #endif /* if ( SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM ) */
 
-#if (SAM3S || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
-	if (p_uart == UART1)
-		p_pdc_base = PDC_UART1;
-#endif
+        #if ( SAM3S || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM )
+            if( p_uart == UART1 )
+            {
+                p_pdc_base = PDC_UART1;
+            }
+        #endif
 
-#if (SAM4N)
-	if (p_uart == UART2)
-		p_pdc_base = PDC_UART2;
-#endif
+        #if ( SAM4N )
+            if( p_uart == UART2 )
+            {
+                p_pdc_base = PDC_UART2;
+            }
+        #endif
 
-	return p_pdc_base;
-}
-#endif
+        return p_pdc_base;
+    }
+#endif /* if ( !SAMV71 && !SAMV70 && !SAME70 && !SAMS70 ) */
 
-#if (SAM4C || SAM4CP || SAM4CM)
+#if ( SAM4C || SAM4CP || SAM4CM )
+
 /**
  * \brief Enable UART optical interface.
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_enable_optical_interface(Uart *p_uart)
-{
-	Assert(p_uart == UART1);
-	p_uart->UART_MR |= UART_MR_OPT_EN;
-}
+    void uart_enable_optical_interface( Uart * p_uart )
+    {
+        Assert( p_uart == UART1 );
+        p_uart->UART_MR |= UART_MR_OPT_EN;
+    }
 
 /**
  * \brief Disable UART optical interface.
  *
  * \param p_uart Pointer to a UART instance.
  */
-void uart_disable_optical_interface(Uart *p_uart)
-{
-	Assert(p_uart == UART1);
-	p_uart->UART_MR &= ~UART_MR_OPT_EN;
-}
+    void uart_disable_optical_interface( Uart * p_uart )
+    {
+        Assert( p_uart == UART1 );
+        p_uart->UART_MR &= ~UART_MR_OPT_EN;
+    }
 
 /**
  * \brief Enable UART optical interface.
@@ -484,26 +508,27 @@ void uart_disable_optical_interface(Uart *p_uart)
  * \param p_uart Pointer to a UART instance.
  * \param cfg Pointer to a UART optical interface configuration.
  */
-void uart_config_optical_interface(Uart *p_uart,
-		struct uart_config_optical *cfg)
-{
-	Assert(p_uart == UART1);
-	uint32_t reg = p_uart->UART_MR;
+    void uart_config_optical_interface( Uart * p_uart,
+                                        struct uart_config_optical * cfg )
+    {
+        Assert( p_uart == UART1 );
+        uint32_t reg = p_uart->UART_MR;
 
-	reg &= ~(UART_MR_OPT_RXINV | UART_MR_OPT_MDINV | UART_MR_FILTER
-			| UART_MR_OPT_CLKDIV_Msk | UART_MR_OPT_DUTY_Msk
-			| UART_MR_OPT_CMPTH_Msk);
-	reg |= (cfg->rx_inverted ? UART_MR_OPT_RXINV : 0)
-			| (cfg->tx_inverted ? UART_MR_OPT_MDINV : 0)
-			| (cfg->rx_filter ? UART_MR_FILTER : 0)
-			| UART_MR_OPT_CLKDIV(cfg->clk_div)
-			| cfg->duty | cfg->threshold;
+        reg &= ~( UART_MR_OPT_RXINV | UART_MR_OPT_MDINV | UART_MR_FILTER
+                  | UART_MR_OPT_CLKDIV_Msk | UART_MR_OPT_DUTY_Msk
+                  | UART_MR_OPT_CMPTH_Msk );
+        reg |= ( cfg->rx_inverted ? UART_MR_OPT_RXINV : 0 )
+               | ( cfg->tx_inverted ? UART_MR_OPT_MDINV : 0 )
+               | ( cfg->rx_filter ? UART_MR_FILTER : 0 )
+               | UART_MR_OPT_CLKDIV( cfg->clk_div )
+               | cfg->duty | cfg->threshold;
 
-	p_uart->UART_MR = reg;
-}
-#endif
+        p_uart->UART_MR = reg;
+    }
+#endif /* if ( SAM4C || SAM4CP || SAM4CM ) */
 
-#if (SAMG53 || SAMG54 || SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if ( SAMG53 || SAMG54 || SAMV71 || SAMV70 || SAME70 || SAMS70 )
+
 /**
  * \brief Set sleepwalking match mode.
  *
@@ -513,27 +538,32 @@ void uart_config_optical_interface(Uart *p_uart,
  * \param cmpmode ture for start condition, false for flag only.
  * \param cmppar ture for parity check, false for no.
  */
-void uart_set_sleepwalking(Uart *p_uart, uint8_t ul_low_value,
-		bool cmpmode, bool cmppar, uint8_t ul_high_value)
-{
-	Assert(ul_low_value <= ul_high_value);
+    void uart_set_sleepwalking( Uart * p_uart,
+                                uint8_t ul_low_value,
+                                bool cmpmode,
+                                bool cmppar,
+                                uint8_t ul_high_value )
+    {
+        Assert( ul_low_value <= ul_high_value );
 
-	uint32_t temp = 0;
+        uint32_t temp = 0;
 
-	if (cmpmode) {
-		temp |= UART_CMPR_CMPMODE_START_CONDITION;
-	}
+        if( cmpmode )
+        {
+            temp |= UART_CMPR_CMPMODE_START_CONDITION;
+        }
 
-	if (cmppar) {
-		temp |= UART_CMPR_CMPPAR;
-	}
+        if( cmppar )
+        {
+            temp |= UART_CMPR_CMPPAR;
+        }
 
-	temp |= UART_CMPR_VAL1(ul_low_value);
+        temp |= UART_CMPR_VAL1( ul_low_value );
 
-	temp |= UART_CMPR_VAL2(ul_high_value);
+        temp |= UART_CMPR_VAL2( ul_high_value );
 
-	p_uart->UART_CMPR= temp;
-}
+        p_uart->UART_CMPR = temp;
+    }
 
 /**
  * \brief Enables/Disables write protection mode.
@@ -541,22 +571,26 @@ void uart_set_sleepwalking(Uart *p_uart, uint8_t ul_low_value,
  * \param p_uart Pointer to a UART instance.
  * \param flag ture for enable, false for disable.
  */
-void uart_set_write_protection(Uart *p_uart, bool flag)
-{
-	if (flag) {
-		p_uart->UART_WPMR = UART_WPMR_WPKEY_PASSWD | UART_WPMR_WPEN;
-	} else {
-		p_uart->UART_WPMR = UART_WPMR_WPKEY_PASSWD;
-	}
-}
-#endif
+    void uart_set_write_protection( Uart * p_uart,
+                                    bool flag )
+    {
+        if( flag )
+        {
+            p_uart->UART_WPMR = UART_WPMR_WPKEY_PASSWD | UART_WPMR_WPEN;
+        }
+        else
+        {
+            p_uart->UART_WPMR = UART_WPMR_WPKEY_PASSWD;
+        }
+    }
+#endif /* if ( SAMG53 || SAMG54 || SAMV71 || SAMV70 || SAME70 || SAMS70 ) */
 
-//@}
+/*@} */
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */

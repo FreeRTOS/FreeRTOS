@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_rspi.h"
@@ -43,10 +43,10 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
-extern const uint32_t * gp_rspi1_tx_address;         /* RSPI1 transmit buffer address */
-extern uint16_t         g_rspi1_tx_count;            /* RSPI1 transmit data number */
+extern const uint32_t * gp_rspi1_tx_address; /* RSPI1 transmit buffer address */
+extern uint16_t g_rspi1_tx_count;            /* RSPI1 transmit data number */
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
@@ -57,21 +57,21 @@ extern uint16_t         g_rspi1_tx_count;            /* RSPI1 transmit data numb
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__irq __arm
+    __irq __arm
 #endif /* __ICCARM__ */
-void r_rspi1_transmit_interrupt(void)
+void r_rspi1_transmit_interrupt( void )
 {
     uint16_t frame_cnt;
 
     /* Clear the interrupt source */
     VIC.PIC2.LONG = 0x00200000UL;
 
-    for (frame_cnt = 0U; frame_cnt < (_RSPI_FRAMES_1 + 1U); frame_cnt++)
+    for( frame_cnt = 0U; frame_cnt < ( _RSPI_FRAMES_1 + 1U ); frame_cnt++ )
     {
-        if (g_rspi1_tx_count > 0U)
+        if( g_rspi1_tx_count > 0U )
         {
             /* Write data for transmission */
-            RSPI1.SPDR.LONG = (*(uint32_t*)gp_rspi1_tx_address);
+            RSPI1.SPDR.LONG = ( *( uint32_t * ) gp_rspi1_tx_address );
             gp_rspi1_tx_address++;
             g_rspi1_tx_count--;
         }
@@ -89,6 +89,7 @@ void r_rspi1_transmit_interrupt(void)
     /* Dummy write */
     VIC.HVA0.LONG = 0x00000000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: r_rspi1_error_interrupt
 * Description  : This function is SPEI1 interrupt service routine.
@@ -96,9 +97,9 @@ void r_rspi1_transmit_interrupt(void)
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__irq __arm
+    __irq __arm
 #endif /* __ICCARM__ */
-void r_rspi1_error_interrupt(void)
+void r_rspi1_error_interrupt( void )
 {
     uint8_t err_type;
 
@@ -118,12 +119,13 @@ void r_rspi1_error_interrupt(void)
     err_type = RSPI1.SPSR.BYTE;
     RSPI1.SPSR.BYTE = 0xA0U;
 
-    if (err_type != 0U)
+    if( err_type != 0U )
     {
-        r_rspi1_callback_error(err_type);
+        r_rspi1_callback_error( err_type );
     }
+
     /* Wait the interrupt signal is disabled */
-    while (0U != (VIC.IRQS2.LONG & 0x00400000UL))
+    while( 0U != ( VIC.IRQS2.LONG & 0x00400000UL ) )
     {
         VIC.IEC2.LONG = 0x00400000UL;
     }
@@ -133,6 +135,7 @@ void r_rspi1_error_interrupt(void)
     /* Dummy write */
     VIC.HVA0.LONG = 0x00000000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: r_rspi1_idle_interrupt
 * Description  : This function is SPII1 interrupt service routine.
@@ -140,9 +143,9 @@ void r_rspi1_error_interrupt(void)
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__irq __arm
+    __irq __arm
 #endif /* __ICCARM__ */
-void r_rspi1_idle_interrupt(void)
+void r_rspi1_idle_interrupt( void )
 {
     /* Disable RSPI function */
     RSPI1.SPCR.BIT.SPE = 0U;
@@ -153,7 +156,7 @@ void r_rspi1_idle_interrupt(void)
     r_rspi1_callback_transmitend();
 
     /* Wait the interrupt signal is disabled */
-    while (0U != (VIC.IRQS2.LONG & 0x00800000UL))
+    while( 0U != ( VIC.IRQS2.LONG & 0x00800000UL ) )
     {
         VIC.IEC2.LONG = 0x00800000UL;
     }
@@ -163,13 +166,14 @@ void r_rspi1_idle_interrupt(void)
     /* Dummy write */
     VIC.HVA0.LONG = 0x00000000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: r_rspi1_callback_transmitend
 * Description  : This function is a callback function when RSPI1 finishes transmission.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void r_rspi1_callback_transmitend(void)
+void r_rspi1_callback_transmitend( void )
 {
     /* Start user code. Do not edit comment generated here */
     /* End user code. Do not edit comment generated here */
@@ -183,12 +187,12 @@ void r_rspi1_callback_transmitend(void)
 *                    error type value
 * Return Value : None
 ***********************************************************************************************************************/
-void r_rspi1_callback_error(uint8_t err_type)
+void r_rspi1_callback_error( uint8_t err_type )
 {
     /* Start user code. Do not edit comment generated here */
 
     /* Used to suppress the warning message generated for unused variables */
-    UNUSED_VARIABLE(err_type);
+    UNUSED_VARIABLE( err_type );
 
     /* End user code. Do not edit comment generated here */
 }

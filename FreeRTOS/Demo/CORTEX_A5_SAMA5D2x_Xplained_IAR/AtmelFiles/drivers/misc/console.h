@@ -31,44 +31,52 @@
 #define _CONSOLE_H_
 
 /*-----------------------------------------------------------------------------
- *        Headers
- *----------------------------------------------------------------------------*/
+*        Headers
+*----------------------------------------------------------------------------*/
 
 #include <stdint.h>
 
-#define DRV_UART     (1)
-#define DRV_USART    (2)
-#define DRV_DBGU     (3)
-//#define DRV_FLEXCOM  (4)
+#define DRV_UART     ( 1 )
+#define DRV_USART    ( 2 )
+#define DRV_DBGU     ( 3 )
+/*#define DRV_FLEXCOM  (4) */
 
-struct _console {
-	void* addr;
-	void (*init)(void*, uint32_t, uint32_t);
-	void (*put_char)(void*, uint8_t);
-	uint32_t (*get_char)(void*);
-	uint32_t (*is_rx_ready)(void*);
-	void (*enable_interrupts)(void*, uint32_t);
+struct _console
+{
+    void * addr;
+    void (* init)( void *,
+                   uint32_t,
+                   uint32_t );
+    void (* put_char)( void *,
+                       uint8_t );
+    uint32_t (* get_char)( void * );
+    uint32_t (* is_rx_ready)( void * );
+    void (* enable_interrupts)( void *,
+                                uint32_t );
 };
 
 /* ----------------------------------------------------------------------------
- *         Global function
- * ---------------------------------------------------------------------------*/
+*         Global function
+* ---------------------------------------------------------------------------*/
 
-extern void console_configure(uint32_t baudrate);
-extern void console_put_char(uint8_t uc);
-extern uint32_t console_get_char(void);
-extern uint32_t console_is_rx_ready(void);
-extern void console_enable_interrupts(uint32_t mask);
-extern void console_dump_frame(uint8_t * pframe, uint32_t size);
-extern void console_dump_memory(uint8_t * pbuffer, uint32_t size,
-				uint32_t address);
-extern uint32_t console_get_integer(uint32_t * pvalue);
-extern uint32_t console_get_integer_min_max(uint32_t * pvalue, uint32_t min,
-					    uint32_t max);
-extern uint32_t console_get_hexa_32(uint32_t * pvalue);
+extern void console_configure( uint32_t baudrate );
+extern void console_put_char( uint8_t uc );
+extern uint32_t console_get_char( void );
+extern uint32_t console_is_rx_ready( void );
+extern void console_enable_interrupts( uint32_t mask );
+extern void console_dump_frame( uint8_t * pframe,
+                                uint32_t size );
+extern void console_dump_memory( uint8_t * pbuffer,
+                                 uint32_t size,
+                                 uint32_t address );
+extern uint32_t console_get_integer( uint32_t * pvalue );
+extern uint32_t console_get_integer_min_max( uint32_t * pvalue,
+                                             uint32_t min,
+                                             uint32_t max );
+extern uint32_t console_get_hexa_32( uint32_t * pvalue );
 
-extern void console_echo(uint8_t c);
-extern void console_clear_screen(void);
-extern void console_reset_cursor(void);
+extern void console_echo( uint8_t c );
+extern void console_clear_screen( void );
+extern void console_reset_cursor( void );
 
-#endif	/* _CONSOLE_H_ */
+#endif /* _CONSOLE_H_ */

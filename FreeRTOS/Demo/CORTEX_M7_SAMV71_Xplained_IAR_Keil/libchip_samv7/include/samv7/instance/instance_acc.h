@@ -31,28 +31,28 @@
 #define _SAM_ACC_INSTANCE_
 
 /* ========== Register definition for ACC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_ACC_CR                    (0x40044000U) /**< \brief (ACC) Control Register */
-  #define REG_ACC_MR                    (0x40044004U) /**< \brief (ACC) Mode Register */
-  #define REG_ACC_IER                   (0x40044024U) /**< \brief (ACC) Interrupt Enable Register */
-  #define REG_ACC_IDR                   (0x40044028U) /**< \brief (ACC) Interrupt Disable Register */
-  #define REG_ACC_IMR                   (0x4004402CU) /**< \brief (ACC) Interrupt Mask Register */
-  #define REG_ACC_ISR                   (0x40044030U) /**< \brief (ACC) Interrupt Status Register */
-  #define REG_ACC_ACR                   (0x40044094U) /**< \brief (ACC) Analog Control Register */
-  #define REG_ACC_WPMR                  (0x400440E4U) /**< \brief (ACC) Write Protection Mode Register */
-  #define REG_ACC_WPSR                  (0x400440E8U) /**< \brief (ACC) Write Protection Status Register */
-  #define REG_ACC_VER                   (0x400440FCU) /**< \brief (ACC) Version Register */
-#else
-  #define REG_ACC_CR   (*(__O  uint32_t*)0x40044000U) /**< \brief (ACC) Control Register */
-  #define REG_ACC_MR   (*(__IO uint32_t*)0x40044004U) /**< \brief (ACC) Mode Register */
-  #define REG_ACC_IER  (*(__O  uint32_t*)0x40044024U) /**< \brief (ACC) Interrupt Enable Register */
-  #define REG_ACC_IDR  (*(__O  uint32_t*)0x40044028U) /**< \brief (ACC) Interrupt Disable Register */
-  #define REG_ACC_IMR  (*(__I  uint32_t*)0x4004402CU) /**< \brief (ACC) Interrupt Mask Register */
-  #define REG_ACC_ISR  (*(__I  uint32_t*)0x40044030U) /**< \brief (ACC) Interrupt Status Register */
-  #define REG_ACC_ACR  (*(__IO uint32_t*)0x40044094U) /**< \brief (ACC) Analog Control Register */
-  #define REG_ACC_WPMR (*(__IO uint32_t*)0x400440E4U) /**< \brief (ACC) Write Protection Mode Register */
-  #define REG_ACC_WPSR (*(__I  uint32_t*)0x400440E8U) /**< \brief (ACC) Write Protection Status Register */
-  #define REG_ACC_VER  (*(__I  uint32_t*)0x400440FCU) /**< \brief (ACC) Version Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_ACC_CR      ( 0x40044000U )                      /**< \brief (ACC) Control Register */
+    #define REG_ACC_MR      ( 0x40044004U )                      /**< \brief (ACC) Mode Register */
+    #define REG_ACC_IER     ( 0x40044024U )                      /**< \brief (ACC) Interrupt Enable Register */
+    #define REG_ACC_IDR     ( 0x40044028U )                      /**< \brief (ACC) Interrupt Disable Register */
+    #define REG_ACC_IMR     ( 0x4004402CU )                      /**< \brief (ACC) Interrupt Mask Register */
+    #define REG_ACC_ISR     ( 0x40044030U )                      /**< \brief (ACC) Interrupt Status Register */
+    #define REG_ACC_ACR     ( 0x40044094U )                      /**< \brief (ACC) Analog Control Register */
+    #define REG_ACC_WPMR    ( 0x400440E4U )                      /**< \brief (ACC) Write Protection Mode Register */
+    #define REG_ACC_WPSR    ( 0x400440E8U )                      /**< \brief (ACC) Write Protection Status Register */
+    #define REG_ACC_VER     ( 0x400440FCU )                      /**< \brief (ACC) Version Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_ACC_CR      ( *( __O uint32_t * ) 0x40044000U )  /**< \brief (ACC) Control Register */
+    #define REG_ACC_MR      ( *( __IO uint32_t * ) 0x40044004U ) /**< \brief (ACC) Mode Register */
+    #define REG_ACC_IER     ( *( __O uint32_t * ) 0x40044024U )  /**< \brief (ACC) Interrupt Enable Register */
+    #define REG_ACC_IDR     ( *( __O uint32_t * ) 0x40044028U )  /**< \brief (ACC) Interrupt Disable Register */
+    #define REG_ACC_IMR     ( *( __I uint32_t * ) 0x4004402CU )  /**< \brief (ACC) Interrupt Mask Register */
+    #define REG_ACC_ISR     ( *( __I uint32_t * ) 0x40044030U )  /**< \brief (ACC) Interrupt Status Register */
+    #define REG_ACC_ACR     ( *( __IO uint32_t * ) 0x40044094U ) /**< \brief (ACC) Analog Control Register */
+    #define REG_ACC_WPMR    ( *( __IO uint32_t * ) 0x400440E4U ) /**< \brief (ACC) Write Protection Mode Register */
+    #define REG_ACC_WPSR    ( *( __I uint32_t * ) 0x400440E8U )  /**< \brief (ACC) Write Protection Status Register */
+    #define REG_ACC_VER     ( *( __I uint32_t * ) 0x400440FCU )  /**< \brief (ACC) Version Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAM_ACC_INSTANCE_ */

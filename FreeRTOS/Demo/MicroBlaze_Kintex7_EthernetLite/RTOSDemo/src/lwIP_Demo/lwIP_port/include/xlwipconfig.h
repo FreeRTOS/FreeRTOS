@@ -4,5 +4,5 @@
 
 /* This is a generated file - do not edit */
 
-#define XLWIP_CONFIG_INCLUDE_EMACLITE 1
+#define XLWIP_CONFIG_INCLUDE_EMACLITE    1
 #endif

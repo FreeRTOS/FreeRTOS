@@ -32,135 +32,135 @@
 #include "RegTests.h"
 
 /* Tasks that implement register tests. */
-static void prvRegisterTest1Task( void *pvParameters );
-static void prvRegisterTest2Task( void *pvParameters );
-static void prvRegisterTest3Task( void *pvParameters );
-static void prvRegisterTest4Task( void *pvParameters );
+static void prvRegisterTest1Task( void * pvParameters );
+static void prvRegisterTest2Task( void * pvParameters );
+static void prvRegisterTest3Task( void * pvParameters );
+static void prvRegisterTest4Task( void * pvParameters );
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
-detected in any of the tasks. */
+ * detected in any of the tasks. */
 static volatile BaseType_t xErrorDetected = pdFALSE;
 
 /* Counters that are incremented on each cycle of a test.  This is used to
-detect a stalled task - a test that is no longer running. */
+ * detect a stalled task - a test that is no longer running. */
 static volatile uint32_t ulRegisterTest1Counter = 0;
 static volatile uint32_t ulRegisterTest2Counter = 0;
 static volatile uint32_t ulRegisterTest3Counter = 0;
 static volatile uint32_t ulRegisterTest4Counter = 0;
 /*-----------------------------------------------------------*/
 
-static void prvRegisterTest1Task( void *pvParameters )
+static void prvRegisterTest1Task( void * pvParameters )
 {
-	( void ) pvParameters;
+    ( void ) pvParameters;
 
-	for( ; ; )
-	{
-		/* 1. Fill the registers stored as part of task context with known values.
-		* 2. Force a context switch.
-		* 3. Verify that all the registers contain expected values.
-		* 4. If all the register contain expected values, increment ulRegisterTest1Counter.
-		*/
-	}
+    for( ; ; )
+    {
+        /* 1. Fill the registers stored as part of task context with known values.
+         * 2. Force a context switch.
+         * 3. Verify that all the registers contain expected values.
+         * 4. If all the register contain expected values, increment ulRegisterTest1Counter.
+         */
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegisterTest2Task( void *pvParameters )
+static void prvRegisterTest2Task( void * pvParameters )
 {
-	( void ) pvParameters;
+    ( void ) pvParameters;
 
-	for( ; ; )
-	{
-		/* 1. Fill the registers stored as part of task context with known values.
-		* 2. Force a context switch.
-		* 3. Verify that all the registers contain expected values.
-		* 4. If all the register contain expected values, increment ulRegisterTest2Counter.
-		*/
-	}
+    for( ; ; )
+    {
+        /* 1. Fill the registers stored as part of task context with known values.
+         * 2. Force a context switch.
+         * 3. Verify that all the registers contain expected values.
+         * 4. If all the register contain expected values, increment ulRegisterTest2Counter.
+         */
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegisterTest3Task( void *pvParameters )
+static void prvRegisterTest3Task( void * pvParameters )
 {
-	( void ) pvParameters;
+    ( void ) pvParameters;
 
-	for( ; ; )
-	{
-		/* 1. Fill the registers stored as part of task context with known values.
-		* 2. Force a context switch.
-		* 3. Verify that all the registers contain expected values.
-		* 4. If all the register contain expected values, increment ulRegisterTest3Counter.
-		*/
-	}
+    for( ; ; )
+    {
+        /* 1. Fill the registers stored as part of task context with known values.
+         * 2. Force a context switch.
+         * 3. Verify that all the registers contain expected values.
+         * 4. If all the register contain expected values, increment ulRegisterTest3Counter.
+         */
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegisterTest4Task( void *pvParameters )
+static void prvRegisterTest4Task( void * pvParameters )
 {
-	( void ) pvParameters;
+    ( void ) pvParameters;
 
-	for( ; ; )
-	{
-		/* 1. Fill the registers stored as part of task context with known values.
-		* 2. Force a context switch.
-		* 3. Verify that all the registers contain expected values.
-		* 4. If all the register contain expected values, increment ulRegisterTest4Counter.
-		*/
-	}
+    for( ; ; )
+    {
+        /* 1. Fill the registers stored as part of task context with known values.
+         * 2. Force a context switch.
+         * 3. Verify that all the registers contain expected values.
+         * 4. If all the register contain expected values, increment ulRegisterTest4Counter.
+         */
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vStartRegisterTasks( UBaseType_t uxPriority )
 {
-	BaseType_t ret;
+    BaseType_t ret;
 
-	ret = xTaskCreate( prvRegisterTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
-	configASSERT( ret == pdPASS );
+    ret = xTaskCreate( prvRegisterTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
+    configASSERT( ret == pdPASS );
 
-	ret = xTaskCreate( prvRegisterTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
-	configASSERT( ret == pdPASS );
+    ret = xTaskCreate( prvRegisterTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
+    configASSERT( ret == pdPASS );
 
-	ret = xTaskCreate( prvRegisterTest3Task, "RegTest3", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
-	configASSERT( ret == pdPASS );
+    ret = xTaskCreate( prvRegisterTest3Task, "RegTest3", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
+    configASSERT( ret == pdPASS );
 
-	ret = xTaskCreate( prvRegisterTest4Task, "RegTest4", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
-	configASSERT( ret == pdPASS );
+    ret = xTaskCreate( prvRegisterTest4Task, "RegTest4", configMINIMAL_STACK_SIZE, NULL, uxPriority, NULL );
+    configASSERT( ret == pdPASS );
 }
 /*-----------------------------------------------------------*/
 
 BaseType_t xAreRegisterTasksStillRunning( void )
 {
-static uint32_t ulLastRegisterTest1Counter = 0, ulLastRegisterTest2Counter = 0;
-static uint32_t ulLastRegisterTest3Counter = 0, ulLastRegisterTest4Counter = 0;
+    static uint32_t ulLastRegisterTest1Counter = 0, ulLastRegisterTest2Counter = 0;
+    static uint32_t ulLastRegisterTest3Counter = 0, ulLastRegisterTest4Counter = 0;
 
-	/* If the register test task is still running then we expect the loop
-	 * counters to have incremented since this function was last called. */
-	if( ulLastRegisterTest1Counter == ulRegisterTest1Counter )
-	{
-		xErrorDetected = pdTRUE;
-	}
+    /* If the register test task is still running then we expect the loop
+     * counters to have incremented since this function was last called. */
+    if( ulLastRegisterTest1Counter == ulRegisterTest1Counter )
+    {
+        xErrorDetected = pdTRUE;
+    }
 
-	if( ulLastRegisterTest2Counter == ulRegisterTest2Counter )
-	{
-		xErrorDetected = pdTRUE;
-	}
+    if( ulLastRegisterTest2Counter == ulRegisterTest2Counter )
+    {
+        xErrorDetected = pdTRUE;
+    }
 
-	if( ulLastRegisterTest3Counter == ulRegisterTest3Counter )
-	{
-		xErrorDetected = pdTRUE;
-	}
+    if( ulLastRegisterTest3Counter == ulRegisterTest3Counter )
+    {
+        xErrorDetected = pdTRUE;
+    }
 
-	if( ulLastRegisterTest4Counter == ulRegisterTest4Counter )
-	{
-		xErrorDetected = pdTRUE;
-	}
+    if( ulLastRegisterTest4Counter == ulRegisterTest4Counter )
+    {
+        xErrorDetected = pdTRUE;
+    }
 
-	ulLastRegisterTest1Counter = ulRegisterTest1Counter;
-	ulLastRegisterTest2Counter = ulRegisterTest2Counter;
-	ulLastRegisterTest3Counter = ulRegisterTest3Counter;
-	ulLastRegisterTest4Counter = ulRegisterTest4Counter;
+    ulLastRegisterTest1Counter = ulRegisterTest1Counter;
+    ulLastRegisterTest2Counter = ulRegisterTest2Counter;
+    ulLastRegisterTest3Counter = ulRegisterTest3Counter;
+    ulLastRegisterTest4Counter = ulRegisterTest4Counter;
 
-	/* Errors detected in the task itself will have latched xErrorDetected
-	 * to true. */
-	return ( BaseType_t ) !xErrorDetected;
+    /* Errors detected in the task itself will have latched xErrorDetected
+     * to true. */
+    return ( BaseType_t ) !xErrorDetected;
 }
 /*-----------------------------------------------------------*/

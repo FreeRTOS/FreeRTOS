@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -39,11 +39,12 @@
  *    request.
  * -# Receive a CDCLineCoding object from the host after a SetLineCoding
  *    request.
- *  
+ *
  */
 
 #ifndef _CDCREQUESTS_H_
 #define _CDCREQUESTS_H_
+
 /** \addtogroup usb_cdc
  *@{
  */
@@ -69,11 +70,11 @@
  */
 
 /** SetLineCoding request code. */
-#define CDCGenericRequest_SETLINECODING             0x20
+#define CDCGenericRequest_SETLINECODING          0x20
 /** GetLineCoding request code. */
-#define CDCGenericRequest_GETLINECODING             0x21
+#define CDCGenericRequest_GETLINECODING          0x21
 /** SetControlLineState request code. */
-#define CDCGenericRequest_SETCONTROLLINESTATE       0x22
+#define CDCGenericRequest_SETCONTROLLINESTATE    0x22
 /**     @}*/
 
 /** \addtogroup usb_cdc_ctrl_line_state USB CDC ControlLineState bitmap
@@ -83,13 +84,13 @@
  * - \ref CDCControlLineState_RTS, CDCControlLineState_CARRIER_ON
  */
 /** Indicates to DCE if DTE is present or not. */
-#define CDCControlLineState_DTE_PRESENT                     (1 << 0)
+#define CDCControlLineState_DTE_PRESENT    ( 1 << 0 )
 /** RS232 signal DTR: Data Terminal Ready. */
-#define CDCControlLineState_DTR                             (1 << 0)
+#define CDCControlLineState_DTR            ( 1 << 0 )
 /** Carrier control for half duplex modems. */
-#define CDCControlLineState_CARRIER_ON                      (1 << 1)
+#define CDCControlLineState_CARRIER_ON     ( 1 << 1 )
 /** RS232 signal RTS: Request to send. */
-#define CDCControlLineState_RTS                             (1 << 1)
+#define CDCControlLineState_RTS            ( 1 << 1 )
 /**     @}*/
 
 /** \addtogroup usb_cdc_stop USB CDC LineCoding StopBits
@@ -100,11 +101,11 @@
  * - \ref CDCLineCoding_TWOSTOPBITS
  */
 /** The transmission protocol uses one stop bit. */
-#define CDCLineCoding_ONESTOPBIT            0
+#define CDCLineCoding_ONESTOPBIT     0
 /** The transmission protocol uses 1.5 stop bit. */
-#define CDCLineCoding_ONE5STOPBIT           1
+#define CDCLineCoding_ONE5STOPBIT    1
 /** The transmissin protocol uses two stop bits. */
-#define CDCLineCoding_TWOSTOPBITS           2
+#define CDCLineCoding_TWOSTOPBITS    2
 /**     @}*/
 
 /** \addtogroup usb_cdc_parity USB CDC LineCoding ParityCheckings
@@ -117,47 +118,48 @@
  * - \ref CDCLineCoding_SPACEPARITY
  */
 /** No parity checking. */
-#define CDCLineCoding_NOPARITY              0
+#define CDCLineCoding_NOPARITY       0
 /** Odd parity checking. */
-#define CDCLineCoding_ODDPARITY             1
+#define CDCLineCoding_ODDPARITY      1
 /** Even parity checking. */
-#define CDCLineCoding_EVENPARITY            2
+#define CDCLineCoding_EVENPARITY     2
 /** Mark parity checking. */
-#define CDCLineCoding_MARKPARITY            3
+#define CDCLineCoding_MARKPARITY     3
 /** Space parity checking. */
-#define CDCLineCoding_SPACEPARITY           4
+#define CDCLineCoding_SPACEPARITY    4
 /**     @}*/
 
 /*----------------------------------------------------------------------------
  *         Types
  *----------------------------------------------------------------------------*/
 #pragma pack(1)
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-#elif defined ( __ICCARM__ ) /* IAR Ewarm */
-#define __attribute__(...)
-#define __packed__  packed
-#elif defined (  __GNUC__  ) /* GCC CS3 */
-#define __packed__  aligned(1)
+#if defined( __CC_ARM )     /* Keil ¦ÌVision 4 */
+#elif defined( __ICCARM__ ) /* IAR Ewarm */
+    #define __attribute__( ... )
+    #define __packed__    packed
+#elif defined( __GNUC__ ) /* GCC CS3 */
+    #define __packed__    aligned( 1 )
 #endif
 
 /**
  * \typedef CDCLineCoding
  * \brief Format of the data returned when a GetLineCoding request is received.
  */
-typedef struct _CDCLineCoding {
-
+typedef struct _CDCLineCoding
+{
     /** Data terminal rate in bits per second. */
     uint32_t dwDTERate;
+
     /** Number of stop bits.
-        \sa usb_cdc_stop CDC LineCoding StopBits. */
+     *  \sa usb_cdc_stop CDC LineCoding StopBits. */
     uint8_t bCharFormat;
+
     /** Type of parity checking used.
-        \sa usb_cdc_parity CDC LineCoding ParityCheckings. */
+     *  \sa usb_cdc_parity CDC LineCoding ParityCheckings. */
     uint8_t bParityType;
     /** Number of data bits (5, 6, 7, 8 or 16). */
     uint8_t bDataBits;
-
-} __attribute__ ((__packed__)) CDCLineCoding; /* GCC */
+} __attribute__( ( __packed__ ) ) CDCLineCoding; /* GCC */
 
 #pragma pack()
 
@@ -165,19 +167,16 @@ typedef struct _CDCLineCoding {
  *         Functions
  *----------------------------------------------------------------------------*/
 
-extern uint8_t CDCSetControlLineStateRequest_IsDtePresent(
-    const USBGenericRequest *request);
+extern uint8_t CDCSetControlLineStateRequest_IsDtePresent( const USBGenericRequest * request );
 
-extern uint8_t CDCSetControlLineStateRequest_ActivateCarrier(
-    const USBGenericRequest *request);
+extern uint8_t CDCSetControlLineStateRequest_ActivateCarrier( const USBGenericRequest * request );
 
-extern void CDCLineCoding_Initialize(CDCLineCoding *lineCoding,
-                                     uint32_t bitrate,
-                                     uint8_t stopbits,
-                                     uint8_t parity,
-                                     uint8_t databits);
+extern void CDCLineCoding_Initialize( CDCLineCoding * lineCoding,
+                                      uint32_t bitrate,
+                                      uint8_t stopbits,
+                                      uint8_t parity,
+                                      uint8_t databits );
 
 
 /**@}*/
 #endif /* #define _CDCREQUESTS_H_ */
-

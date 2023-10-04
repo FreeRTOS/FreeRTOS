@@ -55,111 +55,117 @@ extern uint32_t _sstack;
 extern uint32_t _estack;
 
 /** \cond DOXYGEN_SHOULD_SKIP_THIS */
-int main(void);
+int main( void );
 /** \endcond */
 
-void __libc_init_array(void);
+void __libc_init_array( void );
 
 /* Exception Table */
-__attribute__ ((section(".vectors")))
-IntFunc exception_table[] = {
+__attribute__( ( section( ".vectors" ) ) )
+IntFunc exception_table[] =
+{
+    /* Configure Initial Stack Pointer, using linker-generated symbols */
+    ( IntFunc ) ( &_estack ),
+    Reset_Handler,
 
-	/* Configure Initial Stack Pointer, using linker-generated symbols */
-	(IntFunc) (&_estack),
-	Reset_Handler,
+    NMI_Handler,
+    HardFault_Handler,
+    MemManage_Handler,
+    BusFault_Handler,
+    UsageFault_Handler,
+    0,                       0,0, 0, /* Reserved */
+    SVC_Handler,
+    DebugMon_Handler,
+    0,                       /* Reserved  */
+    PendSV_Handler,
+    SysTick_Handler,
 
-	NMI_Handler,
-	HardFault_Handler,
-	MemManage_Handler,
-	BusFault_Handler,
-	UsageFault_Handler,
-	0, 0, 0, 0,        /* Reserved */
-	SVC_Handler,
-	DebugMon_Handler,
-	0,                 /* Reserved  */
-	PendSV_Handler,
-	SysTick_Handler,
-
-	/* Configurable interrupts  */
-	SUPC_Handler,   /* 0  Supply Controller */
-	RSTC_Handler,   /* 1  Reset Controller */
-	RTC_Handler,    /* 2  Real Time Clock */
-	RTT_Handler,    /* 3  Real Time Timer */
-	WDT_Handler,    /* 4  Watchdog Timer */
-	PMC_Handler,    /* 5  PMC */
-	EFC_Handler,    /* 6  EFC */
-	Dummy_Handler,  /* 7  Reserved */
-	UART0_Handler,  /* 8  UART0 */
-	UART1_Handler,  /* 9  UART1 */
-	SMC_Handler,    /* 10 SMC */
-	PIOA_Handler,   /* 11 Parallel IO Controller A */
-	PIOB_Handler,   /* 12 Parallel IO Controller B */
-	PIOC_Handler,   /* 13 Parallel IO Controller C */
-	USART0_Handler, /* 14 USART 0 */
-	USART1_Handler, /* 15 USART 1 */
-	Dummy_Handler,  /* 16 Reserved */
-	Dummy_Handler,  /* 17 Reserved */
-	HSMCI_Handler,  /* 18 HSMCI */
-	TWI0_Handler,   /* 19 TWI 0 */
-	TWI1_Handler,   /* 20 TWI 1 */
-	SPI_Handler,    /* 21 SPI */
-	SSC_Handler,    /* 22 SSC */
-	TC0_Handler,    /* 23 Timer Counter 0 */
-	TC1_Handler,    /* 24 Timer Counter 1 */
-	TC2_Handler,    /* 25 Timer Counter 2 */
-	TC3_Handler,    /* 26 Timer Counter 3 */
-	TC4_Handler,    /* 27 Timer Counter 4 */
-	TC5_Handler,    /* 28 Timer Counter 5 */
-	ADC_Handler,    /* 29 ADC controller */
-	DACC_Handler,   /* 30 DACC controller */
-	PWM_Handler,    /* 31 PWM */
-	CRCCU_Handler,  /* 32 CRC Calculation Unit */
-	ACC_Handler,    /* 33 Analog Comparator */
-	UDP_Handler,    /* 34 USB Device Port */
-	Dummy_Handler   /* 35 not used */
+    /* Configurable interrupts  */
+    SUPC_Handler,   /* 0  Supply Controller */
+    RSTC_Handler,   /* 1  Reset Controller */
+    RTC_Handler,    /* 2  Real Time Clock */
+    RTT_Handler,    /* 3  Real Time Timer */
+    WDT_Handler,    /* 4  Watchdog Timer */
+    PMC_Handler,    /* 5  PMC */
+    EFC_Handler,    /* 6  EFC */
+    Dummy_Handler,  /* 7  Reserved */
+    UART0_Handler,  /* 8  UART0 */
+    UART1_Handler,  /* 9  UART1 */
+    SMC_Handler,    /* 10 SMC */
+    PIOA_Handler,   /* 11 Parallel IO Controller A */
+    PIOB_Handler,   /* 12 Parallel IO Controller B */
+    PIOC_Handler,   /* 13 Parallel IO Controller C */
+    USART0_Handler, /* 14 USART 0 */
+    USART1_Handler, /* 15 USART 1 */
+    Dummy_Handler,  /* 16 Reserved */
+    Dummy_Handler,  /* 17 Reserved */
+    HSMCI_Handler,  /* 18 HSMCI */
+    TWI0_Handler,   /* 19 TWI 0 */
+    TWI1_Handler,   /* 20 TWI 1 */
+    SPI_Handler,    /* 21 SPI */
+    SSC_Handler,    /* 22 SSC */
+    TC0_Handler,    /* 23 Timer Counter 0 */
+    TC1_Handler,    /* 24 Timer Counter 1 */
+    TC2_Handler,    /* 25 Timer Counter 2 */
+    TC3_Handler,    /* 26 Timer Counter 3 */
+    TC4_Handler,    /* 27 Timer Counter 4 */
+    TC5_Handler,    /* 28 Timer Counter 5 */
+    ADC_Handler,    /* 29 ADC controller */
+    DACC_Handler,   /* 30 DACC controller */
+    PWM_Handler,    /* 31 PWM */
+    CRCCU_Handler,  /* 32 CRC Calculation Unit */
+    ACC_Handler,    /* 33 Analog Comparator */
+    UDP_Handler,    /* 34 USB Device Port */
+    Dummy_Handler   /* 35 not used */
 };
 
 /* TEMPORARY PATCH FOR SCB */
-#define SCB_VTOR_TBLBASE_Pos               29                            /*!< SCB VTOR: TBLBASE Position */
-#define SCB_VTOR_TBLBASE_Msk               (1UL << SCB_VTOR_TBLBASE_Pos) /*!< SCB VTOR: TBLBASE Mask */
+#define SCB_VTOR_TBLBASE_Pos    29                                       /*!< SCB VTOR: TBLBASE Position */
+#define SCB_VTOR_TBLBASE_Msk    ( 1UL << SCB_VTOR_TBLBASE_Pos )          /*!< SCB VTOR: TBLBASE Mask */
 
 /**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-void Reset_Handler(void)
+void Reset_Handler( void )
 {
-	uint32_t *pSrc, *pDest;
+    uint32_t * pSrc, * pDest;
 
-	/* Initialize the relocate segment */
-	pSrc = &_etext;
-	pDest = &_srelocate;
+    /* Initialize the relocate segment */
+    pSrc = &_etext;
+    pDest = &_srelocate;
 
-	if (pSrc != pDest) {
-		for (; pDest < &_erelocate;) {
-			*pDest++ = *pSrc++;
-		}
-	}
+    if( pSrc != pDest )
+    {
+        for( ; pDest < &_erelocate; )
+        {
+            *pDest++ = *pSrc++;
+        }
+    }
 
-	/* Clear the zero segment */
-	for (pDest = &_szero; pDest < &_ezero;) {
-		*pDest++ = 0;
-	}
+    /* Clear the zero segment */
+    for( pDest = &_szero; pDest < &_ezero; )
+    {
+        *pDest++ = 0;
+    }
 
-	/* Set the vector table base address */
-	pSrc = (uint32_t *) & _sfixed;
-	SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
+    /* Set the vector table base address */
+    pSrc = ( uint32_t * ) &_sfixed;
+    SCB->VTOR = ( ( uint32_t ) pSrc & SCB_VTOR_TBLOFF_Msk );
 
-	if (((uint32_t) pSrc >= IRAM_ADDR) && ((uint32_t) pSrc < IRAM_ADDR + IRAM_SIZE)) {
-		SCB->VTOR |= 1 << SCB_VTOR_TBLBASE_Pos;
-	}
+    if( ( ( uint32_t ) pSrc >= IRAM_ADDR ) && ( ( uint32_t ) pSrc < IRAM_ADDR + IRAM_SIZE ) )
+    {
+        SCB->VTOR |= 1 << SCB_VTOR_TBLBASE_Pos;
+    }
 
-	/* Initialize the C library */
-	__libc_init_array();
+    /* Initialize the C library */
+    __libc_init_array();
 
-	/* Branch to main function */
-	main();
+    /* Branch to main function */
+    main();
 
-	/* Infinite loop */
-	while (1);
+    /* Infinite loop */
+    while( 1 )
+    {
+    }
 }

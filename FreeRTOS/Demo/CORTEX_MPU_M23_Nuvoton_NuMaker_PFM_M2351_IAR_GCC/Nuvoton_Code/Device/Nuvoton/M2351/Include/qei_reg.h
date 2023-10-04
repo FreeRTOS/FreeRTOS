@@ -9,21 +9,20 @@
 #define __QEI_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- Quadrature Encoder Interface -------------------------*/
+
 /**
-    @addtogroup QEI Quadrature Encoder Interface(QEI)
-    Memory Mapped Structure for QEI Controller
-@{ */
+ *  @addtogroup QEI Quadrature Encoder Interface(QEI)
+ *  Memory Mapped Structure for QEI Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var QEI_T::CNT
      * Offset: 0x00  QEI Counter Register
@@ -184,118 +183,117 @@ typedef struct
      * |        |          |1 = QEI Counter is in up-counting.
      * |        |          |Note: This bit is set/reset by hardware according to the phase detection between CHA and CHB.
      */
-    __IO uint32_t CNT;                   /*!< [0x0000] QEI Counter Register                                             */
-    __IO uint32_t CNTHOLD;               /*!< [0x0004] QEI Counter Hold Register                                        */
-    __IO uint32_t CNTLATCH;              /*!< [0x0008] QEI Counter Index Latch Register                                 */
-    __IO uint32_t CNTCMP;                /*!< [0x000c] QEI Counter Compare Register                                     */
-    __I  uint32_t RESERVE0[1];
-    __IO uint32_t CNTMAX;                /*!< [0x0014] QEI Pre-set Maximum Count Register                               */
-    __IO uint32_t CTL;                   /*!< [0x0018] QEI Controller Control Register                                  */
-    __I  uint32_t RESERVE1[4];
-    __IO uint32_t STATUS;                /*!< [0x002c] QEI Controller Status Register                                   */
-
+    __IO uint32_t CNT;      /*!< [0x0000] QEI Counter Register                                             */
+    __IO uint32_t CNTHOLD;  /*!< [0x0004] QEI Counter Hold Register                                        */
+    __IO uint32_t CNTLATCH; /*!< [0x0008] QEI Counter Index Latch Register                                 */
+    __IO uint32_t CNTCMP;   /*!< [0x000c] QEI Counter Compare Register                                     */
+    __I uint32_t RESERVE0[ 1 ];
+    __IO uint32_t CNTMAX;   /*!< [0x0014] QEI Pre-set Maximum Count Register                               */
+    __IO uint32_t CTL;      /*!< [0x0018] QEI Controller Control Register                                  */
+    __I uint32_t RESERVE1[ 4 ];
+    __IO uint32_t STATUS;   /*!< [0x002c] QEI Controller Status Register                                   */
 } QEI_T;
 
 /**
-    @addtogroup QEI_CONST QEI Bit Field Definition
-    Constant Definitions for QEI Controller
-@{ */
+ *  @addtogroup QEI_CONST QEI Bit Field Definition
+ *  Constant Definitions for QEI Controller
+ * @{ */
 
-#define QEI_CNT_CNT_Pos                  (0)                                               /*!< QEI_T::CNT: CNT Position               */
-#define QEI_CNT_CNT_Msk                  (0xfffffffful << QEI_CNT_CNT_Pos)                 /*!< QEI_T::CNT: CNT Mask                   */
+#define QEI_CNT_CNT_Pos              ( 0 )                                                 /*!< QEI_T::CNT: CNT Position               */
+#define QEI_CNT_CNT_Msk              ( 0xfffffffful << QEI_CNT_CNT_Pos )                   /*!< QEI_T::CNT: CNT Mask                   */
 
-#define QEI_CNTHOLD_CNTHOLD_Pos          (0)                                               /*!< QEI_T::CNTHOLD: CNTHOLD Position       */
-#define QEI_CNTHOLD_CNTHOLD_Msk          (0xfffffffful << QEI_CNTHOLD_CNTHOLD_Pos)         /*!< QEI_T::CNTHOLD: CNTHOLD Mask           */
+#define QEI_CNTHOLD_CNTHOLD_Pos      ( 0 )                                                 /*!< QEI_T::CNTHOLD: CNTHOLD Position       */
+#define QEI_CNTHOLD_CNTHOLD_Msk      ( 0xfffffffful << QEI_CNTHOLD_CNTHOLD_Pos )           /*!< QEI_T::CNTHOLD: CNTHOLD Mask           */
 
-#define QEI_CNTLATCH_CNTLATCH_Pos        (0)                                               /*!< QEI_T::CNTLATCH: CNTLATCH Position     */
-#define QEI_CNTLATCH_CNTLATCH_Msk        (0xfffffffful << QEI_CNTLATCH_CNTLATCH_Pos)       /*!< QEI_T::CNTLATCH: CNTLATCH Mask         */
+#define QEI_CNTLATCH_CNTLATCH_Pos    ( 0 )                                                 /*!< QEI_T::CNTLATCH: CNTLATCH Position     */
+#define QEI_CNTLATCH_CNTLATCH_Msk    ( 0xfffffffful << QEI_CNTLATCH_CNTLATCH_Pos )         /*!< QEI_T::CNTLATCH: CNTLATCH Mask         */
 
-#define QEI_CNTCMP_CNTCMP_Pos            (0)                                               /*!< QEI_T::CNTCMP: CNTCMP Position         */
-#define QEI_CNTCMP_CNTCMP_Msk            (0xfffffffful << QEI_CNTCMP_CNTCMP_Pos)           /*!< QEI_T::CNTCMP: CNTCMP Mask             */
+#define QEI_CNTCMP_CNTCMP_Pos        ( 0 )                                                 /*!< QEI_T::CNTCMP: CNTCMP Position         */
+#define QEI_CNTCMP_CNTCMP_Msk        ( 0xfffffffful << QEI_CNTCMP_CNTCMP_Pos )             /*!< QEI_T::CNTCMP: CNTCMP Mask             */
 
-#define QEI_CNTMAX_CNTMAX_Pos            (0)                                               /*!< QEI_T::CNTMAX: CNTMAX Position         */
-#define QEI_CNTMAX_CNTMAX_Msk            (0xfffffffful << QEI_CNTMAX_CNTMAX_Pos)           /*!< QEI_T::CNTMAX: CNTMAX Mask             */
+#define QEI_CNTMAX_CNTMAX_Pos        ( 0 )                                                 /*!< QEI_T::CNTMAX: CNTMAX Position         */
+#define QEI_CNTMAX_CNTMAX_Msk        ( 0xfffffffful << QEI_CNTMAX_CNTMAX_Pos )             /*!< QEI_T::CNTMAX: CNTMAX Mask             */
 
-#define QEI_CTL_NFCLKSEL_Pos             (0)                                               /*!< QEI_T::CTL: NFCLKSEL Position          */
-#define QEI_CTL_NFCLKSEL_Msk             (0x7ul << QEI_CTL_NFCLKSEL_Pos)                   /*!< QEI_T::CTL: NFCLKSEL Mask              */
+#define QEI_CTL_NFCLKSEL_Pos         ( 0 )                                                 /*!< QEI_T::CTL: NFCLKSEL Position          */
+#define QEI_CTL_NFCLKSEL_Msk         ( 0x7ul << QEI_CTL_NFCLKSEL_Pos )                     /*!< QEI_T::CTL: NFCLKSEL Mask              */
 
-#define QEI_CTL_NFDIS_Pos                (3)                                               /*!< QEI_T::CTL: NFDIS Position             */
-#define QEI_CTL_NFDIS_Msk                (0x1ul << QEI_CTL_NFDIS_Pos)                      /*!< QEI_T::CTL: NFDIS Mask                 */
+#define QEI_CTL_NFDIS_Pos            ( 3 )                                                 /*!< QEI_T::CTL: NFDIS Position             */
+#define QEI_CTL_NFDIS_Msk            ( 0x1ul << QEI_CTL_NFDIS_Pos )                        /*!< QEI_T::CTL: NFDIS Mask                 */
 
-#define QEI_CTL_CHAEN_Pos                (4)                                               /*!< QEI_T::CTL: CHAEN Position             */
-#define QEI_CTL_CHAEN_Msk                (0x1ul << QEI_CTL_CHAEN_Pos)                      /*!< QEI_T::CTL: CHAEN Mask                 */
+#define QEI_CTL_CHAEN_Pos            ( 4 )                                                 /*!< QEI_T::CTL: CHAEN Position             */
+#define QEI_CTL_CHAEN_Msk            ( 0x1ul << QEI_CTL_CHAEN_Pos )                        /*!< QEI_T::CTL: CHAEN Mask                 */
 
-#define QEI_CTL_CHBEN_Pos                (5)                                               /*!< QEI_T::CTL: CHBEN Position             */
-#define QEI_CTL_CHBEN_Msk                (0x1ul << QEI_CTL_CHBEN_Pos)                      /*!< QEI_T::CTL: CHBEN Mask                 */
+#define QEI_CTL_CHBEN_Pos            ( 5 )                                                 /*!< QEI_T::CTL: CHBEN Position             */
+#define QEI_CTL_CHBEN_Msk            ( 0x1ul << QEI_CTL_CHBEN_Pos )                        /*!< QEI_T::CTL: CHBEN Mask                 */
 
-#define QEI_CTL_IDXEN_Pos                (6)                                               /*!< QEI_T::CTL: IDXEN Position             */
-#define QEI_CTL_IDXEN_Msk                (0x1ul << QEI_CTL_IDXEN_Pos)                      /*!< QEI_T::CTL: IDXEN Mask                 */
+#define QEI_CTL_IDXEN_Pos            ( 6 )                                                 /*!< QEI_T::CTL: IDXEN Position             */
+#define QEI_CTL_IDXEN_Msk            ( 0x1ul << QEI_CTL_IDXEN_Pos )                        /*!< QEI_T::CTL: IDXEN Mask                 */
 
-#define QEI_CTL_MODE_Pos                 (8)                                               /*!< QEI_T::CTL: MODE Position              */
-#define QEI_CTL_MODE_Msk                 (0x3ul << QEI_CTL_MODE_Pos)                       /*!< QEI_T::CTL: MODE Mask                  */
+#define QEI_CTL_MODE_Pos             ( 8 )                                                 /*!< QEI_T::CTL: MODE Position              */
+#define QEI_CTL_MODE_Msk             ( 0x3ul << QEI_CTL_MODE_Pos )                         /*!< QEI_T::CTL: MODE Mask                  */
 
-#define QEI_CTL_CHAINV_Pos               (12)                                              /*!< QEI_T::CTL: CHAINV Position            */
-#define QEI_CTL_CHAINV_Msk               (0x1ul << QEI_CTL_CHAINV_Pos)                     /*!< QEI_T::CTL: CHAINV Mask                */
+#define QEI_CTL_CHAINV_Pos           ( 12 )                                                /*!< QEI_T::CTL: CHAINV Position            */
+#define QEI_CTL_CHAINV_Msk           ( 0x1ul << QEI_CTL_CHAINV_Pos )                       /*!< QEI_T::CTL: CHAINV Mask                */
 
-#define QEI_CTL_CHBINV_Pos               (13)                                              /*!< QEI_T::CTL: CHBINV Position            */
-#define QEI_CTL_CHBINV_Msk               (0x1ul << QEI_CTL_CHBINV_Pos)                     /*!< QEI_T::CTL: CHBINV Mask                */
+#define QEI_CTL_CHBINV_Pos           ( 13 )                                                /*!< QEI_T::CTL: CHBINV Position            */
+#define QEI_CTL_CHBINV_Msk           ( 0x1ul << QEI_CTL_CHBINV_Pos )                       /*!< QEI_T::CTL: CHBINV Mask                */
 
-#define QEI_CTL_IDXINV_Pos               (14)                                              /*!< QEI_T::CTL: IDXINV Position            */
-#define QEI_CTL_IDXINV_Msk               (0x1ul << QEI_CTL_IDXINV_Pos)                     /*!< QEI_T::CTL: IDXINV Mask                */
+#define QEI_CTL_IDXINV_Pos           ( 14 )                                                /*!< QEI_T::CTL: IDXINV Position            */
+#define QEI_CTL_IDXINV_Msk           ( 0x1ul << QEI_CTL_IDXINV_Pos )                       /*!< QEI_T::CTL: IDXINV Mask                */
 
-#define QEI_CTL_OVUNIEN_Pos              (16)                                              /*!< QEI_T::CTL: OVUNIEN Position           */
-#define QEI_CTL_OVUNIEN_Msk              (0x1ul << QEI_CTL_OVUNIEN_Pos)                    /*!< QEI_T::CTL: OVUNIEN Mask               */
+#define QEI_CTL_OVUNIEN_Pos          ( 16 )                                                /*!< QEI_T::CTL: OVUNIEN Position           */
+#define QEI_CTL_OVUNIEN_Msk          ( 0x1ul << QEI_CTL_OVUNIEN_Pos )                      /*!< QEI_T::CTL: OVUNIEN Mask               */
 
-#define QEI_CTL_DIRIEN_Pos               (17)                                              /*!< QEI_T::CTL: DIRIEN Position            */
-#define QEI_CTL_DIRIEN_Msk               (0x1ul << QEI_CTL_DIRIEN_Pos)                     /*!< QEI_T::CTL: DIRIEN Mask                */
+#define QEI_CTL_DIRIEN_Pos           ( 17 )                                                /*!< QEI_T::CTL: DIRIEN Position            */
+#define QEI_CTL_DIRIEN_Msk           ( 0x1ul << QEI_CTL_DIRIEN_Pos )                       /*!< QEI_T::CTL: DIRIEN Mask                */
 
-#define QEI_CTL_CMPIEN_Pos               (18)                                              /*!< QEI_T::CTL: CMPIEN Position            */
-#define QEI_CTL_CMPIEN_Msk               (0x1ul << QEI_CTL_CMPIEN_Pos)                     /*!< QEI_T::CTL: CMPIEN Mask                */
+#define QEI_CTL_CMPIEN_Pos           ( 18 )                                                /*!< QEI_T::CTL: CMPIEN Position            */
+#define QEI_CTL_CMPIEN_Msk           ( 0x1ul << QEI_CTL_CMPIEN_Pos )                       /*!< QEI_T::CTL: CMPIEN Mask                */
 
-#define QEI_CTL_IDXIEN_Pos               (19)                                              /*!< QEI_T::CTL: IDXIEN Position            */
-#define QEI_CTL_IDXIEN_Msk               (0x1ul << QEI_CTL_IDXIEN_Pos)                     /*!< QEI_T::CTL: IDXIEN Mask                */
+#define QEI_CTL_IDXIEN_Pos           ( 19 )                                                /*!< QEI_T::CTL: IDXIEN Position            */
+#define QEI_CTL_IDXIEN_Msk           ( 0x1ul << QEI_CTL_IDXIEN_Pos )                       /*!< QEI_T::CTL: IDXIEN Mask                */
 
-#define QEI_CTL_HOLDTMR0_Pos             (20)                                              /*!< QEI_T::CTL: HOLDTMR0 Position          */
-#define QEI_CTL_HOLDTMR0_Msk             (0x1ul << QEI_CTL_HOLDTMR0_Pos)                   /*!< QEI_T::CTL: HOLDTMR0 Mask              */
+#define QEI_CTL_HOLDTMR0_Pos         ( 20 )                                                /*!< QEI_T::CTL: HOLDTMR0 Position          */
+#define QEI_CTL_HOLDTMR0_Msk         ( 0x1ul << QEI_CTL_HOLDTMR0_Pos )                     /*!< QEI_T::CTL: HOLDTMR0 Mask              */
 
-#define QEI_CTL_HOLDTMR1_Pos             (21)                                              /*!< QEI_T::CTL: HOLDTMR1 Position          */
-#define QEI_CTL_HOLDTMR1_Msk             (0x1ul << QEI_CTL_HOLDTMR1_Pos)                   /*!< QEI_T::CTL: HOLDTMR1 Mask              */
+#define QEI_CTL_HOLDTMR1_Pos         ( 21 )                                                /*!< QEI_T::CTL: HOLDTMR1 Position          */
+#define QEI_CTL_HOLDTMR1_Msk         ( 0x1ul << QEI_CTL_HOLDTMR1_Pos )                     /*!< QEI_T::CTL: HOLDTMR1 Mask              */
 
-#define QEI_CTL_HOLDTMR2_Pos             (22)                                              /*!< QEI_T::CTL: HOLDTMR2 Position          */
-#define QEI_CTL_HOLDTMR2_Msk             (0x1ul << QEI_CTL_HOLDTMR2_Pos)                   /*!< QEI_T::CTL: HOLDTMR2 Mask              */
+#define QEI_CTL_HOLDTMR2_Pos         ( 22 )                                                /*!< QEI_T::CTL: HOLDTMR2 Position          */
+#define QEI_CTL_HOLDTMR2_Msk         ( 0x1ul << QEI_CTL_HOLDTMR2_Pos )                     /*!< QEI_T::CTL: HOLDTMR2 Mask              */
 
-#define QEI_CTL_HOLDTMR3_Pos             (23)                                              /*!< QEI_T::CTL: HOLDTMR3 Position          */
-#define QEI_CTL_HOLDTMR3_Msk             (0x1ul << QEI_CTL_HOLDTMR3_Pos)                   /*!< QEI_T::CTL: HOLDTMR3 Mask              */
+#define QEI_CTL_HOLDTMR3_Pos         ( 23 )                                                /*!< QEI_T::CTL: HOLDTMR3 Position          */
+#define QEI_CTL_HOLDTMR3_Msk         ( 0x1ul << QEI_CTL_HOLDTMR3_Pos )                     /*!< QEI_T::CTL: HOLDTMR3 Mask              */
 
-#define QEI_CTL_HOLDCNT_Pos              (24)                                              /*!< QEI_T::CTL: HOLDCNT Position           */
-#define QEI_CTL_HOLDCNT_Msk              (0x1ul << QEI_CTL_HOLDCNT_Pos)                    /*!< QEI_T::CTL: HOLDCNT Mask               */
+#define QEI_CTL_HOLDCNT_Pos          ( 24 )                                                /*!< QEI_T::CTL: HOLDCNT Position           */
+#define QEI_CTL_HOLDCNT_Msk          ( 0x1ul << QEI_CTL_HOLDCNT_Pos )                      /*!< QEI_T::CTL: HOLDCNT Mask               */
 
-#define QEI_CTL_IDXLATEN_Pos             (25)                                              /*!< QEI_T::CTL: IDXLATEN Position          */
-#define QEI_CTL_IDXLATEN_Msk             (0x1ul << QEI_CTL_IDXLATEN_Pos)                   /*!< QEI_T::CTL: IDXLATEN Mask              */
+#define QEI_CTL_IDXLATEN_Pos         ( 25 )                                                /*!< QEI_T::CTL: IDXLATEN Position          */
+#define QEI_CTL_IDXLATEN_Msk         ( 0x1ul << QEI_CTL_IDXLATEN_Pos )                     /*!< QEI_T::CTL: IDXLATEN Mask              */
 
-#define QEI_CTL_IDXRLDEN_Pos             (27)                                              /*!< QEI_T::CTL: IDXRLDEN Position          */
-#define QEI_CTL_IDXRLDEN_Msk             (0x1ul << QEI_CTL_IDXRLDEN_Pos)                   /*!< QEI_T::CTL: IDXRLDEN Mask              */
+#define QEI_CTL_IDXRLDEN_Pos         ( 27 )                                                /*!< QEI_T::CTL: IDXRLDEN Position          */
+#define QEI_CTL_IDXRLDEN_Msk         ( 0x1ul << QEI_CTL_IDXRLDEN_Pos )                     /*!< QEI_T::CTL: IDXRLDEN Mask              */
 
-#define QEI_CTL_CMPEN_Pos                (28)                                              /*!< QEI_T::CTL: CMPEN Position             */
-#define QEI_CTL_CMPEN_Msk                (0x1ul << QEI_CTL_CMPEN_Pos)                      /*!< QEI_T::CTL: CMPEN Mask                 */
+#define QEI_CTL_CMPEN_Pos            ( 28 )                                                /*!< QEI_T::CTL: CMPEN Position             */
+#define QEI_CTL_CMPEN_Msk            ( 0x1ul << QEI_CTL_CMPEN_Pos )                        /*!< QEI_T::CTL: CMPEN Mask                 */
 
-#define QEI_CTL_QEIEN_Pos                (29)                                              /*!< QEI_T::CTL: QEIEN Position             */
-#define QEI_CTL_QEIEN_Msk                (0x1ul << QEI_CTL_QEIEN_Pos)                      /*!< QEI_T::CTL: QEIEN Mask                 */
+#define QEI_CTL_QEIEN_Pos            ( 29 )                                                /*!< QEI_T::CTL: QEIEN Position             */
+#define QEI_CTL_QEIEN_Msk            ( 0x1ul << QEI_CTL_QEIEN_Pos )                        /*!< QEI_T::CTL: QEIEN Mask                 */
 
-#define QEI_STATUS_IDXF_Pos              (0)                                               /*!< QEI_T::STATUS: IDXF Position           */
-#define QEI_STATUS_IDXF_Msk              (0x1ul << QEI_STATUS_IDXF_Pos)                    /*!< QEI_T::STATUS: IDXF Mask               */
+#define QEI_STATUS_IDXF_Pos          ( 0 )                                                 /*!< QEI_T::STATUS: IDXF Position           */
+#define QEI_STATUS_IDXF_Msk          ( 0x1ul << QEI_STATUS_IDXF_Pos )                      /*!< QEI_T::STATUS: IDXF Mask               */
 
-#define QEI_STATUS_CMPF_Pos              (1)                                               /*!< QEI_T::STATUS: CMPF Position           */
-#define QEI_STATUS_CMPF_Msk              (0x1ul << QEI_STATUS_CMPF_Pos)                    /*!< QEI_T::STATUS: CMPF Mask               */
+#define QEI_STATUS_CMPF_Pos          ( 1 )                                                 /*!< QEI_T::STATUS: CMPF Position           */
+#define QEI_STATUS_CMPF_Msk          ( 0x1ul << QEI_STATUS_CMPF_Pos )                      /*!< QEI_T::STATUS: CMPF Mask               */
 
-#define QEI_STATUS_OVUNF_Pos             (2)                                               /*!< QEI_T::STATUS: OVUNF Position          */
-#define QEI_STATUS_OVUNF_Msk             (0x1ul << QEI_STATUS_OVUNF_Pos)                   /*!< QEI_T::STATUS: OVUNF Mask              */
+#define QEI_STATUS_OVUNF_Pos         ( 2 )                                                 /*!< QEI_T::STATUS: OVUNF Position          */
+#define QEI_STATUS_OVUNF_Msk         ( 0x1ul << QEI_STATUS_OVUNF_Pos )                     /*!< QEI_T::STATUS: OVUNF Mask              */
 
-#define QEI_STATUS_DIRCHGF_Pos           (3)                                               /*!< QEI_T::STATUS: DIRCHGF Position        */
-#define QEI_STATUS_DIRCHGF_Msk           (0x1ul << QEI_STATUS_DIRCHGF_Pos)                 /*!< QEI_T::STATUS: DIRCHGF Mask            */
+#define QEI_STATUS_DIRCHGF_Pos       ( 3 )                                                 /*!< QEI_T::STATUS: DIRCHGF Position        */
+#define QEI_STATUS_DIRCHGF_Msk       ( 0x1ul << QEI_STATUS_DIRCHGF_Pos )                   /*!< QEI_T::STATUS: DIRCHGF Mask            */
 
-#define QEI_STATUS_DIRF_Pos              (8)                                               /*!< QEI_T::STATUS: DIRF Position           */
-#define QEI_STATUS_DIRF_Msk              (0x1ul << QEI_STATUS_DIRF_Pos)                    /*!< QEI_T::STATUS: DIRF Mask               */
+#define QEI_STATUS_DIRF_Pos          ( 8 )                                                 /*!< QEI_T::STATUS: DIRF Position           */
+#define QEI_STATUS_DIRF_Msk          ( 0x1ul << QEI_STATUS_DIRF_Pos )                      /*!< QEI_T::STATUS: DIRF Mask               */
 
 /**@}*/ /* QEI_CONST */
 /**@}*/ /* end of QEI register group */

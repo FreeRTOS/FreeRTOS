@@ -35,28 +35,28 @@
  */
 
 #ifndef _FUSE_
-#define _FUSE_
+    #define _FUSE_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern uint32_t FUSE_Read (uint8_t wordPosition );
-extern void FUSE_Write (uint32_t data, uint8_t wordPosition );
+    extern uint32_t FUSE_Read( uint8_t wordPosition );
+    extern void FUSE_Write( uint32_t data,
+                            uint8_t wordPosition );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _FUSE_ */
-

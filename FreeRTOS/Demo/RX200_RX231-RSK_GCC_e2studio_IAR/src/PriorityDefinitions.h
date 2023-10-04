@@ -28,16 +28,16 @@
 #define PRIORITY_DEFINITIONS_H
 
 #ifndef __IASMRX__
-	#error This file is only intended to be included from the FreeRTOS IAR port layer assembly file.
+    #error This file is only intended to be included from the FreeRTOS IAR port layer assembly file.
 #endif
 
 /* The interrupt priority used by the kernel itself for the tick interrupt and
-the pended interrupt.  This would normally be the lowest priority. */
+ * the pended interrupt.  This would normally be the lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY         1
 
 /* The maximum interrupt priority from which FreeRTOS API calls can be made.
-Interrupts that use a priority above this will not be effected by anything the
-kernel is doing. */
+ * Interrupts that use a priority above this will not be effected by anything the
+ * kernel is doing. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
 
 #endif /* PRIORITY_DEFINITIONS_H */

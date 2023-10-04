@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,29 +30,32 @@
 #ifndef _RSTC_H
 #define _RSTC_H
 
-//-----------------------------------------------------------------------------
-//         Exported functions
-//-----------------------------------------------------------------------------
+/*----------------------------------------------------------------------------- */
+/*         Exported functions */
+/*----------------------------------------------------------------------------- */
 
-extern void RSTC_ConfigureMode(AT91PS_RSTC rstc, unsigned int rmr);
+extern void RSTC_ConfigureMode( AT91PS_RSTC rstc,
+                                unsigned int rmr );
 
-extern void RSTC_SetUserResetEnable(AT91PS_RSTC rstc, unsigned char enable);
+extern void RSTC_SetUserResetEnable( AT91PS_RSTC rstc,
+                                     unsigned char enable );
 
-extern void RSTC_SetUserResetInterruptEnable(AT91PS_RSTC rstc,
-                                             unsigned char enable);
+extern void RSTC_SetUserResetInterruptEnable( AT91PS_RSTC rstc,
+                                              unsigned char enable );
 
-extern void RSTC_SetExtResetLength(AT91PS_RSTC rstc, unsigned char powl);
+extern void RSTC_SetExtResetLength( AT91PS_RSTC rstc,
+                                    unsigned char powl );
 
-extern void RSTC_ProcessorReset(AT91PS_RSTC rstc);
+extern void RSTC_ProcessorReset( AT91PS_RSTC rstc );
 
-extern void RSTC_PeripheralReset(AT91PS_RSTC rstc);
+extern void RSTC_PeripheralReset( AT91PS_RSTC rstc );
 
-extern void RSTC_ExtReset(AT91PS_RSTC rstc);
+extern void RSTC_ExtReset( AT91PS_RSTC rstc );
 
-extern unsigned char RSTC_GetNrstLevel(AT91PS_RSTC rstc);
+extern unsigned char RSTC_GetNrstLevel( AT91PS_RSTC rstc );
 
-extern unsigned char RSTC_IsUserReseetDetected(AT91PS_RSTC rstc);
+extern unsigned char RSTC_IsUserReseetDetected( AT91PS_RSTC rstc );
 
-extern unsigned char RSTC_IsBusy(AT91PS_RSTC rstc);
+extern unsigned char RSTC_IsBusy( AT91PS_RSTC rstc );
 
 #endif // #ifndef _RSTC_H

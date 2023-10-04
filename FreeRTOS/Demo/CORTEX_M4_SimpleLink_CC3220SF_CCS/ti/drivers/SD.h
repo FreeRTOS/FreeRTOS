@@ -85,13 +85,13 @@
  */
 
 #ifndef ti_drivers_SD__include
-#define ti_drivers_SD__include
+    #define ti_drivers_SD__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /**
  *  @defgroup SD_CONTROL SD_control command and status codes
@@ -109,7 +109,7 @@ extern "C" {
  * #define SDXYZ_CMD_COMMAND1    (SD_CMD_RESERVED + 1)
  * @endcode
  */
-#define SD_CMD_RESERVED    (32)
+    #define SD_CMD_RESERVED       ( 32 )
 
 /*!
  * Common SD_control status code reservation offset.
@@ -123,7 +123,7 @@ extern "C" {
  * #define SDXYZ_STATUS_ERROR2    (SD_STATUS_RESERVED - 2)
  * @endcode
  */
-#define SD_STATUS_RESERVED    (-32)
+    #define SD_STATUS_RESERVED    ( -32 )
 
 /**
  *  @defgroup SD_STATUS Status Codes
@@ -138,7 +138,7 @@ extern "C" {
  * SD_control() returns SD_STATUS_SUCCESS if the control code was executed
  * successfully.
  */
-#define SD_STATUS_SUCCESS    (0)
+    #define SD_STATUS_SUCCESS         ( 0 )
 
 /*!
  * @brief Generic error status code returned by SD_control().
@@ -146,7 +146,7 @@ extern "C" {
  * SD_control() returns SD_STATUS_ERROR if the control code
  * was not executed successfully.
  */
-#define SD_STATUS_ERROR    (-1)
+    #define SD_STATUS_ERROR           ( -1 )
 
 /*!
  * @brief   An error status code returned by SD_control() for
@@ -155,7 +155,7 @@ extern "C" {
  * SD_control() returns SD_STATUS_UNDEFINEDCMD if the
  * control code is not recognized by the driver implementation.
  */
-#define SD_STATUS_UNDEFINEDCMD    (-2)
+    #define SD_STATUS_UNDEFINEDCMD    ( -2 )
 /** @}*/
 
 /**
@@ -175,17 +175,18 @@ extern "C" {
 /*!
  *  @brief  SD Card type inserted
  */
-typedef enum SD_CardType_ {
-    SD_NOCARD = 0, /*!< Unrecognized Card */
-    SD_MMC = 1,    /*!< Multi-media Memory Card (MMC) */
-    SD_SDSC = 2,   /*!< Standard SDCard (SDSC) */
-    SD_SDHC = 3    /*!< High Capacity SDCard (SDHC) */
-} SD_CardType;
+    typedef enum SD_CardType_
+    {
+        SD_NOCARD = 0, /*!< Unrecognized Card */
+        SD_MMC = 1,    /*!< Multi-media Memory Card (MMC) */
+        SD_SDSC = 2,   /*!< Standard SDCard (SDSC) */
+        SD_SDHC = 3    /*!< High Capacity SDCard (SDHC) */
+    } SD_CardType;
 
 /*!
  *  @brief      A handle that is returned from a SD_open() call.
  */
-typedef struct SD_Config_ *SD_Handle;
+    typedef struct SD_Config_ * SD_Handle;
 
 /*!
  *  @brief SD Parameters
@@ -197,92 +198,100 @@ typedef struct SD_Config_ *SD_Handle;
  */
 
 /* SD Parameters */
-typedef struct SD_Params_ {
-    void   *custom;  /*!< Custom argument used by driver implementation */
-} SD_Params;
+    typedef struct SD_Params_
+    {
+        void * custom; /*!< Custom argument used by driver implementation */
+    } SD_Params;
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_CloseFxn().
  */
-typedef void (*SD_CloseFxn) (SD_Handle handle);
+    typedef void (* SD_CloseFxn) ( SD_Handle handle );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_controlFxn().
  */
-typedef int_fast16_t (*SD_ControlFxn) (SD_Handle handle,
-    uint_fast16_t cmd, void *arg);
+    typedef int_fast16_t (* SD_ControlFxn) ( SD_Handle handle,
+                                             uint_fast16_t cmd,
+                                             void * arg );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_getNumSectorsFxn().
  */
-typedef uint_fast32_t (*SD_getNumSectorsFxn) (SD_Handle handle);
+    typedef uint_fast32_t (* SD_getNumSectorsFxn) ( SD_Handle handle );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_getSectorSizeFxn().
  */
-typedef uint_fast32_t (*SD_getSectorSizeFxn) (void);
+    typedef uint_fast32_t (* SD_getSectorSizeFxn) ( void );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_InitFxn().
  */
-typedef void (*SD_InitFxn) (SD_Handle handle);
+    typedef void (* SD_InitFxn) ( SD_Handle handle );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_initializeFxn().
  */
-typedef int_fast16_t (*SD_InitializeFxn) (SD_Handle handle);
+    typedef int_fast16_t (* SD_InitializeFxn) ( SD_Handle handle );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_OpenFxn().
  */
-typedef SD_Handle (*SD_OpenFxn) (SD_Handle handle, SD_Params *params);
+    typedef SD_Handle (* SD_OpenFxn) ( SD_Handle handle,
+                                       SD_Params * params );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_readFxn().
  */
-typedef int_fast16_t (*SD_ReadFxn) (SD_Handle handle, void *buf,
-    int_fast32_t sector, uint_fast32_t secCount);
+    typedef int_fast16_t (* SD_ReadFxn) ( SD_Handle handle,
+                                          void * buf,
+                                          int_fast32_t sector,
+                                          uint_fast32_t secCount );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
  *         SD_writeFxn().
  */
-typedef int_fast16_t (*SD_WriteFxn) (SD_Handle handle, const void *buf,
-    int_fast32_t sector, uint_fast32_t secCount);
+    typedef int_fast16_t (* SD_WriteFxn) ( SD_Handle handle,
+                                           const void * buf,
+                                           int_fast32_t sector,
+                                           uint_fast32_t secCount );
 
 /*!
  *  @brief The definition of a SD function table that contains the
  *         required set of functions to control a specific SD driver
  *         implementation.
  */
-typedef struct SD_FxnTable_ {
-    /*! Function to close the specified peripheral */
-    SD_CloseFxn             closeFxn;
-    /*! Function to implementation specific control function */
-    SD_ControlFxn           controlFxn;
-    /*! Function to return the total number of sectors on the SD card */
-    SD_getNumSectorsFxn     getNumSectorsFxn;
-    /*! Function to return the sector size used to address the SD card */
-    SD_getSectorSizeFxn     getSectorSizeFxn;
-    /*! Function to initialize the given data object */
-    SD_InitFxn              initFxn;
-    /*! Function to initialize the SD card */
-    SD_InitializeFxn        initializeFxn;
-    /*! Function to open the specified peripheral */
-    SD_OpenFxn              openFxn;
-    /*! Function to read from the SD card */
-    SD_ReadFxn              readFxn;
-    /*! Function to write to the SD card */
-    SD_WriteFxn             writeFxn;
-} SD_FxnTable;
+    typedef struct SD_FxnTable_
+    {
+        /*! Function to close the specified peripheral */
+        SD_CloseFxn closeFxn;
+        /*! Function to implementation specific control function */
+        SD_ControlFxn controlFxn;
+        /*! Function to return the total number of sectors on the SD card */
+        SD_getNumSectorsFxn getNumSectorsFxn;
+        /*! Function to return the sector size used to address the SD card */
+        SD_getSectorSizeFxn getSectorSizeFxn;
+        /*! Function to initialize the given data object */
+        SD_InitFxn initFxn;
+        /*! Function to initialize the SD card */
+        SD_InitializeFxn initializeFxn;
+        /*! Function to open the specified peripheral */
+        SD_OpenFxn openFxn;
+        /*! Function to read from the SD card */
+        SD_ReadFxn readFxn;
+        /*! Function to write to the SD card */
+        SD_WriteFxn writeFxn;
+    } SD_FxnTable;
 
 /*!
  *  @brief SD Global configuration
@@ -295,16 +304,17 @@ typedef struct SD_FxnTable_ {
  *
  *  @sa SD_init()
  */
-typedef struct SD_Config_ {
-    /*! Pointer to a table of driver-specific implementations of SD APIs */
-    SD_FxnTable const    *fxnTablePtr;
+    typedef struct SD_Config_
+    {
+        /*! Pointer to a table of driver-specific implementations of SD APIs */
+        SD_FxnTable const * fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
-    void                 *object;
+        /*! Pointer to a driver specific data object */
+        void * object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
-    void const           *hwAttrs;
-} SD_Config;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } SD_Config;
 
 /*!
  *  @brief Function to close a SD peripheral specified by the SD handle.
@@ -315,7 +325,7 @@ typedef struct SD_Config_ {
  *
  *  @sa SD_open()
  */
-extern void SD_close(SD_Handle handle);
+    extern void SD_close( SD_Handle handle );
 
 /*!
  *  @brief  Function performs implementation specific features on a given
@@ -355,7 +365,9 @@ extern void SD_close(SD_Handle handle);
  *
  *  @sa SD_open()
  */
-extern int_fast16_t SD_control(SD_Handle handle, uint_fast16_t cmd, void *arg);
+    extern int_fast16_t SD_control( SD_Handle handle,
+                                    uint_fast16_t cmd,
+                                    void * arg );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
@@ -371,7 +383,7 @@ extern int_fast16_t SD_control(SD_Handle handle, uint_fast16_t cmd, void *arg);
  *
  *  @sa SD_initialize()
  */
-extern uint_fast32_t SD_getNumSectors(SD_Handle handle);
+    extern uint_fast32_t SD_getNumSectors( SD_Handle handle );
 
 /*!
  *  @brief Function to obtain the sector size used to access the SD card.
@@ -384,7 +396,7 @@ extern uint_fast32_t SD_getNumSectors(SD_Handle handle);
  *
  *  @sa SD_initialize()
  */
-extern uint_fast32_t SD_getSectorSize(SD_Handle handle);
+    extern uint_fast32_t SD_getSectorSize( SD_Handle handle );
 
 /*!
  *  @brief This function initializes the SD driver.
@@ -394,16 +406,16 @@ extern uint_fast32_t SD_getSectorSize(SD_Handle handle);
  *       any other SD driver APIs. This function call does not modify any
  *       peripheral registers.
  */
-extern void SD_init(void);
+    extern void SD_init( void );
 
 /*!
  *  @brief Function to initialize the SD_Params struct to its defaults.
  *
  *  @param params A pointer to SD_Params structure for initialization.
  */
-extern void SD_Params_init(SD_Params *params);
+    extern void SD_Params_init( SD_Params * params );
 
- /*!
+/*!
  *  @brief  A function pointer to a driver specific implementation of
  *          SD_initialize().
  *
@@ -414,7 +426,7 @@ extern void SD_Params_init(SD_Params *params);
  *  @return SD_STATUS_SUCCESS if no errors occurred during the initialization,
  *          SD_STATUS_ERROR otherwise.
  */
-extern int_fast16_t SD_initialize(SD_Handle handle);
+    extern int_fast16_t SD_initialize( SD_Handle handle );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
@@ -435,7 +447,8 @@ extern int_fast16_t SD_initialize(SD_Handle handle);
  *  @sa SD_init()
  *  @sa SD_close()
  */
-extern SD_Handle SD_open(uint_least8_t index, SD_Params *params);
+    extern SD_Handle SD_open( uint_least8_t index,
+                              SD_Params * params );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
@@ -457,8 +470,10 @@ extern SD_Handle SD_open(uint_least8_t index, SD_Params *params);
  *
  *  @sa SD_initialize()
  */
-extern int_fast16_t SD_read(SD_Handle handle, void *buf,
-    int_fast32_t sector, uint_fast32_t secCount);
+    extern int_fast16_t SD_read( SD_Handle handle,
+                                 void * buf,
+                                 int_fast32_t sector,
+                                 uint_fast32_t secCount );
 
 /*!
  *  @brief A function pointer to a driver specific implementation of
@@ -480,11 +495,13 @@ extern int_fast16_t SD_read(SD_Handle handle, void *buf,
  *
  *  @sa     SD_initialize()
  */
-extern int_fast16_t SD_write(SD_Handle handle, const void *buf,
-    int_fast32_t sector, uint_fast32_t secCount);
+    extern int_fast16_t SD_write( SD_Handle handle,
+                                  const void * buf,
+                                  int_fast32_t sector,
+                                  uint_fast32_t secCount );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_SD__include */

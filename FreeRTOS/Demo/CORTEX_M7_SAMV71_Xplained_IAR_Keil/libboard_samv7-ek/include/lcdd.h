@@ -32,7 +32,7 @@
  *
  * Interface for LCD driver.
  *
- */ 
+ */
 
 #ifndef LCDD_H
 #define LCDD_H
@@ -41,12 +41,12 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void LCDD_Initialize(void);
+extern void LCDD_Initialize( void );
 
-extern void LCDD_On(void);
+extern void LCDD_On( void );
 
-extern void LCDD_Off(void);
+extern void LCDD_Off( void );
 
-extern void LCDD_SetBacklight (uint32_t step);
+extern void LCDD_SetBacklight( uint32_t step );
 
 #endif /* #ifndef LCDD_H */

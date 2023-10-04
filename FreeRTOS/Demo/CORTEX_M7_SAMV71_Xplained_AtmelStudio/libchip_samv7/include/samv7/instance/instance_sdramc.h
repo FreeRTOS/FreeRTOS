@@ -31,34 +31,34 @@
 #define _SAMV71_SDRAMC_INSTANCE_
 
 /* ========== Register definition for SDRAMC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_SDRAMC_MR                         (0x40084000U) /**< \brief (SDRAMC) SDRAMC Mode Register */
-  #define REG_SDRAMC_TR                         (0x40084004U) /**< \brief (SDRAMC) SDRAMC Refresh Timer Register */
-  #define REG_SDRAMC_CR                         (0x40084008U) /**< \brief (SDRAMC) SDRAMC Configuration Register */
-  #define REG_SDRAMC_LPR                        (0x40084010U) /**< \brief (SDRAMC) SDRAMC Low Power Register */
-  #define REG_SDRAMC_IER                        (0x40084014U) /**< \brief (SDRAMC) SDRAMC Interrupt Enable Register */
-  #define REG_SDRAMC_IDR                        (0x40084018U) /**< \brief (SDRAMC) SDRAMC Interrupt Disable Register */
-  #define REG_SDRAMC_IMR                        (0x4008401CU) /**< \brief (SDRAMC) SDRAMC Interrupt Mask Register */
-  #define REG_SDRAMC_ISR                        (0x40084020U) /**< \brief (SDRAMC) SDRAMC Interrupt Status Register */
-  #define REG_SDRAMC_MDR                        (0x40084024U) /**< \brief (SDRAMC) SDRAMC Memory Device Register */
-  #define REG_SDRAMC_CFR1                       (0x40084028U) /**< \brief (SDRAMC) SDRAMC Configuration Register 1 */
-  #define REG_SDRAMC_OCMS                       (0x4008402CU) /**< \brief (SDRAMC) SDRAMC OCMS Register */
-  #define REG_SDRAMC_OCMS_KEY1                  (0x40084030U) /**< \brief (SDRAMC) SDRAMC OCMS KEY1 Register */
-  #define REG_SDRAMC_OCMS_KEY2                  (0x40084034U) /**< \brief (SDRAMC) SDRAMC OCMS KEY2 Register */
-#else
-  #define REG_SDRAMC_MR        (*(__IO uint32_t*)0x40084000U) /**< \brief (SDRAMC) SDRAMC Mode Register */
-  #define REG_SDRAMC_TR        (*(__IO uint32_t*)0x40084004U) /**< \brief (SDRAMC) SDRAMC Refresh Timer Register */
-  #define REG_SDRAMC_CR        (*(__IO uint32_t*)0x40084008U) /**< \brief (SDRAMC) SDRAMC Configuration Register */
-  #define REG_SDRAMC_LPR       (*(__IO uint32_t*)0x40084010U) /**< \brief (SDRAMC) SDRAMC Low Power Register */
-  #define REG_SDRAMC_IER       (*(__O  uint32_t*)0x40084014U) /**< \brief (SDRAMC) SDRAMC Interrupt Enable Register */
-  #define REG_SDRAMC_IDR       (*(__O  uint32_t*)0x40084018U) /**< \brief (SDRAMC) SDRAMC Interrupt Disable Register */
-  #define REG_SDRAMC_IMR       (*(__I  uint32_t*)0x4008401CU) /**< \brief (SDRAMC) SDRAMC Interrupt Mask Register */
-  #define REG_SDRAMC_ISR       (*(__I  uint32_t*)0x40084020U) /**< \brief (SDRAMC) SDRAMC Interrupt Status Register */
-  #define REG_SDRAMC_MDR       (*(__IO uint32_t*)0x40084024U) /**< \brief (SDRAMC) SDRAMC Memory Device Register */
-  #define REG_SDRAMC_CFR1      (*(__IO uint32_t*)0x40084028U) /**< \brief (SDRAMC) SDRAMC Configuration Register 1 */
-  #define REG_SDRAMC_OCMS      (*(__IO uint32_t*)0x4008402CU) /**< \brief (SDRAMC) SDRAMC OCMS Register */
-  #define REG_SDRAMC_OCMS_KEY1 (*(__O  uint32_t*)0x40084030U) /**< \brief (SDRAMC) SDRAMC OCMS KEY1 Register */
-  #define REG_SDRAMC_OCMS_KEY2 (*(__O  uint32_t*)0x40084034U) /**< \brief (SDRAMC) SDRAMC OCMS KEY2 Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_SDRAMC_MR           ( 0x40084000U )                      /**< \brief (SDRAMC) SDRAMC Mode Register */
+    #define REG_SDRAMC_TR           ( 0x40084004U )                      /**< \brief (SDRAMC) SDRAMC Refresh Timer Register */
+    #define REG_SDRAMC_CR           ( 0x40084008U )                      /**< \brief (SDRAMC) SDRAMC Configuration Register */
+    #define REG_SDRAMC_LPR          ( 0x40084010U )                      /**< \brief (SDRAMC) SDRAMC Low Power Register */
+    #define REG_SDRAMC_IER          ( 0x40084014U )                      /**< \brief (SDRAMC) SDRAMC Interrupt Enable Register */
+    #define REG_SDRAMC_IDR          ( 0x40084018U )                      /**< \brief (SDRAMC) SDRAMC Interrupt Disable Register */
+    #define REG_SDRAMC_IMR          ( 0x4008401CU )                      /**< \brief (SDRAMC) SDRAMC Interrupt Mask Register */
+    #define REG_SDRAMC_ISR          ( 0x40084020U )                      /**< \brief (SDRAMC) SDRAMC Interrupt Status Register */
+    #define REG_SDRAMC_MDR          ( 0x40084024U )                      /**< \brief (SDRAMC) SDRAMC Memory Device Register */
+    #define REG_SDRAMC_CFR1         ( 0x40084028U )                      /**< \brief (SDRAMC) SDRAMC Configuration Register 1 */
+    #define REG_SDRAMC_OCMS         ( 0x4008402CU )                      /**< \brief (SDRAMC) SDRAMC OCMS Register */
+    #define REG_SDRAMC_OCMS_KEY1    ( 0x40084030U )                      /**< \brief (SDRAMC) SDRAMC OCMS KEY1 Register */
+    #define REG_SDRAMC_OCMS_KEY2    ( 0x40084034U )                      /**< \brief (SDRAMC) SDRAMC OCMS KEY2 Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_SDRAMC_MR           ( *( __IO uint32_t * ) 0x40084000U ) /**< \brief (SDRAMC) SDRAMC Mode Register */
+    #define REG_SDRAMC_TR           ( *( __IO uint32_t * ) 0x40084004U ) /**< \brief (SDRAMC) SDRAMC Refresh Timer Register */
+    #define REG_SDRAMC_CR           ( *( __IO uint32_t * ) 0x40084008U ) /**< \brief (SDRAMC) SDRAMC Configuration Register */
+    #define REG_SDRAMC_LPR          ( *( __IO uint32_t * ) 0x40084010U ) /**< \brief (SDRAMC) SDRAMC Low Power Register */
+    #define REG_SDRAMC_IER          ( *( __O uint32_t * ) 0x40084014U )  /**< \brief (SDRAMC) SDRAMC Interrupt Enable Register */
+    #define REG_SDRAMC_IDR          ( *( __O uint32_t * ) 0x40084018U )  /**< \brief (SDRAMC) SDRAMC Interrupt Disable Register */
+    #define REG_SDRAMC_IMR          ( *( __I uint32_t * ) 0x4008401CU )  /**< \brief (SDRAMC) SDRAMC Interrupt Mask Register */
+    #define REG_SDRAMC_ISR          ( *( __I uint32_t * ) 0x40084020U )  /**< \brief (SDRAMC) SDRAMC Interrupt Status Register */
+    #define REG_SDRAMC_MDR          ( *( __IO uint32_t * ) 0x40084024U ) /**< \brief (SDRAMC) SDRAMC Memory Device Register */
+    #define REG_SDRAMC_CFR1         ( *( __IO uint32_t * ) 0x40084028U ) /**< \brief (SDRAMC) SDRAMC Configuration Register 1 */
+    #define REG_SDRAMC_OCMS         ( *( __IO uint32_t * ) 0x4008402CU ) /**< \brief (SDRAMC) SDRAMC OCMS Register */
+    #define REG_SDRAMC_OCMS_KEY1    ( *( __O uint32_t * ) 0x40084030U )  /**< \brief (SDRAMC) SDRAMC OCMS KEY1 Register */
+    #define REG_SDRAMC_OCMS_KEY2    ( *( __O uint32_t * ) 0x40084034U )  /**< \brief (SDRAMC) SDRAMC OCMS KEY2 Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMV71_SDRAMC_INSTANCE_ */

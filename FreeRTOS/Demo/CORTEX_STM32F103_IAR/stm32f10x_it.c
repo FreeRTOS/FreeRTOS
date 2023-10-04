@@ -25,7 +25,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 
-extern void TimingDelay_Decrement(void);
+extern void TimingDelay_Decrement( void );
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -41,7 +41,7 @@ extern void TimingDelay_Decrement(void);
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void NMIException(void)
+void NMIException( void )
 {
 }
 
@@ -52,7 +52,7 @@ void NMIException(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void HardFaultException(void)
+void HardFaultException( void )
 {
 }
 
@@ -63,7 +63,7 @@ void HardFaultException(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void MemManageException(void)
+void MemManageException( void )
 {
 }
 
@@ -74,7 +74,7 @@ void MemManageException(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void BusFaultException(void)
+void BusFaultException( void )
 {
 }
 
@@ -85,7 +85,7 @@ void BusFaultException(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UsageFaultException(void)
+void UsageFaultException( void )
 {
 }
 
@@ -96,7 +96,7 @@ void UsageFaultException(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DebugMonitor(void)
+void DebugMonitor( void )
 {
 }
 
@@ -107,7 +107,7 @@ void DebugMonitor(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SVCHandler(void)
+void SVCHandler( void )
 {
 }
 
@@ -118,7 +118,7 @@ void SVCHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PendSVC(void)
+void PendSVC( void )
 {
 }
 
@@ -129,10 +129,10 @@ void PendSVC(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SysTickHandler(void)
+void SysTickHandler( void )
 {
-  /* Decrement the TimingDelay variable */
-  TimingDelay_Decrement();
+    /* Decrement the TimingDelay variable */
+    TimingDelay_Decrement();
 }
 
 /*******************************************************************************
@@ -142,7 +142,7 @@ void SysTickHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_IRQHandler(void)
+void WWDG_IRQHandler( void )
 {
 }
 
@@ -153,7 +153,7 @@ void WWDG_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PVD_IRQHandler(void)
+void PVD_IRQHandler( void )
 {
 }
 
@@ -164,7 +164,7 @@ void PVD_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TAMPER_IRQHandler(void)
+void TAMPER_IRQHandler( void )
 {
 }
 
@@ -175,7 +175,7 @@ void TAMPER_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_IRQHandler(void)
+void RTC_IRQHandler( void )
 {
 }
 
@@ -186,7 +186,7 @@ void RTC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void FLASH_IRQHandler(void)
+void FLASH_IRQHandler( void )
 {
 }
 
@@ -197,7 +197,7 @@ void FLASH_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RCC_IRQHandler(void)
+void RCC_IRQHandler( void )
 {
 }
 
@@ -208,9 +208,8 @@ void RCC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI0_IRQHandler(void)
+void EXTI0_IRQHandler( void )
 {
-
 }
 
 /*******************************************************************************
@@ -220,9 +219,8 @@ void EXTI0_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI1_IRQHandler(void)
+void EXTI1_IRQHandler( void )
 {
-
 }
 
 /*******************************************************************************
@@ -232,7 +230,7 @@ void EXTI1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI2_IRQHandler(void)
+void EXTI2_IRQHandler( void )
 {
 }
 
@@ -243,7 +241,7 @@ void EXTI2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI3_IRQHandler(void)
+void EXTI3_IRQHandler( void )
 {
 }
 
@@ -254,7 +252,7 @@ void EXTI3_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI4_IRQHandler(void)
+void EXTI4_IRQHandler( void )
 {
 }
 
@@ -265,7 +263,7 @@ void EXTI4_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel1_IRQHandler(void)
+void DMAChannel1_IRQHandler( void )
 {
 }
 
@@ -276,7 +274,7 @@ void DMAChannel1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel2_IRQHandler(void)
+void DMAChannel2_IRQHandler( void )
 {
 }
 
@@ -287,7 +285,7 @@ void DMAChannel2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel3_IRQHandler(void)
+void DMAChannel3_IRQHandler( void )
 {
 }
 
@@ -298,7 +296,7 @@ void DMAChannel3_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel4_IRQHandler(void)
+void DMAChannel4_IRQHandler( void )
 {
 }
 
@@ -309,7 +307,7 @@ void DMAChannel4_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel5_IRQHandler(void)
+void DMAChannel5_IRQHandler( void )
 {
 }
 
@@ -320,7 +318,7 @@ void DMAChannel5_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel6_IRQHandler(void)
+void DMAChannel6_IRQHandler( void )
 {
 }
 
@@ -331,7 +329,7 @@ void DMAChannel6_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMAChannel7_IRQHandler(void)
+void DMAChannel7_IRQHandler( void )
 {
 }
 
@@ -342,7 +340,7 @@ void DMAChannel7_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void ADC_IRQHandler(void)
+void ADC_IRQHandler( void )
 {
 }
 
@@ -354,7 +352,7 @@ void ADC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USB_HP_CAN_TX_IRQHandler(void)
+void USB_HP_CAN_TX_IRQHandler( void )
 {
 }
 
@@ -366,7 +364,7 @@ void USB_HP_CAN_TX_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USB_LP_CAN_RX0_IRQHandler(void)
+void USB_LP_CAN_RX0_IRQHandler( void )
 {
 }
 
@@ -377,7 +375,7 @@ void USB_LP_CAN_RX0_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CAN_RX1_IRQHandler(void)
+void CAN_RX1_IRQHandler( void )
 {
 }
 
@@ -388,7 +386,7 @@ void CAN_RX1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CAN_SCE_IRQHandler(void)
+void CAN_SCE_IRQHandler( void )
 {
 }
 
@@ -399,7 +397,7 @@ void CAN_SCE_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI9_5_IRQHandler(void)
+void EXTI9_5_IRQHandler( void )
 {
 }
 
@@ -410,7 +408,7 @@ void EXTI9_5_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_BRK_IRQHandler(void)
+void TIM1_BRK_IRQHandler( void )
 {
 }
 
@@ -422,7 +420,7 @@ void TIM1_BRK_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_UP_IRQHandler(void)
+void TIM1_UP_IRQHandler( void )
 {
 }
 
@@ -434,7 +432,7 @@ void TIM1_UP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_TRG_COM_IRQHandler(void)
+void TIM1_TRG_COM_IRQHandler( void )
 {
 }
 
@@ -445,7 +443,7 @@ void TIM1_TRG_COM_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_CC_IRQHandler(void)
+void TIM1_CC_IRQHandler( void )
 {
 }
 
@@ -456,7 +454,7 @@ void TIM1_CC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM2_IRQHandler(void)
+void TIM2_IRQHandler( void )
 {
 }
 
@@ -467,7 +465,7 @@ void TIM2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM3_IRQHandler(void)
+void TIM3_IRQHandler( void )
 {
 }
 
@@ -478,7 +476,7 @@ void TIM3_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM4_IRQHandler(void)
+void TIM4_IRQHandler( void )
 {
 }
 
@@ -489,7 +487,7 @@ void TIM4_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void I2C1_EV_IRQHandler(void)
+void I2C1_EV_IRQHandler( void )
 {
 }
 
@@ -500,7 +498,7 @@ void I2C1_EV_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void I2C1_ER_IRQHandler(void)
+void I2C1_ER_IRQHandler( void )
 {
 }
 
@@ -511,7 +509,7 @@ void I2C1_ER_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void I2C2_EV_IRQHandler(void)
+void I2C2_EV_IRQHandler( void )
 {
 }
 
@@ -522,7 +520,7 @@ void I2C2_EV_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void I2C2_ER_IRQHandler(void)
+void I2C2_ER_IRQHandler( void )
 {
 }
 
@@ -533,7 +531,7 @@ void I2C2_ER_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SPI1_IRQHandler(void)
+void SPI1_IRQHandler( void )
 {
 }
 
@@ -544,7 +542,7 @@ void SPI1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SPI2_IRQHandler(void)
+void SPI2_IRQHandler( void )
 {
 }
 
@@ -555,7 +553,7 @@ void SPI2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USART1_IRQHandler(void)
+void USART1_IRQHandler( void )
 {
 }
 
@@ -566,7 +564,7 @@ void USART1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USART2_IRQHandler(void)
+void USART2_IRQHandler( void )
 {
 }
 
@@ -577,7 +575,7 @@ void USART2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USART3_IRQHandler(void)
+void USART3_IRQHandler( void )
 {
 }
 
@@ -588,7 +586,7 @@ void USART3_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTI15_10_IRQHandler(void)
+void EXTI15_10_IRQHandler( void )
 {
 }
 
@@ -599,7 +597,7 @@ void EXTI15_10_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTCAlarm_IRQHandler(void)
+void RTCAlarm_IRQHandler( void )
 {
 }
 
@@ -610,7 +608,7 @@ void RTCAlarm_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USBWakeUp_IRQHandler(void)
+void USBWakeUp_IRQHandler( void )
 {
 }
 

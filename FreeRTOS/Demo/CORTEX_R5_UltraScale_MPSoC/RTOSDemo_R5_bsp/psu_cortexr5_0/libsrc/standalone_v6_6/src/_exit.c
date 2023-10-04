@@ -34,11 +34,12 @@
 #include "xil_types.h"
 
 /* _exit - Simple implementation. Does not return.
-*/
-__attribute__((weak)) void _exit (sint32 status)
+ */
+__attribute__( ( weak ) ) void _exit( sint32 status )
 {
-  (void)status;
-  while (1) {
-	;
-  }
+    ( void ) status;
+
+    while( 1 )
+    {
+    }
 }

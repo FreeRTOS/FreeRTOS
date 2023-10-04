@@ -36,7 +36,7 @@
 /*
  * abort -- go out via exit...
  */
-__attribute__((weak)) void abort(void)
+__attribute__( ( weak ) ) void abort( void )
 {
-  _exit(1);
+    _exit( 1 );
 }

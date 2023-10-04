@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -35,42 +35,41 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 #ifndef __CPU_H__
-#define __CPU_H__
+    #define __CPU_H__
 
-#include <stdint.h>
+    #include <stdint.h>
 
-//*****************************************************************************
-//
-// If building with a C++ compiler, make all of the definitions in this header
-// have a C binding.
-//
-//*****************************************************************************
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+/****************************************************************************** */
+/* */
+/* If building with a C++ compiler, make all of the definitions in this header */
+/* have a C binding. */
+/* */
+/****************************************************************************** */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif
 
-//*****************************************************************************
-//
-// Prototypes.
-//
-//*****************************************************************************
-extern uint32_t CPU_cpsid(void);
-extern uint32_t CPU_cpsie(void);
-extern uint32_t CPU_primask(void);
-extern void CPU_wfi(void);
-extern uint32_t CPU_basepriGet(void);
-extern void CPU_basepriSet(uint32_t newBasepri);
+/****************************************************************************** */
+/* */
+/* Prototypes. */
+/* */
+/****************************************************************************** */
+    extern uint32_t CPU_cpsid( void );
+    extern uint32_t CPU_cpsie( void );
+    extern uint32_t CPU_primask( void );
+    extern void CPU_wfi( void );
+    extern uint32_t CPU_basepriGet( void );
+    extern void CPU_basepriSet( uint32_t newBasepri );
 
 
-//*****************************************************************************
-//
-// Mark the end of the C bindings section for C++ compilers.
-//
-//*****************************************************************************
-#ifdef __cplusplus
+/****************************************************************************** */
+/* */
+/* Mark the end of the C bindings section for C++ compilers. */
+/* */
+/****************************************************************************** */
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif // __CPU_H__
-

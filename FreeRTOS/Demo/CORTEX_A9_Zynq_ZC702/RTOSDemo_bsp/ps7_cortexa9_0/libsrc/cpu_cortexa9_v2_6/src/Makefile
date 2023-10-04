@@ -18,7 +18,7 @@ libs:
 	echo "Compiling cpu_cortexa9"
 
 .PHONY: include
-include: 
+include:
 	${CP} $(INCLUDEFILES) $(INCLUDEDIR)
 
 clean:

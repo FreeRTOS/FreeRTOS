@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -28,63 +28,64 @@
  */
 
 /*
-    Title: Assert
-
-    About: Purpose
-        Definition of the ASSERT() macro, which is used for runtime condition
-        verifying.
-
-    About: Usage
-        1 - Use <ASSERT> in your code to check the value of function parameters,
-            return values, etc. *Warning:* the ASSERT condition must not have
-            any side-effect; otherwise, the program may not work properly
-            anymore when assertions are disabled.
-        2 - Use SANITY_CHECK to perform checks with a default error message
-            (outputs the file and line number where the error occured). This 
-            reduces memory overhead caused by assertion error strings.
-        3 - Initialize the <DBGU> to see failed assertions at run-time.
-        4 - Disable assertions by defining the NOASSERT symbol at compilation
-            time.
-*/
+ *  Title: Assert
+ *
+ *  About: Purpose
+ *      Definition of the ASSERT() macro, which is used for runtime condition
+ *      verifying.
+ *
+ *  About: Usage
+ *      1 - Use <ASSERT> in your code to check the value of function parameters,
+ *          return values, etc. *Warning:* the ASSERT condition must not have
+ *          any side-effect; otherwise, the program may not work properly
+ *          anymore when assertions are disabled.
+ *      2 - Use SANITY_CHECK to perform checks with a default error message
+ *          (outputs the file and line number where the error occured). This
+ *          reduces memory overhead caused by assertion error strings.
+ *      3 - Initialize the <DBGU> to see failed assertions at run-time.
+ *      4 - Disable assertions by defining the NOASSERT symbol at compilation
+ *          time.
+ */
 
 #ifndef ASSERT_H
 #define ASSERT_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <stdio.h>
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
+
 /*
-    Macro: ASSERT
-        Check that the given condition is true, otherwise displays an error
-        message and stops the program execution.
+ *  Macro: ASSERT
+ *      Check that the given condition is true, otherwise displays an error
+ *      message and stops the program execution.
+ *
+ *  Parameters:
+ *      condition - Condition to verify.
+ *      string - Formatted string to output if the condition fails.
+ *      ... - Additional arguments depending on the formatted string.
+ */
+#if !defined( NOASSERT ) && !defined( NOTRACE )
 
-    Parameters:
-        condition - Condition to verify.
-        string - Formatted string to output if the condition fails.
-        ... - Additional arguments depending on the formatted string.
-*/
-#if !defined(NOASSERT) && !defined(NOTRACE)
+/*char sanityError[] = "Sanity check failed at %s:%d\n\r"; */
 
-    //char sanityError[] = "Sanity check failed at %s:%d\n\r";
-
-    #define ASSERT(condition, ...)  { \
-        if (!(condition)) { \
-            printf(__VA_ARGS__); \
-            while (1); \
-        } \
+    #define ASSERT( condition, ... ) \
+    {                                \
+        if( !( condition ) ) {       \
+            printf( __VA_ARGS__ );   \
+            while( 1 );              \
+        }                            \
     }
-    #define SANITY_ERROR            "Sanity check failed at %s:%d\n\r"
-    #define SANITY_CHECK(condition) ASSERT(condition, SANITY_ERROR, __FILE__, __LINE__)
-#else
-    #define ASSERT(...)
-    #define SANITY_CHECK(...)
-#endif
+    #define SANITY_ERROR    "Sanity check failed at %s:%d\n\r"
+    #define SANITY_CHECK( condition )    ASSERT( condition, SANITY_ERROR, __FILE__, __LINE__ )
+#else  /* if !defined( NOASSERT ) && !defined( NOTRACE ) */
+    #define ASSERT( ... )
+    #define SANITY_CHECK( ... )
+#endif /* if !defined( NOASSERT ) && !defined( NOTRACE ) */
 
 #endif //#ifndef ASSERT_H
-

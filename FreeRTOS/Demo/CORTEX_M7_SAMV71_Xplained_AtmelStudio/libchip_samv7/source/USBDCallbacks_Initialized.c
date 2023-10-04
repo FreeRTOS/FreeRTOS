@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -45,7 +45,6 @@
  * Invoked after the USB driver has been initialized. By default, configures
  * the UDP/UDPHS interrupt.
  */
-void USBDCallbacks_Initialized(void)
+void USBDCallbacks_Initialized( void )
 {
 }
-

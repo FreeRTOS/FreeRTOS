@@ -40,74 +40,72 @@
 #include <gpio.h>
 
 /* The number of LEDs available to the user on the evaluation kit. */
-#define partestNUM_LEDS			( 3UL )
+#define partestNUM_LEDS        ( 3UL )
 
 /* One of the LEDs is wired in the inverse to the others as it is also used as
-the power LED. */
-#define partstsINVERTED_LED		( 0UL )
+ * the power LED. */
+#define partstsINVERTED_LED    ( 0UL )
 
 /* The index of the pins to which the LEDs are connected.  The ordering of the
-LEDs in this array is intentional and matches the order they appear on the
-hardware. */
+ * LEDs in this array is intentional and matches the order they appear on the
+ * hardware. */
 static const uint32_t ulLED[] = { LED2_GPIO, LED0_GPIO, LED1_GPIO };
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-unsigned long ul;
+    unsigned long ul;
 
-	for( ul = 0; ul < partestNUM_LEDS; ul++ )
-	{
-		/* Configure the LED, before ensuring it starts in the off state. */
-		gpio_configure_pin( ulLED[ ul ],  ( PIO_OUTPUT_1 | PIO_DEFAULT ) );
-		vParTestSetLED( ul, pdFALSE );
-	}
+    for( ul = 0; ul < partestNUM_LEDS; ul++ )
+    {
+        /* Configure the LED, before ensuring it starts in the off state. */
+        gpio_configure_pin( ulLED[ ul ], ( PIO_OUTPUT_1 | PIO_DEFAULT ) );
+        vParTestSetLED( ul, pdFALSE );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( uxLED == partstsINVERTED_LED )
-		{
-			xValue = !xValue;
-		}
+    if( uxLED < partestNUM_LEDS )
+    {
+        if( uxLED == partstsINVERTED_LED )
+        {
+            xValue = !xValue;
+        }
 
-		if( xValue != pdFALSE )
-		{
-			/* Turn the LED on. */
-			taskENTER_CRITICAL();
-			{
-				gpio_set_pin_low( ulLED[ uxLED ]);
-			}
-			taskEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			taskENTER_CRITICAL();
-			{
-				gpio_set_pin_high( ulLED[ uxLED ]);
-			}
-			taskEXIT_CRITICAL();
-		}
-	}
+        if( xValue != pdFALSE )
+        {
+            /* Turn the LED on. */
+            taskENTER_CRITICAL();
+            {
+                gpio_set_pin_low( ulLED[ uxLED ] );
+            }
+            taskEXIT_CRITICAL();
+        }
+        else
+        {
+            /* Turn the LED off. */
+            taskENTER_CRITICAL();
+            {
+                gpio_set_pin_high( ulLED[ uxLED ] );
+            }
+            taskEXIT_CRITICAL();
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partestNUM_LEDS )
-	{
-		taskENTER_CRITICAL();
-		{
-			gpio_toggle_pin( ulLED[ uxLED ] );
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partestNUM_LEDS )
+    {
+        taskENTER_CRITICAL();
+        {
+            gpio_toggle_pin( ulLED[ uxLED ] );
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-
-
-

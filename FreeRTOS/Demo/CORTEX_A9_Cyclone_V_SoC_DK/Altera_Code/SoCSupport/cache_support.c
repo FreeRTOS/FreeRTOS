@@ -32,64 +32,64 @@
 #include "socal/hps.h"
 #include "socal/socal.h"
 #include "cache_support.h"
-//#include "boot_support.h"
+/*#include "boot_support.h" */
 
-ALT_STATUS_CODE cache_init(void) {
+ALT_STATUS_CODE cache_init( void )
+{
+    ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
-	ALT_STATUS_CODE status = ALT_E_SUCCESS;
+    /* */
+    /* The 13.1 release of alt_cache.c does not appear to initialize the L2 */
+    /* cache latency registers properly so we'll do that here. */
+    /* */
+    configure_L2_ram_latency();
 
-	//
-	// The 13.1 release of alt_cache.c does not appear to initialize the L2
-	// cache latency registers properly so we'll do that here.
-	//
-	configure_L2_ram_latency();
+    /* */
+    /* Enable the shared attribute override enable bit in the L2 aux control register */
+    /* */
+    enable_shared_attribute_override_enable();
 
-	//
-	// Enable the shared attribute override enable bit in the L2 aux control register
-	//
-	enable_shared_attribute_override_enable();
+    status = alt_cache_system_enable();
+/*	BOOT_CHECK_STATUS; */
 
-	status = alt_cache_system_enable();
-//	BOOT_CHECK_STATUS;
-
-	return status;
+    return status;
 }
 
-ALT_STATUS_CODE cache_uninit(void) {
-
-	return alt_cache_system_disable();
+ALT_STATUS_CODE cache_uninit( void )
+{
+    return alt_cache_system_disable();
 }
 
-void enable_shared_attribute_override_enable(void) {
-
+void enable_shared_attribute_override_enable( void )
+{
     bool l2_enabled = alt_cache_l2_is_enabled();
 
-    if (l2_enabled)
+    if( l2_enabled )
     {
         alt_cache_l2_disable();
     }
 
-    alt_setbits_word(ALT_MPUL2_AUX_CONTROL_ADDR, SHARED_ATTRIBUTE_OVERRIDE_ENABLE_MASK);
+    alt_setbits_word( ALT_MPUL2_AUX_CONTROL_ADDR, SHARED_ATTRIBUTE_OVERRIDE_ENABLE_MASK );
 
-    if (l2_enabled)
+    if( l2_enabled )
     {
         alt_cache_l2_enable();
     }
 }
 
-void configure_L2_ram_latency(void) {
-
+void configure_L2_ram_latency( void )
+{
     bool l2_enabled = alt_cache_l2_is_enabled();
 
-    if (l2_enabled)
+    if( l2_enabled )
     {
         alt_cache_l2_disable();
     }
 
-	alt_write_word(ALT_MPUL2_TAG_RAM_CONTROL_ADDR, ALT_MPUL2_TAG_RAM_CONTROL_VALUE);
-	alt_write_word(ALT_MPUL2_DATA_RAM_CONTROL_ADDR, ALT_MPUL2_DATA_RAM_CONTROL_VALUE);
+    alt_write_word( ALT_MPUL2_TAG_RAM_CONTROL_ADDR, ALT_MPUL2_TAG_RAM_CONTROL_VALUE );
+    alt_write_word( ALT_MPUL2_DATA_RAM_CONTROL_ADDR, ALT_MPUL2_DATA_RAM_CONTROL_VALUE );
 
-    if (l2_enabled)
+    if( l2_enabled )
     {
         alt_cache_l2_enable();
     }

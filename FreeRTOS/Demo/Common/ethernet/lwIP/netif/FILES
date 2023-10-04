@@ -23,5 +23,5 @@ loopif.c
 slipif.c
           A generic implementation of the SLIP (Serial Line IP)
           protocol. It requires a sio (serial I/O) module to work.
-	  
+
 ppp/      Point-to-Point Protocol stack

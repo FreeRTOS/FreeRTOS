@@ -28,19 +28,19 @@
  */
 
 #ifndef _SDMMC_PERIPH_H_
-#define _SDMMC_PERIPH_H_
+    #define _SDMMC_PERIPH_H_
 
 /*----------------------------------------------------------------------------
  *         Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-struct _SdmmcCommand;
+    struct _SdmmcCommand;
 
 /*----------------------------------------------------------------------------
  *         Definitions
@@ -48,39 +48,39 @@ struct _SdmmcCommand;
 
 /* This structure is private to the SDMMC Driver.
  * Allocate it but ignore its members. */
-struct sdmmc_set
-{
-	uint32_t id;                  /* SDMMC peripheral ID (ID_SDMMCx) */
-	Sdmmc *regs;                  /* set of SDMMC hardware registers */
-	uint32_t tc_id;               /* Timer/Counter peripheral ID (ID_TCx) */
-	TcChannel *timer;             /* set of TC channel hardware registers */
-	uint32_t *table;              /* ADMA descriptor table, or NULL when DMA
-                                       * is not used */
-	uint32_t table_size;          /* Max size of the ADMA descriptor table,
-                                       * in lines */
-	bool use_polling;             /* polling mode */
-	bool use_set_blk_cnt;         /* implicit SET_BLOCK_COUNT command */
+    struct sdmmc_set
+    {
+        uint32_t id;                /* SDMMC peripheral ID (ID_SDMMCx) */
+        Sdmmc * regs;               /* set of SDMMC hardware registers */
+        uint32_t tc_id;             /* Timer/Counter peripheral ID (ID_TCx) */
+        TcChannel * timer;          /* set of TC channel hardware registers */
+        uint32_t * table;           /* ADMA descriptor table, or NULL when DMA
+                                     * is not used */
+        uint32_t table_size;        /* Max size of the ADMA descriptor table,
+                                     * in lines */
+        bool use_polling;           /* polling mode */
+        bool use_set_blk_cnt;       /* implicit SET_BLOCK_COUNT command */
 
-	uint16_t blk_size;            /* max data block size, in bytes */
-	uint32_t dev_freq;            /* frequency of clock provided to memory
-				       * device, in Hz */
-	volatile uint8_t state;
-	struct _SdmmcCommand *cmd;    /* pointer to the command being processed */
-	uint16_t blk_index;           /* count of data blocks tranferred already,
-				       * in the context of the command and data
-				       * transfer being executed */
-	uint8_t resp_len;             /* size of the response, once retrieved,
-				       * in the context of the command being
-				       * executed, expressed in 32-bit words */
-	bool expect_auto_end;         /* waiting for completion of Auto CMD12 */
-};
+        uint16_t blk_size;          /* max data block size, in bytes */
+        uint32_t dev_freq;          /* frequency of clock provided to memory
+                                     * device, in Hz */
+        volatile uint8_t state;
+        struct _SdmmcCommand * cmd; /* pointer to the command being processed */
+        uint16_t blk_index;         /* count of data blocks tranferred already,
+                                     * in the context of the command and data
+                                     * transfer being executed */
+        uint8_t resp_len;           /* size of the response, once retrieved,
+                                    * in the context of the command being
+                                    * executed, expressed in 32-bit words */
+        bool expect_auto_end;       /* waiting for completion of Auto CMD12 */
+    };
 
 /*----------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
 
 /**
- * \brief Initialize the specified driver instance and the associated SDMMC 
+ * \brief Initialize the specified driver instance and the associated SDMMC
  * peripheral.
  * \param set  Pointer to uninitialized driver instance data.
  * \param regs  Base address of registers of the SDMMC peripheral.
@@ -99,11 +99,16 @@ struct sdmmc_set
  * \return true if successful, false if a parameter is assigned an unsupported
  * value.
  */
-bool sdmmc_initialize(struct sdmmc_set *set, Sdmmc *regs, uint32_t sdmmc_id,
-    uint32_t tc_id, uint32_t tc_ch, uint32_t *dma_buf, uint32_t dma_buf_size);
+    bool sdmmc_initialize( struct sdmmc_set * set,
+                           Sdmmc * regs,
+                           uint32_t sdmmc_id,
+                           uint32_t tc_id,
+                           uint32_t tc_ch,
+                           uint32_t * dma_buf,
+                           uint32_t dma_buf_size );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _SDMMC_PERIPH_H_ */

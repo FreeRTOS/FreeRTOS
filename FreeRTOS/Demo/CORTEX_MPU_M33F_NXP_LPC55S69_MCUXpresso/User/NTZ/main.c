@@ -52,7 +52,7 @@ static void prvCreateTasks( void );
 static void prvSetupHardware( void );
 /*-----------------------------------------------------------*/
 
-int main(void)
+int main( void )
 {
     /* Setup hardware. */
     prvSetupHardware();
@@ -99,7 +99,8 @@ static void prvSetupHardware( void )
 /*-----------------------------------------------------------*/
 
 /* Stack overflow hook. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * pcTaskName )
 {
     /* Force an assert. */
     configASSERT( pcTaskName == 0 );
@@ -109,7 +110,7 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
  * implementation of vApplicationGetIdleTaskMemory() to provide the memory that
  * is used by the Idle task. */
-void vApplicationGetIdleTaskMemory(    StaticTask_t ** ppxIdleTaskTCBBuffer,
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
                                     uint32_t * pulIdleTaskStackSize )
 {

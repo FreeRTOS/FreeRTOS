@@ -29,332 +29,362 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
-//*****************************************************************************
-//
-// mpu.c - Driver for the mpu Module.
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/* mpu.c - Driver for the mpu Module. */
+/* */
+/****************************************************************************** */
 
-//*****************************************************************************
-//
-//! \addtogroup mpu_api mpu
-//! @{
-//
-//*****************************************************************************
+/****************************************************************************** */
+/* */
+/*! \addtogroup mpu_api mpu */
+/*! @{ */
+/* */
+/****************************************************************************** */
 
 #include "inc/hw_regaccess.h"
 #include "inc/hw_memmap.h"
 
 #ifdef __MSP430_HAS_MPU__
-#include "mpu.h"
+    #include "mpu.h"
 
-#include <assert.h>
+    #include <assert.h>
 
-//*****************************************************************************
-//
-// The following value is used by createTwoSegments, createThreeSegments to
-// check the user has passed a valid segmentation value. This value was
-// obtained from the User's Guide.
-//
-//*****************************************************************************
-#define MPU_MAX_SEG_VALUE                                                0x13C1
+/****************************************************************************** */
+/* */
+/* The following value is used by createTwoSegments, createThreeSegments to */
+/* check the user has passed a valid segmentation value. This value was */
+/* obtained from the User's Guide. */
+/* */
+/****************************************************************************** */
+    #define MPU_MAX_SEG_VALUE    0x13C1
 
-void MPU_initTwoSegments(uint16_t baseAddress,
-                         uint16_t seg1boundary,
-                         uint8_t seg1accmask,
-                         uint8_t seg2accmask)
-{
-    // Write MPU password to allow MPU register configuration
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-
-    // Create two memory segmentations
-    HWREG16(baseAddress + OFS_MPUSEGB1) = seg1boundary;
-    HWREG16(baseAddress + OFS_MPUSEGB2) = seg1boundary;
-
-    // Set access rights based on user's selection for segment1
-    switch(seg1accmask)
+    void MPU_initTwoSegments( uint16_t baseAddress,
+                              uint16_t seg1boundary,
+                              uint8_t seg1accmask,
+                              uint8_t seg2accmask )
     {
-    case MPU_EXEC | MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG1WE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG1XE + MPUSEG1RE;
-        break;
-    case MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG1XE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG1RE + MPUSEG1WE;
-        break;
-    case MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG1XE + MPUSEG1WE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG1RE;
-        break;
-    case MPU_EXEC | MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) |= (MPUSEG1XE + MPUSEG1WE + MPUSEG1RE);
-        break;
-    case MPU_NO_READ_WRITE_EXEC:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) &= ~(MPUSEG1XE + MPUSEG1WE + MPUSEG1RE);
-        break;
-    default:
-        break;
+        /* Write MPU password to allow MPU register configuration */
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+
+        /* Create two memory segmentations */
+        HWREG16( baseAddress + OFS_MPUSEGB1 ) = seg1boundary;
+        HWREG16( baseAddress + OFS_MPUSEGB2 ) = seg1boundary;
+
+        /* Set access rights based on user's selection for segment1 */
+        switch( seg1accmask )
+        {
+            case MPU_EXEC | MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG1WE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG1XE + MPUSEG1RE;
+                break;
+
+            case MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG1XE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG1RE + MPUSEG1WE;
+                break;
+
+            case MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG1XE + MPUSEG1WE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG1RE;
+                break;
+
+            case MPU_EXEC | MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) |= ( MPUSEG1XE + MPUSEG1WE + MPUSEG1RE );
+                break;
+
+            case MPU_NO_READ_WRITE_EXEC:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) &= ~( MPUSEG1XE + MPUSEG1WE + MPUSEG1RE );
+                break;
+
+            default:
+                break;
+        }
+
+        /* Set access rights based on user's selection for segment2 */
+        switch( seg2accmask )
+        {
+            case MPU_EXEC | MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG3WE + MPUSEG2WE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG3XE + MPUSEG3RE +
+                                                       MPUSEG2XE + MPUSEG2RE;
+                break;
+
+            case MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG3XE + MPUSEG2XE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG3RE + MPUSEG3WE +
+                                                       MPUSEG2RE + MPUSEG2WE;
+                break;
+
+            case MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG3XE + MPUSEG3WE +
+                                                          MPUSEG2XE + MPUSEG2WE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG3RE + MPUSEG2RE;
+                break;
+
+            case MPU_EXEC | MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) |= ( MPUSEG3XE + MPUSEG3WE +
+                                                         MPUSEG3RE + MPUSEG2XE +
+                                                         MPUSEG2WE + MPUSEG2RE );
+                break;
+
+            case MPU_NO_READ_WRITE_EXEC:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG3XE + MPUSEG3WE +
+                                                          MPUSEG3RE + MPUSEG2XE +
+                                                          MPUSEG2WE + MPUSEG2RE );
+                break;
+
+            default:
+                break;
+        }
+
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
     }
 
-    // Set access rights based on user's selection for segment2
-    switch(seg2accmask)
+    void MPU_initThreeSegments( uint16_t baseAddress,
+                                MPU_initThreeSegmentsParam * param )
     {
-    case MPU_EXEC | MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG3WE + MPUSEG2WE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG3XE + MPUSEG3RE +
-                                             MPUSEG2XE + MPUSEG2RE;
-        break;
-    case MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG3XE + MPUSEG2XE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG3RE + MPUSEG3WE +
-                                             MPUSEG2RE + MPUSEG2WE;
-        break;
-    case MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG3XE + MPUSEG3WE +
-                                               MPUSEG2XE + MPUSEG2WE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG3RE + MPUSEG2RE;
-        break;
-    case MPU_EXEC | MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) |= (MPUSEG3XE + MPUSEG3WE +
-                                              MPUSEG3RE + MPUSEG2XE +
-                                              MPUSEG2WE + MPUSEG2RE);
-        break;
-    case MPU_NO_READ_WRITE_EXEC:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG3XE + MPUSEG3WE +
-                                               MPUSEG3RE + MPUSEG2XE +
-                                               MPUSEG2WE + MPUSEG2RE);
-        break;
-    default:
-        break;
+        /* Write MPU password to allow MPU register configuration */
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+
+        /* Create two memory segmentations */
+        HWREG16( baseAddress + OFS_MPUSEGB1 ) = param->seg1boundary;
+        HWREG16( baseAddress + OFS_MPUSEGB2 ) = param->seg2boundary;
+
+        /* Set access rights based on user's selection for segment1 */
+        switch( param->seg1accmask )
+        {
+            case MPU_EXEC | MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG1WE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG1XE + MPUSEG1RE;
+                break;
+
+            case MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG1XE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG1RE + MPUSEG1WE;
+                break;
+
+            case MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG1XE + MPUSEG1WE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG1RE;
+                break;
+
+            case MPU_EXEC | MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) |= ( MPUSEG1XE + MPUSEG1WE + MPUSEG1RE );
+                break;
+
+            case MPU_NO_READ_WRITE_EXEC:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) &= ~( MPUSEG1XE + MPUSEG1WE + MPUSEG1RE );
+                break;
+
+            default:
+                break;
+        }
+
+        /* Set access rights based on user's selection for segment2 */
+        switch( param->seg2accmask )
+        {
+            case MPU_EXEC | MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG2WE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG2XE + MPUSEG2RE;
+                break;
+
+            case MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG2XE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG2RE + MPUSEG2WE;
+                break;
+
+            case MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG2XE + MPUSEG2WE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG2RE;
+                break;
+
+            case MPU_EXEC | MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) |= ( MPUSEG2XE + MPUSEG2WE + MPUSEG2RE );
+                break;
+
+            case MPU_NO_READ_WRITE_EXEC:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) &= ~( MPUSEG2XE + MPUSEG2WE + MPUSEG2RE );
+                break;
+
+            default:
+                break;
+        }
+
+        /* Set access rights based on user's selection for segment3 */
+        switch( param->seg3accmask )
+        {
+            case MPU_EXEC | MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG3WE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG3XE + MPUSEG3RE;
+                break;
+
+            case MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEG3XE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG3RE + MPUSEG3WE;
+                break;
+
+            case MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEG3XE + MPUSEG3WE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEG3RE;
+                break;
+
+            case MPU_EXEC | MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) |= ( MPUSEG3XE + MPUSEG3WE + MPUSEG3WE );
+                break;
+
+            case MPU_NO_READ_WRITE_EXEC:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) &= ~( MPUSEG3XE + MPUSEG3WE + MPUSEG3WE );
+                break;
+
+            default:
+                break;
+        }
+
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
     }
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
-
-void MPU_initThreeSegments(uint16_t baseAddress,
-                           MPU_initThreeSegmentsParam *param)
-{
-    // Write MPU password to allow MPU register configuration
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-
-    // Create two memory segmentations
-    HWREG16(baseAddress + OFS_MPUSEGB1) = param->seg1boundary;
-    HWREG16(baseAddress + OFS_MPUSEGB2) = param->seg2boundary;
-
-    // Set access rights based on user's selection for segment1
-    switch(param->seg1accmask)
+    void MPU_initInfoSegment( uint16_t baseAddress,
+                              uint8_t accmask )
     {
-    case MPU_EXEC | MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG1WE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG1XE + MPUSEG1RE;
-        break;
-    case MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG1XE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG1RE + MPUSEG1WE;
-        break;
-    case MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG1XE + MPUSEG1WE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG1RE;
-        break;
-    case MPU_EXEC | MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) |= (MPUSEG1XE + MPUSEG1WE + MPUSEG1RE);
-        break;
-    case MPU_NO_READ_WRITE_EXEC:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) &= ~(MPUSEG1XE + MPUSEG1WE + MPUSEG1RE);
-        break;
-    default:
-        break;
+        /* Write MPU password to allow MPU register configuration */
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+
+        /* Set access rights based on user's selection for segment1 */
+        switch( accmask )
+        {
+            case MPU_EXEC | MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEGIWE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEGIXE + MPUSEGIRE;
+                break;
+
+            case MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~MPUSEGIXE;
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEGIRE + MPUSEGIWE;
+                break;
+
+            case MPU_READ:
+                HWREG16( baseAddress + OFS_MPUSAM ) &= ~( MPUSEGIXE + MPUSEGIWE );
+                HWREG16( baseAddress + OFS_MPUSAM ) |= MPUSEGIRE;
+                break;
+
+            case MPU_EXEC | MPU_READ | MPU_WRITE:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) |= ( MPUSEGIXE + MPUSEGIWE + MPUSEGIRE );
+                break;
+
+            case MPU_NO_READ_WRITE_EXEC:
+                HWREG16( baseAddress +
+                         OFS_MPUSAM ) &= ~( MPUSEGIXE + MPUSEGIWE + MPUSEGIRE );
+                break;
+
+            default:
+                break;
+        }
+
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
     }
 
-    // Set access rights based on user's selection for segment2
-    switch(param->seg2accmask)
+    void MPU_enableNMIevent( uint16_t baseAddress )
     {
-    case MPU_EXEC | MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG2WE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG2XE + MPUSEG2RE;
-        break;
-    case MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG2XE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG2RE + MPUSEG2WE;
-        break;
-    case MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG2XE + MPUSEG2WE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG2RE;
-        break;
-    case MPU_EXEC | MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) |= (MPUSEG2XE + MPUSEG2WE + MPUSEG2RE);
-        break;
-    case MPU_NO_READ_WRITE_EXEC:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) &= ~(MPUSEG2XE + MPUSEG2WE + MPUSEG2RE);
-        break;
-    default:
-        break;
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | MPUSEGIE |
+                                               HWREG8( baseAddress + OFS_MPUCTL0 );
+
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
     }
 
-    // Set access rights based on user's selection for segment3
-    switch(param->seg3accmask)
+    void MPU_start( uint16_t baseAddress )
     {
-    case MPU_EXEC | MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG3WE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG3XE + MPUSEG3RE;
-        break;
-    case MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEG3XE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG3RE + MPUSEG3WE;
-        break;
-    case MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEG3XE + MPUSEG3WE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEG3RE;
-        break;
-    case MPU_EXEC | MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) |= (MPUSEG3XE + MPUSEG3WE + MPUSEG3WE);
-        break;
-    case MPU_NO_READ_WRITE_EXEC:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) &= ~(MPUSEG3XE + MPUSEG3WE + MPUSEG3WE);
-        break;
-    default:
-        break;
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | MPUENA | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
     }
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
-
-void MPU_initInfoSegment(uint16_t baseAddress,
-                         uint8_t accmask)
-{
-    // Write MPU password to allow MPU register configuration
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-
-    // Set access rights based on user's selection for segment1
-    switch(accmask)
+    void MPU_enablePUCOnViolation( uint16_t baseAddress,
+                                   uint16_t segment )
     {
-    case MPU_EXEC | MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEGIWE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEGIXE + MPUSEGIRE;
-        break;
-    case MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~MPUSEGIXE;
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEGIRE + MPUSEGIWE;
-        break;
-    case MPU_READ:
-        HWREG16(baseAddress + OFS_MPUSAM) &= ~(MPUSEGIXE + MPUSEGIWE);
-        HWREG16(baseAddress + OFS_MPUSAM) |= MPUSEGIRE;
-        break;
-    case MPU_EXEC | MPU_READ | MPU_WRITE:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) |= (MPUSEGIXE + MPUSEGIWE + MPUSEGIRE);
-        break;
-    case MPU_NO_READ_WRITE_EXEC:
-        HWREG16(baseAddress +
-                OFS_MPUSAM) &= ~(MPUSEGIXE + MPUSEGIWE + MPUSEGIRE);
-        break;
-    default:
-        break;
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+        HWREG16( baseAddress + OFS_MPUSAM ) |= segment;
+
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
     }
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
+    void MPU_disablePUCOnViolation( uint16_t baseAddress,
+                                    uint16_t segment )
+    {
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+        HWREG16( baseAddress + OFS_MPUSAM ) &= ~segment;
 
-void MPU_enableNMIevent(uint16_t baseAddress)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | MPUSEGIE |
-                                         HWREG8(baseAddress + OFS_MPUCTL0);
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
+    }
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
+    uint16_t MPU_getInterruptStatus( uint16_t baseAddress,
+                                     uint16_t memAccFlag )
+    {
+        return( HWREG16( baseAddress + OFS_MPUCTL1 ) & memAccFlag );
+    }
 
-void MPU_start(uint16_t baseAddress)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | MPUENA | HWREG8(
-        baseAddress + OFS_MPUCTL0);
+    uint16_t MPU_clearInterrupt( uint16_t baseAddress,
+                                 uint16_t memAccFlag )
+    {
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+        HWREG16( baseAddress + OFS_MPUCTL1 ) &= ~memAccFlag;
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
 
-void MPU_enablePUCOnViolation(uint16_t baseAddress,
-                              uint16_t segment)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-    HWREG16(baseAddress + OFS_MPUSAM) |= segment;
+        return( HWREG16( baseAddress + OFS_MPUCTL1 ) & memAccFlag );
+    }
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
+    uint16_t MPU_clearAllInterrupts( uint16_t baseAddress )
+    {
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | HWREG8(
+            baseAddress + OFS_MPUCTL0 );
+        HWREG16( baseAddress +
+                 OFS_MPUCTL1 ) &= ~( MPUSEG1IFG + MPUSEG2IFG + MPUSEG3IFG );
 
-void MPU_disablePUCOnViolation(uint16_t baseAddress,
-                               uint16_t segment)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-    HWREG16(baseAddress + OFS_MPUSAM) &= ~segment;
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
+        return( HWREG16( baseAddress +
+                         OFS_MPUCTL1 ) & ( MPUSEG1IFG + MPUSEG2IFG + MPUSEG3IFG ) );
+    }
 
-uint16_t MPU_getInterruptStatus(uint16_t baseAddress,
-                                uint16_t memAccFlag)
-{
-    return (HWREG16(baseAddress + OFS_MPUCTL1) & memAccFlag);
-}
+    void MPU_lockMPU( uint16_t baseAddress )
+    {
+        HWREG16( baseAddress + OFS_MPUCTL0 ) = MPUPW | MPULOCK |
+                                               HWREG8( baseAddress + OFS_MPUCTL0 );
 
-uint16_t MPU_clearInterrupt(uint16_t baseAddress,
-                            uint16_t memAccFlag)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-    HWREG16(baseAddress + OFS_MPUCTL1) &= ~memAccFlag;
+        /*Lock MPU to disable writing to all registers */
+        HWREG8( baseAddress + OFS_MPUCTL0_H ) = 0x00;
+    }
 
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-
-    return (HWREG16(baseAddress + OFS_MPUCTL1) & memAccFlag);
-}
-
-uint16_t MPU_clearAllInterrupts(uint16_t baseAddress)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | HWREG8(
-        baseAddress + OFS_MPUCTL0);
-    HWREG16(baseAddress +
-            OFS_MPUCTL1) &= ~(MPUSEG1IFG + MPUSEG2IFG + MPUSEG3IFG);
-
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-
-    return (HWREG16(baseAddress +
-                    OFS_MPUCTL1) & (MPUSEG1IFG + MPUSEG2IFG + MPUSEG3IFG));
-}
-
-void MPU_lockMPU(uint16_t baseAddress)
-{
-    HWREG16(baseAddress + OFS_MPUCTL0) = MPUPW | MPULOCK |
-                                         HWREG8(baseAddress + OFS_MPUCTL0);
-
-    //Lock MPU to disable writing to all registers
-    HWREG8(baseAddress + OFS_MPUCTL0_H) = 0x00;
-}
-
-#endif
-//*****************************************************************************
-//
-//! Close the doxygen group for mpu_api
-//! @}
-//
-//*****************************************************************************
+#endif /* ifdef __MSP430_HAS_MPU__ */
+/****************************************************************************** */
+/* */
+/*! Close the doxygen group for mpu_api */
+/*! @} */
+/* */
+/****************************************************************************** */

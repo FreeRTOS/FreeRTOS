@@ -16,11 +16,13 @@
 *
 * Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name	   : r_bsp.h
 * H/W Platform : RSKRX111
 * Description  : Has the header files that should be included for this platform.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 08.11.2012 0.01     Beta Release
@@ -31,13 +33,13 @@
 
 /* Make sure that no other platforms have already been defined. Do not touch this! */
 #ifdef  PLATFORM_DEFINED
-#error  "Error - Multiple platforms defined in platform.h!"
+    #error  "Error - Multiple platforms defined in platform.h!"
 #else
-#define PLATFORM_DEFINED
+    #define PLATFORM_DEFINED
 #endif
 
 /***********************************************************************************************************************
-INCLUDE APPROPRIATE MCU AND BOARD FILES
+*  INCLUDE APPROPRIATE MCU AND BOARD FILES
 ***********************************************************************************************************************/
 #include    "r_bsp_config.h"
 #include    "iorx111.h"
@@ -46,5 +48,3 @@ INCLUDE APPROPRIATE MCU AND BOARD FILES
 #include    ".\board\rskrx111\lcd.h"
 
 #endif /* PLATFORM_BOARD_RSKRX111 */
-
-

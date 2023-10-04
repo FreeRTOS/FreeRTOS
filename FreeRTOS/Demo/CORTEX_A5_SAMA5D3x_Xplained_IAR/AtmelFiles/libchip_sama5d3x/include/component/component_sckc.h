@@ -36,19 +36,20 @@
 /** \addtogroup SAMA5_SCKC Slow Clock Controller */
 /*@{*/
 
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#if !( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
 /** \brief Sckc hardware registers */
-typedef struct {
-  RwReg SCKC_CR; /**< \brief (Sckc Offset: 0x0) Slow Clock Configuration Register */
-} Sckc;
+    typedef struct
+    {
+        RwReg SCKC_CR; /**< \brief (Sckc Offset: 0x0) Slow Clock Configuration Register */
+    } Sckc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- SCKC_CR : (SCKC Offset: 0x0) Slow Clock Configuration Register -------- */
-#define SCKC_CR_RCEN (0x1u << 0) /**< \brief (SCKC_CR) Internal 32 kHz RC Oscillator */
-#define SCKC_CR_OSC32EN (0x1u << 1) /**< \brief (SCKC_CR) 32,768 Hz Oscillator */
-#define SCKC_CR_OSC32BYP (0x1u << 2) /**< \brief (SCKC_CR) 32,768Hz Oscillator Bypass */
-#define SCKC_CR_OSCSEL (0x1u << 3) /**< \brief (SCKC_CR) Slow Clock Selector */
-#define   SCKC_CR_OSCSEL_RC (0x0u << 3) /**< \brief (SCKC_CR) Slow clock is internal 32 kHz RC oscillator. */
-#define   SCKC_CR_OSCSEL_XTAL (0x1u << 3) /**< \brief (SCKC_CR) Slow clock is 32,768 Hz oscillator. */
+#define SCKC_CR_RCEN             ( 0x1u << 0 ) /**< \brief (SCKC_CR) Internal 32 kHz RC Oscillator */
+#define SCKC_CR_OSC32EN          ( 0x1u << 1 ) /**< \brief (SCKC_CR) 32,768 Hz Oscillator */
+#define SCKC_CR_OSC32BYP         ( 0x1u << 2 ) /**< \brief (SCKC_CR) 32,768Hz Oscillator Bypass */
+#define SCKC_CR_OSCSEL           ( 0x1u << 3 ) /**< \brief (SCKC_CR) Slow Clock Selector */
+#define   SCKC_CR_OSCSEL_RC      ( 0x0u << 3 ) /**< \brief (SCKC_CR) Slow clock is internal 32 kHz RC oscillator. */
+#define   SCKC_CR_OSCSEL_XTAL    ( 0x1u << 3 ) /**< \brief (SCKC_CR) Slow clock is 32,768 Hz oscillator. */
 
 /*@}*/
 

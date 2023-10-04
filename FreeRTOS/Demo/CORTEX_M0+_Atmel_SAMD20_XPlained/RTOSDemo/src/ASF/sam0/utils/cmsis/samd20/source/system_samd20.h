@@ -42,21 +42,21 @@
  */
 
 #ifndef _SYSTEM_SAMD20_H_INCLUDED_
-#define _SYSTEM_SAMD20_H_INCLUDED_
+    #define _SYSTEM_SAMD20_H_INCLUDED_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
+    #include <stdint.h>
 
-extern uint32_t SystemCoreClock;   /*!< System Clock Frequency (Core Clock)  */
+    extern uint32_t SystemCoreClock; /*!< System Clock Frequency (Core Clock)  */
 
-void SystemInit(void);
-void SystemCoreClockUpdate(void);
+    void SystemInit( void );
+    void SystemCoreClockUpdate( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* SYSTEM_SAMD20_H_INCLUDED */

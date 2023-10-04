@@ -158,26 +158,26 @@
 /*-----------------------------------------------------------*/
 
 /* Seen as an infinite block by the ST HAL. */
-#define mainHAL_MAX_TIMEOUT 	0xFFFFFFFFUL
+#define mainHAL_MAX_TIMEOUT       0xFFFFFFFFUL
 
 /* When the cores boot they very crudely wait for each other in a non chip
-specific way by waiting for the other core to start incrementing a shared
-variable within an array.  mainINDEX_TO_TEST sets the index within the array to
-the variable this core tests to see if it is incrementing, and
-mainINDEX_TO_INCREMENT sets the index within the array to the variable this core
-increments to indicate to the other core that it is at the sync point.  Note
-this is not a foolproof method and it is better to use a hardware specific
-solution, such as having one core boot the other core when it was ready, or
-using some kind of shared semaphore or interrupt. */
-#define mainINDEX_TO_TEST		1
-#define mainINDEX_TO_INCREMENT	0
+ * specific way by waiting for the other core to start incrementing a shared
+ * variable within an array.  mainINDEX_TO_TEST sets the index within the array to
+ * the variable this core tests to see if it is incrementing, and
+ * mainINDEX_TO_INCREMENT sets the index within the array to the variable this core
+ * increments to indicate to the other core that it is at the sync point.  Note
+ * this is not a foolproof method and it is better to use a hardware specific
+ * solution, such as having one core boot the other core when it was ready, or
+ * using some kind of shared semaphore or interrupt. */
+#define mainINDEX_TO_TEST         1
+#define mainINDEX_TO_INCREMENT    0
 
 /*-----------------------------------------------------------*/
 
 /*
  * Implements the tasks that receive messages from the M7 core.
  */
-static void prvM4CoreTasks( void *pvParameters );
+static void prvM4CoreTasks( void * pvParameters );
 
 /*
  * The interrupt triggered by the M7 core when there is data available in the
@@ -189,7 +189,8 @@ void HAL_GPIO_EXTI_Callback( uint16_t GPIO_Pin );
  * Just waits to see a variable being incremented by the M7 core to know when
  * the M7 has created the message buffers used for core to core communication.
  */
-static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest, uint32_t ulIndexToIncrement );
+static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest,
+                                        uint32_t ulIndexToIncrement );
 
 /*
  * Configures the hardware ready to run this demo.
@@ -205,269 +206,276 @@ static UART_HandleTypeDef xUARTHandle = { 0 };
 
 int main( void )
 {
-static const uint8_t pucBootMessage[] = "\r\nM4 started and waiting for the M7 to run.\r\n";
-static const uint8_t pucCreatingTasksMessage[] = "M4 core proceeding to create demo tasks.\r\n";
-uint32_t x;
+    static const uint8_t pucBootMessage[] = "\r\nM4 started and waiting for the M7 to run.\r\n";
+    static const uint8_t pucCreatingTasksMessage[] = "M4 core proceeding to create demo tasks.\r\n";
+    uint32_t x;
 
-	/*** See the comments at the top of this page ***/
+    /*** See the comments at the top of this page ***/
 
 
-	/* Prep the hardware to run this demo. */
-	prvSetupHardware();
+    /* Prep the hardware to run this demo. */
+    prvSetupHardware();
 
-	/* The M4 core task prints its status out at various places so you know what
-	it is doing when debugging the M7 core.  This messages is just to indicate
-	it has booted and is about to wait for the M7 core.  If the M7 is already
-	running then reset the hardware so both cores start at once. */
-	HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucBootMessage, sizeof( pucBootMessage ), mainHAL_MAX_TIMEOUT );
-	prvWaitForOtherCoreToStart( mainINDEX_TO_TEST, mainINDEX_TO_INCREMENT );
+    /* The M4 core task prints its status out at various places so you know what
+     * it is doing when debugging the M7 core.  This messages is just to indicate
+     * it has booted and is about to wait for the M7 core.  If the M7 is already
+     * running then reset the hardware so both cores start at once. */
+    HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucBootMessage, sizeof( pucBootMessage ), mainHAL_MAX_TIMEOUT );
+    prvWaitForOtherCoreToStart( mainINDEX_TO_TEST, mainINDEX_TO_INCREMENT );
 
-	/* By this point the M7 should have initialized the message buffers used to
-	send data from the M7 to the M4 core.  The message buffers are statically
-	allocated at a known location so both cores know where they are.  See
-	MessageBufferLocations.h. */
-	configASSERT( ( xControlMessageBuffer != NULL ) && ( xDataMessageBuffers[ 0 ] != NULL ) && ( xDataMessageBuffers[ 1 ] != NULL ) );
+    /* By this point the M7 should have initialized the message buffers used to
+     * send data from the M7 to the M4 core.  The message buffers are statically
+     * allocated at a known location so both cores know where they are.  See
+     * MessageBufferLocations.h. */
+    configASSERT( ( xControlMessageBuffer != NULL ) && ( xDataMessageBuffers[ 0 ] != NULL ) && ( xDataMessageBuffers[ 1 ] != NULL ) );
 
-	/* Everything seems as expected - print a message to say the M4 is about to
-	create the tasks that receive data from the M7 core. */
-	HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucCreatingTasksMessage, sizeof( pucCreatingTasksMessage ), mainHAL_MAX_TIMEOUT );
+    /* Everything seems as expected - print a message to say the M4 is about to
+     * create the tasks that receive data from the M7 core. */
+    HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucCreatingTasksMessage, sizeof( pucCreatingTasksMessage ), mainHAL_MAX_TIMEOUT );
 
-	for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
-	{
-		/* Pass the loop counter into the created task using the task's
-		parameter.  The task then uses the value as an index into the
-		xDataMessageBuffers arrays. */
-		xTaskCreate( prvM4CoreTasks,			/* Function that implements the task. */
-					"AMPM4Core",					/* Task name, for debugging only. */
-					configMINIMAL_STACK_SIZE,	/* Size of stack to allocate for this task - in words. */
-					( void * ) x,				/* Task parameter. */
-					tskIDLE_PRIORITY + 1,		/* Task priority. */
-					NULL );						/* Task handle.  Not used in this case. */
-	}
+    for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
+    {
+        /* Pass the loop counter into the created task using the task's
+         * parameter.  The task then uses the value as an index into the
+         * xDataMessageBuffers arrays. */
+        xTaskCreate( prvM4CoreTasks,           /* Function that implements the task. */
+                     "AMPM4Core",              /* Task name, for debugging only. */
+                     configMINIMAL_STACK_SIZE, /* Size of stack to allocate for this task - in words. */
+                     ( void * ) x,             /* Task parameter. */
+                     tskIDLE_PRIORITY + 1,     /* Task priority. */
+                     NULL );                   /* Task handle.  Not used in this case. */
+    }
 
-	/* Start scheduler */
-	vTaskStartScheduler();
+    /* Start scheduler */
+    vTaskStartScheduler();
 
-	/* Will not get here if the scheduler starts successfully.  If you do end up
-	here then there wasn't enough heap memory available to start either the idle
-	task or the timer/daemon task.  https://www.freertos.org/a00111.html */
-	for( ;; );
+    /* Will not get here if the scheduler starts successfully.  If you do end up
+     * here then there wasn't enough heap memory available to start either the idle
+     * task or the timer/daemon task.  https://www.freertos.org/a00111.html */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvM4CoreTasks( void *pvParameters )
+static void prvM4CoreTasks( void * pvParameters )
 {
-static const uint8_t pucTaskStartedMessage[] = "M4 task started.\r\n";
-BaseType_t xTaskNumber;
-size_t xReceivedBytes;
-uint32_t ulNextValue = 0;
-char cExpectedString[ 15 ];
-char cReceivedString[ 15 ];
-char cMessage;
-const TickType_t xShortBlockTime = pdMS_TO_TICKS( 200 );
+    static const uint8_t pucTaskStartedMessage[] = "M4 task started.\r\n";
+    BaseType_t xTaskNumber;
+    size_t xReceivedBytes;
+    uint32_t ulNextValue = 0;
+    char cExpectedString[ 15 ];
+    char cReceivedString[ 15 ];
+    char cMessage;
+    const TickType_t xShortBlockTime = pdMS_TO_TICKS( 200 );
 
-	/* This task is created more than once so the task's parameter is used to
-	pass in a task number, which is then used as an index into the message
-	buffer array. */
-	xTaskNumber = ( BaseType_t ) pvParameters;
-	configASSERT( xTaskNumber < mbaNUMBER_OF_CORE_2_TASKS );
+    /* This task is created more than once so the task's parameter is used to
+     * pass in a task number, which is then used as an index into the message
+     * buffer array. */
+    xTaskNumber = ( BaseType_t ) pvParameters;
+    configASSERT( xTaskNumber < mbaNUMBER_OF_CORE_2_TASKS );
 
-	vTaskSuspendAll();
-	{
-		/* Message transmitted to indicate the task has started. */
-		HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucTaskStartedMessage, sizeof( pucTaskStartedMessage ), mainHAL_MAX_TIMEOUT );
-	}
-	xTaskResumeAll();
+    vTaskSuspendAll();
+    {
+        /* Message transmitted to indicate the task has started. */
+        HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucTaskStartedMessage, sizeof( pucTaskStartedMessage ), mainHAL_MAX_TIMEOUT );
+    }
+    xTaskResumeAll();
 
-	/* The tasks print out a letter to indicate that the expected message was
-	received from the other core. */
-	if( xTaskNumber == 0 )
-	{
-		cMessage = '0';
-	}
-	else
-	{
-		cMessage = '1';
-	}
+    /* The tasks print out a letter to indicate that the expected message was
+     * received from the other core. */
+    if( xTaskNumber == 0 )
+    {
+        cMessage = '0';
+    }
+    else
+    {
+        cMessage = '1';
+    }
 
-	for( ;; )
-	{
-		/* The M7 core creates and sends to this core an ascii string of an
-		incrementing number.  Create the string that is expected to be received
-		this time round the loop. */
-		sprintf( cExpectedString, "%lu", ( unsigned long ) ulNextValue );
+    for( ; ; )
+    {
+        /* The M7 core creates and sends to this core an ascii string of an
+         * incrementing number.  Create the string that is expected to be received
+         * this time round the loop. */
+        sprintf( cExpectedString, "%lu", ( unsigned long ) ulNextValue );
 
-		/* Wait to receive the next message from core 1. */
-		memset( cReceivedString, 0x00, sizeof( cReceivedString ) );
-		xReceivedBytes = xMessageBufferReceive( /* Handle of message buffer. */
-												xDataMessageBuffers[ xTaskNumber ],
-												/* Buffer into which received data is placed. */
-												cReceivedString,
-												/* Size of the receive buffer. */
-												sizeof( cReceivedString ),
-												/* Time to wait for data to arrive. */
-												xShortBlockTime );
+        /* Wait to receive the next message from core 1. */
+        memset( cReceivedString, 0x00, sizeof( cReceivedString ) );
+        xReceivedBytes = xMessageBufferReceive( /* Handle of message buffer. */
+            xDataMessageBuffers[ xTaskNumber ],
+            /* Buffer into which received data is placed. */
+            cReceivedString,
+            /* Size of the receive buffer. */
+            sizeof( cReceivedString ),
+            /* Time to wait for data to arrive. */
+            xShortBlockTime );
 
-		/* Check the number of bytes received was as expected. */
-		configASSERT( xReceivedBytes == strlen( cExpectedString ) );
+        /* Check the number of bytes received was as expected. */
+        configASSERT( xReceivedBytes == strlen( cExpectedString ) );
 
-		/* If the received string matches that expected then output the task
-		number to give visible indication that the task is still running. */
-		if( strcmp( cReceivedString, cExpectedString ) == 0 )
-		{
-			/* Also print out the task number to give a visual indication that
-			the M4 core is receiving the expected data. */
-			vTaskSuspendAll();
-			{
-				HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) &cMessage, sizeof( cMessage ), mainHAL_MAX_TIMEOUT );
-			}
-			xTaskResumeAll();
-		}
+        /* If the received string matches that expected then output the task
+        *  number to give visible indication that the task is still running. */
+        if( strcmp( cReceivedString, cExpectedString ) == 0 )
+        {
+            /* Also print out the task number to give a visual indication that
+             * the M4 core is receiving the expected data. */
+            vTaskSuspendAll();
+            {
+                HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) &cMessage, sizeof( cMessage ), mainHAL_MAX_TIMEOUT );
+            }
+            xTaskResumeAll();
+        }
 
-		/* Expect the next string in sequence the next time around. */
-		ulNextValue++;
-	}
+        /* Expect the next string in sequence the next time around. */
+        ulNextValue++;
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vGenerateM4ToM7Interrupt( void * xUpdatedMessageBuffer )
 {
-	/* Called by the implementation of sbRECEIVE_COMPLETED() in FreeRTOSConfig.h.
-	See the comments at the top of this file.  Write the handle of the data
-	message buffer to which data was written to the control message buffer. */
+    /* Called by the implementation of sbRECEIVE_COMPLETED() in FreeRTOSConfig.h.
+     * See the comments at the top of this file.  Write the handle of the data
+     * message buffer to which data was written to the control message buffer. */
 
-	/* Generate interrupt in the M7 core. */
-	HAL_EXTI_D2_EventInputConfig( EXTI_LINE1, EXTI_MODE_IT, DISABLE );
-	HAL_EXTI_D1_EventInputConfig( EXTI_LINE1, EXTI_MODE_IT, ENABLE );
-	HAL_EXTI_GenerateSWInterrupt( EXTI_LINE1 );
+    /* Generate interrupt in the M7 core. */
+    HAL_EXTI_D2_EventInputConfig( EXTI_LINE1, EXTI_MODE_IT, DISABLE );
+    HAL_EXTI_D1_EventInputConfig( EXTI_LINE1, EXTI_MODE_IT, ENABLE );
+    HAL_EXTI_GenerateSWInterrupt( EXTI_LINE1 );
 }
 /*-----------------------------------------------------------*/
 
 void HAL_GPIO_EXTI_Callback( uint16_t GPIO_Pin )
 {
-MessageBufferHandle_t xUpdatedMessageBuffer;
-BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    MessageBufferHandle_t xUpdatedMessageBuffer;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-	/* Avoid compiler warnings about unused parameters. */
-	( void ) GPIO_Pin;
+    /* Avoid compiler warnings about unused parameters. */
+    ( void ) GPIO_Pin;
 
-	/* Clear interrupt. */
-	HAL_EXTI_D2_ClearFlag( EXTI_LINE0 );
+    /* Clear interrupt. */
+    HAL_EXTI_D2_ClearFlag( EXTI_LINE0 );
 
-	configASSERT( ( xControlMessageBuffer != NULL ) && ( xDataMessageBuffers[ 0 ] != NULL ) && ( xDataMessageBuffers[ 1 ] != NULL ) );
+    configASSERT( ( xControlMessageBuffer != NULL ) && ( xDataMessageBuffers[ 0 ] != NULL ) && ( xDataMessageBuffers[ 1 ] != NULL ) );
 
-	/* In this example there are mbaNUMBER_OF_CORE_2_TASKS receiving tasks that
-	run on the M4 core.  It would be possible for the M7 core to use a single
-	message buffer to send to both tasks, but that would require additional data
-	to be sent to the message buffer - namely an identifier to indicate which
-	receiving task a message was intended for along with some arbitration in the
-	ISR.  As an alternative, this example uses one message buffer per receiving
-	task and a control message buffer.  The M7 core sends data to a receiving
-	task using that task's dedicated message buffer, then sends the handle of
-	the message buffer that it just sent data to to the control task.  This
-	interrupt service routine receives the handle from the control task then
-	uses the handle to signal the message buffer that contains the data.
+    /* In this example there are mbaNUMBER_OF_CORE_2_TASKS receiving tasks that
+     * run on the M4 core.  It would be possible for the M7 core to use a single
+     * message buffer to send to both tasks, but that would require additional data
+     * to be sent to the message buffer - namely an identifier to indicate which
+     * receiving task a message was intended for along with some arbitration in the
+     * ISR.  As an alternative, this example uses one message buffer per receiving
+     * task and a control message buffer.  The M7 core sends data to a receiving
+     * task using that task's dedicated message buffer, then sends the handle of
+     * the message buffer that it just sent data to to the control task.  This
+     * interrupt service routine receives the handle from the control task then
+     * uses the handle to signal the message buffer that contains the data.
+     *
+     * Receive the handle of the message buffer that contains data from the
+     * control message buffer. */
+    while( xMessageBufferReceiveFromISR( xControlMessageBuffer,
+                                         &xUpdatedMessageBuffer,
+                                         sizeof( xUpdatedMessageBuffer ),
+                                         &xHigherPriorityTaskWoken ) == sizeof( xUpdatedMessageBuffer ) )
+    {
+        /* Call the API function that sends a notification to any task that is
+         * blocked on the xUpdatedMessageBuffer message buffer waiting for data to
+         * arrive. */
+        xMessageBufferSendCompletedFromISR( xUpdatedMessageBuffer, &xHigherPriorityTaskWoken );
+    }
 
-	Receive the handle of the message buffer that contains data from the
-	control message buffer. */
-	while( xMessageBufferReceiveFromISR( 	xControlMessageBuffer,
-											&xUpdatedMessageBuffer,
-											sizeof( xUpdatedMessageBuffer ),
-											&xHigherPriorityTaskWoken ) == sizeof( xUpdatedMessageBuffer ) )
-	{
-		/* Call the API function that sends a notification to any task that is
-		blocked on the xUpdatedMessageBuffer message buffer waiting for data to
-		arrive. */
-		xMessageBufferSendCompletedFromISR( xUpdatedMessageBuffer, &xHigherPriorityTaskWoken );
-	}
-
-	/* Normal FreeRTOS "yield from interrupt" semantics, where
-	xHigherPriorityTaskWoken is initialised to pdFALSE and will then get set to
-	pdTRUE if the interrupt unblocks a task that has a priority above that of
-	the currently executing task. */
-	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    /* Normal FreeRTOS "yield from interrupt" semantics, where
+     * xHigherPriorityTaskWoken is initialised to pdFALSE and will then get set to
+     * pdTRUE if the interrupt unblocks a task that has a priority above that of
+     * the currently executing task. */
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
-static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest, uint32_t ulIndexToIncrement )
+static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest,
+                                        uint32_t ulIndexToIncrement )
 {
-volatile uint32_t ulInitialCount = ulStartSyncCounters[ ulIndexToTest ];
+    volatile uint32_t ulInitialCount = ulStartSyncCounters[ ulIndexToTest ];
 
-	/* When the cores boot they very crudely wait for each other in a non chip
-	specific way by waiting for the other core to start incrementing a shared
-	variable within an array.  mainINDEX_TO_TEST sets the index within the array
-	to the variable this core tests to see if it is incrementing, and
-	mainINDEX_TO_INCREMENT sets the index within the array to the variable this
-	core increments to indicate to the other core that it is at the sync point.
-	Note this is not a foolproof method and it is better to use a hardware
-	specific solution, such as having one core boot the other core when it was
-	ready, or using some kind of shared semaphore or interrupt. */
+    /* When the cores boot they very crudely wait for each other in a non chip
+     * specific way by waiting for the other core to start incrementing a shared
+     * variable within an array.  mainINDEX_TO_TEST sets the index within the array
+     * to the variable this core tests to see if it is incrementing, and
+     * mainINDEX_TO_INCREMENT sets the index within the array to the variable this
+     * core increments to indicate to the other core that it is at the sync point.
+     * Note this is not a foolproof method and it is better to use a hardware
+     * specific solution, such as having one core boot the other core when it was
+     * ready, or using some kind of shared semaphore or interrupt. */
 
-	for( ;; )
-	{
-		/* Indicate to the M7 core that this core is at the synchronisation
-		point. */
-		ulStartSyncCounters[ ulIndexToIncrement ]++;
+    for( ; ; )
+    {
+        /* Indicate to the M7 core that this core is at the synchronisation
+         * point. */
+        ulStartSyncCounters[ ulIndexToIncrement ]++;
 
-		/* Has the counter incremented by the other core changed? */
-		if( ulStartSyncCounters[ ulIndexToTest ] != ulInitialCount )
-		{
-			break;
-		}
-	}
+        /* Has the counter incremented by the other core changed? */
+        if( ulStartSyncCounters[ ulIndexToTest ] != ulInitialCount )
+        {
+            break;
+        }
+    }
 
-	/* One more increment before exiting to avoid race. */
-	ulStartSyncCounters[ ulIndexToIncrement ]++;
+    /* One more increment before exiting to avoid race. */
+    ulStartSyncCounters[ ulIndexToIncrement ]++;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char *pcFile, const uint32_t ulLine )
+void vAssertCalled( const char * pcFile,
+                    const uint32_t ulLine )
 {
-char pcLine[ 10 ];
-const uint8_t pucM4AssertFile[] = "M4 Assert hit in file ";
-const uint8_t pucM4AssertLine[] = "on line number ";
+    char pcLine[ 10 ];
+    const uint8_t pucM4AssertFile[] = "M4 Assert hit in file ";
+    const uint8_t pucM4AssertLine[] = "on line number ";
 
-	/* Assert disables interrupts so no other code can run, prints out the
-	location of the offending assert(), then loops doing nothing waiting for
-	the user to inspect or reset. */
-	taskDISABLE_INTERRUPTS();
-	HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucM4AssertFile, sizeof( pucM4AssertFile ), mainHAL_MAX_TIMEOUT );
-	HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pcFile, strlen( pcFile ), mainHAL_MAX_TIMEOUT );
-	HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucM4AssertLine, sizeof( pucM4AssertLine ), mainHAL_MAX_TIMEOUT );
-	sprintf( pcLine, "%u\r\n", ulLine );
-	HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pcLine, strlen( pcLine ), mainHAL_MAX_TIMEOUT );
-	for( ;; );
+    /* Assert disables interrupts so no other code can run, prints out the
+     * location of the offending assert(), then loops doing nothing waiting for
+     * the user to inspect or reset. */
+    taskDISABLE_INTERRUPTS();
+    HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucM4AssertFile, sizeof( pucM4AssertFile ), mainHAL_MAX_TIMEOUT );
+    HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pcFile, strlen( pcFile ), mainHAL_MAX_TIMEOUT );
+    HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pucM4AssertLine, sizeof( pucM4AssertLine ), mainHAL_MAX_TIMEOUT );
+    sprintf( pcLine, "%u\r\n", ulLine );
+    HAL_UART_Transmit( &xUARTHandle, ( uint8_t * ) pcLine, strlen( pcLine ), mainHAL_MAX_TIMEOUT );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	/* Prevent the HAL's initialisation of SysTick actually starting the systick
-	interrupt as the kernel has not started yet. */
-	taskDISABLE_INTERRUPTS();
-	HAL_Init();
-	BSP_LED_Init( LED2 );
+    /* Prevent the HAL's initialisation of SysTick actually starting the systick
+     * interrupt as the kernel has not started yet. */
+    taskDISABLE_INTERRUPTS();
+    HAL_Init();
+    BSP_LED_Init( LED2 );
 
-	/* This core uses the UART, so initialise it. */
-	xUARTHandle.Instance = USART3;
-	xUARTHandle.Init.BaudRate = 115200;
-	xUARTHandle.Init.WordLength = UART_WORDLENGTH_8B;
-	xUARTHandle.Init.StopBits = UART_STOPBITS_1;
-	xUARTHandle.Init.Parity = UART_PARITY_NONE;
-	xUARTHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	xUARTHandle.Init.Mode = UART_MODE_TX_RX;
-	xUARTHandle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-	xUARTHandle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-	xUARTHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-	HAL_UART_Init( &xUARTHandle );
-	HAL_UARTEx_SetRxFifoThreshold( &xUARTHandle, UART_RXFIFO_THRESHOLD_1_4 );
-	HAL_UARTEx_EnableFifoMode( &xUARTHandle );
+    /* This core uses the UART, so initialise it. */
+    xUARTHandle.Instance = USART3;
+    xUARTHandle.Init.BaudRate = 115200;
+    xUARTHandle.Init.WordLength = UART_WORDLENGTH_8B;
+    xUARTHandle.Init.StopBits = UART_STOPBITS_1;
+    xUARTHandle.Init.Parity = UART_PARITY_NONE;
+    xUARTHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    xUARTHandle.Init.Mode = UART_MODE_TX_RX;
+    xUARTHandle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+    xUARTHandle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+    xUARTHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+    HAL_UART_Init( &xUARTHandle );
+    HAL_UARTEx_SetRxFifoThreshold( &xUARTHandle, UART_RXFIFO_THRESHOLD_1_4 );
+    HAL_UARTEx_EnableFifoMode( &xUARTHandle );
 
-	/* AIEC Common configuration: make CPU1 and CPU2 SWI line1 sensitive to
-	rising edge. */
-	HAL_EXTI_EdgeConfig( EXTI_LINE1, EXTI_RISING_EDGE );
+    /* AIEC Common configuration: make CPU1 and CPU2 SWI line1 sensitive to
+     * rising edge. */
+    HAL_EXTI_EdgeConfig( EXTI_LINE1, EXTI_RISING_EDGE );
 
-	/* Interrupt used for M7 to M4 notifications. */
-	HAL_NVIC_SetPriority( EXTI0_IRQn, 0xFU, 0U );
-	HAL_NVIC_EnableIRQ( EXTI0_IRQn );
+    /* Interrupt used for M7 to M4 notifications. */
+    HAL_NVIC_SetPriority( EXTI0_IRQn, 0xFU, 0U );
+    HAL_NVIC_EnableIRQ( EXTI0_IRQn );
 }

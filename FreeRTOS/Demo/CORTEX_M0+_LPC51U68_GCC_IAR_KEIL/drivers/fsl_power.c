@@ -3,14 +3,14 @@
  * Copyright 2016, NXP
  * All rights reserved.
  *
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #include "fsl_common.h"
 #include "fsl_power.h"
 /* Component ID definition, used by tools. */
 #ifndef FSL_COMPONENT_ID
-#define FSL_COMPONENT_ID "platform.drivers.power"
+    #define FSL_COMPONENT_ID    "platform.drivers.power"
 #endif
 
 /*******************************************************************************

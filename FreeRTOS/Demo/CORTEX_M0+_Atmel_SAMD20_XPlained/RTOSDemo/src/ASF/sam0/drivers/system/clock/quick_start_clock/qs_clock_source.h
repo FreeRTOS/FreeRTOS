@@ -95,8 +95,8 @@
  *
  * -# Write the new configuration to the DFLL module.
  *  \snippet qs_clock_source.c config_extosc32k_set_config
-
-
+ *
+ *
  * \section asfdoc_samd20_system_clock_basic_use_case_use_main Use Case
  *
  * \subsection asfdoc_samd20_system_clock_basic_use_case_code Code

@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -33,21 +33,33 @@
 #include "vect.h"
 #pragma section IntPRG
 
-// Exception(Supervisor Instruction)
-void Excep_SuperVisorInst(void){/* brk(); */}
+/* Exception(Supervisor Instruction) */
+void Excep_SuperVisorInst( void ) /* brk(); */
+{
+}
 
-// Exception(Undefined Instruction)
-void Excep_UndefinedInst(void){/* brk(); */}
+/* Exception(Undefined Instruction) */
+void Excep_UndefinedInst( void ) /* brk(); */
+{
+}
 
-// Exception(Floating Point)
-void Excep_FloatingPoint(void){/* brk(); */}
+/* Exception(Floating Point) */
+void Excep_FloatingPoint( void ) /* brk(); */
+{
+}
 
-// NMI
-void NonMaskableInterrupt(void){/* brk(); */}
+/* NMI */
+void NonMaskableInterrupt( void ) /* brk(); */
+{
+}
 
-// Dummy
-void Dummy(void){/* brk(); */}
+/* Dummy */
+void Dummy( void ) /* brk(); */
+{
+}
 
-// BRK
-void Excep_BRK(void){ wait(); }
-
+/* BRK */
+void Excep_BRK( void )
+{
+    wait();
+}

@@ -51,8 +51,8 @@
 #include "asf.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+ * or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
 
 /*-----------------------------------------------------------*/
 
@@ -66,122 +66,108 @@ static void prvSetupHardware( void );
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
-	extern void main_blinky( void );
+    extern void main_blinky( void );
 #else
-	extern void main_full( void );
+    extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file. */
+ * within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-	/* Configure the hardware ready to run the demo. */
-	prvSetupHardware();
+    /* Configure the hardware ready to run the demo. */
+    prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+     * of this file. */
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 
-	return 0;
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	sysclk_init();
-	board_init();
+    sysclk_init();
+    board_init();
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    /* Called if a call to pvPortMalloc() fails because there is insufficient
+     * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     * internally by FreeRTOS API functions that create tasks, queues, software
+     * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 
-	/* Force an assert. */
-	configASSERT( ( volatile void * ) NULL );
+    /* Force an assert. */
+    configASSERT( ( volatile void * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+    /* Run time stack overflow checking is performed if
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
 
-	/* Force an assert. */
-	configASSERT( ( volatile void * ) NULL );
+    /* Force an assert. */
+    configASSERT( ( volatile void * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeHeapSpace;
+    volatile size_t xFreeHeapSpace;
 
-	/* This is just a trivial example of an idle hook.  It is called on each
-	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-	idle task just queries the amount of FreeRTOS heap that remains.  See the
-	memory management section on the http://www.FreeRTOS.org web site for memory
-	management options.  If there is a lot of heap memory free then the
-	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();
+    /* This is just a trivial example of an idle hook.  It is called on each
+     * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+     * idle task just queries the amount of FreeRTOS heap that remains.  See the
+     * memory management section on the http://www.FreeRTOS.org web site for memory
+     * management options.  If there is a lot of heap memory free then the
+     * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+     * RAM. */
+    xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
-	( void ) xFreeHeapSpace;
+    /* Remove compiler warning about xFreeHeapSpace being set but never used. */
+    ( void ) xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
-	{
-	extern void vFullDemoTickHook( void );
-	
-		/* The full demo includes some tests that execute in an interrupt
-		context, and the tick hook is used for this purpose. */
-		vFullDemoTickHook();	
-	}
-	#endif
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+    {
+        extern void vFullDemoTickHook( void );
+
+        /* The full demo includes some tests that execute in an interrupt
+         * context, and the tick hook is used for this purpose. */
+        vFullDemoTickHook();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -265,73 +251,76 @@ void vApplicationTickHook( void )
  * -# The LED(s) should start blinking on the board. In the terminal window, the
  *    following text should appear (values depend on the board and chip used):
  *    \code
-	-- Getting Started Example xxx --
-	-- xxxxxx-xx
-	-- Compiled: xxx xx xxxx xx:xx:xx --
-\endcode
+ *  -- Getting Started Example xxx --
+ *  -- xxxxxx-xx
+ *  -- Compiled: xxx xx xxxx xx:xx:xx --
+ * \endcode
  * -# Pressing and release button 1 should make one LED stop & restart
  *    blinking.
  * -# If the button 2 available, pressing button 2 should make the other LED
  *    stop & restart blinking.
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "FreeRTOS.h"
-#include "task.h"
+    #include "FreeRTOS.h"
+    #include "task.h"
 
-#include "asf.h"
-#include "stdio_serial.h"
-#include "conf_board.h"
-#include "conf_clock.h"
+    #include "asf.h"
+    #include "stdio_serial.h"
+    #include "conf_board.h"
+    #include "conf_clock.h"
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
-// [main_def_pio_irq_prior]
-#define IRQ_PRIOR_PIO    0
-// [main_def_pio_irq_prior]
+/* [main_def_pio_irq_prior] */
+    #define IRQ_PRIOR_PIO    0
+/* [main_def_pio_irq_prior] */
 
 /** LED0 blink time, LED1 blink half this time, in ms */
-#define BLINK_PERIOD     1000
+    #define BLINK_PERIOD    1000
 
-#define STRING_EOL    "\r"
-#define STRING_HEADER "-- Getting Started Example --\r\n" \
-		"-- "BOARD_NAME" --\r\n" \
-		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+    #define STRING_EOL      "\r"
+    #define STRING_HEADER               \
+    "-- Getting Started Example --\r\n" \
+    "-- "BOARD_NAME " --\r\n"           \
+                    "-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
 /** LED0 blinking control. */
-// [main_var_led0_control]
-volatile bool g_b_led0_active = true;
-// [main_var_led0_control]
+/* [main_var_led0_control] */
+    volatile bool g_b_led0_active = true;
+/* [main_var_led0_control] */
 
-#ifdef LED1_GPIO
+    #ifdef LED1_GPIO
 /** LED1 blinking control. */
-// [main_var_led1_control]
-volatile bool g_b_led1_active = true;
-// [main_var_led1_control]
-#endif
+/* [main_var_led1_control] */
+        volatile bool g_b_led1_active = true;
+/* [main_var_led1_control] */
+    #endif
 
 /** Global g_ul_ms_ticks in milliseconds since start of application */
-// [main_var_ticks]
-volatile uint32_t g_ul_ms_ticks = 0;
-// [main_var_ticks]
+/* [main_var_ticks] */
+    volatile uint32_t g_ul_ms_ticks = 0;
+/* [main_var_ticks] */
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file. */
-void vApplicationMallocFailedHook( void );
-void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
-void vApplicationTickHook( void );
+ * within this file. */
+    void vApplicationMallocFailedHook( void );
+    void vApplicationIdleHook( void );
+    void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                        char * pcTaskName );
+    void vApplicationTickHook( void );
 
 
 /**
@@ -339,35 +328,43 @@ void vApplicationTickHook( void );
  *
  *  Change active states of LEDs when corresponding button events happened.
  */
-static void ProcessButtonEvt(uint8_t uc_button)
-{
-// [main_button1_evnt_process]
-	if (uc_button == 0) {
-		g_b_led0_active = !g_b_led0_active;
-		if (!g_b_led0_active) {
-			ioport_set_pin_level(LED0_GPIO, IOPORT_PIN_LEVEL_HIGH);
-		}
-	}
-// [main_button1_evnt_process]
-#ifdef LED1_GPIO 
-	else {
-// [main_button2_evnt_process]
-		g_b_led1_active = !g_b_led1_active;
+    static void ProcessButtonEvt( uint8_t uc_button )
+    {
+/* [main_button1_evnt_process] */
+        if( uc_button == 0 )
+        {
+            g_b_led0_active = !g_b_led0_active;
 
-		/* Enable LED#2 and TC if they were enabled */
-		if (g_b_led1_active) {
-			ioport_set_pin_level(LED1_GPIO, IOPORT_PIN_LEVEL_LOW);
-			tc_start(TC0, 0);
-		}
-		/* Disable LED#2 and TC if they were disabled */
-		else {
-			ioport_set_pin_level(LED1_GPIO, IOPORT_PIN_LEVEL_HIGH);
-			tc_stop(TC0, 0);
-		}
-// [main_button2_evnt_process]
-	}
-#endif
-}
+            if( !g_b_led0_active )
+            {
+                ioport_set_pin_level( LED0_GPIO, IOPORT_PIN_LEVEL_HIGH );
+            }
+        }
+
+/* [main_button1_evnt_process] */
+        #ifdef LED1_GPIO
+            else
+            {
+/* [main_button2_evnt_process] */
+                g_b_led1_active = !g_b_led1_active;
+
+                /* Enable LED#2 and TC if they were enabled */
+                if( g_b_led1_active )
+                {
+                    ioport_set_pin_level( LED1_GPIO, IOPORT_PIN_LEVEL_LOW );
+                    tc_start( TC0, 0 );
+                }
+                /* Disable LED#2 and TC if they were disabled */
+                else
+                {
+                    ioport_set_pin_level( LED1_GPIO, IOPORT_PIN_LEVEL_HIGH );
+                    tc_stop( TC0, 0 );
+                }
+
+/* [main_button2_evnt_process] */
+            }
+        #endif /* ifdef LED1_GPIO */
+    }
 
 /**
  *  \brief Handler for System Tick interrupt.
@@ -375,42 +372,47 @@ static void ProcessButtonEvt(uint8_t uc_button)
  *  Process System Tick Event
  *  Increments the g_ul_ms_ticks counter.
  */
-// [main_systick_handler]
-void _SysTick_Handler(void)
-{
-	g_ul_ms_ticks++;
-}
-// [main_systick_handler]
+/* [main_systick_handler] */
+    void _SysTick_Handler( void )
+    {
+        g_ul_ms_ticks++;
+    }
+/* [main_systick_handler] */
 
 /**
  *  \brief Handler for Button 1 rising edge interrupt.
  *
  *  Handle process led1 status change.
  */
-// [main_button1_handler]
-static void Button1_Handler(uint32_t id, uint32_t mask)
-{
-	if (PIN_PUSHBUTTON_1_ID == id && PIN_PUSHBUTTON_1_MASK == mask) {
-		ProcessButtonEvt(0);
-	}
-}
-// [main_button1_handler]
+/* [main_button1_handler] */
+    static void Button1_Handler( uint32_t id,
+                                 uint32_t mask )
+    {
+        if( ( PIN_PUSHBUTTON_1_ID == id ) && ( PIN_PUSHBUTTON_1_MASK == mask ) )
+        {
+            ProcessButtonEvt( 0 );
+        }
+    }
+/* [main_button1_handler] */
 
-#ifndef BOARD_NO_PUSHBUTTON_2
+    #ifndef BOARD_NO_PUSHBUTTON_2
+
 /**
  *  \brief Handler for Button 2 falling edge interrupt.
  *
  *  Handle process led2 status change.
  */
-// [main_button2_handler] 
-static void Button2_Handler(uint32_t id, uint32_t mask)
-{
-	if (PIN_PUSHBUTTON_2_ID == id && PIN_PUSHBUTTON_2_MASK == mask) {
-		ProcessButtonEvt(1);
-	}
-}
-// [main_button2_handler]
-#endif
+/* [main_button2_handler] */
+        static void Button2_Handler( uint32_t id,
+                                     uint32_t mask )
+        {
+            if( ( PIN_PUSHBUTTON_2_ID == id ) && ( PIN_PUSHBUTTON_2_MASK == mask ) )
+            {
+                ProcessButtonEvt( 1 );
+            }
+        }
+/* [main_button2_handler] */
+    #endif /* ifndef BOARD_NO_PUSHBUTTON_2 */
 
 /**
  *  \brief Configure the Pushbuttons
@@ -418,123 +420,125 @@ static void Button2_Handler(uint32_t id, uint32_t mask)
  *  Configure the PIO as inputs and generate corresponding interrupt when
  *  pressed or released.
  */
-static void configure_buttons(void)
-{
-// [main_button1_configure]
-	/* Configure Pushbutton 1 */
-	pmc_enable_periph_clk(PIN_PUSHBUTTON_1_ID);
-	pio_set_debounce_filter(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK, 10);
-	/* Interrupt on rising edge  */
-	pio_handler_set(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID,
-			PIN_PUSHBUTTON_1_MASK, PIN_PUSHBUTTON_1_ATTR, Button1_Handler);
-	NVIC_EnableIRQ((IRQn_Type) PIN_PUSHBUTTON_1_ID);
-	pio_handler_set_priority(PIN_PUSHBUTTON_1_PIO,
-			(IRQn_Type) PIN_PUSHBUTTON_1_ID, IRQ_PRIOR_PIO);
-	pio_enable_interrupt(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK);
-// [main_button1_configure]
-#ifndef BOARD_NO_PUSHBUTTON_2
-// [main_button2_configure]
-	/* Configure Pushbutton 2 */
-	pmc_enable_periph_clk(PIN_PUSHBUTTON_2_ID);
-	pio_set_debounce_filter(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK, 10);
-	/* Interrupt on falling edge */
-	pio_handler_set(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_ID,
-			PIN_PUSHBUTTON_2_MASK, PIN_PUSHBUTTON_2_ATTR, Button2_Handler);
-	NVIC_EnableIRQ((IRQn_Type) PIN_PUSHBUTTON_2_ID);
-	pio_handler_set_priority(PIN_PUSHBUTTON_2_PIO,
-			(IRQn_Type) PIN_PUSHBUTTON_2_ID, IRQ_PRIOR_PIO);
-	pio_enable_interrupt(PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK);
-// [main_button2_configure]
-#endif
-}
+    static void configure_buttons( void )
+    {
+/* [main_button1_configure] */
+        /* Configure Pushbutton 1 */
+        pmc_enable_periph_clk( PIN_PUSHBUTTON_1_ID );
+        pio_set_debounce_filter( PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK, 10 );
+        /* Interrupt on rising edge  */
+        pio_handler_set( PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID,
+                         PIN_PUSHBUTTON_1_MASK, PIN_PUSHBUTTON_1_ATTR, Button1_Handler );
+        NVIC_EnableIRQ( ( IRQn_Type ) PIN_PUSHBUTTON_1_ID );
+        pio_handler_set_priority( PIN_PUSHBUTTON_1_PIO,
+                                  ( IRQn_Type ) PIN_PUSHBUTTON_1_ID, IRQ_PRIOR_PIO );
+        pio_enable_interrupt( PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK );
+/* [main_button1_configure] */
+        #ifndef BOARD_NO_PUSHBUTTON_2
+/* [main_button2_configure] */
+            /* Configure Pushbutton 2 */
+            pmc_enable_periph_clk( PIN_PUSHBUTTON_2_ID );
+            pio_set_debounce_filter( PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK, 10 );
+            /* Interrupt on falling edge */
+            pio_handler_set( PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_ID,
+                             PIN_PUSHBUTTON_2_MASK, PIN_PUSHBUTTON_2_ATTR, Button2_Handler );
+            NVIC_EnableIRQ( ( IRQn_Type ) PIN_PUSHBUTTON_2_ID );
+            pio_handler_set_priority( PIN_PUSHBUTTON_2_PIO,
+                                      ( IRQn_Type ) PIN_PUSHBUTTON_2_ID, IRQ_PRIOR_PIO );
+            pio_enable_interrupt( PIN_PUSHBUTTON_2_PIO, PIN_PUSHBUTTON_2_MASK );
+/* [main_button2_configure] */
+        #endif /* ifndef BOARD_NO_PUSHBUTTON_2 */
+    }
 
 /**
  *  Interrupt handler for TC0 interrupt. Toggles the state of LED\#2.
  */
-// [main_tc0_handler]
-#ifndef BOARD_NO_LED_1
-void TC0_Handler(void)
-{
-	volatile uint32_t ul_dummy;
+/* [main_tc0_handler] */
+    #ifndef BOARD_NO_LED_1
+        void TC0_Handler( void )
+        {
+            volatile uint32_t ul_dummy;
 
-	/* Clear status bit to acknowledge interrupt */
-	ul_dummy = tc_get_status(TC0, 0);
+            /* Clear status bit to acknowledge interrupt */
+            ul_dummy = tc_get_status( TC0, 0 );
 
-	/* Avoid compiler warning */
-	UNUSED(ul_dummy);
+            /* Avoid compiler warning */
+            UNUSED( ul_dummy );
 
-#ifdef LED1_GPIO
-	/** Toggle LED state. */
-	ioport_toggle_pin_level(LED1_GPIO);
-#endif
+            #ifdef LED1_GPIO
+                /** Toggle LED state. */
+                ioport_toggle_pin_level( LED1_GPIO );
+            #endif
 
-	printf("2 ");
-}
-// [main_tc0_handler]
+            printf( "2 " );
+        }
+/* [main_tc0_handler] */
 
 /**
  *  Configure Timer Counter 0 to generate an interrupt every 250ms.
  */
-// [main_tc_configure]
-static void configure_tc(void)
-{
-	uint32_t ul_div;
-	uint32_t ul_tcclks;
-	uint32_t ul_sysclk = sysclk_get_cpu_hz();
+/* [main_tc_configure] */
+        static void configure_tc( void )
+        {
+            uint32_t ul_div;
+            uint32_t ul_tcclks;
+            uint32_t ul_sysclk = sysclk_get_cpu_hz();
 
-	/* Configure PMC */
-	pmc_enable_periph_clk(ID_TC0);
-#if SAMG55
-	/* Enable PCK output */
-	pmc_disable_pck(PMC_PCK_3);
-	pmc_switch_pck_to_sclk(PMC_PCK_3, PMC_PCK_PRES_CLK_1);
-	pmc_enable_pck(PMC_PCK_3);
-#endif
+            /* Configure PMC */
+            pmc_enable_periph_clk( ID_TC0 );
+            #if SAMG55
+                /* Enable PCK output */
+                pmc_disable_pck( PMC_PCK_3 );
+                pmc_switch_pck_to_sclk( PMC_PCK_3, PMC_PCK_PRES_CLK_1 );
+                pmc_enable_pck( PMC_PCK_3 );
+            #endif
 
-	/** Configure TC for a 4Hz frequency and trigger on RC compare. */
-	tc_find_mck_divisor(4, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
-	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 4);
+            /** Configure TC for a 4Hz frequency and trigger on RC compare. */
+            tc_find_mck_divisor( 4, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk );
+            tc_init( TC0, 0, ul_tcclks | TC_CMR_CPCTRG );
+            tc_write_rc( TC0, 0, ( ul_sysclk / ul_div ) / 4 );
 
-	/* Configure and enable interrupt on RC compare */
-	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
-	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
+            /* Configure and enable interrupt on RC compare */
+            NVIC_EnableIRQ( ( IRQn_Type ) ID_TC0 );
+            tc_enable_interrupt( TC0, 0, TC_IER_CPCS );
 
-#ifdef LED1_GPIO
-	/** Start the counter if LED1 is enabled. */
-	if (g_b_led1_active) {
-		tc_start(TC0, 0);
-	}
-#else
-	tc_start(TC0, 0);
-#endif
-}
-#endif
-// [main_tc_configure]
+            #ifdef LED1_GPIO
+                /** Start the counter if LED1 is enabled. */
+                if( g_b_led1_active )
+                {
+                    tc_start( TC0, 0 );
+                }
+            #else
+                tc_start( TC0, 0 );
+            #endif
+        }
+    #endif /* ifndef BOARD_NO_LED_1 */
+/* [main_tc_configure] */
 
 /**
  *  Configure UART console.
  */
-// [main_console_configure]
-static void configure_console(void)
-{
-	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-#ifdef CONF_UART_CHAR_LENGTH
-		.charlength = CONF_UART_CHAR_LENGTH,
-#endif
-		.paritytype = CONF_UART_PARITY,
-#ifdef CONF_UART_STOP_BITS
-		.stopbits = CONF_UART_STOP_BITS,
-#endif
-	};
+/* [main_console_configure] */
+    static void configure_console( void )
+    {
+        const usart_serial_options_t uart_serial_options =
+        {
+            .baudrate       = CONF_UART_BAUDRATE,
+            #ifdef CONF_UART_CHAR_LENGTH
+                .charlength = CONF_UART_CHAR_LENGTH,
+            #endif
+            .paritytype     = CONF_UART_PARITY,
+            #ifdef CONF_UART_STOP_BITS
+                .stopbits   = CONF_UART_STOP_BITS,
+            #endif
+        };
 
-	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
-}
+        /* Configure console UART. */
+        sysclk_enable_peripheral_clock( CONSOLE_UART_ID );
+        stdio_serial_init( CONF_UART, &uart_serial_options );
+    }
 
-// [main_console_configure]
+/* [main_console_configure] */
 
 /**
  * \brief Wait for the given number of milliseconds (using the g_ul_ms_ticks
@@ -542,150 +546,167 @@ static void configure_console(void)
  *
  * \param ul_dly_ticks  Delay to wait for, in milliseconds.
  */
-// [main_ms_delay]
-static void mdelay(uint32_t ul_dly_ticks)
-{
-	uint32_t ul_cur_ticks;
+/* [main_ms_delay] */
+    static void mdelay( uint32_t ul_dly_ticks )
+    {
+        uint32_t ul_cur_ticks;
 
-	ul_cur_ticks = g_ul_ms_ticks;
-	while ((g_ul_ms_ticks - ul_cur_ticks) < ul_dly_ticks);
-}
-// [main_ms_delay]
+        ul_cur_ticks = g_ul_ms_ticks;
+
+        while( ( g_ul_ms_ticks - ul_cur_ticks ) < ul_dly_ticks )
+        {
+        }
+    }
+/* [main_ms_delay] */
 
 /**
  *  \brief getting-started Application entry point.
  *
  *  \return Unused (ANSI-C compatibility).
  */
-// [main]
-int main(void)
-{
-//! [main_step_sys_init]
-	/* Initialize the SAM system */
-	sysclk_init();
-	board_init();
-//! [main_step_sys_init]
+/* [main] */
+    int main( void )
+    {
+/*! [main_step_sys_init] */
+        /* Initialize the SAM system */
+        sysclk_init();
+        board_init();
+/*! [main_step_sys_init] */
 
-#ifndef BOARD_NO_PUSHBUTTON_2
-#if (SAMV71 || SAMV70 || SAMS70 || SAME70)
-	if (GPIO_PUSH_BUTTON_2 == PIO_PB12_IDX) {
-		matrix_set_system_io(matrix_get_system_io() | CCFG_SYSIO_SYSIO12);
-	}
-	ioport_set_pin_dir(GPIO_PUSH_BUTTON_2, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_FLAGS);
-	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_SENSE);
-#endif
-#endif
-//! [main_step_console_init]
-	/* Initialize the console uart */
-	configure_console();
-//! [main_step_console_init]
+        #ifndef BOARD_NO_PUSHBUTTON_2
+            #if ( SAMV71 || SAMV70 || SAMS70 || SAME70 )
+                if( GPIO_PUSH_BUTTON_2 == PIO_PB12_IDX )
+                {
+                    matrix_set_system_io( matrix_get_system_io() | CCFG_SYSIO_SYSIO12 );
+                }
 
-	/* Output example information */
-	puts(STRING_HEADER);
+                ioport_set_pin_dir( GPIO_PUSH_BUTTON_2, IOPORT_DIR_INPUT );
+                ioport_set_pin_mode( GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_FLAGS );
+                ioport_set_pin_sense_mode( GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_SENSE );
+            #endif
+        #endif /* ifndef BOARD_NO_PUSHBUTTON_2 */
+/*! [main_step_console_init] */
+        /* Initialize the console uart */
+        configure_console();
+/*! [main_step_console_init] */
 
-	/* Configure systick for 1 ms */
-	puts("Configure system tick to get 1ms tick period.\r");
-//! [main_step_systick_init]
-	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
-		puts("-F- Systick configuration error\r");
-		while (1);
-	}
-//! [main_step_systick_init]
+        /* Output example information */
+        puts( STRING_HEADER );
 
-#ifndef BOARD_NO_LED_1
-	puts("Configure TC.\r");
-//! [main_step_tc_init]
-	configure_tc();
-//! [main_step_tc_init]
-#endif
+        /* Configure systick for 1 ms */
+        puts( "Configure system tick to get 1ms tick period.\r" );
 
-	puts("Configure buttons with debouncing.\r");
-//! [main_step_btn_init]
-	configure_buttons();
-//! [main_step_btn_init]
+/*! [main_step_systick_init] */
+        if( SysTick_Config( sysclk_get_cpu_hz() / 1000 ) )
+        {
+            puts( "-F- Systick configuration error\r" );
 
-	printf("Press %s to Start/Stop the %s blinking.\r\n",
-			PUSHBUTTON_1_NAME, LED_0_NAME);
+            while( 1 )
+            {
+            }
+        }
 
-#ifndef BOARD_NO_PUSHBUTTON_2
-	printf("Press %s to Start/Stop the %s blinking.\r\n",
-			PUSHBUTTON_2_NAME, LED_1_NAME);
-#endif
+/*! [main_step_systick_init] */
 
-//! [main_step_loop]
-	while (1) {
-		/* Wait for LED to be active */
-		while (!g_b_led0_active);
+        #ifndef BOARD_NO_LED_1
+            puts( "Configure TC.\r" );
+/*! [main_step_tc_init] */
+            configure_tc();
+/*! [main_step_tc_init] */
+        #endif
 
-		/* Toggle LED state if active */
-		if (g_b_led0_active) {
-			ioport_toggle_pin_level(LED0_GPIO);
-			printf("1 ");
-		}
+        puts( "Configure buttons with debouncing.\r" );
+/*! [main_step_btn_init] */
+        configure_buttons();
+/*! [main_step_btn_init] */
 
-		/* Wait for 500ms */
-		mdelay(500);
-	}
-//! [main_step_loop]
-}
-// [main]
-/// @cond 0
+        printf( "Press %s to Start/Stop the %s blinking.\r\n",
+                PUSHBUTTON_1_NAME, LED_0_NAME );
+
+        #ifndef BOARD_NO_PUSHBUTTON_2
+            printf( "Press %s to Start/Stop the %s blinking.\r\n",
+                    PUSHBUTTON_2_NAME, LED_1_NAME );
+        #endif
+
+/*! [main_step_loop] */
+        while( 1 )
+        {
+            /* Wait for LED to be active */
+            while( !g_b_led0_active )
+            {
+            }
+
+            /* Toggle LED state if active */
+            if( g_b_led0_active )
+            {
+                ioport_toggle_pin_level( LED0_GPIO );
+                printf( "1 " );
+            }
+
+            /* Wait for 500ms */
+            mdelay( 500 );
+        }
+
+/*! [main_step_loop] */
+    }
+/* [main] */
+/*/ @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
-void vApplicationMallocFailedHook( void )
-{
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    void vApplicationMallocFailedHook( void )
+    {
+        /* Called if a call to pvPortMalloc() fails because there is insufficient
+         * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+         * internally by FreeRTOS API functions that create tasks, queues, software
+         * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+         * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 
-	/* Force an assert. */
-	configASSERT( ( volatile void * ) NULL );
-}
+        /* Force an assert. */
+        configASSERT( ( volatile void * ) NULL );
+    }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
-{
-	( void ) pcTaskName;
-	( void ) pxTask;
+    void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                        char * pcTaskName )
+    {
+        ( void ) pcTaskName;
+        ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+        /* Run time stack overflow checking is performed if
+         * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+         * function is called if a stack overflow is detected. */
 
-	/* Force an assert. */
-	configASSERT( ( volatile void * ) NULL );
-}
+        /* Force an assert. */
+        configASSERT( ( volatile void * ) NULL );
+    }
 /*-----------------------------------------------------------*/
 
-void vApplicationIdleHook( void )
-{
-volatile size_t xFreeHeapSpace;
+    void vApplicationIdleHook( void )
+    {
+        volatile size_t xFreeHeapSpace;
 
-	/* This is just a trivial example of an idle hook.  It is called on each
-	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-	idle task just queries the amount of FreeRTOS heap that remains.  See the
-	memory management section on the http://www.FreeRTOS.org web site for memory
-	management options.  If there is a lot of heap memory free then the
-	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();
+        /* This is just a trivial example of an idle hook.  It is called on each
+         * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+         * idle task just queries the amount of FreeRTOS heap that remains.  See the
+         * memory management section on the http://www.FreeRTOS.org web site for memory
+         * management options.  If there is a lot of heap memory free then the
+         * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+         * RAM. */
+        xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
-	( void ) xFreeHeapSpace;
-}
+        /* Remove compiler warning about xFreeHeapSpace being set but never used. */
+        ( void ) xFreeHeapSpace;
+    }
 /*-----------------------------------------------------------*/
 
-void vApplicationTickHook( void )
-{
-}
+    void vApplicationTickHook( void )
+    {
+    }
 /*-----------------------------------------------------------*/
 
-#endif
+#endif /* if 0 */

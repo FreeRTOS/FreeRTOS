@@ -30,26 +30,27 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xiicps_hw.c
-* @addtogroup iicps_v3_5
-* @{
-*
-* Contains implementation of required functions for providing the reset sequence
-* to the i2c interface
-*
-* <pre> MODIFICATION HISTORY:
-*
-* Ver   Who     Date     Changes
-* ----- ------  -------- --------------------------------------------
-* 1.04a kpc     11/07/13 First release
-* 3.0	sk		11/03/14 Modified TimeOut Register value to 0xFF
-*				01/31/15 Modified the code according to MISRAC 2012 Compliant.
-*
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xiicps_hw.c
+ * @addtogroup iicps_v3_5
+ * @{
+ *
+ * Contains implementation of required functions for providing the reset sequence
+ * to the i2c interface
+ *
+ * <pre> MODIFICATION HISTORY:
+ *
+ * Ver   Who     Date     Changes
+ * ----- ------  -------- --------------------------------------------
+ * 1.04a kpc     11/07/13 First release
+ * 3.0	sk		11/03/14 Modified TimeOut Register value to 0xFF
+ *				01/31/15 Modified the code according to MISRAC 2012 Compliant.
+ *
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -65,47 +66,48 @@
 
 /************************** Variable Definitions *****************************/
 /*****************************************************************************/
-/**
-* This function perform the reset sequence to the given I2c interface by
-* configuring the appropriate control bits in the I2c specifc registers
-* the i2cps reset squence involves the following steps
-*	Disable all the interuupts
-*	Clear the status
-*	Clear FIFO's and disable hold bit
-*	Clear the line status
-*	Update relevant config registers with reset values
-*
-* @param   BaseAddress of the interface
-*
-* @return N/A
-*
-* @note
-* This function will not modify the slcr registers that are relavant for
-* I2c controller
-******************************************************************************/
-void XIicPs_ResetHw(u32 BaseAddress)
-{
-	u32 RegVal;
 
-	/* Disable all the interrupts */
-	XIicPs_WriteReg(BaseAddress, XIICPS_IDR_OFFSET, XIICPS_IXR_ALL_INTR_MASK);
-	/* Clear the interrupt status */
-	RegVal = XIicPs_ReadReg(BaseAddress,XIICPS_ISR_OFFSET);
-	XIicPs_WriteReg(BaseAddress, XIICPS_ISR_OFFSET, RegVal);
-	/* Clear the hold bit,master enable bit and ack bit */
-	RegVal = XIicPs_ReadReg(BaseAddress,XIICPS_CR_OFFSET);
-	RegVal &= ~(XIICPS_CR_HOLD_MASK|XIICPS_CR_MS_MASK|XIICPS_CR_ACKEN_MASK);
-	/* Clear the fifos */
-	RegVal |= XIICPS_CR_CLR_FIFO_MASK;
-	XIicPs_WriteReg(BaseAddress, XIICPS_CR_OFFSET, RegVal);
-	/* Clear the timeout register */
-	XIicPs_WriteReg(BaseAddress, XIICPS_TIME_OUT_OFFSET, XIICPS_TO_RESET_VALUE);
-	/* Clear the transfer size register */
-	XIicPs_WriteReg(BaseAddress, XIICPS_TRANS_SIZE_OFFSET, 0x0U);
-	/* Clear the status register */
-	RegVal = XIicPs_ReadReg(BaseAddress,XIICPS_SR_OFFSET);
-	XIicPs_WriteReg(BaseAddress, XIICPS_SR_OFFSET, RegVal);
-	/* Update the configuraqtion register with reset value */
-	XIicPs_WriteReg(BaseAddress, XIICPS_CR_OFFSET, 0x0U);
+/**
+ * This function perform the reset sequence to the given I2c interface by
+ * configuring the appropriate control bits in the I2c specifc registers
+ * the i2cps reset squence involves the following steps
+ *	Disable all the interuupts
+ *	Clear the status
+ *	Clear FIFO's and disable hold bit
+ *	Clear the line status
+ *	Update relevant config registers with reset values
+ *
+ * @param   BaseAddress of the interface
+ *
+ * @return N/A
+ *
+ * @note
+ * This function will not modify the slcr registers that are relavant for
+ * I2c controller
+ ******************************************************************************/
+void XIicPs_ResetHw( u32 BaseAddress )
+{
+    u32 RegVal;
+
+    /* Disable all the interrupts */
+    XIicPs_WriteReg( BaseAddress, XIICPS_IDR_OFFSET, XIICPS_IXR_ALL_INTR_MASK );
+    /* Clear the interrupt status */
+    RegVal = XIicPs_ReadReg( BaseAddress, XIICPS_ISR_OFFSET );
+    XIicPs_WriteReg( BaseAddress, XIICPS_ISR_OFFSET, RegVal );
+    /* Clear the hold bit,master enable bit and ack bit */
+    RegVal = XIicPs_ReadReg( BaseAddress, XIICPS_CR_OFFSET );
+    RegVal &= ~( XIICPS_CR_HOLD_MASK | XIICPS_CR_MS_MASK | XIICPS_CR_ACKEN_MASK );
+    /* Clear the fifos */
+    RegVal |= XIICPS_CR_CLR_FIFO_MASK;
+    XIicPs_WriteReg( BaseAddress, XIICPS_CR_OFFSET, RegVal );
+    /* Clear the timeout register */
+    XIicPs_WriteReg( BaseAddress, XIICPS_TIME_OUT_OFFSET, XIICPS_TO_RESET_VALUE );
+    /* Clear the transfer size register */
+    XIicPs_WriteReg( BaseAddress, XIICPS_TRANS_SIZE_OFFSET, 0x0U );
+    /* Clear the status register */
+    RegVal = XIicPs_ReadReg( BaseAddress, XIICPS_SR_OFFSET );
+    XIicPs_WriteReg( BaseAddress, XIICPS_SR_OFFSET, RegVal );
+    /* Update the configuraqtion register with reset value */
+    XIicPs_WriteReg( BaseAddress, XIICPS_CR_OFFSET, 0x0U );
 }
 /** @} */

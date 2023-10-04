@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -82,16 +83,17 @@
 
 /*----------------------------------------------------------------------------
  *        Exported functions
-
+ *
  *----------------------------------------------------------------------------*/
+
 /**
  * \brief Enables the MPU module.
  *
  * \param dwMPUEnable  Enable/Disable the memory region.
  */
-void mpu_enable(uint32_t dw_mpu_enable)
+void mpu_enable( uint32_t dw_mpu_enable )
 {
-	MPU->CTRL = dw_mpu_enable ;
+    MPU->CTRL = dw_mpu_enable;
 }
 
 /**
@@ -99,17 +101,17 @@ void mpu_enable(uint32_t dw_mpu_enable)
  *
  * \param dwRegionNum  The memory region to be active.
  */
-void mpu_set_region_num(uint32_t dw_region_num)
+void mpu_set_region_num( uint32_t dw_region_num )
 {
-	MPU->RNR = dw_region_num;
+    MPU->RNR = dw_region_num;
 }
 
 /**
  * \brief Disable the current active region.
  */
-void mpu_disable_region(void)
+void mpu_disable_region( void )
 {
-	MPU->RASR &= 0xfffffffe;
+    MPU->RASR &= 0xfffffffe;
 }
 
 /**
@@ -118,31 +120,37 @@ void mpu_disable_region(void)
  * \param dwRegionBaseAddr  Memory region base address.
  * \param dwRegionAttr  Memory region attributes.
  */
-void mpu_set_region(uint32_t dw_region_base_addr, uint32_t dw_region_attr)
+void mpu_set_region( uint32_t dw_region_base_addr,
+                     uint32_t dw_region_attr )
 {
-	MPU->RBAR = dw_region_base_addr;
-	MPU->RASR = dw_region_attr;
+    MPU->RBAR = dw_region_base_addr;
+    MPU->RASR = dw_region_attr;
 }
 
 
 /**
  * \brief Calculate region size for the RASR.
  */
-uint32_t mpu_cal_mpu_region_size(uint32_t dw_actual_size_in_bytes)
+uint32_t mpu_cal_mpu_region_size( uint32_t dw_actual_size_in_bytes )
 {
-	uint32_t dwRegionSize = 32;
-	uint32_t dwReturnValue = 4;
+    uint32_t dwRegionSize = 32;
+    uint32_t dwReturnValue = 4;
 
-	while( dwReturnValue < 31 ) {
-		if( dw_actual_size_in_bytes <= dwRegionSize ) {
-			break;
-		} else {
-			dwReturnValue++;
-		}
-		dwRegionSize <<= 1;
-	}
+    while( dwReturnValue < 31 )
+    {
+        if( dw_actual_size_in_bytes <= dwRegionSize )
+        {
+            break;
+        }
+        else
+        {
+            dwReturnValue++;
+        }
 
-	return ( dwReturnValue << 1 );
+        dwRegionSize <<= 1;
+    }
+
+    return( dwReturnValue << 1 );
 }
 
 
@@ -151,30 +159,31 @@ uint32_t mpu_cal_mpu_region_size(uint32_t dw_actual_size_in_bytes)
  *
  *  \return Unused (ANSI-C compatibility).
  */
-void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, uint32_t dw_region_attr)
+void mpu_update_regions( uint32_t dw_region_num,
+                         uint32_t dw_region_base_addr,
+                         uint32_t dw_region_attr )
 {
+    /* Disable interrupt */
+    __disable_irq();
 
-	/* Disable interrupt */
-	__disable_irq();
+    /* Clean up data and instruction buffer */
+    __DSB();
+    __ISB();
 
-	/* Clean up data and instruction buffer */
-	__DSB();
-	__ISB();
+    /* Set active region */
+    mpu_set_region_num( dw_region_num );
 
-	/* Set active region */
-	mpu_set_region_num(dw_region_num);
+    /* Disable region */
+    mpu_disable_region();
 
-	/* Disable region */
-	mpu_disable_region();
+    /* Update region attribute */
+    mpu_set_region( dw_region_base_addr, dw_region_attr );
 
-	/* Update region attribute */
-	mpu_set_region( dw_region_base_addr, dw_region_attr);
+    /* Clean up data and instruction buffer to make the new region taking
+     * effect at once */
+    __DSB();
+    __ISB();
 
-	/* Clean up data and instruction buffer to make the new region taking
-	   effect at once */
-	__DSB();
-	__ISB();
-
-	/* Enable the interrupt */
-	__enable_irq();
+    /* Enable the interrupt */
+    __enable_irq();
 }

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,35 +27,35 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !!!Purpose
-/// 
-/// Simple driver for the LCD, which takes care of the initialization.
-/// 
-/// !!!Usage
-/// 
-/// -# Call LCDD_Initialize to configure the LCD controller.
-/// -# Set the buffer displayed by the LCD with LCDD_DisplayBuffer if using
-///    peripheral LCDC, or start displaying with LCDD_Start if using HX8347.
-//------------------------------------------------------------------------------
- 
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !!!Purpose */
+/*/ */
+/*/ Simple driver for the LCD, which takes care of the initialization. */
+/*/ */
+/*/ !!!Usage */
+/*/ */
+/*/ -# Call LCDD_Initialize to configure the LCD controller. */
+/*/ -# Set the buffer displayed by the LCD with LCDD_DisplayBuffer if using */
+/*/    peripheral LCDC, or start displaying with LCDD_Start if using HX8347. */
+/*------------------------------------------------------------------------------ */
+
 #ifndef LCDD_H
 #define LCDD_H
- 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
 
-extern void LCDD_Initialize(void);                 // For peripheral LCDC & HX8347
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void * LCDD_DisplayBuffer(void *pBuffer);   // For peripheral LCDC only
+extern void LCDD_Initialize( void );                /* For peripheral LCDC & HX8347 */
 
-extern void LCDD_Start(void);                      // For HX8347 only
+extern void * LCDD_DisplayBuffer( void * pBuffer ); /* For peripheral LCDC only */
 
-extern void LCDD_Stop(void);                       // For peripheral LCDC & HX8347
+extern void LCDD_Start( void );                     /* For HX8347 only */
 
-extern void LCDD_SetBacklight (unsigned int step); // For peripheral LCDC only
+extern void LCDD_Stop( void );                      /* For peripheral LCDC & HX8347 */
+
+extern void LCDD_SetBacklight( unsigned int step ); /* For peripheral LCDC only */
 
 #endif //#ifndef LCDD_H

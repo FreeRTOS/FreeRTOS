@@ -10,7 +10,7 @@
 **                Default_Handler
 **                XMCVeneer code
 **
-**  Target      : Infineon $(DEVICE) Device 
+**  Target      : Infineon $(DEVICE) Device
 **
 **  Environment : Atollic TrueSTUDIO(R)
 **

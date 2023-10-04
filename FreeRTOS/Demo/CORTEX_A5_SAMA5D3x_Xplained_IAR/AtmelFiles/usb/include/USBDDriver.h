@@ -76,29 +76,28 @@
  *        which are not high-speed capable do not need to provided high-speed
  *        descriptors and the full-speed qualifier & other speed descriptors.
  */
-typedef struct _USBDDriverDescriptors {
-
+typedef struct _USBDDriverDescriptors
+{
     /** Pointer to the full-speed device descriptor */
-    const USBDeviceDescriptor *pFsDevice;
+    const USBDeviceDescriptor * pFsDevice;
     /** Pointer to the full-speed configuration descriptor */
-    const USBConfigurationDescriptor *pFsConfiguration;
+    const USBConfigurationDescriptor * pFsConfiguration;
     /** Pointer to the full-speed qualifier descriptor */
-    const USBDeviceQualifierDescriptor *pFsQualifier;
+    const USBDeviceQualifierDescriptor * pFsQualifier;
     /** Pointer to the full-speed other speed configuration descriptor */
-    const USBConfigurationDescriptor *pFsOtherSpeed;
+    const USBConfigurationDescriptor * pFsOtherSpeed;
     /** Pointer to the high-speed device descriptor */
-    const USBDeviceDescriptor *pHsDevice;
+    const USBDeviceDescriptor * pHsDevice;
     /** Pointer to the high-speed configuration descriptor */
-    const USBConfigurationDescriptor *pHsConfiguration;
+    const USBConfigurationDescriptor * pHsConfiguration;
     /** Pointer to the high-speed qualifier descriptor */
-    const USBDeviceQualifierDescriptor *pHsQualifier;
+    const USBDeviceQualifierDescriptor * pHsQualifier;
     /** Pointer to the high-speed other speed configuration descriptor */
-    const USBConfigurationDescriptor *pHsOtherSpeed;
+    const USBConfigurationDescriptor * pHsOtherSpeed;
     /** Pointer to the list of string descriptors */
-    const uint8_t **pStrings;
+    const uint8_t ** pStrings;
     /** Number of string descriptors in list */
     uint8_t numStrings;
-
 } USBDDriverDescriptors;
 
 /**
@@ -106,12 +105,12 @@ typedef struct _USBDDriverDescriptors {
  * \brief USB device driver structure, holding a list of descriptors identifying
  *        the device as well as the driver current state.
  */
-typedef struct _USBDDriver {
-
+typedef struct _USBDDriver
+{
     /** List of descriptors used by the device. */
-    const USBDDriverDescriptors *pDescriptors;
+    const USBDDriverDescriptors * pDescriptors;
     /** Current setting for each interface. */
-    uint8_t *pInterfaces;
+    uint8_t * pInterfaces;
     /** Current configuration number (0 -> device is not configured). */
     uint8_t cfgnum;
     /** Indicates if remote wake up has been enabled by the host. */
@@ -124,26 +123,22 @@ typedef struct _USBDDriver {
  *         Exported functions
  *------------------------------------------------------------------------------*/
 
-extern USBDDriver *USBD_GetDriver(void);
-extern void USBDDriver_Initialize(
-    USBDDriver *pDriver,
-    const USBDDriverDescriptors *pDescriptors,
-    uint8_t *pInterfaces);
-extern USBConfigurationDescriptor* USBDDriver_GetCfgDescriptors(
-    USBDDriver * pDriver,
-    uint8_t cfgNum);
-extern void USBDDriver_RequestHandler(
-    USBDDriver *pDriver,
-    const USBGenericRequest *pRequest);
-extern uint8_t USBDDriver_IsRemoteWakeUpEnabled(const USBDDriver *pDriver);
-extern uint8_t USBDDriver_returnOTGFeatures(const USBDDriver *pDriver);
-extern void USBDDriver_clearOTGFeatures(USBDDriver *pDriver);
+extern USBDDriver * USBD_GetDriver( void );
+extern void USBDDriver_Initialize( USBDDriver * pDriver,
+                                   const USBDDriverDescriptors * pDescriptors,
+                                   uint8_t * pInterfaces );
+extern USBConfigurationDescriptor * USBDDriver_GetCfgDescriptors( USBDDriver * pDriver,
+                                                                  uint8_t cfgNum );
+extern void USBDDriver_RequestHandler( USBDDriver * pDriver,
+                                       const USBGenericRequest * pRequest );
+extern uint8_t USBDDriver_IsRemoteWakeUpEnabled( const USBDDriver * pDriver );
+extern uint8_t USBDDriver_returnOTGFeatures( const USBDDriver * pDriver );
+extern void USBDDriver_clearOTGFeatures( USBDDriver * pDriver );
 
-extern void USBDDriverCallbacks_ConfigurationChanged(uint8_t cfgnum);
-extern void USBDDriverCallbacks_InterfaceSettingChanged(uint8_t interface,
-                                                             uint8_t setting);
+extern void USBDDriverCallbacks_ConfigurationChanged( uint8_t cfgnum );
+extern void USBDDriverCallbacks_InterfaceSettingChanged( uint8_t interface,
+                                                         uint8_t setting );
 
 /**@}*/
 
 #endif /*#ifndef USBDDRIVER_H*/
-

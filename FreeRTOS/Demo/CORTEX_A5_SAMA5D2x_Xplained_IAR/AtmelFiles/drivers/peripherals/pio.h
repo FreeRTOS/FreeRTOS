@@ -28,37 +28,39 @@
  */
 
 #ifndef _PIO_H
-#define _PIO_H
+    #define _PIO_H
 
-#define IRQ_PIO_HANDLERS_SIZE 16
+    #define IRQ_PIO_HANDLERS_SIZE    16
 
 /*------------------------------------------------------------------------------
  *         Global Types
  *------------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
-struct _pin
-{
-	uint8_t group;      /*< The IO group containing the pins you want to use. */
-	uint32_t mask;      /*< Bitmask indicating which pin(s) to configure. */
-	uint8_t type;       /*< Pin type */
-	uint32_t attribute; /*< Pin config attribute. */
-};
+    struct _pin
+    {
+        uint8_t group;      /*< The IO group containing the pins you want to use. */
+        uint32_t mask;      /*< Bitmask indicating which pin(s) to configure. */
+        uint8_t type;       /*< Pin type */
+        uint32_t attribute; /*< Pin config attribute. */
+    };
 
-typedef void(*pio_handler_t)(uint32_t, uint32_t, void*);
+    typedef void (* pio_handler_t)( uint32_t,
+                                    uint32_t,
+                                    void * );
 
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
 
-#if defined(CONFIG_HAVE_PIO4)
-#include "peripherals/pio4.h"
-#endif
+    #if defined( CONFIG_HAVE_PIO4 )
+        #include "peripherals/pio4.h"
+    #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*------------------------------------------------------------------------------
  *         Exported functions
@@ -78,7 +80,8 @@ extern "C" {
  *
  * \return 1 if the pins have been configured properly; otherwise 0.
  */
-extern uint8_t pio_configure(const struct _pin *list, uint32_t size);
+    extern uint8_t pio_configure( const struct _pin * list,
+                                  uint32_t size );
 
 /**
  * \brief Sets a high output level on all the PIOs defined in the
@@ -90,7 +93,7 @@ extern uint8_t pio_configure(const struct _pin *list, uint32_t size);
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-extern void pio_set(const struct _pin *pin);
+    extern void pio_set( const struct _pin * pin );
 
 /**
  * \brief Sets a low output level on all the PIOs defined in the given
@@ -102,7 +105,7 @@ extern void pio_set(const struct _pin *pin);
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-extern void pio_clear(const struct _pin *pin);
+    extern void pio_clear( const struct _pin * pin );
 
 /**
  * \brief Returns 1 if one or more PIO of the given Pin instance currently have
@@ -115,7 +118,7 @@ extern void pio_clear(const struct _pin *pin);
  * \return 1 if the Pin instance contains at least one PIO that currently has
  * a high level; otherwise 0.
  */
-extern uint8_t pio_get(const struct _pin *pin);
+    extern uint8_t pio_get( const struct _pin * pin );
 
 /**
  * \brief Returns 1 if one or more PIO of the given Pin are configured to output a
@@ -127,7 +130,7 @@ extern uint8_t pio_get(const struct _pin *pin);
  * \return 1 if the Pin instance contains at least one PIO that is configured
  * to output a high level; otherwise 0.
  */
-extern uint8_t pio_get_output_data_status(const struct _pin *pin);
+    extern uint8_t pio_get_output_data_status( const struct _pin * pin );
 
 /**
  * \brief Configures Glitch or Debouncing filter for input.
@@ -135,28 +138,29 @@ extern uint8_t pio_get_output_data_status(const struct _pin *pin);
  * \param pin  Pointer to a Pin instance describing one or more pins.
  * \param cuttoff  Cutt off frequency for debounce filter.
  */
-extern void pio_set_debounce_filter(const struct _pin *pin, uint32_t cuttoff);
+    extern void pio_set_debounce_filter( const struct _pin * pin,
+                                         uint32_t cuttoff );
 
 /**
  * \brief Enable write protect.
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-extern void pio_enable_write_protect(const struct _pin *pin);
+    extern void pio_enable_write_protect( const struct _pin * pin );
 
 /**
  * \brief Disable write protect.
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-extern void pio_disable_write_protect(const struct _pin *pin);
+    extern void pio_disable_write_protect( const struct _pin * pin );
 
 /**
  * \brief Get write protect violation information.
  *
  * \param pin  Pointer to a Pin instance describing one or more pins.
  */
-extern uint32_t pio_get_write_protect_violation_info(const struct _pin * pin);
+    extern uint32_t pio_get_write_protect_violation_info( const struct _pin * pin );
 
 /**
  * \brief Configure all pio outputs low
@@ -164,24 +168,27 @@ extern uint32_t pio_get_write_protect_violation_info(const struct _pin * pin);
  * \param group PIO group number
  * \param mask  Bitmask of one or more pin(s) to configure.
  */
-extern void pio_output_low(uint32_t group, uint32_t mask);
+    extern void pio_output_low( uint32_t group,
+                                uint32_t mask );
 
-extern void pio_add_handler_to_group(uint32_t group, uint32_t mask,
-				     pio_handler_t handler, void* user_arg);
+    extern void pio_add_handler_to_group( uint32_t group,
+                                          uint32_t mask,
+                                          pio_handler_t handler,
+                                          void * user_arg );
 
-extern void pio_reset_all_it(void);
+    extern void pio_reset_all_it( void );
 
 /**
  * \brief Generate an interrupt on status change for a PIO or a group
  * of PIO.
-
+ *
  * \details The provided interrupt handler will be called with the
  * triggering pin as its parameter (enabling different pin instances
  * to share the same handler).
  *
  * \param pin  Pointer to a _pin instance.
  */
-extern void pio_configure_it(const struct _pin * pin);
+    extern void pio_configure_it( const struct _pin * pin );
 
 
 /**
@@ -190,16 +197,16 @@ extern void pio_configure_it(const struct _pin * pin);
  * the interrupt.
  * \param pin  Interrupt source to enable.
  */
-extern void pio_enable_it(const struct _pin * pin);
+    extern void pio_enable_it( const struct _pin * pin );
 
 /**
  * Disables a given interrupt source, with no added side effects.
  *
  * \param pin  Interrupt source to disable.
  */
-extern void pio_disable_it(const struct _pin * pin);
+    extern void pio_disable_it( const struct _pin * pin );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* _PIO_H */

@@ -25,10 +25,10 @@
  */
 
 /*
-Changes from V3.0.0
-
-Changes from V3.0.1
-*/
+ * Changes from V3.0.0
+ *
+ * Changes from V3.0.1
+ */
 
 /*
 ** Here are the configuration words set. See the PIC datasheet

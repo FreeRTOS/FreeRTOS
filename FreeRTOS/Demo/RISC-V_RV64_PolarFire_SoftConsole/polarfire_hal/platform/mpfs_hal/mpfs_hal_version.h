@@ -1,5 +1,5 @@
 #ifndef MPFS_HAL_VERSION_H
-#define MPFS_HAL_VERSION_H
+    #define MPFS_HAL_VERSION_H
 
 /*******************************************************************************
  * Copyright 2019-2021 Microchip Corporation.
@@ -35,16 +35,16 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#define MPFS_HAL_VERSION_MAJOR 1
-#define MPFS_HAL_VERSION_MINOR 8
-#define MPFS_HAL_VERSION_PATCH 125
+    #define MPFS_HAL_VERSION_MAJOR    1
+    #define MPFS_HAL_VERSION_MINOR    8
+    #define MPFS_HAL_VERSION_PATCH    125
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif
+#endif /* ifndef MPFS_HAL_VERSION_H */

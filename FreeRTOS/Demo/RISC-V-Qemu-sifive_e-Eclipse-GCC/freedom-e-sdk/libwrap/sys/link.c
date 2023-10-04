@@ -4,8 +4,9 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-int __wrap_link(const char *old_name, const char *new_name)
+int __wrap_link( const char * old_name,
+                 const char * new_name )
 {
-  return _stub(EMLINK);
+    return _stub( EMLINK );
 }
-weak_under_alias(link);
+weak_under_alias( link );

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -47,28 +47,38 @@ struct ov_reg
 /*---------------------------------------------------------------------------
  *         DEFINITAION
  *---------------------------------------------------------------------------*/
-#define OV_2640          0x00
-#define OV_2643          0x01
-#define OV_5640          0x02
-#define OV_7740          0x03
-#define OV_9740          0x04
-#define OV_UNKNOWN       0xFF
- 
+#define OV_2640       0x00
+#define OV_2643       0x01
+#define OV_5640       0x02
+#define OV_7740       0x03
+#define OV_9740       0x04
+#define OV_UNKNOWN    0xFF
+
 /*----------------------------------------------------------------------------
  *       Exported functions
  *----------------------------------------------------------------------------*/
-extern uint8_t ov_init(Twid *pTwid);
-extern void ov_DumpRegisters8(Twid *pTwid);
-extern void ov_DumpRegisters16(Twid *pTwid);
-extern uint32_t ov_write_regs8(Twid *pTwid, const struct ov_reg* pReglist);
-extern uint32_t ov_write_regs16(Twid *pTwid, const struct ov_reg* pReglist);
-extern uint8_t ov_read_reg8(Twid *pTwid, uint8_t reg, uint8_t *pData);
-extern uint8_t ov_read_reg16(Twid *pTwid, uint16_t reg, uint8_t *pData);
-extern uint8_t ov_write_reg8(Twid *pTwid, uint8_t reg, uint8_t val);
-extern uint8_t ov_write_reg16(Twid *pTwid, uint16_t reg, uint8_t val);
-extern void isOV5640_AF_InitDone(Twid *pTwid);
-extern uint32_t ov_5640_AF_single(Twid *pTwid);
-extern uint32_t ov_5640_AF_continue(Twid *pTwid);
-extern uint32_t ov_5640_AFPause(Twid *pTwid);
-extern uint32_t ov_5640_AFrelease(Twid *pTwid);
-#endif
+extern uint8_t ov_init( Twid * pTwid );
+extern void ov_DumpRegisters8( Twid * pTwid );
+extern void ov_DumpRegisters16( Twid * pTwid );
+extern uint32_t ov_write_regs8( Twid * pTwid,
+                                const struct ov_reg * pReglist );
+extern uint32_t ov_write_regs16( Twid * pTwid,
+                                 const struct ov_reg * pReglist );
+extern uint8_t ov_read_reg8( Twid * pTwid,
+                             uint8_t reg,
+                             uint8_t * pData );
+extern uint8_t ov_read_reg16( Twid * pTwid,
+                              uint16_t reg,
+                              uint8_t * pData );
+extern uint8_t ov_write_reg8( Twid * pTwid,
+                              uint8_t reg,
+                              uint8_t val );
+extern uint8_t ov_write_reg16( Twid * pTwid,
+                               uint16_t reg,
+                               uint8_t val );
+extern void isOV5640_AF_InitDone( Twid * pTwid );
+extern uint32_t ov_5640_AF_single( Twid * pTwid );
+extern uint32_t ov_5640_AF_continue( Twid * pTwid );
+extern uint32_t ov_5640_AFPause( Twid * pTwid );
+extern uint32_t ov_5640_AFrelease( Twid * pTwid );
+#endif /* ifndef OMNIVISION_H */

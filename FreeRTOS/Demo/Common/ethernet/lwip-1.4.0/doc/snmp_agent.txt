@@ -24,12 +24,12 @@ MIB II per RFC1213
   This is a required MIB, so this is always enabled.
   When builing lwIP without TCP, the mib-2.tcp group is omitted.
   The groups EGP, CMOT and transmission are disabled by default.
-  
+
   Most mib-2 objects are not writable except:
   sysName, sysLocation, sysContact, snmpEnableAuthenTraps.
   Writing to or changing the ARP and IP address and route
   tables is not possible.
- 
+
   Note lwIP has a very limited notion of IP routing. It currently
   doen't have a route table and doesn't have a notion of the U,G,H flags.
   Instead lwIP uses the interface list with only one default interface
@@ -47,7 +47,7 @@ Loading additional MIBs
 Large SNMP message support
   The packet decoding and encoding routines are designed
   to use pbuf-chains. Larger payloads than the minimum
-  SNMP requirement of 484 octets are supported if the 
+  SNMP requirement of 484 octets are supported if the
   PBUF_POOL_SIZE and IP_REASS_BUFSIZE are set to match your
   local requirement.
 
@@ -125,7 +125,7 @@ ALL OBJECT IDENTIFIERS LIVING UNDER THIS ID ARE ASSIGNED BY THE lwIP
 MAINTAINERS!
 
 If you need to create your own private MIB you'll need
-to apply for your own enterprise ID with IANA: http://www.iana.org/numbers.html 
+to apply for your own enterprise ID with IANA: http://www.iana.org/numbers.html
 
 You can set it by passing a struct snmp_obj_id to the agent
 using snmp_set_sysobjid(&my_object_id), just before snmp_init().
@@ -150,7 +150,7 @@ We have three distinct parts for all object identifiers:
 The prefix
   .iso.org.dod.internet
 
-the middle part 
+the middle part
   .mgmt.mib-2.ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress
 
 and the index part

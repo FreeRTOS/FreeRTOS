@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -34,6 +34,7 @@
 
 #ifndef _CDCDESCRIPTORS_H_
 #define _CDCDESCRIPTORS_H_
+
 /** \addtogroup usb_cdc
  *@{
  */
@@ -53,9 +54,9 @@
  * This section list the CDC Spec. Release Numbers.
  * - \ref CDCGenericDescriptor_CDC1_10
  */
- 
+
 /** Identify CDC specification version 1.10. */
-#define CDCGenericDescriptor_CDC1_10                            0x0110
+#define CDCGenericDescriptor_CDC1_10    0x0110
 /**     @}*/
 
 /** \addtogroup usb_cdc_desc_type CDC Descriptro Types
@@ -65,9 +66,9 @@
  * - \ref CDCGenericDescriptor_ENDPOINT
  */
 /**Indicates that a CDC descriptor applies to an interface. */
-#define CDCGenericDescriptor_INTERFACE                          0x24
+#define CDCGenericDescriptor_INTERFACE    0x24
 /** Indicates that a CDC descriptor applies to an endpoint. */
-#define CDCGenericDescriptor_ENDPOINT                           0x25
+#define CDCGenericDescriptor_ENDPOINT     0x25
 /**     @}*/
 
 /** \addtogroup usb_cdc_desc_subtype CDC Descriptor Subtypes
@@ -80,13 +81,13 @@
  */
 
 /** Header functional descriptor subtype. */
-#define CDCGenericDescriptor_HEADER                             0x00
+#define CDCGenericDescriptor_HEADER                       0x00
 /** Call management functional descriptor subtype. */
-#define CDCGenericDescriptor_CALLMANAGEMENT                     0x01
+#define CDCGenericDescriptor_CALLMANAGEMENT               0x01
 /** Abstract control management descriptor subtype. */
-#define CDCGenericDescriptor_ABSTRACTCONTROLMANAGEMENT          0x02
+#define CDCGenericDescriptor_ABSTRACTCONTROLMANAGEMENT    0x02
 /** Union descriptor subtype. */
-#define CDCGenericDescriptor_UNION                              0x06
+#define CDCGenericDescriptor_UNION                        0x06
 /**    @}*/
 
 /** \addtogroup usb_cdc_descriptor USB CDC Device Descriptor Values
@@ -97,11 +98,11 @@
  * - \ref CDCDeviceDescriptor_PROTOCOL
  */
 /** Device class code when using the CDC class. */
-#define CDCDeviceDescriptor_CLASS               0x02
+#define CDCDeviceDescriptor_CLASS       0x02
 /** Device subclass code when using the CDC class. */
-#define CDCDeviceDescriptor_SUBCLASS            0x00
+#define CDCDeviceDescriptor_SUBCLASS    0x00
 /** Device protocol code when using the CDC class. */
-#define CDCDeviceDescriptor_PROTOCOL            0x00
+#define CDCDeviceDescriptor_PROTOCOL    0x00
 /** @}*/
 
 /** \addtogroup usb_cdc_if_desc USB CDC Communication Interface Descriptor
@@ -113,11 +114,13 @@
  */
 /** Interface class code for a CDC communication class interface. */
 #define CDCCommunicationInterfaceDescriptor_CLASS                   0x02
+
 /** Interface subclass code for an Abstract Control Model interface descriptor.
  */
 #define CDCCommunicationInterfaceDescriptor_ABSTRACTCONTROLMODEL    0x02
+
 /** Interface protocol code when a CDC communication interface does not
-    implemenent any particular protocol. */
+ *  implemenent any particular protocol. */
 #define CDCCommunicationInterfaceDescriptor_NOPROTOCOL              0x00
 /** @}*/
 
@@ -128,14 +131,15 @@
  * - \ref CDCDataInterfaceDescriptor_SUBCLASS
  * - \ref CDCDataInterfaceDescriptor_NOPROTOCOL
  */
- 
+
 /** Interface class code for a data class interface. */
-#define CDCDataInterfaceDescriptor_CLASS        0x0A
+#define CDCDataInterfaceDescriptor_CLASS         0x0A
 /** Interface subclass code for a data class interface. */
-#define CDCDataInterfaceDescriptor_SUBCLASS     0x00
+#define CDCDataInterfaceDescriptor_SUBCLASS      0x00
+
 /** Protocol code for a data class interface which does not implement any
-    particular protocol. */
-#define CDCDataInterfaceDescriptor_NOPROTOCOL   0x00
+ *  particular protocol. */
+#define CDCDataInterfaceDescriptor_NOPROTOCOL    0x00
 /** @}*/
 
 /** \addtogroup usb_cdc_cb_man_desc USB CDC CallManagement Capabilities
@@ -145,10 +149,11 @@
  * - \ref CDCCallManagementDescriptor_DATACALLMANAGEMENT
  */
 /** Device handles call management itself. */
-#define CDCCallManagementDescriptor_SELFCALLMANAGEMENT      (1 << 0)
+#define CDCCallManagementDescriptor_SELFCALLMANAGEMENT    ( 1 << 0 )
+
 /** Device can exchange call management information over a Data class interface.
  */
-#define CDCCallManagementDescriptor_DATACALLMANAGEMENT      (1 << 1)
+#define CDCCallManagementDescriptor_DATACALLMANAGEMENT    ( 1 << 1 )
 /** @}*/
 
 /** \addtogroup usb_cdc_acm USB CDC ACM Capabilities
@@ -160,37 +165,39 @@
  * - \ref CDCAbstractControlManagementDescriptor_SENDBREAK
  * - \ref CDCAbstractControlManagementDescriptor_NETWORKCONNECTION
  */
- 
+
 /** Device supports the request combination of SetCommFeature, ClearCommFeature
-    and GetCommFeature. */
-#define CDCAbstractControlManagementDescriptor_COMMFEATURE          (1 << 0)
+ *  and GetCommFeature. */
+#define CDCAbstractControlManagementDescriptor_COMMFEATURE          ( 1 << 0 )
+
 /** Device supports the request combination of SetLineCoding, GetLineCoding and
-    SetControlLineState. */
-#define CDCAbstractControlManagementDescriptor_LINE                 (1 << 1)
+ *  SetControlLineState. */
+#define CDCAbstractControlManagementDescriptor_LINE                 ( 1 << 1 )
 /** Device supports the SendBreak request. */
-#define CDCAbstractControlManagementDescriptor_SENDBREAK            (1 << 2)
+#define CDCAbstractControlManagementDescriptor_SENDBREAK            ( 1 << 2 )
 /** Device supports the NetworkConnection notification. */
-#define CDCAbstractControlManagementDescriptor_NETWORKCONNECTION    (1 << 3)
+#define CDCAbstractControlManagementDescriptor_NETWORKCONNECTION    ( 1 << 3 )
 /** @}*/
 
 /*----------------------------------------------------------------------------
  *         Types
  *----------------------------------------------------------------------------*/
 #pragma pack(1)
-#if defined   ( __CC_ARM   ) /* Keil ¦ÌVision 4 */
-#elif defined ( __ICCARM__ ) /* IAR Ewarm */
-#define __attribute__(...)
-#define __packed__  packed
-#elif defined (  __GNUC__  ) /* GCC CS3 */
-#define __packed__  aligned(1)
+#if defined( __CC_ARM )     /* Keil ¦ÌVision 4 */
+#elif defined( __ICCARM__ ) /* IAR Ewarm */
+    #define __attribute__( ... )
+    #define __packed__    packed
+#elif defined( __GNUC__ ) /* GCC CS3 */
+    #define __packed__    aligned( 1 )
 #endif
+
 /**
  * \typedef CDCHeaderDescriptor
  * \brief Marks the beginning of the concatenated set of functional descriptors
  *        for the interface.
  */
-typedef struct _CDCHeaderDescriptor {
-
+typedef struct _CDCHeaderDescriptor
+{
     /** Size of this descriptor in bytes. */
     uint8_t bFunctionLength;
     /** Descriptor type . */
@@ -199,16 +206,15 @@ typedef struct _CDCHeaderDescriptor {
     uint8_t bDescriptorSubtype;
     /** USB CDC specification release number. */
     uint16_t bcdCDC;
-
-} __attribute__ ((__packed__)) CDCHeaderDescriptor; /* GCC */
+} __attribute__( ( __packed__ ) ) CDCHeaderDescriptor; /* GCC */
 
 /**
  * \typedef CDCUnionDescriptor
  * \brief Describes the relationship between a group of interfaces that can
  *        be considered to form a functional unit.
  */
-typedef struct _CDCUnionDescriptor {
-
+typedef struct _CDCUnionDescriptor
+{
     /** Size of the descriptor in bytes. */
     uint8_t bFunctionLength;
     /** Descriptor type . */
@@ -219,49 +225,49 @@ typedef struct _CDCUnionDescriptor {
     uint8_t bMasterInterface;
     /** Number of the first slave interface for this union. */
     uint8_t bSlaveInterface0;
-
-} __attribute__ ((__packed__)) CDCUnionDescriptor; /* GCC */
+} __attribute__( ( __packed__ ) ) CDCUnionDescriptor; /* GCC */
 
 /**
  * \typedef CDCCallManagementDescriptor
  * \brief Describes the processing of calls for the communication class
  *        interface.
  */
-typedef struct _CDCCallManagementDescriptor {
-
+typedef struct _CDCCallManagementDescriptor
+{
     /** Size of this descriptor in bytes. */
     uint8_t bFunctionLength;
     /** Descriptor type . */
     uint8_t bDescriptorType;
     /** Descriptor sub-type . */
     uint8_t bDescriptorSubtype;
-    /** Configuration capabilities
-        \sa usb_cdc_cb_man_desc CDC CallManagement Capabilities. */
-    uint8_t bmCapabilities;
-    /** Interface number of the data class interface used for call management
-        (optional). */
-    uint8_t bDataInterface;
 
-} __attribute__ ((__packed__)) CDCCallManagementDescriptor; /* GCC */
+    /** Configuration capabilities
+     *  \sa usb_cdc_cb_man_desc CDC CallManagement Capabilities. */
+    uint8_t bmCapabilities;
+
+    /** Interface number of the data class interface used for call management
+     *  (optional). */
+    uint8_t bDataInterface;
+} __attribute__( ( __packed__ ) ) CDCCallManagementDescriptor; /* GCC */
 
 /**
  * \typedef CDCAbstractControlManagementDescriptor
  * \brief Describes the command supported by the communication interface class
  *        with the Abstract Control Model subclass code.
  */
-typedef struct _CDCAbstractControlManagementDescriptor {
-
+typedef struct _CDCAbstractControlManagementDescriptor
+{
     /** Size of this descriptor in bytes. */
     uint8_t bFunctionLength;
     /** Descriptor type . */
     uint8_t bDescriptorType;
     /** Descriptor subtype . */
     uint8_t bDescriptorSubtype;
-    /** Configuration capabilities.
-        \sa usb_cdc_acm CDC ACM Capabilities. */
-    uint8_t bmCapabilities;
 
-} __attribute__ ((__packed__)) CDCAbstractControlManagementDescriptor; /* GCC */
+    /** Configuration capabilities.
+     *  \sa usb_cdc_acm CDC ACM Capabilities. */
+    uint8_t bmCapabilities;
+} __attribute__( ( __packed__ ) ) CDCAbstractControlManagementDescriptor; /* GCC */
 
 #pragma pack()
 
@@ -272,4 +278,3 @@ typedef struct _CDCAbstractControlManagementDescriptor {
 
 /**@}*/
 #endif /* #ifndef _CDCDESCRIPTORS_H_ */
-

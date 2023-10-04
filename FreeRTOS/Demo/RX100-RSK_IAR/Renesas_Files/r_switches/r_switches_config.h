@@ -16,6 +16,7 @@
 *
 * Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : r_switches_config.c
 * Description  : Configures the switches code
@@ -30,18 +31,19 @@
 #define SWITCHES_CONFIG_HEADER_FILE
 
 /***********************************************************************************************************************
-Configuration Options
+*  Configuration Options
 ***********************************************************************************************************************/
-/* This macro sets whether interrupts or polling is used for detecting switch presses. The benefit of using interrupts
-   is that no extra processing is used for polling and the use of a system timer tick is not a requirement. The downside
-   of using interrupts is that callback functions are called from within an interrupt so if your ISR is long then it can
-   degrade the real-time response of your system. The benefit of polling is that functions are called at the application
-   level and debouncing is supported. The downside to polling is that your system must call the R_SWITCHES_Update() on a
-   regular basis which requires extra processing.
 
-   0 = Use interrupts
-   1 = Use polling
-    */
-#define SWITCHES_DETECTION_MODE     (0)
+/* This macro sets whether interrupts or polling is used for detecting switch presses. The benefit of using interrupts
+ * is that no extra processing is used for polling and the use of a system timer tick is not a requirement. The downside
+ * of using interrupts is that callback functions are called from within an interrupt so if your ISR is long then it can
+ * degrade the real-time response of your system. The benefit of polling is that functions are called at the application
+ * level and debouncing is supported. The downside to polling is that your system must call the R_SWITCHES_Update() on a
+ * regular basis which requires extra processing.
+ *
+ * 0 = Use interrupts
+ * 1 = Use polling
+ */
+#define SWITCHES_DETECTION_MODE    ( 0 )
 
 #endif /* SWITCHES_CONFIG_HEADER_FILE */

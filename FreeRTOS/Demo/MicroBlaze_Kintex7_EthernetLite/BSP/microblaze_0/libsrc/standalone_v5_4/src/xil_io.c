@@ -30,30 +30,31 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xil_io.c
-*
-* Contains I/O functions for memory-mapped architectures.  These functions
-* encapsulate generic CPU I/O requirements.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date	 Changes
-* ----- ---- -------- -------------------------------------------------------
-* 3.00a hbm  07/28/09 Initial release
-* 3.00a hbm  07/21/10 Added Xil_EndianSwap32/16, Xil_Htonl/s, Xil_Ntohl/s
-* 5.4   sk   01/14/16 Changed xil_io() and xil_out() functions to static inline
-*                     functions.
-*
-* </pre>
-*
-* @note
-*
-* This file may contain architecture-dependent code.
-*
-******************************************************************************/
+ *
+ * @file xil_io.c
+ *
+ * Contains I/O functions for memory-mapped architectures.  These functions
+ * encapsulate generic CPU I/O requirements.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date	 Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 3.00a hbm  07/28/09 Initial release
+ * 3.00a hbm  07/21/10 Added Xil_EndianSwap32/16, Xil_Htonl/s, Xil_Ntohl/s
+ * 5.4   sk   01/14/16 Changed xil_io() and xil_out() functions to static inline
+ *                     functions.
+ *
+ * </pre>
+ *
+ * @note
+ *
+ * This file may contain architecture-dependent code.
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -75,177 +76,187 @@
 /***************** Macros (Inline Functions) and Functions Definitions *******/
 
 /*****************************************************************************/
+
 /**
-*
-* Perform a 16-bit endian converion.
-*
-* @param	Data contains the value to be converted.
-*
-* @return	converted value.
-*
-* @note		None.
-*
-******************************************************************************/
-u16 Xil_EndianSwap16(u16 Data)
+ *
+ * Perform a 16-bit endian converion.
+ *
+ * @param	Data contains the value to be converted.
+ *
+ * @return	converted value.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+u16 Xil_EndianSwap16( u16 Data )
 {
-	return (u16) (((Data & 0xFF00U) >> 8U) | ((Data & 0x00FFU) << 8U));
+    return ( u16 ) ( ( ( Data & 0xFF00U ) >> 8U ) | ( ( Data & 0x00FFU ) << 8U ) );
 }
 
 /*****************************************************************************/
+
 /**
-*
-* Perform a 32-bit endian converion.
-*
-* @param	Data contains the value to be converted.
-*
-* @return	converted value.
-*
-* @note		None.
-*
-******************************************************************************/
-u32 Xil_EndianSwap32(u32 Data)
+ *
+ * Perform a 32-bit endian converion.
+ *
+ * @param	Data contains the value to be converted.
+ *
+ * @return	converted value.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+u32 Xil_EndianSwap32( u32 Data )
 {
-	u16 LoWord;
-	u16 HiWord;
+    u16 LoWord;
+    u16 HiWord;
 
-	/* get each of the half words from the 32 bit word */
+    /* get each of the half words from the 32 bit word */
 
-	LoWord = (u16) (Data & 0x0000FFFFU);
-	HiWord = (u16) ((Data & 0xFFFF0000U) >> 16U);
+    LoWord = ( u16 ) ( Data & 0x0000FFFFU );
+    HiWord = ( u16 ) ( ( Data & 0xFFFF0000U ) >> 16U );
 
-	/* byte swap each of the 16 bit half words */
+    /* byte swap each of the 16 bit half words */
 
-	LoWord = (((LoWord & 0xFF00U) >> 8U) | ((LoWord & 0x00FFU) << 8U));
-	HiWord = (((HiWord & 0xFF00U) >> 8U) | ((HiWord & 0x00FFU) << 8U));
+    LoWord = ( ( ( LoWord & 0xFF00U ) >> 8U ) | ( ( LoWord & 0x00FFU ) << 8U ) );
+    HiWord = ( ( ( HiWord & 0xFF00U ) >> 8U ) | ( ( HiWord & 0x00FFU ) << 8U ) );
 
-	/* swap the half words before returning the value */
+    /* swap the half words before returning the value */
 
-	return ((((u32)LoWord) << (u32)16U) | (u32)HiWord);
+    return( ( ( ( u32 ) LoWord ) << ( u32 ) 16U ) | ( u32 ) HiWord );
 }
 
 /*****************************************************************************/
+
 /**
-*
-* Perform a little-endian input operation for a 16-bit memory location
-* by reading from the specified address and returning the byte-swapped value
-* read from that address.
-*
-* @param	Addr contains the address to perform the input operation at.
-*
-* @return	The value read from the specified input address with the
-*		proper endianness. The return value has the same endianness
-*		as that of the processor, i.e. if the processor is big-engian,
-*		the return value is the byte-swapped value read from the
-*		address.
-*
-*
-* @note		None.
-*
-******************************************************************************/
+ *
+ * Perform a little-endian input operation for a 16-bit memory location
+ * by reading from the specified address and returning the byte-swapped value
+ * read from that address.
+ *
+ * @param	Addr contains the address to perform the input operation at.
+ *
+ * @return	The value read from the specified input address with the
+ *		proper endianness. The return value has the same endianness
+ *		as that of the processor, i.e. if the processor is big-engian,
+ *		the return value is the byte-swapped value read from the
+ *		address.
+ *
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
 #ifndef __LITTLE_ENDIAN__
-u16 Xil_In16LE(UINTPTR Addr)
+    u16 Xil_In16LE( UINTPTR Addr )
 #else
-u16 Xil_In16BE(UINTPTR Addr)
+    u16 Xil_In16BE( UINTPTR Addr )
 #endif
 {
-	u16 Value;
+    u16 Value;
 
-	/* get the data then swap it */
-	Value = Xil_In16(Addr);
+    /* get the data then swap it */
+    Value = Xil_In16( Addr );
 
-	return Xil_EndianSwap16(Value);
+    return Xil_EndianSwap16( Value );
 }
 
 /*****************************************************************************/
+
 /**
-*
-* Perform a little-endian input operation for a 32-bit memory location
-* by reading from the specified address and returning the byte-swapped value
-* read from that address.
-*
-* @param	Addr contains the address to perform the input operation at.
-*
-* @return	The value read from the specified input address with the
-*		proper endianness. The return value has the same endianness
-*		as that of the processor, i.e. if the processor is big-engian,
-*		the return value is the byte-swapped value read from the
-*		address.
-*
-* @note		None.
-*
-******************************************************************************/
+ *
+ * Perform a little-endian input operation for a 32-bit memory location
+ * by reading from the specified address and returning the byte-swapped value
+ * read from that address.
+ *
+ * @param	Addr contains the address to perform the input operation at.
+ *
+ * @return	The value read from the specified input address with the
+ *		proper endianness. The return value has the same endianness
+ *		as that of the processor, i.e. if the processor is big-engian,
+ *		the return value is the byte-swapped value read from the
+ *		address.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
 #ifndef __LITTLE_ENDIAN__
-u32 Xil_In32LE(UINTPTR Addr)
+    u32 Xil_In32LE( UINTPTR Addr )
 #else
-u32 Xil_In32BE(UINTPTR Addr)
+    u32 Xil_In32BE( UINTPTR Addr )
 #endif
 {
-	u32 InValue;
+    u32 InValue;
 
-	/* get the data then swap it */
-	InValue = Xil_In32(Addr);
-	return Xil_EndianSwap32(InValue);
+    /* get the data then swap it */
+    InValue = Xil_In32( Addr );
+    return Xil_EndianSwap32( InValue );
 }
 
 /*****************************************************************************/
+
 /**
-*
-* Perform a little-endian output operation for a 16-bit memory location by
-* writing the specified value to the the specified address. The value is
-* byte-swapped before being written.
-*
-* @param	Addr contains the address to perform the output operation at.
-* @param	Value contains the value to be output at the specified address.
-*		The value has the same endianness as that of the processor.
-*		If the processor is big-endian, the byte-swapped value is
-*		written to the address.
-*
-* @return	None.
-*
-* @note		None.
-*
-******************************************************************************/
+ *
+ * Perform a little-endian output operation for a 16-bit memory location by
+ * writing the specified value to the the specified address. The value is
+ * byte-swapped before being written.
+ *
+ * @param	Addr contains the address to perform the output operation at.
+ * @param	Value contains the value to be output at the specified address.
+ *		The value has the same endianness as that of the processor.
+ *		If the processor is big-endian, the byte-swapped value is
+ *		written to the address.
+ *
+ * @return	None.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
 #ifndef __LITTLE_ENDIAN__
-void Xil_Out16LE(UINTPTR Addr, u16 Value)
+    void Xil_Out16LE( UINTPTR Addr,
+                      u16 Value )
 #else
-void Xil_Out16BE(UINTPTR Addr, u16 Value)
+    void Xil_Out16BE( UINTPTR Addr,
+                      u16 Value )
 #endif
 {
-	u16 OutValue;
+    u16 OutValue;
 
-	/* swap the data then output it */
-	OutValue = Xil_EndianSwap16(Value);
+    /* swap the data then output it */
+    OutValue = Xil_EndianSwap16( Value );
 
-	Xil_Out16(Addr, OutValue);
+    Xil_Out16( Addr, OutValue );
 }
 
 /*****************************************************************************/
+
 /**
-*
-* Perform a little-endian output operation for a 32-bit memory location
-* by writing the specified value to the the specified address. The value is
-* byte-swapped before being written.
-*
-* @param	Addr contains the address at which the output operation at.
-* @param	Value contains the value to be output at the specified address.
-*		The value has the same endianness as that of the processor.
-*		If the processor is big-endian, the byte-swapped value is
-*		written to the address.
-*
-* @return	None.
-*
-* @note		None.
-*
-******************************************************************************/
+ *
+ * Perform a little-endian output operation for a 32-bit memory location
+ * by writing the specified value to the the specified address. The value is
+ * byte-swapped before being written.
+ *
+ * @param	Addr contains the address at which the output operation at.
+ * @param	Value contains the value to be output at the specified address.
+ *		The value has the same endianness as that of the processor.
+ *		If the processor is big-endian, the byte-swapped value is
+ *		written to the address.
+ *
+ * @return	None.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
 #ifndef __LITTLE_ENDIAN__
-void Xil_Out32LE(UINTPTR Addr, u32 Value)
+    void Xil_Out32LE( UINTPTR Addr,
+                      u32 Value )
 #else
-void Xil_Out32BE(UINTPTR Addr, u32 Value)
+    void Xil_Out32BE( UINTPTR Addr,
+                      u32 Value )
 #endif
 {
-	u32 OutValue;
+    u32 OutValue;
 
-	/* swap the data then output it */
-	OutValue = Xil_EndianSwap32(Value);
-	Xil_Out32(Addr, OutValue);
+    /* swap the data then output it */
+    OutValue = Xil_EndianSwap32( Value );
+    Xil_Out32( Addr, OutValue );
 }

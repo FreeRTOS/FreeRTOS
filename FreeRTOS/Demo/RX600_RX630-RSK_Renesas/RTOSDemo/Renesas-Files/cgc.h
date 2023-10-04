@@ -1,23 +1,21 @@
-
-
 /*******************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only 
-* intended for use with Renesas products. No other uses are authorized. This 
+* This software is supplied by Renesas Electronics Corporation and is only
+* intended for use with Renesas products. No other uses are authorized. This
 * software is owned by Renesas Electronics Corporation and is protected under
 * all applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
 * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT
-* LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
+* LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
 * AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.
-* TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS 
-* ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+* TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS
+* ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE
 * FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR
 * ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE
 * BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 * Renesas reserves the right, without notice, to make changes to this software
 * and to discontinue the availability of this software. By using this software,
-* you agree to the additional terms and conditions found by accessing the 
+* you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *******************************************************************************/
@@ -30,15 +28,15 @@
  *      Author: RJW
  *              Reneses Electronics Europe Ltd
  */
- 
+
 
 #ifndef CGC_H_
 #define CGC_H_
 
 /******************************************************************************
- Function Prototypes
+*  Function Prototypes
 ******************************************************************************/
-void InitCGC(void);
+void InitCGC( void );
 
 
 /*****************************************************************************/
@@ -65,13 +63,13 @@ void InitCGC(void);
 /*      #define		CLK_SOURCE          (CLK_SOURCE_MAIN)                    */
 /*                                                                           */
 /*****************************************************************************/
-#define     CLK_SOURCE_LOCO     0x0000
-#define     CLK_SOURCE_HOCO     0x0100
-#define     CLK_SOURCE_MAIN     0x0200
-#define     CLK_SOURCE_SUB      0x0300
-#define     CLK_SOURCE_PLL      0x0400
+#define     CLK_SOURCE_LOCO    0x0000
+#define     CLK_SOURCE_HOCO    0x0100
+#define     CLK_SOURCE_MAIN    0x0200
+#define     CLK_SOURCE_SUB     0x0300
+#define     CLK_SOURCE_PLL     0x0400
 
-#define		CLK_SOURCE          (CLK_SOURCE_PLL)
+#define     CLK_SOURCE         ( CLK_SOURCE_PLL )
 
 
 /*****************************************************************************/
@@ -106,11 +104,11 @@ void InitCGC(void);
 /*                                                                           */
 /* NOTE: The maximum XTAL is 20MHz                                           */
 /*****************************************************************************/
-#define     XTAL_FREQUENCY      (12000000L)	
-#define     PLL_MUL             (16)
-#define     PLL_INPUT_FREQ_DIV  (1)
+#define     XTAL_FREQUENCY        ( 12000000L )
+#define     PLL_MUL               ( 16 )
+#define     PLL_INPUT_FREQ_DIV    ( 1 )
 
-#define     SUB_FREQUENCY       (32768L)	
+#define     SUB_FREQUENCY         ( 32768L )
 
 
 /*****************************************************************************/
@@ -121,10 +119,10 @@ void InitCGC(void);
 /* #define     ENABLE_PLL          (1)                                       */
 /*                                                                           */
 /*****************************************************************************/
-#define     ENABLE_HOCO         (1)
-#define     ENABLE_SUB          (0)
-#define     ENABLE_MAIN         (0)
-#define     ENABLE_PLL          (1)
+#define     ENABLE_HOCO    ( 1 )
+#define     ENABLE_SUB     ( 0 )
+#define     ENABLE_MAIN    ( 0 )
+#define     ENABLE_PLL     ( 1 )
 
 
 
@@ -142,13 +140,13 @@ void InitCGC(void);
 /*  If MAIN, the value of XTAL specified in STEP 2                           */
 /*  If PLL,  the result of the XTAL, PLL Div, PLL Mul specified in STEP 2    */
 /*****************************************************************************/
-#define     FCLK_DIV            (4)
-#define     ICLK_DIV            (2)
-#define     BCLK_DIV            (4)
-#define     PCLK1215_DIV        (2)             /* Do not change this        */
-#define     PCLKB_DIV           (4)
-#define     PCLK47_DIV          (2)             /* Do not change this        */
-#define     PCLK03_DIV          (2)             /* Do not change this        */
+#define     FCLK_DIV        ( 4 )
+#define     ICLK_DIV        ( 2 )
+#define     BCLK_DIV        ( 4 )
+#define     PCLK1215_DIV    ( 2 )               /* Do not change this        */
+#define     PCLKB_DIV       ( 4 )
+#define     PCLK47_DIV      ( 2 )               /* Do not change this        */
+#define     PCLK03_DIV      ( 2 )               /* Do not change this        */
 
 
 /*****************************************************************************/
@@ -165,7 +163,7 @@ void InitCGC(void);
 /*  If MAIN, the value of XTAL specified in STEP 2                           */
 /*  If PLL,  the result of the XTAL, PLL Div, PLL Mul specified in STEP 2    */
 /*****************************************************************************/
-#define     IEBCK_DIV           (2)
+#define     IEBCK_DIV    ( 2 )
 
 
 /*****************************************************************************/
@@ -182,7 +180,7 @@ void InitCGC(void);
 /*  If MAIN, the value of XTAL specified in STEP 2                           */
 /*  If PLL,  the result of the XTAL, PLL Div, PLL Mul specified in STEP 2    */
 /*****************************************************************************/
-#define     UCK_DIV             (3)
+#define     UCK_DIV    ( 3 )
 
 
 /*****************************************************************************/
@@ -193,7 +191,7 @@ void InitCGC(void);
 /*  To DISABLE, set to (1)                                                   */
 /*                                                                           */
 /*****************************************************************************/
-#define     BCLK_PIN            (1)
+#define     BCLK_PIN    ( 1 )
 
 
 /*****************************************************************************/
@@ -202,4 +200,4 @@ void InitCGC(void);
 #include "cgc_set.h"
 #include "cgc_error.h"
 
-#endif
+#endif /* ifndef CGC_H_ */

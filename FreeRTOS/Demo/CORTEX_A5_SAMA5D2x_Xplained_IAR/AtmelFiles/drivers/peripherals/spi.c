@@ -54,7 +54,7 @@
  * Related files :\n
  * \ref spi.c\n
  * \ref spi.h\n
-*/
+ */
 /*@{*/
 /*@}*/
 
@@ -82,181 +82,226 @@
 #include <assert.h>
 
 /*---------------------------------------------------------------------------
-*        Macros
-*----------------------------------------------------------------------------*/
+ *        Macros
+ *----------------------------------------------------------------------------*/
 
-#define SPI_PCS(npcs)       SPI_MR_PCS((~(1 << npcs) & 0xF))
+#define SPI_PCS( npcs )    SPI_MR_PCS( ( ~( 1 << npcs ) & 0xF ) )
 
 /*----------------------------------------------------------------------------
  *        local functions
  *----------------------------------------------------------------------------*/
 
-static inline uint32_t _spi_compute_scbr(uint32_t bitrate, uint32_t periph_id)
+static inline uint32_t _spi_compute_scbr( uint32_t bitrate,
+                                          uint32_t periph_id )
 {
-	assert(bitrate>0);
-	return SPI_CSR_SCBR(
-		pmc_get_peripheral_clock(periph_id) / (bitrate*1000));
+    assert( bitrate > 0 );
+    return SPI_CSR_SCBR(
+        pmc_get_peripheral_clock( periph_id ) / ( bitrate * 1000 ) );
 }
 
-static inline uint32_t _spi_compute_dlybs(uint32_t delay, uint32_t periph_id)
+static inline uint32_t _spi_compute_dlybs( uint32_t delay,
+                                           uint32_t periph_id )
 {
-	uint32_t dlybs =
-		((pmc_get_peripheral_clock(periph_id)/1000000u) * delay) / 100;
-	return SPI_CSR_DLYBS(dlybs);
+    uint32_t dlybs =
+        ( ( pmc_get_peripheral_clock( periph_id ) / 1000000u ) * delay ) / 100;
+
+    return SPI_CSR_DLYBS( dlybs );
 }
 
-static inline uint32_t _spi_compute_dlybct(uint32_t delay, uint32_t periph_id)
+static inline uint32_t _spi_compute_dlybct( uint32_t delay,
+                                            uint32_t periph_id )
 {
-	uint32_t dlybct =
-		((pmc_get_peripheral_clock(periph_id)/31250u) * delay) / 100;
-	return SPI_CSR_DLYBCT(dlybct);
+    uint32_t dlybct =
+        ( ( pmc_get_peripheral_clock( periph_id ) / 31250u ) * delay ) / 100;
+
+    return SPI_CSR_DLYBCT( dlybct );
 }
 
-static inline uint32_t _spi_is_master(Spi* spi)
+static inline uint32_t _spi_is_master( Spi * spi )
 {
-	return (spi->SPI_MR & SPI_MR_MSTR);
+    return( spi->SPI_MR & SPI_MR_MSTR );
 }
 
-static inline uint32_t _spi_is_variable_ps(Spi* spi)
+static inline uint32_t _spi_is_variable_ps( Spi * spi )
 {
-	return (spi->SPI_MR & SPI_MR_PS);
+    return( spi->SPI_MR & SPI_MR_PS );
 }
 
-static void _spi_write_dummy(Spi* spi)
+static void _spi_write_dummy( Spi * spi )
 {
-	if (_spi_is_master(spi)) {
-		writehw(&spi->SPI_TDR, 0xFF);
-	}
+    if( _spi_is_master( spi ) )
+    {
+        writehw( &spi->SPI_TDR, 0xFF );
+    }
 }
 
-static void _spi_consume_read(Spi* spi, uint32_t cs)
+static void _spi_consume_read( Spi * spi,
+                               uint32_t cs )
 {
-	if (_spi_is_master(spi)) {
-		while(!(spi->SPI_SR & SPI_SR_RDRF));
-		uint16_t value;
-		if ((spi->SPI_CSR[cs] & SPI_CSR_BITS_Msk) < SPI_CSR_BITS_9_BIT) {
-			readb(&spi->SPI_RDR, (uint8_t*)&value);
-		} else {
-			readhw(&spi->SPI_RDR, &value);
-		}
-		(void)value;
-	}
+    if( _spi_is_master( spi ) )
+    {
+        while( !( spi->SPI_SR & SPI_SR_RDRF ) )
+        {
+        }
+
+        uint16_t value;
+
+        if( ( spi->SPI_CSR[ cs ] & SPI_CSR_BITS_Msk ) < SPI_CSR_BITS_9_BIT )
+        {
+            readb( &spi->SPI_RDR, ( uint8_t * ) &value );
+        }
+        else
+        {
+            readhw( &spi->SPI_RDR, &value );
+        }
+
+        ( void ) value;
+    }
 }
 
 #ifdef CONFIG_HAVE_SPI_FIFO
 
-static void _spi_fifo_clear(Spi* spi, uint32_t fifos)
-{
-	trace_debug("Spi: Clearing FIFOs\r\n");
-	while (!(spi->SPI_SR & SPI_SR_TXFEF));
-	spi->SPI_CR = fifos & (SPI_CR_RXFCLR | SPI_CR_TXFCLR);
-}
+    static void _spi_fifo_clear( Spi * spi,
+                                 uint32_t fifos )
+    {
+        trace_debug( "Spi: Clearing FIFOs\r\n" );
 
-static inline void _clear_fifo_control_flags(uint32_t* control_reg)
-{
-	*control_reg |= SPI_CR_TXFCLR | SPI_CR_RXFCLR | SPI_CR_FIFODIS;
-}
-#else
-#define _clear_fifo_control_flags(dummy) do {} while(0)
-#endif
+        while( !( spi->SPI_SR & SPI_SR_TXFEF ) )
+        {
+        }
+
+        spi->SPI_CR = fifos & ( SPI_CR_RXFCLR | SPI_CR_TXFCLR );
+    }
+
+    static inline void _clear_fifo_control_flags( uint32_t * control_reg )
+    {
+        *control_reg |= SPI_CR_TXFCLR | SPI_CR_RXFCLR | SPI_CR_FIFODIS;
+    }
+#else  /* ifdef CONFIG_HAVE_SPI_FIFO */
+    #define _clear_fifo_control_flags( dummy )    do {} while( 0 )
+#endif /* ifdef CONFIG_HAVE_SPI_FIFO */
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-void spi_enable(Spi * spi)
+void spi_enable( Spi * spi )
 {
-	spi->SPI_CR = SPI_CR_SPIEN;
+    spi->SPI_CR = SPI_CR_SPIEN;
 }
 
-void spi_disable(Spi * spi)
+void spi_disable( Spi * spi )
 {
-	spi->SPI_CR = SPI_CR_SPIDIS;
+    spi->SPI_CR = SPI_CR_SPIDIS;
 }
 
-void spi_enable_it(Spi * spi, uint32_t dwSources)
+void spi_enable_it( Spi * spi,
+                    uint32_t dwSources )
 {
-	spi->SPI_IER = dwSources;
+    spi->SPI_IER = dwSources;
 }
 
-void spi_disable_it(Spi * spi, uint32_t dwSources)
+void spi_disable_it( Spi * spi,
+                     uint32_t dwSources )
 {
-	spi->SPI_IDR = dwSources;
+    spi->SPI_IDR = dwSources;
 }
 
-void spi_configure(Spi * spi, uint32_t configuration)
+void spi_configure( Spi * spi,
+                    uint32_t configuration )
 {
-	/* Execute a software reset of the SPI twice */
-	spi->SPI_CR = SPI_CR_SWRST;
-	spi->SPI_CR = SPI_CR_SWRST;
+    /* Execute a software reset of the SPI twice */
+    spi->SPI_CR = SPI_CR_SWRST;
+    spi->SPI_CR = SPI_CR_SWRST;
 
-	uint32_t control_reg = SPI_CR_SPIDIS;
-	/* Add clear FIFO flags if present */
-	_clear_fifo_control_flags(&control_reg);
-	/* Apply */
-	spi->SPI_CR = control_reg;
+    uint32_t control_reg = SPI_CR_SPIDIS;
+    /* Add clear FIFO flags if present */
+    _clear_fifo_control_flags( &control_reg );
+    /* Apply */
+    spi->SPI_CR = control_reg;
 
-	spi->SPI_MR = configuration;
+    spi->SPI_MR = configuration;
 }
 
-void spi_chip_select(Spi * spi, uint8_t cS)
+void spi_chip_select( Spi * spi,
+                      uint8_t cS )
 {
-	spi->SPI_MR &= ~SPI_MR_PCS_Msk;
-	spi->SPI_MR |= SPI_PCS(cS);
+    spi->SPI_MR &= ~SPI_MR_PCS_Msk;
+    spi->SPI_MR |= SPI_PCS( cS );
 }
 
-void spi_set_mode(Spi * spi, uint32_t dwConfiguration)
+void spi_set_mode( Spi * spi,
+                   uint32_t dwConfiguration )
 {
-	spi->SPI_MR = dwConfiguration;
+    spi->SPI_MR = dwConfiguration;
 }
 
-void spi_release_cs(Spi * spi)
+void spi_release_cs( Spi * spi )
 {
-	spi->SPI_CR = SPI_CR_LASTXFER;
+    spi->SPI_CR = SPI_CR_LASTXFER;
 }
 
-void spi_configure_cs(Spi * spi, uint32_t cs, uint32_t bitrate,
-		      uint32_t delay_dlybs, uint32_t delay_dlybct,
-		      uint32_t spi_mode, uint32_t release_on_last)
+void spi_configure_cs( Spi * spi,
+                       uint32_t cs,
+                       uint32_t bitrate,
+                       uint32_t delay_dlybs,
+                       uint32_t delay_dlybct,
+                       uint32_t spi_mode,
+                       uint32_t release_on_last )
 {
-	trace_debug("Spi: configuring chip select %u\r\n", (unsigned int)cs);
-	uint32_t id = get_spi_id_from_addr(spi);
-	assert(id < ID_PERIPH_COUNT);
+    trace_debug( "Spi: configuring chip select %u\r\n", ( unsigned int ) cs );
+    uint32_t id = get_spi_id_from_addr( spi );
+    assert( id < ID_PERIPH_COUNT );
 
-	bitrate = _spi_compute_scbr(bitrate, id);
-	delay_dlybs = _spi_compute_dlybs(delay_dlybs, id);
-	delay_dlybct = _spi_compute_dlybct(delay_dlybct, id);
-	release_on_last = release_on_last ? SPI_CSR_CSAAT : 0;
+    bitrate = _spi_compute_scbr( bitrate, id );
+    delay_dlybs = _spi_compute_dlybs( delay_dlybs, id );
+    delay_dlybct = _spi_compute_dlybct( delay_dlybct, id );
+    release_on_last = release_on_last ? SPI_CSR_CSAAT : 0;
 
-	spi->SPI_CSR[cs] = bitrate | delay_dlybs | delay_dlybct
-		| release_on_last | spi_mode;
+    spi->SPI_CSR[ cs ] = bitrate | delay_dlybs | delay_dlybct
+                         | release_on_last | spi_mode;
 }
 
-void spi_configure_cs_mode(Spi * spi, uint32_t cs, uint32_t release_on_last)
+void spi_configure_cs_mode( Spi * spi,
+                            uint32_t cs,
+                            uint32_t release_on_last )
 {
-	if (!release_on_last) {
-		spi->SPI_CSR[cs] |= SPI_CSR_CSAAT;
-	} else {
-		spi->SPI_CSR[cs] &= ~SPI_CSR_CSAAT;
-	}
+    if( !release_on_last )
+    {
+        spi->SPI_CSR[ cs ] |= SPI_CSR_CSAAT;
+    }
+    else
+    {
+        spi->SPI_CSR[ cs ] &= ~SPI_CSR_CSAAT;
+    }
 }
 
-uint32_t spi_get_status(Spi * spi)
+uint32_t spi_get_status( Spi * spi )
 {
-	return spi->SPI_SR;
+    return spi->SPI_SR;
 }
 
-uint16_t spi_read(Spi * spi, uint8_t cs)
+uint16_t spi_read( Spi * spi,
+                   uint8_t cs )
 {
-	_spi_write_dummy(spi);
-	while ((spi->SPI_SR & SPI_SR_RDRF) == 0) ;
-	uint16_t value;
-	if ((spi->SPI_CSR[cs] & SPI_CSR_BITS_Msk) < SPI_CSR_BITS_9_BIT) {
-		readb(&spi->SPI_RDR, (uint8_t*)&value);
-	} else {
-		readhw(&spi->SPI_RDR, &value);
-	}
-	return value;
+    _spi_write_dummy( spi );
+
+    while( ( spi->SPI_SR & SPI_SR_RDRF ) == 0 )
+    {
+    }
+
+    uint16_t value;
+
+    if( ( spi->SPI_CSR[ cs ] & SPI_CSR_BITS_Msk ) < SPI_CSR_BITS_9_BIT )
+    {
+        readb( &spi->SPI_RDR, ( uint8_t * ) &value );
+    }
+    else
+    {
+        readhw( &spi->SPI_RDR, &value );
+    }
+
+    return value;
 }
 
 /**
@@ -264,17 +309,26 @@ uint16_t spi_read(Spi * spi, uint8_t cs)
  * the npcs value is meaningless. Otherwise, it identifies the
  * component which shall be addressed.
  */
-void spi_write(Spi * spi, uint32_t cs, uint16_t data)
+void spi_write( Spi * spi,
+                uint32_t cs,
+                uint16_t data )
 {
-	/* Send data */
-	while ((spi->SPI_SR & SPI_SR_TXEMPTY) == 0);
-	if (_spi_is_variable_ps(spi)) {
-		spi->SPI_TDR = data | SPI_PCS(cs);
-	} else {
-		writehw(&spi->SPI_TDR, data);
-	}
-	/* Consume write */
-	_spi_consume_read(spi, cs);
+    /* Send data */
+    while( ( spi->SPI_SR & SPI_SR_TXEMPTY ) == 0 )
+    {
+    }
+
+    if( _spi_is_variable_ps( spi ) )
+    {
+        spi->SPI_TDR = data | SPI_PCS( cs );
+    }
+    else
+    {
+        writehw( &spi->SPI_TDR, data );
+    }
+
+    /* Consume write */
+    _spi_consume_read( spi, cs );
 }
 
 /**
@@ -288,164 +342,208 @@ void spi_write(Spi * spi, uint32_t cs, uint16_t data)
  * \param dwNpcs  Chip select of the component to address (0, 1, 2 or 3).
  * \param wData  Word of data to send.
  */
-void spi_write_last(Spi * spi, uint32_t cs, uint16_t data)
+void spi_write_last( Spi * spi,
+                     uint32_t cs,
+                     uint16_t data )
 {
-	/* Send data */
-	while ((spi->SPI_SR & SPI_SR_TXEMPTY) == 0) ;
-	spi->SPI_TDR = data | SPI_PCS(cs) | SPI_TDR_LASTXFER;
-	/* Consume write to not corrupt FIFO if present (dummy
-	 * function if CONFIG_HAV_SPI_FIFO not defined) */
-	_spi_consume_read(spi, cs);
+    /* Send data */
+    while( ( spi->SPI_SR & SPI_SR_TXEMPTY ) == 0 )
+    {
+    }
+
+    spi->SPI_TDR = data | SPI_PCS( cs ) | SPI_TDR_LASTXFER;
+
+    /* Consume write to not corrupt FIFO if present (dummy
+     * function if CONFIG_HAV_SPI_FIFO not defined) */
+    _spi_consume_read( spi, cs );
 }
 
-uint32_t spi_is_finished(Spi * spi)
+uint32_t spi_is_finished( Spi * spi )
 {
-	return ((spi->SPI_SR & SPI_SR_TXEMPTY) != 0);
+    return( ( spi->SPI_SR & SPI_SR_TXEMPTY ) != 0 );
 }
 
 #ifdef CONFIG_HAVE_SPI_FIFO
 
-static void _spi_fifo_set_rx_threshold(Spi* spi, uint8_t rx_thres)
-{
-	spi->SPI_FMR &= ~SPI_FMR_RXFTHRES_Msk;
-	spi->SPI_FMR |= SPI_FMR_RXFTHRES(rx_thres);
-}
+    static void _spi_fifo_set_rx_threshold( Spi * spi,
+                                            uint8_t rx_thres )
+    {
+        spi->SPI_FMR &= ~SPI_FMR_RXFTHRES_Msk;
+        spi->SPI_FMR |= SPI_FMR_RXFTHRES( rx_thres );
+    }
 
-static uint32_t _spi_write_stream(Spi *spi, uint32_t chip_select,
-			  const void *stream, uint32_t len)
-{
-	const uint8_t* buffer = stream;
-	uint32_t left = len;
+    static uint32_t _spi_write_stream( Spi * spi,
+                                       uint32_t chip_select,
+                                       const void * stream,
+                                       uint32_t len )
+    {
+        const uint8_t * buffer = stream;
+        uint32_t left = len;
 
-	uint8_t is_ps = _spi_is_variable_ps(spi);
-	uint32_t max_size = is_ps ? sizeof(uint8_t) : sizeof(uint16_t);
-	int32_t fifo_size = get_peripheral_fifo_depth(spi);
-	if (fifo_size < 0)
-		return 0;
+        uint8_t is_ps = _spi_is_variable_ps( spi );
+        uint32_t max_size = is_ps ? sizeof( uint8_t ) : sizeof( uint16_t );
+        int32_t fifo_size = get_peripheral_fifo_depth( spi );
 
-	while (left > 0) {
-		if ((spi->SPI_SR & SPI_SR_TDRE) == 0) continue;
+        if( fifo_size < 0 )
+        {
+            return 0;
+        }
 
-		/* Get FIFO free size (int octet) and clamp it */
-		uint32_t buf_size = fifo_size - spi_fifo_tx_size(spi);
-		buf_size = (buf_size > left) ? left : buf_size;
+        while( left > 0 )
+        {
+            if( ( spi->SPI_SR & SPI_SR_TDRE ) == 0 )
+            {
+                continue;
+            }
 
-		/* Fill the FIFO as must as possible */
-		while (buf_size >= max_size) {
-			if (is_ps) {
-				spi->SPI_TDR = *(uint8_t*)buffer |
-					SPI_PCS(chip_select);
-			} else {
-				spi->SPI_TDR = *buffer |
-					(*(buffer+1) << 16);
-			}
-			buffer += max_size;
-			left -= max_size;
-			buf_size -= max_size;
-		}
-		if (buf_size >= sizeof(uint8_t)) {
-			writehw(&spi->SPI_TDR, *(uint8_t*)buffer);
-			buffer += sizeof(uint8_t);
-			left -= sizeof(uint8_t);
-		}
-	}
-	trace_debug("Spi (fifo): %u data writen\r\n",
-		    (unsigned int)(len-left));
-	return len - left;
-}
+            /* Get FIFO free size (int octet) and clamp it */
+            uint32_t buf_size = fifo_size - spi_fifo_tx_size( spi );
+            buf_size = ( buf_size > left ) ? left : buf_size;
 
-void spi_fifo_configure(Spi* spi, uint8_t tx_thres,
-			uint8_t rx_thres,
-			uint32_t ready_modes)
-{
-	/* Disable SPI and activate FIFO */
-	spi->SPI_CR = SPI_CR_SPIDIS | SPI_CR_FIFOEN;
+            /* Fill the FIFO as must as possible */
+            while( buf_size >= max_size )
+            {
+                if( is_ps )
+                {
+                    spi->SPI_TDR = *( uint8_t * ) buffer |
+                                   SPI_PCS( chip_select );
+                }
+                else
+                {
+                    spi->SPI_TDR = *buffer |
+                                   ( *( buffer + 1 ) << 16 );
+                }
 
-	/* Configure FIFO */
-	spi->SPI_FMR = SPI_FMR_TXFTHRES(tx_thres) | SPI_FMR_RXFTHRES(rx_thres)
-		| ready_modes;
+                buffer += max_size;
+                left -= max_size;
+                buf_size -= max_size;
+            }
 
-	/* Reenable SPI */
-	spi->SPI_CR = SPI_CR_SPIEN;
-}
+            if( buf_size >= sizeof( uint8_t ) )
+            {
+                writehw( &spi->SPI_TDR, *( uint8_t * ) buffer );
+                buffer += sizeof( uint8_t );
+                left -= sizeof( uint8_t );
+            }
+        }
 
-void spi_fifo_disable(Spi* spi)
-{
-	uint32_t reg = 0;
-	_clear_fifo_control_flags(&reg);
-	spi->SPI_CR = reg;
-}
+        trace_debug( "Spi (fifo): %u data writen\r\n",
+                     ( unsigned int ) ( len - left ) );
+        return len - left;
+    }
 
-uint32_t spi_fifo_rx_size(Spi *spi)
-{
-	return (spi->SPI_FLR & SPI_FLR_RXFL_Msk) >> SPI_FLR_RXFL_Pos;
-}
+    void spi_fifo_configure( Spi * spi,
+                             uint8_t tx_thres,
+                             uint8_t rx_thres,
+                             uint32_t ready_modes )
+    {
+        /* Disable SPI and activate FIFO */
+        spi->SPI_CR = SPI_CR_SPIDIS | SPI_CR_FIFOEN;
 
-uint32_t spi_fifo_tx_size(Spi *spi)
-{
-	return (spi->SPI_FLR & SPI_FLR_TXFL_Msk) >> SPI_FLR_TXFL_Pos;
-}
+        /* Configure FIFO */
+        spi->SPI_FMR = SPI_FMR_TXFTHRES( tx_thres ) | SPI_FMR_RXFTHRES( rx_thres )
+                       | ready_modes;
 
-uint32_t spi_read_stream(Spi *spi, uint32_t chip_select,
-			 void *stream, uint32_t len)
-{
-	uint8_t* buffer = stream;
-	uint32_t left = len;
+        /* Reenable SPI */
+        spi->SPI_CR = SPI_CR_SPIEN;
+    }
 
-	uint8_t is_master = _spi_is_master(spi);
-	uint32_t max_size = is_master ? sizeof(uint8_t) : sizeof(uint32_t);
+    void spi_fifo_disable( Spi * spi )
+    {
+        uint32_t reg = 0;
 
-	while (left > 0) {
-		uint32_t lenwrite = (left > SPI_FIFO_DEPTH) ?
-			SPI_FIFO_DEPTH : left;
+        _clear_fifo_control_flags( &reg );
+        spi->SPI_CR = reg;
+    }
 
-		_spi_fifo_set_rx_threshold(spi, lenwrite);
-		_spi_write_stream(spi, chip_select,
-				 stream, lenwrite);
+    uint32_t spi_fifo_rx_size( Spi * spi )
+    {
+        return ( spi->SPI_FLR & SPI_FLR_RXFL_Msk ) >> SPI_FLR_RXFL_Pos;
+    }
 
-		while (!(spi->SPI_SR & SPI_SR_RXFTHF));
+    uint32_t spi_fifo_tx_size( Spi * spi )
+    {
+        return ( spi->SPI_FLR & SPI_FLR_TXFL_Msk ) >> SPI_FLR_TXFL_Pos;
+    }
 
-		/* Get FIFO size (in octets) and clamp it */
-		uint32_t buf_size = spi_fifo_rx_size(spi);
-		buf_size = buf_size > left ? left : buf_size;
+    uint32_t spi_read_stream( Spi * spi,
+                              uint32_t chip_select,
+                              void * stream,
+                              uint32_t len )
+    {
+        uint8_t * buffer = stream;
+        uint32_t left = len;
 
-		/* Fill the buffer as must as possible with four data reads */
-		while (buf_size >= max_size) {
-			if (is_master) {
-				readb(&spi->SPI_RDR, (uint8_t*)buffer);
-			} else {
-				*(uint32_t*)buffer = spi->SPI_RDR;
-			}
-			buffer += max_size;
-			left -= max_size;
-			buf_size -= max_size;
-		}
-		/* Add tail data if stream is not 4 octet aligned */
-		if (buf_size >= sizeof(uint16_t)) {
-			/* two data read */
-			readhw(&spi->SPI_RDR, (uint16_t*)buffer);
-			left -= sizeof(uint16_t);
-			buffer += sizeof(uint16_t);
-			buf_size -= sizeof(uint16_t);
-		}
-		if (buf_size >= sizeof(uint8_t)) {
-			/* two data read */
-			readb(&spi->SPI_RDR, (uint8_t*)buffer);
-			left -= sizeof(uint8_t);
-			buffer += sizeof(uint8_t);
-		}
-	}
-	trace_debug("Spi (fifo): %u data read\r\n",
-		    (unsigned int)(len-left));
-	return len - left;
-}
+        uint8_t is_master = _spi_is_master( spi );
+        uint32_t max_size = is_master ? sizeof( uint8_t ) : sizeof( uint32_t );
 
-uint32_t spi_write_stream(Spi *spi, uint32_t chip_select,
-			  const void *stream, uint32_t len)
-{
-	uint32_t consumed = _spi_write_stream(spi, chip_select, stream, len);
-	_spi_fifo_clear(spi, SPI_CR_RXFCLR);
-	return consumed;
-}
+        while( left > 0 )
+        {
+            uint32_t lenwrite = ( left > SPI_FIFO_DEPTH ) ?
+                                SPI_FIFO_DEPTH : left;
 
-#endif
+            _spi_fifo_set_rx_threshold( spi, lenwrite );
+            _spi_write_stream( spi, chip_select,
+                               stream, lenwrite );
+
+            while( !( spi->SPI_SR & SPI_SR_RXFTHF ) )
+            {
+            }
+
+            /* Get FIFO size (in octets) and clamp it */
+            uint32_t buf_size = spi_fifo_rx_size( spi );
+            buf_size = buf_size > left ? left : buf_size;
+
+            /* Fill the buffer as must as possible with four data reads */
+            while( buf_size >= max_size )
+            {
+                if( is_master )
+                {
+                    readb( &spi->SPI_RDR, ( uint8_t * ) buffer );
+                }
+                else
+                {
+                    *( uint32_t * ) buffer = spi->SPI_RDR;
+                }
+
+                buffer += max_size;
+                left -= max_size;
+                buf_size -= max_size;
+            }
+
+            /* Add tail data if stream is not 4 octet aligned */
+            if( buf_size >= sizeof( uint16_t ) )
+            {
+                /* two data read */
+                readhw( &spi->SPI_RDR, ( uint16_t * ) buffer );
+                left -= sizeof( uint16_t );
+                buffer += sizeof( uint16_t );
+                buf_size -= sizeof( uint16_t );
+            }
+
+            if( buf_size >= sizeof( uint8_t ) )
+            {
+                /* two data read */
+                readb( &spi->SPI_RDR, ( uint8_t * ) buffer );
+                left -= sizeof( uint8_t );
+                buffer += sizeof( uint8_t );
+            }
+        }
+
+        trace_debug( "Spi (fifo): %u data read\r\n",
+                     ( unsigned int ) ( len - left ) );
+        return len - left;
+    }
+
+    uint32_t spi_write_stream( Spi * spi,
+                               uint32_t chip_select,
+                               const void * stream,
+                               uint32_t len )
+    {
+        uint32_t consumed = _spi_write_stream( spi, chip_select, stream, len );
+
+        _spi_fifo_clear( spi, SPI_CR_RXFCLR );
+        return consumed;
+    }
+
+#endif /* ifdef CONFIG_HAVE_SPI_FIFO */

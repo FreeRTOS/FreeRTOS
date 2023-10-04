@@ -30,59 +30,60 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xenv.h
-*
-* Defines common services that are typically found in a host operating.
-* environment. This include file simply includes an OS specific file based
-* on the compile-time constant BUILD_ENV_*, where * is the name of the target
-* environment.
-*
-* All services are defined as macros.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- -----------------------------------------------
-* 1.00b ch   10/24/02 Added XENV_LINUX
-* 1.00a rmm  04/17/02 First release
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xenv.h
+ *
+ * Defines common services that are typically found in a host operating.
+ * environment. This include file simply includes an OS specific file based
+ * on the compile-time constant BUILD_ENV_*, where * is the name of the target
+ * environment.
+ *
+ * All services are defined as macros.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- -----------------------------------------------
+ * 1.00b ch   10/24/02 Added XENV_LINUX
+ * 1.00a rmm  04/17/02 First release
+ * </pre>
+ *
+ ******************************************************************************/
 
-#ifndef XENV_H /* prevent circular inclusions */
-#define XENV_H /* by using protection macros */
+#ifndef XENV_H     /* prevent circular inclusions */
+    #define XENV_H /* by using protection macros */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*
  * Select which target environment we are operating under
  */
 
 /* VxWorks target environment */
-#if defined XENV_VXWORKS
-#include "xenv_vxworks.h"
+    #if defined XENV_VXWORKS
+        #include "xenv_vxworks.h"
 
 /* Linux target environment */
-#elif defined XENV_LINUX
-#include "xenv_linux.h"
+    #elif defined XENV_LINUX
+        #include "xenv_linux.h"
 
 /* Unit test environment */
-#elif defined XENV_UNITTEST
-#include "ut_xenv.h"
+    #elif defined XENV_UNITTEST
+        #include "ut_xenv.h"
 
 /* Integration test environment */
-#elif defined XENV_INTTEST
-#include "int_xenv.h"
+    #elif defined XENV_INTTEST
+        #include "int_xenv.h"
 
 /* Standalone environment selected */
-#else
-#include "xenv_standalone.h"
-#endif
+    #else  /* if defined XENV_VXWORKS */
+        #include "xenv_standalone.h"
+    #endif /* if defined XENV_VXWORKS */
 
 
 /*
@@ -93,6 +94,7 @@ extern "C" {
 /**************************** Type Definitions *******************************/
 
 /*****************************************************************************/
+
 /**
  *
  * XENV_TIME_STAMP
@@ -105,6 +107,7 @@ extern "C" {
 /***************** Macros (Inline Functions) Definitions *********************/
 
 /*****************************************************************************/
+
 /**
  *
  * XENV_MEM_COPY(void *DestPtr, void *SrcPtr, unsigned Bytes)
@@ -119,6 +122,7 @@ extern "C" {
  */
 
 /*****************************************************************************/
+
 /**
  *
  * XENV_MEM_FILL(void *DestPtr, char Data, unsigned Bytes)
@@ -132,6 +136,7 @@ extern "C" {
  * @return  None
  */
 /*****************************************************************************/
+
 /**
  *
  * XENV_TIME_STAMP_GET(XTIME_STAMP *StampPtr)
@@ -144,6 +149,7 @@ extern "C" {
  */
 
 /*****************************************************************************/
+
 /**
  *
  * XENV_TIME_STAMP_DELTA_US(XTIME_STAMP *Stamp1Ptr, XTIME_STAMP* Stamp2Ptr)
@@ -157,6 +163,7 @@ extern "C" {
  */
 
 /*****************************************************************************/
+
 /**
  *
  * XENV_TIME_STAMP_DELTA_MS(XTIME_STAMP *Stamp1Ptr, XTIME_STAMP* Stamp2Ptr)
@@ -180,8 +187,8 @@ extern "C" {
  * @return  None
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif            /* end of protection macro */
+#endif /* end of protection macro */

@@ -40,18 +40,19 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef SLEEP_H
-#define SLEEP_H
+    #define SLEEP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <compiler.h>
+    #include <compiler.h>
 
 /**
  * \defgroup sleep_group Power Manager (PM)
@@ -68,45 +69,46 @@ extern "C" {
  * @{
  */
 
-#if defined(__DOXYGEN__)
+    #if defined( __DOXYGEN__ )
+
 /**
  * \brief Sets the MCU in the specified sleep mode
  * \param sleep_mode Sleep mode to set.
  */
-#endif
+    #endif
 /* SAM3,SAM4,SAMG,SAMV,SAME and SAMS series */
-#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || \
-		SAM4CM || SAM4CP || SAMG || SAMV71 || SAME70 || SAMS70)
+    #if ( SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || \
+          SAM4CM || SAM4CP || SAMG || SAMV71 || SAME70 || SAMS70 )
 
-#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || \
-		SAM4CM || SAM4CP || SAMG55 || SAMV71 || SAME70 || SAMS70)
-# define  SAM_PM_SMODE_ACTIVE     0 /**< Active */
-# define  SAM_PM_SMODE_SLEEP_WFE  1 /**< Wait for Events */
-# define  SAM_PM_SMODE_SLEEP_WFI  2 /**< Wait for Interrupts */
-# define  SAM_PM_SMODE_WAIT_FAST  3 /**< Wait Mode, startup fast (in 3ms) */
-# define  SAM_PM_SMODE_WAIT       4 /**< Wait Mode */
-# define  SAM_PM_SMODE_BACKUP     5 /**< Backup Mode */
-#else
-# define  SAM_PM_SMODE_ACTIVE     0 /**< Active */
-# define  SAM_PM_SMODE_WAIT_FAST  1 /**< Wait Mode, startup fast (in 3ms) */
-# define  SAM_PM_SMODE_WAIT       2 /**< Wait Mode */
-#endif
+        #if ( SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || \
+              SAM4CM || SAM4CP || SAMG55 || SAMV71 || SAME70 || SAMS70 )
+            #define  SAM_PM_SMODE_ACTIVE       0 /**< Active */
+            #define  SAM_PM_SMODE_SLEEP_WFE    1 /**< Wait for Events */
+            #define  SAM_PM_SMODE_SLEEP_WFI    2 /**< Wait for Interrupts */
+            #define  SAM_PM_SMODE_WAIT_FAST    3 /**< Wait Mode, startup fast (in 3ms) */
+            #define  SAM_PM_SMODE_WAIT         4 /**< Wait Mode */
+            #define  SAM_PM_SMODE_BACKUP       5 /**< Backup Mode */
+        #else
+            #define  SAM_PM_SMODE_ACTIVE       0 /**< Active */
+            #define  SAM_PM_SMODE_WAIT_FAST    1 /**< Wait Mode, startup fast (in 3ms) */
+            #define  SAM_PM_SMODE_WAIT         2 /**< Wait Mode */
+        #endif /* if ( SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG55 || SAMV71 || SAME70 || SAMS70 ) */
 
 /** (SCR) Sleep deep bit */
-#define SCR_SLEEPDEEP   (0x1 <<  2)
+        #define SCR_SLEEPDEEP    ( 0x1 << 2 )
 
 /**
  * Clocks restored callback function type.
  * Registered by routine pmc_wait_wakeup_clocks_restore()
  * Callback called when all clocks are restored.
  */
-typedef void (*pmc_callback_wakeup_clocks_restored_t) (void);
+        typedef void (* pmc_callback_wakeup_clocks_restored_t) ( void );
 
 /**
  * Enter sleep mode
  * \param sleep_mode Sleep mode to enter
  */
-void pmc_sleep(int sleep_mode);
+        void pmc_sleep( int sleep_mode );
 
 /**
  * Check if clocks are restored after wakeup
@@ -114,20 +116,19 @@ void pmc_sleep(int sleep_mode);
  *  After wakeup clocks should be restored, before that some of the
  *  ISR should not be served, otherwise there may be timing or clock issue.)
  */
-bool pmc_is_wakeup_clocks_restored(void);
+        bool pmc_is_wakeup_clocks_restored( void );
 
 /**
  * \return true if start waiting
  */
-void pmc_wait_wakeup_clocks_restore(
-		pmc_callback_wakeup_clocks_restored_t callback);
+        void pmc_wait_wakeup_clocks_restore( pmc_callback_wakeup_clocks_restored_t callback );
 
-#endif
+    #endif /* if ( SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG || SAMV71 || SAME70 || SAMS70 ) */
 
-//! @}
+/*! @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* SLEEP_H */

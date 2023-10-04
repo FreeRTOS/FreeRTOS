@@ -15,6 +15,6 @@
  * Link a function into the LIM (Loosely Integrated
  * Memory) if the LIM is present on the target device.
  */
-#define METAL_PLACE_IN_LIM __attribute__((section(".lim")))
+#define METAL_PLACE_IN_LIM    __attribute__( ( section( ".lim" ) ) )
 
 #endif

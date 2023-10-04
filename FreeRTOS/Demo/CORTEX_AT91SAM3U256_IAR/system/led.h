@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,44 +27,43 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-///
-/// Small set of functions for simple and portable LED usage.
-///
-/// !Usage
-///
-/// -# Configure one or more LEDs using LED_Configure and
-///    LED_ConfigureAll.
-/// -# Set, clear and toggle LEDs using LED_Set, LED_Clear and
-///    LED_Toggle.
-///
-/// LEDs are numbered starting from 0; the number of LEDs depend on the
-/// board being used. All the functions defined here will compile properly
-/// regardless of whether the LED is defined or not; they will simply
-/// return 0 when a LED which does not exist is given as an argument.
-/// Also, these functions take into account how each LED is connected on to
-/// board; thus, <LED_Set> might change the level on the corresponding pin
-/// to 0 or 1, but it will always light the LED on; same thing for the other
-/// methods.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Small set of functions for simple and portable LED usage. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Configure one or more LEDs using LED_Configure and */
+/*/    LED_ConfigureAll. */
+/*/ -# Set, clear and toggle LEDs using LED_Set, LED_Clear and */
+/*/    LED_Toggle. */
+/*/ */
+/*/ LEDs are numbered starting from 0; the number of LEDs depend on the */
+/*/ board being used. All the functions defined here will compile properly */
+/*/ regardless of whether the LED is defined or not; they will simply */
+/*/ return 0 when a LED which does not exist is given as an argument. */
+/*/ Also, these functions take into account how each LED is connected on to */
+/*/ board; thus, <LED_Set> might change the level on the corresponding pin */
+/*/ to 0 or 1, but it will always light the LED on; same thing for the other */
+/*/ methods. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef LED_H
 #define LED_H
 
-//------------------------------------------------------------------------------
-//         Global Functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global Functions */
+/*------------------------------------------------------------------------------ */
 
-extern unsigned char LED_Configure(unsigned int led);
+extern unsigned char LED_Configure( unsigned int led );
 
-extern unsigned char LED_Set(unsigned int led);
+extern unsigned char LED_Set( unsigned int led );
 
-extern unsigned char LED_Clear(unsigned int led);
+extern unsigned char LED_Clear( unsigned int led );
 
-extern unsigned char LED_Toggle(unsigned int led);
+extern unsigned char LED_Toggle( unsigned int led );
 
 #endif //#ifndef LED_H
-

@@ -77,31 +77,31 @@
 #include "TaskNotify.h"
 
 /* Priorities for the demo application tasks. */
-#define mainCHECK_TASK_PRIORITY             ( configMAX_PRIORITIES - 1 )
+#define mainCHECK_TASK_PRIORITY            ( configMAX_PRIORITIES - 1 )
 
 /* The period of the check task, in ms, converted to ticks using the
  * pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors have
  * been found, mainERROR_CHECK_TASK_PERIOD is used if an error has been found. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD      pdMS_TO_TICKS( 3000UL )
-#define mainERROR_CHECK_TASK_PERIOD         pdMS_TO_TICKS( 500UL )
+#define mainNO_ERROR_CHECK_TASK_PERIOD     pdMS_TO_TICKS( 3000UL )
+#define mainERROR_CHECK_TASK_PERIOD        pdMS_TO_TICKS( 500UL )
 
 /* Parameters that are passed into the register check tasks solely for the
  * purpose of ensuring parameters are passed into tasks correctly. */
-#define mainREG_TEST_TASK_1_PARAMETER       ( ( void * ) 0x12345678 )
-#define mainREG_TEST_TASK_2_PARAMETER       ( ( void * ) 0x87654321 )
+#define mainREG_TEST_TASK_1_PARAMETER      ( ( void * ) 0x12345678 )
+#define mainREG_TEST_TASK_2_PARAMETER      ( ( void * ) 0x87654321 )
 
 /* The base period used by the timer test tasks. */
-#define mainTIMER_TEST_PERIOD               ( 50 )
+#define mainTIMER_TEST_PERIOD              ( 50 )
 
 /* The size of the stack allocated to the check task (as described in the
  * comments at the top of this file. */
-#define mainCHECK_TASK_STACK_SIZE_WORDS     100
+#define mainCHECK_TASK_STACK_SIZE_WORDS    100
 
 /* Size of the stacks to allocated for the register check tasks. */
-#define mainREG_TEST_STACK_SIZE_WORDS       70
+#define mainREG_TEST_STACK_SIZE_WORDS      70
 
 /* Success output messages. This is used by the CI - do not change. */
-#define mainDEMO_SUCCESS_MESSAGE            "FreeRTOS Demo SUCCESS\r\n"
+#define mainDEMO_SUCCESS_MESSAGE           "FreeRTOS Demo SUCCESS\r\n"
 /*-----------------------------------------------------------*/
 
 /*
@@ -113,7 +113,7 @@ void main_full( void );
 /*
  * The check task, as described at the top of this file.
  */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /*
  * Register check tasks as described at the top of this file.  The nature of
@@ -121,9 +121,9 @@ static void prvCheckTask( void *pvParameters );
  * entry points are kept in the C file for the convenience of checking the task
  * parameter.
  */
-static void prvRegTestTaskEntry1( void *pvParameters );
+static void prvRegTestTaskEntry1( void * pvParameters );
 extern void vRegTest1Implementation( void );
-static void prvRegTestTaskEntry2( void *pvParameters );
+static void prvRegTestTaskEntry2( void * pvParameters );
 extern void vRegTest2Implementation( void );
 
 /*
@@ -139,8 +139,8 @@ void vFullDemoTickHook( void );
  * then the register check tasks have not discovered any errors.  If a variable
  * stops incrementing, then an error has been found. */
 uint32_t ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
-volatile uint32_t *pulRegTest1LoopCounter = &ulRegTest1LoopCounter;
-volatile uint32_t *pulRegTest2LoopCounter = &ulRegTest2LoopCounter;
+volatile uint32_t * pulRegTest1LoopCounter = &ulRegTest1LoopCounter;
+volatile uint32_t * pulRegTest2LoopCounter = &ulRegTest2LoopCounter;
 /*-----------------------------------------------------------*/
 
 void main_full( void )
@@ -177,18 +177,20 @@ void main_full( void )
      * timer tasks to be created.  See the memory management section on the
      * FreeRTOS web site for more details on the FreeRTOS heap
      * http://www.freertos.org/a00111.html. */
-    for( ;; );
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
-TickType_t xLastExecutionTime;
-uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
-char * pcStatusMessage = pcPassMessage;
-extern void vToggleLED( void );
+    TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
+    TickType_t xLastExecutionTime;
+    uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+    char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
+    char * pcStatusMessage = pcPassMessage;
+    extern void vToggleLED( void );
 
     /* Just to stop compiler warnings. */
     ( void ) pvParameters;
@@ -206,7 +208,7 @@ extern void vToggleLED( void );
      * mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
      * effect of increasing the rate at which the onboard LED toggles, and in so
      * doing gives visual feedback of the system status. */
-    for( ;; )
+    for( ; ; )
     {
         /* Delay until it is time to execute again. */
         vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
@@ -238,6 +240,7 @@ extern void vToggleLED( void );
         {
             pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
         }
+
         ulLastRegTest1Value = ulRegTest1LoopCounter;
 
         /* Check that the register test 2 task is still running. */
@@ -245,6 +248,7 @@ extern void vToggleLED( void );
         {
             pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
         }
+
         ulLastRegTest2Value = ulRegTest2LoopCounter;
 
         /* Write the status message to the UART and toggle the LED to show the
@@ -263,7 +267,7 @@ extern void vToggleLED( void );
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestTaskEntry1( void *pvParameters )
+static void prvRegTestTaskEntry1( void * pvParameters )
 {
     /* Although the regtest task is written in assembler, its entry point is
      * written in C for convenience of checking the task parameter is being passed
@@ -281,7 +285,7 @@ static void prvRegTestTaskEntry1( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestTaskEntry2( void *pvParameters )
+static void prvRegTestTaskEntry2( void * pvParameters )
 {
     /* Although the regtest task is written in assembler, its entry point is
      * written in C for convenience of checking the task parameter is being passed

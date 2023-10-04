@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,59 +27,59 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !!!Purpose
-/// 
-/// Configuration and handling of interrupts on PIO status changes. The API
-/// provided here have several advantages over the traditional PIO interrupt
-/// configuration approach:
-///    - It is highly portable
-///    - It automatically demultiplexes interrupts when multiples pins have been
-///      configured on a single PIO controller
-///    - It allows a group of pins to share the same interrupt
-/// 
-/// However, it also has several minor drawbacks that may prevent from using it
-/// in particular applications:
-///    - It enables the clocks of all PIO controllers
-///    - PIO controllers all share the same interrupt handler, which does the
-///      demultiplexing and can be slower than direct configuration
-///    - It reserves space for a fixed number of interrupts, which can be
-///      increased by modifying the appropriate constant in pio_it.c.
-///
-/// !!!Usage
-/// 
-/// -# Initialize the PIO interrupt mechanism using PIO_InitializeInterrupts()
-///    with the desired priority (0 ... 7).
-/// -# Configure a status change interrupt on one or more pin(s) with
-///    PIO_ConfigureIt().
-/// -# Enable & disable interrupts on pins using PIO_EnableIt() and
-///    PIO_DisableIt().
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !!!Purpose */
+/*/ */
+/*/ Configuration and handling of interrupts on PIO status changes. The API */
+/*/ provided here have several advantages over the traditional PIO interrupt */
+/*/ configuration approach: */
+/*/    - It is highly portable */
+/*/    - It automatically demultiplexes interrupts when multiples pins have been */
+/*/      configured on a single PIO controller */
+/*/    - It allows a group of pins to share the same interrupt */
+/*/ */
+/*/ However, it also has several minor drawbacks that may prevent from using it */
+/*/ in particular applications: */
+/*/    - It enables the clocks of all PIO controllers */
+/*/    - PIO controllers all share the same interrupt handler, which does the */
+/*/      demultiplexing and can be slower than direct configuration */
+/*/    - It reserves space for a fixed number of interrupts, which can be */
+/*/      increased by modifying the appropriate constant in pio_it.c. */
+/*/ */
+/*/ !!!Usage */
+/*/ */
+/*/ -# Initialize the PIO interrupt mechanism using PIO_InitializeInterrupts() */
+/*/    with the desired priority (0 ... 7). */
+/*/ -# Configure a status change interrupt on one or more pin(s) with */
+/*/    PIO_ConfigureIt(). */
+/*/ -# Enable & disable interrupts on pins using PIO_EnableIt() and */
+/*/    PIO_DisableIt(). */
+/*------------------------------------------------------------------------------ */
 
 #ifndef PIO_IT_H
 #define PIO_IT_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "pio.h"
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void PIO_InitializeInterrupts(unsigned int priority);
+extern void PIO_InitializeInterrupts( unsigned int priority );
 
-extern void PIO_ConfigureIt(const Pin *pPin, void (*handler)(const Pin *));
+extern void PIO_ConfigureIt( const Pin * pPin,
+                             void ( * handler )( const Pin * ) );
 
-extern void PIO_EnableIt(const Pin *pPin);
+extern void PIO_EnableIt( const Pin * pPin );
 
-extern void PIO_DisableIt(const Pin *pPin);
+extern void PIO_DisableIt( const Pin * pPin );
 
-extern void PIO_IT_InterruptHandler(void);
+extern void PIO_IT_InterruptHandler( void );
 
 #endif //#ifndef PIO_IT_H
-

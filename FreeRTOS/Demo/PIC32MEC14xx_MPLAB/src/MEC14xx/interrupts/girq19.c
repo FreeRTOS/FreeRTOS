@@ -19,8 +19,9 @@
 *****************************************************************************/
 
 /** @file girq19.c
- *Interrupt service routines for MIPS using vanilla GCC and MCHP XC32
+ * Interrupt service routines for MIPS using vanilla GCC and MCHP XC32
  */
+
 /** @defgroup MEC14xx ISR
  *  @{
  */
@@ -35,72 +36,62 @@
 
 #if GIRQ19_DISAGG == 0
 
-void __attribute__((weak, interrupt, nomips16, section(".girqs")))
-girq19_isr(void)
-{
-    JTVIC_GROUP_EN_CLR->w = (1ul<<11);
-}
+    void __attribute__( ( weak, interrupt, nomips16, section( ".girqs" ) ) ) girq19_isr( void )
+    {
+        JTVIC_GROUP_EN_CLR->w = ( 1ul << 11 );
+    }
 
 #else
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b0(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 0);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b0( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 0 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b1(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 1);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b1( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 1 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b2(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 2);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b2( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 2 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b3(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 3);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b3( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 3 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b4(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 4);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b4( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 4 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b5(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 5);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b5( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 5 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b6(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 6);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b6( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 6 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b7(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 7);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b7( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 7 );
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq19_b8(void)
-{
-    jtvic_dis_clr_source(MEC14xx_GIRQ19_ID, 8);
-}
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq19_b8( void )
+    {
+        jtvic_dis_clr_source( MEC14xx_GIRQ19_ID, 8 );
+    }
 
 
-#endif
+#endif /* if GIRQ19_DISAGG == 0 */
 
 /* end girq19.c */
+
 /**   @}
  */
-

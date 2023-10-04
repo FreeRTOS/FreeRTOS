@@ -35,10 +35,10 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_DeInit(void)
+void EXTIT_DeInit( void )
 {
-  MRCC_PeripheralSWResetConfig(MRCC_Peripheral_EXTIT,ENABLE);
-  MRCC_PeripheralSWResetConfig(MRCC_Peripheral_EXTIT,DISABLE);
+    MRCC_PeripheralSWResetConfig( MRCC_Peripheral_EXTIT, ENABLE );
+    MRCC_PeripheralSWResetConfig( MRCC_Peripheral_EXTIT, DISABLE );
 }
 
 /*******************************************************************************
@@ -51,30 +51,30 @@ void EXTIT_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_Init(EXTIT_InitTypeDef* EXTIT_InitStruct)
+void EXTIT_Init( EXTIT_InitTypeDef * EXTIT_InitStruct )
 {
-  if(EXTIT_InitStruct->EXTIT_ITLineCmd == ENABLE)
-  {
-    /* Enable the selected external interrupts */
-    EXTIT->MR |= EXTIT_InitStruct->EXTIT_ITLine;
-    
-    /* Select the trigger for the selected external interrupts */
-    if(EXTIT_InitStruct->EXTIT_ITTrigger == EXTIT_ITTrigger_Falling)
+    if( EXTIT_InitStruct->EXTIT_ITLineCmd == ENABLE )
     {
-      /* Falling edge */
-      EXTIT->TSR &= ~EXTIT_InitStruct->EXTIT_ITLine;
+        /* Enable the selected external interrupts */
+        EXTIT->MR |= EXTIT_InitStruct->EXTIT_ITLine;
+
+        /* Select the trigger for the selected external interrupts */
+        if( EXTIT_InitStruct->EXTIT_ITTrigger == EXTIT_ITTrigger_Falling )
+        {
+            /* Falling edge */
+            EXTIT->TSR &= ~EXTIT_InitStruct->EXTIT_ITLine;
+        }
+        else if( EXTIT_InitStruct->EXTIT_ITTrigger == EXTIT_ITTrigger_Rising )
+        {
+            /* Rising edge */
+            EXTIT->TSR |= EXTIT_InitStruct->EXTIT_ITLine;
+        }
     }
-    else if (EXTIT_InitStruct->EXTIT_ITTrigger == EXTIT_ITTrigger_Rising)
+    else if( EXTIT_InitStruct->EXTIT_ITLineCmd == DISABLE )
     {
-      /* Rising edge */
-      EXTIT->TSR |= EXTIT_InitStruct->EXTIT_ITLine;
+        /* Disable the selected external interrupts */
+        EXTIT->MR &= ~EXTIT_InitStruct->EXTIT_ITLine;
     }
-  }
-  else if(EXTIT_InitStruct->EXTIT_ITLineCmd == DISABLE)
-  {
-    /* Disable the selected external interrupts */
-    EXTIT->MR &= ~EXTIT_InitStruct->EXTIT_ITLine;
-  }
 }
 
 /*******************************************************************************
@@ -85,11 +85,11 @@ void EXTIT_Init(EXTIT_InitTypeDef* EXTIT_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_StructInit(EXTIT_InitTypeDef* EXTIT_InitStruct)
+void EXTIT_StructInit( EXTIT_InitTypeDef * EXTIT_InitStruct )
 {
-  EXTIT_InitStruct->EXTIT_ITLine = EXTIT_ITLineNone;
-  EXTIT_InitStruct->EXTIT_ITTrigger = EXTIT_ITTrigger_Falling;
-  EXTIT_InitStruct->EXTIT_ITLineCmd = DISABLE;
+    EXTIT_InitStruct->EXTIT_ITLine = EXTIT_ITLineNone;
+    EXTIT_InitStruct->EXTIT_ITTrigger = EXTIT_ITTrigger_Falling;
+    EXTIT_InitStruct->EXTIT_ITLineCmd = DISABLE;
 }
 
 /*******************************************************************************
@@ -101,79 +101,79 @@ void EXTIT_StructInit(EXTIT_InitTypeDef* EXTIT_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_GenerateSWInterrupt(u16 EXTIT_ITLine)
+void EXTIT_GenerateSWInterrupt( u16 EXTIT_ITLine )
 {
-  EXTIT->SWIR |= EXTIT_ITLine;
+    EXTIT->SWIR |= EXTIT_ITLine;
 }
 
 /*******************************************************************************
 * Function Name  : EXTIT_GetFlagStatus
 * Description    : Checks whether the specified EXTIT line flag is set or not.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines flag to check.  
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines flag to check.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
 * Return         : The new state of EXTIT_ITLine (SET or RESET).
 *******************************************************************************/
-FlagStatus EXTIT_GetFlagStatus(u16 EXTIT_ITLine)
+FlagStatus EXTIT_GetFlagStatus( u16 EXTIT_ITLine )
 {
-  if((EXTIT->PR & EXTIT_ITLine) != RESET)
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( EXTIT->PR & EXTIT_ITLine ) != RESET )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
 * Function Name  : EXTIT_ClearFlag
 * Description    : Clears the EXTIT’s line pending flags.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines flags to clear. 
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines flags to clear.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_ClearFlag(u16 EXTIT_ITLine)
+void EXTIT_ClearFlag( u16 EXTIT_ITLine )
 {
-  EXTIT->PR = EXTIT_ITLine;
+    EXTIT->PR = EXTIT_ITLine;
 }
 
 /*******************************************************************************
 * Function Name  : EXTIT_GetITStatus
 * Description    : Checks whether the specified EXTIT line is asserted or not.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines to check. 
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines to check.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
 * Return         : The new state of EXTIT_ITLine (SET or RESET).
 *******************************************************************************/
-ITStatus EXTIT_GetITStatus(u16 EXTIT_ITLine)
+ITStatus EXTIT_GetITStatus( u16 EXTIT_ITLine )
 {
-  if(((EXTIT->PR & EXTIT_ITLine) != RESET)&& ((EXTIT->MR & EXTIT_ITLine) != RESET))
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( ( EXTIT->PR & EXTIT_ITLine ) != RESET ) && ( ( EXTIT->MR & EXTIT_ITLine ) != RESET ) )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
 * Function Name  : EXTIT_ClearITPendingBit
 * Description    : Clears the EXTIT’s line pending bits.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines to clear. 
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines to clear.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_ClearITPendingBit(u16 EXTIT_ITLine)
+void EXTIT_ClearITPendingBit( u16 EXTIT_ITLine )
 {
-  EXTIT->PR = EXTIT_ITLine;
+    EXTIT->PR = EXTIT_ITLine;
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

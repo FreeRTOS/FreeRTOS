@@ -28,8 +28,9 @@
  */
 
 /** \file
-    Implementation of the CDCLineCoding class.
+ *  Implementation of the CDCLineCoding class.
  */
+
 /** \addtogroup usb_cdc
  *@{
  */
@@ -55,11 +56,11 @@
  *                  (\ref usb_cdc_parity CDC LineCoding ParityChecking).
  *  \param databits Number of data bits.
  */
-void CDCLineCoding_Initialize(CDCLineCoding *lineCoding,
-                              uint32_t bitrate,
-                              uint8_t stopbits,
-                              uint8_t parity,
-                              uint8_t databits)
+void CDCLineCoding_Initialize( CDCLineCoding * lineCoding,
+                               uint32_t bitrate,
+                               uint8_t stopbits,
+                               uint8_t parity,
+                               uint8_t databits )
 {
     lineCoding->dwDTERate = bitrate;
     lineCoding->bCharFormat = stopbits;
@@ -68,4 +69,3 @@ void CDCLineCoding_Initialize(CDCLineCoding *lineCoding,
 }
 
 /**@}*/
-

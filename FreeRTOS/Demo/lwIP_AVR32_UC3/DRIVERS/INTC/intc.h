@@ -1,18 +1,19 @@
 /*This file is prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
- *
- * \brief INTC driver for AVR32 UC3.
- *
- * AVR32 Interrupt Controller driver module.
- *
- * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
- * - Supported devices:  All AVR32 devices with an INTC module can be used.
- * - AppNote:
- *
- * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
- *
- ******************************************************************************/
+*
+* \brief INTC driver for AVR32 UC3.
+*
+* AVR32 Interrupt Controller driver module.
+*
+* - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+* - Supported devices:  All AVR32 devices with an INTC module can be used.
+* - AppNote:
+*
+* \author               Atmel Corporation: http://www.atmel.com \n
+*                       Support and FAQ: http://support.atmel.no/
+*
+******************************************************************************/
 
 /* Copyright (c) 2007, Atmel Corporation All rights reserved.
  *
@@ -48,37 +49,37 @@
 #include "compiler.h"
 
 
-//! Maximal number of interrupt request lines per group.
-#define AVR32_INTC_MAX_NUM_IRQS_PER_GRP             32
+/*! Maximal number of interrupt request lines per group. */
+#define AVR32_INTC_MAX_NUM_IRQS_PER_GRP    32
 
-//! Number of interrupt priority levels.
-#define AVR32_INTC_NUM_INT_LEVELS                   (1 << AVR32_INTC_IPR0_INTLEV_SIZE)
+/*! Number of interrupt priority levels. */
+#define AVR32_INTC_NUM_INT_LEVELS          ( 1 << AVR32_INTC_IPR0_INTLEV_SIZE )
 
 /*! \name Interrupt Priority Levels
  */
-//! @{
-#define INT0          0 //!< Lowest interrupt priority level.
-#define INT1          1
-#define INT2          2
-#define INT3          3 //!< Highest interrupt priority level.
-//! @}
+/*! @{ */
+#define INT0    0       /*!< Lowest interrupt priority level. */
+#define INT1    1
+#define INT2    2
+#define INT3    3       /*!< Highest interrupt priority level. */
+/*! @} */
 
 
-#ifdef __AVR32_ABI_COMPILER__ // Automatically defined when compiling for AVR32, not when assembling.
+#ifdef __AVR32_ABI_COMPILER__ /* Automatically defined when compiling for AVR32, not when assembling. */
 
-//! Pointer to interrupt handler.
-#if __GNUC__
-typedef void (*__int_handler)(void);
-#elif __ICCAVR32__
-typedef void (__interrupt *__int_handler)(void);
-#endif
+/*! Pointer to interrupt handler. */
+    #if __GNUC__
+        typedef void (* __int_handler)( void );
+    #elif __ICCAVR32__
+        typedef void ( __interrupt * __int_handler )( void );
+    #endif
 
 
 /*! \brief Initializes the hardware interrupt controller driver.
  *
  * \note Taken and adapted from Newlib.
  */
-extern void INTC_init_interrupts(void);
+    extern void INTC_init_interrupts( void );
 
 /*! \brief Registers an interrupt handler.
  *
@@ -96,9 +97,11 @@ extern void INTC_init_interrupts(void);
  *
  * \note Taken and adapted from Newlib.
  */
-extern void INTC_register_interrupt(__int_handler handler, unsigned int irq, unsigned int int_lev);
+    extern void INTC_register_interrupt( __int_handler handler,
+                                         unsigned int irq,
+                                         unsigned int int_lev );
 
-#endif  // __AVR32_ABI_COMPILER__
+#endif // __AVR32_ABI_COMPILER__
 
 
-#endif  // _INTC_H_
+#endif // _INTC_H_

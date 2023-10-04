@@ -9,17 +9,17 @@
 *  14/07/2004 : V1.3
 *  01/01/2004 : V1.2
 *******************************************************************************
- THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
- CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
- AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
- OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
- OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
- CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+*  THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH
+*  CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
+*  AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
+*  OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT
+*  OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
+*  CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
 #include "uart.h"
 
-extern u16 UART_FlagStatus(UART_TypeDef *UARTx);
+extern u16 UART_FlagStatus( UART_TypeDef * UARTx );
 
 /*******************************************************************************
 * Function Name  : UART_Init
@@ -28,13 +28,13 @@ extern u16 UART_FlagStatus(UART_TypeDef *UARTx);
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_Init(UART_TypeDef *UARTx)
+void UART_Init( UART_TypeDef * UARTx )
 {
-  UARTx->IER = 0x00;
-  UARTx->CR = 0x00;
-  (void)UARTx->RxBUFR;
-  UARTx->RxRSTR = 0xFFFF;
-  UARTx->TxRSTR = 0xFFFF;
+    UARTx->IER = 0x00;
+    UARTx->CR = 0x00;
+    ( void ) UARTx->RxBUFR;
+    UARTx->RxRSTR = 0xFFFF;
+    UARTx->TxRSTR = 0xFFFF;
 }
 
 /*******************************************************************************
@@ -45,9 +45,10 @@ void UART_Init(UART_TypeDef *UARTx)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_BaudRateConfig(UART_TypeDef *UARTx, u32 BaudRate)
+void UART_BaudRateConfig( UART_TypeDef * UARTx,
+                          u32 BaudRate )
 {
-  UARTx->BR = (u16)(RCCU_FrequencyValue(RCCU_FCLK)/(16*BaudRate));
+    UARTx->BR = ( u16 ) ( RCCU_FrequencyValue( RCCU_FCLK ) / ( 16 * BaudRate ) );
 }
 
 /*******************************************************************************
@@ -62,13 +63,16 @@ void UART_BaudRateConfig(UART_TypeDef *UARTx, u32 BaudRate)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_Config(UART_TypeDef *UARTx, u32 BaudRate, UARTParity_TypeDef Parity,
-                 UARTStopBits_TypeDef StopBits, UARTMode_TypeDef Mode)
+void UART_Config( UART_TypeDef * UARTx,
+                  u32 BaudRate,
+                  UARTParity_TypeDef Parity,
+                  UARTStopBits_TypeDef StopBits,
+                  UARTMode_TypeDef Mode )
 {
-  UART_ModeConfig(UARTx, Mode);
-  UART_BaudRateConfig(UARTx, BaudRate);
-  UART_ParityConfig(UARTx, Parity);
-  UART_StopBitsConfig(UARTx, StopBits);
+    UART_ModeConfig( UARTx, Mode );
+    UART_BaudRateConfig( UARTx, BaudRate );
+    UART_ParityConfig( UARTx, Parity );
+    UART_StopBitsConfig( UARTx, StopBits );
 }
 
 /*******************************************************************************
@@ -81,9 +85,18 @@ void UART_Config(UART_TypeDef *UARTx, u32 BaudRate, UARTParity_TypeDef Parity,
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_ItConfig(UART_TypeDef *UARTx, u16 UART_Flag, FunctionalState NewState)
+void UART_ItConfig( UART_TypeDef * UARTx,
+                    u16 UART_Flag,
+                    FunctionalState NewState )
 {
-  if (NewState==ENABLE) UARTx->IER|=UART_Flag; else UARTx->IER&=~UART_Flag;
+    if( NewState == ENABLE )
+    {
+        UARTx->IER |= UART_Flag;
+    }
+    else
+    {
+        UARTx->IER &= ~UART_Flag;
+    }
 }
 
 /*******************************************************************************
@@ -95,9 +108,17 @@ void UART_ItConfig(UART_TypeDef *UARTx, u16 UART_Flag, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_FifoConfig(UART_TypeDef *UARTx, FunctionalState NewState)
+void UART_FifoConfig( UART_TypeDef * UARTx,
+                      FunctionalState NewState )
 {
-  if (NewState==ENABLE) UARTx->CR|=0x0400; else UARTx->CR&=~0x0400;
+    if( NewState == ENABLE )
+    {
+        UARTx->CR |= 0x0400;
+    }
+    else
+    {
+        UARTx->CR &= ~0x0400;
+    }
 }
 
 /*******************************************************************************
@@ -109,9 +130,17 @@ void UART_FifoConfig(UART_TypeDef *UARTx, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_FifoReset(UART_TypeDef *UARTx, UARTFIFO_TypeDef FIFO)
+void UART_FifoReset( UART_TypeDef * UARTx,
+                     UARTFIFO_TypeDef FIFO )
 {
-  if (FIFO==UART_RxFIFO) UARTx->RxRSTR=0xFFFF; else UARTx->TxRSTR=0xFFFF;
+    if( FIFO == UART_RxFIFO )
+    {
+        UARTx->RxRSTR = 0xFFFF;
+    }
+    else
+    {
+        UARTx->TxRSTR = 0xFFFF;
+    }
 }
 
 /*******************************************************************************
@@ -123,9 +152,17 @@ void UART_FifoReset(UART_TypeDef *UARTx, UARTFIFO_TypeDef FIFO)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_LoopBackConfig(UART_TypeDef *UARTx, FunctionalState NewState)
+void UART_LoopBackConfig( UART_TypeDef * UARTx,
+                          FunctionalState NewState )
 {
-  if (NewState==ENABLE) UARTx->CR|=0x0040; else UARTx->CR&=~0x0040;
+    if( NewState == ENABLE )
+    {
+        UARTx->CR |= 0x0040;
+    }
+    else
+    {
+        UARTx->CR &= ~0x0040;
+    }
 }
 
 /*******************************************************************************
@@ -136,9 +173,17 @@ void UART_LoopBackConfig(UART_TypeDef *UARTx, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_RxConfig(UART_TypeDef *UARTx, FunctionalState NewState)
+void UART_RxConfig( UART_TypeDef * UARTx,
+                    FunctionalState NewState )
 {
-  if (NewState==ENABLE) UARTx->CR|=0x0100; else UARTx->CR&=~0x0100;
+    if( NewState == ENABLE )
+    {
+        UARTx->CR |= 0x0100;
+    }
+    else
+    {
+        UARTx->CR &= ~0x0100;
+    }
 }
 
 /*******************************************************************************
@@ -149,9 +194,17 @@ void UART_RxConfig(UART_TypeDef *UARTx, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_OnOffConfig(UART_TypeDef *UARTx, FunctionalState NewState)
+void UART_OnOffConfig( UART_TypeDef * UARTx,
+                       FunctionalState NewState )
 {
-  if (NewState==ENABLE) UARTx->CR|=0x0080; else UARTx->CR&=~0x0080;
+    if( NewState == ENABLE )
+    {
+        UARTx->CR |= 0x0080;
+    }
+    else
+    {
+        UARTx->CR &= ~0x0080;
+    }
 }
 
 /*******************************************************************************
@@ -162,13 +215,23 @@ void UART_OnOffConfig(UART_TypeDef *UARTx, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_ByteSend(UART_TypeDef *UARTx, u8 *Data)
+void UART_ByteSend( UART_TypeDef * UARTx,
+                    u8 * Data )
 {
-  if (UARTx->CR & (0x0001<<UART_FIFOEnableBit))// if FIFO ENABLED
-    while((UARTx->SR & UART_TxFull)); // while the UART_TxFIFO contain 16 characters.
-  else                  // if FIFO DISABLED
-    while (!(UARTx->SR & UART_TxEmpty)); // while the transmit shift register not empty
-  UARTx->TxBUFR = *Data;
+    if( UARTx->CR & ( 0x0001 << UART_FIFOEnableBit ) ) /* if FIFO ENABLED */
+    {
+        while( ( UARTx->SR & UART_TxFull ) )           /* while the UART_TxFIFO contain 16 characters. */
+        {
+        }
+    }
+    else                                       /* if FIFO DISABLED */
+    {
+        while( !( UARTx->SR & UART_TxEmpty ) ) /* while the transmit shift register not empty */
+        {
+        }
+    }
+
+    UARTx->TxBUFR = *Data;
 }
 
 /*******************************************************************************
@@ -179,13 +242,23 @@ void UART_ByteSend(UART_TypeDef *UARTx, u8 *Data)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_9BitByteSend(UART_TypeDef *UARTx, u16 *Data)
+void UART_9BitByteSend( UART_TypeDef * UARTx,
+                        u16 * Data )
 {
-  if(UARTx->CR & (0x0001<<UART_FIFOEnableBit))// if FIFO ENABLED
-    while((UARTx->SR & UART_TxFull)); // while the UART_TxFIFO contain 16 characters.
-  else                  // if FIFO DISABLED
-    while (!(UARTx->SR & UART_TxEmpty)); // while the transmit shift register not empty
-  UARTx->TxBUFR = *Data;
+    if( UARTx->CR & ( 0x0001 << UART_FIFOEnableBit ) ) /* if FIFO ENABLED */
+    {
+        while( ( UARTx->SR & UART_TxFull ) )           /* while the UART_TxFIFO contain 16 characters. */
+        {
+        }
+    }
+    else                                       /* if FIFO DISABLED */
+    {
+        while( !( UARTx->SR & UART_TxEmpty ) ) /* while the transmit shift register not empty */
+        {
+        }
+    }
+
+    UARTx->TxBUFR = *Data;
 }
 
 /*******************************************************************************
@@ -197,13 +270,15 @@ void UART_9BitByteSend(UART_TypeDef *UARTx, u16 *Data)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_DataSend(UART_TypeDef *UARTx, u8 *Data, u8 DataLength)
+void UART_DataSend( UART_TypeDef * UARTx,
+                    u8 * Data,
+                    u8 DataLength )
 {
-  while(DataLength--)
-  {
-    UART_ByteSend(UARTx,Data);
-    Data++;
-  }
+    while( DataLength-- )
+    {
+        UART_ByteSend( UARTx, Data );
+        Data++;
+    }
 }
 
 /*******************************************************************************
@@ -215,13 +290,15 @@ void UART_DataSend(UART_TypeDef *UARTx, u8 *Data, u8 DataLength)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_9BitDataSend(UART_TypeDef *UARTx, u16 *Data, u8 DataLength)
+void UART_9BitDataSend( UART_TypeDef * UARTx,
+                        u16 * Data,
+                        u8 DataLength )
 {
-  while(DataLength--)
-  {
-    UART_9BitByteSend(UARTx,Data);
-    Data++;
-  }
+    while( DataLength-- )
+    {
+        UART_9BitByteSend( UARTx, Data );
+        Data++;
+    }
 }
 
 /*******************************************************************************
@@ -232,13 +309,18 @@ void UART_9BitDataSend(UART_TypeDef *UARTx, u16 *Data, u8 DataLength)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART_StringSend(UART_TypeDef *UARTx, u8 *String)
+void UART_StringSend( UART_TypeDef * UARTx,
+                      u8 * String )
 {
-  u8 *Data=String;
-  while(*Data != '\0')
-    UART_ByteSend(UARTx, Data++);
-  *Data='\0';
-  UART_ByteSend(UARTx, Data);
+    u8 * Data = String;
+
+    while( *Data != '\0' )
+    {
+        UART_ByteSend( UARTx, Data++ );
+    }
+
+    *Data = '\0';
+    UART_ByteSend( UARTx, Data );
 }
 
 /*******************************************************************************
@@ -250,13 +332,20 @@ void UART_StringSend(UART_TypeDef *UARTx, u8 *String)
 * Output         : The received data
 * Return         : The UARTx.SR register contents
 *******************************************************************************/
-u16 UART_ByteReceive(UART_TypeDef *UARTx, u8 *Data, u8 TimeOut)
+u16 UART_ByteReceive( UART_TypeDef * UARTx,
+                      u8 * Data,
+                      u8 TimeOut )
 {
-   u16 wStatus;
-   UARTx->TOR=TimeOut;// reload the Timeout counter
-   while (!((wStatus=UARTx->SR) & (UART_TimeOutIdle|UART_RxHalfFull|UART_RxBufFull)));// while the UART_RxFIFO is empty and no Timeoutidle
-   *Data = (u8)UARTx->RxBUFR; // then read the Receive Buffer Register
-   return wStatus;
+    u16 wStatus;
+
+    UARTx->TOR = TimeOut;                                                                           /* reload the Timeout counter */
+
+    while( !( ( wStatus = UARTx->SR ) & ( UART_TimeOutIdle | UART_RxHalfFull | UART_RxBufFull ) ) ) /* while the UART_RxFIFO is empty and no Timeoutidle */
+    {
+    }
+
+    *Data = ( u8 ) UARTx->RxBUFR; /* then read the Receive Buffer Register */
+    return wStatus;
 }
 
 /*******************************************************************************
@@ -268,13 +357,20 @@ u16 UART_ByteReceive(UART_TypeDef *UARTx, u8 *Data, u8 TimeOut)
 * Output         : The received data
 * Return         : The UARTx.SR register contents
 *******************************************************************************/
-u16 UART_9BitByteReceive(UART_TypeDef *UARTx, u16 *Data, u8 TimeOut)
+u16 UART_9BitByteReceive( UART_TypeDef * UARTx,
+                          u16 * Data,
+                          u8 TimeOut )
 {
-  u16 wStatus;
-  UARTx->TOR=TimeOut;// reload the Timeout counter
-  while (!((wStatus=UARTx->SR) & (UART_TimeOutIdle|UART_RxHalfFull|UART_RxBufFull)));// while the UART_RxFIFO is empty and no Timeoutidle
-  *Data = (u16)UARTx->RxBUFR; // then read the RxBUFR
-  return wStatus;
+    u16 wStatus;
+
+    UARTx->TOR = TimeOut;                                                                           /* reload the Timeout counter */
+
+    while( !( ( wStatus = UARTx->SR ) & ( UART_TimeOutIdle | UART_RxHalfFull | UART_RxBufFull ) ) ) /* while the UART_RxFIFO is empty and no Timeoutidle */
+    {
+    }
+
+    *Data = ( u16 ) UARTx->RxBUFR; /* then read the RxBUFR */
+    return wStatus;
 }
 
 /*******************************************************************************
@@ -287,12 +383,19 @@ u16 UART_9BitByteReceive(UART_TypeDef *UARTx, u16 *Data, u8 TimeOut)
 * Output         : The received data
 * Return         : The UARTx.SR register contents
 *******************************************************************************/
-u16 UART_DataReceive(UART_TypeDef *UARTx, u8 *Data, u8 DataLength, u8 TimeOut)
+u16 UART_DataReceive( UART_TypeDef * UARTx,
+                      u8 * Data,
+                      u8 DataLength,
+                      u8 TimeOut )
 {
-  u16 wStatus;
-  while(DataLength--)
-    wStatus=UART_ByteReceive(UARTx,Data++,TimeOut);
-  return wStatus;
+    u16 wStatus;
+
+    while( DataLength-- )
+    {
+        wStatus = UART_ByteReceive( UARTx, Data++, TimeOut );
+    }
+
+    return wStatus;
 }
 
 /*******************************************************************************
@@ -305,12 +408,19 @@ u16 UART_DataReceive(UART_TypeDef *UARTx, u8 *Data, u8 DataLength, u8 TimeOut)
 * Output         : The received data
 * Return         : The UARTx.SR register contents
 *******************************************************************************/
-u16 UART_9BitDataReceive(UART_TypeDef *UARTx, u16 *Data, u8 DataLength, u8 TimeOut)
+u16 UART_9BitDataReceive( UART_TypeDef * UARTx,
+                          u16 * Data,
+                          u8 DataLength,
+                          u8 TimeOut )
 {
-  u16 wStatus;
-  while(DataLength--)
-    wStatus=UART_9BitByteReceive(UARTx,Data++,TimeOut);
-  return wStatus;
+    u16 wStatus;
+
+    while( DataLength-- )
+    {
+        wStatus = UART_9BitByteReceive( UARTx, Data++, TimeOut );
+    }
+
+    return wStatus;
 }
 
 /*******************************************************************************
@@ -321,20 +431,27 @@ u16 UART_9BitDataReceive(UART_TypeDef *UARTx, u16 *Data, u8 DataLength, u8 TimeO
 * Output         : The received string
 * Return         : The UARTx.SR register contents
 *******************************************************************************/
-u16 UART_StringReceive(UART_TypeDef *UARTx, u8 *Data)
+u16 UART_StringReceive( UART_TypeDef * UARTx,
+                        u8 * Data )
 {
-  u8 *pSTRING=Data;
-  u16 wStatus;
-  do
-  {
-    while (!((wStatus=UARTx->SR) & (UART_RxHalfFull|UART_RxBufFull)));// while the UART_RxFIFO is empty and no Timeoutidle
-    *(pSTRING++) = (u8)UARTx->RxBUFR; // then read the RxBUFR
-  } while((*(pSTRING - 1)!=0x0D)&(*(pSTRING - 1)!='\0'));
-  *(pSTRING - 1)='\0';
-  return wStatus;
+    u8 * pSTRING = Data;
+    u16 wStatus;
+
+    do
+    {
+        while( !( ( wStatus = UARTx->SR ) & ( UART_RxHalfFull | UART_RxBufFull ) ) ) /* while the UART_RxFIFO is empty and no Timeoutidle */
+        {
+        }
+
+        *( pSTRING++ ) = ( u8 ) UARTx->RxBUFR; /* then read the RxBUFR */
+    } while( ( *( pSTRING - 1 ) != 0x0D ) & ( *( pSTRING - 1 ) != '\0' ) );
+
+    *( pSTRING - 1 ) = '\0';
+    return wStatus;
 }
 
 #ifdef USE_SERIAL_PORT
+
 /*******************************************************************************
 * Function Name  : sendchar
 * Description    : This function sends a character to the selected UART.
@@ -342,26 +459,26 @@ u16 UART_StringReceive(UART_TypeDef *UARTx, u8 *Data)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void sendchar( char *ch )
-{
-   #ifdef USE_UART0
-     #define  UARTx  UART0
-   #endif /* Use_UART0 */
+    void sendchar( char * ch )
+    {
+        #ifdef USE_UART0
+        #define  UARTx    UART0
+        #endif /* Use_UART0 */
 
-   #ifdef USE_UART1
-     #define  UARTx  UART1
-   #endif /* Use_UART1 */
+        #ifdef USE_UART1
+        #define  UARTx    UART1
+        #endif /* Use_UART1 */
 
-   #ifdef USE_UART2
-     #define  UARTx  UART2
-   #endif /* Use_UART2 */
+        #ifdef USE_UART2
+        #define  UARTx    UART2
+        #endif /* Use_UART2 */
 
-   #ifdef USE_UART3
-     #define  UARTx  UART3
-   #endif /* Use_UART3 */
+        #ifdef USE_UART3
+        #define  UARTx    UART3
+        #endif /* Use_UART3 */
 
-   UART_ByteSend(UARTx,(u8 *)ch);
-}
+        UART_ByteSend( UARTx, ( u8 * ) ch );
+    }
 #endif /* USE_SERIAL_PORT */
 
 /******************* (C) COPYRIGHT 2003 STMicroelectronics *****END OF FILE****/

@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -45,7 +45,6 @@
  */
 typedef struct _ClockConfiguration
 {
-
     /** Processor clock frequency (in MHz). */
     uint16_t pck;
     /** Master clock frequency (in MHz). */
@@ -54,7 +53,7 @@ typedef struct _ClockConfiguration
     uint32_t pllr;
     /** PMC_MCKR register value. */
     uint32_t mckr;
-} ClockConfiguration ;
+} ClockConfiguration;
 
 /*----------------------------------------------------------------------------
  *        Local variables
@@ -62,19 +61,20 @@ typedef struct _ClockConfiguration
 
 /* Clock configurations for the AT91SAM3S4-EK */
 #define CKGR_MUL_SHIFT         16
-#define CKGR_PLLCOUNT_SHIFT     8
-#define CKGR_DIV_SHIFT          0
+#define CKGR_PLLCOUNT_SHIFT    8
+#define CKGR_DIV_SHIFT         0
 
 /* Clock configuration for the AT91SAM3S */
-static const ClockConfiguration clockConfigurations[] = {
-    {133, 133,  CKGR_PLLAR_STUCKTO1 | CKGR_PLLAR_MULA(199) 
-    | CKGR_PLLAR_OUTA(0) | CKGR_PLLAR_PLLACOUNT(64) | CKGR_PLLAR_DIVA(3),
-    PMC_MCKR_CSS_SLOW_CLK | PMC_MCKR_PRES_CLOCK | PMC_MCKR_MDIV_PCK_DIV3 
-    | PMC_MCKR_PLLADIV2_DIV2 | PMC_MCKR_CSS_PLLA_CLK}
+static const ClockConfiguration clockConfigurations[] =
+{
+    { 133, 133, CKGR_PLLAR_STUCKTO1 | CKGR_PLLAR_MULA( 199 )
+      | CKGR_PLLAR_OUTA( 0 ) | CKGR_PLLAR_PLLACOUNT( 64 ) | CKGR_PLLAR_DIVA( 3 ),
+      PMC_MCKR_CSS_SLOW_CLK | PMC_MCKR_PRES_CLOCK | PMC_MCKR_MDIV_PCK_DIV3
+      | PMC_MCKR_PLLADIV2_DIV2 | PMC_MCKR_CSS_PLLA_CLK }
 };
 
 /* Number of available clock configurations */
-#define NB_CLOCK_CONFIGURATION (sizeof(clockConfigurations)/sizeof(clockConfigurations[0]))
+#define NB_CLOCK_CONFIGURATION    ( sizeof( clockConfigurations ) / sizeof( clockConfigurations[ 0 ] ) )
 
 /* Current clock configuration */
 uint32_t currentConfig = 0; /* 0 have to be the default configuration */
@@ -88,81 +88,92 @@ uint32_t currentConfig = 0; /* 0 have to be the default configuration */
  *
  * \param configuration  Index of the configuration to set.
  */
-void CLOCK_SetConfig(uint8_t configuration)
+void CLOCK_SetConfig( uint8_t configuration )
 {
-    TRACE_DEBUG("Setting clock configuration #%d ... ", configuration);
+    TRACE_DEBUG( "Setting clock configuration #%d ... ", configuration );
     currentConfig = configuration;
 
     /* Switch to main oscillator in two operations */
-    //C->PMC_MCKR = (PMC->PMC_MCKR & (uint32_t)~PMC_MCKR_CSS) | PMC_MCKR_CSS_MAIN_CLK;
-    while ((PMC->PMC_SR & PMC_SR_MCKRDY) == 0);
+    /*C->PMC_MCKR = (PMC->PMC_MCKR & (uint32_t)~PMC_MCKR_CSS) | PMC_MCKR_CSS_MAIN_CLK; */
+    while( ( PMC->PMC_SR & PMC_SR_MCKRDY ) == 0 )
+    {
+    }
 
     /* Configure PLL */
-    PMC->CKGR_PLLAR = clockConfigurations[configuration].pllr;
-    while ((PMC->PMC_SR & PMC_SR_LOCKA) == 0);
+    PMC->CKGR_PLLAR = clockConfigurations[ configuration ].pllr;
+
+    while( ( PMC->PMC_SR & PMC_SR_LOCKA ) == 0 )
+    {
+    }
 
     /* Configure master clock in two operations */
-    //C->PMC_MCKR = (clockConfigurations[configuration].mckr & (uint32_t)~PMC_MCKR_CSS) | PMC_MCKR_CSS_MAIN_CLK;
-    while ((PMC->PMC_SR & PMC_SR_MCKRDY) == 0);
-    PMC->PMC_MCKR = clockConfigurations[configuration].mckr;
-    while ((PMC->PMC_SR & PMC_SR_MCKRDY) == 0);
+    /*C->PMC_MCKR = (clockConfigurations[configuration].mckr & (uint32_t)~PMC_MCKR_CSS) | PMC_MCKR_CSS_MAIN_CLK; */
+    while( ( PMC->PMC_SR & PMC_SR_MCKRDY ) == 0 )
+    {
+    }
+
+    PMC->PMC_MCKR = clockConfigurations[ configuration ].mckr;
+
+    while( ( PMC->PMC_SR & PMC_SR_MCKRDY ) == 0 )
+    {
+    }
 
     /* DBGU reconfiguration */
-    DBGU_Configure(115200, clockConfigurations[configuration].mck*1000000);
-    TRACE_DEBUG("done.\n\r");
+    DBGU_Configure( 115200, clockConfigurations[ configuration ].mck * 1000000 );
+    TRACE_DEBUG( "done.\n\r" );
 }
 
 /**
  * \brief Display the user menu on the DBGU.
  */
-void CLOCK_DisplayMenu(void)
+void CLOCK_DisplayMenu( void )
 {
     uint32_t i;
 
-    printf("\n\rMenu Clock configuration:\n\r");
-    for (i = 0; i < NB_CLOCK_CONFIGURATION; i++) {
+    printf( "\n\rMenu Clock configuration:\n\r" );
 
-        printf("  %u: Set PCK = %3u MHz, MCK = %3u MHz   %s\n\r",
-               (unsigned int)i,
-               (unsigned int)clockConfigurations[i].pck,
-               (unsigned int)clockConfigurations[i].mck,
-               (currentConfig==i)?"(curr)":"");
+    for( i = 0; i < NB_CLOCK_CONFIGURATION; i++ )
+    {
+        printf( "  %u: Set PCK = %3u MHz, MCK = %3u MHz   %s\n\r",
+                ( unsigned int ) i,
+                ( unsigned int ) clockConfigurations[ i ].pck,
+                ( unsigned int ) clockConfigurations[ i ].mck,
+                ( currentConfig == i ) ? "(curr)" : "" );
     }
 }
 
 /**
  * \brief Get the current MCK
  */
-uint16_t CLOCK_GetCurrMCK(void)
+uint16_t CLOCK_GetCurrMCK( void )
 {
-    return clockConfigurations[currentConfig].mck;
+    return clockConfigurations[ currentConfig ].mck;
 }
 
 /**
  * \brief Get the current PCK
  */
-uint16_t CLOCK_GetCurrPCK(void)
+uint16_t CLOCK_GetCurrPCK( void )
 {
-    return clockConfigurations[currentConfig].pck;
+    return clockConfigurations[ currentConfig ].pck;
 }
 
 /**
  * \brief Change clock configuration.
  */
-void CLOCK_UserChangeConfig(void)
+void CLOCK_UserChangeConfig( void )
 {
     uint8_t key = 0;
 
-    while (1)
+    while( 1 )
     {
         CLOCK_DisplayMenu();
         key = DBGU_GetChar();
 
-        if ((key >= '0') && (key <= ('0' + NB_CLOCK_CONFIGURATION - 1)))
+        if( ( key >= '0' ) && ( key <= ( '0' + NB_CLOCK_CONFIGURATION - 1 ) ) )
         {
-            CLOCK_SetConfig(key - '0');
+            CLOCK_SetConfig( key - '0' );
             break;
         }
     }
 }
-

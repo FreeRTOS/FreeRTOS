@@ -28,46 +28,44 @@
 #include "partest.h"
 #include "led.h"
 
-#define partstNUM_LEDS			( 4 )
+#define partstNUM_LEDS    ( 4 )
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines for the LED's.
  *-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
-unsigned long ul;
+{
+    unsigned long ul;
 
-	for( ul = 0; ul < partstNUM_LEDS; ul++ )
-	{
-		LED_Configure( ul );
-	}
+    for( ul = 0; ul < partstNUM_LEDS; ul++ )
+    {
+        LED_Configure( ul );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		if( xValue == 0 )
-		{
-			LED_Clear( uxLED );
-		}
-		else
-		{
-			LED_Set( uxLED );
-		}
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        if( xValue == 0 )
+        {
+            LED_Clear( uxLED );
+        }
+        else
+        {
+            LED_Set( uxLED );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-    	LED_Toggle( uxLED );
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        LED_Toggle( uxLED );
+    }
 }
-
-
-

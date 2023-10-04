@@ -9,21 +9,20 @@
 #define __SC_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- Smart Card Host Interface Controller -------------------------*/
+
 /**
-    @addtogroup SC Smart Card Host Interface Controller(SC)
-    Memory Mapped Structure for SC Controller
-@{ */
+ *  @addtogroup SC Smart Card Host Interface Controller(SC)
+ *  Memory Mapped Structure for SC Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var SC_T::DAT
      * Offset: 0x00  SC Receive/Transmit Holding Buffer Register
@@ -643,332 +642,331 @@ typedef struct
      * |        |          |Extend time = 20 * 2048 * 0.25us = 10.24 ms.
      * |        |          |Note: Setting 0 to this field conforms to the protocol ISO/IEC 7816-3
      */
-    __IO uint32_t DAT;                   /*!< [0x0000] SC Receive/Transmit Holding Buffer Register                      */
-    __IO uint32_t CTL;                   /*!< [0x0004] SC Control Register                                              */
-    __IO uint32_t ALTCTL;                /*!< [0x0008] SC Alternate Control Register                                    */
-    __IO uint32_t EGT;                   /*!< [0x000c] SC Extra Guard Time Register                                     */
-    __IO uint32_t RXTOUT;                /*!< [0x0010] SC Receive Buffer Time-out Counter Register                      */
-    __IO uint32_t ETUCTL;                /*!< [0x0014] SC Element Time Unit Control Register                            */
-    __IO uint32_t INTEN;                 /*!< [0x0018] SC Interrupt Enable Control Register                             */
-    __IO uint32_t INTSTS;                /*!< [0x001c] SC Interrupt Status Register                                     */
-    __IO uint32_t STATUS;                /*!< [0x0020] SC Transfer Status Register                                      */
-    __IO uint32_t PINCTL;                /*!< [0x0024] SC Pin Control State Register                                    */
-    __IO uint32_t TMRCTL0;               /*!< [0x0028] SC Internal Timer0 Control Register                              */
-    __IO uint32_t TMRCTL1;               /*!< [0x002c] SC Internal Timer1 Control Register                              */
-    __IO uint32_t TMRCTL2;               /*!< [0x0030] SC Internal Timer2 Control Register                              */
-    __IO uint32_t UARTCTL;               /*!< [0x0034] SC UART Mode Control Register                                    */
-    __I  uint32_t RESERVE0[5];
-    __IO uint32_t ACTCTL;                /*!< [0x004c] SC Activation Control Register                                   */
-
+    __IO uint32_t DAT;     /*!< [0x0000] SC Receive/Transmit Holding Buffer Register                      */
+    __IO uint32_t CTL;     /*!< [0x0004] SC Control Register                                              */
+    __IO uint32_t ALTCTL;  /*!< [0x0008] SC Alternate Control Register                                    */
+    __IO uint32_t EGT;     /*!< [0x000c] SC Extra Guard Time Register                                     */
+    __IO uint32_t RXTOUT;  /*!< [0x0010] SC Receive Buffer Time-out Counter Register                      */
+    __IO uint32_t ETUCTL;  /*!< [0x0014] SC Element Time Unit Control Register                            */
+    __IO uint32_t INTEN;   /*!< [0x0018] SC Interrupt Enable Control Register                             */
+    __IO uint32_t INTSTS;  /*!< [0x001c] SC Interrupt Status Register                                     */
+    __IO uint32_t STATUS;  /*!< [0x0020] SC Transfer Status Register                                      */
+    __IO uint32_t PINCTL;  /*!< [0x0024] SC Pin Control State Register                                    */
+    __IO uint32_t TMRCTL0; /*!< [0x0028] SC Internal Timer0 Control Register                              */
+    __IO uint32_t TMRCTL1; /*!< [0x002c] SC Internal Timer1 Control Register                              */
+    __IO uint32_t TMRCTL2; /*!< [0x0030] SC Internal Timer2 Control Register                              */
+    __IO uint32_t UARTCTL; /*!< [0x0034] SC UART Mode Control Register                                    */
+    __I uint32_t RESERVE0[ 5 ];
+    __IO uint32_t ACTCTL;  /*!< [0x004c] SC Activation Control Register                                   */
 } SC_T;
 
 /**
-    @addtogroup SC_CONST SC Bit Field Definition
-    Constant Definitions for SC Controller
-@{ */
+ *  @addtogroup SC_CONST SC Bit Field Definition
+ *  Constant Definitions for SC Controller
+ * @{ */
 
-#define SC_DAT_DAT_Pos                   (0)                                               /*!< SC_T::DAT: DAT Position                */
-#define SC_DAT_DAT_Msk                   (0xfful << SC_DAT_DAT_Pos)                        /*!< SC_T::DAT: DAT Mask                    */
+#define SC_DAT_DAT_Pos            ( 0 )                                                    /*!< SC_T::DAT: DAT Position                */
+#define SC_DAT_DAT_Msk            ( 0xfful << SC_DAT_DAT_Pos )                             /*!< SC_T::DAT: DAT Mask                    */
 
-#define SC_CTL_SCEN_Pos                  (0)                                               /*!< SC_T::CTL: SCEN Position               */
-#define SC_CTL_SCEN_Msk                  (0x1ul << SC_CTL_SCEN_Pos)                        /*!< SC_T::CTL: SCEN Mask                   */
+#define SC_CTL_SCEN_Pos           ( 0 )                                                    /*!< SC_T::CTL: SCEN Position               */
+#define SC_CTL_SCEN_Msk           ( 0x1ul << SC_CTL_SCEN_Pos )                             /*!< SC_T::CTL: SCEN Mask                   */
 
-#define SC_CTL_RXOFF_Pos                 (1)                                               /*!< SC_T::CTL: RXOFF Position              */
-#define SC_CTL_RXOFF_Msk                 (0x1ul << SC_CTL_RXOFF_Pos)                       /*!< SC_T::CTL: RXOFF Mask                  */
+#define SC_CTL_RXOFF_Pos          ( 1 )                                                    /*!< SC_T::CTL: RXOFF Position              */
+#define SC_CTL_RXOFF_Msk          ( 0x1ul << SC_CTL_RXOFF_Pos )                            /*!< SC_T::CTL: RXOFF Mask                  */
 
-#define SC_CTL_TXOFF_Pos                 (2)                                               /*!< SC_T::CTL: TXOFF Position              */
-#define SC_CTL_TXOFF_Msk                 (0x1ul << SC_CTL_TXOFF_Pos)                       /*!< SC_T::CTL: TXOFF Mask                  */
+#define SC_CTL_TXOFF_Pos          ( 2 )                                                    /*!< SC_T::CTL: TXOFF Position              */
+#define SC_CTL_TXOFF_Msk          ( 0x1ul << SC_CTL_TXOFF_Pos )                            /*!< SC_T::CTL: TXOFF Mask                  */
 
-#define SC_CTL_AUTOCEN_Pos               (3)                                               /*!< SC_T::CTL: AUTOCEN Position            */
-#define SC_CTL_AUTOCEN_Msk               (0x1ul << SC_CTL_AUTOCEN_Pos)                     /*!< SC_T::CTL: AUTOCEN Mask                */
+#define SC_CTL_AUTOCEN_Pos        ( 3 )                                                    /*!< SC_T::CTL: AUTOCEN Position            */
+#define SC_CTL_AUTOCEN_Msk        ( 0x1ul << SC_CTL_AUTOCEN_Pos )                          /*!< SC_T::CTL: AUTOCEN Mask                */
 
-#define SC_CTL_CONSEL_Pos                (4)                                               /*!< SC_T::CTL: CONSEL Position             */
-#define SC_CTL_CONSEL_Msk                (0x3ul << SC_CTL_CONSEL_Pos)                      /*!< SC_T::CTL: CONSEL Mask                 */
+#define SC_CTL_CONSEL_Pos         ( 4 )                                                    /*!< SC_T::CTL: CONSEL Position             */
+#define SC_CTL_CONSEL_Msk         ( 0x3ul << SC_CTL_CONSEL_Pos )                           /*!< SC_T::CTL: CONSEL Mask                 */
 
-#define SC_CTL_RXTRGLV_Pos               (6)                                               /*!< SC_T::CTL: RXTRGLV Position            */
-#define SC_CTL_RXTRGLV_Msk               (0x3ul << SC_CTL_RXTRGLV_Pos)                     /*!< SC_T::CTL: RXTRGLV Mask                */
+#define SC_CTL_RXTRGLV_Pos        ( 6 )                                                    /*!< SC_T::CTL: RXTRGLV Position            */
+#define SC_CTL_RXTRGLV_Msk        ( 0x3ul << SC_CTL_RXTRGLV_Pos )                          /*!< SC_T::CTL: RXTRGLV Mask                */
 
-#define SC_CTL_BGT_Pos                   (8)                                               /*!< SC_T::CTL: BGT Position                */
-#define SC_CTL_BGT_Msk                   (0x1ful << SC_CTL_BGT_Pos)                        /*!< SC_T::CTL: BGT Mask                    */
+#define SC_CTL_BGT_Pos            ( 8 )                                                    /*!< SC_T::CTL: BGT Position                */
+#define SC_CTL_BGT_Msk            ( 0x1ful << SC_CTL_BGT_Pos )                             /*!< SC_T::CTL: BGT Mask                    */
 
-#define SC_CTL_TMRSEL_Pos                (13)                                              /*!< SC_T::CTL: TMRSEL Position             */
-#define SC_CTL_TMRSEL_Msk                (0x3ul << SC_CTL_TMRSEL_Pos)                      /*!< SC_T::CTL: TMRSEL Mask                 */
+#define SC_CTL_TMRSEL_Pos         ( 13 )                                                   /*!< SC_T::CTL: TMRSEL Position             */
+#define SC_CTL_TMRSEL_Msk         ( 0x3ul << SC_CTL_TMRSEL_Pos )                           /*!< SC_T::CTL: TMRSEL Mask                 */
 
-#define SC_CTL_NSB_Pos                   (15)                                              /*!< SC_T::CTL: NSB Position                */
-#define SC_CTL_NSB_Msk                   (0x1ul << SC_CTL_NSB_Pos)                         /*!< SC_T::CTL: NSB Mask                    */
+#define SC_CTL_NSB_Pos            ( 15 )                                                   /*!< SC_T::CTL: NSB Position                */
+#define SC_CTL_NSB_Msk            ( 0x1ul << SC_CTL_NSB_Pos )                              /*!< SC_T::CTL: NSB Mask                    */
 
-#define SC_CTL_RXRTY_Pos                 (16)                                              /*!< SC_T::CTL: RXRTY Position              */
-#define SC_CTL_RXRTY_Msk                 (0x7ul << SC_CTL_RXRTY_Pos)                       /*!< SC_T::CTL: RXRTY Mask                  */
+#define SC_CTL_RXRTY_Pos          ( 16 )                                                   /*!< SC_T::CTL: RXRTY Position              */
+#define SC_CTL_RXRTY_Msk          ( 0x7ul << SC_CTL_RXRTY_Pos )                            /*!< SC_T::CTL: RXRTY Mask                  */
 
-#define SC_CTL_RXRTYEN_Pos               (19)                                              /*!< SC_T::CTL: RXRTYEN Position            */
-#define SC_CTL_RXRTYEN_Msk               (0x1ul << SC_CTL_RXRTYEN_Pos)                     /*!< SC_T::CTL: RXRTYEN Mask                */
+#define SC_CTL_RXRTYEN_Pos        ( 19 )                                                   /*!< SC_T::CTL: RXRTYEN Position            */
+#define SC_CTL_RXRTYEN_Msk        ( 0x1ul << SC_CTL_RXRTYEN_Pos )                          /*!< SC_T::CTL: RXRTYEN Mask                */
 
-#define SC_CTL_TXRTY_Pos                 (20)                                              /*!< SC_T::CTL: TXRTY Position              */
-#define SC_CTL_TXRTY_Msk                 (0x7ul << SC_CTL_TXRTY_Pos)                       /*!< SC_T::CTL: TXRTY Mask                  */
+#define SC_CTL_TXRTY_Pos          ( 20 )                                                   /*!< SC_T::CTL: TXRTY Position              */
+#define SC_CTL_TXRTY_Msk          ( 0x7ul << SC_CTL_TXRTY_Pos )                            /*!< SC_T::CTL: TXRTY Mask                  */
 
-#define SC_CTL_TXRTYEN_Pos               (23)                                              /*!< SC_T::CTL: TXRTYEN Position            */
-#define SC_CTL_TXRTYEN_Msk               (0x1ul << SC_CTL_TXRTYEN_Pos)                     /*!< SC_T::CTL: TXRTYEN Mask                */
+#define SC_CTL_TXRTYEN_Pos        ( 23 )                                                   /*!< SC_T::CTL: TXRTYEN Position            */
+#define SC_CTL_TXRTYEN_Msk        ( 0x1ul << SC_CTL_TXRTYEN_Pos )                          /*!< SC_T::CTL: TXRTYEN Mask                */
 
-#define SC_CTL_CDDBSEL_Pos               (24)                                              /*!< SC_T::CTL: CDDBSEL Position            */
-#define SC_CTL_CDDBSEL_Msk               (0x3ul << SC_CTL_CDDBSEL_Pos)                     /*!< SC_T::CTL: CDDBSEL Mask                */
+#define SC_CTL_CDDBSEL_Pos        ( 24 )                                                   /*!< SC_T::CTL: CDDBSEL Position            */
+#define SC_CTL_CDDBSEL_Msk        ( 0x3ul << SC_CTL_CDDBSEL_Pos )                          /*!< SC_T::CTL: CDDBSEL Mask                */
 
-#define SC_CTL_CDLV_Pos                  (26)                                              /*!< SC_T::CTL: CDLV Position               */
-#define SC_CTL_CDLV_Msk                  (0x1ul << SC_CTL_CDLV_Pos)                        /*!< SC_T::CTL: CDLV Mask                   */
+#define SC_CTL_CDLV_Pos           ( 26 )                                                   /*!< SC_T::CTL: CDLV Position               */
+#define SC_CTL_CDLV_Msk           ( 0x1ul << SC_CTL_CDLV_Pos )                             /*!< SC_T::CTL: CDLV Mask                   */
 
-#define SC_CTL_SYNC_Pos                  (30)                                              /*!< SC_T::CTL: SYNC Position               */
-#define SC_CTL_SYNC_Msk                  (0x1ul << SC_CTL_SYNC_Pos)                        /*!< SC_T::CTL: SYNC Mask                   */
+#define SC_CTL_SYNC_Pos           ( 30 )                                                   /*!< SC_T::CTL: SYNC Position               */
+#define SC_CTL_SYNC_Msk           ( 0x1ul << SC_CTL_SYNC_Pos )                             /*!< SC_T::CTL: SYNC Mask                   */
 
-#define SC_ALTCTL_TXRST_Pos              (0)                                               /*!< SC_T::ALTCTL: TXRST Position           */
-#define SC_ALTCTL_TXRST_Msk              (0x1ul << SC_ALTCTL_TXRST_Pos)                    /*!< SC_T::ALTCTL: TXRST Mask               */
+#define SC_ALTCTL_TXRST_Pos       ( 0 )                                                    /*!< SC_T::ALTCTL: TXRST Position           */
+#define SC_ALTCTL_TXRST_Msk       ( 0x1ul << SC_ALTCTL_TXRST_Pos )                         /*!< SC_T::ALTCTL: TXRST Mask               */
 
-#define SC_ALTCTL_RXRST_Pos              (1)                                               /*!< SC_T::ALTCTL: RXRST Position           */
-#define SC_ALTCTL_RXRST_Msk              (0x1ul << SC_ALTCTL_RXRST_Pos)                    /*!< SC_T::ALTCTL: RXRST Mask               */
+#define SC_ALTCTL_RXRST_Pos       ( 1 )                                                    /*!< SC_T::ALTCTL: RXRST Position           */
+#define SC_ALTCTL_RXRST_Msk       ( 0x1ul << SC_ALTCTL_RXRST_Pos )                         /*!< SC_T::ALTCTL: RXRST Mask               */
 
-#define SC_ALTCTL_DACTEN_Pos             (2)                                               /*!< SC_T::ALTCTL: DACTEN Position          */
-#define SC_ALTCTL_DACTEN_Msk             (0x1ul << SC_ALTCTL_DACTEN_Pos)                   /*!< SC_T::ALTCTL: DACTEN Mask              */
+#define SC_ALTCTL_DACTEN_Pos      ( 2 )                                                    /*!< SC_T::ALTCTL: DACTEN Position          */
+#define SC_ALTCTL_DACTEN_Msk      ( 0x1ul << SC_ALTCTL_DACTEN_Pos )                        /*!< SC_T::ALTCTL: DACTEN Mask              */
 
-#define SC_ALTCTL_ACTEN_Pos              (3)                                               /*!< SC_T::ALTCTL: ACTEN Position           */
-#define SC_ALTCTL_ACTEN_Msk              (0x1ul << SC_ALTCTL_ACTEN_Pos)                    /*!< SC_T::ALTCTL: ACTEN Mask               */
+#define SC_ALTCTL_ACTEN_Pos       ( 3 )                                                    /*!< SC_T::ALTCTL: ACTEN Position           */
+#define SC_ALTCTL_ACTEN_Msk       ( 0x1ul << SC_ALTCTL_ACTEN_Pos )                         /*!< SC_T::ALTCTL: ACTEN Mask               */
 
-#define SC_ALTCTL_WARSTEN_Pos            (4)                                               /*!< SC_T::ALTCTL: WARSTEN Position         */
-#define SC_ALTCTL_WARSTEN_Msk            (0x1ul << SC_ALTCTL_WARSTEN_Pos)                  /*!< SC_T::ALTCTL: WARSTEN Mask             */
+#define SC_ALTCTL_WARSTEN_Pos     ( 4 )                                                    /*!< SC_T::ALTCTL: WARSTEN Position         */
+#define SC_ALTCTL_WARSTEN_Msk     ( 0x1ul << SC_ALTCTL_WARSTEN_Pos )                       /*!< SC_T::ALTCTL: WARSTEN Mask             */
 
-#define SC_ALTCTL_CNTEN0_Pos             (5)                                               /*!< SC_T::ALTCTL: CNTEN0 Position          */
-#define SC_ALTCTL_CNTEN0_Msk             (0x1ul << SC_ALTCTL_CNTEN0_Pos)                   /*!< SC_T::ALTCTL: CNTEN0 Mask              */
+#define SC_ALTCTL_CNTEN0_Pos      ( 5 )                                                    /*!< SC_T::ALTCTL: CNTEN0 Position          */
+#define SC_ALTCTL_CNTEN0_Msk      ( 0x1ul << SC_ALTCTL_CNTEN0_Pos )                        /*!< SC_T::ALTCTL: CNTEN0 Mask              */
 
-#define SC_ALTCTL_CNTEN1_Pos             (6)                                               /*!< SC_T::ALTCTL: CNTEN1 Position          */
-#define SC_ALTCTL_CNTEN1_Msk             (0x1ul << SC_ALTCTL_CNTEN1_Pos)                   /*!< SC_T::ALTCTL: CNTEN1 Mask              */
+#define SC_ALTCTL_CNTEN1_Pos      ( 6 )                                                    /*!< SC_T::ALTCTL: CNTEN1 Position          */
+#define SC_ALTCTL_CNTEN1_Msk      ( 0x1ul << SC_ALTCTL_CNTEN1_Pos )                        /*!< SC_T::ALTCTL: CNTEN1 Mask              */
 
-#define SC_ALTCTL_CNTEN2_Pos             (7)                                               /*!< SC_T::ALTCTL: CNTEN2 Position          */
-#define SC_ALTCTL_CNTEN2_Msk             (0x1ul << SC_ALTCTL_CNTEN2_Pos)                   /*!< SC_T::ALTCTL: CNTEN2 Mask              */
+#define SC_ALTCTL_CNTEN2_Pos      ( 7 )                                                    /*!< SC_T::ALTCTL: CNTEN2 Position          */
+#define SC_ALTCTL_CNTEN2_Msk      ( 0x1ul << SC_ALTCTL_CNTEN2_Pos )                        /*!< SC_T::ALTCTL: CNTEN2 Mask              */
 
-#define SC_ALTCTL_INITSEL_Pos            (8)                                               /*!< SC_T::ALTCTL: INITSEL Position         */
-#define SC_ALTCTL_INITSEL_Msk            (0x3ul << SC_ALTCTL_INITSEL_Pos)                  /*!< SC_T::ALTCTL: INITSEL Mask             */
+#define SC_ALTCTL_INITSEL_Pos     ( 8 )                                                    /*!< SC_T::ALTCTL: INITSEL Position         */
+#define SC_ALTCTL_INITSEL_Msk     ( 0x3ul << SC_ALTCTL_INITSEL_Pos )                       /*!< SC_T::ALTCTL: INITSEL Mask             */
 
-#define SC_ALTCTL_ADACEN_Pos             (11)                                              /*!< SC_T::ALTCTL: ADACEN Position          */
-#define SC_ALTCTL_ADACEN_Msk             (0x1ul << SC_ALTCTL_ADACEN_Pos)                   /*!< SC_T::ALTCTL: ADACEN Mask              */
+#define SC_ALTCTL_ADACEN_Pos      ( 11 )                                                   /*!< SC_T::ALTCTL: ADACEN Position          */
+#define SC_ALTCTL_ADACEN_Msk      ( 0x1ul << SC_ALTCTL_ADACEN_Pos )                        /*!< SC_T::ALTCTL: ADACEN Mask              */
 
-#define SC_ALTCTL_RXBGTEN_Pos            (12)                                              /*!< SC_T::ALTCTL: RXBGTEN Position         */
-#define SC_ALTCTL_RXBGTEN_Msk            (0x1ul << SC_ALTCTL_RXBGTEN_Pos)                  /*!< SC_T::ALTCTL: RXBGTEN Mask             */
+#define SC_ALTCTL_RXBGTEN_Pos     ( 12 )                                                   /*!< SC_T::ALTCTL: RXBGTEN Position         */
+#define SC_ALTCTL_RXBGTEN_Msk     ( 0x1ul << SC_ALTCTL_RXBGTEN_Pos )                       /*!< SC_T::ALTCTL: RXBGTEN Mask             */
 
-#define SC_ALTCTL_ACTSTS0_Pos            (13)                                              /*!< SC_T::ALTCTL: ACTSTS0 Position         */
-#define SC_ALTCTL_ACTSTS0_Msk            (0x1ul << SC_ALTCTL_ACTSTS0_Pos)                  /*!< SC_T::ALTCTL: ACTSTS0 Mask             */
+#define SC_ALTCTL_ACTSTS0_Pos     ( 13 )                                                   /*!< SC_T::ALTCTL: ACTSTS0 Position         */
+#define SC_ALTCTL_ACTSTS0_Msk     ( 0x1ul << SC_ALTCTL_ACTSTS0_Pos )                       /*!< SC_T::ALTCTL: ACTSTS0 Mask             */
 
-#define SC_ALTCTL_ACTSTS1_Pos            (14)                                              /*!< SC_T::ALTCTL: ACTSTS1 Position         */
-#define SC_ALTCTL_ACTSTS1_Msk            (0x1ul << SC_ALTCTL_ACTSTS1_Pos)                  /*!< SC_T::ALTCTL: ACTSTS1 Mask             */
+#define SC_ALTCTL_ACTSTS1_Pos     ( 14 )                                                   /*!< SC_T::ALTCTL: ACTSTS1 Position         */
+#define SC_ALTCTL_ACTSTS1_Msk     ( 0x1ul << SC_ALTCTL_ACTSTS1_Pos )                       /*!< SC_T::ALTCTL: ACTSTS1 Mask             */
 
-#define SC_ALTCTL_ACTSTS2_Pos            (15)                                              /*!< SC_T::ALTCTL: ACTSTS2 Position         */
-#define SC_ALTCTL_ACTSTS2_Msk            (0x1ul << SC_ALTCTL_ACTSTS2_Pos)                  /*!< SC_T::ALTCTL: ACTSTS2 Mask             */
+#define SC_ALTCTL_ACTSTS2_Pos     ( 15 )                                                   /*!< SC_T::ALTCTL: ACTSTS2 Position         */
+#define SC_ALTCTL_ACTSTS2_Msk     ( 0x1ul << SC_ALTCTL_ACTSTS2_Pos )                       /*!< SC_T::ALTCTL: ACTSTS2 Mask             */
 
-#define SC_ALTCTL_SYNC_Pos               (31)                                              /*!< SC_T::ALTCTL: SYNC Position            */
-#define SC_ALTCTL_SYNC_Msk               (0x1ul << SC_ALTCTL_SYNC_Pos)                     /*!< SC_T::ALTCTL: SYNC Mask                */
+#define SC_ALTCTL_SYNC_Pos        ( 31 )                                                   /*!< SC_T::ALTCTL: SYNC Position            */
+#define SC_ALTCTL_SYNC_Msk        ( 0x1ul << SC_ALTCTL_SYNC_Pos )                          /*!< SC_T::ALTCTL: SYNC Mask                */
 
-#define SC_EGT_EGT_Pos                   (0)                                               /*!< SC_T::EGT: EGT Position                */
-#define SC_EGT_EGT_Msk                   (0xfful << SC_EGT_EGT_Pos)                        /*!< SC_T::EGT: EGT Mask                    */
+#define SC_EGT_EGT_Pos            ( 0 )                                                    /*!< SC_T::EGT: EGT Position                */
+#define SC_EGT_EGT_Msk            ( 0xfful << SC_EGT_EGT_Pos )                             /*!< SC_T::EGT: EGT Mask                    */
 
-#define SC_RXTOUT_RFTM_Pos               (0)                                               /*!< SC_T::RXTOUT: RFTM Position            */
-#define SC_RXTOUT_RFTM_Msk               (0x1fful << SC_RXTOUT_RFTM_Pos)                   /*!< SC_T::RXTOUT: RFTM Mask                */
+#define SC_RXTOUT_RFTM_Pos        ( 0 )                                                    /*!< SC_T::RXTOUT: RFTM Position            */
+#define SC_RXTOUT_RFTM_Msk        ( 0x1fful << SC_RXTOUT_RFTM_Pos )                        /*!< SC_T::RXTOUT: RFTM Mask                */
 
-#define SC_ETUCTL_ETURDIV_Pos            (0)                                               /*!< SC_T::ETUCTL: ETURDIV Position         */
-#define SC_ETUCTL_ETURDIV_Msk            (0xffful << SC_ETUCTL_ETURDIV_Pos)                /*!< SC_T::ETUCTL: ETURDIV Mask             */
+#define SC_ETUCTL_ETURDIV_Pos     ( 0 )                                                    /*!< SC_T::ETUCTL: ETURDIV Position         */
+#define SC_ETUCTL_ETURDIV_Msk     ( 0xffful << SC_ETUCTL_ETURDIV_Pos )                     /*!< SC_T::ETUCTL: ETURDIV Mask             */
 
-#define SC_INTEN_RDAIEN_Pos              (0)                                               /*!< SC_T::INTEN: RDAIEN Position           */
-#define SC_INTEN_RDAIEN_Msk              (0x1ul << SC_INTEN_RDAIEN_Pos)                    /*!< SC_T::INTEN: RDAIEN Mask               */
+#define SC_INTEN_RDAIEN_Pos       ( 0 )                                                    /*!< SC_T::INTEN: RDAIEN Position           */
+#define SC_INTEN_RDAIEN_Msk       ( 0x1ul << SC_INTEN_RDAIEN_Pos )                         /*!< SC_T::INTEN: RDAIEN Mask               */
 
-#define SC_INTEN_TBEIEN_Pos              (1)                                               /*!< SC_T::INTEN: TBEIEN Position           */
-#define SC_INTEN_TBEIEN_Msk              (0x1ul << SC_INTEN_TBEIEN_Pos)                    /*!< SC_T::INTEN: TBEIEN Mask               */
+#define SC_INTEN_TBEIEN_Pos       ( 1 )                                                    /*!< SC_T::INTEN: TBEIEN Position           */
+#define SC_INTEN_TBEIEN_Msk       ( 0x1ul << SC_INTEN_TBEIEN_Pos )                         /*!< SC_T::INTEN: TBEIEN Mask               */
 
-#define SC_INTEN_TERRIEN_Pos             (2)                                               /*!< SC_T::INTEN: TERRIEN Position          */
-#define SC_INTEN_TERRIEN_Msk             (0x1ul << SC_INTEN_TERRIEN_Pos)                   /*!< SC_T::INTEN: TERRIEN Mask              */
+#define SC_INTEN_TERRIEN_Pos      ( 2 )                                                    /*!< SC_T::INTEN: TERRIEN Position          */
+#define SC_INTEN_TERRIEN_Msk      ( 0x1ul << SC_INTEN_TERRIEN_Pos )                        /*!< SC_T::INTEN: TERRIEN Mask              */
 
-#define SC_INTEN_TMR0IEN_Pos             (3)                                               /*!< SC_T::INTEN: TMR0IEN Position          */
-#define SC_INTEN_TMR0IEN_Msk             (0x1ul << SC_INTEN_TMR0IEN_Pos)                   /*!< SC_T::INTEN: TMR0IEN Mask              */
+#define SC_INTEN_TMR0IEN_Pos      ( 3 )                                                    /*!< SC_T::INTEN: TMR0IEN Position          */
+#define SC_INTEN_TMR0IEN_Msk      ( 0x1ul << SC_INTEN_TMR0IEN_Pos )                        /*!< SC_T::INTEN: TMR0IEN Mask              */
 
-#define SC_INTEN_TMR1IEN_Pos             (4)                                               /*!< SC_T::INTEN: TMR1IEN Position          */
-#define SC_INTEN_TMR1IEN_Msk             (0x1ul << SC_INTEN_TMR1IEN_Pos)                   /*!< SC_T::INTEN: TMR1IEN Mask              */
+#define SC_INTEN_TMR1IEN_Pos      ( 4 )                                                    /*!< SC_T::INTEN: TMR1IEN Position          */
+#define SC_INTEN_TMR1IEN_Msk      ( 0x1ul << SC_INTEN_TMR1IEN_Pos )                        /*!< SC_T::INTEN: TMR1IEN Mask              */
 
-#define SC_INTEN_TMR2IEN_Pos             (5)                                               /*!< SC_T::INTEN: TMR2IEN Position          */
-#define SC_INTEN_TMR2IEN_Msk             (0x1ul << SC_INTEN_TMR2IEN_Pos)                   /*!< SC_T::INTEN: TMR2IEN Mask              */
+#define SC_INTEN_TMR2IEN_Pos      ( 5 )                                                    /*!< SC_T::INTEN: TMR2IEN Position          */
+#define SC_INTEN_TMR2IEN_Msk      ( 0x1ul << SC_INTEN_TMR2IEN_Pos )                        /*!< SC_T::INTEN: TMR2IEN Mask              */
 
-#define SC_INTEN_BGTIEN_Pos              (6)                                               /*!< SC_T::INTEN: BGTIEN Position           */
-#define SC_INTEN_BGTIEN_Msk              (0x1ul << SC_INTEN_BGTIEN_Pos)                    /*!< SC_T::INTEN: BGTIEN Mask               */
+#define SC_INTEN_BGTIEN_Pos       ( 6 )                                                    /*!< SC_T::INTEN: BGTIEN Position           */
+#define SC_INTEN_BGTIEN_Msk       ( 0x1ul << SC_INTEN_BGTIEN_Pos )                         /*!< SC_T::INTEN: BGTIEN Mask               */
 
-#define SC_INTEN_CDIEN_Pos               (7)                                               /*!< SC_T::INTEN: CDIEN Position            */
-#define SC_INTEN_CDIEN_Msk               (0x1ul << SC_INTEN_CDIEN_Pos)                     /*!< SC_T::INTEN: CDIEN Mask                */
+#define SC_INTEN_CDIEN_Pos        ( 7 )                                                    /*!< SC_T::INTEN: CDIEN Position            */
+#define SC_INTEN_CDIEN_Msk        ( 0x1ul << SC_INTEN_CDIEN_Pos )                          /*!< SC_T::INTEN: CDIEN Mask                */
 
-#define SC_INTEN_INITIEN_Pos             (8)                                               /*!< SC_T::INTEN: INITIEN Position          */
-#define SC_INTEN_INITIEN_Msk             (0x1ul << SC_INTEN_INITIEN_Pos)                   /*!< SC_T::INTEN: INITIEN Mask              */
+#define SC_INTEN_INITIEN_Pos      ( 8 )                                                    /*!< SC_T::INTEN: INITIEN Position          */
+#define SC_INTEN_INITIEN_Msk      ( 0x1ul << SC_INTEN_INITIEN_Pos )                        /*!< SC_T::INTEN: INITIEN Mask              */
 
-#define SC_INTEN_RXTOIEN_Pos             (9)                                               /*!< SC_T::INTEN: RXTOIEN Position          */
-#define SC_INTEN_RXTOIEN_Msk             (0x1ul << SC_INTEN_RXTOIEN_Pos)                   /*!< SC_T::INTEN: RXTOIEN Mask              */
+#define SC_INTEN_RXTOIEN_Pos      ( 9 )                                                    /*!< SC_T::INTEN: RXTOIEN Position          */
+#define SC_INTEN_RXTOIEN_Msk      ( 0x1ul << SC_INTEN_RXTOIEN_Pos )                        /*!< SC_T::INTEN: RXTOIEN Mask              */
 
-#define SC_INTEN_ACERRIEN_Pos            (10)                                              /*!< SC_T::INTEN: ACERRIEN Position         */
-#define SC_INTEN_ACERRIEN_Msk            (0x1ul << SC_INTEN_ACERRIEN_Pos)                  /*!< SC_T::INTEN: ACERRIEN Mask             */
+#define SC_INTEN_ACERRIEN_Pos     ( 10 )                                                   /*!< SC_T::INTEN: ACERRIEN Position         */
+#define SC_INTEN_ACERRIEN_Msk     ( 0x1ul << SC_INTEN_ACERRIEN_Pos )                       /*!< SC_T::INTEN: ACERRIEN Mask             */
 
-#define SC_INTSTS_RDAIF_Pos              (0)                                               /*!< SC_T::INTSTS: RDAIF Position           */
-#define SC_INTSTS_RDAIF_Msk              (0x1ul << SC_INTSTS_RDAIF_Pos)                    /*!< SC_T::INTSTS: RDAIF Mask               */
+#define SC_INTSTS_RDAIF_Pos       ( 0 )                                                    /*!< SC_T::INTSTS: RDAIF Position           */
+#define SC_INTSTS_RDAIF_Msk       ( 0x1ul << SC_INTSTS_RDAIF_Pos )                         /*!< SC_T::INTSTS: RDAIF Mask               */
 
-#define SC_INTSTS_TBEIF_Pos              (1)                                               /*!< SC_T::INTSTS: TBEIF Position           */
-#define SC_INTSTS_TBEIF_Msk              (0x1ul << SC_INTSTS_TBEIF_Pos)                    /*!< SC_T::INTSTS: TBEIF Mask               */
+#define SC_INTSTS_TBEIF_Pos       ( 1 )                                                    /*!< SC_T::INTSTS: TBEIF Position           */
+#define SC_INTSTS_TBEIF_Msk       ( 0x1ul << SC_INTSTS_TBEIF_Pos )                         /*!< SC_T::INTSTS: TBEIF Mask               */
 
-#define SC_INTSTS_TERRIF_Pos             (2)                                               /*!< SC_T::INTSTS: TERRIF Position          */
-#define SC_INTSTS_TERRIF_Msk             (0x1ul << SC_INTSTS_TERRIF_Pos)                   /*!< SC_T::INTSTS: TERRIF Mask              */
+#define SC_INTSTS_TERRIF_Pos      ( 2 )                                                    /*!< SC_T::INTSTS: TERRIF Position          */
+#define SC_INTSTS_TERRIF_Msk      ( 0x1ul << SC_INTSTS_TERRIF_Pos )                        /*!< SC_T::INTSTS: TERRIF Mask              */
 
-#define SC_INTSTS_TMR0IF_Pos             (3)                                               /*!< SC_T::INTSTS: TMR0IF Position          */
-#define SC_INTSTS_TMR0IF_Msk             (0x1ul << SC_INTSTS_TMR0IF_Pos)                   /*!< SC_T::INTSTS: TMR0IF Mask              */
+#define SC_INTSTS_TMR0IF_Pos      ( 3 )                                                    /*!< SC_T::INTSTS: TMR0IF Position          */
+#define SC_INTSTS_TMR0IF_Msk      ( 0x1ul << SC_INTSTS_TMR0IF_Pos )                        /*!< SC_T::INTSTS: TMR0IF Mask              */
 
-#define SC_INTSTS_TMR1IF_Pos             (4)                                               /*!< SC_T::INTSTS: TMR1IF Position          */
-#define SC_INTSTS_TMR1IF_Msk             (0x1ul << SC_INTSTS_TMR1IF_Pos)                   /*!< SC_T::INTSTS: TMR1IF Mask              */
+#define SC_INTSTS_TMR1IF_Pos      ( 4 )                                                    /*!< SC_T::INTSTS: TMR1IF Position          */
+#define SC_INTSTS_TMR1IF_Msk      ( 0x1ul << SC_INTSTS_TMR1IF_Pos )                        /*!< SC_T::INTSTS: TMR1IF Mask              */
 
-#define SC_INTSTS_TMR2IF_Pos             (5)                                               /*!< SC_T::INTSTS: TMR2IF Position          */
-#define SC_INTSTS_TMR2IF_Msk             (0x1ul << SC_INTSTS_TMR2IF_Pos)                   /*!< SC_T::INTSTS: TMR2IF Mask              */
+#define SC_INTSTS_TMR2IF_Pos      ( 5 )                                                    /*!< SC_T::INTSTS: TMR2IF Position          */
+#define SC_INTSTS_TMR2IF_Msk      ( 0x1ul << SC_INTSTS_TMR2IF_Pos )                        /*!< SC_T::INTSTS: TMR2IF Mask              */
 
-#define SC_INTSTS_BGTIF_Pos              (6)                                               /*!< SC_T::INTSTS: BGTIF Position           */
-#define SC_INTSTS_BGTIF_Msk              (0x1ul << SC_INTSTS_BGTIF_Pos)                    /*!< SC_T::INTSTS: BGTIF Mask               */
+#define SC_INTSTS_BGTIF_Pos       ( 6 )                                                    /*!< SC_T::INTSTS: BGTIF Position           */
+#define SC_INTSTS_BGTIF_Msk       ( 0x1ul << SC_INTSTS_BGTIF_Pos )                         /*!< SC_T::INTSTS: BGTIF Mask               */
 
-#define SC_INTSTS_CDIF_Pos               (7)                                               /*!< SC_T::INTSTS: CDIF Position            */
-#define SC_INTSTS_CDIF_Msk               (0x1ul << SC_INTSTS_CDIF_Pos)                     /*!< SC_T::INTSTS: CDIF Mask                */
+#define SC_INTSTS_CDIF_Pos        ( 7 )                                                    /*!< SC_T::INTSTS: CDIF Position            */
+#define SC_INTSTS_CDIF_Msk        ( 0x1ul << SC_INTSTS_CDIF_Pos )                          /*!< SC_T::INTSTS: CDIF Mask                */
 
-#define SC_INTSTS_INITIF_Pos             (8)                                               /*!< SC_T::INTSTS: INITIF Position          */
-#define SC_INTSTS_INITIF_Msk             (0x1ul << SC_INTSTS_INITIF_Pos)                   /*!< SC_T::INTSTS: INITIF Mask              */
+#define SC_INTSTS_INITIF_Pos      ( 8 )                                                    /*!< SC_T::INTSTS: INITIF Position          */
+#define SC_INTSTS_INITIF_Msk      ( 0x1ul << SC_INTSTS_INITIF_Pos )                        /*!< SC_T::INTSTS: INITIF Mask              */
 
-#define SC_INTSTS_RXTOIF_Pos             (9)                                               /*!< SC_T::INTSTS: RXTOIF Position          */
-#define SC_INTSTS_RXTOIF_Msk             (0x1ul << SC_INTSTS_RXTOIF_Pos)                   /*!< SC_T::INTSTS: RXTOIF Mask              */
+#define SC_INTSTS_RXTOIF_Pos      ( 9 )                                                    /*!< SC_T::INTSTS: RXTOIF Position          */
+#define SC_INTSTS_RXTOIF_Msk      ( 0x1ul << SC_INTSTS_RXTOIF_Pos )                        /*!< SC_T::INTSTS: RXTOIF Mask              */
 
-#define SC_INTSTS_ACERRIF_Pos            (10)                                              /*!< SC_T::INTSTS: ACERRIF Position         */
-#define SC_INTSTS_ACERRIF_Msk            (0x1ul << SC_INTSTS_ACERRIF_Pos)                  /*!< SC_T::INTSTS: ACERRIF Mask             */
+#define SC_INTSTS_ACERRIF_Pos     ( 10 )                                                   /*!< SC_T::INTSTS: ACERRIF Position         */
+#define SC_INTSTS_ACERRIF_Msk     ( 0x1ul << SC_INTSTS_ACERRIF_Pos )                       /*!< SC_T::INTSTS: ACERRIF Mask             */
 
-#define SC_STATUS_RXOV_Pos               (0)                                               /*!< SC_T::STATUS: RXOV Position            */
-#define SC_STATUS_RXOV_Msk               (0x1ul << SC_STATUS_RXOV_Pos)                     /*!< SC_T::STATUS: RXOV Mask                */
+#define SC_STATUS_RXOV_Pos        ( 0 )                                                    /*!< SC_T::STATUS: RXOV Position            */
+#define SC_STATUS_RXOV_Msk        ( 0x1ul << SC_STATUS_RXOV_Pos )                          /*!< SC_T::STATUS: RXOV Mask                */
 
-#define SC_STATUS_RXEMPTY_Pos            (1)                                               /*!< SC_T::STATUS: RXEMPTY Position         */
-#define SC_STATUS_RXEMPTY_Msk            (0x1ul << SC_STATUS_RXEMPTY_Pos)                  /*!< SC_T::STATUS: RXEMPTY Mask             */
+#define SC_STATUS_RXEMPTY_Pos     ( 1 )                                                    /*!< SC_T::STATUS: RXEMPTY Position         */
+#define SC_STATUS_RXEMPTY_Msk     ( 0x1ul << SC_STATUS_RXEMPTY_Pos )                       /*!< SC_T::STATUS: RXEMPTY Mask             */
 
-#define SC_STATUS_RXFULL_Pos             (2)                                               /*!< SC_T::STATUS: RXFULL Position          */
-#define SC_STATUS_RXFULL_Msk             (0x1ul << SC_STATUS_RXFULL_Pos)                   /*!< SC_T::STATUS: RXFULL Mask              */
+#define SC_STATUS_RXFULL_Pos      ( 2 )                                                    /*!< SC_T::STATUS: RXFULL Position          */
+#define SC_STATUS_RXFULL_Msk      ( 0x1ul << SC_STATUS_RXFULL_Pos )                        /*!< SC_T::STATUS: RXFULL Mask              */
 
-#define SC_STATUS_PEF_Pos                (4)                                               /*!< SC_T::STATUS: PEF Position             */
-#define SC_STATUS_PEF_Msk                (0x1ul << SC_STATUS_PEF_Pos)                      /*!< SC_T::STATUS: PEF Mask                 */
+#define SC_STATUS_PEF_Pos         ( 4 )                                                    /*!< SC_T::STATUS: PEF Position             */
+#define SC_STATUS_PEF_Msk         ( 0x1ul << SC_STATUS_PEF_Pos )                           /*!< SC_T::STATUS: PEF Mask                 */
 
-#define SC_STATUS_FEF_Pos                (5)                                               /*!< SC_T::STATUS: FEF Position             */
-#define SC_STATUS_FEF_Msk                (0x1ul << SC_STATUS_FEF_Pos)                      /*!< SC_T::STATUS: FEF Mask                 */
+#define SC_STATUS_FEF_Pos         ( 5 )                                                    /*!< SC_T::STATUS: FEF Position             */
+#define SC_STATUS_FEF_Msk         ( 0x1ul << SC_STATUS_FEF_Pos )                           /*!< SC_T::STATUS: FEF Mask                 */
 
-#define SC_STATUS_BEF_Pos                (6)                                               /*!< SC_T::STATUS: BEF Position             */
-#define SC_STATUS_BEF_Msk                (0x1ul << SC_STATUS_BEF_Pos)                      /*!< SC_T::STATUS: BEF Mask                 */
+#define SC_STATUS_BEF_Pos         ( 6 )                                                    /*!< SC_T::STATUS: BEF Position             */
+#define SC_STATUS_BEF_Msk         ( 0x1ul << SC_STATUS_BEF_Pos )                           /*!< SC_T::STATUS: BEF Mask                 */
 
-#define SC_STATUS_TXOV_Pos               (8)                                               /*!< SC_T::STATUS: TXOV Position            */
-#define SC_STATUS_TXOV_Msk               (0x1ul << SC_STATUS_TXOV_Pos)                     /*!< SC_T::STATUS: TXOV Mask                */
+#define SC_STATUS_TXOV_Pos        ( 8 )                                                    /*!< SC_T::STATUS: TXOV Position            */
+#define SC_STATUS_TXOV_Msk        ( 0x1ul << SC_STATUS_TXOV_Pos )                          /*!< SC_T::STATUS: TXOV Mask                */
 
-#define SC_STATUS_TXEMPTY_Pos            (9)                                               /*!< SC_T::STATUS: TXEMPTY Position         */
-#define SC_STATUS_TXEMPTY_Msk            (0x1ul << SC_STATUS_TXEMPTY_Pos)                  /*!< SC_T::STATUS: TXEMPTY Mask             */
+#define SC_STATUS_TXEMPTY_Pos     ( 9 )                                                    /*!< SC_T::STATUS: TXEMPTY Position         */
+#define SC_STATUS_TXEMPTY_Msk     ( 0x1ul << SC_STATUS_TXEMPTY_Pos )                       /*!< SC_T::STATUS: TXEMPTY Mask             */
 
-#define SC_STATUS_TXFULL_Pos             (10)                                              /*!< SC_T::STATUS: TXFULL Position          */
-#define SC_STATUS_TXFULL_Msk             (0x1ul << SC_STATUS_TXFULL_Pos)                   /*!< SC_T::STATUS: TXFULL Mask              */
+#define SC_STATUS_TXFULL_Pos      ( 10 )                                                   /*!< SC_T::STATUS: TXFULL Position          */
+#define SC_STATUS_TXFULL_Msk      ( 0x1ul << SC_STATUS_TXFULL_Pos )                        /*!< SC_T::STATUS: TXFULL Mask              */
 
-#define SC_STATUS_CREMOVE_Pos            (11)                                              /*!< SC_T::STATUS: CREMOVE Position         */
-#define SC_STATUS_CREMOVE_Msk            (0x1ul << SC_STATUS_CREMOVE_Pos)                  /*!< SC_T::STATUS: CREMOVE Mask             */
+#define SC_STATUS_CREMOVE_Pos     ( 11 )                                                   /*!< SC_T::STATUS: CREMOVE Position         */
+#define SC_STATUS_CREMOVE_Msk     ( 0x1ul << SC_STATUS_CREMOVE_Pos )                       /*!< SC_T::STATUS: CREMOVE Mask             */
 
-#define SC_STATUS_CINSERT_Pos            (12)                                              /*!< SC_T::STATUS: CINSERT Position         */
-#define SC_STATUS_CINSERT_Msk            (0x1ul << SC_STATUS_CINSERT_Pos)                  /*!< SC_T::STATUS: CINSERT Mask             */
+#define SC_STATUS_CINSERT_Pos     ( 12 )                                                   /*!< SC_T::STATUS: CINSERT Position         */
+#define SC_STATUS_CINSERT_Msk     ( 0x1ul << SC_STATUS_CINSERT_Pos )                       /*!< SC_T::STATUS: CINSERT Mask             */
 
-#define SC_STATUS_CDPINSTS_Pos           (13)                                              /*!< SC_T::STATUS: CDPINSTS Position        */
-#define SC_STATUS_CDPINSTS_Msk           (0x1ul << SC_STATUS_CDPINSTS_Pos)                 /*!< SC_T::STATUS: CDPINSTS Mask            */
+#define SC_STATUS_CDPINSTS_Pos    ( 13 )                                                   /*!< SC_T::STATUS: CDPINSTS Position        */
+#define SC_STATUS_CDPINSTS_Msk    ( 0x1ul << SC_STATUS_CDPINSTS_Pos )                      /*!< SC_T::STATUS: CDPINSTS Mask            */
 
-#define SC_STATUS_RXPOINT_Pos            (16)                                              /*!< SC_T::STATUS: RXPOINT Position         */
-#define SC_STATUS_RXPOINT_Msk            (0x7ul << SC_STATUS_RXPOINT_Pos)                  /*!< SC_T::STATUS: RXPOINT Mask             */
+#define SC_STATUS_RXPOINT_Pos     ( 16 )                                                   /*!< SC_T::STATUS: RXPOINT Position         */
+#define SC_STATUS_RXPOINT_Msk     ( 0x7ul << SC_STATUS_RXPOINT_Pos )                       /*!< SC_T::STATUS: RXPOINT Mask             */
 
-#define SC_STATUS_RXRERR_Pos             (21)                                              /*!< SC_T::STATUS: RXRERR Position          */
-#define SC_STATUS_RXRERR_Msk             (0x1ul << SC_STATUS_RXRERR_Pos)                   /*!< SC_T::STATUS: RXRERR Mask              */
+#define SC_STATUS_RXRERR_Pos      ( 21 )                                                   /*!< SC_T::STATUS: RXRERR Position          */
+#define SC_STATUS_RXRERR_Msk      ( 0x1ul << SC_STATUS_RXRERR_Pos )                        /*!< SC_T::STATUS: RXRERR Mask              */
 
-#define SC_STATUS_RXOVERR_Pos            (22)                                              /*!< SC_T::STATUS: RXOVERR Position         */
-#define SC_STATUS_RXOVERR_Msk            (0x1ul << SC_STATUS_RXOVERR_Pos)                  /*!< SC_T::STATUS: RXOVERR Mask             */
+#define SC_STATUS_RXOVERR_Pos     ( 22 )                                                   /*!< SC_T::STATUS: RXOVERR Position         */
+#define SC_STATUS_RXOVERR_Msk     ( 0x1ul << SC_STATUS_RXOVERR_Pos )                       /*!< SC_T::STATUS: RXOVERR Mask             */
 
-#define SC_STATUS_RXACT_Pos              (23)                                              /*!< SC_T::STATUS: RXACT Position           */
-#define SC_STATUS_RXACT_Msk              (0x1ul << SC_STATUS_RXACT_Pos)                    /*!< SC_T::STATUS: RXACT Mask               */
+#define SC_STATUS_RXACT_Pos       ( 23 )                                                   /*!< SC_T::STATUS: RXACT Position           */
+#define SC_STATUS_RXACT_Msk       ( 0x1ul << SC_STATUS_RXACT_Pos )                         /*!< SC_T::STATUS: RXACT Mask               */
 
-#define SC_STATUS_TXPOINT_Pos            (24)                                              /*!< SC_T::STATUS: TXPOINT Position         */
-#define SC_STATUS_TXPOINT_Msk            (0x7ul << SC_STATUS_TXPOINT_Pos)                  /*!< SC_T::STATUS: TXPOINT Mask             */
+#define SC_STATUS_TXPOINT_Pos     ( 24 )                                                   /*!< SC_T::STATUS: TXPOINT Position         */
+#define SC_STATUS_TXPOINT_Msk     ( 0x7ul << SC_STATUS_TXPOINT_Pos )                       /*!< SC_T::STATUS: TXPOINT Mask             */
 
-#define SC_STATUS_TXRERR_Pos             (29)                                              /*!< SC_T::STATUS: TXRERR Position          */
-#define SC_STATUS_TXRERR_Msk             (0x1ul << SC_STATUS_TXRERR_Pos)                   /*!< SC_T::STATUS: TXRERR Mask              */
+#define SC_STATUS_TXRERR_Pos      ( 29 )                                                   /*!< SC_T::STATUS: TXRERR Position          */
+#define SC_STATUS_TXRERR_Msk      ( 0x1ul << SC_STATUS_TXRERR_Pos )                        /*!< SC_T::STATUS: TXRERR Mask              */
 
-#define SC_STATUS_TXOVERR_Pos            (30)                                              /*!< SC_T::STATUS: TXOVERR Position         */
-#define SC_STATUS_TXOVERR_Msk            (0x1ul << SC_STATUS_TXOVERR_Pos)                  /*!< SC_T::STATUS: TXOVERR Mask             */
+#define SC_STATUS_TXOVERR_Pos     ( 30 )                                                   /*!< SC_T::STATUS: TXOVERR Position         */
+#define SC_STATUS_TXOVERR_Msk     ( 0x1ul << SC_STATUS_TXOVERR_Pos )                       /*!< SC_T::STATUS: TXOVERR Mask             */
 
-#define SC_STATUS_TXACT_Pos              (31)                                              /*!< SC_T::STATUS: TXACT Position           */
-#define SC_STATUS_TXACT_Msk              (0x1ul << SC_STATUS_TXACT_Pos)                    /*!< SC_T::STATUS: TXACT Mask               */
+#define SC_STATUS_TXACT_Pos       ( 31 )                                                   /*!< SC_T::STATUS: TXACT Position           */
+#define SC_STATUS_TXACT_Msk       ( 0x1ul << SC_STATUS_TXACT_Pos )                         /*!< SC_T::STATUS: TXACT Mask               */
 
-#define SC_PINCTL_PWREN_Pos              (0)                                               /*!< SC_T::PINCTL: PWREN Position           */
-#define SC_PINCTL_PWREN_Msk              (0x1ul << SC_PINCTL_PWREN_Pos)                    /*!< SC_T::PINCTL: PWREN Mask               */
+#define SC_PINCTL_PWREN_Pos       ( 0 )                                                    /*!< SC_T::PINCTL: PWREN Position           */
+#define SC_PINCTL_PWREN_Msk       ( 0x1ul << SC_PINCTL_PWREN_Pos )                         /*!< SC_T::PINCTL: PWREN Mask               */
 
-#define SC_PINCTL_RSTEN_Pos              (1)                                               /*!< SC_T::PINCTL: RSTEN Position           */
-#define SC_PINCTL_RSTEN_Msk              (0x1ul << SC_PINCTL_RSTEN_Pos)                    /*!< SC_T::PINCTL: RSTEN Mask               */
+#define SC_PINCTL_RSTEN_Pos       ( 1 )                                                    /*!< SC_T::PINCTL: RSTEN Position           */
+#define SC_PINCTL_RSTEN_Msk       ( 0x1ul << SC_PINCTL_RSTEN_Pos )                         /*!< SC_T::PINCTL: RSTEN Mask               */
 
-#define SC_PINCTL_CSTOPLV_Pos            (5)                                               /*!< SC_T::PINCTL: CSTOPLV Position         */
-#define SC_PINCTL_CSTOPLV_Msk            (0x1ul << SC_PINCTL_CSTOPLV_Pos)                  /*!< SC_T::PINCTL: CSTOPLV Mask             */
+#define SC_PINCTL_CSTOPLV_Pos     ( 5 )                                                    /*!< SC_T::PINCTL: CSTOPLV Position         */
+#define SC_PINCTL_CSTOPLV_Msk     ( 0x1ul << SC_PINCTL_CSTOPLV_Pos )                       /*!< SC_T::PINCTL: CSTOPLV Mask             */
 
-#define SC_PINCTL_CLKKEEP_Pos            (6)                                               /*!< SC_T::PINCTL: CLKKEEP Position         */
-#define SC_PINCTL_CLKKEEP_Msk            (0x1ul << SC_PINCTL_CLKKEEP_Pos)                  /*!< SC_T::PINCTL: CLKKEEP Mask             */
+#define SC_PINCTL_CLKKEEP_Pos     ( 6 )                                                    /*!< SC_T::PINCTL: CLKKEEP Position         */
+#define SC_PINCTL_CLKKEEP_Msk     ( 0x1ul << SC_PINCTL_CLKKEEP_Pos )                       /*!< SC_T::PINCTL: CLKKEEP Mask             */
 
-#define SC_PINCTL_SCDATA_Pos             (9)                                               /*!< SC_T::PINCTL: SCDATA Position          */
-#define SC_PINCTL_SCDATA_Msk             (0x1ul << SC_PINCTL_SCDATA_Pos)                   /*!< SC_T::PINCTL: SCDATA Mask              */
+#define SC_PINCTL_SCDATA_Pos      ( 9 )                                                    /*!< SC_T::PINCTL: SCDATA Position          */
+#define SC_PINCTL_SCDATA_Msk      ( 0x1ul << SC_PINCTL_SCDATA_Pos )                        /*!< SC_T::PINCTL: SCDATA Mask              */
 
-#define SC_PINCTL_PWRINV_Pos             (11)                                              /*!< SC_T::PINCTL: PWRINV Position          */
-#define SC_PINCTL_PWRINV_Msk             (0x1ul << SC_PINCTL_PWRINV_Pos)                   /*!< SC_T::PINCTL: PWRINV Mask              */
+#define SC_PINCTL_PWRINV_Pos      ( 11 )                                                   /*!< SC_T::PINCTL: PWRINV Position          */
+#define SC_PINCTL_PWRINV_Msk      ( 0x1ul << SC_PINCTL_PWRINV_Pos )                        /*!< SC_T::PINCTL: PWRINV Mask              */
 
-#define SC_PINCTL_DATASTS_Pos            (16)                                              /*!< SC_T::PINCTL: DATASTS Position         */
-#define SC_PINCTL_DATASTS_Msk            (0x1ul << SC_PINCTL_DATASTS_Pos)                  /*!< SC_T::PINCTL: DATASTS Mask             */
+#define SC_PINCTL_DATASTS_Pos     ( 16 )                                                   /*!< SC_T::PINCTL: DATASTS Position         */
+#define SC_PINCTL_DATASTS_Msk     ( 0x1ul << SC_PINCTL_DATASTS_Pos )                       /*!< SC_T::PINCTL: DATASTS Mask             */
 
-#define SC_PINCTL_PWRSTS_Pos             (17)                                              /*!< SC_T::PINCTL: PWRSTS Position          */
-#define SC_PINCTL_PWRSTS_Msk             (0x1ul << SC_PINCTL_PWRSTS_Pos)                   /*!< SC_T::PINCTL: PWRSTS Mask              */
+#define SC_PINCTL_PWRSTS_Pos      ( 17 )                                                   /*!< SC_T::PINCTL: PWRSTS Position          */
+#define SC_PINCTL_PWRSTS_Msk      ( 0x1ul << SC_PINCTL_PWRSTS_Pos )                        /*!< SC_T::PINCTL: PWRSTS Mask              */
 
-#define SC_PINCTL_RSTSTS_Pos             (18)                                              /*!< SC_T::PINCTL: RSTSTS Position          */
-#define SC_PINCTL_RSTSTS_Msk             (0x1ul << SC_PINCTL_RSTSTS_Pos)                   /*!< SC_T::PINCTL: RSTSTS Mask              */
+#define SC_PINCTL_RSTSTS_Pos      ( 18 )                                                   /*!< SC_T::PINCTL: RSTSTS Position          */
+#define SC_PINCTL_RSTSTS_Msk      ( 0x1ul << SC_PINCTL_RSTSTS_Pos )                        /*!< SC_T::PINCTL: RSTSTS Mask              */
 
-#define SC_PINCTL_SYNC_Pos               (30)                                              /*!< SC_T::PINCTL: SYNC Position            */
-#define SC_PINCTL_SYNC_Msk               (0x1ul << SC_PINCTL_SYNC_Pos)                     /*!< SC_T::PINCTL: SYNC Mask                */
+#define SC_PINCTL_SYNC_Pos        ( 30 )                                                   /*!< SC_T::PINCTL: SYNC Position            */
+#define SC_PINCTL_SYNC_Msk        ( 0x1ul << SC_PINCTL_SYNC_Pos )                          /*!< SC_T::PINCTL: SYNC Mask                */
 
-#define SC_TMRCTL0_CNT_Pos               (0)                                               /*!< SC_T::TMRCTL0: CNT Position            */
-#define SC_TMRCTL0_CNT_Msk               (0xfffffful << SC_TMRCTL0_CNT_Pos)                /*!< SC_T::TMRCTL0: CNT Mask                */
+#define SC_TMRCTL0_CNT_Pos        ( 0 )                                                    /*!< SC_T::TMRCTL0: CNT Position            */
+#define SC_TMRCTL0_CNT_Msk        ( 0xfffffful << SC_TMRCTL0_CNT_Pos )                     /*!< SC_T::TMRCTL0: CNT Mask                */
 
-#define SC_TMRCTL0_OPMODE_Pos            (24)                                              /*!< SC_T::TMRCTL0: OPMODE Position         */
-#define SC_TMRCTL0_OPMODE_Msk            (0xful << SC_TMRCTL0_OPMODE_Pos)                  /*!< SC_T::TMRCTL0: OPMODE Mask             */
+#define SC_TMRCTL0_OPMODE_Pos     ( 24 )                                                   /*!< SC_T::TMRCTL0: OPMODE Position         */
+#define SC_TMRCTL0_OPMODE_Msk     ( 0xful << SC_TMRCTL0_OPMODE_Pos )                       /*!< SC_T::TMRCTL0: OPMODE Mask             */
 
-#define SC_TMRCTL0_SYNC_Pos              (31)                                              /*!< SC_T::TMRCTL0: SYNC Position           */
-#define SC_TMRCTL0_SYNC_Msk              (0x1ul << SC_TMRCTL0_SYNC_Pos)                    /*!< SC_T::TMRCTL0: SYNC Mask               */
+#define SC_TMRCTL0_SYNC_Pos       ( 31 )                                                   /*!< SC_T::TMRCTL0: SYNC Position           */
+#define SC_TMRCTL0_SYNC_Msk       ( 0x1ul << SC_TMRCTL0_SYNC_Pos )                         /*!< SC_T::TMRCTL0: SYNC Mask               */
 
-#define SC_TMRCTL1_CNT_Pos               (0)                                               /*!< SC_T::TMRCTL1: CNT Position            */
-#define SC_TMRCTL1_CNT_Msk               (0xfful << SC_TMRCTL1_CNT_Pos)                    /*!< SC_T::TMRCTL1: CNT Mask                */
+#define SC_TMRCTL1_CNT_Pos        ( 0 )                                                    /*!< SC_T::TMRCTL1: CNT Position            */
+#define SC_TMRCTL1_CNT_Msk        ( 0xfful << SC_TMRCTL1_CNT_Pos )                         /*!< SC_T::TMRCTL1: CNT Mask                */
 
-#define SC_TMRCTL1_OPMODE_Pos            (24)                                              /*!< SC_T::TMRCTL1: OPMODE Position         */
-#define SC_TMRCTL1_OPMODE_Msk            (0xful << SC_TMRCTL1_OPMODE_Pos)                  /*!< SC_T::TMRCTL1: OPMODE Mask             */
+#define SC_TMRCTL1_OPMODE_Pos     ( 24 )                                                   /*!< SC_T::TMRCTL1: OPMODE Position         */
+#define SC_TMRCTL1_OPMODE_Msk     ( 0xful << SC_TMRCTL1_OPMODE_Pos )                       /*!< SC_T::TMRCTL1: OPMODE Mask             */
 
-#define SC_TMRCTL1_SYNC_Pos              (31)                                              /*!< SC_T::TMRCTL1: SYNC Position           */
-#define SC_TMRCTL1_SYNC_Msk              (0x1ul << SC_TMRCTL1_SYNC_Pos)                    /*!< SC_T::TMRCTL1: SYNC Mask               */
+#define SC_TMRCTL1_SYNC_Pos       ( 31 )                                                   /*!< SC_T::TMRCTL1: SYNC Position           */
+#define SC_TMRCTL1_SYNC_Msk       ( 0x1ul << SC_TMRCTL1_SYNC_Pos )                         /*!< SC_T::TMRCTL1: SYNC Mask               */
 
-#define SC_TMRCTL2_CNT_Pos               (0)                                               /*!< SC_T::TMRCTL2: CNT Position            */
-#define SC_TMRCTL2_CNT_Msk               (0xfful << SC_TMRCTL2_CNT_Pos)                    /*!< SC_T::TMRCTL2: CNT Mask                */
+#define SC_TMRCTL2_CNT_Pos        ( 0 )                                                    /*!< SC_T::TMRCTL2: CNT Position            */
+#define SC_TMRCTL2_CNT_Msk        ( 0xfful << SC_TMRCTL2_CNT_Pos )                         /*!< SC_T::TMRCTL2: CNT Mask                */
 
-#define SC_TMRCTL2_OPMODE_Pos            (24)                                              /*!< SC_T::TMRCTL2: OPMODE Position         */
-#define SC_TMRCTL2_OPMODE_Msk            (0xful << SC_TMRCTL2_OPMODE_Pos)                  /*!< SC_T::TMRCTL2: OPMODE Mask             */
+#define SC_TMRCTL2_OPMODE_Pos     ( 24 )                                                   /*!< SC_T::TMRCTL2: OPMODE Position         */
+#define SC_TMRCTL2_OPMODE_Msk     ( 0xful << SC_TMRCTL2_OPMODE_Pos )                       /*!< SC_T::TMRCTL2: OPMODE Mask             */
 
-#define SC_TMRCTL2_SYNC_Pos              (31)                                              /*!< SC_T::TMRCTL2: SYNC Position           */
-#define SC_TMRCTL2_SYNC_Msk              (0x1ul << SC_TMRCTL2_SYNC_Pos)                    /*!< SC_T::TMRCTL2: SYNC Mask               */
+#define SC_TMRCTL2_SYNC_Pos       ( 31 )                                                   /*!< SC_T::TMRCTL2: SYNC Position           */
+#define SC_TMRCTL2_SYNC_Msk       ( 0x1ul << SC_TMRCTL2_SYNC_Pos )                         /*!< SC_T::TMRCTL2: SYNC Mask               */
 
-#define SC_UARTCTL_UARTEN_Pos            (0)                                               /*!< SC_T::UARTCTL: UARTEN Position         */
-#define SC_UARTCTL_UARTEN_Msk            (0x1ul << SC_UARTCTL_UARTEN_Pos)                  /*!< SC_T::UARTCTL: UARTEN Mask             */
+#define SC_UARTCTL_UARTEN_Pos     ( 0 )                                                    /*!< SC_T::UARTCTL: UARTEN Position         */
+#define SC_UARTCTL_UARTEN_Msk     ( 0x1ul << SC_UARTCTL_UARTEN_Pos )                       /*!< SC_T::UARTCTL: UARTEN Mask             */
 
-#define SC_UARTCTL_WLS_Pos               (4)                                               /*!< SC_T::UARTCTL: WLS Position            */
-#define SC_UARTCTL_WLS_Msk               (0x3ul << SC_UARTCTL_WLS_Pos)                     /*!< SC_T::UARTCTL: WLS Mask                */
+#define SC_UARTCTL_WLS_Pos        ( 4 )                                                    /*!< SC_T::UARTCTL: WLS Position            */
+#define SC_UARTCTL_WLS_Msk        ( 0x3ul << SC_UARTCTL_WLS_Pos )                          /*!< SC_T::UARTCTL: WLS Mask                */
 
-#define SC_UARTCTL_PBOFF_Pos             (6)                                               /*!< SC_T::UARTCTL: PBOFF Position          */
-#define SC_UARTCTL_PBOFF_Msk             (0x1ul << SC_UARTCTL_PBOFF_Pos)                   /*!< SC_T::UARTCTL: PBOFF Mask              */
+#define SC_UARTCTL_PBOFF_Pos      ( 6 )                                                    /*!< SC_T::UARTCTL: PBOFF Position          */
+#define SC_UARTCTL_PBOFF_Msk      ( 0x1ul << SC_UARTCTL_PBOFF_Pos )                        /*!< SC_T::UARTCTL: PBOFF Mask              */
 
-#define SC_UARTCTL_OPE_Pos               (7)                                               /*!< SC_T::UARTCTL: OPE Position            */
-#define SC_UARTCTL_OPE_Msk               (0x1ul << SC_UARTCTL_OPE_Pos)                     /*!< SC_T::UARTCTL: OPE Mask                */
+#define SC_UARTCTL_OPE_Pos        ( 7 )                                                    /*!< SC_T::UARTCTL: OPE Position            */
+#define SC_UARTCTL_OPE_Msk        ( 0x1ul << SC_UARTCTL_OPE_Pos )                          /*!< SC_T::UARTCTL: OPE Mask                */
 
-#define SC_ACTCTL_T1EXT_Pos              (0)                                               /*!< SC_T::ACTCTL: T1EXT Position           */
-#define SC_ACTCTL_T1EXT_Msk              (0x1ful << SC_ACTCTL_T1EXT_Pos)                   /*!< SC_T::ACTCTL: T1EXT Mask               */
+#define SC_ACTCTL_T1EXT_Pos       ( 0 )                                                    /*!< SC_T::ACTCTL: T1EXT Position           */
+#define SC_ACTCTL_T1EXT_Msk       ( 0x1ful << SC_ACTCTL_T1EXT_Pos )                        /*!< SC_T::ACTCTL: T1EXT Mask               */
 
 /**@}*/ /* SC_CONST */
 /**@}*/ /* end of SC register group */

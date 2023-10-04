@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*!*****************************************************************************
  *  @file       SPICC32XXDMA.h
  *
@@ -107,17 +108,17 @@
  */
 
 #ifndef ti_drivers_spi_SPICC32XXDMA__include
-#define ti_drivers_spi_SPICC32XXDMA__include
+    #define ti_drivers_spi_SPICC32XXDMA__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <ti/drivers/dpl/HwiP.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
-#include <ti/drivers/Power.h>
-#include <ti/drivers/SPI.h>
-#include <ti/drivers/dma/UDMACC32XX.h>
+    #include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/Power.h>
+    #include <ti/drivers/SPI.h>
+    #include <ti/drivers/dma/UDMACC32XX.h>
 
 /**
  *  @addtogroup SPI_STATUS
@@ -147,23 +148,23 @@ extern "C" {
 
 /** @}*/
 
-#define SPICC32XXDMA_PIN_05_CLK     0x0704
-#define SPICC32XXDMA_PIN_06_MISO    0x0705
-#define SPICC32XXDMA_PIN_07_MOSI    0x0706
-#define SPICC32XXDMA_PIN_08_CS      0x0707
-#define SPICC32XXDMA_PIN_45_CLK     0x072C
-#define SPICC32XXDMA_PIN_50_CS      0x0931
-#define SPICC32XXDMA_PIN_52_MOSI    0x0833
-#define SPICC32XXDMA_PIN_53_MISO    0x0734
+    #define SPICC32XXDMA_PIN_05_CLK       0x0704
+    #define SPICC32XXDMA_PIN_06_MISO      0x0705
+    #define SPICC32XXDMA_PIN_07_MOSI      0x0706
+    #define SPICC32XXDMA_PIN_08_CS        0x0707
+    #define SPICC32XXDMA_PIN_45_CLK       0x072C
+    #define SPICC32XXDMA_PIN_50_CS        0x0931
+    #define SPICC32XXDMA_PIN_52_MOSI      0x0833
+    #define SPICC32XXDMA_PIN_53_MISO      0x0734
 
-#define SPICC32XXDMA_PIN_NO_CONFIG  0xFFFF
+    #define SPICC32XXDMA_PIN_NO_CONFIG    0xFFFF
 
 
-typedef unsigned long SPIBaseAddrType;
-typedef unsigned long SPIDataType;
+    typedef unsigned long   SPIBaseAddrType;
+    typedef unsigned long   SPIDataType;
 
 /* SPI function table pointer */
-extern const SPI_FxnTable SPICC32XXDMA_fxnTable;
+    extern const SPI_FxnTable SPICC32XXDMA_fxnTable;
 
 /*!
  *  @brief
@@ -174,11 +175,12 @@ extern const SPI_FxnTable SPICC32XXDMA_fxnTable;
  *  SPICC32XXDMA_16bit: txBuf and rxBuf are arrays of uint16_t elements
  *  SPICC32XXDMA_32bit: txBuf and rxBuf are arrays of uint32_t elements
  */
-typedef enum SPICC32XXDMA_FrameSize {
-    SPICC32XXDMA_8bit  = 0,
-    SPICC32XXDMA_16bit = 1,
-    SPICC32XXDMA_32bit = 2
-} SPICC32XXDMA_FrameSize;
+    typedef enum SPICC32XXDMA_FrameSize
+    {
+        SPICC32XXDMA_8bit = 0,
+        SPICC32XXDMA_16bit = 1,
+        SPICC32XXDMA_32bit = 2
+    } SPICC32XXDMA_FrameSize;
 
 /*!
  *  @brief  SPICC32XXDMA Hardware attributes
@@ -237,94 +239,99 @@ typedef enum SPICC32XXDMA_FrameSize {
  *  };
  *  @endcode
  */
-typedef struct SPICC32XXDMA_HWAttrsV1 {
-    /*! SPICC32XXDMA Peripheral's base address */
-    SPIBaseAddrType   baseAddr;
+    typedef struct SPICC32XXDMA_HWAttrsV1
+    {
+        /*! SPICC32XXDMA Peripheral's base address */
+        SPIBaseAddrType baseAddr;
 
-    /*! SPICC32XXDMA Peripheral's interrupt vector */
-    uint32_t   intNum;
+        /*! SPICC32XXDMA Peripheral's interrupt vector */
+        uint32_t intNum;
 
-    /*! SPICC32XXDMA Peripheral's interrupt priority */
-    uint32_t   intPriority;
+        /*! SPICC32XXDMA Peripheral's interrupt priority */
+        uint32_t intPriority;
 
-    /*! SPI PRCM peripheral number */
-    uint32_t   spiPRCM;
+        /*! SPI PRCM peripheral number */
+        uint32_t spiPRCM;
 
-    /*! Specify if chip select line will be controlled by SW or HW */
-    uint32_t   csControl;
+        /*! Specify if chip select line will be controlled by SW or HW */
+        uint32_t csControl;
 
-    uint32_t   csPolarity;
+        uint32_t csPolarity;
 
-    /*! Set peripheral to work in 3-pin or 4-pin mode */
-    uint32_t   pinMode;
+        /*! Set peripheral to work in 3-pin or 4-pin mode */
+        uint32_t pinMode;
 
-    /*! Enable or disable SPI TURBO mode */
-    uint32_t   turboMode;
+        /*! Enable or disable SPI TURBO mode */
+        uint32_t turboMode;
 
-    /*! Address of a scratch buffer of size uint32_t */
-    uint32_t  *scratchBufPtr;
+        /*! Address of a scratch buffer of size uint32_t */
+        uint32_t * scratchBufPtr;
 
-    /*! Default TX value if txBuf == NULL */
-    unsigned long   defaultTxBufValue;
+        /*! Default TX value if txBuf == NULL */
+        unsigned long defaultTxBufValue;
 
-    /*! uDMA RX channel index */
-    uint32_t   rxChannelIndex;
+        /*! uDMA RX channel index */
+        uint32_t rxChannelIndex;
 
-    /*! uDMA TX channel index */
-    uint32_t   txChannelIndex;
+        /*! uDMA TX channel index */
+        uint32_t txChannelIndex;
 
-    /*! Minimum amout of data to start a uDMA transfer */
-    uint32_t   minDmaTransferSize;
+        /*! Minimum amout of data to start a uDMA transfer */
+        uint32_t minDmaTransferSize;
 
-    /*! GSPI MOSI pin assignment */
-    uint16_t   mosiPin;
+        /*! GSPI MOSI pin assignment */
+        uint16_t mosiPin;
 
-    /*! GSPI MISO pin assignment */
-    uint16_t   misoPin;
+        /*! GSPI MISO pin assignment */
+        uint16_t misoPin;
 
-    /*! GSPI CLK pin assignment */
-    uint16_t   clkPin;
+        /*! GSPI CLK pin assignment */
+        uint16_t clkPin;
 
-    /*! GSPI CS pin assignment */
-    uint16_t   csPin;
-} SPICC32XXDMA_HWAttrsV1;
+        /*! GSPI CS pin assignment */
+        uint16_t csPin;
+    } SPICC32XXDMA_HWAttrsV1;
 
 /*!
  *  @brief  SPICC32XXDMA Object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct SPICC32XXDMA_Object {
-    HwiP_Handle            hwiHandle;
-    SemaphoreP_Handle      transferComplete;
+    typedef struct SPICC32XXDMA_Object
+    {
+        HwiP_Handle hwiHandle;
+        SemaphoreP_Handle transferComplete;
 
-    Power_NotifyObj        notifyObj;
-    unsigned int           powerMgrId;
+        Power_NotifyObj notifyObj;
+        unsigned int powerMgrId;
 
-    uint32_t               bitRate;        /*!< SPI bit rate in Hz */
-    uint32_t               dataSize;       /*!< SPI data frame size in bits */
-    SPI_CallbackFxn        transferCallbackFxn;
-    SPI_Transaction       *transaction;
+        uint32_t bitRate;                  /*!< SPI bit rate in Hz */
+        uint32_t dataSize;                 /*!< SPI data frame size in bits */
+        SPI_CallbackFxn transferCallbackFxn;
+        SPI_Transaction * transaction;
 
-    void                 (*spiPollingFxn) (uint32_t baseAddr, void *rx,
-                                   void *tx, uint8_t rxInc, uint8_t txInc,
-                               size_t count);
+        void ( * spiPollingFxn )( uint32_t baseAddr,
+                                  void * rx,
+                                  void * tx,
+                                  uint8_t rxInc,
+                                  uint8_t txInc,
+                                  size_t count );
 
-    uint8_t                rxFifoTrigger;
-    uint8_t                txFifoTrigger;
-    SPI_Mode               spiMode;
-    SPI_TransferMode       transferMode;
-    SPI_FrameFormat        frameFormat;    /*!< SPI frame format */
-    SPICC32XXDMA_FrameSize frameSize;
+        uint8_t rxFifoTrigger;
+        uint8_t txFifoTrigger;
+        SPI_Mode spiMode;
+        SPI_TransferMode transferMode;
+        SPI_FrameFormat frameFormat;       /*!< SPI frame format */
+        SPICC32XXDMA_FrameSize frameSize;
 
-    bool                   isOpen;
+        bool isOpen;
 
-    /* UDMA */
-    UDMACC32XX_Handle      dmaHandle;
-} SPICC32XXDMA_Object, *SPICC32XXDMA_Handle;
+        /* UDMA */
+        UDMACC32XX_Handle dmaHandle;
+    } SPICC32XXDMA_Object, * SPICC32XXDMA_Handle;
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_spi_SPICC32XXDMA__include */

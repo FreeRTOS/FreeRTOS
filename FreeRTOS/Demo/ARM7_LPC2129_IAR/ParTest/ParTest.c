@@ -36,61 +36,61 @@
 #include "partest.h"
 
 /* Board specific defines. */
-#define partstFIRST_IO		( ( unsigned long ) 0x10000 )
-#define partstNUM_LEDS		( 8 )
+#define partstFIRST_IO    ( ( unsigned long ) 0x10000 )
+#define partstNUM_LEDS    ( 8 )
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
-	/* The ports are setup within prvInitialiseHardware(), called by main(). */
+{
+    /* The ports are setup within prvInitialiseHardware(), called by main(). */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned long ulLED = partstFIRST_IO;
+    unsigned long ulLED = partstFIRST_IO;
 
-	if( uxLED < partstNUM_LEDS )
-	{
-		/* Rotate to the wanted bit of port 1.  Only P16 to P23 have an LED
-		attached. */
-		ulLED <<= ( unsigned long ) uxLED;
+    if( uxLED < partstNUM_LEDS )
+    {
+        /* Rotate to the wanted bit of port 1.  Only P16 to P23 have an LED
+         * attached. */
+        ulLED <<= ( unsigned long ) uxLED;
 
-		/* Set or clear the output. */
-		if( xValue )
-		{
-			IO1SET = ulLED;
-		}
-		else
-		{
-			IO1CLR = ulLED;			
-		}
-	}	
+        /* Set or clear the output. */
+        if( xValue )
+        {
+            IO1SET = ulLED;
+        }
+        else
+        {
+            IO1CLR = ulLED;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned long ulLED = partstFIRST_IO, ulCurrentState;
+    unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 
-	if( uxLED < partstNUM_LEDS )
-	{
-		/* Rotate to the wanted bit of port 1.  Only P10 to P13 have an LED
-		attached. */
-		ulLED <<= ( unsigned long ) uxLED;
+    if( uxLED < partstNUM_LEDS )
+    {
+        /* Rotate to the wanted bit of port 1.  Only P10 to P13 have an LED
+         * attached. */
+        ulLED <<= ( unsigned long ) uxLED;
 
-		/* If this bit is already set, clear it, and vice versa. */
-		ulCurrentState = IO1PIN;
-		if( ulCurrentState & ulLED )
-		{
-			IO1CLR = ulLED;
-		}
-		else
-		{
-			IO1SET = ulLED;			
-		}
-	}	
+        /* If this bit is already set, clear it, and vice versa. */
+        ulCurrentState = IO1PIN;
+
+        if( ulCurrentState & ulLED )
+        {
+            IO1CLR = ulLED;
+        }
+        else
+        {
+            IO1SET = ulLED;
+        }
+    }
 }
-
-

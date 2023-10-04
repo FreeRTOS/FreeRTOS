@@ -46,7 +46,8 @@
 #include <assert.h>
 
 
-static LcdColor_t gLcdPixelCache[LCD_DATA_CACHE_SIZE];
+static LcdColor_t gLcdPixelCache[ LCD_DATA_CACHE_SIZE ];
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -61,16 +62,16 @@ static LcdColor_t gLcdPixelCache[LCD_DATA_CACHE_SIZE];
  */
 static uint32_t LCD_SetColor( uint32_t dwRgb24Bits )
 {
-    uint32_t i ;
+    uint32_t i;
 
     /* Fill the cache with selected color */
-    for ( i = 0 ; i < LCD_DATA_CACHE_SIZE ; ++i )
+    for( i = 0; i < LCD_DATA_CACHE_SIZE; ++i )
     {
-        gLcdPixelCache[i] = dwRgb24Bits ;
+        gLcdPixelCache[ i ] = dwRgb24Bits;
     }
 
     return 0;
-} 
+}
 
 /**
  * \brief Check Box coordinates. Return upper left and bottom right coordinates.
@@ -80,39 +81,48 @@ static uint32_t LCD_SetColor( uint32_t dwRgb24Bits )
  * \param pX2      X-coordinate of lower-right corner on LCD.
  * \param pY2      Y-coordinate of lower-right corner on LCD.
  */
-static void CheckBoxCoordinates( uint32_t *pX1, uint32_t *pY1, uint32_t *pX2, uint32_t *pY2 )
+static void CheckBoxCoordinates( uint32_t * pX1,
+                                 uint32_t * pY1,
+                                 uint32_t * pX2,
+                                 uint32_t * pY2 )
 {
     uint32_t dw;
 
-    if ( *pX1 >= BOARD_LCD_WIDTH )
+    if( *pX1 >= BOARD_LCD_WIDTH )
     {
-        *pX1 = BOARD_LCD_WIDTH-1 ;
+        *pX1 = BOARD_LCD_WIDTH - 1;
     }
-    if ( *pX2 >= BOARD_LCD_WIDTH )
+
+    if( *pX2 >= BOARD_LCD_WIDTH )
     {
-        *pX2 = BOARD_LCD_WIDTH-1 ;
+        *pX2 = BOARD_LCD_WIDTH - 1;
     }
-    if ( *pY1 >= BOARD_LCD_HEIGHT )
+
+    if( *pY1 >= BOARD_LCD_HEIGHT )
     {
-        *pY1 = BOARD_LCD_HEIGHT-1 ;
+        *pY1 = BOARD_LCD_HEIGHT - 1;
     }
-    if ( *pY2 >= BOARD_LCD_HEIGHT )
+
+    if( *pY2 >= BOARD_LCD_HEIGHT )
     {
-        *pY2 = BOARD_LCD_HEIGHT-1 ;
+        *pY2 = BOARD_LCD_HEIGHT - 1;
     }
-    if (*pX1 > *pX2)
+
+    if( *pX1 > *pX2 )
     {
         dw = *pX1;
         *pX1 = *pX2;
         *pX2 = dw;
     }
-    if (*pY1 > *pY2)
+
+    if( *pY1 > *pY2 )
     {
         dw = *pY1;
         *pY1 = *pY2;
         *pY2 = dw;
     }
 }
+
 /**
  * \brief Fills the given LCD buffer with a particular color.
  *
@@ -120,14 +130,14 @@ static void CheckBoxCoordinates( uint32_t *pX1, uint32_t *pY1, uint32_t *pX2, ui
  */
 void LCDD_Fill( uint32_t dwColor )
 {
-    uint32_t dw ;
+    uint32_t dw;
 
-    //    LCD_SetCursor( 0, 0 ) ;
-    ILI9488_WriteRAM_Prepare() ;
+    /*    LCD_SetCursor( 0, 0 ) ; */
+    ILI9488_WriteRAM_Prepare();
 
-    for ( dw = BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT; dw > 0; dw-- )
+    for( dw = BOARD_LCD_WIDTH * BOARD_LCD_HEIGHT; dw > 0; dw-- )
     {
-        ILI9488_WriteRAM( dwColor ) ;
+        ILI9488_WriteRAM( dwColor );
     }
 }
 
@@ -138,11 +148,13 @@ void LCDD_Fill( uint32_t dwColor )
  * \param y  Y-coordinate of pixel.
  * \param color  Pixel color.
  */
-extern void LCDD_DrawPixel( uint32_t x, uint32_t y, uint32_t color )
+extern void LCDD_DrawPixel( uint32_t x,
+                            uint32_t y,
+                            uint32_t color )
 {
-    ILI9488_SetCursor( x, y ) ;
-    ILI9488_WriteRAM_Prepare() ;
-    ILI9488_WriteRAM( color ) ;
+    ILI9488_SetCursor( x, y );
+    ILI9488_WriteRAM_Prepare();
+    ILI9488_WriteRAM( color );
 }
 
 
@@ -155,11 +167,12 @@ extern void LCDD_DrawPixel( uint32_t x, uint32_t y, uint32_t color )
  *
  * \return color  Readed pixel color.
  */
-extern uint32_t LCDD_ReadPixel( uint32_t x, uint32_t y )
+extern uint32_t LCDD_ReadPixel( uint32_t x,
+                                uint32_t y )
 {
     uint32_t color;
 
-    ILI9488_SetCursor(x, y);
+    ILI9488_SetCursor( x, y );
     ILI9488_ReadRAM_Prepare();
     color = ILI9488_ReadRAM();
 
@@ -175,17 +188,20 @@ extern uint32_t LCDD_ReadPixel( uint32_t x, uint32_t y )
  * \param direction line direction: 0 - horizontal, 1 - vertical.
  * \param color     Pixel color.
  */
-extern void LCDD_DrawLine( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY2 , uint32_t color )
+extern void LCDD_DrawLine( uint32_t dwX1,
+                           uint32_t dwY1,
+                           uint32_t dwX2,
+                           uint32_t dwY2,
+                           uint32_t color )
 {
-    if (( dwY1 == dwY2 ) || (dwX1 == dwX2))
+    if( ( dwY1 == dwY2 ) || ( dwX1 == dwX2 ) )
     {
         LCDD_DrawRectangleWithFill( dwX1, dwY1, dwX2, dwY2, color );
     }
     else
     {
-        LCDD_DrawLineBresenham( dwX1, dwY1, dwX2, dwY2 , color) ;
+        LCDD_DrawLineBresenham( dwX1, dwY1, dwX2, dwY2, color );
     }
-
 }
 
 
@@ -199,60 +215,67 @@ extern void LCDD_DrawLine( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t
  * \param direction line direction: 0 - horizontal, 1 - vertical.
  * \param color     LcdColor_t color.
  */
-extern uint32_t LCDD_DrawLineBresenham( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY2 , uint32_t color)
+extern uint32_t LCDD_DrawLineBresenham( uint32_t dwX1,
+                                        uint32_t dwY1,
+                                        uint32_t dwX2,
+                                        uint32_t dwY2,
+                                        uint32_t color )
 {
-    int dx, dy ;
-    int i ;
-    int xinc, yinc, cumul ;
-    int x, y ;
+    int dx, dy;
+    int i;
+    int xinc, yinc, cumul;
+    int x, y;
 
-    x = dwX1 ;
-    y = dwY1 ;
-    dx = dwX2 - dwX1 ;
-    dy = dwY2 - dwY1 ;
+    x = dwX1;
+    y = dwY1;
+    dx = dwX2 - dwX1;
+    dy = dwY2 - dwY1;
 
-    xinc = ( dx > 0 ) ? 1 : -1 ;
-    yinc = ( dy > 0 ) ? 1 : -1 ;
-    dx = ( dx > 0 ) ? dx : -dx ;
-    dy = ( dy > 0 ) ? dy : -dy ;
+    xinc = ( dx > 0 ) ? 1 : -1;
+    yinc = ( dy > 0 ) ? 1 : -1;
+    dx = ( dx > 0 ) ? dx : -dx;
+    dy = ( dy > 0 ) ? dy : -dy;
 
-    LCDD_DrawPixel(x , y , color);
+    LCDD_DrawPixel( x, y, color );
 
-    if ( dx > dy )
+    if( dx > dy )
     {
-        cumul = dx / 2 ;
-        for ( i = 1 ; i <= dx ; i++ )
-        {
-            x += xinc ;
-            cumul += dy ;
+        cumul = dx / 2;
 
-            if ( cumul >= dx )
+        for( i = 1; i <= dx; i++ )
+        {
+            x += xinc;
+            cumul += dy;
+
+            if( cumul >= dx )
             {
-                cumul -= dx ;
-                y += yinc ;
+                cumul -= dx;
+                y += yinc;
             }
-            LCDD_DrawPixel(x , y , color);
+
+            LCDD_DrawPixel( x, y, color );
         }
     }
     else
     {
-        cumul = dy / 2 ;
-        for ( i = 1 ; i <= dy ; i++ )
-        {
-            y += yinc ;
-            cumul += dx ;
+        cumul = dy / 2;
 
-            if ( cumul >= dy )
+        for( i = 1; i <= dy; i++ )
+        {
+            y += yinc;
+            cumul += dx;
+
+            if( cumul >= dy )
             {
-                cumul -= dy ;
-                x += xinc ;
+                cumul -= dy;
+                x += xinc;
             }
 
-            LCDD_DrawPixel(x , y , color);
+            LCDD_DrawPixel( x, y, color );
         }
     }
 
-    return 0 ;
+    return 0;
 }
 
 /*
@@ -264,14 +287,17 @@ extern uint32_t LCDD_DrawLineBresenham( uint32_t dwX1, uint32_t dwY1, uint32_t d
  * \param height  Rectangle height in pixels.
  * \param color  Rectangle color.
  */
-extern void LCDD_DrawRectangle( uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint32_t color )
+extern void LCDD_DrawRectangle( uint32_t x,
+                                uint32_t y,
+                                uint32_t width,
+                                uint32_t height,
+                                uint32_t color )
 {
+    LCDD_DrawRectangleWithFill( x, y, width, y, color );
+    LCDD_DrawRectangleWithFill( x, height, width, height, color );
 
-    LCDD_DrawRectangleWithFill(x, y, width, y, color);
-    LCDD_DrawRectangleWithFill(x, height, width, height, color);
-
-    LCDD_DrawRectangleWithFill(x, y, x, height, color);
-    LCDD_DrawRectangleWithFill(width, y, width, height, color);
+    LCDD_DrawRectangleWithFill( x, y, x, height, color );
+    LCDD_DrawRectangleWithFill( width, y, width, height, color );
 }
 
 /*
@@ -283,29 +309,34 @@ extern void LCDD_DrawRectangle( uint32_t x, uint32_t y, uint32_t width, uint32_t
  * \param height  Rectangle height in pixels.
  * \param color  Rectangle color.
  */
-extern void LCDD_DrawRectangleWithFill( uint32_t dwX, uint32_t dwY, uint32_t dwWidth, uint32_t dwHeight, uint32_t dwColor )
+extern void LCDD_DrawRectangleWithFill( uint32_t dwX,
+                                        uint32_t dwY,
+                                        uint32_t dwWidth,
+                                        uint32_t dwHeight,
+                                        uint32_t dwColor )
 {
     uint32_t size, blocks;
 
-    CheckBoxCoordinates(&dwX, &dwY, &dwWidth, &dwHeight);
-    LCD_SetColor(dwColor);
-    ILI9488_SetWindow( dwX, dwY, dwWidth, dwHeight ) ;
+    CheckBoxCoordinates( &dwX, &dwY, &dwWidth, &dwHeight );
+    LCD_SetColor( dwColor );
+    ILI9488_SetWindow( dwX, dwY, dwWidth, dwHeight );
 
-    size = (dwWidth - dwX + 1) * (dwHeight - dwY + 1);
+    size = ( dwWidth - dwX + 1 ) * ( dwHeight - dwY + 1 );
 
     /* Send pixels blocks => one LCD IT / block */
     blocks = size / LCD_DATA_CACHE_SIZE;
 
-    ILI9488_WriteRAM_Prepare() ;
+    ILI9488_WriteRAM_Prepare();
 
-    while (blocks--)
+    while( blocks-- )
     {
-        ILI9488_WriteRAMBuffer(gLcdPixelCache, LCD_DATA_CACHE_SIZE);
+        ILI9488_WriteRAMBuffer( gLcdPixelCache, LCD_DATA_CACHE_SIZE );
     }
+
     /* Send remaining pixels */
-    ILI9488_WriteRAMBuffer(gLcdPixelCache, size % LCD_DATA_CACHE_SIZE);
-    ILI9488_SetWindow( 0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT ) ;
-    //    LCD_SetCursor( 0, 0 ) ;
+    ILI9488_WriteRAMBuffer( gLcdPixelCache, size % LCD_DATA_CACHE_SIZE );
+    ILI9488_SetWindow( 0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT );
+    /*    LCD_SetCursor( 0, 0 ) ; */
 }
 
 /**
@@ -316,81 +347,93 @@ extern void LCDD_DrawRectangleWithFill( uint32_t dwX, uint32_t dwY, uint32_t dwW
  * \param r      circle radius.
  * \param color  circle color.
  */
-extern uint32_t LCDD_DrawCircle( uint32_t x, uint32_t y, uint32_t r, uint32_t color )
+extern uint32_t LCDD_DrawCircle( uint32_t x,
+                                 uint32_t y,
+                                 uint32_t r,
+                                 uint32_t color )
 {
-    signed int    d;    /* Decision Variable */
-    uint32_t  curX; /* Current X Value */
-    uint32_t  curY; /* Current Y Value */
+    signed int d;  /* Decision Variable */
+    uint32_t curX; /* Current X Value */
+    uint32_t curY; /* Current Y Value */
 
-    d = 3 - (r << 1);
+    d = 3 - ( r << 1 );
     curX = 0;
     curY = r;
 
-    while (curX <= curY)
+    while( curX <= curY )
     {
-        LCDD_DrawPixel(x + curX, y + curY, color);
-        LCDD_DrawPixel(x + curX, y - curY, color);
-        LCDD_DrawPixel(x - curX, y + curY, color);
-        LCDD_DrawPixel(x - curX, y - curY, color);
-        LCDD_DrawPixel(x + curY, y + curX, color);
-        LCDD_DrawPixel(x + curY, y - curX, color);
-        LCDD_DrawPixel(x - curY, y + curX, color);
-        LCDD_DrawPixel(x - curY, y - curX, color);
+        LCDD_DrawPixel( x + curX, y + curY, color );
+        LCDD_DrawPixel( x + curX, y - curY, color );
+        LCDD_DrawPixel( x - curX, y + curY, color );
+        LCDD_DrawPixel( x - curX, y - curY, color );
+        LCDD_DrawPixel( x + curY, y + curX, color );
+        LCDD_DrawPixel( x + curY, y - curX, color );
+        LCDD_DrawPixel( x - curY, y + curX, color );
+        LCDD_DrawPixel( x - curY, y - curX, color );
 
-        if (d < 0) {
-            d += (curX << 2) + 6;
+        if( d < 0 )
+        {
+            d += ( curX << 2 ) + 6;
         }
-        else {
-            d += ((curX - curY) << 2) + 10;
+        else
+        {
+            d += ( ( curX - curY ) << 2 ) + 10;
             curY--;
         }
+
         curX++;
     }
+
     return 0;
 }
 
 
-extern uint32_t LCD_DrawFilledCircle( uint32_t dwX, uint32_t dwY, uint32_t dwRadius, uint32_t color)
+extern uint32_t LCD_DrawFilledCircle( uint32_t dwX,
+                                      uint32_t dwY,
+                                      uint32_t dwRadius,
+                                      uint32_t color )
 {
-    signed int d ; /* Decision Variable */
-    uint32_t dwCurX ; /* Current X Value */
-    uint32_t dwCurY ; /* Current Y Value */
+    signed int d;    /* Decision Variable */
+    uint32_t dwCurX; /* Current X Value */
+    uint32_t dwCurY; /* Current Y Value */
     uint32_t dwXmin, dwYmin;
 
-    if (dwRadius == 0)
+    if( dwRadius == 0 )
     {
         return 0;
     }
-    d = 3 - (dwRadius << 1) ;
-    dwCurX = 0 ;
-    dwCurY = dwRadius ;
 
-    while ( dwCurX <= dwCurY )
+    d = 3 - ( dwRadius << 1 );
+    dwCurX = 0;
+    dwCurY = dwRadius;
+
+    while( dwCurX <= dwCurY )
     {
-        dwXmin = (dwCurX > dwX) ? 0 : dwX-dwCurX;
-        dwYmin = (dwCurY > dwY) ? 0 : dwY-dwCurY;
-        LCDD_DrawRectangleWithFill( dwXmin, dwYmin, dwX+dwCurX, dwYmin ,color) ;
-        LCDD_DrawRectangleWithFill( dwXmin, dwY+dwCurY, dwX+dwCurX, dwY+dwCurY, color ) ;
-        dwXmin = (dwCurY > dwX) ? 0 : dwX-dwCurY;
-        dwYmin = (dwCurX > dwY) ? 0 : dwY-dwCurX;
-        LCDD_DrawRectangleWithFill( dwXmin, dwYmin, dwX+dwCurY, dwYmin, color  ) ;
-        LCDD_DrawRectangleWithFill( dwXmin, dwY+dwCurX, dwX+dwCurY, dwY+dwCurX, color  ) ;
+        dwXmin = ( dwCurX > dwX ) ? 0 : dwX - dwCurX;
+        dwYmin = ( dwCurY > dwY ) ? 0 : dwY - dwCurY;
+        LCDD_DrawRectangleWithFill( dwXmin, dwYmin, dwX + dwCurX, dwYmin, color );
+        LCDD_DrawRectangleWithFill( dwXmin, dwY + dwCurY, dwX + dwCurX, dwY + dwCurY, color );
+        dwXmin = ( dwCurY > dwX ) ? 0 : dwX - dwCurY;
+        dwYmin = ( dwCurX > dwY ) ? 0 : dwY - dwCurX;
+        LCDD_DrawRectangleWithFill( dwXmin, dwYmin, dwX + dwCurY, dwYmin, color );
+        LCDD_DrawRectangleWithFill( dwXmin, dwY + dwCurX, dwX + dwCurY, dwY + dwCurX, color );
 
-        if ( d < 0 )
+        if( d < 0 )
         {
-            d += (dwCurX << 2) + 6 ;
+            d += ( dwCurX << 2 ) + 6;
         }
         else
         {
-            d += ((dwCurX - dwCurY) << 2) + 10;
-            dwCurY-- ;
+            d += ( ( dwCurX - dwCurY ) << 2 ) + 10;
+            dwCurY--;
         }
 
-        dwCurX++ ;
+        dwCurX++;
     }
 
-    return 0 ;
+    return 0;
 }
+
 /**
  * \brief Draws a string inside a LCD buffer, at the given coordinates. Line breaks
  * will be honored.
@@ -400,24 +443,27 @@ extern uint32_t LCD_DrawFilledCircle( uint32_t dwX, uint32_t dwY, uint32_t dwRad
  * \param pString  String to display.
  * \param color    String color.
  */
-extern void LCDD_DrawString( uint32_t x, uint32_t y, const uint8_t *pString, uint32_t color )
+extern void LCDD_DrawString( uint32_t x,
+                             uint32_t y,
+                             const uint8_t * pString,
+                             uint32_t color )
 {
-    uint32_t xorg = x ;
+    uint32_t xorg = x;
 
-    while ( *pString != 0 )
+    while( *pString != 0 )
     {
-        if ( *pString == '\n' )
+        if( *pString == '\n' )
         {
-            y += gFont.height + 2 ;
-            x = xorg ;
+            y += gFont.height + 2;
+            x = xorg;
         }
         else
         {
-            LCDD_DrawChar( x, y, *pString, color ) ;
-            x += gFont.width + 2 ;
+            LCDD_DrawChar( x, y, *pString, color );
+            x += gFont.width + 2;
         }
 
-        pString++ ;
+        pString++;
     }
 }
 
@@ -431,20 +477,24 @@ extern void LCDD_DrawString( uint32_t x, uint32_t y, const uint8_t *pString, uin
  * \param fontColor String color.
  * \param bgColor   Background color.
  */
-extern void LCDD_DrawStringWithBGColor( uint32_t x, uint32_t y, const char *pString, uint32_t fontColor, uint32_t bgColor )
+extern void LCDD_DrawStringWithBGColor( uint32_t x,
+                                        uint32_t y,
+                                        const char * pString,
+                                        uint32_t fontColor,
+                                        uint32_t bgColor )
 {
     unsigned xorg = x;
 
-    while ( *pString != 0 )
+    while( *pString != 0 )
     {
-        if ( *pString == '\n' )
+        if( *pString == '\n' )
         {
-            y += gFont.height + 2 ;
-            x = xorg ;
+            y += gFont.height + 2;
+            x = xorg;
         }
         else
         {
-            LCDD_DrawCharWithBGColor( x, y, *pString, fontColor, bgColor ) ;
+            LCDD_DrawCharWithBGColor( x, y, *pString, fontColor, bgColor );
             x += gFont.width + 2;
         }
 
@@ -462,38 +512,40 @@ extern void LCDD_DrawStringWithBGColor( uint32_t x, uint32_t y, const char *pStr
  *
  * \return String width in pixels.
  */
-extern void LCDD_GetStringSize( const uint8_t *pString, uint32_t *pWidth, uint32_t *pHeight )
+extern void LCDD_GetStringSize( const uint8_t * pString,
+                                uint32_t * pWidth,
+                                uint32_t * pHeight )
 {
     uint32_t width = 0;
     uint32_t height = gFont.height;
 
-    while ( *pString != 0 )
+    while( *pString != 0 )
     {
-        if ( *pString == '\n' )
+        if( *pString == '\n' )
         {
-            height += gFont.height + 2 ;
+            height += gFont.height + 2;
         }
         else
         {
-            width += gFont.width + 2 ;
+            width += gFont.width + 2;
         }
 
-        pString++ ;
+        pString++;
     }
 
-    if ( width > 0 )
+    if( width > 0 )
     {
         width -= 2;
     }
 
-    if ( pWidth != NULL )
+    if( pWidth != NULL )
     {
         *pWidth = width;
     }
 
-    if ( pHeight != NULL )
+    if( pHeight != NULL )
     {
-        *pHeight = height ;
+        *pHeight = height;
     }
 }
 
@@ -506,24 +558,28 @@ extern void LCDD_GetStringSize( const uint8_t *pString, uint32_t *pWidth, uint32
  * \param width     Image width.
  * \param height    Image height.
  */
-extern void LCDD_DrawImage( uint32_t dwX, uint32_t dwY, const LcdColor_t *pImage, uint32_t dwWidth, uint32_t dwHeight )
+extern void LCDD_DrawImage( uint32_t dwX,
+                            uint32_t dwY,
+                            const LcdColor_t * pImage,
+                            uint32_t dwWidth,
+                            uint32_t dwHeight )
 {
     uint32_t size;
 
 
     /* Determine the refresh window area */
     /* Horizontal and Vertical RAM Address Position (R50h, R51h, R52h, R53h) */
-    CheckBoxCoordinates(&dwX, &dwY, &dwWidth, &dwHeight);
-    ILI9488_SetWindow(dwX, dwY, dwWidth, dwHeight);
+    CheckBoxCoordinates( &dwX, &dwY, &dwWidth, &dwHeight );
+    ILI9488_SetWindow( dwX, dwY, dwWidth, dwHeight );
 
     /* Prepare to write in GRAM */
     ILI9488_WriteRAM_Prepare();
 
-    size = (dwWidth - dwX + 1) * (dwHeight - dwY + 1);
+    size = ( dwWidth - dwX + 1 ) * ( dwHeight - dwY + 1 );
 
-    ILI9488_WriteRAMBuffer(pImage, size);
+    ILI9488_WriteRAMBuffer( pImage, size );
 
-    ILI9488_SetWindow( 0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT ) ;
+    ILI9488_SetWindow( 0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT );
 }
 
 /*
@@ -533,31 +589,34 @@ extern void LCDD_DrawImage( uint32_t dwX, uint32_t dwY, const LcdColor_t *pImage
  * \param dwY         Y-coordinate of image start.
  * \param pGIMPImage  Image data.
  */
-void LCDD_DrawGIMPImage( uint32_t dwX, uint32_t dwY, const SGIMPImage* pGIMPImage )
+void LCDD_DrawGIMPImage( uint32_t dwX,
+                         uint32_t dwY,
+                         const SGIMPImage * pGIMPImage )
 {
-    uint32_t dw ;
-    register uint32_t dwLength ;
-    uint8_t* pucData ;
-    LcdColor_t *pData;
+    uint32_t dw;
+    register uint32_t dwLength;
+    uint8_t * pucData;
+    LcdColor_t * pData;
 
-    // Draw raw RGB bitmap
-    //    CheckBoxCoordinates(&dwX, &dwY, &dwWidth, &dwHeight);
-    ILI9488_SetWindow( dwX, dwY, pGIMPImage->dwWidth, pGIMPImage->dwHeight ) ;
-    //    LCD_SetCursor( dwX, dwY ) ;
+    /* Draw raw RGB bitmap */
+    /*    CheckBoxCoordinates(&dwX, &dwY, &dwWidth, &dwHeight); */
+    ILI9488_SetWindow( dwX, dwY, pGIMPImage->dwWidth, pGIMPImage->dwHeight );
+    /*    LCD_SetCursor( dwX, dwY ) ; */
 
-    ILI9488_WriteRAM_Prepare() ;
+    ILI9488_WriteRAM_Prepare();
 
-    dwLength = pGIMPImage->dwWidth*pGIMPImage->dwHeight ;
-    pucData = pGIMPImage->pucPixel_data ;
-    for ( dw=0; dw < dwLength; dw++ )
+    dwLength = pGIMPImage->dwWidth * pGIMPImage->dwHeight;
+    pucData = pGIMPImage->pucPixel_data;
+
+    for( dw = 0; dw < dwLength; dw++ )
     {
-        *pData  = ((*pucData++)<<16) ;
-        *pData |= ((*pucData++)<<8) ;
-        *pData |= (*pucData++) ;
-        ILI9488_WriteRAM(*pData);
+        *pData = ( ( *pucData++ ) << 16 );
+        *pData |= ( ( *pucData++ ) << 8 );
+        *pData |= ( *pucData++ );
+        ILI9488_WriteRAM( *pData );
     }
 
-    ILI9488_SetWindow( 0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT ) ;
+    ILI9488_SetWindow( 0, 0, BOARD_LCD_WIDTH, BOARD_LCD_HEIGHT );
 }
 
 /*
@@ -569,16 +628,20 @@ void LCDD_DrawGIMPImage( uint32_t dwX, uint32_t dwY, const SGIMPImage* pGIMPImag
  * \param dwHeight    window height.
  * \param dwColor     background color
  */
-extern void LCDD_ClearWindow( uint32_t dwX, uint32_t dwY, uint32_t dwWidth, uint32_t dwHeight, uint32_t dwColor )
+extern void LCDD_ClearWindow( uint32_t dwX,
+                              uint32_t dwY,
+                              uint32_t dwWidth,
+                              uint32_t dwHeight,
+                              uint32_t dwColor )
 {
-    uint32_t dw ;
+    uint32_t dw;
 
 
-    ILI9488_SetWindow( dwX, dwY, dwWidth, dwHeight ) ;
-    ILI9488_WriteRAM_Prepare() ;
+    ILI9488_SetWindow( dwX, dwY, dwWidth, dwHeight );
+    ILI9488_WriteRAM_Prepare();
 
-    for ( dw = dwWidth * dwHeight; dw > 0; dw-- )
+    for( dw = dwWidth * dwHeight; dw > 0; dw-- )
     {
-        ILI9488_WriteRAM( dwColor ) ;
+        ILI9488_WriteRAM( dwColor );
     }
 }

@@ -36,92 +36,93 @@
 #include "mcu.h"
 
 /* Only the LEDs on one of the two seven segment displays are used. */
-#define partstMAX_LEDS		8
+#define partstMAX_LEDS    8
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-	/* Analog inputs are not used on the LED outputs. */
-	FM3_GPIO->ADE  = 0x0000;
+    /* Analog inputs are not used on the LED outputs. */
+    FM3_GPIO->ADE = 0x0000;
 
-	/* Set to output. */
-	FM3_GPIO->DDR1 |= 0xFFFF;
-	FM3_GPIO->DDR3 |= 0xFFFF;
-	
-	/* Set as GPIO. */
-	FM3_GPIO->PFR1 &= 0x0000;
-	FM3_GPIO->PFR3 &= 0x0000;
+    /* Set to output. */
+    FM3_GPIO->DDR1 |= 0xFFFF;
+    FM3_GPIO->DDR3 |= 0xFFFF;
 
-	/* Start with all LEDs off. */
-	FM3_GPIO->PDOR1 = 0xFFFF;
-	FM3_GPIO->PDOR1 = 0xFFFF;
+    /* Set as GPIO. */
+    FM3_GPIO->PFR1 &= 0x0000;
+    FM3_GPIO->PFR3 &= 0x0000;
+
+    /* Start with all LEDs off. */
+    FM3_GPIO->PDOR1 = 0xFFFF;
+    FM3_GPIO->PDOR1 = 0xFFFF;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < partstMAX_LEDS )
-	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
-		{
-			if( xValue == pdTRUE )
-			{
-				FM3_GPIO->PDOR1 &= ~( 1UL << uxLED );
-			}
-			else
-			{
-				FM3_GPIO->PDOR1 |= ( 1UL << uxLED );
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstMAX_LEDS )
+    {
+        /* A critical section is used as the LEDs are also accessed from an
+         * interrupt. */
+        taskENTER_CRITICAL();
+        {
+            if( xValue == pdTRUE )
+            {
+                FM3_GPIO->PDOR1 &= ~( 1UL << uxLED );
+            }
+            else
+            {
+                FM3_GPIO->PDOR1 |= ( 1UL << uxLED );
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED,
+                            signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxInterruptFlags;
+    unsigned portBASE_TYPE uxInterruptFlags;
 
-	uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
-	{
-		if( uxLED < partstMAX_LEDS )
-		{
-			if( xValue == pdTRUE )
-			{
-				FM3_GPIO->PDOR1 &= ~( 1UL << uxLED );
-			}
-			else
-			{
-				FM3_GPIO->PDOR1 |= ( 1UL << uxLED );
-			}
-		}
-	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
+    uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
+    {
+        if( uxLED < partstMAX_LEDS )
+        {
+            if( xValue == pdTRUE )
+            {
+                FM3_GPIO->PDOR1 &= ~( 1UL << uxLED );
+            }
+            else
+            {
+                FM3_GPIO->PDOR1 |= ( 1UL << uxLED );
+            }
+        }
+    }
+    portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < partstMAX_LEDS )
-	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
-		{
-			if( ( FM3_GPIO->PDOR1 & ( 1UL << uxLED ) ) != 0UL )
-			{
-				FM3_GPIO->PDOR1 &= ~( 1UL << uxLED );
-			}
-			else
-			{
-				FM3_GPIO->PDOR1 |= ( 1UL << uxLED );
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstMAX_LEDS )
+    {
+        /* A critical section is used as the LEDs are also accessed from an
+         * interrupt. */
+        taskENTER_CRITICAL();
+        {
+            if( ( FM3_GPIO->PDOR1 & ( 1UL << uxLED ) ) != 0UL )
+            {
+                FM3_GPIO->PDOR1 &= ~( 1UL << uxLED );
+            }
+            else
+            {
+                FM3_GPIO->PDOR1 |= ( 1UL << uxLED );
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
-

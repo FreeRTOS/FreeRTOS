@@ -31,34 +31,34 @@
 #define _SAMA5_TWI0_INSTANCE_
 
 /* ========== Register definition for TWI0 peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_TWI0_CR                    (0xF0014000U) /**< \brief (TWI0) Control Register */
-#define REG_TWI0_MMR                   (0xF0014004U) /**< \brief (TWI0) Master Mode Register */
-#define REG_TWI0_SMR                   (0xF0014008U) /**< \brief (TWI0) Slave Mode Register */
-#define REG_TWI0_IADR                  (0xF001400CU) /**< \brief (TWI0) Internal Address Register */
-#define REG_TWI0_CWGR                  (0xF0014010U) /**< \brief (TWI0) Clock Waveform Generator Register */
-#define REG_TWI0_SR                    (0xF0014020U) /**< \brief (TWI0) Status Register */
-#define REG_TWI0_IER                   (0xF0014024U) /**< \brief (TWI0) Interrupt Enable Register */
-#define REG_TWI0_IDR                   (0xF0014028U) /**< \brief (TWI0) Interrupt Disable Register */
-#define REG_TWI0_IMR                   (0xF001402CU) /**< \brief (TWI0) Interrupt Mask Register */
-#define REG_TWI0_RHR                   (0xF0014030U) /**< \brief (TWI0) Receive Holding Register */
-#define REG_TWI0_THR                   (0xF0014034U) /**< \brief (TWI0) Transmit Holding Register */
-#define REG_TWI0_WPROT_MODE            (0xF00140E4U) /**< \brief (TWI0) Protection Mode Register */
-#define REG_TWI0_WPROT_STATUS          (0xF00140E8U) /**< \brief (TWI0) Protection Status Register */
-#else
-#define REG_TWI0_CR           (*(WoReg*)0xF0014000U) /**< \brief (TWI0) Control Register */
-#define REG_TWI0_MMR          (*(RwReg*)0xF0014004U) /**< \brief (TWI0) Master Mode Register */
-#define REG_TWI0_SMR          (*(RwReg*)0xF0014008U) /**< \brief (TWI0) Slave Mode Register */
-#define REG_TWI0_IADR         (*(RwReg*)0xF001400CU) /**< \brief (TWI0) Internal Address Register */
-#define REG_TWI0_CWGR         (*(RwReg*)0xF0014010U) /**< \brief (TWI0) Clock Waveform Generator Register */
-#define REG_TWI0_SR           (*(RoReg*)0xF0014020U) /**< \brief (TWI0) Status Register */
-#define REG_TWI0_IER          (*(WoReg*)0xF0014024U) /**< \brief (TWI0) Interrupt Enable Register */
-#define REG_TWI0_IDR          (*(WoReg*)0xF0014028U) /**< \brief (TWI0) Interrupt Disable Register */
-#define REG_TWI0_IMR          (*(RoReg*)0xF001402CU) /**< \brief (TWI0) Interrupt Mask Register */
-#define REG_TWI0_RHR          (*(RoReg*)0xF0014030U) /**< \brief (TWI0) Receive Holding Register */
-#define REG_TWI0_THR          (*(WoReg*)0xF0014034U) /**< \brief (TWI0) Transmit Holding Register */
-#define REG_TWI0_WPROT_MODE   (*(RwReg*)0xF00140E4U) /**< \brief (TWI0) Protection Mode Register */
-#define REG_TWI0_WPROT_STATUS (*(RoReg*)0xF00140E8U) /**< \brief (TWI0) Protection Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_TWI0_CR              ( 0xF0014000U )              /**< \brief (TWI0) Control Register */
+    #define REG_TWI0_MMR             ( 0xF0014004U )              /**< \brief (TWI0) Master Mode Register */
+    #define REG_TWI0_SMR             ( 0xF0014008U )              /**< \brief (TWI0) Slave Mode Register */
+    #define REG_TWI0_IADR            ( 0xF001400CU )              /**< \brief (TWI0) Internal Address Register */
+    #define REG_TWI0_CWGR            ( 0xF0014010U )              /**< \brief (TWI0) Clock Waveform Generator Register */
+    #define REG_TWI0_SR              ( 0xF0014020U )              /**< \brief (TWI0) Status Register */
+    #define REG_TWI0_IER             ( 0xF0014024U )              /**< \brief (TWI0) Interrupt Enable Register */
+    #define REG_TWI0_IDR             ( 0xF0014028U )              /**< \brief (TWI0) Interrupt Disable Register */
+    #define REG_TWI0_IMR             ( 0xF001402CU )              /**< \brief (TWI0) Interrupt Mask Register */
+    #define REG_TWI0_RHR             ( 0xF0014030U )              /**< \brief (TWI0) Receive Holding Register */
+    #define REG_TWI0_THR             ( 0xF0014034U )              /**< \brief (TWI0) Transmit Holding Register */
+    #define REG_TWI0_WPROT_MODE      ( 0xF00140E4U )              /**< \brief (TWI0) Protection Mode Register */
+    #define REG_TWI0_WPROT_STATUS    ( 0xF00140E8U )              /**< \brief (TWI0) Protection Status Register */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_TWI0_CR              ( *( WoReg * ) 0xF0014000U ) /**< \brief (TWI0) Control Register */
+    #define REG_TWI0_MMR             ( *( RwReg * ) 0xF0014004U ) /**< \brief (TWI0) Master Mode Register */
+    #define REG_TWI0_SMR             ( *( RwReg * ) 0xF0014008U ) /**< \brief (TWI0) Slave Mode Register */
+    #define REG_TWI0_IADR            ( *( RwReg * ) 0xF001400CU ) /**< \brief (TWI0) Internal Address Register */
+    #define REG_TWI0_CWGR            ( *( RwReg * ) 0xF0014010U ) /**< \brief (TWI0) Clock Waveform Generator Register */
+    #define REG_TWI0_SR              ( *( RoReg * ) 0xF0014020U ) /**< \brief (TWI0) Status Register */
+    #define REG_TWI0_IER             ( *( WoReg * ) 0xF0014024U ) /**< \brief (TWI0) Interrupt Enable Register */
+    #define REG_TWI0_IDR             ( *( WoReg * ) 0xF0014028U ) /**< \brief (TWI0) Interrupt Disable Register */
+    #define REG_TWI0_IMR             ( *( RoReg * ) 0xF001402CU ) /**< \brief (TWI0) Interrupt Mask Register */
+    #define REG_TWI0_RHR             ( *( RoReg * ) 0xF0014030U ) /**< \brief (TWI0) Receive Holding Register */
+    #define REG_TWI0_THR             ( *( WoReg * ) 0xF0014034U ) /**< \brief (TWI0) Transmit Holding Register */
+    #define REG_TWI0_WPROT_MODE      ( *( RwReg * ) 0xF00140E4U ) /**< \brief (TWI0) Protection Mode Register */
+    #define REG_TWI0_WPROT_STATUS    ( *( RoReg * ) 0xF00140E8U ) /**< \brief (TWI0) Protection Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_TWI0_INSTANCE_ */

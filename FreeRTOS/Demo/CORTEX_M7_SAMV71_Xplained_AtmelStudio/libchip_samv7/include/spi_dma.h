@@ -35,114 +35,120 @@
  */
 
 #ifndef _SPI_DMA_
-#define _SPI_DMA_
+    #define _SPI_DMA_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
 /*----------------------------------------------------------------------------
  *        Definitions
  *----------------------------------------------------------------------------*/
 
 /** An unspecified error has occurred.*/
-#define SPID_ERROR          1
+    #define SPID_ERROR         1
 
 /** SPI driver is currently in use.*/
-#define SPID_ERROR_LOCK     2
+    #define SPID_ERROR_LOCK    2
 
 /*----------------------------------------------------------------------------
  *        Macros
  *----------------------------------------------------------------------------*/
 
-/** Calculates the value of the SCBR field of the Chip Select Register 
-	given MCK and SPCK.*/
-#define SPID_CSR_SCBR(mck, spck)    SPI_CSR_SCBR((mck) / (spck))
+/** Calculates the value of the SCBR field of the Chip Select Register
+ *  given MCK and SPCK.*/
+    #define SPID_CSR_SCBR( mck, spck )    SPI_CSR_SCBR( ( mck ) / ( spck ) )
 
-/** Calculates the value of the DLYBS field of the Chip Select Register 
-	given delay in ns and MCK.*/
-#define SPID_CSR_DLYBS(mck, delay)  SPI_CSR_DLYBS((((delay) * \
-									((mck) / 1000000)) / 1000) + 1)
+/** Calculates the value of the DLYBS field of the Chip Select Register
+ *  given delay in ns and MCK.*/
+    #define SPID_CSR_DLYBS( mck, delay ) \
+    SPI_CSR_DLYBS( ( ( ( delay ) *       \
+                       ( ( mck ) / 1000000 ) ) / 1000 ) + 1 )
 
-/** Calculates the value of the DLYBCT field of the Chip Select Register 
-	given delay in ns and MCK.*/
-#define SPID_CSR_DLYBCT(mck, delay) SPI_CSR_DLYBCT((((delay) / 32 * \
-									((mck) / 1000000)) / 1000) + 1)
+/** Calculates the value of the DLYBCT field of the Chip Select Register
+ *  given delay in ns and MCK.*/
+    #define SPID_CSR_DLYBCT( mck, delay ) \
+    SPI_CSR_DLYBCT( ( ( ( delay ) / 32 *  \
+                        ( ( mck ) / 1000000 ) ) / 1000 ) + 1 )
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
 
 /** SPI transfer complete callback. */
-typedef void (*SpidCallback)( uint8_t, void* ) ;
+    typedef void (* SpidCallback)( uint8_t,
+                                   void * );
 
 /** \brief Spi Transfer Request prepared by the application upper layer.
  *
  * This structure is sent to the SPI_SendCommand function to start the transfer.
  * At the end of the transfer, the callback is invoked by the interrupt handler.
  */
-typedef struct _SpidCmd
-{
-	/** Pointer to the Tx data. */
-	uint8_t *pTxBuff;
-	/** Tx size in bytes. */
-	uint8_t TxSize;
-	/** Pointer to the Rx data. */
-	uint8_t *pRxBuff;
-	/** Rx size in bytes. */
-	uint16_t RxSize;
-	/** SPI chip select. */
-	uint8_t spiCs;
-	/** Callback function invoked at the end of transfer. */
-	SpidCallback callback;
-	/** Callback arguments. */
-	void *pArgument;
-} SpidCmd ;
+    typedef struct _SpidCmd
+    {
+        /** Pointer to the Tx data. */
+        uint8_t * pTxBuff;
+        /** Tx size in bytes. */
+        uint8_t TxSize;
+        /** Pointer to the Rx data. */
+        uint8_t * pRxBuff;
+        /** Rx size in bytes. */
+        uint16_t RxSize;
+        /** SPI chip select. */
+        uint8_t spiCs;
+        /** Callback function invoked at the end of transfer. */
+        SpidCallback callback;
+        /** Callback arguments. */
+        void * pArgument;
+    } SpidCmd;
 
 /** Constant structure associated with SPI port. This structure prevents
-	client applications to have access in the same time. */
-typedef struct _Spid
-{
-	/** Pointer to SPI Hardware registers */
-	Spi* pSpiHw ;
-	/** Current SpiCommand being processed */
-	SpidCmd *pCurrentCommand ;
-	/** Pointer to DMA driver */
-	sXdmad* pXdmad;
-	/** SPI Id as defined in the product datasheet */
-	uint8_t spiId ;
-	/** Mutual exclusion semaphore. */
-	volatile int8_t semaphore ;
-} Spid ;
+ *  client applications to have access in the same time. */
+    typedef struct _Spid
+    {
+        /** Pointer to SPI Hardware registers */
+        Spi * pSpiHw;
+        /** Current SpiCommand being processed */
+        SpidCmd * pCurrentCommand;
+        /** Pointer to DMA driver */
+        sXdmad * pXdmad;
+        /** SPI Id as defined in the product datasheet */
+        uint8_t spiId;
+        /** Mutual exclusion semaphore. */
+        volatile int8_t semaphore;
+    } Spid;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint32_t SPID_Configure( Spid* pSpid,
-								Spi* pSpiHw,
-								uint8_t spiId,
-								uint32_t SpiMode,
-								sXdmad* pXdmad ) ;
+    extern uint32_t SPID_Configure( Spid * pSpid,
+                                    Spi * pSpiHw,
+                                    uint8_t spiId,
+                                    uint32_t SpiMode,
+                                    sXdmad * pXdmad );
 
-extern void SPID_ConfigureCS( Spid* pSpid, uint32_t dwCS, uint32_t dwCsr ) ;
+    extern void SPID_ConfigureCS( Spid * pSpid,
+                                  uint32_t dwCS,
+                                  uint32_t dwCsr );
 
-extern uint32_t SPID_SendCommand( Spid* pSpid, SpidCmd* pCommand ) ;
+    extern uint32_t SPID_SendCommand( Spid * pSpid,
+                                      SpidCmd * pCommand );
 
-extern void SPID_Handler( Spid* pSpid ) ;
+    extern void SPID_Handler( Spid * pSpid );
 
-extern void SPID_DmaHandler( Spid *pSpid );
+    extern void SPID_DmaHandler( Spid * pSpid );
 
-extern uint32_t SPID_IsBusy( const Spid* pSpid ) ;
+    extern uint32_t SPID_IsBusy( const Spid * pSpid );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _SPI_DMA_ */

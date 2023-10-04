@@ -31,21 +31,22 @@
 ******************************************************************************/
 
 /*****************************************************************************/
+
 /**
-*
-* @file xil_sleeptimer.c
-*
-* This file provides the common helper routines for the sleep API's
-*
-* <pre>
-* MODIFICATION HISTORY :
-*
-* Ver   Who  Date	 Changes
-* ----- ---- -------- -------------------------------------------------------
-* 6.6	srm  10/18/17 First Release.
-*
-* </pre>
-*****************************************************************************/
+ *
+ * @file xil_sleeptimer.c
+ *
+ * This file provides the common helper routines for the sleep API's
+ *
+ * <pre>
+ * MODIFICATION HISTORY :
+ *
+ * Ver   Who  Date	 Changes
+ * ----- ---- -------- -------------------------------------------------------
+ * 6.6	srm  10/18/17 First Release.
+ *
+ * </pre>
+ *****************************************************************************/
 
 /****************************  Include Files  ********************************/
 
@@ -57,105 +58,121 @@
 
 
 /* Function definitions are applicable only when TTC3 is present*/
-#if defined (SLEEP_TIMER_BASEADDR)
+#if defined( SLEEP_TIMER_BASEADDR )
 /****************************************************************************/
-/**
-*
-* This is a helper function used by sleep/usleep APIs to
-* have delay in sec/usec
-*
-* @param            delay - delay time in seconds/micro seconds
-*
-* @param            frequency - Number of counts per second/micro second
-*
-* @return           none
-*
-* @note             none
-*
-*****************************************************************************/
-void Xil_SleepTTCCommon(u32 delay, u64 frequency)
-{
-	INTPTR tEnd = 0U;
-	INTPTR tCur = 0U;
-	XCntrVal TimeHighVal = 0U;
-	XCntrVal TimeLowVal1 = 0U;
-	XCntrVal TimeLowVal2 = 0U;
 
-	TimeLowVal1 = XSleep_ReadCounterVal(SLEEP_TIMER_BASEADDR +
-			XSLEEP_TIMER_TTC_COUNT_VALUE_OFFSET);
-	tEnd = (INTPTR)TimeLowVal1 + ((INTPTR)(delay) * frequency);
-	do
-	{
-		TimeLowVal2 = XSleep_ReadCounterVal(SLEEP_TIMER_BASEADDR +
-				                  XSLEEP_TIMER_TTC_COUNT_VALUE_OFFSET);
-		if (TimeLowVal2 < TimeLowVal1) {
-			TimeHighVal++;
-		}
-		TimeLowVal1 = TimeLowVal2;
-		tCur = (((INTPTR) TimeHighVal) << XSLEEP_TIMER_REG_SHIFT) |
-								(INTPTR)TimeLowVal2;
-	}while (tCur < tEnd);
-}
+/**
+ *
+ * This is a helper function used by sleep/usleep APIs to
+ * have delay in sec/usec
+ *
+ * @param            delay - delay time in seconds/micro seconds
+ *
+ * @param            frequency - Number of counts per second/micro second
+ *
+ * @return           none
+ *
+ * @note             none
+ *
+ *****************************************************************************/
+    void Xil_SleepTTCCommon( u32 delay,
+                             u64 frequency )
+    {
+        INTPTR tEnd = 0U;
+        INTPTR tCur = 0U;
+        XCntrVal TimeHighVal = 0U;
+        XCntrVal TimeLowVal1 = 0U;
+        XCntrVal TimeLowVal2 = 0U;
+
+        TimeLowVal1 = XSleep_ReadCounterVal( SLEEP_TIMER_BASEADDR +
+                                             XSLEEP_TIMER_TTC_COUNT_VALUE_OFFSET );
+        tEnd = ( INTPTR ) TimeLowVal1 + ( ( INTPTR ) ( delay ) * frequency );
+
+        do
+        {
+            TimeLowVal2 = XSleep_ReadCounterVal( SLEEP_TIMER_BASEADDR +
+                                                 XSLEEP_TIMER_TTC_COUNT_VALUE_OFFSET );
+
+            if( TimeLowVal2 < TimeLowVal1 )
+            {
+                TimeHighVal++;
+            }
+
+            TimeLowVal1 = TimeLowVal2;
+            tCur = ( ( ( INTPTR ) TimeHighVal ) << XSLEEP_TIMER_REG_SHIFT ) |
+                   ( INTPTR ) TimeLowVal2;
+        } while( tCur < tEnd );
+    }
 
 
 /*****************************************************************************/
+
 /**
-*
-* This API starts the Triple Timer Counter
-*
-* @param            none
-*
-* @return           none
-*
-* @note             none
-*
-*****************************************************************************/
-void XTime_StartTTCTimer()
-{
-	u32 TimerPrescalar;
-	u32 TimerCntrl;
+ *
+ * This API starts the Triple Timer Counter
+ *
+ * @param            none
+ *
+ * @return           none
+ *
+ * @note             none
+ *
+ *****************************************************************************/
+    void XTime_StartTTCTimer()
+    {
+        u32 TimerPrescalar;
+        u32 TimerCntrl;
 
-#if (defined (__aarch64__) && EL3==1) || defined (ARMR5) || defined (ARMA53_32)
-	u32 LpdRst;
+        #if ( defined( __aarch64__ ) && EL3 == 1 ) || defined( ARMR5 ) || defined( ARMA53_32 )
+            u32 LpdRst;
 
-	LpdRst = XSleep_ReadCounterVal(RST_LPD_IOU2);
+            LpdRst = XSleep_ReadCounterVal( RST_LPD_IOU2 );
 
-	/* check if the timer is reset */
-	if (((LpdRst & (RST_LPD_IOU2_TTC_BASE_RESET_MASK <<
-					       XSLEEP_TTC_INSTANCE)) != 0 )) {
-		LpdRst = LpdRst & (~(RST_LPD_IOU2_TTC_BASE_RESET_MASK <<
-							XSLEEP_TTC_INSTANCE));
-		Xil_Out32(RST_LPD_IOU2, LpdRst);
-	} else {
-#endif
-		TimerCntrl = XSleep_ReadCounterVal(SLEEP_TIMER_BASEADDR +
-					XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET);
-		/* check if Timer is disabled */
-		if ((TimerCntrl & XSLEEP_TIMER_TTC_CNT_CNTRL_DIS_MASK) == 0) {
-		    TimerPrescalar = XSleep_ReadCounterVal(SLEEP_TIMER_BASEADDR +
-					       XSLEEP_TIMER_TTC_CLK_CNTRL_OFFSET);
-		/* check if Timer is configured with proper functionalty for sleep */
-		   if ((TimerPrescalar & XSLEEP_TIMER_TTC_CLK_CNTRL_PS_EN_MASK) == 0)
-						return;
-		}
-#if (defined (__aarch64__) && EL3==1) || defined (ARMR5) || defined (ARMA53_32)
-	}
-#endif
-	/* Disable the timer to configure */
-	TimerCntrl = XSleep_ReadCounterVal(SLEEP_TIMER_BASEADDR +
-					XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET);
-	TimerCntrl = TimerCntrl | XSLEEP_TIMER_TTC_CNT_CNTRL_DIS_MASK;
-	Xil_Out32(SLEEP_TIMER_BASEADDR + XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET,
-			                 TimerCntrl);
-	/* Disable the prescalar */
-	TimerPrescalar = XSleep_ReadCounterVal(SLEEP_TIMER_BASEADDR +
-			XSLEEP_TIMER_TTC_CLK_CNTRL_OFFSET);
-	TimerPrescalar = TimerPrescalar & (~XSLEEP_TIMER_TTC_CLK_CNTRL_PS_EN_MASK);
-	Xil_Out32(SLEEP_TIMER_BASEADDR + XSLEEP_TIMER_TTC_CLK_CNTRL_OFFSET,
-								TimerPrescalar);
-	/* Enable the Timer */
-	TimerCntrl = TimerCntrl & (~XSLEEP_TIMER_TTC_CNT_CNTRL_DIS_MASK);
-	Xil_Out32(SLEEP_TIMER_BASEADDR + XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET,
-								TimerCntrl);
-}
-#endif
+            /* check if the timer is reset */
+            if( ( ( LpdRst & ( RST_LPD_IOU2_TTC_BASE_RESET_MASK <<
+                               XSLEEP_TTC_INSTANCE ) ) != 0 ) )
+            {
+                LpdRst = LpdRst & ( ~( RST_LPD_IOU2_TTC_BASE_RESET_MASK <<
+                                       XSLEEP_TTC_INSTANCE ) );
+                Xil_Out32( RST_LPD_IOU2, LpdRst );
+            }
+            else
+            {
+        #endif /* if ( defined( __aarch64__ ) && EL3 == 1 ) || defined( ARMR5 ) || defined( ARMA53_32 ) */
+        TimerCntrl = XSleep_ReadCounterVal( SLEEP_TIMER_BASEADDR +
+                                            XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET );
+
+        /* check if Timer is disabled */
+        if( ( TimerCntrl & XSLEEP_TIMER_TTC_CNT_CNTRL_DIS_MASK ) == 0 )
+        {
+            TimerPrescalar = XSleep_ReadCounterVal( SLEEP_TIMER_BASEADDR +
+                                                    XSLEEP_TIMER_TTC_CLK_CNTRL_OFFSET );
+
+            /* check if Timer is configured with proper functionalty for sleep */
+            if( ( TimerPrescalar & XSLEEP_TIMER_TTC_CLK_CNTRL_PS_EN_MASK ) == 0 )
+            {
+                return;
+            }
+        }
+
+        #if ( defined( __aarch64__ ) && EL3 == 1 ) || defined( ARMR5 ) || defined( ARMA53_32 )
+    }
+        #endif
+        /* Disable the timer to configure */
+        TimerCntrl = XSleep_ReadCounterVal( SLEEP_TIMER_BASEADDR +
+                                            XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET );
+        TimerCntrl = TimerCntrl | XSLEEP_TIMER_TTC_CNT_CNTRL_DIS_MASK;
+        Xil_Out32( SLEEP_TIMER_BASEADDR + XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET,
+                   TimerCntrl );
+        /* Disable the prescalar */
+        TimerPrescalar = XSleep_ReadCounterVal( SLEEP_TIMER_BASEADDR +
+                                                XSLEEP_TIMER_TTC_CLK_CNTRL_OFFSET );
+        TimerPrescalar = TimerPrescalar & ( ~XSLEEP_TIMER_TTC_CLK_CNTRL_PS_EN_MASK );
+        Xil_Out32( SLEEP_TIMER_BASEADDR + XSLEEP_TIMER_TTC_CLK_CNTRL_OFFSET,
+                   TimerPrescalar );
+        /* Enable the Timer */
+        TimerCntrl = TimerCntrl & ( ~XSLEEP_TIMER_TTC_CNT_CNTRL_DIS_MASK );
+        Xil_Out32( SLEEP_TIMER_BASEADDR + XSLEEP_TIMER_TTC_CNT_CNTRL_OFFSET,
+                   TimerCntrl );
+    }
+#endif /* if defined( SLEEP_TIMER_BASEADDR ) */

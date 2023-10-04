@@ -1,42 +1,42 @@
 /******************************************************************************
- *
- * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- * 
- * 3. The name of the author may not be used to endorse or promote products
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
- * OF SUCH DAMAGE.
- * 
- ******************************************************************************/
+*
+* Copyright 2013 Altera Corporation. All Rights Reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+* this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+* this list of conditions and the following disclaimer in the documentation
+* and/or other materials provided with the distribution.
+*
+* 3. The name of the author may not be used to endorse or promote products
+* derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
+* EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+* OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+* OF SUCH DAMAGE.
+*
+******************************************************************************/
 
 #ifndef __ALT_CACHE_H__
-#define __ALT_CACHE_H__
+    #define __ALT_CACHE_H__
 
-#include "hwlib.h"
+    #include "hwlib.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif
 
 /*!
  * \addtogroup CACHE_MGR Cache Management API
@@ -106,14 +106,14 @@ extern "C"
  * ALT_CACHE_SUPPORT_NON_FLAT_VIRTUAL_MEMORY=1 in your Makefile when compiling
  * HWLibs.
  */
-#ifndef ALT_CACHE_SUPPORT_NON_FLAT_VIRTUAL_MEMORY
-#define ALT_CACHE_SUPPORT_NON_FLAT_VIRTUAL_MEMORY (0)
-#endif
+    #ifndef ALT_CACHE_SUPPORT_NON_FLAT_VIRTUAL_MEMORY
+        #define ALT_CACHE_SUPPORT_NON_FLAT_VIRTUAL_MEMORY    ( 0 )
+    #endif
 
 /*!
  * This is the system wide cache line size, given in bytes.
  */
-#define ALT_CACHE_LINE_SIZE         32
+    #define ALT_CACHE_LINE_SIZE    32
 
 /*!
  * Enables all caches and features which improve reliability and speed on all
@@ -125,7 +125,7 @@ extern "C"
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_system_enable(void);
+    ALT_STATUS_CODE alt_cache_system_enable( void );
 
 /*!
  * Disables all cache controllers visible to the current CPU core. Cache
@@ -136,7 +136,7 @@ ALT_STATUS_CODE alt_cache_system_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_system_disable(void);
+    ALT_STATUS_CODE alt_cache_system_disable( void );
 
 /*!
  * Invalidates the specified contents of all cache levels visible to the
@@ -170,7 +170,8 @@ ALT_STATUS_CODE alt_cache_system_disable(void);
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_system_invalidate(void * vaddress, size_t length);
+    ALT_STATUS_CODE alt_cache_system_invalidate( void * vaddress,
+                                                 size_t length );
 
 /*!
  * Cleans the specified contents of all cache levels visible to the current
@@ -204,7 +205,8 @@ ALT_STATUS_CODE alt_cache_system_invalidate(void * vaddress, size_t length);
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_system_clean(void * vaddress, size_t length);
+    ALT_STATUS_CODE alt_cache_system_clean( void * vaddress,
+                                            size_t length );
 
 /*!
  * Cleans and invalidates the specified contents of all cache levels visible
@@ -240,7 +242,8 @@ ALT_STATUS_CODE alt_cache_system_clean(void * vaddress, size_t length);
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_system_purge(void * vaddress, size_t length);
+    ALT_STATUS_CODE alt_cache_system_purge( void * vaddress,
+                                            size_t length );
 
 /*!
  * @}
@@ -282,7 +285,7 @@ ALT_STATUS_CODE alt_cache_system_purge(void * vaddress, size_t length);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_enable_all(void);
+    ALT_STATUS_CODE alt_cache_l1_enable_all( void );
 
 /*!
  * Disables all L1 caches and features on the current CPU core. This includes
@@ -296,7 +299,7 @@ ALT_STATUS_CODE alt_cache_l1_enable_all(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_disable_all(void);
+    ALT_STATUS_CODE alt_cache_l1_disable_all( void );
 
 /*!
  * Enables the L1 instruction cache on the current CPU core. If the cache is
@@ -306,7 +309,7 @@ ALT_STATUS_CODE alt_cache_l1_disable_all(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_instruction_enable(void);
+    ALT_STATUS_CODE alt_cache_l1_instruction_enable( void );
 
 /*!
  * Disables the L1 instruction cache on the current CPU core.
@@ -314,7 +317,7 @@ ALT_STATUS_CODE alt_cache_l1_instruction_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_instruction_disable(void);
+    ALT_STATUS_CODE alt_cache_l1_instruction_disable( void );
 
 /*!
  * Returns \b true when the L1 instruction cache is enabled and \b false when
@@ -323,7 +326,7 @@ ALT_STATUS_CODE alt_cache_l1_instruction_disable(void);
  * \retval      true            The L1 instruction cache is enabled.
  * \retval      false           The L1 instruction cache is disabled.
  */
-bool alt_cache_l1_instruction_is_enabled(void);
+    bool alt_cache_l1_instruction_is_enabled( void );
 
 /*!
  * Invalidates the contents of the L1 instruction cache on the current CPU
@@ -338,7 +341,7 @@ bool alt_cache_l1_instruction_is_enabled(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_instruction_invalidate(void);
+    ALT_STATUS_CODE alt_cache_l1_instruction_invalidate( void );
 
 /*!
  * Enables the L1 data cache on the current CPU core.
@@ -349,7 +352,7 @@ ALT_STATUS_CODE alt_cache_l1_instruction_invalidate(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_data_enable(void);
+    ALT_STATUS_CODE alt_cache_l1_data_enable( void );
 
 /*!
  * Disables the L1 data cache on the current CPU core.
@@ -360,7 +363,7 @@ ALT_STATUS_CODE alt_cache_l1_data_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_data_disable(void);
+    ALT_STATUS_CODE alt_cache_l1_data_disable( void );
 
 /*!
  * Returns \b true when the L1 data cache is enabled and \b false when it is
@@ -369,7 +372,7 @@ ALT_STATUS_CODE alt_cache_l1_data_disable(void);
  * \retval      true            The L1 data cache is enabled.
  * \retval      false           The L1 data cache is disabled.
  */
-bool alt_cache_l1_data_is_enabled(void);
+    bool alt_cache_l1_data_is_enabled( void );
 
 /*!
  * Invalidates the specified contents of the L1 data cache on the current CPU
@@ -390,7 +393,8 @@ bool alt_cache_l1_data_is_enabled(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  */
-ALT_STATUS_CODE alt_cache_l1_data_invalidate(void * vaddress, size_t length);
+    ALT_STATUS_CODE alt_cache_l1_data_invalidate( void * vaddress,
+                                                  size_t length );
 
 /*!
  * Invalidates the entire contents of the L1 data cache on the current CPU
@@ -404,7 +408,7 @@ ALT_STATUS_CODE alt_cache_l1_data_invalidate(void * vaddress, size_t length);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_data_invalidate_all(void);
+    ALT_STATUS_CODE alt_cache_l1_data_invalidate_all( void );
 
 /*!
  * Cleans the specified contents of the L1 data cache on the current CPU core
@@ -425,7 +429,8 @@ ALT_STATUS_CODE alt_cache_l1_data_invalidate_all(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  */
-ALT_STATUS_CODE alt_cache_l1_data_clean(void * vaddress, size_t length);
+    ALT_STATUS_CODE alt_cache_l1_data_clean( void * vaddress,
+                                             size_t length );
 
 /*!
  * Cleans the entire L1 data cache for the current CPU core.
@@ -433,7 +438,7 @@ ALT_STATUS_CODE alt_cache_l1_data_clean(void * vaddress, size_t length);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_data_clean_all(void);
+    ALT_STATUS_CODE alt_cache_l1_data_clean_all( void );
 
 /*!
  * Cleans and invalidates the specified contents of the L1 data cache on the
@@ -459,7 +464,8 @@ ALT_STATUS_CODE alt_cache_l1_data_clean_all(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  */
-ALT_STATUS_CODE alt_cache_l1_data_purge(void * vaddress, size_t length);
+    ALT_STATUS_CODE alt_cache_l1_data_purge( void * vaddress,
+                                             size_t length );
 
 /*!
  * Cleans and invalidates the entire L1 data cache for the current CPU core.
@@ -467,7 +473,7 @@ ALT_STATUS_CODE alt_cache_l1_data_purge(void * vaddress, size_t length);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_data_purge_all(void);
+    ALT_STATUS_CODE alt_cache_l1_data_purge_all( void );
 
 /*!
  * Enables the parity error detection feature in the L1 caches on the current
@@ -501,7 +507,7 @@ ALT_STATUS_CODE alt_cache_l1_data_purge_all(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_parity_enable(void);
+    ALT_STATUS_CODE alt_cache_l1_parity_enable( void );
 
 /*!
  * Disables parity error detection in the L1 caches.
@@ -509,7 +515,7 @@ ALT_STATUS_CODE alt_cache_l1_parity_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_parity_disable(void);
+    ALT_STATUS_CODE alt_cache_l1_parity_disable( void );
 
 /*!
  * Returns \b true when parity error detection is enabled and \b false when it
@@ -520,7 +526,7 @@ ALT_STATUS_CODE alt_cache_l1_parity_disable(void);
  * \retval      false           Parity error detection for L1 caches is
  *                              disabled.
  */
-bool alt_cache_l1_parity_is_enabled(void);
+    bool alt_cache_l1_parity_is_enabled( void );
 
 /*!
  * Enables the dynamic branch predictor features on the current CPU core.
@@ -532,7 +538,7 @@ bool alt_cache_l1_parity_is_enabled(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_branch_enable(void);
+    ALT_STATUS_CODE alt_cache_l1_branch_enable( void );
 
 /*!
  * Disables the dynamic branch predictor features on the current CPU core.
@@ -543,7 +549,7 @@ ALT_STATUS_CODE alt_cache_l1_branch_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_branch_disable(void);
+    ALT_STATUS_CODE alt_cache_l1_branch_disable( void );
 
 /*!
  * Returns \b true when both the dynamic predictor features are enabled and
@@ -553,7 +559,7 @@ ALT_STATUS_CODE alt_cache_l1_branch_disable(void);
  * \retval      false           Some or all L1 branch predictor caches are
  *                              disabled.
  */
-bool alt_cache_l1_branch_is_enabled(void);
+    bool alt_cache_l1_branch_is_enabled( void );
 
 /*!
  * Invalidates the dynamic branch predictor feature caches on the current CPU
@@ -562,7 +568,7 @@ bool alt_cache_l1_branch_is_enabled(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_branch_invalidate(void);
+    ALT_STATUS_CODE alt_cache_l1_branch_invalidate( void );
 
 /*!
  * Enables the L1 cache data prefetch feature on the current CPU core.
@@ -575,7 +581,7 @@ ALT_STATUS_CODE alt_cache_l1_branch_invalidate(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_prefetch_enable(void);
+    ALT_STATUS_CODE alt_cache_l1_prefetch_enable( void );
 
 /*!
  * Disables the L1 cache data prefetch feature on the current CPU core.
@@ -583,7 +589,7 @@ ALT_STATUS_CODE alt_cache_l1_prefetch_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l1_prefetch_disable(void);
+    ALT_STATUS_CODE alt_cache_l1_prefetch_disable( void );
 
 /*!
  * Returns \b true if the L1 cache data prefetch feature is enabled and
@@ -592,7 +598,7 @@ ALT_STATUS_CODE alt_cache_l1_prefetch_disable(void);
  * \retval      true            The L1 data cache prefetch feature is enabled.
  * \retval      false           The L1 data cache prefetch feature is disabled.
  */
-bool alt_cache_l1_prefetch_is_enabled(void);
+    bool alt_cache_l1_prefetch_is_enabled( void );
 
 /*!
  * @}
@@ -632,7 +638,7 @@ bool alt_cache_l1_prefetch_is_enabled(void);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_cache_l2_init(void);
+    ALT_STATUS_CODE alt_cache_l2_init( void );
 
 /*!
  * Uninitializes the L2 cache controller.
@@ -640,7 +646,7 @@ ALT_STATUS_CODE alt_cache_l2_init(void);
  * \retval      ALT_E_SUCCESS   Successful status.
  * \retval      ALT_E_ERROR     Details about error status code
  */
-ALT_STATUS_CODE alt_cache_l2_uninit(void);
+    ALT_STATUS_CODE alt_cache_l2_uninit( void );
 
 /*!
  * Enables the L2 cache features for data and instruction prefetching.
@@ -653,7 +659,7 @@ ALT_STATUS_CODE alt_cache_l2_uninit(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_prefetch_enable(void);
+    ALT_STATUS_CODE alt_cache_l2_prefetch_enable( void );
 
 /*!
  * Disables the L2 cache features for data and instruction prefetching.
@@ -666,7 +672,7 @@ ALT_STATUS_CODE alt_cache_l2_prefetch_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_prefetch_disable(void);
+    ALT_STATUS_CODE alt_cache_l2_prefetch_disable( void );
 
 /*!
  * Returns \b true if either L2 cache data or instruction prefetch features are
@@ -677,7 +683,7 @@ ALT_STATUS_CODE alt_cache_l2_prefetch_disable(void);
  * \retval      false           Some L2 data and instruction prefetch features
  *                              are disabled.
  */
-bool alt_cache_l2_prefetch_is_enabled(void);
+    bool alt_cache_l2_prefetch_is_enabled( void );
 
 /*!
  * Enables parity error detection in the L2 cache.
@@ -704,7 +710,7 @@ bool alt_cache_l2_prefetch_is_enabled(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_parity_enable(void);
+    ALT_STATUS_CODE alt_cache_l2_parity_enable( void );
 
 /*!
  * Disables parity error detection in the L2 cache.
@@ -712,7 +718,7 @@ ALT_STATUS_CODE alt_cache_l2_parity_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_parity_disable(void);
+    ALT_STATUS_CODE alt_cache_l2_parity_disable( void );
 
 /*!
  * Returns \b true when parity error detection is enabled and \b false when it
@@ -723,7 +729,7 @@ ALT_STATUS_CODE alt_cache_l2_parity_disable(void);
  * \retval      false           The L2 cache parity error detection feature is
  *                              disabled.
  */
-bool alt_cache_l2_parity_is_enabled(void);
+    bool alt_cache_l2_parity_is_enabled( void );
 
 /*!
  * Enables the L2 cache.
@@ -734,7 +740,7 @@ bool alt_cache_l2_parity_is_enabled(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_enable(void);
+    ALT_STATUS_CODE alt_cache_l2_enable( void );
 
 /*!
  * Disables the L2 cache.
@@ -745,7 +751,7 @@ ALT_STATUS_CODE alt_cache_l2_enable(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_disable(void);
+    ALT_STATUS_CODE alt_cache_l2_disable( void );
 
 /*!
  * Returns \b true when the L2 cache is enabled and \b false when it is
@@ -754,7 +760,7 @@ ALT_STATUS_CODE alt_cache_l2_disable(void);
  * \retval      true            The L2 cache is enabled.
  * \retval      false           The L2 cache is disabled.
  */
-bool alt_cache_l2_is_enabled(void);
+    bool alt_cache_l2_is_enabled( void );
 
 /*!
  * Flushes the L2 cache controller hardware buffers.
@@ -763,7 +769,7 @@ bool alt_cache_l2_is_enabled(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_l2_sync(void);
+    ALT_STATUS_CODE alt_cache_l2_sync( void );
 
 /*!
  * Invalidates the specified contents of the L2 cache for the given memory
@@ -785,7 +791,8 @@ ALT_STATUS_CODE alt_cache_l2_sync(void);
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_l2_invalidate(void * paddress, size_t length);
+    ALT_STATUS_CODE alt_cache_l2_invalidate( void * paddress,
+                                             size_t length );
 
 /*!
  * Invalidates th entire contents of the L2 cache.
@@ -794,12 +801,12 @@ ALT_STATUS_CODE alt_cache_l2_invalidate(void * paddress, size_t length);
  * in certain circumstances it may be necessary to invalidate it manually. An
  * example of this situation is when the address space is remapped and the
  * processor accesses memory from the new memory area.
-
+ *
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_l2_invalidate_all(void);
+    ALT_STATUS_CODE alt_cache_l2_invalidate_all( void );
 
 /*!
  * Cleans the specified contents of the L2 cache for the given memory segment.
@@ -820,7 +827,8 @@ ALT_STATUS_CODE alt_cache_l2_invalidate_all(void);
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_l2_clean(void * paddress, size_t length);
+    ALT_STATUS_CODE alt_cache_l2_clean( void * paddress,
+                                        size_t length );
 
 /*!
  * Cleans the entire L2 cache. All L2 cache controller interrupts will be
@@ -831,7 +839,7 @@ ALT_STATUS_CODE alt_cache_l2_clean(void * paddress, size_t length);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_l2_clean_all(void);
+    ALT_STATUS_CODE alt_cache_l2_clean_all( void );
 
 /*!
  * Cleans and invalidates the specified contents of the L2 cache for the
@@ -852,7 +860,8 @@ ALT_STATUS_CODE alt_cache_l2_clean_all(void);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_BAD_ARG   The memory segment is invalid.
  */
-ALT_STATUS_CODE alt_cache_l2_purge(void * paddress, size_t length);
+    ALT_STATUS_CODE alt_cache_l2_purge( void * paddress,
+                                        size_t length );
 
 /*!
  * Cleans and invalidates the entire L2 cache. All L2 cache controller
@@ -863,42 +872,42 @@ ALT_STATUS_CODE alt_cache_l2_purge(void * paddress, size_t length);
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_TMO       The memory operation timed out.
  */
-ALT_STATUS_CODE alt_cache_l2_purge_all(void);
+    ALT_STATUS_CODE alt_cache_l2_purge_all( void );
 
 /*!
  * This type definition enumerates all the interrupt conditions that can be
  * generated by the L2 cache controller as register mask values.
  */
-enum ALT_CACHE_L2_INTERRUPT_e
-{
-    /*! Decode error received on the master ports from L3. */
-    ALT_CACHE_L2_INTERRUPT_DECERR = 1 << 8,
+    enum ALT_CACHE_L2_INTERRUPT_e
+    {
+        /*! Decode error received on the master ports from L3. */
+        ALT_CACHE_L2_INTERRUPT_DECERR = 1 << 8,
 
-    /*! Slave error received on the master ports from L3.  */
-    ALT_CACHE_L2_INTERRUPT_SLVERR = 1 << 7,
+        /*! Slave error received on the master ports from L3.  */
+        ALT_CACHE_L2_INTERRUPT_SLVERR = 1 << 7,
 
-    /*! Error on the L2 data RAM read.                     */
-    ALT_CACHE_L2_INTERRUPT_ERRRD  = 1 << 6,
+        /*! Error on the L2 data RAM read.                     */
+        ALT_CACHE_L2_INTERRUPT_ERRRD = 1 << 6,
 
-    /*! Error on the L2 tag RAM read.                      */
-    ALT_CACHE_L2_INTERRUPT_ERRRT  = 1 << 5,
+        /*! Error on the L2 tag RAM read.                      */
+        ALT_CACHE_L2_INTERRUPT_ERRRT = 1 << 5,
 
-    /*! Error on the L2 data RAM write.                    */
-    ALT_CACHE_L2_INTERRUPT_ERRWD  = 1 << 4,
+        /*! Error on the L2 data RAM write.                    */
+        ALT_CACHE_L2_INTERRUPT_ERRWD = 1 << 4,
 
-    /*! Error on the L2 tag RAM write.                     */
-    ALT_CACHE_L2_INTERRUPT_ERRWT  = 1 << 3,
+        /*! Error on the L2 tag RAM write.                     */
+        ALT_CACHE_L2_INTERRUPT_ERRWT = 1 << 3,
 
-    /*! Parity error on the L2 data RAM read.              */
-    ALT_CACHE_L2_INTERRUPT_PARRD  = 1 << 2,
+        /*! Parity error on the L2 data RAM read.              */
+        ALT_CACHE_L2_INTERRUPT_PARRD = 1 << 2,
 
-    /*! Parity error on the L2 tag RAM read.               */
-    ALT_CACHE_L2_INTERRUPT_PARRT  = 1 << 1,
+        /*! Parity error on the L2 tag RAM read.               */
+        ALT_CACHE_L2_INTERRUPT_PARRT = 1 << 1,
 
-    /*! Event counter overflow or increment.               */
-    ALT_CACHE_L2_INTERRUPT_ECNTR  = 1 << 0
-};
-typedef enum ALT_CACHE_L2_INTERRUPT_e ALT_CACHE_L2_INTERRUPT_t;
+        /*! Event counter overflow or increment.               */
+        ALT_CACHE_L2_INTERRUPT_ECNTR = 1 << 0
+    };
+    typedef enum ALT_CACHE_L2_INTERRUPT_e ALT_CACHE_L2_INTERRUPT_t;
 
 /*!
  * Enables the L2 cache controller interrupts for the specified set of
@@ -911,7 +920,7 @@ typedef enum ALT_CACHE_L2_INTERRUPT_e ALT_CACHE_L2_INTERRUPT_t;
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_int_enable(uint32_t interrupt);
+    ALT_STATUS_CODE alt_cache_l2_int_enable( uint32_t interrupt );
 
 /*!
  * Disables the L2 cache controller interrupts for the specified set of
@@ -924,7 +933,7 @@ ALT_STATUS_CODE alt_cache_l2_int_enable(uint32_t interrupt);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_int_disable(uint32_t interrupt);
+    ALT_STATUS_CODE alt_cache_l2_int_disable( uint32_t interrupt );
 
 /*!
  * Gets the condition(s) causing the L2 cache controller to interrupt as a
@@ -933,7 +942,7 @@ ALT_STATUS_CODE alt_cache_l2_int_disable(uint32_t interrupt);
  * \returns     A register mask of the currently asserted and enabled
  *              conditions resulting in an interrupt being generated.
  */
-uint32_t alt_cache_l2_int_status_get(void);
+    uint32_t alt_cache_l2_int_status_get( void );
 
 /*!
  * Clears the specified conditon(s) causing the L2 cache controller to
@@ -947,7 +956,7 @@ uint32_t alt_cache_l2_int_status_get(void);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_cache_l2_int_status_clear(uint32_t interrupt);
+    ALT_STATUS_CODE alt_cache_l2_int_status_clear( uint32_t interrupt );
 
 /*!
  * @}
@@ -957,8 +966,8 @@ ALT_STATUS_CODE alt_cache_l2_int_status_clear(uint32_t interrupt);
  * @}
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __ALT_CACHE_H__ */

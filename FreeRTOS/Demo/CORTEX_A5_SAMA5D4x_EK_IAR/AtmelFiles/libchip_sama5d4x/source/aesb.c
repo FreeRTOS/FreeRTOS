@@ -29,9 +29,9 @@
 
 /** \addtogroup aesb_module Working with AESB
  * The TWI driver provides the interface to True Random Number Generator (AESB) passes the American NIST Special Publication 800-22 and Diehard
-Random Tests Suites.
-The AESB may be used as an entropy source for seeding an NIST approved DRNG (Deterministic RNG) as required by
-FIPS PUB 140-2 and 140-3. use the TWI
+ * Random Tests Suites.
+ * The AESB may be used as an entropy source for seeding an NIST approved DRNG (Deterministic RNG) as required by
+ * FIPS PUB 140-2 and 140-3. use the TWI
  * peripheral.
  *
  * \section Usage
@@ -66,7 +66,7 @@ FIPS PUB 140-2 and 140-3. use the TWI
  * Related files :\n
  * \ref twi.c\n
  * \ref twi.h.\n
-*/
+ */
 /*@{*/
 /*@}*/
 
@@ -90,7 +90,7 @@ FIPS PUB 140-2 and 140-3. use the TWI
 /**
  * \brief Starts Manual encryption/decryption process.
  */
-void AESB_Start(void)
+void AESB_Start( void )
 {
     AESB->AESB_CR = AESB_CR_START;
 }
@@ -98,7 +98,7 @@ void AESB_Start(void)
 /**
  * \brief Resets the AESB. A software triggered hardware reset of the AESB interface is performed.
  */
-void AESB_SoftReset(void)
+void AESB_SoftReset( void )
 {
     AESB->AESB_CR = AESB_CR_SWRST;
 }
@@ -106,7 +106,7 @@ void AESB_SoftReset(void)
 /**
  * \brief Restarts the countermeasures generator to an internal pre-defined value.
  */
-void AESB_Recount(void)
+void AESB_Recount( void )
 {
     AESB->AESB_CR = AESB_CR_LOADSEED;
 }
@@ -115,16 +115,16 @@ void AESB_Recount(void)
  * \brief Configures an AESB peripheral with the specified parameters.
  *  \param mode  Desired value for the AESB mode register (see the datasheet).
  */
-void AESB_Configure(uint32_t mode)
+void AESB_Configure( uint32_t mode )
 {
-    AESB->AESB_MR = mode; 
+    AESB->AESB_MR = mode;
 }
 
 /**
  * \brief Enables the selected interrupts sources on a AESB peripheral.
  * \param sources  Bitwise OR of selected interrupt sources.
  */
-void AESB_EnableIt(uint32_t sources)
+void AESB_EnableIt( uint32_t sources )
 {
     AESB->AESB_IER = sources;
 }
@@ -133,7 +133,7 @@ void AESB_EnableIt(uint32_t sources)
  * \brief Disables the selected interrupts sources on a AESB peripheral.
  * \param sources  Bitwise OR of selected interrupt sources.
  */
-void AESB_DisableIt(uint32_t sources)
+void AESB_DisableIt( uint32_t sources )
 {
     AESB->AESB_IDR = sources;
 }
@@ -142,7 +142,7 @@ void AESB_DisableIt(uint32_t sources)
  * \brief Get the current status register of the given AESB peripheral.
  * \return  AESB status register.
  */
-uint32_t AESB_GetStatus(void)
+uint32_t AESB_GetStatus( void )
 {
     return AESB->AESB_ISR;
 }
@@ -152,34 +152,40 @@ uint32_t AESB_GetStatus(void)
  * \param pKey Pointer to a 16 bytes cipher key.
  * \param keyLength length of key
  */
-void AESB_WriteKey(const uint32_t *pKey)
+void AESB_WriteKey( const uint32_t * pKey )
 {
-    AESB->AESB_KEYWR[0] = pKey[0];
-    AESB->AESB_KEYWR[1] = pKey[1];
-    AESB->AESB_KEYWR[2] = pKey[2];
-    AESB->AESB_KEYWR[3] = pKey[3];
+    AESB->AESB_KEYWR[ 0 ] = pKey[ 0 ];
+    AESB->AESB_KEYWR[ 1 ] = pKey[ 1 ];
+    AESB->AESB_KEYWR[ 2 ] = pKey[ 2 ];
+    AESB->AESB_KEYWR[ 3 ] = pKey[ 3 ];
 }
 
 /**
  * \brief Set the for 32-bit input Data allow to set the 128-bit data block used for encryption/decryption.
  * \param data Pointer to the 16-bytes data to cipher/decipher.
  */
-void AESB_SetInput(uint32_t *data)
+void AESB_SetInput( uint32_t * data )
 {
     uint8_t i;
-    for (i = 0; i < 4; i++)
-        AESB->AESB_IDATAR[i] = data[i];
+
+    for( i = 0; i < 4; i++ )
+    {
+        AESB->AESB_IDATAR[ i ] = data[ i ];
+    }
 }
 
 /**
  * \brief Get the four 32-bit data contain the 128-bit data block which has been encrypted/decrypted.
  * \param data pointer to the word that has been encrypted/decrypted..
  */
-void AESB_GetOutput(uint32_t *data)
+void AESB_GetOutput( uint32_t * data )
 {
     uint8_t i;
-    for (i = 0; i < 4; i++) 
-        data[i] = AESB->AESB_ODATAR[i];
+
+    for( i = 0; i < 4; i++ )
+    {
+        data[ i ] = AESB->AESB_ODATAR[ i ];
+    }
 }
 
 /**
@@ -187,11 +193,10 @@ void AESB_GetOutput(uint32_t *data)
  * modes of operation as an additional initial input.
  * \param pVector point to the word of the initialization vector.
  */
-void AESB_SetVector(const uint32_t *pVector)
+void AESB_SetVector( const uint32_t * pVector )
 {
-    AESB->AESB_IVR[0] = pVector[0];
-    AESB->AESB_IVR[1] = pVector[1];
-    AESB->AESB_IVR[2] = pVector[2];
-    AESB->AESB_IVR[3] = pVector[3];
+    AESB->AESB_IVR[ 0 ] = pVector[ 0 ];
+    AESB->AESB_IVR[ 1 ] = pVector[ 1 ];
+    AESB->AESB_IVR[ 2 ] = pVector[ 2 ];
+    AESB->AESB_IVR[ 3 ] = pVector[ 3 ];
 }
-

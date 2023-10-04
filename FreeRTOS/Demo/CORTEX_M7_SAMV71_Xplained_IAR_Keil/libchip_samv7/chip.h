@@ -32,28 +32,28 @@
 
 
 /* Define WEAK attribute */
-#if defined   ( __CC_ARM   )
-    #define WEAK __attribute__ ((weak))
-#elif defined ( __ICCARM__ )
-    #define WEAK __weak
-#elif defined (  __GNUC__  )
-    #define WEAK __attribute__ ((weak))
+#if defined( __CC_ARM )
+    #define WEAK    __attribute__( ( weak ) )
+#elif defined( __ICCARM__ )
+    #define WEAK    __weak
+#elif defined( __GNUC__ )
+    #define WEAK    __attribute__( ( weak ) )
 #endif
 
 /* Define NO_INIT attribute */
-#if defined   ( __CC_ARM   )
+#if defined( __CC_ARM )
     #define NO_INIT
-#elif defined ( __ICCARM__ )
-    #define NO_INIT __no_init
-#elif defined (  __GNUC__  )
+#elif defined( __ICCARM__ )
+    #define NO_INIT    __no_init
+#elif defined( __GNUC__ )
     #define NO_INIT
 #endif
 
 /* Define RAMFUNC attribute */
 #ifdef __ICCARM__
-#define RAMFUNC __ramfunc
+    #define RAMFUNC    __ramfunc
 #else
-#define RAMFUNC __attribute__ ((section (".ramfunc")))
+    #define RAMFUNC    __attribute__( ( section( ".ramfunc" ) ) )
 #endif
 
 /*
@@ -64,9 +64,10 @@
 /*
  * Core
  */
-//#include "include/exceptions.h"
+/*#include "include/exceptions.h" */
 
-#define memory_barrier()        __DSB();
+#define memory_barrier()    __DSB();
+
 /*
  * Peripherals
  */
@@ -119,20 +120,21 @@
 #include "include/afe_dma.h"
 #include "include/dac_dma.h"
 
-#define ENABLE_PERIPHERAL(dwId)         PMC_EnablePeripheral( dwId )
-#define DISABLE_PERIPHERAL(dwId)        PMC_DisablePeripheral( dwId )
-   
-   
+#define ENABLE_PERIPHERAL( dwId )     PMC_EnablePeripheral( dwId )
+#define DISABLE_PERIPHERAL( dwId )    PMC_DisablePeripheral( dwId )
+
+
 /* SCB Interrupt Control State Register Definitions */
 #ifndef SCB_VTOR_TBLBASE_Pos
-#define SCB_VTOR_TBLBASE_Pos               29                                             /*!< SCB VTOR: TBLBASE Position */
-#define SCB_VTOR_TBLBASE_Msk               (1UL << SCB_VTOR_TBLBASE_Pos)                  /*!< SCB VTOR: TBLBASE Mask */
+    #define SCB_VTOR_TBLBASE_Pos    29                                                    /*!< SCB VTOR: TBLBASE Position */
+    #define SCB_VTOR_TBLBASE_Msk    ( 1UL << SCB_VTOR_TBLBASE_Pos )                       /*!< SCB VTOR: TBLBASE Mask */
 #endif
 
-#define RESET_CYCLE_COUNTER()               { DWT->CTRL = 0;__ISB(); \
-                                            while(DWT->CYCCNT != 0)DWT->CYCCNT = 0;\
-                                            DWT->CTRL = DWT_CTRL_CYCCNTENA_Msk; }
+#define RESET_CYCLE_COUNTER()                    \
+    { DWT->CTRL = 0; __ISB();                    \
+      while( DWT->CYCCNT != 0 ) DWT->CYCCNT = 0; \
+      DWT->CTRL = DWT_CTRL_CYCCNTENA_Msk; }
 
-#define GET_CYCLE_COUNTER(x)                 x=DWT->CYCCNT;
+#define GET_CYCLE_COUNTER( x )    x = DWT->CYCCNT;
 
 #endif /* SAMS7_CHIP_H */

@@ -50,23 +50,24 @@
 /**
  * \brief Setup TLB for the board
  */
-extern void board_setup_tlb(uint32_t *tlb);
+extern void board_setup_tlb( uint32_t * tlb );
 
 /**
  * \brief Configures L2CC for the board
  */
-extern void board_cfg_l2cc(void);
+extern void board_cfg_l2cc( void );
 
 /**
  * \brief Configures DDR for the board
  */
-extern void board_cfg_ddram(void);
+extern void board_cfg_ddram( void );
 
 #ifdef CONFIG_HAVE_NANDFLASH
+
 /**
  * \brief Configures SMC for the board NAND flash.
  */
-extern void board_cfg_nand_flash(void);
+    extern void board_cfg_nand_flash( void );
 #endif
 
-#endif  /* BOARD_MEMORIES_H */
+#endif /* BOARD_MEMORIES_H */

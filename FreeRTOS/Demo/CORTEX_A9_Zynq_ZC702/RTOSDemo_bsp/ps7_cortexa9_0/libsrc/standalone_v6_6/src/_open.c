@@ -35,7 +35,9 @@
 
 #ifdef __cplusplus
 extern "C" {
-	__attribute__((weak)) s32 _open(const char8 *buf, s32 flags, s32 mode);
+__attribute__( ( weak ) ) s32 _open( const char8 * buf,
+                                     s32 flags,
+                                     s32 mode );
 }
 #endif
 
@@ -43,12 +45,14 @@ extern "C" {
  * _open -- open a file descriptor. We don't have a filesystem, so
  *         we return an error.
  */
-__attribute__((weak)) s32 _open(const char8 *buf, s32 flags, s32 mode)
+__attribute__( ( weak ) ) s32 _open( const char8 * buf,
+                                     s32 flags,
+                                     s32 mode )
 {
-  (void)buf;
-  (void)flags;
-  (void)mode;
-  errno = EIO;
-  return (-1);
+    ( void ) buf;
+    ( void ) flags;
+    ( void ) mode;
+    errno = EIO;
+    return( -1 );
 }
-#endif
+#endif /* ifndef UNDEFINE_FILE_OPS */

@@ -50,11 +50,11 @@
  *        Definitions
  *----------------------------------------------------------------------------*/
 
-#define ILI9488_SPIMODE        0
-#define ILI9488_EBIMODE        1
+#define ILI9488_SPIMODE         0
+#define ILI9488_EBIMODE         1
 
 /* ILI9325 ID code */
-#define ILI9488_DEVICE_CODE    0x9488
+#define ILI9488_DEVICE_CODE     0x9488
 
 #define ILI9488_LCD_WIDTH       320
 #define ILI9488_LCD_HEIGHT      480
@@ -66,42 +66,45 @@
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
-typedef enum{
-	 AccessInst = 0,
-	 AccessRead,
-	 AccessWrite
-}AccessIli_t;
+typedef enum
+{
+    AccessInst = 0,
+    AccessRead,
+    AccessWrite
+} AccessIli_t;
 
 typedef union _union_type
 {
-	uint32_t value;
-		struct{
-			uint8_t byte_8;
-			uint8_t byte_l6;
-			uint8_t byte_24;
-			uint8_t byte_32;
-		}byte;
-		struct{
-			uint16_t half_word_l;
-			uint16_t half_word_h;
-			}half_word;
-	}union_type;
-typedef volatile uint8_t REG8;
+    uint32_t value;
+    struct
+    {
+        uint8_t byte_8;
+        uint8_t byte_l6;
+        uint8_t byte_24;
+        uint8_t byte_32;
+    } byte;
+    struct
+    {
+        uint16_t half_word_l;
+        uint16_t half_word_h;
+    } half_word;
+} union_type;
+typedef volatile uint8_t   REG8;
 
-typedef uint32_t LcdColor_t;
+typedef uint32_t           LcdColor_t;
 
 /*----------------------------------------------------------------------------
  *        Marcos
  *----------------------------------------------------------------------------*/
 /* Pixel cache used to speed up communication */
-#define LCD_DATA_CACHE_SIZE         BOARD_LCD_WIDTH
+#define LCD_DATA_CACHE_SIZE    BOARD_LCD_WIDTH
 
 /*----------------------------------------------------------------------------
  *        Function Marcos
  *----------------------------------------------------------------------------*/
-#define get_0b_to_8b(x)             (((union_type*)&(x))->byte.byte_8)
-#define get_8b_to_16b(x)            (((union_type*)&(x))->byte.byte_l6)
-#define get_16b_to_24b(x)           (((union_type*)&(x))->byte.byte_24)
-#define get_24b_to_32b(x)           (((union_type*)&(x))->byte.byte_32)
+#define get_0b_to_8b( x )      ( ( ( union_type * ) &( x ) )->byte.byte_8 )
+#define get_8b_to_16b( x )     ( ( ( union_type * ) &( x ) )->byte.byte_l6 )
+#define get_16b_to_24b( x )    ( ( ( union_type * ) &( x ) )->byte.byte_24 )
+#define get_24b_to_32b( x )    ( ( ( union_type * ) &( x ) )->byte.byte_32 )
 
 #endif /* #ifndef ILI9488 */

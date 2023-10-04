@@ -39,14 +39,14 @@
  * <ul>
  * <li> Select an appropriate reference voltage on ADVREF   </li>
  * <li> Configure the DACC according to its requirements and special needs,which could be
-        broken down into several parts:
+ *      broken down into several parts:
  * -#   Enable DACC in free running mode by clearing TRGEN in DACC_MR;
  * -#   Configure Startup Time and Refresh Period through setting STARTUP and REFRESH fields
  *      in DACC_MR; The refresh mechanism is used to protect the output analog value from
  *      decreasing.
  * -#   Enable channels and write digital code to DACC_CDR,in free running mode, the conversion
  *      is started right after at least one channel is enabled and data is written .
-   </li>
+ * </li>
  * </ul>
  *
  * For more accurate information, please look at the DACC section of the
@@ -55,15 +55,17 @@
  * Related files :\n
  * \ref DACC.c\n
  * \ref DACC.h\n
-*/
+ */
 /*@{*/
 /*@}*/
+
 /**
  * \file
  *
  * Implementation of Digital-to-Analog Converter Controller (DACC).
  *
  */
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -78,31 +80,30 @@
  *----------------------------------------------------------------------------*/
 
 /**
-  * \brief Initialize the DACC controller
-  * \param pDACC Pointer to an DACC instance.
-  * \param idDACC identifier of DAC peripheral
-  * \param trgEn trigger mode, free running mode or external Hardware trigger
-  * \param word transfer size,word or half word
-  * \param trgSel hardware trigger selection
-  * \param sleepMode sleep mode selection
-  * \param mck value of MCK in Hz
-  * \param refresh refresh period
-  * \param user_sel user channel selection ,0 or 1
-  * \param tag_mode tag for channel number
-  * \param startup value of the start up time (in DACCClock) (see datasheet)
-*/
-extern void DACC_Initialize( Dacc* pDACC,
+ * \brief Initialize the DACC controller
+ * \param pDACC Pointer to an DACC instance.
+ * \param idDACC identifier of DAC peripheral
+ * \param trgEn trigger mode, free running mode or external Hardware trigger
+ * \param word transfer size,word or half word
+ * \param trgSel hardware trigger selection
+ * \param sleepMode sleep mode selection
+ * \param mck value of MCK in Hz
+ * \param refresh refresh period
+ * \param user_sel user channel selection ,0 or 1
+ * \param tag_mode tag for channel number
+ * \param startup value of the start up time (in DACCClock) (see datasheet)
+ */
+extern void DACC_Initialize( Dacc * pDACC,
                              uint8_t idDACC,
                              uint8_t trgEn,
                              uint8_t trgSel,
                              uint8_t word,
                              uint8_t sleepMode,
                              uint32_t mck,
-                             uint8_t refresh,    /* refresh period */
-                             uint8_t user_sel,   /* user channel selection */
-                             uint32_t tag_mode,  /* using tag for channel number */
-                             uint32_t startup
-                            )
+                             uint8_t refresh,   /* refresh period */
+                             uint8_t user_sel,  /* user channel selection */
+                             uint32_t tag_mode, /* using tag for channel number */
+                             uint32_t startup )
 {
     /* Stop warning */
     mck = mck;
@@ -111,18 +112,18 @@ extern void DACC_Initialize( Dacc* pDACC,
     PMC->PMC_PCER0 = 1 << idDACC;
 
     /*  Reset the controller */
-    DACC_SoftReset(pDACC);
+    DACC_SoftReset( pDACC );
 
     /*  Write to the MR register */
     DACC_CfgModeReg( pDACC,
-          ( trgEn & DACC_MR_TRGEN)
-        |   DACC_MR_TRGSEL(trgSel)
-        | ( word & DACC_MR_WORD)
-        | ( sleepMode & DACC_MR_SLEEP)
-        |   DACC_MR_REFRESH(refresh)
-        | ( user_sel & DACC_MR_USER_SEL_Msk)
-        | ( tag_mode &  DACC_MR_TAG)
-        | ( startup & DACC_MR_STARTUP_Msk));
+                     ( trgEn & DACC_MR_TRGEN )
+                     | DACC_MR_TRGSEL( trgSel )
+                     | ( word & DACC_MR_WORD )
+                     | ( sleepMode & DACC_MR_SLEEP )
+                     | DACC_MR_REFRESH( refresh )
+                     | ( user_sel & DACC_MR_USER_SEL_Msk )
+                     | ( tag_mode & DACC_MR_TAG )
+                     | ( startup & DACC_MR_STARTUP_Msk ) );
 }
 
 
@@ -131,54 +132,54 @@ extern void DACC_Initialize( Dacc* pDACC,
  * \param pDACC Pointer to an Dacc instance.
  * \param data  date to be converted.
  */
-extern void DACC_SetConversionData( Dacc* pDACC, uint32_t dwData )
+extern void DACC_SetConversionData( Dacc * pDACC,
+                                    uint32_t dwData )
 {
-    uint32_t dwMR = pDACC->DACC_MR ;
+    uint32_t dwMR = pDACC->DACC_MR;
 
-    if ( dwMR & DACC_MR_WORD )
+    if( dwMR & DACC_MR_WORD )
     {
-        pDACC->DACC_CDR = dwData ;
+        pDACC->DACC_CDR = dwData;
     }
     else
     {
-        pDACC->DACC_CDR = (dwData&0xFFFF) ;
+        pDACC->DACC_CDR = ( dwData & 0xFFFF );
     }
 }
 
 
 /**
-  * \brief Write converted data through PDC channel
-  * \param pDACC the pointer of DACC peripheral
-  * \param pBuffer the destination buffer
-  * \param size the size of the buffer
-*/
-extern uint32_t DACC_WriteBuffer( Dacc* pDACC, uint16_t *pwBuffer, uint32_t dwSize )
+ * \brief Write converted data through PDC channel
+ * \param pDACC the pointer of DACC peripheral
+ * \param pBuffer the destination buffer
+ * \param size the size of the buffer
+ */
+extern uint32_t DACC_WriteBuffer( Dacc * pDACC,
+                                  uint16_t * pwBuffer,
+                                  uint32_t dwSize )
 {
-
     /* Check if the first PDC bank is free*/
-    if ( (pDACC->DACC_TCR == 0) && (pDACC->DACC_TNCR == 0) )
+    if( ( pDACC->DACC_TCR == 0 ) && ( pDACC->DACC_TNCR == 0 ) )
     {
-        pDACC->DACC_TPR = (uint32_t)pwBuffer ;
-        pDACC->DACC_TCR = dwSize ;
-        pDACC->DACC_PTCR = DACC_PTCR_TXTEN ;
+        pDACC->DACC_TPR = ( uint32_t ) pwBuffer;
+        pDACC->DACC_TCR = dwSize;
+        pDACC->DACC_PTCR = DACC_PTCR_TXTEN;
 
-        return 1 ;
+        return 1;
     }
     /* Check if the second PDC bank is free*/
     else
     {
-        if (pDACC->DACC_TNCR == 0)
+        if( pDACC->DACC_TNCR == 0 )
         {
-            pDACC->DACC_TNPR = (uint32_t)pwBuffer ;
-            pDACC->DACC_TNCR = dwSize ;
+            pDACC->DACC_TNPR = ( uint32_t ) pwBuffer;
+            pDACC->DACC_TNCR = dwSize;
 
-            return 1 ;
+            return 1;
         }
         else
         {
-            return 0 ;
+            return 0;
         }
     }
-
 }
-

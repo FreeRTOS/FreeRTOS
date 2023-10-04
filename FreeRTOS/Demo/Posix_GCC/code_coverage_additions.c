@@ -595,7 +595,7 @@ static BaseType_t prvTimerQuery( void )
                            xTimerPeriod,
                            pdFALSE,
                            ( void * ) xTimerPeriod,
-                           NULL );  /* Not actually going to start timer so NULL callback is ok. */
+                           NULL ); /* Not actually going to start timer so NULL callback is ok. */
 
     if( xTimer != NULL )
     {

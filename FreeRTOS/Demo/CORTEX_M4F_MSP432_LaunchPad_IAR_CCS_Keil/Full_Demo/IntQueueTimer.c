@@ -40,19 +40,19 @@
 #include "IntQueue.h"
 
 /* The frequencies at which the two timers expire are slightly offset to ensure
-they don't remain synchronised. */
-#define tmrTIMER_0_FREQUENCY	( 2000UL )
-#define tmrTIMER_1_FREQUENCY	( 2003UL )
+ * they don't remain synchronised. */
+#define tmrTIMER_0_FREQUENCY    ( 2000UL )
+#define tmrTIMER_1_FREQUENCY    ( 2003UL )
 
 /* The interrupts use the FreeRTOS API so must be at or below the max syscall
-interrupt priority.  Counter-intuitively, the higher the numeric number the
-lower the logical priority. http://www.freertos.org/RTOS-Cortex-M3-M4.html */
-#define tmrLOWER_PRIORITY		( configMAX_SYSCALL_INTERRUPT_PRIORITY )
-#define tmrHIGHER_PRIORITY		( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
+*  interrupt priority.  Counter-intuitively, the higher the numeric number the
+*  lower the logical priority. http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+#define tmrLOWER_PRIORITY       ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define tmrHIGHER_PRIORITY      ( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
 /*-----------------------------------------------------------*/
 
 /* Handlers for the two timer peripherals - two channels are used in the TC0
-timer. */
+ * timer. */
 void vT32_0_Handler( void );
 void vT32_1_Handler( void );
 
@@ -61,32 +61,31 @@ void vT32_1_Handler( void );
 void vInitialiseTimerForIntQueueTest( void )
 {
     /* Configure the timer channels. */
-	MAP_Timer32_initModule( (uint32_t)TIMER32_0_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
-	MAP_Timer32_setCount( (uint32_t)TIMER32_0_BASE, CS_getMCLK() / tmrTIMER_0_FREQUENCY );
-	MAP_Timer32_enableInterrupt( (uint32_t)TIMER32_0_BASE );
-	MAP_Timer32_startTimer( (uint32_t)TIMER32_0_BASE, false );
-	MAP_Interrupt_setPriority( INT_T32_INT1, tmrLOWER_PRIORITY );
-	MAP_Interrupt_enableInterrupt( INT_T32_INT1 );
+    MAP_Timer32_initModule( ( uint32_t ) TIMER32_0_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
+    MAP_Timer32_setCount( ( uint32_t ) TIMER32_0_BASE, CS_getMCLK() / tmrTIMER_0_FREQUENCY );
+    MAP_Timer32_enableInterrupt( ( uint32_t ) TIMER32_0_BASE );
+    MAP_Timer32_startTimer( ( uint32_t ) TIMER32_0_BASE, false );
+    MAP_Interrupt_setPriority( INT_T32_INT1, tmrLOWER_PRIORITY );
+    MAP_Interrupt_enableInterrupt( INT_T32_INT1 );
 
-	MAP_Timer32_initModule( (uint32_t)TIMER32_1_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
-	MAP_Timer32_setCount( (uint32_t)TIMER32_1_BASE, CS_getMCLK() / tmrTIMER_1_FREQUENCY );
-	MAP_Timer32_enableInterrupt( (uint32_t)TIMER32_1_BASE );
-	MAP_Timer32_startTimer( (uint32_t)TIMER32_1_BASE, false );
-	MAP_Interrupt_setPriority( INT_T32_INT2, tmrHIGHER_PRIORITY );
-	MAP_Interrupt_enableInterrupt( INT_T32_INT2 );
+    MAP_Timer32_initModule( ( uint32_t ) TIMER32_1_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
+    MAP_Timer32_setCount( ( uint32_t ) TIMER32_1_BASE, CS_getMCLK() / tmrTIMER_1_FREQUENCY );
+    MAP_Timer32_enableInterrupt( ( uint32_t ) TIMER32_1_BASE );
+    MAP_Timer32_startTimer( ( uint32_t ) TIMER32_1_BASE, false );
+    MAP_Interrupt_setPriority( INT_T32_INT2, tmrHIGHER_PRIORITY );
+    MAP_Interrupt_enableInterrupt( INT_T32_INT2 );
 }
 /*-----------------------------------------------------------*/
 
 void vT32_0_Handler( void )
 {
-    MAP_Timer32_clearInterruptFlag( (uint32_t)TIMER32_0_BASE );
-	portYIELD_FROM_ISR( xFirstTimerHandler() );
+    MAP_Timer32_clearInterruptFlag( ( uint32_t ) TIMER32_0_BASE );
+    portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
 void vT32_1_Handler( void )
 {
-    MAP_Timer32_clearInterruptFlag( (uint32_t)TIMER32_1_BASE );
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
+    MAP_Timer32_clearInterruptFlag( ( uint32_t ) TIMER32_1_BASE );
+    portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-

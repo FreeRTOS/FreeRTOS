@@ -22,16 +22,17 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define RTC_CNF_Enable_Mask      0x0010      /* Configuration Flag Enable Mask */
-#define RTC_CNF_Disable_Mask     0xFFEF      /* Configuration Flag Disable Mask */
-#define RTC_LSB_Mask             0x0000FFFF  /* RTC LSB Mask */
-#define RTC_MSB_Mask             0xFFFF0000  /* RTC MSB Mask */
-#define RTC_Prescaler_MSB_Mask   0x000F0000  /* RTC Prescaler MSB Mask */
+#define RTC_CNF_Enable_Mask       0x0010     /* Configuration Flag Enable Mask */
+#define RTC_CNF_Disable_Mask      0xFFEF     /* Configuration Flag Disable Mask */
+#define RTC_LSB_Mask              0x0000FFFF /* RTC LSB Mask */
+#define RTC_MSB_Mask              0xFFFF0000 /* RTC MSB Mask */
+#define RTC_Prescaler_MSB_Mask    0x000F0000 /* RTC Prescaler MSB Mask */
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+
 /*******************************************************************************
 * Function Name  : RTC_DeInit
 * Description    : Deinitializes the RTC peripheral registers to their
@@ -40,10 +41,10 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_DeInit(void)
+void RTC_DeInit( void )
 {
-  MRCC_PeripheralSWResetConfig(MRCC_Peripheral_RTC,ENABLE);
-  MRCC_PeripheralSWResetConfig(MRCC_Peripheral_RTC,DISABLE);
+    MRCC_PeripheralSWResetConfig( MRCC_Peripheral_RTC, ENABLE );
+    MRCC_PeripheralSWResetConfig( MRCC_Peripheral_RTC, DISABLE );
 }
 
 /*******************************************************************************
@@ -61,16 +62,17 @@ void RTC_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_ITConfig(u16 RTC_IT, FunctionalState NewState)
+void RTC_ITConfig( u16 RTC_IT,
+                   FunctionalState NewState )
 {
-  if(NewState == ENABLE)
-  {
-    RTC->CRH |= RTC_IT;
-  }
-  else
-  {
-    RTC->CRH &= ~RTC_IT;
-  }
+    if( NewState == ENABLE )
+    {
+        RTC->CRH |= RTC_IT;
+    }
+    else
+    {
+        RTC->CRH &= ~RTC_IT;
+    }
 }
 
 /*******************************************************************************
@@ -80,10 +82,10 @@ void RTC_ITConfig(u16 RTC_IT, FunctionalState NewState)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_EnterConfigMode(void)
+void RTC_EnterConfigMode( void )
 {
-  /* Set the CNF flag to enter in the Configuration Mode */
-  RTC->CRL |= RTC_CNF_Enable_Mask;
+    /* Set the CNF flag to enter in the Configuration Mode */
+    RTC->CRL |= RTC_CNF_Enable_Mask;
 }
 
 /*******************************************************************************
@@ -93,10 +95,10 @@ void RTC_EnterConfigMode(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_ExitConfigMode(void)
+void RTC_ExitConfigMode( void )
 {
-  /* Reset the CNF flag to exit from the Configuration Mode */
-  RTC->CRL &= RTC_CNF_Disable_Mask;
+    /* Reset the CNF flag to exit from the Configuration Mode */
+    RTC->CRL &= RTC_CNF_Disable_Mask;
 }
 
 /*******************************************************************************
@@ -106,12 +108,13 @@ void RTC_ExitConfigMode(void)
 * Output         : None
 * Return         : RTC counter value.
 *******************************************************************************/
-u32 RTC_GetCounter(void)
+u32 RTC_GetCounter( void )
 {
-  u16 Tmp = 0;
-  Tmp = RTC->CNTL;
-  
-  return (((u32)RTC->CNTH << 16 ) |Tmp) ;
+    u16 Tmp = 0;
+
+    Tmp = RTC->CNTL;
+
+    return( ( ( u32 ) RTC->CNTH << 16 ) | Tmp );
 }
 
 /*******************************************************************************
@@ -121,17 +124,17 @@ u32 RTC_GetCounter(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_SetCounter(u32 CounterValue)
+void RTC_SetCounter( u32 CounterValue )
 {
-  RTC_EnterConfigMode();
-  
+    RTC_EnterConfigMode();
+
 /* COUNTER Config ------------------------------------------------------------*/
-  /* Set RTC COUNTER MSB word */
-  RTC->CNTH =(CounterValue & RTC_MSB_Mask) >> 16;
-  /* Set RTC COUNTER LSB word */
-  RTC->CNTL =(CounterValue & RTC_LSB_Mask);
-  
-  RTC_ExitConfigMode();
+    /* Set RTC COUNTER MSB word */
+    RTC->CNTH = ( CounterValue & RTC_MSB_Mask ) >> 16;
+    /* Set RTC COUNTER LSB word */
+    RTC->CNTL = ( CounterValue & RTC_LSB_Mask );
+
+    RTC_ExitConfigMode();
 }
 
 /*******************************************************************************
@@ -141,17 +144,17 @@ void RTC_SetCounter(u32 CounterValue)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_SetPrescaler(u32 PrescalerValue)
+void RTC_SetPrescaler( u32 PrescalerValue )
 {
-  RTC_EnterConfigMode();
-  
+    RTC_EnterConfigMode();
+
 /* PRESCALER Config ----------------------------------------------------------*/
-  /* Set RTC PRESCALER MSB word */
-  RTC->PRLH = (PrescalerValue & RTC_Prescaler_MSB_Mask) >> 16;
-  /* Set RTC PRESCALER LSB word */
-  RTC->PRLL = (PrescalerValue & RTC_LSB_Mask);
-  
-  RTC_ExitConfigMode();
+    /* Set RTC PRESCALER MSB word */
+    RTC->PRLH = ( PrescalerValue & RTC_Prescaler_MSB_Mask ) >> 16;
+    /* Set RTC PRESCALER LSB word */
+    RTC->PRLL = ( PrescalerValue & RTC_LSB_Mask );
+
+    RTC_ExitConfigMode();
 }
 
 /*******************************************************************************
@@ -161,12 +164,13 @@ void RTC_SetPrescaler(u32 PrescalerValue)
 * Output         : None
 * Return         : RTC prescaler value.
 *******************************************************************************/
-u32 RTC_GetPrescaler(void)
+u32 RTC_GetPrescaler( void )
 {
-  u16 Tmp = 0;
-  Tmp = RTC->PRLL;
-  
-  return (((u32)(RTC->PRLH & 0x000F) << 16 ) | Tmp);
+    u16 Tmp = 0;
+
+    Tmp = RTC->PRLL;
+
+    return( ( ( u32 ) ( RTC->PRLH & 0x000F ) << 16 ) | Tmp );
 }
 
 /*******************************************************************************
@@ -176,17 +180,17 @@ u32 RTC_GetPrescaler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_SetAlarm(u32 AlarmValue)
+void RTC_SetAlarm( u32 AlarmValue )
 {
-  RTC_EnterConfigMode();
-  
+    RTC_EnterConfigMode();
+
 /* ALARM Config --------------------------------------------------------------*/
-  /* Set the ALARM MSB word */
-  RTC->ALRH = (AlarmValue & RTC_MSB_Mask) >> 16;
-  /* Set the ALARM LSB word */
-  RTC->ALRL = (AlarmValue & RTC_LSB_Mask);
-  
-  RTC_ExitConfigMode();
+    /* Set the ALARM MSB word */
+    RTC->ALRH = ( AlarmValue & RTC_MSB_Mask ) >> 16;
+    /* Set the ALARM LSB word */
+    RTC->ALRL = ( AlarmValue & RTC_LSB_Mask );
+
+    RTC_ExitConfigMode();
 }
 
 /*******************************************************************************
@@ -196,11 +200,12 @@ void RTC_SetAlarm(u32 AlarmValue)
 * Output         : None
 * Return         : RTC Divider value.
 *******************************************************************************/
-u32 RTC_GetDivider(void)
+u32 RTC_GetDivider( void )
 {
-  u16 Tmp = 0;
-  Tmp = RTC->DIVL ;
-  return (((u32)(RTC->DIVH & 0x000F) << 16 ) | Tmp);
+    u16 Tmp = 0;
+
+    Tmp = RTC->DIVL;
+    return( ( ( u32 ) ( RTC->DIVH & 0x000F ) << 16 ) | Tmp );
 }
 
 /*******************************************************************************
@@ -211,29 +216,33 @@ u32 RTC_GetDivider(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_WaitForLastTask(void)
+void RTC_WaitForLastTask( void )
 {
-  /* Loop until RTOFF flag is set */
-  while ((RTC->CRL & RTC_FLAG_RTOFF) == RESET);
+    /* Loop until RTOFF flag is set */
+    while( ( RTC->CRL & RTC_FLAG_RTOFF ) == RESET )
+    {
+    }
 }
 
 /*******************************************************************************
 * Function Name  : RTC_WaitForSynchro
-* Description    : Waits until the RTC registers (RTC_CNT, RTC_ALR and RTC_PRL) 
+* Description    : Waits until the RTC registers (RTC_CNT, RTC_ALR and RTC_PRL)
 *                  are synchronized with RTC APB clock.
-*                  This function must be called before any read operation after 
+*                  This function must be called before any read operation after
 *                  an APB reset or an APB clock stop.
 * Input          : None
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_WaitForSynchro(void)
+void RTC_WaitForSynchro( void )
 {
-  /* Clear RSF flag */
-  RTC->CRL &= ~RTC_FLAG_RSF;
-  
-  /* Loop until RSF flag is set */
-  while((RTC->CRL & RTC_FLAG_RSF)== RESET);
+    /* Clear RSF flag */
+    RTC->CRL &= ~RTC_FLAG_RSF;
+
+    /* Loop until RSF flag is set */
+    while( ( RTC->CRL & RTC_FLAG_RSF ) == RESET )
+    {
+    }
 }
 
 /*******************************************************************************
@@ -249,16 +258,16 @@ void RTC_WaitForSynchro(void)
 * Output         : None
 * Return         : The new state of RTC_FLAG (SET or RESET).
 *******************************************************************************/
-FlagStatus RTC_GetFlagStatus(u16 RTC_FLAG)
+FlagStatus RTC_GetFlagStatus( u16 RTC_FLAG )
 {
-  if((RTC->CRL & RTC_FLAG) != RESET)
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( RTC->CRL & RTC_FLAG ) != RESET )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
@@ -275,10 +284,10 @@ FlagStatus RTC_GetFlagStatus(u16 RTC_FLAG)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_ClearFlag(u16 RTC_FLAG)
+void RTC_ClearFlag( u16 RTC_FLAG )
 {
-  /* Clear the coressponding RTC flag */
-  RTC->CRL &= ~RTC_FLAG;
+    /* Clear the coressponding RTC flag */
+    RTC->CRL &= ~RTC_FLAG;
 }
 
 /*******************************************************************************
@@ -293,22 +302,22 @@ void RTC_ClearFlag(u16 RTC_FLAG)
 * Output         : None
 * Return         : The new state of the RTC_IT (SET or RESET).
 *******************************************************************************/
-ITStatus RTC_GetITStatus(u16 RTC_IT)
+ITStatus RTC_GetITStatus( u16 RTC_IT )
 {
-  if(((RTC->CRH & RTC_IT) != RESET)&& ((RTC->CRL & RTC_IT) != RESET))
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( ( RTC->CRH & RTC_IT ) != RESET ) && ( ( RTC->CRL & RTC_IT ) != RESET ) )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
 * Function Name  : RTC_ClearITPendingBit
 * Description    : Clears the RTC’s interrupt pending bits.
-* Input          : RTC_IT: specifies the interrupt pending bit to clear. 
+* Input          : RTC_IT: specifies the interrupt pending bit to clear.
 *                   This parameter can be any combination of one or more of
 *                   the following values:
 *                       - RTC_IT_Overflow: Overflow interrupt
@@ -317,10 +326,10 @@ ITStatus RTC_GetITStatus(u16 RTC_IT)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_ClearITPendingBit(u16 RTC_IT)
+void RTC_ClearITPendingBit( u16 RTC_IT )
 {
-  /* Clear the coressponding RTC pending bit */
-  RTC->CRL &= ~RTC_IT;
+    /* Clear the coressponding RTC pending bit */
+    RTC->CRL &= ~RTC_IT;
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

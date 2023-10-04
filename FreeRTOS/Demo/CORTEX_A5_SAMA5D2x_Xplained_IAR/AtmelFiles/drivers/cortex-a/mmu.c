@@ -70,20 +70,20 @@
 /*         Local variables                                                       */
 /*------------------------------------------------------------------------------ */
 
-ALIGNED(16384) static uint32_t _tlb[4096];
+ALIGNED( 16384 ) static uint32_t _tlb[ 4096 ];
 
 /*------------------------------------------------------------------------------ */
 /*         Exported functions                                                    */
 /*------------------------------------------------------------------------------ */
 
-void mmu_initialize(void)
+void mmu_initialize( void )
 {
-	board_setup_tlb(_tlb);
-	cp15_write_ttb((unsigned int)_tlb);
-	/* Program the domain access register */
-	/* only domain 15: access are not checked */
-	cp15_write_domain_access_control(0xC0000000);
-	asm volatile("": : :"memory");
-	asm("dsb");
-	asm("isb");
+    board_setup_tlb( _tlb );
+    cp15_write_ttb( ( unsigned int ) _tlb );
+    /* Program the domain access register */
+    /* only domain 15: access are not checked */
+    cp15_write_domain_access_control( 0xC0000000 );
+    asm volatile ( "" : : : "memory" );
+    asm ( "dsb" );
+    asm ( "isb" );
 }

@@ -27,7 +27,7 @@ either as a queue which allows multiple messages to be posted to a
 mailbox, or as a rendez-vous point where only one message can be
 posted at a time. lwIP works with both kinds, but the former type will
 be more efficient. A message in a mailbox is just a pointer, nothing
-more. 
+more.
 
 Semaphores are represented by the type "sys_sem_t" which is typedef'd
 in the sys_arch.h file. Mailboxes are equivalently represented by the
@@ -108,7 +108,7 @@ The following functions must be implemented by the sys_arch:
   timeout.
 
   Note that a function with a similar name, sys_mbox_fetch(), is
-  implemented by lwIP. 
+  implemented by lwIP.
 
 - u32_t sys_arch_mbox_tryfetch(sys_mbox_t mbox, void **msg)
 
@@ -122,7 +122,7 @@ The following functions must be implemented by the sys_arch:
     #define sys_arch_mbox_tryfetch(mbox,msg) \
       sys_arch_mbox_fetch(mbox,msg,1)
   although this would introduce unnecessary delays.
-  
+
 If threads are supported by the underlying operating system and if
 such functionality is needed in lwIP, the following function will have
 to be implemented as well:
@@ -168,7 +168,7 @@ Additional files required for the "OS support" emulation layer:
 -------------------------------------------------------------------------------
 
 cc.h       - Architecture environment, some compiler specific, some
-             environment specific (probably should move env stuff 
+             environment specific (probably should move env stuff
              to sys_arch.h.)
 
   Typedefs for the types used by lwip -

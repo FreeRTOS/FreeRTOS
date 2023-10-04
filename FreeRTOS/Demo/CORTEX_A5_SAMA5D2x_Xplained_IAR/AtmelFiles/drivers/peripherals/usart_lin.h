@@ -38,56 +38,67 @@
  */
 
 #ifndef _USART_LIN_
-#define _USART_LIN_
+    #define _USART_LIN_
 
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
 /*------------------------------------------------------------------------------
  *         Definitions
  *------------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*------------------------------------------------------------------------------*/
 /*         Exported functions                                                   */
 /*------------------------------------------------------------------------------*/
 
-extern void usart_lin_reset_status_bits(Usart *usart);
-extern uint32_t usart_lin_get_status_register(Usart *usart);
-extern void usart_lin_set_mode_master_or_slave (Usart* usart, uint32_t mode_master_or_slave);
-extern void usart_lin_abort_tx(Usart *usart);
-extern void usart_lin_send_wakeup_signal(Usart *usart);
-extern void usart_lin_set_node_action(Usart *usart, uint8_t action);
-extern void usart_lin_disable_parity(Usart *usart);
-extern void usart_lin_enable_parity(Usart *usart);
-extern void usart_lin_disable_checksum(Usart *usart);
-extern void usart_lin_enable_checksum(Usart *usart);
-extern void usart_lin_set_checksum_type(Usart *usart, uint8_t type);
-extern void usart_lin_set_data_len_mode(Usart *usart, uint8_t mode);
-extern void usart_lin_disable_frame_slot(Usart *usart);
-extern void usart_lin_enable_frame_slot(Usart *usart);
-extern void usart_lin_set_wakeup_signal_type(Usart *usart, uint8_t type);
-extern void usart_lin_set_frame_data_len(Usart *usart, uint8_t len);
-extern void usart_lin_disable_dmac_mode(Usart *usart);
-extern void usart_lin_enable_dmac_mode(Usart *usart);
-extern void usart_lin_set_tx_identifier(Usart *usart, uint8_t id);
-extern uint8_t usart_lin_read_identifier(Usart *usart);
-extern uint8_t usart_lin_get_data_length(Usart *usart);
+    extern void usart_lin_reset_status_bits( Usart * usart );
+    extern uint32_t usart_lin_get_status_register( Usart * usart );
+    extern void usart_lin_set_mode_master_or_slave( Usart * usart,
+                                                    uint32_t mode_master_or_slave );
+    extern void usart_lin_abort_tx( Usart * usart );
+    extern void usart_lin_send_wakeup_signal( Usart * usart );
+    extern void usart_lin_set_node_action( Usart * usart,
+                                           uint8_t action );
+    extern void usart_lin_disable_parity( Usart * usart );
+    extern void usart_lin_enable_parity( Usart * usart );
+    extern void usart_lin_disable_checksum( Usart * usart );
+    extern void usart_lin_enable_checksum( Usart * usart );
+    extern void usart_lin_set_checksum_type( Usart * usart,
+                                             uint8_t type );
+    extern void usart_lin_set_data_len_mode( Usart * usart,
+                                             uint8_t mode );
+    extern void usart_lin_disable_frame_slot( Usart * usart );
+    extern void usart_lin_enable_frame_slot( Usart * usart );
+    extern void usart_lin_set_wakeup_signal_type( Usart * usart,
+                                                  uint8_t type );
+    extern void usart_lin_set_frame_data_len( Usart * usart,
+                                              uint8_t len );
+    extern void usart_lin_disable_dmac_mode( Usart * usart );
+    extern void usart_lin_enable_dmac_mode( Usart * usart );
+    extern void usart_lin_set_tx_identifier( Usart * usart,
+                                             uint8_t id );
+    extern uint8_t usart_lin_read_identifier( Usart * usart );
+    extern uint8_t usart_lin_get_data_length( Usart * usart );
 
 
-#ifdef CONFIG_HAVE_USART_FIFO
-extern uint32_t usart_lin_read_stream(Usart *usart, uint8_t *stream, uint32_t len);
-extern uint32_t usart_lin_write_stream(Usart *usart, uint8_t *stream, uint32_t len);
-#endif
+    #ifdef CONFIG_HAVE_USART_FIFO
+        extern uint32_t usart_lin_read_stream( Usart * usart,
+                                               uint8_t * stream,
+                                               uint32_t len );
+        extern uint32_t usart_lin_write_stream( Usart * usart,
+                                                uint8_t * stream,
+                                                uint32_t len );
+    #endif
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif	/* #ifndef _USART_LIN_ */
+#endif /* #ifndef _USART_LIN_ */

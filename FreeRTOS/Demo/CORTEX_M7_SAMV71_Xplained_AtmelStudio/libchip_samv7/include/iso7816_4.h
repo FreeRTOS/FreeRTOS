@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -27,7 +27,8 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+
 /** \page
  *
  *  \section Purpose
@@ -61,42 +62,38 @@
  *----------------------------------------------------------------------------*/
 
 /** Size max of Answer To Reset */
-#define ATR_SIZE_MAX            55
+#define ATR_SIZE_MAX    55
 
 /** NULL byte to restart byte procedure */
-#define ISO_NULL_VAL            0x60
+#define ISO_NULL_VAL    0x60
 
 /*------------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
- 
-extern void ISO7816_Init( 
-	Usart *pUsart, 
-	uint32_t usartId , 
-	const Pin pPinIso7816RstMC );
+
+extern void ISO7816_Init( Usart * pUsart,
+                          uint32_t usartId,
+                          const Pin pPinIso7816RstMC );
 
 extern void ISO7816_IccPowerOff( void );
 
-extern uint16_t ISO7816_XfrBlockTPDU_T0(
-	const uint8_t *pAPDU,
-	uint8_t *pMessage,
-	uint16_t wLength );
+extern uint16_t ISO7816_XfrBlockTPDU_T0( const uint8_t * pAPDU,
+                                         uint8_t * pMessage,
+                                         uint16_t wLength );
 
 extern void ISO7816_Escape( void );
 
-extern void ISO7816_RestartClock( void);
+extern void ISO7816_RestartClock( void );
 
 extern void ISO7816_StopClock( void );
 
 extern void ISO7816_toAPDU( void );
 
-extern void ISO7816_Datablock_ATR( 
-	uint8_t* pAtr, 
-	uint8_t* pLength );
+extern void ISO7816_Datablock_ATR( uint8_t * pAtr,
+                                   uint8_t * pLength );
 
-extern void ISO7816_SetDataRateandClockFrequency( 
-	uint32_t dwClockFrequency, 
-	uint32_t dwDataRate );
+extern void ISO7816_SetDataRateandClockFrequency( uint32_t dwClockFrequency,
+                                                  uint32_t dwDataRate );
 
 extern uint8_t ISO7816_StatusReset( void );
 
@@ -104,7 +101,6 @@ extern void ISO7816_cold_reset( void );
 
 extern void ISO7816_warm_reset( void );
 
-extern void ISO7816_Decode_ATR( uint8_t* pAtr );
+extern void ISO7816_Decode_ATR( uint8_t * pAtr );
 
 #endif /* ISO7816_4_H */
-

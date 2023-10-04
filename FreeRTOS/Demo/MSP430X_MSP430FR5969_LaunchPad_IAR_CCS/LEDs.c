@@ -40,33 +40,33 @@
 #include "driverlib.h"
 
 /* Port/pin definitions. */
-#define partstNUM_LEDS	2
+#define partstNUM_LEDS    2
 const uint8_t ucPorts[ partstNUM_LEDS ] = { GPIO_PORT_P1, GPIO_PORT_P4 };
 const uint16_t usPins[ partstNUM_LEDS ] = { GPIO_PIN0, GPIO_PIN6 };
 
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
+void vParTestSetLED( UBaseType_t uxLED,
+                     BaseType_t xValue )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		if( xValue == pdFALSE )
-		{
-			GPIO_setOutputLowOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
-		}
-		else
-		{
-			GPIO_setOutputHighOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
-		}
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        if( xValue == pdFALSE )
+        {
+            GPIO_setOutputLowOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
+        }
+        else
+        {
+            GPIO_setOutputHighOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( UBaseType_t uxLED )
 {
-	if( uxLED < partstNUM_LEDS )
-	{
-		GPIO_toggleOutputOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
-	}
+    if( uxLED < partstNUM_LEDS )
+    {
+        GPIO_toggleOutputOnPin( ucPorts[ uxLED ], usPins[ uxLED ] );
+    }
 }
-

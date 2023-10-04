@@ -26,9 +26,9 @@
 
 
 /* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER for port 1.
-
-Note that this driver is written to test the RTOS port and is not intended
-to represent an optimised solution. */
+ *
+ * Note that this driver is written to test the RTOS port and is not intended
+ * to represent an optimised solution. */
 
 /* Standard include files. */
 #include <stdlib.h>
@@ -45,30 +45,34 @@ to represent an optimised solution. */
 /*
  * Initialise port 1 for interrupt driven communications.
  */
-xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud,
+                                       unsigned portBASE_TYPE uxQueueLength )
 {
-	return NULL;
+    return NULL;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort,
+                                     signed char * pcRxedChar,
+                                     TickType_t xBlockTime )
 {
-	return pdFALSE;
+    return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort,
+                                     signed char cOutChar,
+                                     TickType_t xBlockTime )
 {
-signed portBASE_TYPE xReturn = pdPASS;
+    signed portBASE_TYPE xReturn = pdPASS;
 
-	return xReturn;
+    return xReturn;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
-{	
-	/* Not supported. */
-	( void ) xPort;
+{
+    /* Not supported. */
+    ( void ) xPort;
 }
 /*-----------------------------------------------------------*/
-

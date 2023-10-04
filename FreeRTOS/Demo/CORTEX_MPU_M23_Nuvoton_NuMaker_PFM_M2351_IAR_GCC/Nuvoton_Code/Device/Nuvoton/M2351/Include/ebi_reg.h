@@ -9,22 +9,21 @@
 #define __EBI_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- External Bus Interface Controller -------------------------*/
+
 /**
-    @addtogroup EBI External Bus Interface Controller(EBI)
-    Memory Mapped Structure for EBI Controller
-@{ */
+ *  @addtogroup EBI External Bus Interface Controller(EBI)
+ *  Memory Mapped Structure for EBI Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var EBI_T::CTL0
      * Offset: 0x00  External Bus Interface Control Register
@@ -90,60 +89,59 @@ typedef struct
      * |        |          |R2R idle cycle = (R2R * EBI_MCLK).
      * |        |          |When read action is finish and next action is going to read, R2R idle cycle is inserted and EBI_nCS return to idle state.
      */
-    __IO uint32_t CTL0;                  /*!< [0x0000] External Bus Interface Bank0 Control Register                    */
-    __IO uint32_t TCTL0;                 /*!< [0x0004] External Bus Interface Bank0 Timing Control Register             */
-    __I  uint32_t RESERVE0[2];
-    __IO uint32_t CTL1;                  /*!< [0x0010] External Bus Interface Bank1 Control Register                    */
-    __IO uint32_t TCTL1;                 /*!< [0x0014] External Bus Interface Bank1 Timing Control Register             */
-    __I  uint32_t RESERVE1[2];
-    __IO uint32_t CTL2;                  /*!< [0x0020] External Bus Interface Bank2 Control Register                    */
-    __IO uint32_t TCTL2;                 /*!< [0x0024] External Bus Interface Bank2 Timing Control Register             */
-
+    __IO uint32_t CTL0;  /*!< [0x0000] External Bus Interface Bank0 Control Register                    */
+    __IO uint32_t TCTL0; /*!< [0x0004] External Bus Interface Bank0 Timing Control Register             */
+    __I uint32_t RESERVE0[ 2 ];
+    __IO uint32_t CTL1;  /*!< [0x0010] External Bus Interface Bank1 Control Register                    */
+    __IO uint32_t TCTL1; /*!< [0x0014] External Bus Interface Bank1 Timing Control Register             */
+    __I uint32_t RESERVE1[ 2 ];
+    __IO uint32_t CTL2;  /*!< [0x0020] External Bus Interface Bank2 Control Register                    */
+    __IO uint32_t TCTL2; /*!< [0x0024] External Bus Interface Bank2 Timing Control Register             */
 } EBI_T;
 
 /**
-    @addtogroup EBI_CONST EBI Bit Field Definition
-    Constant Definitions for EBI Controller
-@{ */
+ *  @addtogroup EBI_CONST EBI Bit Field Definition
+ *  Constant Definitions for EBI Controller
+ * @{ */
 
-#define EBI_CTL_EN_Pos                   (0)                                               /*!< EBI_T::CTL0: EN Position                  */
-#define EBI_CTL_EN_Msk                   (0x1ul << EBI_CTL_EN_Pos)                         /*!< EBI_T::CTL0: EN Mask                      */
+#define EBI_CTL_EN_Pos          ( 0 )                                                      /*!< EBI_T::CTL0: EN Position                  */
+#define EBI_CTL_EN_Msk          ( 0x1ul << EBI_CTL_EN_Pos )                                /*!< EBI_T::CTL0: EN Mask                      */
 
-#define EBI_CTL_DW16_Pos                 (1)                                               /*!< EBI_T::CTL0: DW16 Position                */
-#define EBI_CTL_DW16_Msk                 (0x1ul << EBI_CTL_DW16_Pos)                       /*!< EBI_T::CTL0: DW16 Mask                    */
+#define EBI_CTL_DW16_Pos        ( 1 )                                                      /*!< EBI_T::CTL0: DW16 Position                */
+#define EBI_CTL_DW16_Msk        ( 0x1ul << EBI_CTL_DW16_Pos )                              /*!< EBI_T::CTL0: DW16 Mask                    */
 
-#define EBI_CTL_CSPOLINV_Pos             (2)                                               /*!< EBI_T::CTL0: CSPOLINV Position            */
-#define EBI_CTL_CSPOLINV_Msk             (0x1ul << EBI_CTL_CSPOLINV_Pos)                   /*!< EBI_T::CTL0: CSPOLINV Mask                */
+#define EBI_CTL_CSPOLINV_Pos    ( 2 )                                                      /*!< EBI_T::CTL0: CSPOLINV Position            */
+#define EBI_CTL_CSPOLINV_Msk    ( 0x1ul << EBI_CTL_CSPOLINV_Pos )                          /*!< EBI_T::CTL0: CSPOLINV Mask                */
 
-#define EBI_CTL_ADSEPEN_Pos              (3)                                               /*!< EBI_T::CTL0: ADSEPEN Position            */
-#define EBI_CTL_ADSEPEN_Msk              (0x1ul << EBI_CTL_ADSEPEN_Pos)                    /*!< EBI_T::CTL0: ADSEPEN Mask                */
+#define EBI_CTL_ADSEPEN_Pos     ( 3 )                                                      /*!< EBI_T::CTL0: ADSEPEN Position            */
+#define EBI_CTL_ADSEPEN_Msk     ( 0x1ul << EBI_CTL_ADSEPEN_Pos )                           /*!< EBI_T::CTL0: ADSEPEN Mask                */
 
-#define EBI_CTL_CACCESS_Pos              (4)                                               /*!< EBI_T::CTL0: CACCESS Position             */
-#define EBI_CTL_CACCESS_Msk              (0x1ul << EBI_CTL_CACCESS_Pos)                    /*!< EBI_T::CTL0: CACCESS Mask                 */
+#define EBI_CTL_CACCESS_Pos     ( 4 )                                                      /*!< EBI_T::CTL0: CACCESS Position             */
+#define EBI_CTL_CACCESS_Msk     ( 0x1ul << EBI_CTL_CACCESS_Pos )                           /*!< EBI_T::CTL0: CACCESS Mask                 */
 
-#define EBI_CTL_MCLKDIV_Pos              (8)                                               /*!< EBI_T::CTL0: MCLKDIV Position             */
-#define EBI_CTL_MCLKDIV_Msk              (0x7ul << EBI_CTL_MCLKDIV_Pos)                    /*!< EBI_T::CTL0: MCLKDIV Mask                 */
+#define EBI_CTL_MCLKDIV_Pos     ( 8 )                                                      /*!< EBI_T::CTL0: MCLKDIV Position             */
+#define EBI_CTL_MCLKDIV_Msk     ( 0x7ul << EBI_CTL_MCLKDIV_Pos )                           /*!< EBI_T::CTL0: MCLKDIV Mask                 */
 
-#define EBI_CTL_TALE_Pos                 (16)                                              /*!< EBI_T::CTL0: TALE Position                */
-#define EBI_CTL_TALE_Msk                 (0x7ul << EBI_CTL_TALE_Pos)                       /*!< EBI_T::CTL0: TALE Mask                    */
+#define EBI_CTL_TALE_Pos        ( 16 )                                                     /*!< EBI_T::CTL0: TALE Position                */
+#define EBI_CTL_TALE_Msk        ( 0x7ul << EBI_CTL_TALE_Pos )                              /*!< EBI_T::CTL0: TALE Mask                    */
 
-#define EBI_TCTL_TACC_Pos                (3)                                               /*!< EBI_T::TCTL0: TACC Position               */
-#define EBI_TCTL_TACC_Msk                (0x1ful << EBI_TCTL_TACC_Pos)                     /*!< EBI_T::TCTL0: TACC Mask                   */
+#define EBI_TCTL_TACC_Pos       ( 3 )                                                      /*!< EBI_T::TCTL0: TACC Position               */
+#define EBI_TCTL_TACC_Msk       ( 0x1ful << EBI_TCTL_TACC_Pos )                            /*!< EBI_T::TCTL0: TACC Mask                   */
 
-#define EBI_TCTL_TAHD_Pos                (8)                                               /*!< EBI_T::TCTL0: TAHD Position               */
-#define EBI_TCTL_TAHD_Msk                (0x7ul << EBI_TCTL_TAHD_Pos)                      /*!< EBI_T::TCTL0: TAHD Mask                   */
+#define EBI_TCTL_TAHD_Pos       ( 8 )                                                      /*!< EBI_T::TCTL0: TAHD Position               */
+#define EBI_TCTL_TAHD_Msk       ( 0x7ul << EBI_TCTL_TAHD_Pos )                             /*!< EBI_T::TCTL0: TAHD Mask                   */
 
-#define EBI_TCTL_W2X_Pos                 (12)                                              /*!< EBI_T::TCTL0: W2X Position                */
-#define EBI_TCTL_W2X_Msk                 (0xful << EBI_TCTL_W2X_Pos)                       /*!< EBI_T::TCTL0: W2X Mask                    */
+#define EBI_TCTL_W2X_Pos        ( 12 )                                                     /*!< EBI_T::TCTL0: W2X Position                */
+#define EBI_TCTL_W2X_Msk        ( 0xful << EBI_TCTL_W2X_Pos )                              /*!< EBI_T::TCTL0: W2X Mask                    */
 
-#define EBI_TCTL_RAHDOFF_Pos             (22)                                              /*!< EBI_T::TCTL0: RAHDOFF Position            */
-#define EBI_TCTL_RAHDOFF_Msk             (0x1ul << EBI_TCTL_RAHDOFF_Pos)                   /*!< EBI_T::TCTL0: RAHDOFF Mask                */
+#define EBI_TCTL_RAHDOFF_Pos    ( 22 )                                                     /*!< EBI_T::TCTL0: RAHDOFF Position            */
+#define EBI_TCTL_RAHDOFF_Msk    ( 0x1ul << EBI_TCTL_RAHDOFF_Pos )                          /*!< EBI_T::TCTL0: RAHDOFF Mask                */
 
-#define EBI_TCTL_WAHDOFF_Pos             (23)                                              /*!< EBI_T::TCTL0: WAHDOFF Position            */
-#define EBI_TCTL_WAHDOFF_Msk             (0x1ul << EBI_TCTL_WAHDOFF_Pos)                   /*!< EBI_T::TCTL0: WAHDOFF Mask                */
+#define EBI_TCTL_WAHDOFF_Pos    ( 23 )                                                     /*!< EBI_T::TCTL0: WAHDOFF Position            */
+#define EBI_TCTL_WAHDOFF_Msk    ( 0x1ul << EBI_TCTL_WAHDOFF_Pos )                          /*!< EBI_T::TCTL0: WAHDOFF Mask                */
 
-#define EBI_TCTL_R2R_Pos                 (24)                                              /*!< EBI_T::TCTL0: R2R Position                */
-#define EBI_TCTL_R2R_Msk                 (0xful << EBI_TCTL_R2R_Pos)                       /*!< EBI_T::TCTL0: R2R Mask                    */
+#define EBI_TCTL_R2R_Pos        ( 24 )                                                     /*!< EBI_T::TCTL0: R2R Position                */
+#define EBI_TCTL_R2R_Msk        ( 0xful << EBI_TCTL_R2R_Pos )                              /*!< EBI_T::TCTL0: R2R Mask                    */
 
 /**@}*/ /* EBI_CONST */
 /**@}*/ /* end of EBI register group */

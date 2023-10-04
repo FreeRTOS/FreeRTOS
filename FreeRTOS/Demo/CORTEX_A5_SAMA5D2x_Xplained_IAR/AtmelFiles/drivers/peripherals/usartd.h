@@ -33,45 +33,48 @@
 #include "mutex.h"
 #include "io.h"
 
-#define USARTD_SUCCESS         (0)
-#define USARTD_INVALID_ID      (1)
-#define USARTD_INVALID_BITRATE (2)
-#define USARTD_ERROR_LOCK      (3)
-#define USARTD_ERROR_DUPLEX    (4)
+#define USARTD_SUCCESS            ( 0 )
+#define USARTD_INVALID_ID         ( 1 )
+#define USARTD_INVALID_BITRATE    ( 2 )
+#define USARTD_ERROR_LOCK         ( 3 )
+#define USARTD_ERROR_DUPLEX       ( 4 )
 
 struct _usart_desc;
 
-typedef void (*usartd_callback_t)(struct _usart_desc* spid, void* args);
+typedef void (* usartd_callback_t)( struct _usart_desc * spid,
+                                    void * args );
 
 struct _usart_desc
 {
-	Usart*  addr;
-	uint32_t mode;
-	uint32_t baudrate;
-	uint8_t transfert_mode;
-	/* implicit internal padding is mandatory here */
-	mutex_t mutex;
-	uint32_t region_start;
-	uint32_t region_end;
-	usartd_callback_t callback;
-	void*   cb_args;
+    Usart * addr;
+    uint32_t mode;
+    uint32_t baudrate;
+    uint8_t transfert_mode;
+    /* implicit internal padding is mandatory here */
+    mutex_t mutex;
+    uint32_t region_start;
+    uint32_t region_end;
+    usartd_callback_t callback;
+    void * cb_args;
 };
 
 enum _usartd_trans_mode
 {
-	USARTD_MODE_POLLING,
-	USARTD_MODE_FIFO,
-	USARTD_MODE_DMA
+    USARTD_MODE_POLLING,
+    USARTD_MODE_FIFO,
+    USARTD_MODE_DMA
 };
 
-extern void usartd_configure(struct _usart_desc* desc);
-extern uint32_t usartd_transfert(struct _usart_desc* desc, struct _buffer* rx,
-			  struct _buffer* tx, usartd_callback_t cb,
-			  void* user_args);
-extern void usartd_finish_transfert_callback(struct _usart_desc* desc,
-				      void* user_args);
-extern void usartd_finish_transfert(struct _usart_desc* desc);
-extern uint32_t usartd_is_busy(const struct _usart_desc* desc);
-extern void usartd_wait_transfert(const struct _usart_desc* desc);
+extern void usartd_configure( struct _usart_desc * desc );
+extern uint32_t usartd_transfert( struct _usart_desc * desc,
+                                  struct _buffer * rx,
+                                  struct _buffer * tx,
+                                  usartd_callback_t cb,
+                                  void * user_args );
+extern void usartd_finish_transfert_callback( struct _usart_desc * desc,
+                                              void * user_args );
+extern void usartd_finish_transfert( struct _usart_desc * desc );
+extern uint32_t usartd_is_busy( const struct _usart_desc * desc );
+extern void usartd_wait_transfert( const struct _usart_desc * desc );
 
 #endif /* USARTD_HEADER__ */

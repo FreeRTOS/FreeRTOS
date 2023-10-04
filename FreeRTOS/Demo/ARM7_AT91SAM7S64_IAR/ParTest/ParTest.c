@@ -32,44 +32,43 @@
  * Simple parallel port IO routines for the LED's.
  *-----------------------------------------------------------*/
 
-const unsigned long led_mask[ NB_LED ]= { LED1, LED2, LED3, LED4 };
+const unsigned long led_mask[ NB_LED ] = { LED1, LED2, LED3, LED4 };
 
 void vParTestInitialise( void )
-{	
-	/* Start with all LED's off. */
-	AT91F_PIO_SetOutput( AT91C_BASE_PIOA, LED_MASK );	
+{
+    /* Start with all LED's off. */
+    AT91F_PIO_SetOutput( AT91C_BASE_PIOA, LED_MASK );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < ( portBASE_TYPE ) NB_LED )
-	{
-		if( xValue )
-		{
-			AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
-		}
-		else
-		{
-			AT91F_PIO_ClearOutput( AT91C_BASE_PIOA, led_mask[ uxLED ]);
-		}
-	}
+    if( uxLED < ( portBASE_TYPE ) NB_LED )
+    {
+        if( xValue )
+        {
+            AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
+        }
+        else
+        {
+            AT91F_PIO_ClearOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < ( portBASE_TYPE ) NB_LED )
-	{
-		if( AT91F_PIO_GetInput( AT91C_BASE_PIOA ) & led_mask[ uxLED ] )
-		{
-			AT91F_PIO_ClearOutput( AT91C_BASE_PIOA, led_mask[ uxLED ]);
-		}
-		else
-		{
-			AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );					
-		}
-	}
+    if( uxLED < ( portBASE_TYPE ) NB_LED )
+    {
+        if( AT91F_PIO_GetInput( AT91C_BASE_PIOA ) & led_mask[ uxLED ] )
+        {
+            AT91F_PIO_ClearOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
+        }
+        else
+        {
+            AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
+        }
+    }
 }
-
-

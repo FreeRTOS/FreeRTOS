@@ -28,17 +28,17 @@
 /* EXTIT Trigger enumeration */
 typedef enum
 {
-  EXTIT_ITTrigger_Falling = 1,
-  EXTIT_ITTrigger_Rising
-}EXTITTrigger_TypeDef;
+    EXTIT_ITTrigger_Falling = 1,
+    EXTIT_ITTrigger_Rising
+} EXTITTrigger_TypeDef;
 
 /* EXTIT Init Structure definition */
 typedef struct
 {
-  u32 EXTIT_ITLine;
-  EXTITTrigger_TypeDef EXTIT_ITTrigger;
-  FunctionalState EXTIT_ITLineCmd;
-}EXTIT_InitTypeDef;
+    u32 EXTIT_ITLine;
+    EXTITTrigger_TypeDef EXTIT_ITTrigger;
+    FunctionalState EXTIT_ITLineCmd;
+} EXTIT_InitTypeDef;
 
 /* Exported constants --------------------------------------------------------*/
 /* EXTIT Lines */
@@ -63,14 +63,14 @@ typedef struct
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-void EXTIT_DeInit(void);
-void EXTIT_Init(EXTIT_InitTypeDef* EXTIT_InitStruct);
-void EXTIT_StructInit(EXTIT_InitTypeDef* EXTIT_InitStruct);
-void EXTIT_GenerateSWInterrupt(u16 EXTIT_ITLine);
-FlagStatus EXTIT_GetFlagStatus(u16 EXTIT_ITLine);
-void EXTIT_ClearFlag(u16 EXTIT_ITLine);
-ITStatus EXTIT_GetITStatus(u16 EXTIT_ITLine);
-void EXTIT_ClearITPendingBit(u16 EXTIT_ITLine);
+void EXTIT_DeInit( void );
+void EXTIT_Init( EXTIT_InitTypeDef * EXTIT_InitStruct );
+void EXTIT_StructInit( EXTIT_InitTypeDef * EXTIT_InitStruct );
+void EXTIT_GenerateSWInterrupt( u16 EXTIT_ITLine );
+FlagStatus EXTIT_GetFlagStatus( u16 EXTIT_ITLine );
+void EXTIT_ClearFlag( u16 EXTIT_ITLine );
+ITStatus EXTIT_GetITStatus( u16 EXTIT_ITLine );
+void EXTIT_ClearITPendingBit( u16 EXTIT_ITLine );
 
 #endif /* __75x_EXTIT_H */
 

@@ -20,73 +20,75 @@
 
 
 /** @file mec14xx_trace_inline.h
- *MEC14xx Inline TRACE macros
+ * MEC14xx Inline TRACE macros
  */
+
 /** @defgroup MEC14xx TRACE
  */
 
 #ifndef _MEC14XX_TRACE_INLINE_H
-#define _MEC14XX_TRACE_INLINE_H
+    #define _MEC14XX_TRACE_INLINE_H
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#define INLINE_TRACE_ENABLE
+    #define INLINE_TRACE_ENABLE
 
-#ifdef INLINE_TRACE_ENABLE
+    #ifdef INLINE_TRACE_ENABLE
 
 
-#define TRDA (0xA0008c00ul)
+        #define TRDA    ( 0xA0008c00ul )
 
-#define TRHDR() *(volatile uint8_t *)(TRDA)=0xFDu
-#define TRB0(v) *(volatile uint8_t *)(TRDA)=(uint8_t)v
-#define TRB1(v) *(volatile uint8_t *)(TRDA)=(uint8_t)(v>>8)
-#define TRB2(v) *(volatile uint8_t *)(TRDA)=(uint8_t)(v>>16)
-#define TRB3(v) *(volatile uint8_t *)(TRDA)=(uint8_t)(v>>24)
+        #define TRHDR()                                       *( volatile uint8_t * ) ( TRDA ) = 0xFDu
+        #define TRB0( v )                                     *( volatile uint8_t * ) ( TRDA ) = ( uint8_t ) v
+        #define TRB1( v )                                     *( volatile uint8_t * ) ( TRDA ) = ( uint8_t ) ( v >> 8 )
+        #define TRB2( v )                                     *( volatile uint8_t * ) ( TRDA ) = ( uint8_t ) ( v >> 16 )
+        #define TRB3( v )                                     *( volatile uint8_t * ) ( TRDA ) = ( uint8_t ) ( v >> 24 )
 
-#define TRACE0(nbr,cat,b,str) TRHDR();TRB0(nbr);TRB1(nbr);
-#define TRACE1(nbr,cat,b,str,p1) TRHDR();TRB0(nbr);TRB1(nbr);TRB0(p1);TRB1(p1);
-#define TRACE2(nbr,cat,b,str,p1,p2) TRHDR();TRB0(nbr);TRB1(nbr);TRB0(p1);TRB1(p1);TRB0(p2);TRB1(p2);
-#define TRACE3(nbr,cat,b,str,p1,p2,p3) TRHDR();TRB0(nbr);TRB1(nbr);TRB0(p1);TRB1(p1);TRB0(p2);TRB1(p2);TRB0(p3);TRB1(p3);
-#define TRACE4(nbr,cat,b,str,p1,p2,p3,p4) TRHDR();TRB0(nbr);TRB1(nbr);TRB0(p1);TRB1(p1);TRB0(p2);TRB1(p2);TRB0(p3);TRB1(p3);TRB0(p4);TRB1(p4);
-#define TRACE11(nbr,cat,b,str,p1) TRHDR();TRB0(nbr);TRB1(nbr);TRB0(p1);TRB1(p1);TRB2(p1);TRB3(p1);
-#define TRACE12(nbr,cat,b,str,p1,p2) TRHDR();TRB0(nbr);TRB1(nbr);TRB0(p1);TRB1(p1);TRB2(p1);TRB3(p1);TRB0(p2);TRB1(p2);TRB2(p2);TRB3(p2);
+        #define TRACE0( nbr, cat, b, str )                    TRHDR(); TRB0( nbr ); TRB1( nbr );
+        #define TRACE1( nbr, cat, b, str, p1 )                TRHDR(); TRB0( nbr ); TRB1( nbr ); TRB0( p1 ); TRB1( p1 );
+        #define TRACE2( nbr, cat, b, str, p1, p2 )            TRHDR(); TRB0( nbr ); TRB1( nbr ); TRB0( p1 ); TRB1( p1 ); TRB0( p2 ); TRB1( p2 );
+        #define TRACE3( nbr, cat, b, str, p1, p2, p3 )        TRHDR(); TRB0( nbr ); TRB1( nbr ); TRB0( p1 ); TRB1( p1 ); TRB0( p2 ); TRB1( p2 ); TRB0( p3 ); TRB1( p3 );
+        #define TRACE4( nbr, cat, b, str, p1, p2, p3, p4 )    TRHDR(); TRB0( nbr ); TRB1( nbr ); TRB0( p1 ); TRB1( p1 ); TRB0( p2 ); TRB1( p2 ); TRB0( p3 ); TRB1( p3 ); TRB0( p4 ); TRB1( p4 );
+        #define TRACE11( nbr, cat, b, str, p1 )               TRHDR(); TRB0( nbr ); TRB1( nbr ); TRB0( p1 ); TRB1( p1 ); TRB2( p1 ); TRB3( p1 );
+        #define TRACE12( nbr, cat, b, str, p1, p2 )           TRHDR(); TRB0( nbr ); TRB1( nbr ); TRB0( p1 ); TRB1( p1 ); TRB2( p1 ); TRB3( p1 ); TRB0( p2 ); TRB1( p2 ); TRB2( p2 ); TRB3( p2 );
 
-#else // #ifdef INLINE_TRACE_ENABLE
+    #else // #ifdef INLINE_TRACE_ENABLE
 
-#define TRACE0(nbr,cat,b,str) 
-#define TRACE1(nbr,cat,b,str,p1) 
-#define TRACE2(nbr,cat,b,str,p1,p2) 
-#define TRACE3(nbr,cat,b,str,p1,p2,p3) 
-#define TRACE4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define TRACE11(nbr,cat,b,str,p1) 
-#define TRACE12(nbr,cat,b,str,p1,p2) 
-#define trace0(nbr,cat,b,str) 
-#define trace1(nbr,cat,b,str,p1) 
-#define trace2(nbr,cat,b,str,p1,p2) 
-#define trace3(nbr,cat,b,str,p1,p2,p3) 
-#define trace4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define trace11(nbr,cat,b,str,p1) 
-#define trace12(nbr,cat,b,str,p1,p2) 
+        #define TRACE0( nbr, cat, b, str )
+        #define TRACE1( nbr, cat, b, str, p1 )
+        #define TRACE2( nbr, cat, b, str, p1, p2 )
+        #define TRACE3( nbr, cat, b, str, p1, p2, p3 )
+        #define TRACE4( nbr, cat, b, str, p1, p2, p3, p4 )
+        #define TRACE11( nbr, cat, b, str, p1 )
+        #define TRACE12( nbr, cat, b, str, p1, p2 )
+        #define trace0( nbr, cat, b, str )
+        #define trace1( nbr, cat, b, str, p1 )
+        #define trace2( nbr, cat, b, str, p1, p2 )
+        #define trace3( nbr, cat, b, str, p1, p2, p3 )
+        #define trace4( nbr, cat, b, str, p1, p2, p3, p4 )
+        #define trace11( nbr, cat, b, str, p1 )
+        #define trace12( nbr, cat, b, str, p1, p2 )
 
-#endif // #ifdef PLIB_TRACE_ENABLE
+    #endif // #ifdef PLIB_TRACE_ENABLE
 
-#define trace0(nbr,cat,b,str) 
-#define trace1(nbr,cat,b,str,p1) 
-#define trace2(nbr,cat,b,str,p1,p2) 
-#define trace3(nbr,cat,b,str,p1,p2,p3) 
-#define trace4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define trace11(nbr,cat,b,str,p1) 
-#define trace12(nbr,cat,b,str,p1,p2) 
+    #define trace0( nbr, cat, b, str )
+    #define trace1( nbr, cat, b, str, p1 )
+    #define trace2( nbr, cat, b, str, p1, p2 )
+    #define trace3( nbr, cat, b, str, p1, p2, p3 )
+    #define trace4( nbr, cat, b, str, p1, p2, p3, p4 )
+    #define trace11( nbr, cat, b, str, p1 )
+    #define trace12( nbr, cat, b, str, p1, p2 )
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif // #ifndef _MEC14XX_TRACE_INLINE_H
 /* end mec14xx_trace_inline.h */
+
 /**   @}
  */

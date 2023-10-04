@@ -30,9 +30,9 @@
 /* Demo app includes. */
 #include "partest.h"
 
-#define ptOUTPUT 	0x07
-#define ptALL_OFF	0x07
-#define ptNUM_LEDS	3
+#define ptOUTPUT      0x07
+#define ptALL_OFF     0x07
+#define ptNUM_LEDS    3
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -40,49 +40,47 @@
 
 void vParTestInitialise( void )
 {
-	/* Bottom 3 LEDs output. */
-	TRISD = TRISD & ~ptOUTPUT;
-	PORTD = PORTD & ~ptALL_OFF;
+    /* Bottom 3 LEDs output. */
+    TRISD = TRISD & ~ptOUTPUT;
+    PORTD = PORTD & ~ptALL_OFF;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxLEDBit;
+    unsigned portBASE_TYPE uxLEDBit;
 
-	if( uxLED < ptNUM_LEDS )
-	{
-		/* Which port A bit is being modified? */
-		uxLEDBit = 1 << uxLED;
+    if( uxLED < ptNUM_LEDS )
+    {
+        /* Which port A bit is being modified? */
+        uxLEDBit = 1 << uxLED;
 
-		if( xValue != 0 )
-		{
-			/* Turn the LED on.   Use of the PORTASET register removes the need
-			to use a critical section. */
-			PORTDSET = uxLEDBit;
-		}
-		else
-		{
-			/* Turn the LED off.  Use of the PORTACLR register removes the need
-			to use a critical section. */
-			PORTDCLR = uxLEDBit;
-		}
-	}
+        if( xValue != 0 )
+        {
+            /* Turn the LED on.   Use of the PORTASET register removes the need
+             * to use a critical section. */
+            PORTDSET = uxLEDBit;
+        }
+        else
+        {
+            /* Turn the LED off.  Use of the PORTACLR register removes the need
+             * to use a critical section. */
+            PORTDCLR = uxLEDBit;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portBASE_TYPE uxLEDBit;
+    unsigned portBASE_TYPE uxLEDBit;
 
-	if( uxLED < ptNUM_LEDS )
-	{
-		uxLEDBit = 1 << uxLED;
+    if( uxLED < ptNUM_LEDS )
+    {
+        uxLEDBit = 1 << uxLED;
 
-		/* Use of the PORTAINV register removes the need to use a critical section. */
-		PORTDINV = uxLEDBit;
-	}
+        /* Use of the PORTAINV register removes the need to use a critical section. */
+        PORTDINV = uxLEDBit;
+    }
 }
-
-
-

@@ -3,9 +3,9 @@
 *//**
 * @file		lpc_types.h
 * @brief	Contains the NXP ABL typedefs for C standard types.
-*     		It is intended to be used in ISO C conforming development
-*     		environments and checks for this insofar as it is possible
-*     		to do so.
+*           It is intended to be used in ISO C conforming development
+*           environments and checks for this insofar as it is possible
+*           to do so.
 * @version	1.0
 * @date		02. June. 2011
 * @author	NXP MCU SW Application Team
@@ -27,6 +27,7 @@
 **********************************************************************/
 
 /* Type group ----------------------------------------------------------- */
+
 /** @defgroup LPC_Types LPC_Types
  * @ingroup LPC4300CMSIS_FwLib_Drivers
  * @{
@@ -40,6 +41,7 @@
 
 
 /* Public Types --------------------------------------------------------------- */
+
 /** @defgroup LPC_Types_Public_Types LPC_Types Public Types
  * @{
  */
@@ -47,24 +49,36 @@
 /**
  * @brief Boolean Type definition
  */
-typedef enum {FALSE = 0, TRUE = !FALSE} Bool;
+typedef enum
+{
+    FALSE = 0, TRUE = !FALSE
+} Bool;
 
 /**
  * @brief Flag Status and Interrupt Flag Status type definition
  */
-typedef enum {RESET = 0, SET = !RESET} FlagStatus, IntStatus, SetState;
-#define PARAM_SETSTATE(State) ((State==RESET) || (State==SET))
+typedef enum
+{
+    RESET = 0, SET = !RESET
+} FlagStatus, IntStatus, SetState;
+#define PARAM_SETSTATE( State )    ( ( State == RESET ) || ( State == SET ) )
 
 /**
  * @brief Functional State Definition
  */
-typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
-#define PARAM_FUNCTIONALSTATE(State) ((State==DISABLE) || (State==ENABLE))
+typedef enum
+{
+    DISABLE = 0, ENABLE = !DISABLE
+} FunctionalState;
+#define PARAM_FUNCTIONALSTATE( State )    ( ( State == DISABLE ) || ( State == ENABLE ) )
 
 /**
  * @ Status type definition
  */
-typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
+typedef enum
+{
+    ERROR = 0, SUCCESS = !ERROR
+} Status;
 
 
 /**
@@ -72,16 +86,16 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
  */
 typedef enum
 {
-	NONE_BLOCKING = 0,		/**< None Blocking type */
-	BLOCKING,				/**< Blocking type */
+    NONE_BLOCKING = 0, /**< None Blocking type */
+    BLOCKING,          /**< Blocking type */
 } TRANSFER_BLOCK_Type;
 
 
 /** Pointer to Function returning Void (any number of parameters) */
-typedef void (*PFV)();
+typedef void (* PFV)();
 
 /** Pointer to Function returning int32_t (any number of parameters) */
-typedef int32_t(*PFI)();
+typedef int32_t (* PFI)();
 
 /**
  * @}
@@ -89,6 +103,7 @@ typedef int32_t(*PFI)();
 
 
 /* Public Macros -------------------------------------------------------------- */
+
 /** @defgroup LPC_Types_Public_Macros  LPC_Types Public Macros
  * @{
  */
@@ -99,7 +114,7 @@ typedef int32_t(*PFI)();
  */
 #undef _BIT
 /* Set bit macro */
-#define _BIT(n)	(1<<(n))
+#define _BIT( n )    ( 1 << ( n ) )
 
 /* _SBF(f,v) sets the bit field starting at position "f" to value "v".
  * _SBF(f,v) is intended to be used in "OR" and "AND" expressions:
@@ -107,7 +122,7 @@ typedef int32_t(*PFI)();
  */
 #undef _SBF
 /* Set bit field macro */
-#define _SBF(f,v) ((v)<<(f))
+#define _SBF( f, v )    ( ( v ) << ( f ) )
 
 /* _BITMASK constructs a symbol with 'field_width' least significant
  * bits set.
@@ -124,26 +139,26 @@ typedef int32_t(*PFI)();
  */
 #undef _BITMASK
 /* Bitmask creation macro */
-#define _BITMASK(field_width) ( _BIT(field_width) - 1)
+#define _BITMASK( field_width )    ( _BIT( field_width ) - 1 )
 
 /* NULL pointer */
 #ifndef NULL
-#define NULL ((void*) 0)
+    #define NULL    ( ( void * ) 0 )
 #endif
 
 /* Number of elements in an array */
-#define NELEMENTS(array)  (sizeof (array) / sizeof (array[0]))
+#define NELEMENTS( array )    ( sizeof( array ) / sizeof( array[ 0 ] ) )
 
 /* Static data/function define */
-#define STATIC static
+#define STATIC    static
 /* External data/function define */
-#define EXTERN extern
+#define EXTERN    extern
 
-#if !defined(MAX)
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#if !defined( MAX )
+    #define MAX( a, b )    ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #endif
-#if !defined(MIN)
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#if !defined( MIN )
+    #define MIN( a, b )    ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 #endif
 
 /**
@@ -152,51 +167,53 @@ typedef int32_t(*PFI)();
 
 
 /* Old Type Definition compatibility ------------------------------------------ */
+
 /** @addtogroup LPC_Types_Public_Types LPC_Types Public Types
  * @{
  */
 
 /** SMA type for character type */
-typedef char CHAR;
+typedef char       CHAR;
 
 /** SMA type for 8 bit unsigned value */
-typedef uint8_t UNS_8;
+typedef uint8_t    UNS_8;
 
 /** SMA type for 8 bit signed value */
-typedef int8_t INT_8;
+typedef int8_t     INT_8;
 
 /** SMA type for 16 bit unsigned value */
-typedef	uint16_t UNS_16;
+typedef uint16_t   UNS_16;
 
 /** SMA type for 16 bit signed value */
-typedef	int16_t INT_16;
+typedef int16_t    INT_16;
 
 /** SMA type for 32 bit unsigned value */
-typedef	uint32_t UNS_32;
+typedef uint32_t   UNS_32;
 
 /** SMA type for 32 bit signed value */
-typedef	int32_t INT_32;
+typedef int32_t    INT_32;
 
 /** SMA type for 64 bit signed value */
-typedef int64_t INT_64;
+typedef int64_t    INT_64;
 
 /** SMA type for 64 bit unsigned value */
-typedef uint64_t UNS_64;
+typedef uint64_t   UNS_64;
 
 /** 32 bit boolean type */
-typedef Bool BOOL_32;
+typedef Bool       BOOL_32;
 
 /** 16 bit boolean type */
-typedef Bool BOOL_16;
+typedef Bool       BOOL_16;
 
 /** 8 bit boolean type */
-typedef Bool BOOL_8;
+typedef Bool       BOOL_8;
 
 #ifdef __CC_ARM
-#define INLINE  __inline
+    #define INLINE    __inline
 #else
-#define INLINE inline
+    #define INLINE    inline
 #endif
+
 /**
  * @}
  */

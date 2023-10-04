@@ -52,25 +52,24 @@
  * \param[in]  length   Length of data buffer
  *
  */
-void _usart_write_buffer(
-		struct usart_module *const module,
-		uint8_t *tx_data,
-		uint16_t length)
+void _usart_write_buffer( struct usart_module * const module,
+                          uint8_t * tx_data,
+                          uint16_t length )
 {
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
+    /* Sanity check arguments */
+    Assert( module );
+    Assert( module->hw );
 
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
+    /* Get a pointer to the hardware module instance */
+    SercomUsart * const usart_hw = &( module->hw->USART );
 
-	/* Write parameters to the device instance */
-	module->remaining_tx_buffer_length = length;
-	module->tx_buffer_ptr              = tx_data;
-	module->tx_status                  = STATUS_BUSY;
+    /* Write parameters to the device instance */
+    module->remaining_tx_buffer_length = length;
+    module->tx_buffer_ptr = tx_data;
+    module->tx_status = STATUS_BUSY;
 
-	/* Enable the Data Register Empty Interrupt */
-	usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_DRE;
+    /* Enable the Data Register Empty Interrupt */
+    usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_DRE;
 }
 
 /**
@@ -82,26 +81,25 @@ void _usart_write_buffer(
  * \param[in]  length   Length of data buffer
  *
  */
-void _usart_read_buffer(
-		struct usart_module *const module,
-		uint8_t *rx_data,
-		uint16_t length)
+void _usart_read_buffer( struct usart_module * const module,
+                         uint8_t * rx_data,
+                         uint16_t length )
 {
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
+    /* Sanity check arguments */
+    Assert( module );
+    Assert( module->hw );
 
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
+    /* Get a pointer to the hardware module instance */
+    SercomUsart * const usart_hw = &( module->hw->USART );
 
-	/* Set length for the buffer and the pointer, and let
-	 * the interrupt handler do the rest */
-	module->remaining_rx_buffer_length = length;
-	module->rx_buffer_ptr              = rx_data;
-	module->rx_status                  = STATUS_BUSY;
+    /* Set length for the buffer and the pointer, and let
+     * the interrupt handler do the rest */
+    module->remaining_rx_buffer_length = length;
+    module->rx_buffer_ptr = rx_data;
+    module->rx_status = STATUS_BUSY;
 
-	/* Enable the RX Complete Interrupt */
-	usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXC;
+    /* Enable the RX Complete Interrupt */
+    usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXC;
 }
 
 /**
@@ -118,20 +116,19 @@ void _usart_read_buffer(
  * \param[in]  callback_type  Callback type given by an enum
  *
  */
-void usart_register_callback(
-		struct usart_module *const module,
-		usart_callback_t callback_func,
-		enum usart_callback callback_type)
+void usart_register_callback( struct usart_module * const module,
+                              usart_callback_t callback_func,
+                              enum usart_callback callback_type )
 {
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(callback_func);
+    /* Sanity check arguments */
+    Assert( module );
+    Assert( callback_func );
 
-	/* Register callback function */
-	module->callback[callback_type] = callback_func;
+    /* Register callback function */
+    module->callback[ callback_type ] = callback_func;
 
-	/* Set the bit corresponding to the callback_type */
-	module->callback_reg_mask |= (1 << callback_type);
+    /* Set the bit corresponding to the callback_type */
+    module->callback_reg_mask |= ( 1 << callback_type );
 }
 
 /**
@@ -143,18 +140,17 @@ void usart_register_callback(
  * \param[in]      callback_type  Callback type given by an enum
  *
  */
-void usart_unregister_callback(
-		struct usart_module *const module,
-		enum usart_callback callback_type)
+void usart_unregister_callback( struct usart_module * const module,
+                                enum usart_callback callback_type )
 {
-	/* Sanity check arguments */
-	Assert(module);
+    /* Sanity check arguments */
+    Assert( module );
 
-	/* Unregister callback function */
-	module->callback[callback_type] = NULL;
+    /* Unregister callback function */
+    module->callback[ callback_type ] = NULL;
 
-	/* Clear the bit corresponding to the callback_type */
-	module->callback_reg_mask &= ~(1 << callback_type);
+    /* Clear the bit corresponding to the callback_type */
+    module->callback_reg_mask &= ~( 1 << callback_type );
 }
 
 /**
@@ -172,27 +168,29 @@ void usart_unregister_callback(
  *                           USART module being busy
  * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
-enum status_code usart_write_job(
-		struct usart_module *const module,
-		const uint16_t tx_data)
+enum status_code usart_write_job( struct usart_module * const module,
+                                  const uint16_t tx_data )
 {
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-	/* Check if the USART transmitter is busy */
-	if (module->remaining_tx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
+    /* Sanity check arguments */
+    Assert( module );
+    Assert( module->hw );
 
-	/* Check that the transmitter is enabled */
-	if (!(module->transmitter_enabled)) {
-		return STATUS_ERR_DENIED;
-	}
+    /* Check if the USART transmitter is busy */
+    if( module->remaining_tx_buffer_length > 0 )
+    {
+        return STATUS_BUSY;
+    }
 
-	/* Call internal write buffer function with length 1 */
-	_usart_write_buffer(module, (uint8_t *)&tx_data, 1);
+    /* Check that the transmitter is enabled */
+    if( !( module->transmitter_enabled ) )
+    {
+        return STATUS_ERR_DENIED;
+    }
 
-	return STATUS_OK;
+    /* Call internal write buffer function with length 1 */
+    _usart_write_buffer( module, ( uint8_t * ) &tx_data, 1 );
+
+    return STATUS_OK;
 }
 
 /**
@@ -209,22 +207,22 @@ enum status_code usart_write_job(
  * \retval  STATUS_OK    If operation was completed
  * \retval  STATUS_BUSY  If operation was not completed,
  */
-enum status_code usart_read_job(
-		struct usart_module *const module,
-		uint16_t *const rx_data)
+enum status_code usart_read_job( struct usart_module * const module,
+                                 uint16_t * const rx_data )
 {
-	/* Sanity check arguments */
-	Assert(module);
+    /* Sanity check arguments */
+    Assert( module );
 
-	/* Check if the USART receiver is busy */
-	if (module->remaining_rx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
+    /* Check if the USART receiver is busy */
+    if( module->remaining_rx_buffer_length > 0 )
+    {
+        return STATUS_BUSY;
+    }
 
-	/* Call internal read buffer function with length 1 */
-	_usart_read_buffer(module, (uint8_t *)rx_data, 1);
+    /* Call internal read buffer function with length 1 */
+    _usart_read_buffer( module, ( uint8_t * ) rx_data, 1 );
 
-	return STATUS_OK;
+    return STATUS_OK;
 }
 
 /**
@@ -245,32 +243,34 @@ enum status_code usart_read_job(
  *                                arguments
  * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
  */
-enum status_code usart_write_buffer_job(
-		struct usart_module *const module,
-		uint8_t *tx_data,
-		uint16_t length)
+enum status_code usart_write_buffer_job( struct usart_module * const module,
+                                         uint8_t * tx_data,
+                                         uint16_t length )
 {
-	/* Sanity check arguments */
-	Assert(module);
+    /* Sanity check arguments */
+    Assert( module );
 
-	if (length == 0) {
-		return STATUS_ERR_INVALID_ARG;
-	}
+    if( length == 0 )
+    {
+        return STATUS_ERR_INVALID_ARG;
+    }
 
-	/* Check if the USART transmitter is busy */
-	if (module->remaining_tx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
-	
-	/* Check that the receiver is enabled */
-	if (!(module->transmitter_enabled)) {
-		return STATUS_ERR_DENIED;
-	}
+    /* Check if the USART transmitter is busy */
+    if( module->remaining_tx_buffer_length > 0 )
+    {
+        return STATUS_BUSY;
+    }
 
-	/* Issue internal asynchronous write */
-	_usart_write_buffer(module, tx_data, length);
+    /* Check that the receiver is enabled */
+    if( !( module->transmitter_enabled ) )
+    {
+        return STATUS_ERR_DENIED;
+    }
 
-	return STATUS_OK;
+    /* Issue internal asynchronous write */
+    _usart_write_buffer( module, tx_data, length );
+
+    return STATUS_OK;
 }
 
 /**
@@ -291,33 +291,35 @@ enum status_code usart_write_buffer_job(
  *                                arguments
  * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
  */
-enum status_code usart_read_buffer_job(
-		struct usart_module *const module,
-		uint8_t *rx_data,
-		uint16_t length)
+enum status_code usart_read_buffer_job( struct usart_module * const module,
+                                        uint8_t * rx_data,
+                                        uint16_t length )
 {
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(rx_data);
+    /* Sanity check arguments */
+    Assert( module );
+    Assert( rx_data );
 
-	if (length == 0) {
-		return STATUS_ERR_INVALID_ARG;
-	}
-	
-	/* Check that the receiver is enabled */
-	if (!(module->receiver_enabled)) {
-		return STATUS_ERR_DENIED;
-	}
+    if( length == 0 )
+    {
+        return STATUS_ERR_INVALID_ARG;
+    }
 
-	/* Check if the USART receiver is busy */
-	if (module->remaining_rx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
+    /* Check that the receiver is enabled */
+    if( !( module->receiver_enabled ) )
+    {
+        return STATUS_ERR_DENIED;
+    }
 
-	/* Issue internal asynchronous read */
-	_usart_read_buffer(module, rx_data, length);
+    /* Check if the USART receiver is busy */
+    if( module->remaining_rx_buffer_length > 0 )
+    {
+        return STATUS_BUSY;
+    }
 
-	return STATUS_OK;
+    /* Issue internal asynchronous read */
+    _usart_read_buffer( module, rx_data, length );
+
+    return STATUS_OK;
 }
 
 /**
@@ -329,38 +331,40 @@ enum status_code usart_read_buffer_job(
  * \param[in]  module            Pointer to USART software instance struct
  * \param[in]  transceiver_type  Transfer type to cancel
  */
-void usart_abort_job(
-		struct usart_module *const module,
-		enum usart_transceiver_type transceiver_type)
+void usart_abort_job( struct usart_module * const module,
+                      enum usart_transceiver_type transceiver_type )
 {
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
+    /* Sanity check arguments */
+    Assert( module );
+    Assert( module->hw );
 
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
+    /* Get a pointer to the hardware module instance */
+    SercomUsart * const usart_hw = &( module->hw->USART );
 
-	switch(transceiver_type) {
-		case USART_TRANSCEIVER_RX:
-			/* Clear the interrupt flag in order to prevent the receive
-			 * complete callback to fire */
-			usart_hw->INTFLAG.reg |= SERCOM_USART_INTFLAG_RXC;
+    switch( transceiver_type )
+    {
+        case USART_TRANSCEIVER_RX:
 
-			/* Clear the software reception buffer */
-			module->remaining_rx_buffer_length = 0;
+            /* Clear the interrupt flag in order to prevent the receive
+             * complete callback to fire */
+            usart_hw->INTFLAG.reg |= SERCOM_USART_INTFLAG_RXC;
 
-			break;
+            /* Clear the software reception buffer */
+            module->remaining_rx_buffer_length = 0;
 
-		case USART_TRANSCEIVER_TX:
-			/* Clear the interrupt flag in order to prevent the receive
-			 * complete callback to fire */
-			usart_hw->INTFLAG.reg |= SERCOM_USART_INTFLAG_TXC;
+            break;
 
-			/* Clear the software reception buffer */
-			module->remaining_tx_buffer_length = 0;
+        case USART_TRANSCEIVER_TX:
 
-			break;
-	}
+            /* Clear the interrupt flag in order to prevent the receive
+             * complete callback to fire */
+            usart_hw->INTFLAG.reg |= SERCOM_USART_INTFLAG_TXC;
+
+            /* Clear the software reception buffer */
+            module->remaining_tx_buffer_length = 0;
+
+            break;
+    }
 }
 
 /**
@@ -371,7 +375,7 @@ void usart_abort_job(
  *
  * \param[in]  module            Pointer to USART software instance struct
  * \param[in]  transceiver_type  Transfer type to check
-  *
+ *
  * \return Status of the given job.
  * \retval STATUS_OK               No error occurred during the last transfer
  * \retval STATUS_BUSY             A transfer is ongoing
@@ -384,31 +388,31 @@ void usart_abort_job(
  *                                 buffer overflow.
  * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given.
  */
-enum status_code usart_get_job_status(
-		struct usart_module *const module,
-		enum usart_transceiver_type transceiver_type)
+enum status_code usart_get_job_status( struct usart_module * const module,
+                                       enum usart_transceiver_type transceiver_type )
 {
-	/* Sanity check arguments */
-	Assert(module);
+    /* Sanity check arguments */
+    Assert( module );
 
-	/* Variable for status code */
-	enum status_code status_code;
+    /* Variable for status code */
+    enum status_code status_code;
 
-	switch(transceiver_type) {
-	case USART_TRANSCEIVER_RX:
-			status_code = module->rx_status;
-			break;
+    switch( transceiver_type )
+    {
+        case USART_TRANSCEIVER_RX:
+            status_code = module->rx_status;
+            break;
 
-	case USART_TRANSCEIVER_TX:
-			status_code = module->tx_status;
-			break;
+        case USART_TRANSCEIVER_TX:
+            status_code = module->tx_status;
+            break;
 
-	default:
-			status_code = STATUS_ERR_INVALID_ARG;
-			break;
-	}
+        default:
+            status_code = STATUS_ERR_INVALID_ARG;
+            break;
+    }
 
-	return status_code;
+    return status_code;
 }
 
 /**
@@ -419,143 +423,164 @@ enum status_code usart_get_job_status(
  * \param[in]  instance  ID of the SERCOM instance calling the interrupt
  *                       handler.
  */
-void _usart_interrupt_handler(
-		uint8_t instance)
+void _usart_interrupt_handler( uint8_t instance )
 {
-	/* Temporary variables */
-	uint16_t interrupt_status;
-	uint16_t callback_status;
-	uint8_t error_code;
+    /* Temporary variables */
+    uint16_t interrupt_status;
+    uint16_t callback_status;
+    uint8_t error_code;
 
 
-	/* Get device instance from the look-up table */
-	struct usart_module *module
-		= (struct usart_module *)_sercom_instances[instance];
+    /* Get device instance from the look-up table */
+    struct usart_module * module
+        = ( struct usart_module * ) _sercom_instances[ instance ];
 
-	/* Pointer to the hardware module instance */
-	SercomUsart *const usart_hw
-		= &(module->hw->USART);
+    /* Pointer to the hardware module instance */
+    SercomUsart * const usart_hw
+        = &( module->hw->USART );
 
-	/* Wait for the synchronization to complete */
-	_usart_wait_for_sync(module);
+    /* Wait for the synchronization to complete */
+    _usart_wait_for_sync( module );
 
-	/* Read and mask interrupt flag register */
-	interrupt_status = usart_hw->INTFLAG.reg;
-	callback_status = module->callback_reg_mask
-			&module->callback_enable_mask;
+    /* Read and mask interrupt flag register */
+    interrupt_status = usart_hw->INTFLAG.reg;
+    callback_status = module->callback_reg_mask
+                      & module->callback_enable_mask;
 
-	/* Check if a DATA READY interrupt has occurred,
-	 * and if there is more to transfer */
-	if (interrupt_status & SERCOM_USART_INTFLAG_DRE) {
-		if (module->remaining_tx_buffer_length) {
-			/* Write value will be at least 8-bits long */
-			uint16_t data_to_send = *(module->tx_buffer_ptr);
-			/* Increment 8-bit pointer */
-			(module->tx_buffer_ptr)++;
+    /* Check if a DATA READY interrupt has occurred,
+     * and if there is more to transfer */
+    if( interrupt_status & SERCOM_USART_INTFLAG_DRE )
+    {
+        if( module->remaining_tx_buffer_length )
+        {
+            /* Write value will be at least 8-bits long */
+            uint16_t data_to_send = *( module->tx_buffer_ptr );
+            /* Increment 8-bit pointer */
+            ( module->tx_buffer_ptr )++;
 
-			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-				data_to_send = (*(module->tx_buffer_ptr) << 8);
-				/* Increment 8-bit pointer */
-				(module->tx_buffer_ptr)++;
-			}
-			/* Write the data to send */
-			usart_hw->DATA.reg = (data_to_send & SERCOM_USART_DATA_MASK);
+            if( module->character_size == USART_CHARACTER_SIZE_9BIT )
+            {
+                data_to_send = ( *( module->tx_buffer_ptr ) << 8 );
+                /* Increment 8-bit pointer */
+                ( module->tx_buffer_ptr )++;
+            }
 
-			if (--(module->remaining_tx_buffer_length) == 0) {
-				/* Disable the Data Register Empty Interrupt */
-				usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
-				/* Enable Transmission Complete interrupt */
-				usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_TXC;
+            /* Write the data to send */
+            usart_hw->DATA.reg = ( data_to_send & SERCOM_USART_DATA_MASK );
 
-			}
-		} else {
-			usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
-		}
+            if( --( module->remaining_tx_buffer_length ) == 0 )
+            {
+                /* Disable the Data Register Empty Interrupt */
+                usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
+                /* Enable Transmission Complete interrupt */
+                usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_TXC;
+            }
+        }
+        else
+        {
+            usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
+        }
 
-	/* Check if the Transmission Complete interrupt has occurred and
-	 * that the transmit buffer is empty */
-	}
-	if (interrupt_status & SERCOM_USART_INTFLAG_TXC) {
+        /* Check if the Transmission Complete interrupt has occurred and
+         * that the transmit buffer is empty */
+    }
 
-		/* Disable TX Complete Interrupt, and set STATUS_OK */
-		usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_TXC;
-		module->tx_status = STATUS_OK;
+    if( interrupt_status & SERCOM_USART_INTFLAG_TXC )
+    {
+        /* Disable TX Complete Interrupt, and set STATUS_OK */
+        usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_TXC;
+        module->tx_status = STATUS_OK;
 
-		/* Run callback if registered and enabled */
-		if( module->remaining_tx_buffer_length == 0 ) /* Added by _RB_ */
-		{
-			if (callback_status & (1 << USART_CALLBACK_BUFFER_TRANSMITTED)) {
-				(*(module->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(module);
-			}
-		}
+        /* Run callback if registered and enabled */
+        if( module->remaining_tx_buffer_length == 0 ) /* Added by _RB_ */
+        {
+            if( callback_status & ( 1 << USART_CALLBACK_BUFFER_TRANSMITTED ) )
+            {
+                ( *( module->callback[ USART_CALLBACK_BUFFER_TRANSMITTED ] ) )( module );
+            }
+        }
 
-	/* Check if the Receive Complete interrupt has occurred, and that
-	 * there's more data to receive */
-	}
-	if (interrupt_status & SERCOM_USART_INTFLAG_RXC) {
+        /* Check if the Receive Complete interrupt has occurred, and that
+         * there's more data to receive */
+    }
 
-		if (module->remaining_rx_buffer_length) {
-			/* Read out the status code and mask away all but the 4 LSBs*/
-			error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
+    if( interrupt_status & SERCOM_USART_INTFLAG_RXC )
+    {
+        if( module->remaining_rx_buffer_length )
+        {
+            /* Read out the status code and mask away all but the 4 LSBs*/
+            error_code = ( uint8_t ) ( usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK );
 
-			/* Check if an error has occurred during the receiving */
-			if (error_code) {
-				/* Check which error occurred */
-				if (error_code & SERCOM_USART_STATUS_FERR) {
-					/* Store the error code and clear flag by writing 1 to it */
-					module->rx_status = STATUS_ERR_BAD_FORMAT;
-					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_FERR;
-				} else if (error_code & SERCOM_USART_STATUS_BUFOVF) {
-					/* Store the error code and clear flag by writing 1 to it */
-					module->rx_status = STATUS_ERR_OVERFLOW;
-					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_BUFOVF;
-				} else if (error_code & SERCOM_USART_STATUS_PERR) {
-					/* Store the error code and clear flag by writing 1 to it */
-					module->rx_status = STATUS_ERR_BAD_DATA;
-					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_PERR;
-				}
+            /* Check if an error has occurred during the receiving */
+            if( error_code )
+            {
+                /* Check which error occurred */
+                if( error_code & SERCOM_USART_STATUS_FERR )
+                {
+                    /* Store the error code and clear flag by writing 1 to it */
+                    module->rx_status = STATUS_ERR_BAD_FORMAT;
+                    usart_hw->STATUS.reg |= SERCOM_USART_STATUS_FERR;
+                }
+                else if( error_code & SERCOM_USART_STATUS_BUFOVF )
+                {
+                    /* Store the error code and clear flag by writing 1 to it */
+                    module->rx_status = STATUS_ERR_OVERFLOW;
+                    usart_hw->STATUS.reg |= SERCOM_USART_STATUS_BUFOVF;
+                }
+                else if( error_code & SERCOM_USART_STATUS_PERR )
+                {
+                    /* Store the error code and clear flag by writing 1 to it */
+                    module->rx_status = STATUS_ERR_BAD_DATA;
+                    usart_hw->STATUS.reg |= SERCOM_USART_STATUS_PERR;
+                }
 
-				/* Run callback if registered and enabled */
-				if (callback_status
-						& (1 << USART_CALLBACK_ERROR)) {
-					(*(module->callback[USART_CALLBACK_ERROR]))(module);
-				}
+                /* Run callback if registered and enabled */
+                if( callback_status
+                    & ( 1 << USART_CALLBACK_ERROR ) )
+                {
+                    ( *( module->callback[ USART_CALLBACK_ERROR ] ) )( module );
+                }
+            }
+            else
+            {
+                /* Read current packet from DATA register,
+                 * increment buffer pointer and decrement buffer length */
+                uint16_t received_data = ( usart_hw->DATA.reg & SERCOM_USART_DATA_MASK );
 
-			} else {
+                /* Read value will be at least 8-bits long */
+                *( module->rx_buffer_ptr ) = received_data;
+                /* Increment 8-bit pointer */
+                module->rx_buffer_ptr += 1;
 
-				/* Read current packet from DATA register,
-				 * increment buffer pointer and decrement buffer length */
-				uint16_t received_data = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
+                if( module->character_size == USART_CHARACTER_SIZE_9BIT )
+                {
+                    /* 9-bit data, write next received byte to the buffer */
+                    *( module->rx_buffer_ptr ) = ( received_data >> 8 );
+                    /* Increment 8-bit pointer */
+                    module->rx_buffer_ptr += 1;
+                }
 
-				/* Read value will be at least 8-bits long */
-				*(module->rx_buffer_ptr) = received_data;
-				/* Increment 8-bit pointer */
-				module->rx_buffer_ptr += 1;
+                /* Check if the last character have been received */
+                if( --( module->remaining_rx_buffer_length ) == 0 )
+                {
+                    /* Disable RX Complete Interrupt,
+                     * and set STATUS_OK */
+                    usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
+                    module->rx_status = STATUS_OK;
 
-				if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-					/* 9-bit data, write next received byte to the buffer */
-					*(module->rx_buffer_ptr) = (received_data >> 8);
-					/* Increment 8-bit pointer */
-					module->rx_buffer_ptr += 1;
-				}
-
-				/* Check if the last character have been received */
-				if(--(module->remaining_rx_buffer_length) == 0) {
-					/* Disable RX Complete Interrupt,
-					 * and set STATUS_OK */
-					usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
-					module->rx_status = STATUS_OK;
-
-					/* Run callback if registered and enabled */
-					if (callback_status
-							& (1 << USART_CALLBACK_BUFFER_RECEIVED)) {
-						(*(module->callback[USART_CALLBACK_BUFFER_RECEIVED]))(module);
-					}
-				}
-			}
-		} else {
-			/* This should not happen. Disable Receive Complete interrupt. */
-			usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
-		}
-	}
+                    /* Run callback if registered and enabled */
+                    if( callback_status
+                        & ( 1 << USART_CALLBACK_BUFFER_RECEIVED ) )
+                    {
+                        ( *( module->callback[ USART_CALLBACK_BUFFER_RECEIVED ] ) )( module );
+                    }
+                }
+            }
+        }
+        else
+        {
+            /* This should not happen. Disable Receive Complete interrupt. */
+            usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
+        }
+    }
 }

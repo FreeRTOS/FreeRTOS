@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,31 +30,30 @@
 #ifndef TC_H
 #define TC_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
 
-#if !defined(AT91C_ID_TC0) && defined(AT91C_ID_TC012)
-    #define AT91C_ID_TC0 AT91C_ID_TC012
+#if !defined( AT91C_ID_TC0 ) && defined( AT91C_ID_TC012 )
+    #define AT91C_ID_TC0    AT91C_ID_TC012
 #endif
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void TC_Configure(AT91S_TC *pTc, unsigned int mode);
+extern void TC_Configure( AT91S_TC * pTc,
+                          unsigned int mode );
 
-extern void TC_Start(AT91S_TC *pTc);
+extern void TC_Start( AT91S_TC * pTc );
 
-extern void TC_Stop(AT91S_TC *pTc);
+extern void TC_Stop( AT91S_TC * pTc );
 
-extern unsigned char TC_FindMckDivisor(
-    unsigned int freq,
-    unsigned int mck,
-    unsigned int *div,
-    unsigned int *tcclks);
+extern unsigned char TC_FindMckDivisor( unsigned int freq,
+                                        unsigned int mck,
+                                        unsigned int * div,
+                                        unsigned int * tcclks );
 
 #endif //#ifndef TC_H
-

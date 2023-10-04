@@ -43,46 +43,48 @@
 #include <compiler.h>
 #include <pll.h>
 
-#define SCIF_UNLOCK_PLL_REG(pll_id) \
-	do { \
-		SCIF->SCIF_UNLOCK = SCIF_UNLOCK_KEY(0xAAu)                     \
-			| SCIF_UNLOCK_ADDR((uint32_t)&SCIF->SCIF_PLL[0].SCIF_PLL \
-			+ (4 * pll_id) - (uint32_t)SCIF);                      \
-	} while (0)
+#define SCIF_UNLOCK_PLL_REG( pll_id )                                                      \
+    do {                                                                                   \
+        SCIF->SCIF_UNLOCK = SCIF_UNLOCK_KEY( 0xAAu )                                       \
+                            | SCIF_UNLOCK_ADDR( ( uint32_t ) &SCIF->SCIF_PLL[ 0 ].SCIF_PLL \
+                                                + ( 4 * pll_id ) - ( uint32_t ) SCIF );    \
+    } while( 0 )
 
-void pll_config_write(const struct pll_config *cfg, uint32_t pll_id)
+void pll_config_write( const struct pll_config * cfg,
+                       uint32_t pll_id )
 {
-	irqflags_t flags;
+    irqflags_t flags;
 
-	Assert(pll_id < NR_PLLS);
+    Assert( pll_id < NR_PLLS );
 
-	flags = cpu_irq_save();
+    flags = cpu_irq_save();
 
-	SCIF_UNLOCK_PLL_REG(pll_id);
-	SCIF->SCIF_PLL[pll_id].SCIF_PLL  = cfg->ctrl;
-	cpu_irq_restore(flags);
+    SCIF_UNLOCK_PLL_REG( pll_id );
+    SCIF->SCIF_PLL[ pll_id ].SCIF_PLL = cfg->ctrl;
+    cpu_irq_restore( flags );
 }
 
-void pll_enable(const struct pll_config *cfg, uint32_t pll_id)
+void pll_enable( const struct pll_config * cfg,
+                 uint32_t pll_id )
 {
-	irqflags_t flags;
+    irqflags_t flags;
 
-	Assert(pll_id < NR_PLLS);
+    Assert( pll_id < NR_PLLS );
 
-	flags = cpu_irq_save();
-	SCIF_UNLOCK_PLL_REG(pll_id);
-	SCIF->SCIF_PLL[pll_id].SCIF_PLL  = cfg->ctrl | SCIF_PLL_PLLEN;
-	cpu_irq_restore(flags);
+    flags = cpu_irq_save();
+    SCIF_UNLOCK_PLL_REG( pll_id );
+    SCIF->SCIF_PLL[ pll_id ].SCIF_PLL = cfg->ctrl | SCIF_PLL_PLLEN;
+    cpu_irq_restore( flags );
 }
 
-void pll_disable(uint32_t pll_id)
+void pll_disable( uint32_t pll_id )
 {
-	irqflags_t flags;
+    irqflags_t flags;
 
-	Assert(pll_id < NR_PLLS);
+    Assert( pll_id < NR_PLLS );
 
-	flags = cpu_irq_save();
-	SCIF_UNLOCK_PLL_REG(pll_id);
-	SCIF->SCIF_PLL[pll_id].SCIF_PLL  = 0;
-	cpu_irq_restore(flags);
+    flags = cpu_irq_save();
+    SCIF_UNLOCK_PLL_REG( pll_id );
+    SCIF->SCIF_PLL[ pll_id ].SCIF_PLL = 0;
+    cpu_irq_restore( flags );
 }

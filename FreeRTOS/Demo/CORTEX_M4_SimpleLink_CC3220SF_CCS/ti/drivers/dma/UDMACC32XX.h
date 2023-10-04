@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       UDMACC32XX.h
  *
@@ -50,20 +51,20 @@
  */
 
 #ifndef ti_drivers_dma_UDMACC32XX__include
-#define ti_drivers_dma_UDMACC32XX__include
+    #define ti_drivers_dma_UDMACC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <ti/drivers/dpl/HwiP.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <ti/drivers/dpl/HwiP.h>
 
 /*!
  *  @brief      UDMA error function pointer
  */
-typedef void (*UDMACC32XX_ErrorFxn)(uintptr_t arg);
+    typedef void (* UDMACC32XX_ErrorFxn)( uintptr_t arg );
 
 /*!
  *  @brief      UDMACC32XX Hardware attributes
@@ -116,12 +117,13 @@ typedef void (*UDMACC32XX_ErrorFxn)(uintptr_t arg);
  *  @endcode
  *
  */
-typedef struct UDMACC32XX_HWAttrs {
-    void           *controlBaseAddr; /*!< uDMA control registers base address */
-    UDMACC32XX_ErrorFxn dmaErrorFxn; /*!< uDMA error interrupt handler */
-    uint8_t         intNum;          /*!< uDMA error interrupt number */
-    uint8_t         intPriority;     /*!< uDMA error interrupt priority. */
-} UDMACC32XX_HWAttrs;
+    typedef struct UDMACC32XX_HWAttrs
+    {
+        void * controlBaseAddr;          /*!< uDMA control registers base address */
+        UDMACC32XX_ErrorFxn dmaErrorFxn; /*!< uDMA error interrupt handler */
+        uint8_t intNum;                  /*!< uDMA error interrupt number */
+        uint8_t intPriority;             /*!< uDMA error interrupt priority. */
+    } UDMACC32XX_HWAttrs;
 
 /*!
  *  @brief      UDMACC32XX Global configuration
@@ -132,25 +134,27 @@ typedef struct UDMACC32XX_HWAttrs {
  *  This structure needs to be defined before calling UDMACC32XX_init() and
  *  it must not be changed thereafter.
  */
-typedef struct UDMACC32XX_Config {
-    void              *object;            /*!< Pointer to UDMACC32XX object */
-    void const        *hwAttrs;           /*!< Pointer to hardware attributes */
-} UDMACC32XX_Config;
+    typedef struct UDMACC32XX_Config
+    {
+        void * object;                    /*!< Pointer to UDMACC32XX object */
+        void const * hwAttrs;             /*!< Pointer to hardware attributes */
+    } UDMACC32XX_Config;
 
 /*!
  *  @brief      A handle that is returned from a UDMACC32XX_open() call.
  */
-typedef struct UDMACC32XX_Config      *UDMACC32XX_Handle;
+    typedef struct UDMACC32XX_Config * UDMACC32XX_Handle;
 
 /*!
  *  @brief  UDMACC32XX object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct UDMACC32XX_Object {
-    bool             isOpen;          /* Flag for open/close status */
-    HwiP_Handle      hwiHandle;       /* DMA error Hwi */
-} UDMACC32XX_Object;
+    typedef struct UDMACC32XX_Object
+    {
+        bool isOpen;                  /* Flag for open/close status */
+        HwiP_Handle hwiHandle;        /* DMA error Hwi */
+    } UDMACC32XX_Object;
 
 /*!
  *  @brief  Function to close the DMA driver.
@@ -170,7 +174,7 @@ typedef struct UDMACC32XX_Object {
  *
  *  @sa     UDMACC32XX_open
  */
-extern void UDMACC32XX_close(UDMACC32XX_Handle handle);
+    extern void UDMACC32XX_close( UDMACC32XX_Handle handle );
 
 /*!
  *  @brief  Function to initialize the CC32XX DMA driver
@@ -182,7 +186,7 @@ extern void UDMACC32XX_close(UDMACC32XX_Handle handle);
  *
  *  @sa     UDMACC32XX_open()
  */
-extern void UDMACC32XX_init();
+    extern void UDMACC32XX_init();
 
 /*!
  *  @brief  Function to initialize the CC32XX DMA peripheral
@@ -201,10 +205,10 @@ extern void UDMACC32XX_init();
  *
  *  @sa     UDMACC32XX_close()
  */
-extern UDMACC32XX_Handle UDMACC32XX_open();
+    extern UDMACC32XX_Handle UDMACC32XX_open();
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_dma_UDMACC32XX__include */

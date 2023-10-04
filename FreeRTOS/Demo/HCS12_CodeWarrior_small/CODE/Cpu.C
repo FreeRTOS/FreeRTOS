@@ -40,12 +40,12 @@
 #include "Events.h"
 #include "Cpu.h"
 
-#define CGM_DELAY  3071UL
+#define CGM_DELAY    3071UL
 
 
 /* Global variables */
-volatile byte CCR_reg;                 /* Current CCR reegister */
-byte CpuMode = HIGH_SPEED;             /* Current speed mode */
+volatile byte CCR_reg;     /* Current CCR reegister */
+byte CpuMode = HIGH_SPEED; /* Current speed mode */
 
 
 /*
@@ -59,11 +59,11 @@ byte CpuMode = HIGH_SPEED;             /* Current speed mode */
 */
 #pragma CODE_SEG __NEAR_SEG NON_BANKED /* Interrupt section for this module. Placement will be in NON_BANKED area. */
 
-__interrupt void Cpu_Interrupt(void)
+__interrupt void Cpu_Interrupt( void )
 {
 }
 
-#pragma CODE_SEG DEFAULT               /* Change code section to DEFAULT. */
+#pragma CODE_SEG DEFAULT /* Change code section to DEFAULT. */
 
 /*
 ** ===================================================================
@@ -75,11 +75,12 @@ __interrupt void Cpu_Interrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void Cpu_DisableInt(void)
 
-**      This method is implemented as macro in the header module. **
-*/
+/*
+ * void Cpu_DisableInt(void)
+ *
+ **      This method is implemented as macro in the header module. **
+ */
 
 /*
 ** ===================================================================
@@ -91,11 +92,12 @@ void Cpu_DisableInt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void Cpu_EnableInt(void)
 
-**      This method is implemented as macro in the header module. **
-*/
+/*
+ * void Cpu_EnableInt(void)
+ *
+ **      This method is implemented as macro in the header module. **
+ */
 
 /*
 ** ===================================================================
@@ -108,11 +110,12 @@ void Cpu_EnableInt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void Cpu_SetStopMode(void)
 
-**      This method is implemented as macro in the header module. **
-*/
+/*
+ * void Cpu_SetStopMode(void)
+ *
+ **      This method is implemented as macro in the header module. **
+ */
 
 /*
 ** ===================================================================
@@ -126,11 +129,12 @@ void Cpu_SetStopMode(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void Cpu_SetWaitMode(void)
 
-**      This method is implemented as macro in the header module. **
-*/
+/*
+ * void Cpu_SetWaitMode(void)
+ *
+ **      This method is implemented as macro in the header module. **
+ */
 
 /*
 ** ===================================================================
@@ -141,33 +145,37 @@ void Cpu_SetWaitMode(void)
 **         only.
 ** ===================================================================
 */
-extern void _Startup(void);            /* Forward declaration of external startup function declared in file Start12.c */
-#define INITRG_ADR  0x0011             /* Register map position register */
+extern void _Startup( void ); /* Forward declaration of external startup function declared in file Start12.c */
+#define INITRG_ADR    0x0011  /* Register map position register */
 #pragma NO_FRAME
 #pragma NO_EXIT
-void _EntryPoint(void)
+void _EntryPoint( void )
 {
-  /*** ### MC9S12C32_80 "Cpu" init code ... ***/
-  /*** PE initialization code after reset ***/
-  /* Initialization of the registers INITRG, INITRM, INITEE is done to protect them to be written accidentally later by the application */
-  *(byte*)INITRG_ADR = 0;              /* Set the register map position */
-  asm nop;                             /* nop instruction */
-  INITRM=8;                            /* Set the RAM map position */
-  /* MISC: ??=0,??=0,??=0,??=0,EXSTR1=0,EXSTR0=0,ROMHM=0,ROMON=1 */
-  MISC=1;
-  /* System clock initialization */
-  CLKSEL=0;
-  CLKSEL_PLLSEL = 0;                   /* Select clock source from XTAL */
-  PLLCTL_PLLON = 0;                    /* Disable the PLL */
-  SYNR = 23;                           /* Set the multiplier register */
-  REFDV = 15;                          /* Set the divider register */
-  PLLCTL = 192;
-  PLLCTL_PLLON = 1;                    /* Enable the PLL */
-  while(!CRGFLG_LOCK);                 /* Wait */
-  CLKSEL_PLLSEL = 1;                   /* Select clock source from PLL */
-  /*** End of PE initialization code after reset ***/
+    /*** ### MC9S12C32_80 "Cpu" init code ... ***/
+    /*** PE initialization code after reset ***/
+    /* Initialization of the registers INITRG, INITRM, INITEE is done to protect them to be written accidentally later by the application */
+    *( byte * ) INITRG_ADR = 0;        /* Set the register map position */
+    asm nop;                           /* nop instruction */
+    INITRM = 8;                        /* Set the RAM map position */
+    /* MISC: ??=0,??=0,??=0,??=0,EXSTR1=0,EXSTR0=0,ROMHM=0,ROMON=1 */
+    MISC = 1;
+    /* System clock initialization */
+    CLKSEL = 0;
+    CLKSEL_PLLSEL = 0;                 /* Select clock source from XTAL */
+    PLLCTL_PLLON = 0;                  /* Disable the PLL */
+    SYNR = 23;                         /* Set the multiplier register */
+    REFDV = 15;                        /* Set the divider register */
+    PLLCTL = 192;
+    PLLCTL_PLLON = 1;                  /* Enable the PLL */
 
-  __asm   jmp _Startup;                /* Jump to C startup code */
+    while( !CRGFLG_LOCK )              /* Wait */
+    {
+    }
+
+    CLKSEL_PLLSEL = 1;                 /* Select clock source from PLL */
+    /*** End of PE initialization code after reset ***/
+
+    __asm jmp _Startup;                /* Jump to C startup code */
 }
 
 /*
@@ -179,46 +187,46 @@ void _EntryPoint(void)
 **         only.
 ** ===================================================================
 */
-void PE_low_level_init(void)
+void PE_low_level_init( void )
 {
-  /* Common initialization of the CPU registers */
+    /* Common initialization of the CPU registers */
 /* TSCR1: TEN=0,TSWAI=0,TSFRZ=1 */
-  output( TSCR1, input( TSCR1 ) & ~192 | 32 );
+    output( TSCR1, input( TSCR1 ) & ~192 | 32 );
 /* TCTL2: OM0=0,OL0=0 */
-  output( TCTL2, input( TCTL2 ) & ~3 );
+    output( TCTL2, input( TCTL2 ) & ~3 );
 /* TCTL1: OM7=0,OL7=0 */
-  output( TCTL1, input( TCTL1 ) & ~192 );
+    output( TCTL1, input( TCTL1 ) & ~192 );
 /* TIE: C0I=0 */
-  output( TIE, input( TIE ) & ~1 );
+    output( TIE, input( TIE ) & ~1 );
 /* TTOV: TOV0=0 */
-  output( TTOV, input( TTOV ) & ~1 );
+    output( TTOV, input( TTOV ) & ~1 );
 /* TSCR2: TOI=0,TCRE=1 */
-  output( TSCR2, input( TSCR2 ) & ~128 | 8 );
+    output( TSCR2, input( TSCR2 ) & ~128 | 8 );
 /* TIOS: IOS7=1,IOS0=1 */
-  output( TIOS, input( TIOS ) | 129 );
+    output( TIOS, input( TIOS ) | 129 );
 /* PPSP: PPSP0=0 */
-  output( PPSP, input( PPSP ) & ~1 );
+    output( PPSP, input( PPSP ) & ~1 );
 /* PERP: PERP0=1 */
-  output( PERP, input( PERP ) | 1 );
+    output( PERP, input( PERP ) | 1 );
 /* DDRP: DDRP0=0 */
-  output( DDRP, input( DDRP ) & ~1 );
+    output( DDRP, input( DDRP ) & ~1 );
 /* PWMCTL: PSWAI=0,PFRZ=0 */
-  output( PWMCTL, input( PWMCTL ) & ~12 );
+    output( PWMCTL, input( PWMCTL ) & ~12 );
 /* PWMSDN: PWMIF=0,PWMIE=0,PWMRSTRT=0,PWMLVL=0,??=0,PWM7IN=0,PWM7INL=0,PWM7ENA=0 */
-  output( PWMSDN, 0 );
-  /* ### MC9S12C32_80 "Cpu" init code ... */
-  /* ### ByteIO "Byte1" init code ... */
-  PORTB = 0;                           /* Prepare value for output */
-  DDRB = 255;                          /* Set direction to output */
-  /* ### TimerInt "TickTimer" init code ... */
-  TickTimer_Init();
-  /* ### External interrupt "ButtonInterrupt" init code ... */
-  PIEP_PIEP0 = 0;                      /* Disable interrupt */
- /* Common peripheral initialization - ENABLE */
+    output( PWMSDN, 0 );
+    /* ### MC9S12C32_80 "Cpu" init code ... */
+    /* ### ByteIO "Byte1" init code ... */
+    PORTB = 0;                         /* Prepare value for output */
+    DDRB = 255;                        /* Set direction to output */
+    /* ### TimerInt "TickTimer" init code ... */
+    TickTimer_Init();
+    /* ### External interrupt "ButtonInterrupt" init code ... */
+    PIEP_PIEP0 = 0;                    /* Disable interrupt */
+    /* Common peripheral initialization - ENABLE */
 /* TSCR1: TEN=1 */
-  output( TSCR1, input( TSCR1 ) | 128 );
-  INTCR_IRQEN = 0;                     /* Disable the IRQ interrupt. IRQ interrupt is enabled after CPU reset by default. */
-  __DI();                              /* Disable interrupts */
+    output( TSCR1, input( TSCR1 ) | 128 );
+    INTCR_IRQEN = 0;                   /* Disable the IRQ interrupt. IRQ interrupt is enabled after CPU reset by default. */
+    __DI();                            /* Disable interrupts */
 }
 
 /* END Cpu. */
@@ -226,7 +234,7 @@ void PE_low_level_init(void)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

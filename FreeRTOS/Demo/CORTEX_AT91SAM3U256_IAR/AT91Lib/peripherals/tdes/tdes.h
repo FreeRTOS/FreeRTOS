@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,51 +30,51 @@
 #ifndef TDES_H
 #define TDES_H
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-/// 
-/// Methods to manage the Triple DES (3DES)
-/// 
-/// !Usage
-///
-/// -# Configure TDES
-/// -# Sets the key used by the TDES algorithm
-/// -# Sets the input data of the TDES algorithm
-/// -# Starts the encryption/decryption process
-/// -# Stores the result of the last TDES operation
-///
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Methods to manage the Triple DES (3DES) */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Configure TDES */
+/*/ -# Sets the key used by the TDES algorithm */
+/*/ -# Sets the input data of the TDES algorithm */
+/*/ -# Starts the encryption/decryption process */
+/*/ -# Stores the result of the last TDES operation */
+/*/ */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void TDES_Configure(
-    unsigned char cipher,
-    unsigned int tdesmod,
-    unsigned int keymod,
-    unsigned int smod,
-    unsigned int opmod);
+extern void TDES_Configure( unsigned char cipher,
+                            unsigned int tdesmod,
+                            unsigned int keymod,
+                            unsigned int smod,
+                            unsigned int opmod );
 
-extern void TDES_Start(void);
+extern void TDES_Start( void );
 
-extern unsigned int TDES_GetStatus(void);
+extern unsigned int TDES_GetStatus( void );
 
-extern void TDES_SetKeys(
-    const unsigned int *pKey1,
-    const unsigned int *pKey2,
-    const unsigned int *pKey3);
+extern void TDES_SetKeys( const unsigned int * pKey1,
+                          const unsigned int * pKey2,
+                          const unsigned int * pKey3 );
 
-extern void TDES_SetInputData(const unsigned int *pInput);
+extern void TDES_SetInputData( const unsigned int * pInput );
 
-extern void TDES_SetInputBuffer(const unsigned int *pInput, unsigned int size);
+extern void TDES_SetInputBuffer( const unsigned int * pInput,
+                                 unsigned int size );
 
-extern void TDES_GetOutputData(unsigned int *pOutput);
+extern void TDES_GetOutputData( unsigned int * pOutput );
 
-extern void TDES_SetOutputBuffer(unsigned int *pOutput, unsigned int size);
+extern void TDES_SetOutputBuffer( unsigned int * pOutput,
+                                  unsigned int size );
 
-extern void TDES_SetVector(const unsigned int *pVector);
+extern void TDES_SetVector( const unsigned int * pVector );
 
 #endif //#ifndef TDES_H

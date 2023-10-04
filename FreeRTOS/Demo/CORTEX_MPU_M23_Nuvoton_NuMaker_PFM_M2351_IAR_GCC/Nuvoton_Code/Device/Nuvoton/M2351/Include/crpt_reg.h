@@ -10,22 +10,21 @@
 
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- Cryptographic Accelerator -------------------------*/
+
 /**
-    @addtogroup CRPT Cryptographic Accelerator(CRPT)
-    Memory Mapped Structure for CRPT Controller
-@{ */
+ *  @addtogroup CRPT Cryptographic Accelerator(CRPT)
+ *  Memory Mapped Structure for CRPT Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var CRPT_T::INTEN
      * Offset: 0x00  Crypto Interrupt Enable Control Register
@@ -1563,622 +1562,621 @@ typedef struct
      * |        |          |Although CRPT_ECC_WORDCNT is 32-bit, the maximum of word count in ECC accelerator is 144 words
      * |        |          |CRPT_ECC_WORDCNT can be read and written
      */
-    __IO uint32_t INTEN;                 /*!< [0x0000] Crypto Interrupt Enable Control Register                         */
-    __IO uint32_t INTSTS;                /*!< [0x0004] Crypto Interrupt Flag                                            */
-    __IO uint32_t PRNG_CTL;              /*!< [0x0008] PRNG Control Register                                            */
-    __O  uint32_t PRNG_SEED;             /*!< [0x000c] Seed for PRNG                                                    */
-    __I  uint32_t PRNG_KEY[8];           /*!< [0x0010] ~ [0x002c] PRNG Generated Key0 ~ Key7                            */
-    __I  uint32_t RESERVE0[8];
-    __I  uint32_t AES_FDBCK[4];          /*!< [0x0050] ~ [0x005c] AES Engine Output Feedback Data after Cryptographic Operation    */
-    __I  uint32_t TDES_FDBCKH;           /*!< [0x0060] TDES/DES Engine Output Feedback High Word Data after Cryptographic Operation */
-    __I  uint32_t TDES_FDBCKL;           /*!< [0x0064] TDES/DES Engine Output Feedback Low Word Data after Cryptographic Operation */
-    __I  uint32_t RESERVE1[38];
-    __IO uint32_t AES_CTL;               /*!< [0x0100] AES Control Register                                             */
-    __I  uint32_t AES_STS;               /*!< [0x0104] AES Engine Flag                                                  */
-    __IO uint32_t AES_DATIN;             /*!< [0x0108] AES Engine Data Input Port Register                              */
-    __I  uint32_t AES_DATOUT;            /*!< [0x010c] AES Engine Data Output Port Register                             */
-    __IO uint32_t AES0_KEY[8];           /*!< [0x0110] ~ [0x012c] AES Key Word 0~7 Register for Channel 0               */
-    __IO uint32_t AES0_IV[4];            /*!< [0x0130] ~ [0x013c] AES Initial Vector Word 0 ~ 3 Register for Channel 0  */
-    __IO uint32_t AES0_SADDR;            /*!< [0x0140] AES DMA Source Address Register for Channel 0                    */
-    __IO uint32_t AES0_DADDR;            /*!< [0x0144] AES DMA Destination Address Register for Channel 0               */
-    __IO uint32_t AES0_CNT;              /*!< [0x0148] AES Byte Count Register for Channel 0                            */
-    __IO uint32_t AES1_KEY[8];           /*!< [0x014c] ~ [0x0168] AES Key Word 0~7 Register for Channel 1               */
-    __IO uint32_t AES1_IV[4];            /*!< [0x016c] ~ [0x0178] AES Initial Vector Word 0~3 Register for Channel 1    */
-    __IO uint32_t AES1_SADDR;            /*!< [0x017c] AES DMA Source Address Register for Channel 1                    */
-    __IO uint32_t AES1_DADDR;            /*!< [0x0180] AES DMA Destination Address Register for Channel 1               */
-    __IO uint32_t AES1_CNT;              /*!< [0x0184] AES Byte Count Register for Channel 1                            */
-    __IO uint32_t AES2_KEY[8];           /*!< [0x0188] ~ [0x01a4] AES Key Word 0~7 Register for Channel 2               */
-    __IO uint32_t AES2_IV[4];            /*!< [0x01a8] ~ [0x01b4] AES Initial Vector Word 0~3 Register for Channel 2    */
-    __IO uint32_t AES2_SADDR;            /*!< [0x01b8] AES DMA Source Address Register for Channel 2                    */
-    __IO uint32_t AES2_DADDR;            /*!< [0x01bc] AES DMA Destination Address Register for Channel 2               */
-    __IO uint32_t AES2_CNT;              /*!< [0x01c0] AES Byte Count Register for Channel 2                            */
-    __IO uint32_t AES3_KEY[8];           /*!< [0x01c4] ~ [0x01e0] AES Key Word 0~7 Register for Channel 3               */
-    __IO uint32_t AES3_IV[4];            /*!< [0x01e4] ~ [0x01f0] AES Initial Vector Word 0~3 Register for Channel 3    */
-    __IO uint32_t AES3_SADDR;            /*!< [0x01f4] AES DMA Source Address Register for Channel 3                    */
-    __IO uint32_t AES3_DADDR;            /*!< [0x01f8] AES DMA Destination Address Register for Channel 3               */
-    __IO uint32_t AES3_CNT;              /*!< [0x01fc] AES Byte Count Register for Channel 3                            */
-    __IO uint32_t TDES_CTL;              /*!< [0x0200] TDES/DES Control Register                                        */
-    __I  uint32_t TDES_STS;              /*!< [0x0204] TDES/DES Engine Flag                                             */
-    __IO uint32_t TDES0_KEY1H;           /*!< [0x0208] TDES/DES Key 1 High Word Register for Channel 0                  */
-    __IO uint32_t TDES0_KEY1L;           /*!< [0x020c] TDES/DES Key 1 Low Word Register for Channel 0                   */
-    __IO uint32_t TDES0_KEY2H;           /*!< [0x0210] TDES Key 2 High Word Register for Channel 0                      */
-    __IO uint32_t TDES0_KEY2L;           /*!< [0x0214] TDES Key 2 Low Word Register for Channel 0                       */
-    __IO uint32_t TDES0_KEY3H;           /*!< [0x0218] TDES Key 3 High Word Register for Channel 0                      */
-    __IO uint32_t TDES0_KEY3L;           /*!< [0x021c] TDES Key 3 Low Word Register for Channel 0                       */
-    __IO uint32_t TDES0_IVH;             /*!< [0x0220] TDES/DES Initial Vector High Word Register for Channel 0         */
-    __IO uint32_t TDES0_IVL;             /*!< [0x0224] TDES/DES Initial Vector Low Word Register for Channel 0          */
-    __IO uint32_t TDES0_SADDR;           /*!< [0x0228] TDES/DES DMA Source Address Register for Channel 0               */
-    __IO uint32_t TDES0_DADDR;              /*!< [0x022c] TDES/DES DMA Destination Address Register for Channel 0          */
-    __IO uint32_t TDES0_CNT;             /*!< [0x0230] TDES/DES Byte Count Register for Channel 0                       */
-    __IO uint32_t TDES_DATIN;            /*!< [0x0234] TDES/DES Engine Input data Word Register                         */
-    __I  uint32_t TDES_DATOUT;           /*!< [0x0238] TDES/DES Engine Output data Word Register                        */
-    __I  uint32_t RESERVE2[3];
-    __IO uint32_t TDES1_KEY1H;           /*!< [0x0248] TDES/DES Key 1 High Word Register for Channel 1                  */
-    __IO uint32_t TDES1_KEY1L;           /*!< [0x024c] TDES/DES Key 1 Low Word Register for Channel 1                   */
-    __IO uint32_t TDES1_KEY2H;           /*!< [0x0250] TDES Key 2 High Word Register for Channel 1                      */
-    __IO uint32_t TDES1_KEY2L;           /*!< [0x0254] TDES Key 2 Low Word Register for Channel 1                       */
-    __IO uint32_t TDES1_KEY3H;           /*!< [0x0258] TDES Key 3 High Word Register for Channel 1                      */
-    __IO uint32_t TDES1_KEY3L;           /*!< [0x025c] TDES Key 3 Low Word Register for Channel 1                       */
-    __IO uint32_t TDES1_IVH;             /*!< [0x0260] TDES/DES Initial Vector High Word Register for Channel 1         */
-    __IO uint32_t TDES1_IVL;             /*!< [0x0264] TDES/DES Initial Vector Low Word Register for Channel 1          */
-    __IO uint32_t TDES1_SADDR;           /*!< [0x0268] TDES/DES DMA Source Address Register for Channel 1               */
-    __IO uint32_t TDES1_DADDR;           /*!< [0x026c] TDES/DES DMA Destination Address Register for Channel 1          */
-    __IO uint32_t TDES1_CNT;             /*!< [0x0270] TDES/DES Byte Count Register for Channel 1                       */
-    __I  uint32_t RESERVE3[5];
-    __IO uint32_t TDES2_KEY1H;           /*!< [0x0288] TDES/DES Key 1 High Word Register for Channel 2                  */
-    __IO uint32_t TDES2_KEY1L;           /*!< [0x028c] TDES/DES Key 1 Low Word Register for Channel 2                   */
-    __IO uint32_t TDES2_KEY2H;           /*!< [0x0290] TDES Key 2 High Word Register for Channel 2                      */
-    __IO uint32_t TDES2_KEY2L;           /*!< [0x0294] TDES Key 2 Low Word Register for Channel 2                       */
-    __IO uint32_t TDES2_KEY3H;           /*!< [0x0298] TDES Key 3 High Word Register for Channel 2                      */
-    __IO uint32_t TDES2_KEY3L;           /*!< [0x029c] TDES Key 3 Low Word Register for Channel 2                       */
-    __IO uint32_t TDES2_IVH;             /*!< [0x02a0] TDES/DES Initial Vector High Word Register for Channel 2         */
-    __IO uint32_t TDES2_IVL;             /*!< [0x02a4] TDES/DES Initial Vector Low Word Register for Channel 2          */
-    __IO uint32_t TDES2_SADDR;           /*!< [0x02a8] TDES/DES DMA Source Address Register for Channel 2               */
-    __IO uint32_t TDES2_DADDR;           /*!< [0x02ac] TDES/DES DMA Destination Address Register for Channel 2          */
-    __IO uint32_t TDES2_CNT;             /*!< [0x02b0] TDES/DES Byte Count Register for Channel 2                       */
-    __I  uint32_t RESERVE4[5];
-    __IO uint32_t TDES3_KEY1H;           /*!< [0x02c8] TDES/DES Key 1 High Word Register for Channel 3                  */
-    __IO uint32_t TDES3_KEY1L;           /*!< [0x02cc] TDES/DES Key 1 Low Word Register for Channel 3                   */
-    __IO uint32_t TDES3_KEY2H;           /*!< [0x02d0] TDES Key 2 High Word Register for Channel 3                      */
-    __IO uint32_t TDES3_KEY2L;           /*!< [0x02d4] TDES Key 2 Low Word Register for Channel 3                       */
-    __IO uint32_t TDES3_KEY3H;           /*!< [0x02d8] TDES Key 3 High Word Register for Channel 3                      */
-    __IO uint32_t TDES3_KEY3L;           /*!< [0x02dc] TDES Key 3 Low Word Register for Channel 3                       */
-    __IO uint32_t TDES3_IVH;             /*!< [0x02e0] TDES/DES Initial Vector High Word Register for Channel 3         */
-    __IO uint32_t TDES3_IVL;             /*!< [0x02e4] TDES/DES Initial Vector Low Word Register for Channel 3          */
-    __IO uint32_t TDES3_SADDR;           /*!< [0x02e8] TDES/DES DMA Source Address Register for Channel 3               */
-    __IO uint32_t TDES3_DADDR;           /*!< [0x02ec] TDES/DES DMA Destination Address Register for Channel 3          */
-    __IO uint32_t TDES3_CNT;             /*!< [0x02f0] TDES/DES Byte Count Register for Channel 3                       */
-    __I  uint32_t RESERVE5[3];
-    __IO uint32_t HMAC_CTL;              /*!< [0x0300] SHA/HMAC Control Register                                        */
-    __I  uint32_t HMAC_STS;              /*!< [0x0304] SHA/HMAC Status Flag                                             */
-    __I  uint32_t HMAC_DGST[16];         /*!< [0x0308] ~ [0x0344] SHA/HMAC Digest Message 0~15                          */
-    __IO uint32_t HMAC_KEYCNT;           /*!< [0x0348] SHA/HMAC Key Byte Count Register                                 */
-    __IO uint32_t HMAC_SADDR;            /*!< [0x034c] SHA/HMAC DMA Source Address Register                             */
-    __IO uint32_t HMAC_DMACNT;           /*!< [0x0350] SHA/HMAC Byte Count Register                                     */
-    __IO uint32_t HMAC_DATIN;            /*!< [0x0354] SHA/HMAC Engine Non-DMA Mode Data Input Port Register            */
-    __I  uint32_t RESERVE6[298];
-    __IO uint32_t ECC_CTL;               /*!< [0x0800] ECC Control Register                                             */
-    __I  uint32_t ECC_STS;               /*!< [0x0804] ECC Status Register                                              */
-    __IO uint32_t ECC_X1[18];            /*!< [0x0808] ~ [0x084c] ECC The X-coordinate word 0~17 of the first point     */
-    __IO uint32_t ECC_Y1[18];            /*!< [0x0850] ~ [0x0894] ECC The Y-coordinate word 0~17 of the first point     */
-    __IO uint32_t ECC_X2[18];            /*!< [0x0898] ~ [0x08dc] ECC The X-coordinate word 0~17 of the second point    */
-    __IO uint32_t ECC_Y2[18];            /*!< [0x08e0] ~ [0x0924] ECC The Y-coordinate word 0~17 of the second point    */
-    __IO uint32_t ECC_A[18];             /*!< [0x0928] ~ [0x096c] ECC The parameter CURVEA word 0~17 of elliptic curve  */
-    __IO uint32_t ECC_B[18];             /*!< [0x0970] ~ [0x09b4] ECC The parameter CURVEB word 0~17 of elliptic curve  */
-    __IO uint32_t ECC_N[18];             /*!< [0x09b8] ~ [0x09fc] ECC The parameter CURVEN word 0~17 of elliptic curve  */
-    __O  uint32_t ECC_K[18];             /*!< [0x0a00] ~ [0x0a44] ECC The scalar SCALARK word 0~17 of point multiplication */
-    __IO uint32_t ECC_SADDR;             /*!< [0x0a48] ECC DMA Source Address Register                                  */
-    __IO uint32_t ECC_DADDR;             /*!< [0x0a4c] ECC DMA Destination Address Register                             */
-    __IO uint32_t ECC_STARTREG;          /*!< [0x0a50] ECC Starting Address of Updated Registers                        */
-    __IO uint32_t ECC_WORDCNT;           /*!< [0x0a54] ECC DMA Word Count                                               */
-
+    __IO uint32_t INTEN;          /*!< [0x0000] Crypto Interrupt Enable Control Register                         */
+    __IO uint32_t INTSTS;         /*!< [0x0004] Crypto Interrupt Flag                                            */
+    __IO uint32_t PRNG_CTL;       /*!< [0x0008] PRNG Control Register                                            */
+    __O uint32_t PRNG_SEED;       /*!< [0x000c] Seed for PRNG                                                    */
+    __I uint32_t PRNG_KEY[ 8 ];   /*!< [0x0010] ~ [0x002c] PRNG Generated Key0 ~ Key7                            */
+    __I uint32_t RESERVE0[ 8 ];
+    __I uint32_t AES_FDBCK[ 4 ];  /*!< [0x0050] ~ [0x005c] AES Engine Output Feedback Data after Cryptographic Operation    */
+    __I uint32_t TDES_FDBCKH;     /*!< [0x0060] TDES/DES Engine Output Feedback High Word Data after Cryptographic Operation */
+    __I uint32_t TDES_FDBCKL;     /*!< [0x0064] TDES/DES Engine Output Feedback Low Word Data after Cryptographic Operation */
+    __I uint32_t RESERVE1[ 38 ];
+    __IO uint32_t AES_CTL;        /*!< [0x0100] AES Control Register                                             */
+    __I uint32_t AES_STS;         /*!< [0x0104] AES Engine Flag                                                  */
+    __IO uint32_t AES_DATIN;      /*!< [0x0108] AES Engine Data Input Port Register                              */
+    __I uint32_t AES_DATOUT;      /*!< [0x010c] AES Engine Data Output Port Register                             */
+    __IO uint32_t AES0_KEY[ 8 ];  /*!< [0x0110] ~ [0x012c] AES Key Word 0~7 Register for Channel 0               */
+    __IO uint32_t AES0_IV[ 4 ];   /*!< [0x0130] ~ [0x013c] AES Initial Vector Word 0 ~ 3 Register for Channel 0  */
+    __IO uint32_t AES0_SADDR;     /*!< [0x0140] AES DMA Source Address Register for Channel 0                    */
+    __IO uint32_t AES0_DADDR;     /*!< [0x0144] AES DMA Destination Address Register for Channel 0               */
+    __IO uint32_t AES0_CNT;       /*!< [0x0148] AES Byte Count Register for Channel 0                            */
+    __IO uint32_t AES1_KEY[ 8 ];  /*!< [0x014c] ~ [0x0168] AES Key Word 0~7 Register for Channel 1               */
+    __IO uint32_t AES1_IV[ 4 ];   /*!< [0x016c] ~ [0x0178] AES Initial Vector Word 0~3 Register for Channel 1    */
+    __IO uint32_t AES1_SADDR;     /*!< [0x017c] AES DMA Source Address Register for Channel 1                    */
+    __IO uint32_t AES1_DADDR;     /*!< [0x0180] AES DMA Destination Address Register for Channel 1               */
+    __IO uint32_t AES1_CNT;       /*!< [0x0184] AES Byte Count Register for Channel 1                            */
+    __IO uint32_t AES2_KEY[ 8 ];  /*!< [0x0188] ~ [0x01a4] AES Key Word 0~7 Register for Channel 2               */
+    __IO uint32_t AES2_IV[ 4 ];   /*!< [0x01a8] ~ [0x01b4] AES Initial Vector Word 0~3 Register for Channel 2    */
+    __IO uint32_t AES2_SADDR;     /*!< [0x01b8] AES DMA Source Address Register for Channel 2                    */
+    __IO uint32_t AES2_DADDR;     /*!< [0x01bc] AES DMA Destination Address Register for Channel 2               */
+    __IO uint32_t AES2_CNT;       /*!< [0x01c0] AES Byte Count Register for Channel 2                            */
+    __IO uint32_t AES3_KEY[ 8 ];  /*!< [0x01c4] ~ [0x01e0] AES Key Word 0~7 Register for Channel 3               */
+    __IO uint32_t AES3_IV[ 4 ];   /*!< [0x01e4] ~ [0x01f0] AES Initial Vector Word 0~3 Register for Channel 3    */
+    __IO uint32_t AES3_SADDR;     /*!< [0x01f4] AES DMA Source Address Register for Channel 3                    */
+    __IO uint32_t AES3_DADDR;     /*!< [0x01f8] AES DMA Destination Address Register for Channel 3               */
+    __IO uint32_t AES3_CNT;       /*!< [0x01fc] AES Byte Count Register for Channel 3                            */
+    __IO uint32_t TDES_CTL;       /*!< [0x0200] TDES/DES Control Register                                        */
+    __I uint32_t TDES_STS;        /*!< [0x0204] TDES/DES Engine Flag                                             */
+    __IO uint32_t TDES0_KEY1H;    /*!< [0x0208] TDES/DES Key 1 High Word Register for Channel 0                  */
+    __IO uint32_t TDES0_KEY1L;    /*!< [0x020c] TDES/DES Key 1 Low Word Register for Channel 0                   */
+    __IO uint32_t TDES0_KEY2H;    /*!< [0x0210] TDES Key 2 High Word Register for Channel 0                      */
+    __IO uint32_t TDES0_KEY2L;    /*!< [0x0214] TDES Key 2 Low Word Register for Channel 0                       */
+    __IO uint32_t TDES0_KEY3H;    /*!< [0x0218] TDES Key 3 High Word Register for Channel 0                      */
+    __IO uint32_t TDES0_KEY3L;    /*!< [0x021c] TDES Key 3 Low Word Register for Channel 0                       */
+    __IO uint32_t TDES0_IVH;      /*!< [0x0220] TDES/DES Initial Vector High Word Register for Channel 0         */
+    __IO uint32_t TDES0_IVL;      /*!< [0x0224] TDES/DES Initial Vector Low Word Register for Channel 0          */
+    __IO uint32_t TDES0_SADDR;    /*!< [0x0228] TDES/DES DMA Source Address Register for Channel 0               */
+    __IO uint32_t TDES0_DADDR;    /*!< [0x022c] TDES/DES DMA Destination Address Register for Channel 0          */
+    __IO uint32_t TDES0_CNT;      /*!< [0x0230] TDES/DES Byte Count Register for Channel 0                       */
+    __IO uint32_t TDES_DATIN;     /*!< [0x0234] TDES/DES Engine Input data Word Register                         */
+    __I uint32_t TDES_DATOUT;     /*!< [0x0238] TDES/DES Engine Output data Word Register                        */
+    __I uint32_t RESERVE2[ 3 ];
+    __IO uint32_t TDES1_KEY1H;    /*!< [0x0248] TDES/DES Key 1 High Word Register for Channel 1                  */
+    __IO uint32_t TDES1_KEY1L;    /*!< [0x024c] TDES/DES Key 1 Low Word Register for Channel 1                   */
+    __IO uint32_t TDES1_KEY2H;    /*!< [0x0250] TDES Key 2 High Word Register for Channel 1                      */
+    __IO uint32_t TDES1_KEY2L;    /*!< [0x0254] TDES Key 2 Low Word Register for Channel 1                       */
+    __IO uint32_t TDES1_KEY3H;    /*!< [0x0258] TDES Key 3 High Word Register for Channel 1                      */
+    __IO uint32_t TDES1_KEY3L;    /*!< [0x025c] TDES Key 3 Low Word Register for Channel 1                       */
+    __IO uint32_t TDES1_IVH;      /*!< [0x0260] TDES/DES Initial Vector High Word Register for Channel 1         */
+    __IO uint32_t TDES1_IVL;      /*!< [0x0264] TDES/DES Initial Vector Low Word Register for Channel 1          */
+    __IO uint32_t TDES1_SADDR;    /*!< [0x0268] TDES/DES DMA Source Address Register for Channel 1               */
+    __IO uint32_t TDES1_DADDR;    /*!< [0x026c] TDES/DES DMA Destination Address Register for Channel 1          */
+    __IO uint32_t TDES1_CNT;      /*!< [0x0270] TDES/DES Byte Count Register for Channel 1                       */
+    __I uint32_t RESERVE3[ 5 ];
+    __IO uint32_t TDES2_KEY1H;    /*!< [0x0288] TDES/DES Key 1 High Word Register for Channel 2                  */
+    __IO uint32_t TDES2_KEY1L;    /*!< [0x028c] TDES/DES Key 1 Low Word Register for Channel 2                   */
+    __IO uint32_t TDES2_KEY2H;    /*!< [0x0290] TDES Key 2 High Word Register for Channel 2                      */
+    __IO uint32_t TDES2_KEY2L;    /*!< [0x0294] TDES Key 2 Low Word Register for Channel 2                       */
+    __IO uint32_t TDES2_KEY3H;    /*!< [0x0298] TDES Key 3 High Word Register for Channel 2                      */
+    __IO uint32_t TDES2_KEY3L;    /*!< [0x029c] TDES Key 3 Low Word Register for Channel 2                       */
+    __IO uint32_t TDES2_IVH;      /*!< [0x02a0] TDES/DES Initial Vector High Word Register for Channel 2         */
+    __IO uint32_t TDES2_IVL;      /*!< [0x02a4] TDES/DES Initial Vector Low Word Register for Channel 2          */
+    __IO uint32_t TDES2_SADDR;    /*!< [0x02a8] TDES/DES DMA Source Address Register for Channel 2               */
+    __IO uint32_t TDES2_DADDR;    /*!< [0x02ac] TDES/DES DMA Destination Address Register for Channel 2          */
+    __IO uint32_t TDES2_CNT;      /*!< [0x02b0] TDES/DES Byte Count Register for Channel 2                       */
+    __I uint32_t RESERVE4[ 5 ];
+    __IO uint32_t TDES3_KEY1H;    /*!< [0x02c8] TDES/DES Key 1 High Word Register for Channel 3                  */
+    __IO uint32_t TDES3_KEY1L;    /*!< [0x02cc] TDES/DES Key 1 Low Word Register for Channel 3                   */
+    __IO uint32_t TDES3_KEY2H;    /*!< [0x02d0] TDES Key 2 High Word Register for Channel 3                      */
+    __IO uint32_t TDES3_KEY2L;    /*!< [0x02d4] TDES Key 2 Low Word Register for Channel 3                       */
+    __IO uint32_t TDES3_KEY3H;    /*!< [0x02d8] TDES Key 3 High Word Register for Channel 3                      */
+    __IO uint32_t TDES3_KEY3L;    /*!< [0x02dc] TDES Key 3 Low Word Register for Channel 3                       */
+    __IO uint32_t TDES3_IVH;      /*!< [0x02e0] TDES/DES Initial Vector High Word Register for Channel 3         */
+    __IO uint32_t TDES3_IVL;      /*!< [0x02e4] TDES/DES Initial Vector Low Word Register for Channel 3          */
+    __IO uint32_t TDES3_SADDR;    /*!< [0x02e8] TDES/DES DMA Source Address Register for Channel 3               */
+    __IO uint32_t TDES3_DADDR;    /*!< [0x02ec] TDES/DES DMA Destination Address Register for Channel 3          */
+    __IO uint32_t TDES3_CNT;      /*!< [0x02f0] TDES/DES Byte Count Register for Channel 3                       */
+    __I uint32_t RESERVE5[ 3 ];
+    __IO uint32_t HMAC_CTL;       /*!< [0x0300] SHA/HMAC Control Register                                        */
+    __I uint32_t HMAC_STS;        /*!< [0x0304] SHA/HMAC Status Flag                                             */
+    __I uint32_t HMAC_DGST[ 16 ]; /*!< [0x0308] ~ [0x0344] SHA/HMAC Digest Message 0~15                          */
+    __IO uint32_t HMAC_KEYCNT;    /*!< [0x0348] SHA/HMAC Key Byte Count Register                                 */
+    __IO uint32_t HMAC_SADDR;     /*!< [0x034c] SHA/HMAC DMA Source Address Register                             */
+    __IO uint32_t HMAC_DMACNT;    /*!< [0x0350] SHA/HMAC Byte Count Register                                     */
+    __IO uint32_t HMAC_DATIN;     /*!< [0x0354] SHA/HMAC Engine Non-DMA Mode Data Input Port Register            */
+    __I uint32_t RESERVE6[ 298 ];
+    __IO uint32_t ECC_CTL;        /*!< [0x0800] ECC Control Register                                             */
+    __I uint32_t ECC_STS;         /*!< [0x0804] ECC Status Register                                              */
+    __IO uint32_t ECC_X1[ 18 ];   /*!< [0x0808] ~ [0x084c] ECC The X-coordinate word 0~17 of the first point     */
+    __IO uint32_t ECC_Y1[ 18 ];   /*!< [0x0850] ~ [0x0894] ECC The Y-coordinate word 0~17 of the first point     */
+    __IO uint32_t ECC_X2[ 18 ];   /*!< [0x0898] ~ [0x08dc] ECC The X-coordinate word 0~17 of the second point    */
+    __IO uint32_t ECC_Y2[ 18 ];   /*!< [0x08e0] ~ [0x0924] ECC The Y-coordinate word 0~17 of the second point    */
+    __IO uint32_t ECC_A[ 18 ];    /*!< [0x0928] ~ [0x096c] ECC The parameter CURVEA word 0~17 of elliptic curve  */
+    __IO uint32_t ECC_B[ 18 ];    /*!< [0x0970] ~ [0x09b4] ECC The parameter CURVEB word 0~17 of elliptic curve  */
+    __IO uint32_t ECC_N[ 18 ];    /*!< [0x09b8] ~ [0x09fc] ECC The parameter CURVEN word 0~17 of elliptic curve  */
+    __O uint32_t ECC_K[ 18 ];     /*!< [0x0a00] ~ [0x0a44] ECC The scalar SCALARK word 0~17 of point multiplication */
+    __IO uint32_t ECC_SADDR;      /*!< [0x0a48] ECC DMA Source Address Register                                  */
+    __IO uint32_t ECC_DADDR;      /*!< [0x0a4c] ECC DMA Destination Address Register                             */
+    __IO uint32_t ECC_STARTREG;   /*!< [0x0a50] ECC Starting Address of Updated Registers                        */
+    __IO uint32_t ECC_WORDCNT;    /*!< [0x0a54] ECC DMA Word Count                                               */
 } CRPT_T;
 
 /**
-    @addtogroup CRPT_CONST CRPT Bit Field Definition
-    Constant Definitions for CRPT Controller
-@{ */
+ *  @addtogroup CRPT_CONST CRPT Bit Field Definition
+ *  Constant Definitions for CRPT Controller
+ * @{ */
 
-#define CRPT_INTEN_AESIEN_Pos            (0)                                               /*!< CRPT_T::INTEN: AESIEN Position         */
-#define CRPT_INTEN_AESIEN_Msk            (0x1ul << CRPT_INTEN_AESIEN_Pos)                  /*!< CRPT_T::INTEN: AESIEN Mask             */
+#define CRPT_INTEN_AESIEN_Pos             ( 0 )                                              /*!< CRPT_T::INTEN: AESIEN Position         */
+#define CRPT_INTEN_AESIEN_Msk             ( 0x1ul << CRPT_INTEN_AESIEN_Pos )                 /*!< CRPT_T::INTEN: AESIEN Mask             */
 
-#define CRPT_INTEN_AESEIEN_Pos           (1)                                               /*!< CRPT_T::INTEN: AESEIEN Position        */
-#define CRPT_INTEN_AESEIEN_Msk           (0x1ul << CRPT_INTEN_AESEIEN_Pos)                 /*!< CRPT_T::INTEN: AESEIEN Mask            */
+#define CRPT_INTEN_AESEIEN_Pos            ( 1 )                                              /*!< CRPT_T::INTEN: AESEIEN Position        */
+#define CRPT_INTEN_AESEIEN_Msk            ( 0x1ul << CRPT_INTEN_AESEIEN_Pos )                /*!< CRPT_T::INTEN: AESEIEN Mask            */
 
-#define CRPT_INTEN_TDESIEN_Pos           (8)                                               /*!< CRPT_T::INTEN: TDESIEN Position        */
-#define CRPT_INTEN_TDESIEN_Msk           (0x1ul << CRPT_INTEN_TDESIEN_Pos)                 /*!< CRPT_T::INTEN: TDESIEN Mask            */
+#define CRPT_INTEN_TDESIEN_Pos            ( 8 )                                              /*!< CRPT_T::INTEN: TDESIEN Position        */
+#define CRPT_INTEN_TDESIEN_Msk            ( 0x1ul << CRPT_INTEN_TDESIEN_Pos )                /*!< CRPT_T::INTEN: TDESIEN Mask            */
 
-#define CRPT_INTEN_TDESEIEN_Pos          (9)                                               /*!< CRPT_T::INTEN: TDESEIEN Position       */
-#define CRPT_INTEN_TDESEIEN_Msk          (0x1ul << CRPT_INTEN_TDESEIEN_Pos)                /*!< CRPT_T::INTEN: TDESEIEN Mask           */
+#define CRPT_INTEN_TDESEIEN_Pos           ( 9 )                                              /*!< CRPT_T::INTEN: TDESEIEN Position       */
+#define CRPT_INTEN_TDESEIEN_Msk           ( 0x1ul << CRPT_INTEN_TDESEIEN_Pos )               /*!< CRPT_T::INTEN: TDESEIEN Mask           */
 
-#define CRPT_INTEN_PRNGIEN_Pos           (16)                                              /*!< CRPT_T::INTEN: PRNGIEN Position        */
-#define CRPT_INTEN_PRNGIEN_Msk           (0x1ul << CRPT_INTEN_PRNGIEN_Pos)                 /*!< CRPT_T::INTEN: PRNGIEN Mask            */
+#define CRPT_INTEN_PRNGIEN_Pos            ( 16 )                                             /*!< CRPT_T::INTEN: PRNGIEN Position        */
+#define CRPT_INTEN_PRNGIEN_Msk            ( 0x1ul << CRPT_INTEN_PRNGIEN_Pos )                /*!< CRPT_T::INTEN: PRNGIEN Mask            */
 
-#define CRPT_INTEN_ECCIEN_Pos            (22)                                              /*!< CRPT_T::INTEN: ECCIEN Position         */
-#define CRPT_INTEN_ECCIEN_Msk            (0x1ul << CRPT_INTEN_ECCIEN_Pos)                  /*!< CRPT_T::INTEN: ECCIEN Mask             */
+#define CRPT_INTEN_ECCIEN_Pos             ( 22 )                                             /*!< CRPT_T::INTEN: ECCIEN Position         */
+#define CRPT_INTEN_ECCIEN_Msk             ( 0x1ul << CRPT_INTEN_ECCIEN_Pos )                 /*!< CRPT_T::INTEN: ECCIEN Mask             */
 
-#define CRPT_INTEN_ECCEIEN_Pos           (23)                                              /*!< CRPT_T::INTEN: ECCEIEN Position        */
-#define CRPT_INTEN_ECCEIEN_Msk           (0x1ul << CRPT_INTEN_ECCEIEN_Pos)                 /*!< CRPT_T::INTEN: ECCEIEN Mask            */
+#define CRPT_INTEN_ECCEIEN_Pos            ( 23 )                                             /*!< CRPT_T::INTEN: ECCEIEN Position        */
+#define CRPT_INTEN_ECCEIEN_Msk            ( 0x1ul << CRPT_INTEN_ECCEIEN_Pos )                /*!< CRPT_T::INTEN: ECCEIEN Mask            */
 
-#define CRPT_INTEN_HMACIEN_Pos           (24)                                              /*!< CRPT_T::INTEN: HMACIEN Position        */
-#define CRPT_INTEN_HMACIEN_Msk           (0x1ul << CRPT_INTEN_HMACIEN_Pos)                 /*!< CRPT_T::INTEN: HMACIEN Mask            */
+#define CRPT_INTEN_HMACIEN_Pos            ( 24 )                                             /*!< CRPT_T::INTEN: HMACIEN Position        */
+#define CRPT_INTEN_HMACIEN_Msk            ( 0x1ul << CRPT_INTEN_HMACIEN_Pos )                /*!< CRPT_T::INTEN: HMACIEN Mask            */
 
-#define CRPT_INTEN_HMACEIEN_Pos          (25)                                              /*!< CRPT_T::INTEN: HMACEIEN Position       */
-#define CRPT_INTEN_HMACEIEN_Msk          (0x1ul << CRPT_INTEN_HMACEIEN_Pos)                /*!< CRPT_T::INTEN: HMACEIEN Mask           */
+#define CRPT_INTEN_HMACEIEN_Pos           ( 25 )                                             /*!< CRPT_T::INTEN: HMACEIEN Position       */
+#define CRPT_INTEN_HMACEIEN_Msk           ( 0x1ul << CRPT_INTEN_HMACEIEN_Pos )               /*!< CRPT_T::INTEN: HMACEIEN Mask           */
 
-#define CRPT_INTSTS_AESIF_Pos            (0)                                               /*!< CRPT_T::INTSTS: AESIF Position         */
-#define CRPT_INTSTS_AESIF_Msk            (0x1ul << CRPT_INTSTS_AESIF_Pos)                  /*!< CRPT_T::INTSTS: AESIF Mask             */
+#define CRPT_INTSTS_AESIF_Pos             ( 0 )                                              /*!< CRPT_T::INTSTS: AESIF Position         */
+#define CRPT_INTSTS_AESIF_Msk             ( 0x1ul << CRPT_INTSTS_AESIF_Pos )                 /*!< CRPT_T::INTSTS: AESIF Mask             */
 
-#define CRPT_INTSTS_AESEIF_Pos           (1)                                               /*!< CRPT_T::INTSTS: AESEIF Position        */
-#define CRPT_INTSTS_AESEIF_Msk           (0x1ul << CRPT_INTSTS_AESEIF_Pos)                 /*!< CRPT_T::INTSTS: AESEIF Mask            */
+#define CRPT_INTSTS_AESEIF_Pos            ( 1 )                                              /*!< CRPT_T::INTSTS: AESEIF Position        */
+#define CRPT_INTSTS_AESEIF_Msk            ( 0x1ul << CRPT_INTSTS_AESEIF_Pos )                /*!< CRPT_T::INTSTS: AESEIF Mask            */
 
-#define CRPT_INTSTS_TDESIF_Pos           (8)                                               /*!< CRPT_T::INTSTS: TDESIF Position        */
-#define CRPT_INTSTS_TDESIF_Msk           (0x1ul << CRPT_INTSTS_TDESIF_Pos)                 /*!< CRPT_T::INTSTS: TDESIF Mask            */
+#define CRPT_INTSTS_TDESIF_Pos            ( 8 )                                              /*!< CRPT_T::INTSTS: TDESIF Position        */
+#define CRPT_INTSTS_TDESIF_Msk            ( 0x1ul << CRPT_INTSTS_TDESIF_Pos )                /*!< CRPT_T::INTSTS: TDESIF Mask            */
 
-#define CRPT_INTSTS_TDESEIF_Pos          (9)                                               /*!< CRPT_T::INTSTS: TDESEIF Position       */
-#define CRPT_INTSTS_TDESEIF_Msk          (0x1ul << CRPT_INTSTS_TDESEIF_Pos)                /*!< CRPT_T::INTSTS: TDESEIF Mask           */
+#define CRPT_INTSTS_TDESEIF_Pos           ( 9 )                                              /*!< CRPT_T::INTSTS: TDESEIF Position       */
+#define CRPT_INTSTS_TDESEIF_Msk           ( 0x1ul << CRPT_INTSTS_TDESEIF_Pos )               /*!< CRPT_T::INTSTS: TDESEIF Mask           */
 
-#define CRPT_INTSTS_PRNGIF_Pos           (16)                                              /*!< CRPT_T::INTSTS: PRNGIF Position        */
-#define CRPT_INTSTS_PRNGIF_Msk           (0x1ul << CRPT_INTSTS_PRNGIF_Pos)                 /*!< CRPT_T::INTSTS: PRNGIF Mask            */
+#define CRPT_INTSTS_PRNGIF_Pos            ( 16 )                                             /*!< CRPT_T::INTSTS: PRNGIF Position        */
+#define CRPT_INTSTS_PRNGIF_Msk            ( 0x1ul << CRPT_INTSTS_PRNGIF_Pos )                /*!< CRPT_T::INTSTS: PRNGIF Mask            */
 
-#define CRPT_INTSTS_ECCIF_Pos            (22)                                              /*!< CRPT_T::INTSTS: ECCIF Position         */
-#define CRPT_INTSTS_ECCIF_Msk            (0x1ul << CRPT_INTSTS_ECCIF_Pos)                  /*!< CRPT_T::INTSTS: ECCIF Mask             */
+#define CRPT_INTSTS_ECCIF_Pos             ( 22 )                                             /*!< CRPT_T::INTSTS: ECCIF Position         */
+#define CRPT_INTSTS_ECCIF_Msk             ( 0x1ul << CRPT_INTSTS_ECCIF_Pos )                 /*!< CRPT_T::INTSTS: ECCIF Mask             */
 
-#define CRPT_INTSTS_ECCEIF_Pos           (23)                                              /*!< CRPT_T::INTSTS: ECCEIF Position        */
-#define CRPT_INTSTS_ECCEIF_Msk           (0x1ul << CRPT_INTSTS_ECCEIF_Pos)                 /*!< CRPT_T::INTSTS: ECCEIF Mask            */
+#define CRPT_INTSTS_ECCEIF_Pos            ( 23 )                                             /*!< CRPT_T::INTSTS: ECCEIF Position        */
+#define CRPT_INTSTS_ECCEIF_Msk            ( 0x1ul << CRPT_INTSTS_ECCEIF_Pos )                /*!< CRPT_T::INTSTS: ECCEIF Mask            */
 
-#define CRPT_INTSTS_HMACIF_Pos           (24)                                              /*!< CRPT_T::INTSTS: HMACIF Position        */
-#define CRPT_INTSTS_HMACIF_Msk           (0x1ul << CRPT_INTSTS_HMACIF_Pos)                 /*!< CRPT_T::INTSTS: HMACIF Mask            */
+#define CRPT_INTSTS_HMACIF_Pos            ( 24 )                                             /*!< CRPT_T::INTSTS: HMACIF Position        */
+#define CRPT_INTSTS_HMACIF_Msk            ( 0x1ul << CRPT_INTSTS_HMACIF_Pos )                /*!< CRPT_T::INTSTS: HMACIF Mask            */
 
-#define CRPT_INTSTS_HMACEIF_Pos          (25)                                              /*!< CRPT_T::INTSTS: HMACEIF Position       */
-#define CRPT_INTSTS_HMACEIF_Msk          (0x1ul << CRPT_INTSTS_HMACEIF_Pos)                /*!< CRPT_T::INTSTS: HMACEIF Mask           */
+#define CRPT_INTSTS_HMACEIF_Pos           ( 25 )                                             /*!< CRPT_T::INTSTS: HMACEIF Position       */
+#define CRPT_INTSTS_HMACEIF_Msk           ( 0x1ul << CRPT_INTSTS_HMACEIF_Pos )               /*!< CRPT_T::INTSTS: HMACEIF Mask           */
 
-#define CRPT_PRNG_CTL_START_Pos          (0)                                               /*!< CRPT_T::PRNG_CTL: START Position       */
-#define CRPT_PRNG_CTL_START_Msk          (0x1ul << CRPT_PRNG_CTL_START_Pos)                /*!< CRPT_T::PRNG_CTL: START Mask           */
+#define CRPT_PRNG_CTL_START_Pos           ( 0 )                                              /*!< CRPT_T::PRNG_CTL: START Position       */
+#define CRPT_PRNG_CTL_START_Msk           ( 0x1ul << CRPT_PRNG_CTL_START_Pos )               /*!< CRPT_T::PRNG_CTL: START Mask           */
 
-#define CRPT_PRNG_CTL_SEEDRLD_Pos        (1)                                               /*!< CRPT_T::PRNG_CTL: SEEDRLD Position     */
-#define CRPT_PRNG_CTL_SEEDRLD_Msk        (0x1ul << CRPT_PRNG_CTL_SEEDRLD_Pos)              /*!< CRPT_T::PRNG_CTL: SEEDRLD Mask         */
+#define CRPT_PRNG_CTL_SEEDRLD_Pos         ( 1 )                                              /*!< CRPT_T::PRNG_CTL: SEEDRLD Position     */
+#define CRPT_PRNG_CTL_SEEDRLD_Msk         ( 0x1ul << CRPT_PRNG_CTL_SEEDRLD_Pos )             /*!< CRPT_T::PRNG_CTL: SEEDRLD Mask         */
 
-#define CRPT_PRNG_CTL_KEYSZ_Pos          (2)                                               /*!< CRPT_T::PRNG_CTL: KEYSZ Position       */
-#define CRPT_PRNG_CTL_KEYSZ_Msk          (0x3ul << CRPT_PRNG_CTL_KEYSZ_Pos)                /*!< CRPT_T::PRNG_CTL: KEYSZ Mask           */
+#define CRPT_PRNG_CTL_KEYSZ_Pos           ( 2 )                                              /*!< CRPT_T::PRNG_CTL: KEYSZ Position       */
+#define CRPT_PRNG_CTL_KEYSZ_Msk           ( 0x3ul << CRPT_PRNG_CTL_KEYSZ_Pos )               /*!< CRPT_T::PRNG_CTL: KEYSZ Mask           */
 
-#define CRPT_PRNG_CTL_BUSY_Pos           (8)                                               /*!< CRPT_T::PRNG_CTL: BUSY Position        */
-#define CRPT_PRNG_CTL_BUSY_Msk           (0x1ul << CRPT_PRNG_CTL_BUSY_Pos)                 /*!< CRPT_T::PRNG_CTL: BUSY Mask            */
+#define CRPT_PRNG_CTL_BUSY_Pos            ( 8 )                                              /*!< CRPT_T::PRNG_CTL: BUSY Position        */
+#define CRPT_PRNG_CTL_BUSY_Msk            ( 0x1ul << CRPT_PRNG_CTL_BUSY_Pos )                /*!< CRPT_T::PRNG_CTL: BUSY Mask            */
 
-#define CRPT_PRNG_SEED_SEED_Pos          (0)                                               /*!< CRPT_T::PRNG_SEED: SEED Position       */
-#define CRPT_PRNG_SEED_SEED_Msk          (0xfffffffful << CRPT_PRNG_SEED_SEED_Pos)         /*!< CRPT_T::PRNG_SEED: SEED Mask           */
+#define CRPT_PRNG_SEED_SEED_Pos           ( 0 )                                              /*!< CRPT_T::PRNG_SEED: SEED Position       */
+#define CRPT_PRNG_SEED_SEED_Msk           ( 0xfffffffful << CRPT_PRNG_SEED_SEED_Pos )        /*!< CRPT_T::PRNG_SEED: SEED Mask           */
 
-#define CRPT_PRNG_KEYx_KEY_Pos           (0)                                               /*!< CRPT_T::PRNG_KEY[8]: KEY Position        */
-#define CRPT_PRNG_KEYx_KEY_Msk           (0xfffffffful << CRPT_PRNG_KEYx_KEY_Pos)          /*!< CRPT_T::PRNG_KEY[8]: KEY Mask            */
+#define CRPT_PRNG_KEYx_KEY_Pos            ( 0 )                                              /*!< CRPT_T::PRNG_KEY[8]: KEY Position        */
+#define CRPT_PRNG_KEYx_KEY_Msk            ( 0xfffffffful << CRPT_PRNG_KEYx_KEY_Pos )         /*!< CRPT_T::PRNG_KEY[8]: KEY Mask            */
 
-#define CRPT_AES_FDBCKx_FDBCK_Pos        (0)                                               /*!< CRPT_T::AES_FDBCK[4]: FDBCK Position     */
-#define CRPT_AES_FDBCKx_FDBCK_Msk        (0xfffffffful << CRPT_AES_FDBCKx_FDBCK_Pos)       /*!< CRPT_T::AES_FDBCK[4]: FDBCK Mask         */
+#define CRPT_AES_FDBCKx_FDBCK_Pos         ( 0 )                                              /*!< CRPT_T::AES_FDBCK[4]: FDBCK Position     */
+#define CRPT_AES_FDBCKx_FDBCK_Msk         ( 0xfffffffful << CRPT_AES_FDBCKx_FDBCK_Pos )      /*!< CRPT_T::AES_FDBCK[4]: FDBCK Mask         */
 
-#define CRPT_TDES_FDBCKH_FDBCK_Pos       (0)                                               /*!< CRPT_T::TDES_FDBCKH: FDBCK Position    */
-#define CRPT_TDES_FDBCKH_FDBCK_Msk       (0xfffffffful << CRPT_TDES_FDBCKH_FDBCK_Pos)      /*!< CRPT_T::TDES_FDBCKH: FDBCK Mask        */
+#define CRPT_TDES_FDBCKH_FDBCK_Pos        ( 0 )                                              /*!< CRPT_T::TDES_FDBCKH: FDBCK Position    */
+#define CRPT_TDES_FDBCKH_FDBCK_Msk        ( 0xfffffffful << CRPT_TDES_FDBCKH_FDBCK_Pos )     /*!< CRPT_T::TDES_FDBCKH: FDBCK Mask        */
 
-#define CRPT_TDES_FDBCKL_FDBCK_Pos       (0)                                               /*!< CRPT_T::TDES_FDBCKL: FDBCK Position    */
-#define CRPT_TDES_FDBCKL_FDBCK_Msk       (0xfffffffful << CRPT_TDES_FDBCKL_FDBCK_Pos)      /*!< CRPT_T::TDES_FDBCKL: FDBCK Mask        */
+#define CRPT_TDES_FDBCKL_FDBCK_Pos        ( 0 )                                              /*!< CRPT_T::TDES_FDBCKL: FDBCK Position    */
+#define CRPT_TDES_FDBCKL_FDBCK_Msk        ( 0xfffffffful << CRPT_TDES_FDBCKL_FDBCK_Pos )     /*!< CRPT_T::TDES_FDBCKL: FDBCK Mask        */
 
-#define CRPT_AES_CTL_START_Pos           (0)                                               /*!< CRPT_T::AES_CTL: START Position        */
-#define CRPT_AES_CTL_START_Msk           (0x1ul << CRPT_AES_CTL_START_Pos)                 /*!< CRPT_T::AES_CTL: START Mask            */
+#define CRPT_AES_CTL_START_Pos            ( 0 )                                              /*!< CRPT_T::AES_CTL: START Position        */
+#define CRPT_AES_CTL_START_Msk            ( 0x1ul << CRPT_AES_CTL_START_Pos )                /*!< CRPT_T::AES_CTL: START Mask            */
 
-#define CRPT_AES_CTL_STOP_Pos            (1)                                               /*!< CRPT_T::AES_CTL: STOP Position         */
-#define CRPT_AES_CTL_STOP_Msk            (0x1ul << CRPT_AES_CTL_STOP_Pos)                  /*!< CRPT_T::AES_CTL: STOP Mask             */
+#define CRPT_AES_CTL_STOP_Pos             ( 1 )                                              /*!< CRPT_T::AES_CTL: STOP Position         */
+#define CRPT_AES_CTL_STOP_Msk             ( 0x1ul << CRPT_AES_CTL_STOP_Pos )                 /*!< CRPT_T::AES_CTL: STOP Mask             */
 
-#define CRPT_AES_CTL_KEYSZ_Pos           (2)                                               /*!< CRPT_T::AES_CTL: KEYSZ Position        */
-#define CRPT_AES_CTL_KEYSZ_Msk           (0x3ul << CRPT_AES_CTL_KEYSZ_Pos)                 /*!< CRPT_T::AES_CTL: KEYSZ Mask            */
+#define CRPT_AES_CTL_KEYSZ_Pos            ( 2 )                                              /*!< CRPT_T::AES_CTL: KEYSZ Position        */
+#define CRPT_AES_CTL_KEYSZ_Msk            ( 0x3ul << CRPT_AES_CTL_KEYSZ_Pos )                /*!< CRPT_T::AES_CTL: KEYSZ Mask            */
 
-#define CRPT_AES_CTL_DMALAST_Pos         (5)                                               /*!< CRPT_T::AES_CTL: DMALAST Position      */
-#define CRPT_AES_CTL_DMALAST_Msk         (0x1ul << CRPT_AES_CTL_DMALAST_Pos)               /*!< CRPT_T::AES_CTL: DMALAST Mask          */
+#define CRPT_AES_CTL_DMALAST_Pos          ( 5 )                                              /*!< CRPT_T::AES_CTL: DMALAST Position      */
+#define CRPT_AES_CTL_DMALAST_Msk          ( 0x1ul << CRPT_AES_CTL_DMALAST_Pos )              /*!< CRPT_T::AES_CTL: DMALAST Mask          */
 
-#define CRPT_AES_CTL_DMACSCAD_Pos        (6)                                               /*!< CRPT_T::AES_CTL: DMACSCAD Position     */
-#define CRPT_AES_CTL_DMACSCAD_Msk        (0x1ul << CRPT_AES_CTL_DMACSCAD_Pos)              /*!< CRPT_T::AES_CTL: DMACSCAD Mask         */
+#define CRPT_AES_CTL_DMACSCAD_Pos         ( 6 )                                              /*!< CRPT_T::AES_CTL: DMACSCAD Position     */
+#define CRPT_AES_CTL_DMACSCAD_Msk         ( 0x1ul << CRPT_AES_CTL_DMACSCAD_Pos )             /*!< CRPT_T::AES_CTL: DMACSCAD Mask         */
 
-#define CRPT_AES_CTL_DMAEN_Pos           (7)                                               /*!< CRPT_T::AES_CTL: DMAEN Position        */
-#define CRPT_AES_CTL_DMAEN_Msk           (0x1ul << CRPT_AES_CTL_DMAEN_Pos)                 /*!< CRPT_T::AES_CTL: DMAEN Mask            */
+#define CRPT_AES_CTL_DMAEN_Pos            ( 7 )                                              /*!< CRPT_T::AES_CTL: DMAEN Position        */
+#define CRPT_AES_CTL_DMAEN_Msk            ( 0x1ul << CRPT_AES_CTL_DMAEN_Pos )                /*!< CRPT_T::AES_CTL: DMAEN Mask            */
 
-#define CRPT_AES_CTL_OPMODE_Pos          (8)                                               /*!< CRPT_T::AES_CTL: OPMODE Position       */
-#define CRPT_AES_CTL_OPMODE_Msk          (0xfful << CRPT_AES_CTL_OPMODE_Pos)               /*!< CRPT_T::AES_CTL: OPMODE Mask           */
+#define CRPT_AES_CTL_OPMODE_Pos           ( 8 )                                              /*!< CRPT_T::AES_CTL: OPMODE Position       */
+#define CRPT_AES_CTL_OPMODE_Msk           ( 0xfful << CRPT_AES_CTL_OPMODE_Pos )              /*!< CRPT_T::AES_CTL: OPMODE Mask           */
 
-#define CRPT_AES_CTL_ENCRPT_Pos          (16)                                              /*!< CRPT_T::AES_CTL: ENCRPT Position       */
-#define CRPT_AES_CTL_ENCRPT_Msk          (0x1ul << CRPT_AES_CTL_ENCRPT_Pos)                /*!< CRPT_T::AES_CTL: ENCRPT Mask           */
+#define CRPT_AES_CTL_ENCRPT_Pos           ( 16 )                                             /*!< CRPT_T::AES_CTL: ENCRPT Position       */
+#define CRPT_AES_CTL_ENCRPT_Msk           ( 0x1ul << CRPT_AES_CTL_ENCRPT_Pos )               /*!< CRPT_T::AES_CTL: ENCRPT Mask           */
 
-#define CRPT_AES_CTL_OUTSWAP_Pos         (22)                                              /*!< CRPT_T::AES_CTL: OUTSWAP Position      */
-#define CRPT_AES_CTL_OUTSWAP_Msk         (0x1ul << CRPT_AES_CTL_OUTSWAP_Pos)               /*!< CRPT_T::AES_CTL: OUTSWAP Mask          */
+#define CRPT_AES_CTL_OUTSWAP_Pos          ( 22 )                                             /*!< CRPT_T::AES_CTL: OUTSWAP Position      */
+#define CRPT_AES_CTL_OUTSWAP_Msk          ( 0x1ul << CRPT_AES_CTL_OUTSWAP_Pos )              /*!< CRPT_T::AES_CTL: OUTSWAP Mask          */
 
-#define CRPT_AES_CTL_INSWAP_Pos          (23)                                              /*!< CRPT_T::AES_CTL: INSWAP Position       */
-#define CRPT_AES_CTL_INSWAP_Msk          (0x1ul << CRPT_AES_CTL_INSWAP_Pos)                /*!< CRPT_T::AES_CTL: INSWAP Mask           */
+#define CRPT_AES_CTL_INSWAP_Pos           ( 23 )                                             /*!< CRPT_T::AES_CTL: INSWAP Position       */
+#define CRPT_AES_CTL_INSWAP_Msk           ( 0x1ul << CRPT_AES_CTL_INSWAP_Pos )               /*!< CRPT_T::AES_CTL: INSWAP Mask           */
 
-#define CRPT_AES_CTL_CHANNEL_Pos         (24)                                              /*!< CRPT_T::AES_CTL: CHANNEL Position      */
-#define CRPT_AES_CTL_CHANNEL_Msk         (0x3ul << CRPT_AES_CTL_CHANNEL_Pos)               /*!< CRPT_T::AES_CTL: CHANNEL Mask          */
+#define CRPT_AES_CTL_CHANNEL_Pos          ( 24 )                                             /*!< CRPT_T::AES_CTL: CHANNEL Position      */
+#define CRPT_AES_CTL_CHANNEL_Msk          ( 0x3ul << CRPT_AES_CTL_CHANNEL_Pos )              /*!< CRPT_T::AES_CTL: CHANNEL Mask          */
 
-#define CRPT_AES_CTL_KEYUNPRT_Pos        (26)                                              /*!< CRPT_T::AES_CTL: KEYUNPRT Position     */
-#define CRPT_AES_CTL_KEYUNPRT_Msk        (0x1ful << CRPT_AES_CTL_KEYUNPRT_Pos)             /*!< CRPT_T::AES_CTL: KEYUNPRT Mask         */
+#define CRPT_AES_CTL_KEYUNPRT_Pos         ( 26 )                                             /*!< CRPT_T::AES_CTL: KEYUNPRT Position     */
+#define CRPT_AES_CTL_KEYUNPRT_Msk         ( 0x1ful << CRPT_AES_CTL_KEYUNPRT_Pos )            /*!< CRPT_T::AES_CTL: KEYUNPRT Mask         */
 
-#define CRPT_AES_CTL_KEYPRT_Pos          (31)                                              /*!< CRPT_T::AES_CTL: KEYPRT Position       */
-#define CRPT_AES_CTL_KEYPRT_Msk          (0x1ul << CRPT_AES_CTL_KEYPRT_Pos)                /*!< CRPT_T::AES_CTL: KEYPRT Mask           */
+#define CRPT_AES_CTL_KEYPRT_Pos           ( 31 )                                             /*!< CRPT_T::AES_CTL: KEYPRT Position       */
+#define CRPT_AES_CTL_KEYPRT_Msk           ( 0x1ul << CRPT_AES_CTL_KEYPRT_Pos )               /*!< CRPT_T::AES_CTL: KEYPRT Mask           */
 
-#define CRPT_AES_STS_BUSY_Pos            (0)                                               /*!< CRPT_T::AES_STS: BUSY Position         */
-#define CRPT_AES_STS_BUSY_Msk            (0x1ul << CRPT_AES_STS_BUSY_Pos)                  /*!< CRPT_T::AES_STS: BUSY Mask             */
+#define CRPT_AES_STS_BUSY_Pos             ( 0 )                                              /*!< CRPT_T::AES_STS: BUSY Position         */
+#define CRPT_AES_STS_BUSY_Msk             ( 0x1ul << CRPT_AES_STS_BUSY_Pos )                 /*!< CRPT_T::AES_STS: BUSY Mask             */
 
-#define CRPT_AES_STS_INBUFEMPTY_Pos      (8)                                               /*!< CRPT_T::AES_STS: INBUFEMPTY Position   */
-#define CRPT_AES_STS_INBUFEMPTY_Msk      (0x1ul << CRPT_AES_STS_INBUFEMPTY_Pos)            /*!< CRPT_T::AES_STS: INBUFEMPTY Mask       */
+#define CRPT_AES_STS_INBUFEMPTY_Pos       ( 8 )                                              /*!< CRPT_T::AES_STS: INBUFEMPTY Position   */
+#define CRPT_AES_STS_INBUFEMPTY_Msk       ( 0x1ul << CRPT_AES_STS_INBUFEMPTY_Pos )           /*!< CRPT_T::AES_STS: INBUFEMPTY Mask       */
 
-#define CRPT_AES_STS_INBUFFULL_Pos       (9)                                               /*!< CRPT_T::AES_STS: INBUFFULL Position    */
-#define CRPT_AES_STS_INBUFFULL_Msk       (0x1ul << CRPT_AES_STS_INBUFFULL_Pos)             /*!< CRPT_T::AES_STS: INBUFFULL Mask        */
+#define CRPT_AES_STS_INBUFFULL_Pos        ( 9 )                                              /*!< CRPT_T::AES_STS: INBUFFULL Position    */
+#define CRPT_AES_STS_INBUFFULL_Msk        ( 0x1ul << CRPT_AES_STS_INBUFFULL_Pos )            /*!< CRPT_T::AES_STS: INBUFFULL Mask        */
 
-#define CRPT_AES_STS_INBUFERR_Pos        (10)                                              /*!< CRPT_T::AES_STS: INBUFERR Position     */
-#define CRPT_AES_STS_INBUFERR_Msk        (0x1ul << CRPT_AES_STS_INBUFERR_Pos)              /*!< CRPT_T::AES_STS: INBUFERR Mask         */
+#define CRPT_AES_STS_INBUFERR_Pos         ( 10 )                                             /*!< CRPT_T::AES_STS: INBUFERR Position     */
+#define CRPT_AES_STS_INBUFERR_Msk         ( 0x1ul << CRPT_AES_STS_INBUFERR_Pos )             /*!< CRPT_T::AES_STS: INBUFERR Mask         */
 
-#define CRPT_AES_STS_CNTERR_Pos          (12)                                              /*!< CRPT_T::AES_STS: CNTERR Position       */
-#define CRPT_AES_STS_CNTERR_Msk          (0x1ul << CRPT_AES_STS_CNTERR_Pos)                /*!< CRPT_T::AES_STS: CNTERR Mask           */
+#define CRPT_AES_STS_CNTERR_Pos           ( 12 )                                             /*!< CRPT_T::AES_STS: CNTERR Position       */
+#define CRPT_AES_STS_CNTERR_Msk           ( 0x1ul << CRPT_AES_STS_CNTERR_Pos )               /*!< CRPT_T::AES_STS: CNTERR Mask           */
 
-#define CRPT_AES_STS_OUTBUFEMPTY_Pos     (16)                                              /*!< CRPT_T::AES_STS: OUTBUFEMPTY Position  */
-#define CRPT_AES_STS_OUTBUFEMPTY_Msk     (0x1ul << CRPT_AES_STS_OUTBUFEMPTY_Pos)           /*!< CRPT_T::AES_STS: OUTBUFEMPTY Mask      */
+#define CRPT_AES_STS_OUTBUFEMPTY_Pos      ( 16 )                                             /*!< CRPT_T::AES_STS: OUTBUFEMPTY Position  */
+#define CRPT_AES_STS_OUTBUFEMPTY_Msk      ( 0x1ul << CRPT_AES_STS_OUTBUFEMPTY_Pos )          /*!< CRPT_T::AES_STS: OUTBUFEMPTY Mask      */
 
-#define CRPT_AES_STS_OUTBUFFULL_Pos      (17)                                              /*!< CRPT_T::AES_STS: OUTBUFFULL Position   */
-#define CRPT_AES_STS_OUTBUFFULL_Msk      (0x1ul << CRPT_AES_STS_OUTBUFFULL_Pos)            /*!< CRPT_T::AES_STS: OUTBUFFULL Mask       */
+#define CRPT_AES_STS_OUTBUFFULL_Pos       ( 17 )                                             /*!< CRPT_T::AES_STS: OUTBUFFULL Position   */
+#define CRPT_AES_STS_OUTBUFFULL_Msk       ( 0x1ul << CRPT_AES_STS_OUTBUFFULL_Pos )           /*!< CRPT_T::AES_STS: OUTBUFFULL Mask       */
 
-#define CRPT_AES_STS_OUTBUFERR_Pos       (18)                                              /*!< CRPT_T::AES_STS: OUTBUFERR Position    */
-#define CRPT_AES_STS_OUTBUFERR_Msk       (0x1ul << CRPT_AES_STS_OUTBUFERR_Pos)             /*!< CRPT_T::AES_STS: OUTBUFERR Mask        */
+#define CRPT_AES_STS_OUTBUFERR_Pos        ( 18 )                                             /*!< CRPT_T::AES_STS: OUTBUFERR Position    */
+#define CRPT_AES_STS_OUTBUFERR_Msk        ( 0x1ul << CRPT_AES_STS_OUTBUFERR_Pos )            /*!< CRPT_T::AES_STS: OUTBUFERR Mask        */
 
-#define CRPT_AES_STS_BUSERR_Pos          (20)                                              /*!< CRPT_T::AES_STS: BUSERR Position       */
-#define CRPT_AES_STS_BUSERR_Msk          (0x1ul << CRPT_AES_STS_BUSERR_Pos)                /*!< CRPT_T::AES_STS: BUSERR Mask           */
+#define CRPT_AES_STS_BUSERR_Pos           ( 20 )                                             /*!< CRPT_T::AES_STS: BUSERR Position       */
+#define CRPT_AES_STS_BUSERR_Msk           ( 0x1ul << CRPT_AES_STS_BUSERR_Pos )               /*!< CRPT_T::AES_STS: BUSERR Mask           */
 
-#define CRPT_AES_DATIN_DATIN_Pos         (0)                                               /*!< CRPT_T::AES_DATIN: DATIN Position      */
-#define CRPT_AES_DATIN_DATIN_Msk         (0xfffffffful << CRPT_AES_DATIN_DATIN_Pos)        /*!< CRPT_T::AES_DATIN: DATIN Mask          */
+#define CRPT_AES_DATIN_DATIN_Pos          ( 0 )                                              /*!< CRPT_T::AES_DATIN: DATIN Position      */
+#define CRPT_AES_DATIN_DATIN_Msk          ( 0xfffffffful << CRPT_AES_DATIN_DATIN_Pos )       /*!< CRPT_T::AES_DATIN: DATIN Mask          */
 
-#define CRPT_AES_DATOUT_DATOUT_Pos       (0)                                               /*!< CRPT_T::AES_DATOUT: DATOUT Position    */
-#define CRPT_AES_DATOUT_DATOUT_Msk       (0xfffffffful << CRPT_AES_DATOUT_DATOUT_Pos)      /*!< CRPT_T::AES_DATOUT: DATOUT Mask        */
+#define CRPT_AES_DATOUT_DATOUT_Pos        ( 0 )                                              /*!< CRPT_T::AES_DATOUT: DATOUT Position    */
+#define CRPT_AES_DATOUT_DATOUT_Msk        ( 0xfffffffful << CRPT_AES_DATOUT_DATOUT_Pos )     /*!< CRPT_T::AES_DATOUT: DATOUT Mask        */
 
-#define CRPT_AES0_KEYx_KEY_Pos           (0)                                               /*!< CRPT_T::AES0_KEY[8]: KEY Position        */
-#define CRPT_AES0_KEYx_KEY_Msk           (0xfffffffful << CRPT_AES0_KEYx_KEY_Pos)          /*!< CRPT_T::AES0_KEY[8]: KEY Mask            */
+#define CRPT_AES0_KEYx_KEY_Pos            ( 0 )                                              /*!< CRPT_T::AES0_KEY[8]: KEY Position        */
+#define CRPT_AES0_KEYx_KEY_Msk            ( 0xfffffffful << CRPT_AES0_KEYx_KEY_Pos )         /*!< CRPT_T::AES0_KEY[8]: KEY Mask            */
 
-#define CRPT_AES0_IVx_IV_Pos             (0)                                               /*!< CRPT_T::AES0_IV[4]: IV Position          */
-#define CRPT_AES0_IVx_IV_Msk             (0xfffffffful << CRPT_AES0_IVx_IV_Pos)            /*!< CRPT_T::AES0_IV[4]: IV Mask              */
+#define CRPT_AES0_IVx_IV_Pos              ( 0 )                                              /*!< CRPT_T::AES0_IV[4]: IV Position          */
+#define CRPT_AES0_IVx_IV_Msk              ( 0xfffffffful << CRPT_AES0_IVx_IV_Pos )           /*!< CRPT_T::AES0_IV[4]: IV Mask              */
 
-#define CRPT_AES0_SADDR_SADDR_Pos        (0)                                               /*!< CRPT_T::AES0_SADDR: SADDR Position     */
-#define CRPT_AES0_SADDR_SADDR_Msk        (0xfffffffful << CRPT_AES0_SADDR_SADDR_Pos)       /*!< CRPT_T::AES0_SADDR: SADDR Mask         */
+#define CRPT_AES0_SADDR_SADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES0_SADDR: SADDR Position     */
+#define CRPT_AES0_SADDR_SADDR_Msk         ( 0xfffffffful << CRPT_AES0_SADDR_SADDR_Pos )      /*!< CRPT_T::AES0_SADDR: SADDR Mask         */
 
-#define CRPT_AES0_DADDR_DADDR_Pos        (0)                                               /*!< CRPT_T::AES0_DADDR: DADDR Position     */
-#define CRPT_AES0_DADDR_DADDR_Msk        (0xfffffffful << CRPT_AES0_DADDR_DADDR_Pos)       /*!< CRPT_T::AES0_DADDR: DADDR Mask         */
+#define CRPT_AES0_DADDR_DADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES0_DADDR: DADDR Position     */
+#define CRPT_AES0_DADDR_DADDR_Msk         ( 0xfffffffful << CRPT_AES0_DADDR_DADDR_Pos )      /*!< CRPT_T::AES0_DADDR: DADDR Mask         */
 
-#define CRPT_AES0_CNT_CNT_Pos            (0)                                               /*!< CRPT_T::AES0_CNT: CNT Position         */
-#define CRPT_AES0_CNT_CNT_Msk            (0xfffffffful << CRPT_AES0_CNT_CNT_Pos)           /*!< CRPT_T::AES0_CNT: CNT Mask             */
+#define CRPT_AES0_CNT_CNT_Pos             ( 0 )                                              /*!< CRPT_T::AES0_CNT: CNT Position         */
+#define CRPT_AES0_CNT_CNT_Msk             ( 0xfffffffful << CRPT_AES0_CNT_CNT_Pos )          /*!< CRPT_T::AES0_CNT: CNT Mask             */
 
-#define CRPT_AES1_KEYx_KEY_Pos           (0)                                               /*!< CRPT_T::AES1_KEY[8]: KEY Position        */
-#define CRPT_AES1_KEYx_KEY_Msk           (0xfffffffful << CRPT_AES1_KEYx_KEY_Pos)          /*!< CRPT_T::AES1_KEY[8]: KEY Mask            */
+#define CRPT_AES1_KEYx_KEY_Pos            ( 0 )                                              /*!< CRPT_T::AES1_KEY[8]: KEY Position        */
+#define CRPT_AES1_KEYx_KEY_Msk            ( 0xfffffffful << CRPT_AES1_KEYx_KEY_Pos )         /*!< CRPT_T::AES1_KEY[8]: KEY Mask            */
 
-#define CRPT_AES1_IVx_IV_Pos             (0)                                               /*!< CRPT_T::AES1_IV[4]: IV Position          */
-#define CRPT_AES1_IVx_IV_Msk             (0xfffffffful << CRPT_AES1_IVx_IV_Pos)            /*!< CRPT_T::AES1_IV[4]: IV Mask              */
+#define CRPT_AES1_IVx_IV_Pos              ( 0 )                                              /*!< CRPT_T::AES1_IV[4]: IV Position          */
+#define CRPT_AES1_IVx_IV_Msk              ( 0xfffffffful << CRPT_AES1_IVx_IV_Pos )           /*!< CRPT_T::AES1_IV[4]: IV Mask              */
 
-#define CRPT_AES1_SADDR_SADDR_Pos        (0)                                               /*!< CRPT_T::AES1_SADDR: SADDR Position     */
-#define CRPT_AES1_SADDR_SADDR_Msk        (0xfffffffful << CRPT_AES1_SADDR_SADDR_Pos)       /*!< CRPT_T::AES1_SADDR: SADDR Mask         */
+#define CRPT_AES1_SADDR_SADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES1_SADDR: SADDR Position     */
+#define CRPT_AES1_SADDR_SADDR_Msk         ( 0xfffffffful << CRPT_AES1_SADDR_SADDR_Pos )      /*!< CRPT_T::AES1_SADDR: SADDR Mask         */
 
-#define CRPT_AES1_DADDR_DADDR_Pos        (0)                                               /*!< CRPT_T::AES1_DADDR: DADDR Position     */
-#define CRPT_AES1_DADDR_DADDR_Msk        (0xfffffffful << CRPT_AES1_DADDR_DADDR_Pos)       /*!< CRPT_T::AES1_DADDR: DADDR Mask         */
+#define CRPT_AES1_DADDR_DADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES1_DADDR: DADDR Position     */
+#define CRPT_AES1_DADDR_DADDR_Msk         ( 0xfffffffful << CRPT_AES1_DADDR_DADDR_Pos )      /*!< CRPT_T::AES1_DADDR: DADDR Mask         */
 
-#define CRPT_AES1_CNT_CNT_Pos            (0)                                               /*!< CRPT_T::AES1_CNT: CNT Position         */
-#define CRPT_AES1_CNT_CNT_Msk            (0xfffffffful << CRPT_AES1_CNT_CNT_Pos)           /*!< CRPT_T::AES1_CNT: CNT Mask             */
+#define CRPT_AES1_CNT_CNT_Pos             ( 0 )                                              /*!< CRPT_T::AES1_CNT: CNT Position         */
+#define CRPT_AES1_CNT_CNT_Msk             ( 0xfffffffful << CRPT_AES1_CNT_CNT_Pos )          /*!< CRPT_T::AES1_CNT: CNT Mask             */
 
-#define CRPT_AES2_KEYx_KEY_Pos           (0)                                               /*!< CRPT_T::AES2_KEYx: KEY Position        */
-#define CRPT_AES2_KEYx_KEY_Msk           (0xfffffffful << CRPT_AES2_KEYx_KEY_Pos)          /*!< CRPT_T::AES2_KEYx: KEY Mask            */
+#define CRPT_AES2_KEYx_KEY_Pos            ( 0 )                                              /*!< CRPT_T::AES2_KEYx: KEY Position        */
+#define CRPT_AES2_KEYx_KEY_Msk            ( 0xfffffffful << CRPT_AES2_KEYx_KEY_Pos )         /*!< CRPT_T::AES2_KEYx: KEY Mask            */
 
-#define CRPT_AES2_IVx_IV_Pos             (0)                                               /*!< CRPT_T::AES2_IVx: IV Position          */
-#define CRPT_AES2_IVx_IV_Msk             (0xfffffffful << CRPT_AES2_IVx_IV_Pos)            /*!< CRPT_T::AES2_IVx: IV Mask              */
+#define CRPT_AES2_IVx_IV_Pos              ( 0 )                                              /*!< CRPT_T::AES2_IVx: IV Position          */
+#define CRPT_AES2_IVx_IV_Msk              ( 0xfffffffful << CRPT_AES2_IVx_IV_Pos )           /*!< CRPT_T::AES2_IVx: IV Mask              */
 
-#define CRPT_AES2_SADDR_SADDR_Pos        (0)                                               /*!< CRPT_T::AES2_SADDR: SADDR Position     */
-#define CRPT_AES2_SADDR_SADDR_Msk        (0xfffffffful << CRPT_AES2_SADDR_SADDR_Pos)       /*!< CRPT_T::AES2_SADDR: SADDR Mask         */
+#define CRPT_AES2_SADDR_SADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES2_SADDR: SADDR Position     */
+#define CRPT_AES2_SADDR_SADDR_Msk         ( 0xfffffffful << CRPT_AES2_SADDR_SADDR_Pos )      /*!< CRPT_T::AES2_SADDR: SADDR Mask         */
 
-#define CRPT_AES2_DADDR_DADDR_Pos        (0)                                               /*!< CRPT_T::AES2_DADDR: DADDR Position     */
-#define CRPT_AES2_DADDR_DADDR_Msk        (0xfffffffful << CRPT_AES2_DADDR_DADDR_Pos)       /*!< CRPT_T::AES2_DADDR: DADDR Mask         */
+#define CRPT_AES2_DADDR_DADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES2_DADDR: DADDR Position     */
+#define CRPT_AES2_DADDR_DADDR_Msk         ( 0xfffffffful << CRPT_AES2_DADDR_DADDR_Pos )      /*!< CRPT_T::AES2_DADDR: DADDR Mask         */
 
-#define CRPT_AES2_CNT_CNT_Pos            (0)                                               /*!< CRPT_T::AES2_CNT: CNT Position         */
-#define CRPT_AES2_CNT_CNT_Msk            (0xfffffffful << CRPT_AES2_CNT_CNT_Pos)           /*!< CRPT_T::AES2_CNT: CNT Mask             */
+#define CRPT_AES2_CNT_CNT_Pos             ( 0 )                                              /*!< CRPT_T::AES2_CNT: CNT Position         */
+#define CRPT_AES2_CNT_CNT_Msk             ( 0xfffffffful << CRPT_AES2_CNT_CNT_Pos )          /*!< CRPT_T::AES2_CNT: CNT Mask             */
 
-#define CRPT_AES3_KEYx_KEY_Pos           (0)                                               /*!< CRPT_T::AES3_KEY[8]: KEY Position        */
-#define CRPT_AES3_KEYx_KEY_Msk           (0xfffffffful << CRPT_AES3_KEYx_KEY_Pos)          /*!< CRPT_T::AES3_KEY[8]: KEY Mask            */
+#define CRPT_AES3_KEYx_KEY_Pos            ( 0 )                                              /*!< CRPT_T::AES3_KEY[8]: KEY Position        */
+#define CRPT_AES3_KEYx_KEY_Msk            ( 0xfffffffful << CRPT_AES3_KEYx_KEY_Pos )         /*!< CRPT_T::AES3_KEY[8]: KEY Mask            */
 
-#define CRPT_AES3_IVx_IV_Pos             (0)                                               /*!< CRPT_T::AES3_IV[4]: IV Position          */
-#define CRPT_AES3_IVx_IV_Msk             (0xfffffffful << CRPT_AES3_IVx_IV_Pos)            /*!< CRPT_T::AES3_IV[4]: IV Mask              */
+#define CRPT_AES3_IVx_IV_Pos              ( 0 )                                              /*!< CRPT_T::AES3_IV[4]: IV Position          */
+#define CRPT_AES3_IVx_IV_Msk              ( 0xfffffffful << CRPT_AES3_IVx_IV_Pos )           /*!< CRPT_T::AES3_IV[4]: IV Mask              */
 
-#define CRPT_AES3_SADDR_SADDR_Pos        (0)                                               /*!< CRPT_T::AES3_SADDR: SADDR Position     */
-#define CRPT_AES3_SADDR_SADDR_Msk        (0xfffffffful << CRPT_AES3_SADDR_SADDR_Pos)       /*!< CRPT_T::AES3_SADDR: SADDR Mask         */
+#define CRPT_AES3_SADDR_SADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES3_SADDR: SADDR Position     */
+#define CRPT_AES3_SADDR_SADDR_Msk         ( 0xfffffffful << CRPT_AES3_SADDR_SADDR_Pos )      /*!< CRPT_T::AES3_SADDR: SADDR Mask         */
 
-#define CRPT_AES3_DADDR_DADDR_Pos        (0)                                               /*!< CRPT_T::AES3_DADDR: DADDR Position     */
-#define CRPT_AES3_DADDR_DADDR_Msk        (0xfffffffful << CRPT_AES3_DADDR_DADDR_Pos)       /*!< CRPT_T::AES3_DADDR: DADDR Mask         */
+#define CRPT_AES3_DADDR_DADDR_Pos         ( 0 )                                              /*!< CRPT_T::AES3_DADDR: DADDR Position     */
+#define CRPT_AES3_DADDR_DADDR_Msk         ( 0xfffffffful << CRPT_AES3_DADDR_DADDR_Pos )      /*!< CRPT_T::AES3_DADDR: DADDR Mask         */
 
-#define CRPT_AES3_CNT_CNT_Pos            (0)                                               /*!< CRPT_T::AES3_CNT: CNT Position         */
-#define CRPT_AES3_CNT_CNT_Msk            (0xfffffffful << CRPT_AES3_CNT_CNT_Pos)           /*!< CRPT_T::AES3_CNT: CNT Mask             */
+#define CRPT_AES3_CNT_CNT_Pos             ( 0 )                                              /*!< CRPT_T::AES3_CNT: CNT Position         */
+#define CRPT_AES3_CNT_CNT_Msk             ( 0xfffffffful << CRPT_AES3_CNT_CNT_Pos )          /*!< CRPT_T::AES3_CNT: CNT Mask             */
 
-#define CRPT_TDES_CTL_START_Pos          (0)                                               /*!< CRPT_T::TDES_CTL: START Position       */
-#define CRPT_TDES_CTL_START_Msk          (0x1ul << CRPT_TDES_CTL_START_Pos)                /*!< CRPT_T::TDES_CTL: START Mask           */
+#define CRPT_TDES_CTL_START_Pos           ( 0 )                                              /*!< CRPT_T::TDES_CTL: START Position       */
+#define CRPT_TDES_CTL_START_Msk           ( 0x1ul << CRPT_TDES_CTL_START_Pos )               /*!< CRPT_T::TDES_CTL: START Mask           */
 
-#define CRPT_TDES_CTL_STOP_Pos           (1)                                               /*!< CRPT_T::TDES_CTL: STOP Position        */
-#define CRPT_TDES_CTL_STOP_Msk           (0x1ul << CRPT_TDES_CTL_STOP_Pos)                 /*!< CRPT_T::TDES_CTL: STOP Mask            */
+#define CRPT_TDES_CTL_STOP_Pos            ( 1 )                                              /*!< CRPT_T::TDES_CTL: STOP Position        */
+#define CRPT_TDES_CTL_STOP_Msk            ( 0x1ul << CRPT_TDES_CTL_STOP_Pos )                /*!< CRPT_T::TDES_CTL: STOP Mask            */
 
-#define CRPT_TDES_CTL_TMODE_Pos          (2)                                               /*!< CRPT_T::TDES_CTL: TMODE Position       */
-#define CRPT_TDES_CTL_TMODE_Msk          (0x1ul << CRPT_TDES_CTL_TMODE_Pos)                /*!< CRPT_T::TDES_CTL: TMODE Mask           */
+#define CRPT_TDES_CTL_TMODE_Pos           ( 2 )                                              /*!< CRPT_T::TDES_CTL: TMODE Position       */
+#define CRPT_TDES_CTL_TMODE_Msk           ( 0x1ul << CRPT_TDES_CTL_TMODE_Pos )               /*!< CRPT_T::TDES_CTL: TMODE Mask           */
 
-#define CRPT_TDES_CTL_3KEYS_Pos          (3)                                               /*!< CRPT_T::TDES_CTL: 3KEYS Position       */
-#define CRPT_TDES_CTL_3KEYS_Msk          (0x1ul << CRPT_TDES_CTL_3KEYS_Pos)                /*!< CRPT_T::TDES_CTL: 3KEYS Mask           */
+#define CRPT_TDES_CTL_3KEYS_Pos           ( 3 )                                              /*!< CRPT_T::TDES_CTL: 3KEYS Position       */
+#define CRPT_TDES_CTL_3KEYS_Msk           ( 0x1ul << CRPT_TDES_CTL_3KEYS_Pos )               /*!< CRPT_T::TDES_CTL: 3KEYS Mask           */
 
-#define CRPT_TDES_CTL_DMALAST_Pos        (5)                                               /*!< CRPT_T::TDES_CTL: DMALAST Position     */
-#define CRPT_TDES_CTL_DMALAST_Msk        (0x1ul << CRPT_TDES_CTL_DMALAST_Pos)              /*!< CRPT_T::TDES_CTL: DMALAST Mask         */
+#define CRPT_TDES_CTL_DMALAST_Pos         ( 5 )                                              /*!< CRPT_T::TDES_CTL: DMALAST Position     */
+#define CRPT_TDES_CTL_DMALAST_Msk         ( 0x1ul << CRPT_TDES_CTL_DMALAST_Pos )             /*!< CRPT_T::TDES_CTL: DMALAST Mask         */
 
-#define CRPT_TDES_CTL_DMACSCAD_Pos       (6)                                               /*!< CRPT_T::TDES_CTL: DMACSCAD Position    */
-#define CRPT_TDES_CTL_DMACSCAD_Msk       (0x1ul << CRPT_TDES_CTL_DMACSCAD_Pos)             /*!< CRPT_T::TDES_CTL: DMACSCAD Mask        */
+#define CRPT_TDES_CTL_DMACSCAD_Pos        ( 6 )                                              /*!< CRPT_T::TDES_CTL: DMACSCAD Position    */
+#define CRPT_TDES_CTL_DMACSCAD_Msk        ( 0x1ul << CRPT_TDES_CTL_DMACSCAD_Pos )            /*!< CRPT_T::TDES_CTL: DMACSCAD Mask        */
 
-#define CRPT_TDES_CTL_DMAEN_Pos          (7)                                               /*!< CRPT_T::TDES_CTL: DMAEN Position       */
-#define CRPT_TDES_CTL_DMAEN_Msk          (0x1ul << CRPT_TDES_CTL_DMAEN_Pos)                /*!< CRPT_T::TDES_CTL: DMAEN Mask           */
+#define CRPT_TDES_CTL_DMAEN_Pos           ( 7 )                                              /*!< CRPT_T::TDES_CTL: DMAEN Position       */
+#define CRPT_TDES_CTL_DMAEN_Msk           ( 0x1ul << CRPT_TDES_CTL_DMAEN_Pos )               /*!< CRPT_T::TDES_CTL: DMAEN Mask           */
 
-#define CRPT_TDES_CTL_OPMODE_Pos         (8)                                               /*!< CRPT_T::TDES_CTL: OPMODE Position      */
-#define CRPT_TDES_CTL_OPMODE_Msk         (0x7ul << CRPT_TDES_CTL_OPMODE_Pos)               /*!< CRPT_T::TDES_CTL: OPMODE Mask          */
+#define CRPT_TDES_CTL_OPMODE_Pos          ( 8 )                                              /*!< CRPT_T::TDES_CTL: OPMODE Position      */
+#define CRPT_TDES_CTL_OPMODE_Msk          ( 0x7ul << CRPT_TDES_CTL_OPMODE_Pos )              /*!< CRPT_T::TDES_CTL: OPMODE Mask          */
 
-#define CRPT_TDES_CTL_ENCRPT_Pos         (16)                                              /*!< CRPT_T::TDES_CTL: ENCRPT Position      */
-#define CRPT_TDES_CTL_ENCRPT_Msk         (0x1ul << CRPT_TDES_CTL_ENCRPT_Pos)               /*!< CRPT_T::TDES_CTL: ENCRPT Mask          */
+#define CRPT_TDES_CTL_ENCRPT_Pos          ( 16 )                                             /*!< CRPT_T::TDES_CTL: ENCRPT Position      */
+#define CRPT_TDES_CTL_ENCRPT_Msk          ( 0x1ul << CRPT_TDES_CTL_ENCRPT_Pos )              /*!< CRPT_T::TDES_CTL: ENCRPT Mask          */
 
-#define CRPT_TDES_CTL_BLKSWAP_Pos        (21)                                              /*!< CRPT_T::TDES_CTL: BLKSWAP Position     */
-#define CRPT_TDES_CTL_BLKSWAP_Msk        (0x1ul << CRPT_TDES_CTL_BLKSWAP_Pos)              /*!< CRPT_T::TDES_CTL: BLKSWAP Mask         */
+#define CRPT_TDES_CTL_BLKSWAP_Pos         ( 21 )                                             /*!< CRPT_T::TDES_CTL: BLKSWAP Position     */
+#define CRPT_TDES_CTL_BLKSWAP_Msk         ( 0x1ul << CRPT_TDES_CTL_BLKSWAP_Pos )             /*!< CRPT_T::TDES_CTL: BLKSWAP Mask         */
 
-#define CRPT_TDES_CTL_OUTSWAP_Pos        (22)                                              /*!< CRPT_T::TDES_CTL: OUTSWAP Position     */
-#define CRPT_TDES_CTL_OUTSWAP_Msk        (0x1ul << CRPT_TDES_CTL_OUTSWAP_Pos)              /*!< CRPT_T::TDES_CTL: OUTSWAP Mask         */
+#define CRPT_TDES_CTL_OUTSWAP_Pos         ( 22 )                                             /*!< CRPT_T::TDES_CTL: OUTSWAP Position     */
+#define CRPT_TDES_CTL_OUTSWAP_Msk         ( 0x1ul << CRPT_TDES_CTL_OUTSWAP_Pos )             /*!< CRPT_T::TDES_CTL: OUTSWAP Mask         */
 
-#define CRPT_TDES_CTL_INSWAP_Pos         (23)                                              /*!< CRPT_T::TDES_CTL: INSWAP Position      */
-#define CRPT_TDES_CTL_INSWAP_Msk         (0x1ul << CRPT_TDES_CTL_INSWAP_Pos)               /*!< CRPT_T::TDES_CTL: INSWAP Mask          */
+#define CRPT_TDES_CTL_INSWAP_Pos          ( 23 )                                             /*!< CRPT_T::TDES_CTL: INSWAP Position      */
+#define CRPT_TDES_CTL_INSWAP_Msk          ( 0x1ul << CRPT_TDES_CTL_INSWAP_Pos )              /*!< CRPT_T::TDES_CTL: INSWAP Mask          */
 
-#define CRPT_TDES_CTL_CHANNEL_Pos        (24)                                              /*!< CRPT_T::TDES_CTL: CHANNEL Position     */
-#define CRPT_TDES_CTL_CHANNEL_Msk        (0x3ul << CRPT_TDES_CTL_CHANNEL_Pos)              /*!< CRPT_T::TDES_CTL: CHANNEL Mask         */
+#define CRPT_TDES_CTL_CHANNEL_Pos         ( 24 )                                             /*!< CRPT_T::TDES_CTL: CHANNEL Position     */
+#define CRPT_TDES_CTL_CHANNEL_Msk         ( 0x3ul << CRPT_TDES_CTL_CHANNEL_Pos )             /*!< CRPT_T::TDES_CTL: CHANNEL Mask         */
 
-#define CRPT_TDES_CTL_KEYUNPRT_Pos       (26)                                              /*!< CRPT_T::TDES_CTL: KEYUNPRT Position    */
-#define CRPT_TDES_CTL_KEYUNPRT_Msk       (0x1ful << CRPT_TDES_CTL_KEYUNPRT_Pos)            /*!< CRPT_T::TDES_CTL: KEYUNPRT Mask        */
+#define CRPT_TDES_CTL_KEYUNPRT_Pos        ( 26 )                                             /*!< CRPT_T::TDES_CTL: KEYUNPRT Position    */
+#define CRPT_TDES_CTL_KEYUNPRT_Msk        ( 0x1ful << CRPT_TDES_CTL_KEYUNPRT_Pos )           /*!< CRPT_T::TDES_CTL: KEYUNPRT Mask        */
 
-#define CRPT_TDES_CTL_KEYPRT_Pos         (31)                                              /*!< CRPT_T::TDES_CTL: KEYPRT Position      */
-#define CRPT_TDES_CTL_KEYPRT_Msk         (0x1ul << CRPT_TDES_CTL_KEYPRT_Pos)               /*!< CRPT_T::TDES_CTL: KEYPRT Mask          */
+#define CRPT_TDES_CTL_KEYPRT_Pos          ( 31 )                                             /*!< CRPT_T::TDES_CTL: KEYPRT Position      */
+#define CRPT_TDES_CTL_KEYPRT_Msk          ( 0x1ul << CRPT_TDES_CTL_KEYPRT_Pos )              /*!< CRPT_T::TDES_CTL: KEYPRT Mask          */
 
-#define CRPT_TDES_STS_BUSY_Pos           (0)                                               /*!< CRPT_T::TDES_STS: BUSY Position        */
-#define CRPT_TDES_STS_BUSY_Msk           (0x1ul << CRPT_TDES_STS_BUSY_Pos)                 /*!< CRPT_T::TDES_STS: BUSY Mask            */
+#define CRPT_TDES_STS_BUSY_Pos            ( 0 )                                              /*!< CRPT_T::TDES_STS: BUSY Position        */
+#define CRPT_TDES_STS_BUSY_Msk            ( 0x1ul << CRPT_TDES_STS_BUSY_Pos )                /*!< CRPT_T::TDES_STS: BUSY Mask            */
 
-#define CRPT_TDES_STS_INBUFEMPTY_Pos     (8)                                               /*!< CRPT_T::TDES_STS: INBUFEMPTY Position  */
-#define CRPT_TDES_STS_INBUFEMPTY_Msk     (0x1ul << CRPT_TDES_STS_INBUFEMPTY_Pos)           /*!< CRPT_T::TDES_STS: INBUFEMPTY Mask      */
+#define CRPT_TDES_STS_INBUFEMPTY_Pos      ( 8 )                                              /*!< CRPT_T::TDES_STS: INBUFEMPTY Position  */
+#define CRPT_TDES_STS_INBUFEMPTY_Msk      ( 0x1ul << CRPT_TDES_STS_INBUFEMPTY_Pos )          /*!< CRPT_T::TDES_STS: INBUFEMPTY Mask      */
 
-#define CRPT_TDES_STS_INBUFFULL_Pos      (9)                                               /*!< CRPT_T::TDES_STS: INBUFFULL Position   */
-#define CRPT_TDES_STS_INBUFFULL_Msk      (0x1ul << CRPT_TDES_STS_INBUFFULL_Pos)            /*!< CRPT_T::TDES_STS: INBUFFULL Mask       */
+#define CRPT_TDES_STS_INBUFFULL_Pos       ( 9 )                                              /*!< CRPT_T::TDES_STS: INBUFFULL Position   */
+#define CRPT_TDES_STS_INBUFFULL_Msk       ( 0x1ul << CRPT_TDES_STS_INBUFFULL_Pos )           /*!< CRPT_T::TDES_STS: INBUFFULL Mask       */
 
-#define CRPT_TDES_STS_INBUFERR_Pos       (10)                                              /*!< CRPT_T::TDES_STS: INBUFERR Position    */
-#define CRPT_TDES_STS_INBUFERR_Msk       (0x1ul << CRPT_TDES_STS_INBUFERR_Pos)             /*!< CRPT_T::TDES_STS: INBUFERR Mask        */
+#define CRPT_TDES_STS_INBUFERR_Pos        ( 10 )                                             /*!< CRPT_T::TDES_STS: INBUFERR Position    */
+#define CRPT_TDES_STS_INBUFERR_Msk        ( 0x1ul << CRPT_TDES_STS_INBUFERR_Pos )            /*!< CRPT_T::TDES_STS: INBUFERR Mask        */
 
-#define CRPT_TDES_STS_OUTBUFEMPTY_Pos    (16)                                              /*!< CRPT_T::TDES_STS: OUTBUFEMPTY Position */
-#define CRPT_TDES_STS_OUTBUFEMPTY_Msk    (0x1ul << CRPT_TDES_STS_OUTBUFEMPTY_Pos)          /*!< CRPT_T::TDES_STS: OUTBUFEMPTY Mask     */
+#define CRPT_TDES_STS_OUTBUFEMPTY_Pos     ( 16 )                                             /*!< CRPT_T::TDES_STS: OUTBUFEMPTY Position */
+#define CRPT_TDES_STS_OUTBUFEMPTY_Msk     ( 0x1ul << CRPT_TDES_STS_OUTBUFEMPTY_Pos )         /*!< CRPT_T::TDES_STS: OUTBUFEMPTY Mask     */
 
-#define CRPT_TDES_STS_OUTBUFFULL_Pos     (17)                                              /*!< CRPT_T::TDES_STS: OUTBUFFULL Position  */
-#define CRPT_TDES_STS_OUTBUFFULL_Msk     (0x1ul << CRPT_TDES_STS_OUTBUFFULL_Pos)           /*!< CRPT_T::TDES_STS: OUTBUFFULL Mask      */
+#define CRPT_TDES_STS_OUTBUFFULL_Pos      ( 17 )                                             /*!< CRPT_T::TDES_STS: OUTBUFFULL Position  */
+#define CRPT_TDES_STS_OUTBUFFULL_Msk      ( 0x1ul << CRPT_TDES_STS_OUTBUFFULL_Pos )          /*!< CRPT_T::TDES_STS: OUTBUFFULL Mask      */
 
-#define CRPT_TDES_STS_OUTBUFERR_Pos      (18)                                              /*!< CRPT_T::TDES_STS: OUTBUFERR Position   */
-#define CRPT_TDES_STS_OUTBUFERR_Msk      (0x1ul << CRPT_TDES_STS_OUTBUFERR_Pos)            /*!< CRPT_T::TDES_STS: OUTBUFERR Mask       */
+#define CRPT_TDES_STS_OUTBUFERR_Pos       ( 18 )                                             /*!< CRPT_T::TDES_STS: OUTBUFERR Position   */
+#define CRPT_TDES_STS_OUTBUFERR_Msk       ( 0x1ul << CRPT_TDES_STS_OUTBUFERR_Pos )           /*!< CRPT_T::TDES_STS: OUTBUFERR Mask       */
 
-#define CRPT_TDES_STS_BUSERR_Pos         (20)                                              /*!< CRPT_T::TDES_STS: BUSERR Position      */
-#define CRPT_TDES_STS_BUSERR_Msk         (0x1ul << CRPT_TDES_STS_BUSERR_Pos)               /*!< CRPT_T::TDES_STS: BUSERR Mask          */
+#define CRPT_TDES_STS_BUSERR_Pos          ( 20 )                                             /*!< CRPT_T::TDES_STS: BUSERR Position      */
+#define CRPT_TDES_STS_BUSERR_Msk          ( 0x1ul << CRPT_TDES_STS_BUSERR_Pos )              /*!< CRPT_T::TDES_STS: BUSERR Mask          */
 
-#define CRPT_TDES0_KEYxH_KEY_Pos         (0)                                               /*!< CRPT_T::TDES0_KEYxH: KEY Position      */
-#define CRPT_TDES0_KEYxH_KEY_Msk         (0xfffffffful << CRPT_TDES0_KEYxH_KEY_Pos)        /*!< CRPT_T::TDES0_KEYxH: KEY Mask          */
+#define CRPT_TDES0_KEYxH_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES0_KEYxH: KEY Position      */
+#define CRPT_TDES0_KEYxH_KEY_Msk          ( 0xfffffffful << CRPT_TDES0_KEYxH_KEY_Pos )       /*!< CRPT_T::TDES0_KEYxH: KEY Mask          */
 
-#define CRPT_TDES0_KEYxL_KEY_Pos         (0)                                               /*!< CRPT_T::TDES0_KEYxL: KEY Position      */
-#define CRPT_TDES0_KEYxL_KEY_Msk         (0xfffffffful << CRPT_TDES0_KEYxL_KEY_Pos)        /*!< CRPT_T::TDES0_KEYxL: KEY Mask          */
+#define CRPT_TDES0_KEYxL_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES0_KEYxL: KEY Position      */
+#define CRPT_TDES0_KEYxL_KEY_Msk          ( 0xfffffffful << CRPT_TDES0_KEYxL_KEY_Pos )       /*!< CRPT_T::TDES0_KEYxL: KEY Mask          */
 
-#define CRPT_TDES0_IVH_IV_Pos            (0)                                               /*!< CRPT_T::TDES0_IVH: IV Position         */
-#define CRPT_TDES0_IVH_IV_Msk            (0xfffffffful << CRPT_TDES0_IVH_IV_Pos)           /*!< CRPT_T::TDES0_IVH: IV Mask             */
+#define CRPT_TDES0_IVH_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES0_IVH: IV Position         */
+#define CRPT_TDES0_IVH_IV_Msk             ( 0xfffffffful << CRPT_TDES0_IVH_IV_Pos )          /*!< CRPT_T::TDES0_IVH: IV Mask             */
 
-#define CRPT_TDES0_IVL_IV_Pos            (0)                                               /*!< CRPT_T::TDES0_IVL: IV Position         */
-#define CRPT_TDES0_IVL_IV_Msk            (0xfffffffful << CRPT_TDES0_IVL_IV_Pos)           /*!< CRPT_T::TDES0_IVL: IV Mask             */
+#define CRPT_TDES0_IVL_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES0_IVL: IV Position         */
+#define CRPT_TDES0_IVL_IV_Msk             ( 0xfffffffful << CRPT_TDES0_IVL_IV_Pos )          /*!< CRPT_T::TDES0_IVL: IV Mask             */
 
-#define CRPT_TDES0_SADDR_SADDR_Pos       (0)                                               /*!< CRPT_T::TDES0_SADDR: SADDR Position    */
-#define CRPT_TDES0_SADDR_SADDR_Msk       (0xfffffffful << CRPT_TDES0_SADDR_SADDR_Pos)      /*!< CRPT_T::TDES0_SADDR: SADDR Mask        */
+#define CRPT_TDES0_SADDR_SADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES0_SADDR: SADDR Position    */
+#define CRPT_TDES0_SADDR_SADDR_Msk        ( 0xfffffffful << CRPT_TDES0_SADDR_SADDR_Pos )     /*!< CRPT_T::TDES0_SADDR: SADDR Mask        */
 
-#define CRPT_TDES0_DADDR_DADDR_Pos       (0)                                               /*!< CRPT_T::TDES0_DADDR: DADDR Position    */
-#define CRPT_TDES0_DADDR_DADDR_Msk       (0xfffffffful << CRPT_TDES0_DADDR_DADDR_Pos)      /*!< CRPT_T::TDES0_DADDR: DADDR Mask        */
+#define CRPT_TDES0_DADDR_DADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES0_DADDR: DADDR Position    */
+#define CRPT_TDES0_DADDR_DADDR_Msk        ( 0xfffffffful << CRPT_TDES0_DADDR_DADDR_Pos )     /*!< CRPT_T::TDES0_DADDR: DADDR Mask        */
 
-#define CRPT_TDES0_CNT_CNT_Pos           (0)                                               /*!< CRPT_T::TDES0_CNT: CNT Position        */
-#define CRPT_TDES0_CNT_CNT_Msk           (0xfffffffful << CRPT_TDES0_CNT_CNT_Pos)          /*!< CRPT_T::TDES0_CNT: CNT Mask            */
+#define CRPT_TDES0_CNT_CNT_Pos            ( 0 )                                              /*!< CRPT_T::TDES0_CNT: CNT Position        */
+#define CRPT_TDES0_CNT_CNT_Msk            ( 0xfffffffful << CRPT_TDES0_CNT_CNT_Pos )         /*!< CRPT_T::TDES0_CNT: CNT Mask            */
 
-#define CRPT_TDES_DATIN_DATIN_Pos        (0)                                               /*!< CRPT_T::TDES_DATIN: DATIN Position     */
-#define CRPT_TDES_DATIN_DATIN_Msk        (0xfffffffful << CRPT_TDES_DATIN_DATIN_Pos)       /*!< CRPT_T::TDES_DATIN: DATIN Mask         */
+#define CRPT_TDES_DATIN_DATIN_Pos         ( 0 )                                              /*!< CRPT_T::TDES_DATIN: DATIN Position     */
+#define CRPT_TDES_DATIN_DATIN_Msk         ( 0xfffffffful << CRPT_TDES_DATIN_DATIN_Pos )      /*!< CRPT_T::TDES_DATIN: DATIN Mask         */
 
-#define CRPT_TDES_DATOUT_DATOUT_Pos      (0)                                               /*!< CRPT_T::TDES_DATOUT: DATOUT Position   */
-#define CRPT_TDES_DATOUT_DATOUT_Msk      (0xfffffffful << CRPT_TDES_DATOUT_DATOUT_Pos)     /*!< CRPT_T::TDES_DATOUT: DATOUT Mask       */
+#define CRPT_TDES_DATOUT_DATOUT_Pos       ( 0 )                                              /*!< CRPT_T::TDES_DATOUT: DATOUT Position   */
+#define CRPT_TDES_DATOUT_DATOUT_Msk       ( 0xfffffffful << CRPT_TDES_DATOUT_DATOUT_Pos )    /*!< CRPT_T::TDES_DATOUT: DATOUT Mask       */
 
-#define CRPT_TDES1_KEYxH_KEY_Pos         (0)                                               /*!< CRPT_T::TDES1_KEYxH: KEY Position      */
-#define CRPT_TDES1_KEYxH_KEY_Msk         (0xfffffffful << CRPT_TDES1_KEYxH_KEY_Pos)        /*!< CRPT_T::TDES1_KEYxH: KEY Mask          */
+#define CRPT_TDES1_KEYxH_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES1_KEYxH: KEY Position      */
+#define CRPT_TDES1_KEYxH_KEY_Msk          ( 0xfffffffful << CRPT_TDES1_KEYxH_KEY_Pos )       /*!< CRPT_T::TDES1_KEYxH: KEY Mask          */
 
-#define CRPT_TDES1_KEYxL_KEY_Pos         (0)                                               /*!< CRPT_T::TDES1_KEYxL: KEY Position      */
-#define CRPT_TDES1_KEYxL_KEY_Msk         (0xfffffffful << CRPT_TDES1_KEY1L_KEY_Pos)        /*!< CRPT_T::TDES1_KEYxL: KEY Mask          */
+#define CRPT_TDES1_KEYxL_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES1_KEYxL: KEY Position      */
+#define CRPT_TDES1_KEYxL_KEY_Msk          ( 0xfffffffful << CRPT_TDES1_KEY1L_KEY_Pos )       /*!< CRPT_T::TDES1_KEYxL: KEY Mask          */
 
-#define CRPT_TDES1_IVH_IV_Pos            (0)                                               /*!< CRPT_T::TDES1_IVH: IV Position         */
-#define CRPT_TDES1_IVH_IV_Msk            (0xfffffffful << CRPT_TDES1_IVH_IV_Pos)           /*!< CRPT_T::TDES1_IVH: IV Mask             */
+#define CRPT_TDES1_IVH_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES1_IVH: IV Position         */
+#define CRPT_TDES1_IVH_IV_Msk             ( 0xfffffffful << CRPT_TDES1_IVH_IV_Pos )          /*!< CRPT_T::TDES1_IVH: IV Mask             */
 
-#define CRPT_TDES1_IVL_IV_Pos            (0)                                               /*!< CRPT_T::TDES1_IVL: IV Position         */
-#define CRPT_TDES1_IVL_IV_Msk            (0xfffffffful << CRPT_TDES1_IVL_IV_Pos)           /*!< CRPT_T::TDES1_IVL: IV Mask             */
+#define CRPT_TDES1_IVL_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES1_IVL: IV Position         */
+#define CRPT_TDES1_IVL_IV_Msk             ( 0xfffffffful << CRPT_TDES1_IVL_IV_Pos )          /*!< CRPT_T::TDES1_IVL: IV Mask             */
 
-#define CRPT_TDES1_SADDR_SADDR_Pos       (0)                                               /*!< CRPT_T::TDES1_SADDR: SADDR Position    */
-#define CRPT_TDES1_SADDR_SADDR_Msk       (0xfffffffful << CRPT_TDES1_SADDR_SADDR_Pos)      /*!< CRPT_T::TDES1_SADDR: SADDR Mask        */
+#define CRPT_TDES1_SADDR_SADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES1_SADDR: SADDR Position    */
+#define CRPT_TDES1_SADDR_SADDR_Msk        ( 0xfffffffful << CRPT_TDES1_SADDR_SADDR_Pos )     /*!< CRPT_T::TDES1_SADDR: SADDR Mask        */
 
-#define CRPT_TDES1_DADDR_DADDR_Pos       (0)                                               /*!< CRPT_T::TDES1_DADDR: DADDR Position    */
-#define CRPT_TDES1_DADDR_DADDR_Msk       (0xfffffffful << CRPT_TDES1_DADDR_DADDR_Pos)      /*!< CRPT_T::TDES1_DADDR: DADDR Mask        */
+#define CRPT_TDES1_DADDR_DADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES1_DADDR: DADDR Position    */
+#define CRPT_TDES1_DADDR_DADDR_Msk        ( 0xfffffffful << CRPT_TDES1_DADDR_DADDR_Pos )     /*!< CRPT_T::TDES1_DADDR: DADDR Mask        */
 
-#define CRPT_TDES1_CNT_CNT_Pos           (0)                                               /*!< CRPT_T::TDES1_CNT: CNT Position        */
-#define CRPT_TDES1_CNT_CNT_Msk           (0xfffffffful << CRPT_TDES1_CNT_CNT_Pos)          /*!< CRPT_T::TDES1_CNT: CNT Mask            */
+#define CRPT_TDES1_CNT_CNT_Pos            ( 0 )                                              /*!< CRPT_T::TDES1_CNT: CNT Position        */
+#define CRPT_TDES1_CNT_CNT_Msk            ( 0xfffffffful << CRPT_TDES1_CNT_CNT_Pos )         /*!< CRPT_T::TDES1_CNT: CNT Mask            */
 
-#define CRPT_TDES2_KEYxH_KEY_Pos         (0)                                               /*!< CRPT_T::TDES2_KEYxH: KEY Position      */
-#define CRPT_TDES2_KEYxH_KEY_Msk         (0xfffffffful << CRPT_TDES2_KEYxH_KEY_Pos)        /*!< CRPT_T::TDES2_KEYxH: KEY Mask          */
+#define CRPT_TDES2_KEYxH_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES2_KEYxH: KEY Position      */
+#define CRPT_TDES2_KEYxH_KEY_Msk          ( 0xfffffffful << CRPT_TDES2_KEYxH_KEY_Pos )       /*!< CRPT_T::TDES2_KEYxH: KEY Mask          */
 
-#define CRPT_TDES2_KEYxL_KEY_Pos         (0)                                               /*!< CRPT_T::TDES2_KEYxL: KEY Position      */
-#define CRPT_TDES2_KEYxL_KEY_Msk         (0xfffffffful << CRPT_TDES2_KEYxL_KEY_Pos)        /*!< CRPT_T::TDES2_KEYxL: KEY Mask          */
+#define CRPT_TDES2_KEYxL_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES2_KEYxL: KEY Position      */
+#define CRPT_TDES2_KEYxL_KEY_Msk          ( 0xfffffffful << CRPT_TDES2_KEYxL_KEY_Pos )       /*!< CRPT_T::TDES2_KEYxL: KEY Mask          */
 
-#define CRPT_TDES2_IVH_IV_Pos            (0)                                               /*!< CRPT_T::TDES2_IVH: IV Position         */
-#define CRPT_TDES2_IVH_IV_Msk            (0xfffffffful << CRPT_TDES2_IVH_IV_Pos)           /*!< CRPT_T::TDES2_IVH: IV Mask             */
+#define CRPT_TDES2_IVH_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES2_IVH: IV Position         */
+#define CRPT_TDES2_IVH_IV_Msk             ( 0xfffffffful << CRPT_TDES2_IVH_IV_Pos )          /*!< CRPT_T::TDES2_IVH: IV Mask             */
 
-#define CRPT_TDES2_IVL_IV_Pos            (0)                                               /*!< CRPT_T::TDES2_IVL: IV Position         */
-#define CRPT_TDES2_IVL_IV_Msk            (0xfffffffful << CRPT_TDES2_IVL_IV_Pos)           /*!< CRPT_T::TDES2_IVL: IV Mask             */
+#define CRPT_TDES2_IVL_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES2_IVL: IV Position         */
+#define CRPT_TDES2_IVL_IV_Msk             ( 0xfffffffful << CRPT_TDES2_IVL_IV_Pos )          /*!< CRPT_T::TDES2_IVL: IV Mask             */
 
-#define CRPT_TDES2_SADDR_SADDR_Pos       (0)                                               /*!< CRPT_T::TDES2_SADDR: SADDR Position    */
-#define CRPT_TDES2_SADDR_SADDR_Msk       (0xfffffffful << CRPT_TDES2_SADDR_SADDR_Pos)      /*!< CRPT_T::TDES2_SADDR: SADDR Mask        */
+#define CRPT_TDES2_SADDR_SADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES2_SADDR: SADDR Position    */
+#define CRPT_TDES2_SADDR_SADDR_Msk        ( 0xfffffffful << CRPT_TDES2_SADDR_SADDR_Pos )     /*!< CRPT_T::TDES2_SADDR: SADDR Mask        */
 
-#define CRPT_TDES2_DADDR_DADDR_Pos       (0)                                               /*!< CRPT_T::TDES2_DADDR: DADDR Position    */
-#define CRPT_TDES2_DADDR_DADDR_Msk       (0xfffffffful << CRPT_TDES2_DADDR_DADDR_Pos)      /*!< CRPT_T::TDES2_DADDR: DADDR Mask        */
+#define CRPT_TDES2_DADDR_DADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES2_DADDR: DADDR Position    */
+#define CRPT_TDES2_DADDR_DADDR_Msk        ( 0xfffffffful << CRPT_TDES2_DADDR_DADDR_Pos )     /*!< CRPT_T::TDES2_DADDR: DADDR Mask        */
 
-#define CRPT_TDES2_CNT_CNT_Pos           (0)                                               /*!< CRPT_T::TDES2_CNT: CNT Position        */
-#define CRPT_TDES2_CNT_CNT_Msk           (0xfffffffful << CRPT_TDES2_CNT_CNT_Pos)          /*!< CRPT_T::TDES2_CNT: CNT Mask            */
+#define CRPT_TDES2_CNT_CNT_Pos            ( 0 )                                              /*!< CRPT_T::TDES2_CNT: CNT Position        */
+#define CRPT_TDES2_CNT_CNT_Msk            ( 0xfffffffful << CRPT_TDES2_CNT_CNT_Pos )         /*!< CRPT_T::TDES2_CNT: CNT Mask            */
 
-#define CRPT_TDES3_KEYxH_KEY_Pos         (0)                                               /*!< CRPT_T::TDES3_KEYxH: KEY Position      */
-#define CRPT_TDES3_KEYxH_KEY_Msk         (0xfffffffful << CRPT_TDES3_KEYxH_KEY_Pos)        /*!< CRPT_T::TDES3_KEYxH: KEY Mask          */
+#define CRPT_TDES3_KEYxH_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES3_KEYxH: KEY Position      */
+#define CRPT_TDES3_KEYxH_KEY_Msk          ( 0xfffffffful << CRPT_TDES3_KEYxH_KEY_Pos )       /*!< CRPT_T::TDES3_KEYxH: KEY Mask          */
 
-#define CRPT_TDES3_KEYxL_KEY_Pos         (0)                                               /*!< CRPT_T::TDES3_KEYxL: KEY Position      */
-#define CRPT_TDES3_KEYxL_KEY_Msk         (0xfffffffful << CRPT_TDES3_KEYxL_KEY_Pos)        /*!< CRPT_T::TDES3_KEYxL: KEY Mask          */
+#define CRPT_TDES3_KEYxL_KEY_Pos          ( 0 )                                              /*!< CRPT_T::TDES3_KEYxL: KEY Position      */
+#define CRPT_TDES3_KEYxL_KEY_Msk          ( 0xfffffffful << CRPT_TDES3_KEYxL_KEY_Pos )       /*!< CRPT_T::TDES3_KEYxL: KEY Mask          */
 
-#define CRPT_TDES3_IVH_IV_Pos            (0)                                               /*!< CRPT_T::TDES3_IVH: IV Position         */
-#define CRPT_TDES3_IVH_IV_Msk            (0xfffffffful << CRPT_TDES3_IVH_IV_Pos)           /*!< CRPT_T::TDES3_IVH: IV Mask             */
+#define CRPT_TDES3_IVH_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES3_IVH: IV Position         */
+#define CRPT_TDES3_IVH_IV_Msk             ( 0xfffffffful << CRPT_TDES3_IVH_IV_Pos )          /*!< CRPT_T::TDES3_IVH: IV Mask             */
 
-#define CRPT_TDES3_IVL_IV_Pos            (0)                                               /*!< CRPT_T::TDES3_IVL: IV Position         */
-#define CRPT_TDES3_IVL_IV_Msk            (0xfffffffful << CRPT_TDES3_IVL_IV_Pos)           /*!< CRPT_T::TDES3_IVL: IV Mask             */
+#define CRPT_TDES3_IVL_IV_Pos             ( 0 )                                              /*!< CRPT_T::TDES3_IVL: IV Position         */
+#define CRPT_TDES3_IVL_IV_Msk             ( 0xfffffffful << CRPT_TDES3_IVL_IV_Pos )          /*!< CRPT_T::TDES3_IVL: IV Mask             */
 
-#define CRPT_TDES3_SADDR_SADDR_Pos       (0)                                               /*!< CRPT_T::TDES3_SADDR: SADDR Position    */
-#define CRPT_TDES3_SADDR_SADDR_Msk       (0xfffffffful << CRPT_TDES3_SADDR_SADDR_Pos)      /*!< CRPT_T::TDES3_SADDR: SADDR Mask        */
+#define CRPT_TDES3_SADDR_SADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES3_SADDR: SADDR Position    */
+#define CRPT_TDES3_SADDR_SADDR_Msk        ( 0xfffffffful << CRPT_TDES3_SADDR_SADDR_Pos )     /*!< CRPT_T::TDES3_SADDR: SADDR Mask        */
 
-#define CRPT_TDES3_DADDR_DADDR_Pos       (0)                                               /*!< CRPT_T::TDES3_DADDR: DADDR Position    */
-#define CRPT_TDES3_DADDR_DADDR_Msk       (0xfffffffful << CRPT_TDES3_DADDR_DADDR_Pos)      /*!< CRPT_T::TDES3_DADDR: DADDR Mask        */
+#define CRPT_TDES3_DADDR_DADDR_Pos        ( 0 )                                              /*!< CRPT_T::TDES3_DADDR: DADDR Position    */
+#define CRPT_TDES3_DADDR_DADDR_Msk        ( 0xfffffffful << CRPT_TDES3_DADDR_DADDR_Pos )     /*!< CRPT_T::TDES3_DADDR: DADDR Mask        */
 
-#define CRPT_TDES3_CNT_CNT_Pos           (0)                                               /*!< CRPT_T::TDES3_CNT: CNT Position        */
-#define CRPT_TDES3_CNT_CNT_Msk           (0xfffffffful << CRPT_TDES3_CNT_CNT_Pos)          /*!< CRPT_T::TDES3_CNT: CNT Mask            */
+#define CRPT_TDES3_CNT_CNT_Pos            ( 0 )                                              /*!< CRPT_T::TDES3_CNT: CNT Position        */
+#define CRPT_TDES3_CNT_CNT_Msk            ( 0xfffffffful << CRPT_TDES3_CNT_CNT_Pos )         /*!< CRPT_T::TDES3_CNT: CNT Mask            */
 
-#define CRPT_HMAC_CTL_START_Pos          (0)                                               /*!< CRPT_T::HMAC_CTL: START Position       */
-#define CRPT_HMAC_CTL_START_Msk          (0x1ul << CRPT_HMAC_CTL_START_Pos)                /*!< CRPT_T::HMAC_CTL: START Mask           */
+#define CRPT_HMAC_CTL_START_Pos           ( 0 )                                              /*!< CRPT_T::HMAC_CTL: START Position       */
+#define CRPT_HMAC_CTL_START_Msk           ( 0x1ul << CRPT_HMAC_CTL_START_Pos )               /*!< CRPT_T::HMAC_CTL: START Mask           */
 
-#define CRPT_HMAC_CTL_STOP_Pos           (1)                                               /*!< CRPT_T::HMAC_CTL: STOP Position        */
-#define CRPT_HMAC_CTL_STOP_Msk           (0x1ul << CRPT_HMAC_CTL_STOP_Pos)                 /*!< CRPT_T::HMAC_CTL: STOP Mask            */
+#define CRPT_HMAC_CTL_STOP_Pos            ( 1 )                                              /*!< CRPT_T::HMAC_CTL: STOP Position        */
+#define CRPT_HMAC_CTL_STOP_Msk            ( 0x1ul << CRPT_HMAC_CTL_STOP_Pos )                /*!< CRPT_T::HMAC_CTL: STOP Mask            */
 
-#define CRPT_HMAC_CTL_DMALAST_Pos        (5)                                               /*!< CRPT_T::HMAC_CTL: DMALAST Position     */
-#define CRPT_HMAC_CTL_DMALAST_Msk        (0x1ul << CRPT_HMAC_CTL_DMALAST_Pos)              /*!< CRPT_T::HMAC_CTL: DMALAST Mask         */
+#define CRPT_HMAC_CTL_DMALAST_Pos         ( 5 )                                              /*!< CRPT_T::HMAC_CTL: DMALAST Position     */
+#define CRPT_HMAC_CTL_DMALAST_Msk         ( 0x1ul << CRPT_HMAC_CTL_DMALAST_Pos )             /*!< CRPT_T::HMAC_CTL: DMALAST Mask         */
 
-#define CRPT_HMAC_CTL_DMAEN_Pos          (7)                                               /*!< CRPT_T::HMAC_CTL: DMAEN Position       */
-#define CRPT_HMAC_CTL_DMAEN_Msk          (0x1ul << CRPT_HMAC_CTL_DMAEN_Pos)                /*!< CRPT_T::HMAC_CTL: DMAEN Mask           */
+#define CRPT_HMAC_CTL_DMAEN_Pos           ( 7 )                                              /*!< CRPT_T::HMAC_CTL: DMAEN Position       */
+#define CRPT_HMAC_CTL_DMAEN_Msk           ( 0x1ul << CRPT_HMAC_CTL_DMAEN_Pos )               /*!< CRPT_T::HMAC_CTL: DMAEN Mask           */
 
-#define CRPT_HMAC_CTL_OPMODE_Pos         (8)                                               /*!< CRPT_T::HMAC_CTL: OPMODE Position      */
-#define CRPT_HMAC_CTL_OPMODE_Msk         (0x7ul << CRPT_HMAC_CTL_OPMODE_Pos)               /*!< CRPT_T::HMAC_CTL: OPMODE Mask          */
+#define CRPT_HMAC_CTL_OPMODE_Pos          ( 8 )                                              /*!< CRPT_T::HMAC_CTL: OPMODE Position      */
+#define CRPT_HMAC_CTL_OPMODE_Msk          ( 0x7ul << CRPT_HMAC_CTL_OPMODE_Pos )              /*!< CRPT_T::HMAC_CTL: OPMODE Mask          */
 
-#define CRPT_HMAC_CTL_OUTSWAP_Pos        (22)                                              /*!< CRPT_T::HMAC_CTL: OUTSWAP Position     */
-#define CRPT_HMAC_CTL_OUTSWAP_Msk        (0x1ul << CRPT_HMAC_CTL_OUTSWAP_Pos)              /*!< CRPT_T::HMAC_CTL: OUTSWAP Mask         */
+#define CRPT_HMAC_CTL_OUTSWAP_Pos         ( 22 )                                             /*!< CRPT_T::HMAC_CTL: OUTSWAP Position     */
+#define CRPT_HMAC_CTL_OUTSWAP_Msk         ( 0x1ul << CRPT_HMAC_CTL_OUTSWAP_Pos )             /*!< CRPT_T::HMAC_CTL: OUTSWAP Mask         */
 
-#define CRPT_HMAC_CTL_INSWAP_Pos         (23)                                              /*!< CRPT_T::HMAC_CTL: INSWAP Position      */
-#define CRPT_HMAC_CTL_INSWAP_Msk         (0x1ul << CRPT_HMAC_CTL_INSWAP_Pos)               /*!< CRPT_T::HMAC_CTL: INSWAP Mask          */
+#define CRPT_HMAC_CTL_INSWAP_Pos          ( 23 )                                             /*!< CRPT_T::HMAC_CTL: INSWAP Position      */
+#define CRPT_HMAC_CTL_INSWAP_Msk          ( 0x1ul << CRPT_HMAC_CTL_INSWAP_Pos )              /*!< CRPT_T::HMAC_CTL: INSWAP Mask          */
 
-#define CRPT_HMAC_STS_BUSY_Pos           (0)                                               /*!< CRPT_T::HMAC_STS: BUSY Position        */
-#define CRPT_HMAC_STS_BUSY_Msk           (0x1ul << CRPT_HMAC_STS_BUSY_Pos)                 /*!< CRPT_T::HMAC_STS: BUSY Mask            */
+#define CRPT_HMAC_STS_BUSY_Pos            ( 0 )                                              /*!< CRPT_T::HMAC_STS: BUSY Position        */
+#define CRPT_HMAC_STS_BUSY_Msk            ( 0x1ul << CRPT_HMAC_STS_BUSY_Pos )                /*!< CRPT_T::HMAC_STS: BUSY Mask            */
 
-#define CRPT_HMAC_STS_DMABUSY_Pos        (1)                                               /*!< CRPT_T::HMAC_STS: DMABUSY Position     */
-#define CRPT_HMAC_STS_DMABUSY_Msk        (0x1ul << CRPT_HMAC_STS_DMABUSY_Pos)              /*!< CRPT_T::HMAC_STS: DMABUSY Mask         */
+#define CRPT_HMAC_STS_DMABUSY_Pos         ( 1 )                                              /*!< CRPT_T::HMAC_STS: DMABUSY Position     */
+#define CRPT_HMAC_STS_DMABUSY_Msk         ( 0x1ul << CRPT_HMAC_STS_DMABUSY_Pos )             /*!< CRPT_T::HMAC_STS: DMABUSY Mask         */
 
-#define CRPT_HMAC_STS_DMAERR_Pos         (8)                                               /*!< CRPT_T::HMAC_STS: DMAERR Position      */
-#define CRPT_HMAC_STS_DMAERR_Msk         (0x1ul << CRPT_HMAC_STS_DMAERR_Pos)               /*!< CRPT_T::HMAC_STS: DMAERR Mask          */
+#define CRPT_HMAC_STS_DMAERR_Pos          ( 8 )                                              /*!< CRPT_T::HMAC_STS: DMAERR Position      */
+#define CRPT_HMAC_STS_DMAERR_Msk          ( 0x1ul << CRPT_HMAC_STS_DMAERR_Pos )              /*!< CRPT_T::HMAC_STS: DMAERR Mask          */
 
-#define CRPT_HMAC_STS_DATINREQ_Pos       (16)                                              /*!< CRPT_T::HMAC_STS: DATINREQ Position    */
-#define CRPT_HMAC_STS_DATINREQ_Msk       (0x1ul << CRPT_HMAC_STS_DATINREQ_Pos)             /*!< CRPT_T::HMAC_STS: DATINREQ Mask        */
+#define CRPT_HMAC_STS_DATINREQ_Pos        ( 16 )                                             /*!< CRPT_T::HMAC_STS: DATINREQ Position    */
+#define CRPT_HMAC_STS_DATINREQ_Msk        ( 0x1ul << CRPT_HMAC_STS_DATINREQ_Pos )            /*!< CRPT_T::HMAC_STS: DATINREQ Mask        */
 
-#define CRPT_HMAC_DGSTx_DGST_Pos         (0)                                               /*!< CRPT_T::HMAC_DGSTx: DGST Position      */
-#define CRPT_HMAC_DGSTx_DGST_Msk         (0xfffffffful << CRPT_HMAC_DGSTx_DGST_Pos)        /*!< CRPT_T::HMAC_DGSTx: DGST Mask          */
+#define CRPT_HMAC_DGSTx_DGST_Pos          ( 0 )                                              /*!< CRPT_T::HMAC_DGSTx: DGST Position      */
+#define CRPT_HMAC_DGSTx_DGST_Msk          ( 0xfffffffful << CRPT_HMAC_DGSTx_DGST_Pos )       /*!< CRPT_T::HMAC_DGSTx: DGST Mask          */
 
-#define CRPT_HMAC_KEYCNT_KEYCNT_Pos      (0)                                               /*!< CRPT_T::HMAC_KEYCNT: KEYCNT Position   */
-#define CRPT_HMAC_KEYCNT_KEYCNT_Msk      (0xfffffffful << CRPT_HMAC_KEYCNT_KEYCNT_Pos)     /*!< CRPT_T::HMAC_KEYCNT: KEYCNT Mask       */
+#define CRPT_HMAC_KEYCNT_KEYCNT_Pos       ( 0 )                                              /*!< CRPT_T::HMAC_KEYCNT: KEYCNT Position   */
+#define CRPT_HMAC_KEYCNT_KEYCNT_Msk       ( 0xfffffffful << CRPT_HMAC_KEYCNT_KEYCNT_Pos )    /*!< CRPT_T::HMAC_KEYCNT: KEYCNT Mask       */
 
-#define CRPT_HMAC_SADDR_SADDR_Pos        (0)                                               /*!< CRPT_T::HMAC_SADDR: SADDR Position     */
-#define CRPT_HMAC_SADDR_SADDR_Msk        (0xfffffffful << CRPT_HMAC_SADDR_SADDR_Pos)       /*!< CRPT_T::HMAC_SADDR: SADDR Mask         */
+#define CRPT_HMAC_SADDR_SADDR_Pos         ( 0 )                                              /*!< CRPT_T::HMAC_SADDR: SADDR Position     */
+#define CRPT_HMAC_SADDR_SADDR_Msk         ( 0xfffffffful << CRPT_HMAC_SADDR_SADDR_Pos )      /*!< CRPT_T::HMAC_SADDR: SADDR Mask         */
 
-#define CRPT_HMAC_DMACNT_DMACNT_Pos      (0)                                               /*!< CRPT_T::HMAC_DMACNT: DMACNT Position   */
-#define CRPT_HMAC_DMACNT_DMACNT_Msk      (0xfffffffful << CRPT_HMAC_DMACNT_DMACNT_Pos)     /*!< CRPT_T::HMAC_DMACNT: DMACNT Mask       */
+#define CRPT_HMAC_DMACNT_DMACNT_Pos       ( 0 )                                              /*!< CRPT_T::HMAC_DMACNT: DMACNT Position   */
+#define CRPT_HMAC_DMACNT_DMACNT_Msk       ( 0xfffffffful << CRPT_HMAC_DMACNT_DMACNT_Pos )    /*!< CRPT_T::HMAC_DMACNT: DMACNT Mask       */
 
-#define CRPT_HMAC_DATIN_DATIN_Pos        (0)                                               /*!< CRPT_T::HMAC_DATIN: DATIN Position     */
-#define CRPT_HMAC_DATIN_DATIN_Msk        (0xfffffffful << CRPT_HMAC_DATIN_DATIN_Pos)       /*!< CRPT_T::HMAC_DATIN: DATIN Mask         */
+#define CRPT_HMAC_DATIN_DATIN_Pos         ( 0 )                                              /*!< CRPT_T::HMAC_DATIN: DATIN Position     */
+#define CRPT_HMAC_DATIN_DATIN_Msk         ( 0xfffffffful << CRPT_HMAC_DATIN_DATIN_Pos )      /*!< CRPT_T::HMAC_DATIN: DATIN Mask         */
 
-#define CRPT_ECC_CTL_START_Pos           (0)                                               /*!< CRPT_T::ECC_CTL: START Position        */
-#define CRPT_ECC_CTL_START_Msk           (0x1ul << CRPT_ECC_CTL_START_Pos)                 /*!< CRPT_T::ECC_CTL: START Mask            */
+#define CRPT_ECC_CTL_START_Pos            ( 0 )                                              /*!< CRPT_T::ECC_CTL: START Position        */
+#define CRPT_ECC_CTL_START_Msk            ( 0x1ul << CRPT_ECC_CTL_START_Pos )                /*!< CRPT_T::ECC_CTL: START Mask            */
 
-#define CRPT_ECC_CTL_STOP_Pos            (1)                                               /*!< CRPT_T::ECC_CTL: STOP Position         */
-#define CRPT_ECC_CTL_STOP_Msk            (0x1ul << CRPT_ECC_CTL_STOP_Pos)                  /*!< CRPT_T::ECC_CTL: STOP Mask             */
+#define CRPT_ECC_CTL_STOP_Pos             ( 1 )                                              /*!< CRPT_T::ECC_CTL: STOP Position         */
+#define CRPT_ECC_CTL_STOP_Msk             ( 0x1ul << CRPT_ECC_CTL_STOP_Pos )                 /*!< CRPT_T::ECC_CTL: STOP Mask             */
 
-#define CRPT_ECC_CTL_DMAEN_Pos           (7)                                               /*!< CRPT_T::ECC_CTL: DMAEN Position        */
-#define CRPT_ECC_CTL_DMAEN_Msk           (0x1ul << CRPT_ECC_CTL_DMAEN_Pos)                 /*!< CRPT_T::ECC_CTL: DMAEN Mask            */
+#define CRPT_ECC_CTL_DMAEN_Pos            ( 7 )                                              /*!< CRPT_T::ECC_CTL: DMAEN Position        */
+#define CRPT_ECC_CTL_DMAEN_Msk            ( 0x1ul << CRPT_ECC_CTL_DMAEN_Pos )                /*!< CRPT_T::ECC_CTL: DMAEN Mask            */
 
-#define CRPT_ECC_CTL_FSEL_Pos            (8)                                               /*!< CRPT_T::ECC_CTL: FSEL Position         */
-#define CRPT_ECC_CTL_FSEL_Msk            (0x1ul << CRPT_ECC_CTL_FSEL_Pos)                  /*!< CRPT_T::ECC_CTL: FSEL Mask             */
+#define CRPT_ECC_CTL_FSEL_Pos             ( 8 )                                              /*!< CRPT_T::ECC_CTL: FSEL Position         */
+#define CRPT_ECC_CTL_FSEL_Msk             ( 0x1ul << CRPT_ECC_CTL_FSEL_Pos )                 /*!< CRPT_T::ECC_CTL: FSEL Mask             */
 
-#define CRPT_ECC_CTL_ECCOP_Pos           (9)                                               /*!< CRPT_T::ECC_CTL: ECCOP Position        */
-#define CRPT_ECC_CTL_ECCOP_Msk           (0x3ul << CRPT_ECC_CTL_ECCOP_Pos)                 /*!< CRPT_T::ECC_CTL: ECCOP Mask            */
+#define CRPT_ECC_CTL_ECCOP_Pos            ( 9 )                                              /*!< CRPT_T::ECC_CTL: ECCOP Position        */
+#define CRPT_ECC_CTL_ECCOP_Msk            ( 0x3ul << CRPT_ECC_CTL_ECCOP_Pos )                /*!< CRPT_T::ECC_CTL: ECCOP Mask            */
 
-#define CRPT_ECC_CTL_MODOP_Pos           (11)                                              /*!< CRPT_T::ECC_CTL: MODOP Position        */
-#define CRPT_ECC_CTL_MODOP_Msk           (0x3ul << CRPT_ECC_CTL_MODOP_Pos)                 /*!< CRPT_T::ECC_CTL: MODOP Mask            */
+#define CRPT_ECC_CTL_MODOP_Pos            ( 11 )                                             /*!< CRPT_T::ECC_CTL: MODOP Position        */
+#define CRPT_ECC_CTL_MODOP_Msk            ( 0x3ul << CRPT_ECC_CTL_MODOP_Pos )                /*!< CRPT_T::ECC_CTL: MODOP Mask            */
 
-#define CRPT_ECC_CTL_LDP1_Pos            (16)                                              /*!< CRPT_T::ECC_CTL: LDP1 Position         */
-#define CRPT_ECC_CTL_LDP1_Msk            (0x1ul << CRPT_ECC_CTL_LDP1_Pos)                  /*!< CRPT_T::ECC_CTL: LDP1 Mask             */
+#define CRPT_ECC_CTL_LDP1_Pos             ( 16 )                                             /*!< CRPT_T::ECC_CTL: LDP1 Position         */
+#define CRPT_ECC_CTL_LDP1_Msk             ( 0x1ul << CRPT_ECC_CTL_LDP1_Pos )                 /*!< CRPT_T::ECC_CTL: LDP1 Mask             */
 
-#define CRPT_ECC_CTL_LDP2_Pos            (17)                                              /*!< CRPT_T::ECC_CTL: LDP2 Position         */
-#define CRPT_ECC_CTL_LDP2_Msk            (0x1ul << CRPT_ECC_CTL_LDP2_Pos)                  /*!< CRPT_T::ECC_CTL: LDP2 Mask             */
+#define CRPT_ECC_CTL_LDP2_Pos             ( 17 )                                             /*!< CRPT_T::ECC_CTL: LDP2 Position         */
+#define CRPT_ECC_CTL_LDP2_Msk             ( 0x1ul << CRPT_ECC_CTL_LDP2_Pos )                 /*!< CRPT_T::ECC_CTL: LDP2 Mask             */
 
-#define CRPT_ECC_CTL_LDA_Pos             (18)                                              /*!< CRPT_T::ECC_CTL: LDA Position          */
-#define CRPT_ECC_CTL_LDA_Msk             (0x1ul << CRPT_ECC_CTL_LDA_Pos)                   /*!< CRPT_T::ECC_CTL: LDA Mask              */
+#define CRPT_ECC_CTL_LDA_Pos              ( 18 )                                             /*!< CRPT_T::ECC_CTL: LDA Position          */
+#define CRPT_ECC_CTL_LDA_Msk              ( 0x1ul << CRPT_ECC_CTL_LDA_Pos )                  /*!< CRPT_T::ECC_CTL: LDA Mask              */
 
-#define CRPT_ECC_CTL_LDB_Pos             (19)                                              /*!< CRPT_T::ECC_CTL: LDB Position          */
-#define CRPT_ECC_CTL_LDB_Msk             (0x1ul << CRPT_ECC_CTL_LDB_Pos)                   /*!< CRPT_T::ECC_CTL: LDB Mask              */
+#define CRPT_ECC_CTL_LDB_Pos              ( 19 )                                             /*!< CRPT_T::ECC_CTL: LDB Position          */
+#define CRPT_ECC_CTL_LDB_Msk              ( 0x1ul << CRPT_ECC_CTL_LDB_Pos )                  /*!< CRPT_T::ECC_CTL: LDB Mask              */
 
-#define CRPT_ECC_CTL_LDN_Pos             (20)                                              /*!< CRPT_T::ECC_CTL: LDN Position          */
-#define CRPT_ECC_CTL_LDN_Msk             (0x1ul << CRPT_ECC_CTL_LDN_Pos)                   /*!< CRPT_T::ECC_CTL: LDN Mask              */
+#define CRPT_ECC_CTL_LDN_Pos              ( 20 )                                             /*!< CRPT_T::ECC_CTL: LDN Position          */
+#define CRPT_ECC_CTL_LDN_Msk              ( 0x1ul << CRPT_ECC_CTL_LDN_Pos )                  /*!< CRPT_T::ECC_CTL: LDN Mask              */
 
-#define CRPT_ECC_CTL_LDK_Pos             (21)                                              /*!< CRPT_T::ECC_CTL: LDK Position          */
-#define CRPT_ECC_CTL_LDK_Msk             (0x1ul << CRPT_ECC_CTL_LDK_Pos)                   /*!< CRPT_T::ECC_CTL: LDK Mask              */
+#define CRPT_ECC_CTL_LDK_Pos              ( 21 )                                             /*!< CRPT_T::ECC_CTL: LDK Position          */
+#define CRPT_ECC_CTL_LDK_Msk              ( 0x1ul << CRPT_ECC_CTL_LDK_Pos )                  /*!< CRPT_T::ECC_CTL: LDK Mask              */
 
-#define CRPT_ECC_CTL_CURVEM_Pos          (22)                                              /*!< CRPT_T::ECC_CTL: CURVEM Position       */
-#define CRPT_ECC_CTL_CURVEM_Msk          (0x3fful << CRPT_ECC_CTL_CURVEM_Pos)              /*!< CRPT_T::ECC_CTL: CURVEM Mask           */
+#define CRPT_ECC_CTL_CURVEM_Pos           ( 22 )                                             /*!< CRPT_T::ECC_CTL: CURVEM Position       */
+#define CRPT_ECC_CTL_CURVEM_Msk           ( 0x3fful << CRPT_ECC_CTL_CURVEM_Pos )             /*!< CRPT_T::ECC_CTL: CURVEM Mask           */
 
-#define CRPT_ECC_STS_BUSY_Pos            (0)                                               /*!< CRPT_T::ECC_STS: BUSY Position         */
-#define CRPT_ECC_STS_BUSY_Msk            (0x1ul << CRPT_ECC_STS_BUSY_Pos)                  /*!< CRPT_T::ECC_STS: BUSY Mask             */
+#define CRPT_ECC_STS_BUSY_Pos             ( 0 )                                              /*!< CRPT_T::ECC_STS: BUSY Position         */
+#define CRPT_ECC_STS_BUSY_Msk             ( 0x1ul << CRPT_ECC_STS_BUSY_Pos )                 /*!< CRPT_T::ECC_STS: BUSY Mask             */
 
-#define CRPT_ECC_STS_DMABUSY_Pos         (1)                                               /*!< CRPT_T::ECC_STS: DMABUSY Position      */
-#define CRPT_ECC_STS_DMABUSY_Msk         (0x1ul << CRPT_ECC_STS_DMABUSY_Pos)               /*!< CRPT_T::ECC_STS: DMABUSY Mask          */
+#define CRPT_ECC_STS_DMABUSY_Pos          ( 1 )                                              /*!< CRPT_T::ECC_STS: DMABUSY Position      */
+#define CRPT_ECC_STS_DMABUSY_Msk          ( 0x1ul << CRPT_ECC_STS_DMABUSY_Pos )              /*!< CRPT_T::ECC_STS: DMABUSY Mask          */
 
-#define CRPT_ECC_STS_BUSERR_Pos          (16)                                              /*!< CRPT_T::ECC_STS: BUSERR Position       */
-#define CRPT_ECC_STS_BUSERR_Msk          (0x1ul << CRPT_ECC_STS_BUSERR_Pos)                /*!< CRPT_T::ECC_STS: BUSERR Mask           */
+#define CRPT_ECC_STS_BUSERR_Pos           ( 16 )                                             /*!< CRPT_T::ECC_STS: BUSERR Position       */
+#define CRPT_ECC_STS_BUSERR_Msk           ( 0x1ul << CRPT_ECC_STS_BUSERR_Pos )               /*!< CRPT_T::ECC_STS: BUSERR Mask           */
 
-#define CRPT_ECC_X1_POINTX1_Pos          (0)                                               /*!< CRPT_T::ECC_X1:  POINTX1 Position      */
-#define CRPT_ECC_X1_POINTX1_Msk          (0xfffffffful << CRPT_ECC_X1_POINTX1_Pos)         /*!< CRPT_T::ECC_X1:  POINTX1 Mask          */
+#define CRPT_ECC_X1_POINTX1_Pos           ( 0 )                                              /*!< CRPT_T::ECC_X1:  POINTX1 Position      */
+#define CRPT_ECC_X1_POINTX1_Msk           ( 0xfffffffful << CRPT_ECC_X1_POINTX1_Pos )        /*!< CRPT_T::ECC_X1:  POINTX1 Mask          */
 
-#define CRPT_ECC_Y1_POINTY1_Pos          (0)                                               /*!< CRPT_T::ECC_Y1: POINTY1 Position       */
-#define CRPT_ECC_Y1_POINTY1_Msk          (0xfffffffful << CRPT_ECC_Y1_POINTY1_Pos)         /*!< CRPT_T::ECC_Y1: POINTY1 Mask           */
+#define CRPT_ECC_Y1_POINTY1_Pos           ( 0 )                                              /*!< CRPT_T::ECC_Y1: POINTY1 Position       */
+#define CRPT_ECC_Y1_POINTY1_Msk           ( 0xfffffffful << CRPT_ECC_Y1_POINTY1_Pos )        /*!< CRPT_T::ECC_Y1: POINTY1 Mask           */
 
-#define CRPT_ECC_X2_POINTX2_Pos          (0)                                               /*!< CRPT_T::ECC_X2: POINTX2 Position       */
-#define CRPT_ECC_X2_POINTX2_Msk          (0xfffffffful << CRPT_ECC_X2_POINTX2_Pos)         /*!< CRPT_T::ECC_X2: POINTX2 Mask           */
+#define CRPT_ECC_X2_POINTX2_Pos           ( 0 )                                              /*!< CRPT_T::ECC_X2: POINTX2 Position       */
+#define CRPT_ECC_X2_POINTX2_Msk           ( 0xfffffffful << CRPT_ECC_X2_POINTX2_Pos )        /*!< CRPT_T::ECC_X2: POINTX2 Mask           */
 
-#define CRPT_ECC_Y2_POINTY2_Pos          (0)                                               /*!< CRPT_T::ECC_Y2: POINTY2 Position       */
-#define CRPT_ECC_Y2_POINTY2_Msk          (0xfffffffful << CRPT_ECC_Y2_POINTY2_Pos)         /*!< CRPT_T::ECC_Y2: POINTY2 Mask           */
+#define CRPT_ECC_Y2_POINTY2_Pos           ( 0 )                                              /*!< CRPT_T::ECC_Y2: POINTY2 Position       */
+#define CRPT_ECC_Y2_POINTY2_Msk           ( 0xfffffffful << CRPT_ECC_Y2_POINTY2_Pos )        /*!< CRPT_T::ECC_Y2: POINTY2 Mask           */
 
-#define CRPT_ECC_A_CURVEA_Pos            (0)                                               /*!< CRPT_T::ECC_A: CURVEA Position         */
-#define CRPT_ECC_A_CURVEA_Msk            (0xfffffffful << CRPT_ECC_A_CURVEA_Pos)           /*!< CRPT_T::ECC_A: CURVEA Mask             */
+#define CRPT_ECC_A_CURVEA_Pos             ( 0 )                                              /*!< CRPT_T::ECC_A: CURVEA Position         */
+#define CRPT_ECC_A_CURVEA_Msk             ( 0xfffffffful << CRPT_ECC_A_CURVEA_Pos )          /*!< CRPT_T::ECC_A: CURVEA Mask             */
 
-#define CRPT_ECC_B_CURVEB_Pos            (0)                                               /*!< CRPT_T::ECC_B: CURVEB Position         */
-#define CRPT_ECC_B_CURVEB_Msk            (0xfffffffful << CRPT_ECC_B_CURVEB_Pos)           /*!< CRPT_T::ECC_B: CURVEB Mask             */
+#define CRPT_ECC_B_CURVEB_Pos             ( 0 )                                              /*!< CRPT_T::ECC_B: CURVEB Position         */
+#define CRPT_ECC_B_CURVEB_Msk             ( 0xfffffffful << CRPT_ECC_B_CURVEB_Pos )          /*!< CRPT_T::ECC_B: CURVEB Mask             */
 
-#define CRPT_ECC_N_CURVEN_Pos            (0)                                               /*!< CRPT_T::ECC_N: CURVEN Position         */
-#define CRPT_ECC_N_CURVEN_Msk            (0xfffffffful << CRPT_ECC_N_CURVEN_Pos)           /*!< CRPT_T::ECC_N: CURVEN Mask             */
+#define CRPT_ECC_N_CURVEN_Pos             ( 0 )                                              /*!< CRPT_T::ECC_N: CURVEN Position         */
+#define CRPT_ECC_N_CURVEN_Msk             ( 0xfffffffful << CRPT_ECC_N_CURVEN_Pos )          /*!< CRPT_T::ECC_N: CURVEN Mask             */
 
-#define CRPT_ECC_K_SCALARK_Pos           (0)                                               /*!< CRPT_T::ECC_K: SCALARK Position        */
-#define CRPT_ECC_K_SCALARK_Msk           (0xfffffffful << CRPT_ECC_K_SCALARK_Pos)          /*!< CRPT_T::ECC_K: SCALARK Mask            */
+#define CRPT_ECC_K_SCALARK_Pos            ( 0 )                                              /*!< CRPT_T::ECC_K: SCALARK Position        */
+#define CRPT_ECC_K_SCALARK_Msk            ( 0xfffffffful << CRPT_ECC_K_SCALARK_Pos )         /*!< CRPT_T::ECC_K: SCALARK Mask            */
 
-#define CRPT_ECC_DADDR_DADDR_Pos         (0)                                               /*!< CRPT_T::ECC_DADDR: DADDR Position      */
-#define CRPT_ECC_DADDR_DADDR_Msk         (0xfffffffful << CRPT_ECC_DADDR_DADDR_Pos)        /*!< CRPT_T::ECC_DADDR: DADDR Mask          */
+#define CRPT_ECC_DADDR_DADDR_Pos          ( 0 )                                              /*!< CRPT_T::ECC_DADDR: DADDR Position      */
+#define CRPT_ECC_DADDR_DADDR_Msk          ( 0xfffffffful << CRPT_ECC_DADDR_DADDR_Pos )       /*!< CRPT_T::ECC_DADDR: DADDR Mask          */
 
-#define CRPT_ECC_STARTREG_STARTREG_Pos   (0)                                               /*!< CRPT_T::ECC_STARTREG: STARTREG Position*/
-#define CRPT_ECC_STARTREG_STARTREG_Msk   (0xfffffffful << CRPT_ECC_STARTREG_STARTREG_Pos)  /*!< CRPT_T::ECC_STARTREG: STARTREG Mask    */
+#define CRPT_ECC_STARTREG_STARTREG_Pos    ( 0 )                                              /*!< CRPT_T::ECC_STARTREG: STARTREG Position*/
+#define CRPT_ECC_STARTREG_STARTREG_Msk    ( 0xfffffffful << CRPT_ECC_STARTREG_STARTREG_Pos ) /*!< CRPT_T::ECC_STARTREG: STARTREG Mask    */
 
-#define CRPT_ECC_WORDCNT_WORDCNT_Pos     (0)                                               /*!< CRPT_T::ECC_WORDCNT: WORDCNT Position  */
-#define CRPT_ECC_WORDCNT_WORDCNT_Msk     (0xfffffffful << CRPT_ECC_WORDCNT_WORDCNT_Pos)    /*!< CRPT_T::ECC_WORDCNT: WORDCNT Mask      */
+#define CRPT_ECC_WORDCNT_WORDCNT_Pos      ( 0 )                                              /*!< CRPT_T::ECC_WORDCNT: WORDCNT Position  */
+#define CRPT_ECC_WORDCNT_WORDCNT_Msk      ( 0xfffffffful << CRPT_ECC_WORDCNT_WORDCNT_Pos )   /*!< CRPT_T::ECC_WORDCNT: WORDCNT Mask      */
 
 /**@}*/ /* CRPT_CONST */
 /**@}*/ /* end of CRPT register group */

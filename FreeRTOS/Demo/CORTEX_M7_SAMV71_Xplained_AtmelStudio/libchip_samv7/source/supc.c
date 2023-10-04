@@ -44,32 +44,37 @@
  *
  */
 
-void SUPC_SelectExtCrystal32K(void)
+void SUPC_SelectExtCrystal32K( void )
 {
-	PMC_EnableXT32KFME();
-	/* Select XTAL 32k instead of internal slow RC 32k for slow clock */
-	if ( (SUPC->SUPC_SR & SUPC_SR_OSCSEL) != SUPC_SR_OSCSEL_CRYST ) {
-		SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
-		while( !(SUPC->SUPC_SR & SUPC_SR_OSCSEL) );
-	}
+    PMC_EnableXT32KFME();
+
+    /* Select XTAL 32k instead of internal slow RC 32k for slow clock */
+    if( ( SUPC->SUPC_SR & SUPC_SR_OSCSEL ) != SUPC_SR_OSCSEL_CRYST )
+    {
+        SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
+
+        while( !( SUPC->SUPC_SR & SUPC_SR_OSCSEL ) )
+        {
+        }
+    }
 }
 
 /**
  * \brief VROFF asserts the vddcore_nreset and stops the voltage regulator
  *
  */
-void SUPC_DisableVoltageReg(void)
+void SUPC_DisableVoltageReg( void )
 {
-	SUPC->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
+    SUPC->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
 }
 
 /**
  * \brief Configures supply monitor
  *
  */
-void SUPC_ConfigSupplyMonitor(uint32_t Config)
+void SUPC_ConfigSupplyMonitor( uint32_t Config )
 {
-	SUPC->SUPC_SMMR = Config;
+    SUPC->SUPC_SMMR = Config;
 }
 
 
@@ -77,9 +82,9 @@ void SUPC_ConfigSupplyMonitor(uint32_t Config)
  * \brief Disables supply monitor
  *
  */
-void SUPC_DisableSupplyMonitor(void)
+void SUPC_DisableSupplyMonitor( void )
 {
-	SUPC->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
+    SUPC->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
 }
 
 
@@ -87,22 +92,25 @@ void SUPC_DisableSupplyMonitor(void)
  * \brief Enables/Disables Brownout detector
  *
  */
-void SUPC_BrownoutDetectEnable(uint8_t enable)
+void SUPC_BrownoutDetectEnable( uint8_t enable )
 {
-	if(enable) {
-		SUPC->SUPC_MR = ( SUPC_MR_BODDIS_ENABLE | SUPC_MR_KEY_PASSWD);
-	} else {
-		SUPC->SUPC_MR = ( SUPC_MR_BODDIS_DISABLE | SUPC_MR_KEY_PASSWD);
-	}
+    if( enable )
+    {
+        SUPC->SUPC_MR = ( SUPC_MR_BODDIS_ENABLE | SUPC_MR_KEY_PASSWD );
+    }
+    else
+    {
+        SUPC->SUPC_MR = ( SUPC_MR_BODDIS_DISABLE | SUPC_MR_KEY_PASSWD );
+    }
 }
 
 /**
  * \brief Enables Brownout Detector Reset
  *
  */
-void SUPC_BrownoutResetEnable(void)
+void SUPC_BrownoutResetEnable( void )
 {
-	SUPC->SUPC_MR = ( SUPC_MR_BODRSTEN_ENABLE | SUPC_MR_KEY_PASSWD);
+    SUPC->SUPC_MR = ( SUPC_MR_BODRSTEN_ENABLE | SUPC_MR_KEY_PASSWD );
 }
 
 
@@ -110,22 +118,25 @@ void SUPC_BrownoutResetEnable(void)
  * \brief Enables/Disables Sram in backup mode
  *
  */
-void SUPC_SramBackupMode(uint8_t enable)
+void SUPC_SramBackupMode( uint8_t enable )
 {
-	if(enable) {
-		SUPC->SUPC_MR = ((1 << 17) | SUPC_MR_KEY_PASSWD);
-	} else {
-		SUPC->SUPC_MR = ( (0 << 17) | SUPC_MR_KEY_PASSWD);
-	}
+    if( enable )
+    {
+        SUPC->SUPC_MR = ( ( 1 << 17 ) | SUPC_MR_KEY_PASSWD );
+    }
+    else
+    {
+        SUPC->SUPC_MR = ( ( 0 << 17 ) | SUPC_MR_KEY_PASSWD );
+    }
 }
 
 /**
  * \brief Bypass external 32.768KHz oscillator
  *
  */
-void SUPC_BypassXtal32KOsc(void)
+void SUPC_BypassXtal32KOsc( void )
 {
-	SUPC->SUPC_MR = ( SUPC_MR_OSCBYPASS_BYPASS | SUPC_MR_KEY_PASSWD);    
+    SUPC->SUPC_MR = ( SUPC_MR_OSCBYPASS_BYPASS | SUPC_MR_KEY_PASSWD );
 }
 
 
@@ -133,31 +144,35 @@ void SUPC_BypassXtal32KOsc(void)
  * \brief Enables/Disables Wakeup mode
  *
  */
-void SUPC_EnablesWakeupMode(uint32_t Regs, uint8_t enable)
+void SUPC_EnablesWakeupMode( uint32_t Regs,
+                             uint8_t enable )
 {
-	if(enable) {
-		SUPC->SUPC_WUMR |= Regs;
-	} else {
-		SUPC->SUPC_WUMR &= ~(uint32_t)Regs;
-	}
+    if( enable )
+    {
+        SUPC->SUPC_WUMR |= Regs;
+    }
+    else
+    {
+        SUPC->SUPC_WUMR &= ~( uint32_t ) Regs;
+    }
 }
 
 /**
  * \brief Configure Wakeup denounce period
  *
  */
-void SUPC_SetWakeupDebounce(uint8_t period)
+void SUPC_SetWakeupDebounce( uint8_t period )
 {
-	SUPC->SUPC_WUMR |= ( (period << SUPC_WUMR_WKUPDBC_Pos) & SUPC_WUMR_WKUPDBC_Msk);
+    SUPC->SUPC_WUMR |= ( ( period << SUPC_WUMR_WKUPDBC_Pos ) & SUPC_WUMR_WKUPDBC_Msk );
 }
 
 /**
  * \brief Configure Low-power denounce period
  *
  */
-void SUPC_SetLowPowerDebounce(uint8_t period)
+void SUPC_SetLowPowerDebounce( uint8_t period )
 {
-	SUPC->SUPC_WUMR |= ( (period << SUPC_WUMR_LPDBC_Pos) & SUPC_WUMR_LPDBC_Msk);
+    SUPC->SUPC_WUMR |= ( ( period << SUPC_WUMR_LPDBC_Pos ) & SUPC_WUMR_LPDBC_Msk );
 }
 
 
@@ -165,31 +180,33 @@ void SUPC_SetLowPowerDebounce(uint8_t period)
  * \brief Enables/Disables Wakeup Inputs
  *
  */
-void SUPC_EnablesWakeupInput(uint32_t Input, uint8_t enable)
+void SUPC_EnablesWakeupInput( uint32_t Input,
+                              uint8_t enable )
 {
-	if(enable) {
-		SUPC->SUPC_WUIR |= Input;
-	} else {
-		SUPC->SUPC_WUIR &= ~(uint32_t)Input;
-	}
+    if( enable )
+    {
+        SUPC->SUPC_WUIR |= Input;
+    }
+    else
+    {
+        SUPC->SUPC_WUIR &= ~( uint32_t ) Input;
+    }
 }
 
 /**
  * \brief Checks if Crystal oscillator is selected as a slow clock
  */
 
-uint8_t SUPC_IsSlowClkExtCrystal32K(void)
+uint8_t SUPC_IsSlowClkExtCrystal32K( void )
 {
-	return ((SUPC->SUPC_SR & SUPC_SR_OSCSEL) >> 7);
+    return( ( SUPC->SUPC_SR & SUPC_SR_OSCSEL ) >> 7 );
 }
 
 /**
  * \brief Checks if Crystal oscillator is selected as a slow clock
  */
 
-uint8_t SUPC_Read_Status(uint32_t status)
+uint8_t SUPC_Read_Status( uint32_t status )
 {
-	return (SUPC->SUPC_SR & status);
+    return( SUPC->SUPC_SR & status );
 }
-
-

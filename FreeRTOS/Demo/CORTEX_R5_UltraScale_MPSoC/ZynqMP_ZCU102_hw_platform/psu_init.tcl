@@ -16853,11 +16853,11 @@ set psu_ps_pl_reset_config_data {
 
 proc psu_init {} {
     # save current mode
-    set saved_mode [configparams force-mem-accesses]                  
+    set saved_mode [configparams force-mem-accesses]
     # force accesses
-    configparams force-mem-accesses 1 
-    variable psu_mio_init_data 
-    variable psu_pll_init_data 
+    configparams force-mem-accesses 1
+    variable psu_mio_init_data
+    variable psu_pll_init_data
     variable psu_clock_init_data
 	variable psu_ddr_init_data
     variable psu_peripherals_init_data
@@ -16865,19 +16865,19 @@ proc psu_init {} {
     variable psu_resetout_init_data
     variable psu_serdes_init_data
     variable psu_resetin_init_data
-    variable psu_peripherals_powerdwn_data 
-    variable psu_afi_config 
+    variable psu_peripherals_powerdwn_data
+    variable psu_afi_config
 
     init_ps [subst {$psu_mio_init_data $psu_pll_init_data $psu_clock_init_data $psu_ddr_init_data }]
-    psu_ddr_phybringup_data 
+    psu_ddr_phybringup_data
     init_ps [subst {$psu_peripherals_init_data $psu_resetin_init_data }]
-    init_serdes 
+    init_serdes
     init_ps [subst {$psu_serdes_init_data $psu_resetout_init_data }]
-    init_peripheral 
+    init_peripheral
     init_ps [subst {$psu_peripherals_powerdwn_data }]
     init_ps [subst {$psu_afi_config }]
     # restore original mode
-    configparams force-mem-accesses $saved_mode                                       
+    configparams force-mem-accesses $saved_mode
 }
 
 proc psu_post_config {} {
@@ -16927,7 +16927,7 @@ proc psu_mask_write { addr mask value } {
 }
 
 proc serdes_fixcal_code {} {
-	
+
 	set MaskStatus 1
 	array set match_pmos_code {}
 	array set match_nmos_code {}
@@ -16946,10 +16946,10 @@ proc serdes_fixcal_code {} {
     set L3_TM_CALIB_DIG14 0
 
   set rdata 0
-  
-  set rdata [mask_read 0XFD40289C 0xFFFFFFFF] 
+
+  set rdata [mask_read 0XFD40289C 0xFFFFFFFF]
   set rdata [expr $rdata & ~0x03 ]
-  set rdata [expr $rdata | 0x1]  
+  set rdata [expr $rdata | 0x1]
   mask_write 0XFD40289C 0xFFFFFFFF $rdata
   #check supply good status before starting AFE sequencing
   set count 1
@@ -16969,12 +16969,12 @@ proc serdes_fixcal_code {} {
 	   set match_pmos_code($i) 0;
 	   set match_nmos_code($i) 0;
 	}
-	
+
 	for {set i 0}  {$i<7} {incr i} {
  	   set match_ical_code($i) 0;
 	   set match_rcal_code($i) 0;
     }
-	
+
 	while 1 {
       #Clear ICM_CFG value
       mask_write 0xFD410010 0xFFFFFFFF 0x00000000
@@ -16987,66 +16987,66 @@ proc serdes_fixcal_code {} {
 
       #is calibration done? polling on L3_CALIB_DONE_STATUS
       mask_poll 0xFD40EF14  0x2;
-      
-	  #PMOS code	
-      set p_code [mask_read 0xFD40EF18 0xFFFFFFFF]; 
+
+	  #PMOS code
+      set p_code [mask_read 0xFD40EF18 0xFFFFFFFF];
 	  #NMOS code
-      set n_code [mask_read 0xFD40EF1C 0xFFFFFFFF]; 
-      #ICAL code 
-      set i_code [mask_read 0xFD40EF24 0xFFFFFFFF]; 
+      set n_code [mask_read 0xFD40EF1C 0xFFFFFFFF];
+      #ICAL code
+      set i_code [mask_read 0xFD40EF24 0xFFFFFFFF];
 	  #RX code
-      set r_code [mask_read 0xFD40EF28 0xFFFFFFFF]; 
-      
+      set r_code [mask_read 0xFD40EF28 0xFFFFFFFF];
+
 
       #xil_printf("#SERDES initialization VALUES NMOS = 0x%x, PMOS = 0x%x, ICAL = 0x%x, RCAL = 0x%x\n\r", p_code, n_code, i_code, r_code);
-	  #PMOS code in acceptable range 	
+	  #PMOS code in acceptable range
       if {($p_code >= 0x26) && ($p_code <= 0x3C)} {
     	  set index [expr $p_code - 0x26]
-		  set value $match_pmos_code($index) 
+		  set value $match_pmos_code($index)
 		  incr value
 		  set match_pmos_code($index) $value;
       }
-	  #NMOS code in acceptable range	
+	  #NMOS code in acceptable range
       if {($n_code >= 0x26) && ($n_code <= 0x3C)} {
         set index [expr $n_code - 0x26]
         set value $match_nmos_code($index)
-        incr value    	
+        incr value
 		set match_nmos_code($index) $value;
       }
       #PMOS code in acceptable range
       if {($i_code >= 0xC) && ($i_code <= 0x12)} {
-      
+
     	set index [expr $i_code - 0xC]
         set value $match_ical_code($index)
-        incr value    	
+        incr value
 		set match_ical_code($index) $value;
-		
+
       }
       #NMOS code in acceptable range
       if {($r_code >= 0x6) && ($r_code <= 0xC)} {
     	set index [expr $r_code - 0x6]
         set value $match_rcal_code($index)
-        incr value    	
+        incr value
 		set match_rcal_code($index) $value;
       }
-	  
-	  incr repeat_count 	
+
+	  incr repeat_count
       if {$repeat_count > 10} {
 	    break
 	  }
-   } 
-	
-	
-   
+   }
+
+
+
    #find the valid code which resulted in maximum times in 10 iterations
    for {set i 0 } {$i < 23}  {incr i} {
-   
+
 	   if {$match_pmos_code($i) >= $match_pmos_code(0) } {
 		   set match_pmos_code(0)  $match_pmos_code($i)
 		   set p_code [expr 0x26 + $i]
 	   }
 	   if {$match_nmos_code($i)  >= $match_nmos_code(0)} {
-	   
+
 		   set match_nmos_code(0) $match_nmos_code($i)
 		   set n_code [expr 0x26 + $i];
 	   }
@@ -17066,7 +17066,7 @@ proc serdes_fixcal_code {} {
    #L3_TM_CALIB_DIG20[3] PSW MSB Override
    #L3_TM_CALIB_DIG20[2:0]	PSW Code [4:2]
    #read DIG20
-   set L3_TM_CALIB_DIG20 [mask_read 0xFD40EC50  0xFFFFFFF0]; 
+   set L3_TM_CALIB_DIG20 [mask_read 0xFD40EC50  0xFFFFFFF0];
    set L3_TM_CALIB_DIG20 [expr $L3_TM_CALIB_DIG20 | 0x8 | (($p_code>>2)&0x7)]
 
 
@@ -17081,13 +17081,13 @@ proc serdes_fixcal_code {} {
    #L3_TM_CALIB_DIG18[7:5]	NSW Code [2:0]
    #L3_TM_CALIB_DIG18[4]	NSW Override
    #read DIG18
-   set L3_TM_CALIB_DIG18  [mask_read 0xFD40EC48 0xFFFFFF0F] 
+   set L3_TM_CALIB_DIG18  [mask_read 0xFD40EC48 0xFFFFFF0F]
    set L3_TM_CALIB_DIG18  [expr $L3_TM_CALIB_DIG18 | (($n_code&0x7)<<5) | 0x10]
 
 
    #L3_TM_CALIB_DIG16[2:0]	RX Code [3:1]
    #read DIG16
-   set L3_TM_CALIB_DIG16  [mask_read 0xFD40EC40 0xFFFFFFF8]  
+   set L3_TM_CALIB_DIG16  [mask_read 0xFD40EC40 0xFFFFFFF8]
    set L3_TM_CALIB_DIG16  [expr $L3_TM_CALIB_DIG16 | (($r_code>>1)&0x7)]
 
    #L3_TM_CALIB_DIG15[7]	RX Code [0]
@@ -17110,18 +17110,18 @@ proc serdes_fixcal_code {} {
    mask_write 0xFD40EC48 0xFFFFFFFF $L3_TM_CALIB_DIG18
    mask_write 0xFD40EC40 0xFFFFFFFF $L3_TM_CALIB_DIG16
    mask_write 0xFD40EC3C 0xFFFFFFFF $L3_TM_CALIB_DIG15
-   mask_write 0xFD40EC38 0xFFFFFFFF $L3_TM_CALIB_DIG14 
+   mask_write 0xFD40EC38 0xFFFFFFFF $L3_TM_CALIB_DIG14
 
 
    return $MaskStatus;
  }
-proc serdes_enb_coarse_saturation {} { 
-   #/* 
+proc serdes_enb_coarse_saturation {} {
+   #/*
    # * Enable PLL Coarse Code saturation Logic
    # */
-   mask_write 0xFD402094 0xFFFFFFFF 0x00000010 
-   mask_write 0xFD406094 0xFFFFFFFF 0x00000010 
-   mask_write 0xFD40A094 0xFFFFFFFF 0x00000010 
+   mask_write 0xFD402094 0xFFFFFFFF 0x00000010
+   mask_write 0xFD406094 0xFFFFFFFF 0x00000010
+   mask_write 0xFD40A094 0xFFFFFFFF 0x00000010
    mask_write 0xFD40E094 0xFFFFFFFF 0x00000010
 
 }
@@ -17149,7 +17149,7 @@ proc poll { addr mask data} {
 
 proc init_peripheral {} {
 #SMMU_REG Interrrupt Enable: Followig register need to be written all the time to properly catch SMMU messages.
-   mask_write 0xFD5F0018 0x8000001F 0x8000001F 
+   mask_write 0xFD5F0018 0x8000001F 0x8000001F
 }
 proc psu_init_xppu_aper_ram {} {
 
@@ -17160,9 +17160,9 @@ proc psu_lpd_protection {} {
 }
 
 proc psu_ddr_protection {} {
-    set saved_mode [configparams force-mem-accesses]                  
-    configparams force-mem-accesses 1 
-    
+    set saved_mode [configparams force-mem-accesses]
+    configparams force-mem-accesses 1
+
     variable psu_ddr_xmpu0_data
     variable psu_ddr_xmpu1_data
     variable psu_ddr_xmpu2_data
@@ -17170,38 +17170,38 @@ proc psu_ddr_protection {} {
     variable psu_ddr_xmpu4_data
     variable psu_ddr_xmpu5_data
     init_ps [subst {$psu_ddr_xmpu0_data  $psu_ddr_xmpu1_data  $psu_ddr_xmpu2_data  $psu_ddr_xmpu3_data  $psu_ddr_xmpu4_data  $psu_ddr_xmpu5_data}]
-    
-	configparams force-mem-accesses $saved_mode                                       
+
+	configparams force-mem-accesses $saved_mode
 }
 
 proc psu_ocm_protection {} {
-    set saved_mode [configparams force-mem-accesses]                  
-    configparams force-mem-accesses 1 
-    
+    set saved_mode [configparams force-mem-accesses]
+    configparams force-mem-accesses 1
+
     variable psu_ocm_xmpu_data
     init_ps [subst {$psu_ocm_xmpu_data }]
-    
-	configparams force-mem-accesses $saved_mode                                       
+
+	configparams force-mem-accesses $saved_mode
 }
 
 proc psu_fpd_protection {} {
-    set saved_mode [configparams force-mem-accesses]                  
-    configparams force-mem-accesses 1 
-    
+    set saved_mode [configparams force-mem-accesses]
+    configparams force-mem-accesses 1
+
 	variable psu_fpd_xmpu_data
     init_ps [subst {$psu_fpd_xmpu_data }]
-    
-	configparams force-mem-accesses $saved_mode                                       
+
+	configparams force-mem-accesses $saved_mode
 }
 
 proc psu_protection_lock {} {
-    set saved_mode [configparams force-mem-accesses]                  
-    configparams force-mem-accesses 1 
-    
+    set saved_mode [configparams force-mem-accesses]
+    configparams force-mem-accesses 1
+
 	variable psu_protection_lock_data
     init_ps [subst {$psu_protection_lock_data }]
-    
-	configparams force-mem-accesses $saved_mode                                       
+
+	configparams force-mem-accesses $saved_mode
 }
 
 proc psu_protection {} {
@@ -17216,10 +17216,10 @@ proc psu_protection {} {
 proc psu_ddr_phybringup_data {} {
 mwr -force  0xFD080004 0x00040073
 
-poll 0xFD080030 0x0000000F 0x0000000F  
+poll 0xFD080030 0x0000000F 0x0000000F
 	psu_mask_write 0xFD080004 0x00000001 0x00000001
-#poll for PHY initialization to complete 
-poll 0xFD080030 0x000000FF 0x0000001F 
+#poll for PHY initialization to complete
+poll 0xFD080030 0x000000FF 0x0000001F
 
 	psu_mask_write 0xFD070010 0x00000008 0x00000008
 	psu_mask_write 0xFD0701B0 0x00000001 0x00000001
@@ -17228,47 +17228,47 @@ poll 0xFD080030 0x000000FF 0x0000001F
 	psu_mask_write 0xFD070010 0x0000F000 0x00006000
 	psu_mask_write 0xFD070014 0x0003FFFF 0x00000819
 	psu_mask_write 0xFD070010 0x80000000 0x80000000
-poll 0xFD070018 0x00000001 0 
+poll 0xFD070018 0x00000001 0
 	psu_mask_write 0xFD070010 0x00000030 0x00000010
 	psu_mask_write 0xFD070010 0x00000001 0x00000000
 	psu_mask_write 0xFD070010 0x0000F000 0x00006000
 	psu_mask_write 0xFD070014 0x0003FFFF 0x00000899
 	psu_mask_write 0xFD070010 0x80000000 0x80000000
-poll 0xFD070018 0x00000001 0 
+poll 0xFD070018 0x00000001 0
 	psu_mask_write 0xFD070010 0x00000030 0x00000010
 	psu_mask_write 0xFD070010 0x00000001 0x00000000
 	psu_mask_write 0xFD070010 0x0000F000 0x00006000
 	psu_mask_write 0xFD070014 0x0003FFFF 0x00000819
 	psu_mask_write 0xFD070010 0x80000000 0x80000000
-poll 0xFD070018 0x00000001 0 
+poll 0xFD070018 0x00000001 0
 	psu_mask_write 0xFD070010 0x00000008 0x00000000
 mwr -force  0xFD0701B0 0x00000001
 mwr -force  0xFD070320 0x00000001
-#//poll for DDR initialization to complete 
-poll 0xFD070004 0x0000000F 0x00000001 
+#//poll for DDR initialization to complete
+poll 0xFD070004 0x0000000F 0x00000001
 
 	psu_mask_write 0xFD080014 0x00000040 0x00000040
 #Dummy reads before PHY training starts
-mrd -force 0xFD070004    
-  #//dummy reads 
-mrd -force 0xFD070004    
-  #//dummy reads 
-mrd -force 0xFD070004    
-  #//dummy reads 
-mrd -force 0xFD070004    
-  #//dummy reads 
-mrd -force 0xFD070004    
-  #//dummy reads 
-mrd -force 0xFD070004    
-  #//dummy reads 
+mrd -force 0xFD070004
+  #//dummy reads
+mrd -force 0xFD070004
+  #//dummy reads
+mrd -force 0xFD070004
+  #//dummy reads
+mrd -force 0xFD070004
+  #//dummy reads
+mrd -force 0xFD070004
+  #//dummy reads
+mrd -force 0xFD070004
+  #//dummy reads
 psu_mask_write 0xFD080004 0xFFFFFFFF 0x0004FE01
- #trigger PHY training 
+ #trigger PHY training
 poll 0xFD080030 0x00000FFF 0x00000FFF
- 
-  #Poll PUB_PGSR0 for Trng complete  
+
+  #Poll PUB_PGSR0 for Trng complete
 
 
- # Run Vref training in static read mode  
+ # Run Vref training in static read mode
 mwr -force  0xFD080200 0x100091C7
 mwr -force  0xFD080018 0x00F01EEF
 	psu_mask_write 0xFD08142C 0x00000030 0x00000030
@@ -17277,11 +17277,11 @@ mwr -force  0xFD080018 0x00F01EEF
 	psu_mask_write 0xFD0814EC 0x00000030 0x00000030
 	psu_mask_write 0xFD08152C 0x00000030 0x00000030
 psu_mask_write 0xFD080004 0xFFFFFFFF 0x00060001
-  
- #trigger VreFPHY training 
+
+ #trigger VreFPHY training
 poll 0xFD080030 0x00004001 0x00004001
-     
- #//Poll PUB_PGSR0 for Trng complete  
+
+ #//Poll PUB_PGSR0 for Trng complete
 mwr -force  0xFD080200 0x800091C7
 mwr -force  0xFD080018 0x00F122E7
 	psu_mask_write 0xFD08142C 0x00000030 0x00000000
@@ -17290,15 +17290,15 @@ mwr -force  0xFD080018 0x00F122E7
 	psu_mask_write 0xFD0814EC 0x00000030 0x00000000
 	psu_mask_write 0xFD08152C 0x00000030 0x00000000
 psu_mask_write 0xFD080004 0xFFFFFFFF 0x0000C001
-  
- #trigger VreFPHY training 
+
+ #trigger VreFPHY training
 poll 0xFD080030 0x00000C01 0x00000C01
-     
- #//Poll PUB_PGSR0 for Trng complete  
+
+ #//Poll PUB_PGSR0 for Trng complete
 mwr -force  0xFD070180 0x01000040
 mwr -force  0xFD070060 0x00000000
 	psu_mask_write 0xFD080014 0x00000040 0x00000000
 
- 
+
 }
 

@@ -14,7 +14,7 @@
 **     Copyright 2016 Freescale Semiconductor, Inc.
 **     Copyright 2016-2017 NXP
 **     All rights reserved.
-**     
+**
 **     SPDX-License-Identifier: BSD-3-Clause
 **
 **     http:                 www.nxp.com
@@ -54,7 +54,7 @@ SECTIONS
     __VECTOR_TABLE = .;
     KEEP(*(.vectors))
   } > m_vector
-  
+
   /* The program code and other data goes into internal flash */
   .text :
   {

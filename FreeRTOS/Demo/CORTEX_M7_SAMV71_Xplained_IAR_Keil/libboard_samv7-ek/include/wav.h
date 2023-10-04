@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -38,41 +38,39 @@
 typedef struct _WavHeader
 {
     /* Contains the letters "RIFF" in ASCII form. */
-    unsigned int  chunkID;
+    unsigned int chunkID;
     /* Size of the rest of the chunk following this number.*/
-    unsigned int  chunkSize;
+    unsigned int chunkSize;
     /* Contains the letters "WAVE".*/
     unsigned int format;
     /* Contains the letters "fmt ".*/
     unsigned int subchunk1ID;
     /* 16 for PCM.  This is the size of the rest of the Subchunk which follows this number.*/
-    unsigned int  subchunk1Size;
+    unsigned int subchunk1Size;
     /* PCM = 1 (i.e. Linear quantization). Values other than 1 indicate some form of compression.*/
     unsigned short audioFormat;
     /* Mono = 1, Stereo = 2, etc.*/
     unsigned short numChannels;
     /* 8000, 44100, etc.*/
-    unsigned int   sampleRate;
+    unsigned int sampleRate;
     /* SampleRate * NumChannels * BitsPerSample/8*/
-    unsigned int   byteRate;
+    unsigned int byteRate;
     /* NumChannels * BitsPerSample/8*/
-    unsigned short blockAlign; 
+    unsigned short blockAlign;
     /* 8 bits = 8, 16 bits = 16, etc.*/
     unsigned short bitsPerSample;
     /* Contains the letters "data".*/
     unsigned int subchunk2ID;
     /* Number of bytes in the data.*/
     unsigned int subchunk2Size;
-
 } WavHeader;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern unsigned char WAV_IsValid(const WavHeader *header);
+extern unsigned char WAV_IsValid( const WavHeader * header );
 
-extern void WAV_DisplayInfo(const WavHeader *header);
+extern void WAV_DisplayInfo( const WavHeader * header );
 
 #endif //#ifndef WAV_H
-

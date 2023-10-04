@@ -24,11 +24,11 @@
  *
  */
 
-/* 
-Changes from V2.0.0
-
-	+ Use scheduler suspends in place of critical sections.
-*/
+/*
+ * Changes from V2.0.0
+ *
+ + Use scheduler suspends in place of critical sections.
+ */
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -39,79 +39,93 @@ Changes from V2.0.0
  * The four LED's are connected to D4 to D7.
  *-----------------------------------------------------------*/
 
-#define partstBIT_AS_OUTPUT			( ( unsigned short ) 0 )
-#define partstSET_OUTPUT			( ( unsigned short ) 1 )
-#define partstCLEAR_OUTPUT			( ( unsigned short ) 0 )
+#define partstBIT_AS_OUTPUT        ( ( unsigned short ) 0 )
+#define partstSET_OUTPUT           ( ( unsigned short ) 1 )
+#define partstCLEAR_OUTPUT         ( ( unsigned short ) 0 )
 
-#define partstENABLE_GENERAL_IO		( ( unsigned char ) 7 )
+#define partstENABLE_GENERAL_IO    ( ( unsigned char ) 7 )
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-	/* Set the top four bits of port D to output. */
-	TRISDbits.TRISD7 = partstBIT_AS_OUTPUT;
-	TRISDbits.TRISD6 = partstBIT_AS_OUTPUT;
-	TRISDbits.TRISD5 = partstBIT_AS_OUTPUT;
-	TRISDbits.TRISD4 = partstBIT_AS_OUTPUT;
+    /* Set the top four bits of port D to output. */
+    TRISDbits.TRISD7 = partstBIT_AS_OUTPUT;
+    TRISDbits.TRISD6 = partstBIT_AS_OUTPUT;
+    TRISDbits.TRISD5 = partstBIT_AS_OUTPUT;
+    TRISDbits.TRISD4 = partstBIT_AS_OUTPUT;
 
-	/* Start with all bits off. */
-	PORTDbits.RD7 = partstCLEAR_OUTPUT;
-	PORTDbits.RD6 = partstCLEAR_OUTPUT;
-	PORTDbits.RD5 = partstCLEAR_OUTPUT;
-	PORTDbits.RD4 = partstCLEAR_OUTPUT;
+    /* Start with all bits off. */
+    PORTDbits.RD7 = partstCLEAR_OUTPUT;
+    PORTDbits.RD6 = partstCLEAR_OUTPUT;
+    PORTDbits.RD5 = partstCLEAR_OUTPUT;
+    PORTDbits.RD4 = partstCLEAR_OUTPUT;
 
-	/* Enable the driver. */
-	ADCON1 = partstENABLE_GENERAL_IO;
-	TRISEbits.TRISE2 = partstBIT_AS_OUTPUT;
-	PORTEbits.RE2 = partstSET_OUTPUT;	
+    /* Enable the driver. */
+    ADCON1 = partstENABLE_GENERAL_IO;
+    TRISEbits.TRISE2 = partstBIT_AS_OUTPUT;
+    PORTEbits.RE2 = partstSET_OUTPUT;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     portBASE_TYPE xValue )
 {
-	/* We are only using the top nibble, so LED 0 corresponds to bit 4. */	
-	vTaskSuspendAll();
-	{
-		switch( uxLED )
-		{
-			case 3	:	PORTDbits.RD7 = ( short ) xValue;
-						break;
-			case 2	:	PORTDbits.RD6 = ( short ) xValue;
-						break;
-			case 1	:	PORTDbits.RD5 = ( short ) xValue;
-						break;
-			case 0	:	PORTDbits.RD4 = ( short ) xValue;
-						break;
-			default	:	/* There are only 4 LED's. */
-						break;
-		}
-	}
-	xTaskResumeAll();
+    /* We are only using the top nibble, so LED 0 corresponds to bit 4. */
+    vTaskSuspendAll();
+    {
+        switch( uxLED )
+        {
+            case 3:
+                PORTDbits.RD7 = ( short ) xValue;
+                break;
+
+            case 2:
+                PORTDbits.RD6 = ( short ) xValue;
+                break;
+
+            case 1:
+                PORTDbits.RD5 = ( short ) xValue;
+                break;
+
+            case 0:
+                PORTDbits.RD4 = ( short ) xValue;
+                break;
+
+            default: /* There are only 4 LED's. */
+                break;
+        }
+    }
+    xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	/* We are only using the top nibble, so LED 0 corresponds to bit 4. */	
-	vTaskSuspendAll();
-	{
-		switch( uxLED )
-		{
-			case 3	:	PORTDbits.RD7 = !( PORTDbits.RD7 );
-						break;
-			case 2	:	PORTDbits.RD6 = !( PORTDbits.RD6 );
-						break;
-			case 1	:	PORTDbits.RD5 = !( PORTDbits.RD5 );
-						break;
-			case 0	:	PORTDbits.RD4 = !( PORTDbits.RD4 );
-						break;
-			default	:	/* There are only 4 LED's. */
-						break;
-		}
-	}
-	xTaskResumeAll();
+    /* We are only using the top nibble, so LED 0 corresponds to bit 4. */
+    vTaskSuspendAll();
+    {
+        switch( uxLED )
+        {
+            case 3:
+                PORTDbits.RD7 = !( PORTDbits.RD7 );
+                break;
+
+            case 2:
+                PORTDbits.RD6 = !( PORTDbits.RD6 );
+                break;
+
+            case 1:
+                PORTDbits.RD5 = !( PORTDbits.RD5 );
+                break;
+
+            case 0:
+                PORTDbits.RD4 = !( PORTDbits.RD4 );
+                break;
+
+            default: /* There are only 4 LED's. */
+                break;
+        }
+    }
+    xTaskResumeAll();
 }
-
-
-

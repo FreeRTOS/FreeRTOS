@@ -9,21 +9,20 @@
 #define __TRNG_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- True Random Number Generator -------------------------*/
+
 /**
-    @addtogroup TRNG True Random Number Generator(TRNG)
-    Memory Mapped Structure for TRNG Controller
-@{ */
+ *  @addtogroup TRNG True Random Number Generator(TRNG)
+ *  Memory Mapped Structure for TRNG Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var TRNG_T::CTL
      * Offset: 0x00  TRNG Control Register and Status
@@ -88,44 +87,43 @@ typedef struct
      * |        |          |Note: ACT is an enable bit of analog part
      * |        |          |When TRNG is not required to generate random number, TRNGEN (TRNG_CTL[0]) bit and ACT bit should be set to 0 to reduce power consumption.
      */
-    __IO uint32_t CTL;                   /*!< [0x0000] TRNG Control Register and Status                                 */
-    __I  uint32_t DATA;                  /*!< [0x0004] TRNG Data Register                                               */
-    __I  uint32_t RESERVE0[1];
-    __IO uint32_t ACT;                   /*!< [0x000c] TRNG Activation Register                                         */
-
+    __IO uint32_t CTL; /*!< [0x0000] TRNG Control Register and Status                                 */
+    __I uint32_t DATA; /*!< [0x0004] TRNG Data Register                                               */
+    __I uint32_t RESERVE0[ 1 ];
+    __IO uint32_t ACT; /*!< [0x000c] TRNG Activation Register                                         */
 } TRNG_T;
 
 /**
-    @addtogroup TRNG_CONST TRNG Bit Field Definition
-    Constant Definitions for TRNG Controller
-@{ */
+ *  @addtogroup TRNG_CONST TRNG Bit Field Definition
+ *  Constant Definitions for TRNG Controller
+ * @{ */
 
-#define TRNG_CTL_TRNGEN_Pos              (0)                                               /*!< TRNG_T::CTL: TRNGEN Position           */
-#define TRNG_CTL_TRNGEN_Msk              (0x1ul << TRNG_CTL_TRNGEN_Pos)                    /*!< TRNG_T::CTL: TRNGEN Mask               */
+#define TRNG_CTL_TRNGEN_Pos      ( 0 )                                                     /*!< TRNG_T::CTL: TRNGEN Position           */
+#define TRNG_CTL_TRNGEN_Msk      ( 0x1ul << TRNG_CTL_TRNGEN_Pos )                          /*!< TRNG_T::CTL: TRNGEN Mask               */
 
-#define TRNG_CTL_DVIF_Pos                (1)                                               /*!< TRNG_T::CTL: DVIF Position             */
-#define TRNG_CTL_DVIF_Msk                (0x1ul << TRNG_CTL_DVIF_Pos)                      /*!< TRNG_T::CTL: DVIF Mask                 */
+#define TRNG_CTL_DVIF_Pos        ( 1 )                                                     /*!< TRNG_T::CTL: DVIF Position             */
+#define TRNG_CTL_DVIF_Msk        ( 0x1ul << TRNG_CTL_DVIF_Pos )                            /*!< TRNG_T::CTL: DVIF Mask                 */
 
-#define TRNG_CTL_CLKP_Pos                (2)                                               /*!< TRNG_T::CTL: CLKP Position             */
-#define TRNG_CTL_CLKP_Msk                (0xful << TRNG_CTL_CLKP_Pos)                      /*!< TRNG_T::CTL: CLKP Mask                 */
+#define TRNG_CTL_CLKP_Pos        ( 2 )                                                     /*!< TRNG_T::CTL: CLKP Position             */
+#define TRNG_CTL_CLKP_Msk        ( 0xful << TRNG_CTL_CLKP_Pos )                            /*!< TRNG_T::CTL: CLKP Mask                 */
 
-#define TRNG_CTL_DVIEN_Pos               (6)                                               /*!< TRNG_T::CTL: DVIEN Position            */
-#define TRNG_CTL_DVIEN_Msk               (0x1ul << TRNG_CTL_DVIEN_Pos)                     /*!< TRNG_T::CTL: DVIEN Mask                */
+#define TRNG_CTL_DVIEN_Pos       ( 6 )                                                     /*!< TRNG_T::CTL: DVIEN Position            */
+#define TRNG_CTL_DVIEN_Msk       ( 0x1ul << TRNG_CTL_DVIEN_Pos )                           /*!< TRNG_T::CTL: DVIEN Mask                */
 
-#define TRNG_CTL_READY_Pos               (7)                                               /*!< TRNG_T::CTL: READY Position            */
-#define TRNG_CTL_READY_Msk               (0x1ul << TRNG_CTL_READY_Pos)                     /*!< TRNG_T::CTL: READY Mask                */
+#define TRNG_CTL_READY_Pos       ( 7 )                                                     /*!< TRNG_T::CTL: READY Position            */
+#define TRNG_CTL_READY_Msk       ( 0x1ul << TRNG_CTL_READY_Pos )                           /*!< TRNG_T::CTL: READY Mask                */
 
-#define TRNG_CTL_Reversed_Pos            (8)                                               /*!< TRNG_T::CTL: Reversed Position         */
-#define TRNG_CTL_Reversed_Msk            (0xfffffful << TRNG_CTL_Reversed_Pos)             /*!< TRNG_T::CTL: Reversed Mask             */
+#define TRNG_CTL_Reversed_Pos    ( 8 )                                                     /*!< TRNG_T::CTL: Reversed Position         */
+#define TRNG_CTL_Reversed_Msk    ( 0xfffffful << TRNG_CTL_Reversed_Pos )                   /*!< TRNG_T::CTL: Reversed Mask             */
 
-#define TRNG_DATA_DATA_Pos               (0)                                               /*!< TRNG_T::DATA: DATA Position            */
-#define TRNG_DATA_DATA_Msk               (0xfful << TRNG_DATA_DATA_Pos)                    /*!< TRNG_T::DATA: DATA Mask                */
+#define TRNG_DATA_DATA_Pos       ( 0 )                                                     /*!< TRNG_T::DATA: DATA Position            */
+#define TRNG_DATA_DATA_Msk       ( 0xfful << TRNG_DATA_DATA_Pos )                          /*!< TRNG_T::DATA: DATA Mask                */
 
-#define TRNG_ACT_VER_Pos                 (0)                                               /*!< TRNG_T::ACT: VER Position              */
-#define TRNG_ACT_VER_Msk                 (0x7ful << TRNG_ACT_VER_Pos)                      /*!< TRNG_T::ACT: VER Mask                  */
+#define TRNG_ACT_VER_Pos         ( 0 )                                                     /*!< TRNG_T::ACT: VER Position              */
+#define TRNG_ACT_VER_Msk         ( 0x7ful << TRNG_ACT_VER_Pos )                            /*!< TRNG_T::ACT: VER Mask                  */
 
-#define TRNG_ACT_ACT_Pos                 (7)                                               /*!< TRNG_T::ACT: ACT Position              */
-#define TRNG_ACT_ACT_Msk                 (0x1ul << TRNG_ACT_ACT_Pos)                       /*!< TRNG_T::ACT: ACT Mask                  */
+#define TRNG_ACT_ACT_Pos         ( 7 )                                                     /*!< TRNG_T::ACT: ACT Position              */
+#define TRNG_ACT_ACT_Msk         ( 0x1ul << TRNG_ACT_ACT_Pos )                             /*!< TRNG_T::ACT: ACT Mask                  */
 
 /**@}*/ /* TRNG_CONST */
 /**@}*/ /* end of TRNG register group */

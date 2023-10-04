@@ -29,77 +29,77 @@
 /*-----------------------------------------------------------*/
 
 /* Called by the startup code to initialise the run time system. */
-unsigned char __low_level_init(void);
+unsigned char __low_level_init( void );
 
 /*-----------------------------------------------------------*/
 
-unsigned char __low_level_init(void)
+unsigned char __low_level_init( void )
 {
-unsigned char resetflag = RESF;
-unsigned char psval = 0;
+    unsigned char resetflag = RESF;
+    unsigned char psval = 0;
 
-	/* Setup provided by NEC. */
+    /* Setup provided by NEC. */
 
-	/* Disable global interrupts to ensure no interrupts occur during system
-	setup. */
-	portDISABLE_INTERRUPTS();
+    /* Disable global interrupts to ensure no interrupts occur during system
+     * setup. */
+    portDISABLE_INTERRUPTS();
 
-	PRCMD = 0x00;
-	OCDM = 0x00;
-	VSWC = 0x12;
-	VSWC = 18;
+    PRCMD = 0x00;
+    OCDM = 0x00;
+    VSWC = 0x12;
+    VSWC = 18;
 
-	/* Set main system clock */
-	OSTS = 0x06;
-	psval = 0x80;
-	PRCMD = psval;
-	PCC = psval;
-	while (!OSTC)
-	{
-		;
-	}
+    /* Set main system clock */
+    OSTS = 0x06;
+    psval = 0x80;
+    PRCMD = psval;
+    PCC = psval;
 
-	PLLS = 0x03;
-	PLLON = 1;
-	while (LOCKR)
-	{
-		;
-	}
+    while( !OSTC )
+    {
+    }
 
-	psval = 0x01;
-	PRCMD = psval;
-	MCM = psval;
-	SELPLL = 1;
+    PLLS = 0x03;
+    PLLON = 1;
 
-	/* Set fCPU */
-	psval = PCC | 0x00;
-	PRCMD = psval;
-	PCC = psval;
-	RCM = 0x83;
+    while( LOCKR )
+    {
+    }
 
-	/* Set fXP1 */
-	SELCNT4 = 0x00;
+    psval = 0x01;
+    PRCMD = psval;
+    MCM = psval;
+    SELPLL = 1;
 
-	/* Set fBRG */
-	PRSM0 = 0x00;
+    /* Set fCPU */
+    psval = PCC | 0x00;
+    PRCMD = psval;
+    PCC = psval;
+    RCM = 0x83;
 
-	/* Stand-by setting */
-	psval = 0x00;
-	PRCMD = psval;
-	PSC = psval;
+    /* Set fXP1 */
+    SELCNT4 = 0x00;
 
-	/* WDT2 setting */
-	WDTM2 = 0x1F;
+    /* Set fBRG */
+    PRSM0 = 0x00;
 
-	/* PCL setting */
-	PCLM = 0x00;
+    /* Stand-by setting */
+    psval = 0x00;
+    PRCMD = psval;
+    PSC = psval;
 
-	/* disable dma0 - dma3 */
-	E00 = 0;	
-	E11 = 0;
-	E22 = 0;
-	E33 = 0;	
+    /* WDT2 setting */
+    WDTM2 = 0x1F;
 
-	return pdTRUE;
+    /* PCL setting */
+    PCLM = 0x00;
+
+    /* disable dma0 - dma3 */
+    E00 = 0;
+    E11 = 0;
+    E22 = 0;
+    E33 = 0;
+
+    return pdTRUE;
 }
 /*-----------------------------------------------------------*/

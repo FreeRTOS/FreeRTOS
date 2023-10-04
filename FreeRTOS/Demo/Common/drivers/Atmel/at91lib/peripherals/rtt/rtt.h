@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,33 +30,35 @@
 #ifndef RTT_H
 #define RTT_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
 
-//------------------------------------------------------------------------------
-//         Definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Definitions */
+/*------------------------------------------------------------------------------ */
 
 #ifndef AT91C_BASE_RTTC
-    #define AT91C_BASE_RTTC         AT91C_BASE_RTTC0
+    #define AT91C_BASE_RTTC    AT91C_BASE_RTTC0
 #endif
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
 
-extern void RTT_SetPrescaler(AT91S_RTTC *rtt, unsigned short prescaler);
+extern void RTT_SetPrescaler( AT91S_RTTC * rtt,
+                              unsigned short prescaler );
 
-extern unsigned int RTT_GetTime(AT91S_RTTC *rtt);
+extern unsigned int RTT_GetTime( AT91S_RTTC * rtt );
 
-extern void RTT_EnableIT(AT91S_RTTC *rtt, unsigned int sources);
+extern void RTT_EnableIT( AT91S_RTTC * rtt,
+                          unsigned int sources );
 
-extern unsigned int RTT_GetStatus(AT91S_RTTC *rtt);
+extern unsigned int RTT_GetStatus( AT91S_RTTC * rtt );
 
-extern void RTT_SetAlarm(AT91S_RTTC *pRtt, unsigned int time);
+extern void RTT_SetAlarm( AT91S_RTTC * pRtt,
+                          unsigned int time );
 
 #endif //#ifndef RTT_H
-

@@ -24,27 +24,27 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* ----------- WWDG registers bit address in the alias region ----------- */
-#define WWDG_OFFSET       (WWDG_BASE - PERIPH_BASE)
+#define WWDG_OFFSET       ( WWDG_BASE - PERIPH_BASE )
 
 /* Alias word address of EWI bit */
-#define CFR_OFFSET        (WWDG_OFFSET + 0x04)
+#define CFR_OFFSET        ( WWDG_OFFSET + 0x04 )
 #define EWI_BitNumber     0x09
-#define CFR_EWI_BB        (PERIPH_BB_BASE + (CFR_OFFSET * 32) + (EWI_BitNumber * 4))
+#define CFR_EWI_BB        ( PERIPH_BB_BASE + ( CFR_OFFSET * 32 ) + ( EWI_BitNumber * 4 ) )
 
 /* Alias word address of EWIF bit */
-#define SR_OFFSET         (WWDG_OFFSET + 0x08)
+#define SR_OFFSET         ( WWDG_OFFSET + 0x08 )
 #define EWIF_BitNumber    0x00
-#define SR_EWIF_BB        (PERIPH_BB_BASE + (SR_OFFSET * 32) + (EWIF_BitNumber * 4))
+#define SR_EWIF_BB        ( PERIPH_BB_BASE + ( SR_OFFSET * 32 ) + ( EWIF_BitNumber * 4 ) )
 
 /* --------------------- WWDG registers bit mask ------------------------ */
 /* CR register bit mask */
-#define CR_WDGA_Set       ((u32)0x00000080)
+#define CR_WDGA_Set       ( ( u32 ) 0x00000080 )
 
 /* CFR register bit mask */
-#define CFR_WDGTB_Mask    ((u32)0xFFFFFE7F)
-#define CFR_W_Mask        ((u32)0xFFFFFF80)
+#define CFR_WDGTB_Mask    ( ( u32 ) 0xFFFFFE7F )
+#define CFR_W_Mask        ( ( u32 ) 0xFFFFFF80 )
 
-#define BIT_Mask          ((u8)0x7F)
+#define BIT_Mask          ( ( u8 ) 0x7F )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -59,10 +59,10 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_DeInit(void)
+void WWDG_DeInit( void )
 {
-  RCC_APB1PeriphResetCmd(RCC_APB1Periph_WWDG, ENABLE);
-  RCC_APB1PeriphResetCmd(RCC_APB1Periph_WWDG, DISABLE);
+    RCC_APB1PeriphResetCmd( RCC_APB1Periph_WWDG, ENABLE );
+    RCC_APB1PeriphResetCmd( RCC_APB1Periph_WWDG, DISABLE );
 }
 
 /*******************************************************************************
@@ -77,21 +77,21 @@ void WWDG_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_SetPrescaler(u32 WWDG_Prescaler)
+void WWDG_SetPrescaler( u32 WWDG_Prescaler )
 {
-  u32 tmpreg = 0;
+    u32 tmpreg = 0;
 
-  /* Check the parameters */
-  assert(IS_WWDG_PRESCALER(WWDG_Prescaler));
+    /* Check the parameters */
+    assert( IS_WWDG_PRESCALER( WWDG_Prescaler ) );
 
-  /* Clear WDGTB[8:7] bits */
-  tmpreg = WWDG->CFR & CFR_WDGTB_Mask;
+    /* Clear WDGTB[8:7] bits */
+    tmpreg = WWDG->CFR & CFR_WDGTB_Mask;
 
-  /* Set WDGTB[8:7] bits according to WWDG_Prescaler value */
-  tmpreg |= WWDG_Prescaler;
+    /* Set WDGTB[8:7] bits according to WWDG_Prescaler value */
+    tmpreg |= WWDG_Prescaler;
 
-  /* Store the new value */
-  WWDG->CFR = tmpreg;
+    /* Store the new value */
+    WWDG->CFR = tmpreg;
 }
 
 /*******************************************************************************
@@ -103,21 +103,21 @@ void WWDG_SetPrescaler(u32 WWDG_Prescaler)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_SetWindowValue(u8 WindowValue)
+void WWDG_SetWindowValue( u8 WindowValue )
 {
-  u32 tmpreg = 0;
+    u32 tmpreg = 0;
 
-  /* Check the parameters */
-  assert(IS_WWDG_WINDOW_VALUE(WindowValue));
+    /* Check the parameters */
+    assert( IS_WWDG_WINDOW_VALUE( WindowValue ) );
 
-  /* Clear W[6:0] bits */
-  tmpreg = WWDG->CFR & CFR_W_Mask;
+    /* Clear W[6:0] bits */
+    tmpreg = WWDG->CFR & CFR_W_Mask;
 
-  /* Set W[6:0] bits according to WindowValue value */
-  tmpreg |= WindowValue & BIT_Mask;
+    /* Set W[6:0] bits according to WindowValue value */
+    tmpreg |= WindowValue & BIT_Mask;
 
-  /* Store the new value */
-  WWDG->CFR = tmpreg;
+    /* Store the new value */
+    WWDG->CFR = tmpreg;
 }
 
 /*******************************************************************************
@@ -127,9 +127,9 @@ void WWDG_SetWindowValue(u8 WindowValue)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_EnableIT(void)
+void WWDG_EnableIT( void )
 {
-  *(vu32 *) CFR_EWI_BB = (u32)ENABLE;
+    *( vu32 * ) CFR_EWI_BB = ( u32 ) ENABLE;
 }
 
 /*******************************************************************************
@@ -140,14 +140,14 @@ void WWDG_EnableIT(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_SetCounter(u8 Counter)
+void WWDG_SetCounter( u8 Counter )
 {
-  /* Check the parameters */
-  assert(IS_WWDG_COUNTER(Counter));
+    /* Check the parameters */
+    assert( IS_WWDG_COUNTER( Counter ) );
 
-  /* Write to T[6:0] bits to configure the counter value, no need to do
-     a read-modify-write; writing a 0 to WDGA bit does nothing */
-  WWDG->CR = Counter & BIT_Mask;
+    /* Write to T[6:0] bits to configure the counter value, no need to do
+     * a read-modify-write; writing a 0 to WDGA bit does nothing */
+    WWDG->CR = Counter & BIT_Mask;
 }
 
 /*******************************************************************************
@@ -159,12 +159,12 @@ void WWDG_SetCounter(u8 Counter)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_Enable(u8 Counter)
+void WWDG_Enable( u8 Counter )
 {
-  /* Check the parameters */
-  assert(IS_WWDG_COUNTER(Counter));
+    /* Check the parameters */
+    assert( IS_WWDG_COUNTER( Counter ) );
 
-  WWDG->CR = CR_WDGA_Set | Counter;
+    WWDG->CR = CR_WDGA_Set | Counter;
 }
 
 /*******************************************************************************
@@ -174,9 +174,9 @@ void WWDG_Enable(u8 Counter)
 * Output         : None
 * Return         : The new state of the Early Wakeup interrupt flag (SET or RESET)
 *******************************************************************************/
-FlagStatus WWDG_GetFlagStatus(void)
+FlagStatus WWDG_GetFlagStatus( void )
 {
-  return (FlagStatus)(*(vu32 *) SR_EWIF_BB);
+    return ( FlagStatus ) ( *( vu32 * ) SR_EWIF_BB );
 }
 
 /*******************************************************************************
@@ -186,9 +186,9 @@ FlagStatus WWDG_GetFlagStatus(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WWDG_ClearFlag(void)
+void WWDG_ClearFlag( void )
 {
-  WWDG->SR = (u32)RESET;
+    WWDG->SR = ( u32 ) RESET;
 }
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

@@ -11,7 +11,7 @@ config USART_CK
     bool "csky usart"
     help
         select the ck usart driver
-        
+
 config USART_SILAN
     bool "silan usart"
     help

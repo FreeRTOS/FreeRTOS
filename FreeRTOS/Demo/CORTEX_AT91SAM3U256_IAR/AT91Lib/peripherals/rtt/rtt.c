@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,67 +27,69 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include "rtt.h"
 #include <utility/assert.h>
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
 
-//------------------------------------------------------------------------------
-/// Changes the prescaler value of the given RTT and restarts it. This function
-/// disables RTT interrupt sources.
-/// \param rtt  Pointer to a AT91S_RTTC instance.
-/// \param prescaler  Prescaler value for the RTT.
-//------------------------------------------------------------------------------
-void RTT_SetPrescaler(AT91S_RTTC *rtt, unsigned short prescaler)
+/*------------------------------------------------------------------------------ */
+/*/ Changes the prescaler value of the given RTT and restarts it. This function */
+/*/ disables RTT interrupt sources. */
+/*/ \param rtt  Pointer to a AT91S_RTTC instance. */
+/*/ \param prescaler  Prescaler value for the RTT. */
+/*------------------------------------------------------------------------------ */
+void RTT_SetPrescaler( AT91S_RTTC * rtt,
+                       unsigned short prescaler )
 {
-    rtt->RTTC_RTMR = (prescaler | AT91C_RTTC_RTTRST);
+    rtt->RTTC_RTMR = ( prescaler | AT91C_RTTC_RTTRST );
 }
 
-//------------------------------------------------------------------------------
-/// Returns the current value of the RTT timer value.
-/// \param rtt  Pointer to a AT91S_RTTC instance.
-//------------------------------------------------------------------------------
-unsigned int RTT_GetTime(AT91S_RTTC *rtt)
+/*------------------------------------------------------------------------------ */
+/*/ Returns the current value of the RTT timer value. */
+/*/ \param rtt  Pointer to a AT91S_RTTC instance. */
+/*------------------------------------------------------------------------------ */
+unsigned int RTT_GetTime( AT91S_RTTC * rtt )
 {
     return rtt->RTTC_RTVR;
 }
 
-//------------------------------------------------------------------------------
-/// Enables the specified RTT interrupt sources.
-/// \param rtt  Pointer to a AT91S_RTTC instance.
-/// \param sources  Bitmask of interrupts to enable.
-//------------------------------------------------------------------------------
-void RTT_EnableIT(AT91S_RTTC *rtt, unsigned int sources)
+/*------------------------------------------------------------------------------ */
+/*/ Enables the specified RTT interrupt sources. */
+/*/ \param rtt  Pointer to a AT91S_RTTC instance. */
+/*/ \param sources  Bitmask of interrupts to enable. */
+/*------------------------------------------------------------------------------ */
+void RTT_EnableIT( AT91S_RTTC * rtt,
+                   unsigned int sources )
 {
-    ASSERT((sources & 0x0004FFFF) == 0,
-           "RTT_EnableIT: Wrong sources value.\n\r");
+    ASSERT( ( sources & 0x0004FFFF ) == 0,
+            "RTT_EnableIT: Wrong sources value.\n\r" );
     rtt->RTTC_RTMR |= sources;
 }
 
-//------------------------------------------------------------------------------
-/// Returns the status register value of the given RTT.
-/// \param rtt  Pointer to an AT91S_RTTC instance.
-//------------------------------------------------------------------------------
-unsigned int RTT_GetStatus(AT91S_RTTC *rtt)
+/*------------------------------------------------------------------------------ */
+/*/ Returns the status register value of the given RTT. */
+/*/ \param rtt  Pointer to an AT91S_RTTC instance. */
+/*------------------------------------------------------------------------------ */
+unsigned int RTT_GetStatus( AT91S_RTTC * rtt )
 {
     return rtt->RTTC_RTSR;
 }
 
-//------------------------------------------------------------------------------
-/// Configures the RTT to generate an alarm at the given time.
-/// \param pRtt  Pointer to an AT91S_RTTC instance.
-/// \param time  Alarm time.
-//------------------------------------------------------------------------------
-void RTT_SetAlarm(AT91S_RTTC *pRtt, unsigned int time)
+/*------------------------------------------------------------------------------ */
+/*/ Configures the RTT to generate an alarm at the given time. */
+/*/ \param pRtt  Pointer to an AT91S_RTTC instance. */
+/*/ \param time  Alarm time. */
+/*------------------------------------------------------------------------------ */
+void RTT_SetAlarm( AT91S_RTTC * pRtt,
+                   unsigned int time )
 {
-    SANITY_CHECK(time > 0);
+    SANITY_CHECK( time > 0 );
 
     pRtt->RTTC_RTAR = time - 1;
 }
-

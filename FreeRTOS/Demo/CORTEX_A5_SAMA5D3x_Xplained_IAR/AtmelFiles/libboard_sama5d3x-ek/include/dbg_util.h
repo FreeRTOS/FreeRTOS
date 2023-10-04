@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -53,14 +53,15 @@
  *         Global functions
  *----------------------------------------------------------------------------*/
 
-extern uint8_t DbgReceiveByte(uint8_t * pByte,uint32_t timeOut);
+extern uint8_t DbgReceiveByte( uint8_t * pByte,
+                               uint32_t timeOut );
 
-extern uint32_t DbgReceiveBinary(uint8_t start,
-                                 uint32_t address,
-                                 uint32_t maxSize);
+extern uint32_t DbgReceiveBinary( uint8_t start,
+                                  uint32_t address,
+                                  uint32_t maxSize );
 
-extern uint32_t DbgReceive1KXModem(uint8_t * pktBuffer,
-                                   uint32_t address,
-                                   uint32_t maxSize);
+extern uint32_t DbgReceive1KXModem( uint8_t * pktBuffer,
+                                    uint32_t address,
+                                    uint32_t maxSize );
 
 #endif /* _DBG_UTIL_ */

@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_reset.c
@@ -33,13 +34,14 @@
 * Description  : RESET and Low-Power API of RZ/T1
 * Limitation   : none
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              : 21.05.2015 1.00     First Release
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 #include <stdint.h>
 #include "iodefine.h"
@@ -48,81 +50,77 @@ Includes <System Includes> , "Project Includes"
 #include "r_typedefs.h"
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
-#define RST_WRITE_ENABLE  (0x0000A502)
-#define RST_WRITE_DISABLE (0x0000A500)
+#define RST_WRITE_ENABLE     ( 0x0000A502 )
+#define RST_WRITE_DISABLE    ( 0x0000A500 )
 
 /***********************************************************************************************************************
-Typedef definitions
-***********************************************************************************************************************/
-
-
-
-/***********************************************************************************************************************
-Imported global variables and functions (from other files)
-***********************************************************************************************************************/
-
-
-/***********************************************************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 
 
 /***********************************************************************************************************************
-Private variables and functions
+*  Imported global variables and functions (from other files)
+***********************************************************************************************************************/
+
+
+/***********************************************************************************************************************
+*  Exported global variables and functions (to be accessed by other files)
+***********************************************************************************************************************/
+
+
+
+/***********************************************************************************************************************
+*  Private variables and functions
 ***********************************************************************************************************************/
 
 
 /*******************************************************************************
 * Function Name : r_rst_write_enable
 * Description   : Enables writing to the registers related to RESET and Low-
-*                 Power function. And dummy read the register in order to fix 
+*                 Power function. And dummy read the register in order to fix
 *                 the register value.
 * Arguments    : none
 * Return Value : none
 *******************************************************************************/
-void r_rst_write_enable(void)
+void r_rst_write_enable( void )
 {
-    volatile uint32_t dummy=0;
+    volatile uint32_t dummy = 0;
 
-    UNUSED_VARIABLE(dummy);
-  
+    UNUSED_VARIABLE( dummy );
+
     /* Enables writing to the Reset and Low-Power register */
     SYSTEM.PRCR.LONG = RST_WRITE_ENABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
 }
 
 /*******************************************************************************
- End of function r_rst_write_enable
+*  End of function r_rst_write_enable
 *******************************************************************************/
 
 /*******************************************************************************
 * Function Name : r_rst_write_disable
 * Description   : Disables writing to the registers related to RESET and Low-
-*                 Power function. And dummy read the register in order to fix 
+*                 Power function. And dummy read the register in order to fix
 *                 the register value.
 * Arguments    : none
 * Return Value : none
 *******************************************************************************/
-void r_rst_write_disable(void)
+void r_rst_write_disable( void )
 {
-    volatile uint32_t dummy=0;
+    volatile uint32_t dummy = 0;
 
-    UNUSED_VARIABLE(dummy);
-  
+    UNUSED_VARIABLE( dummy );
+
     /* Disables writing to the Reset and Low-Power register */
     SYSTEM.PRCR.LONG = RST_WRITE_DISABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
 }
 
 /***********************************************************************************************************************
- End of function r_rst_write_disable
+*  End of function r_rst_write_disable
 ***********************************************************************************************************************/
 
 /* End of File */
-
-

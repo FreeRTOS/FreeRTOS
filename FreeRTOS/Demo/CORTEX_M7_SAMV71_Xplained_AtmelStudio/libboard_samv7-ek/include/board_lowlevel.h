@@ -44,4 +44,3 @@ extern void LowLevelInit( void );
 extern void _SetupMemoryRegion( void );
 
 #endif /* BOARD_LOWLEVEL_H */
-

@@ -36,7 +36,7 @@
  *          Headers
  *-------------------------------*/
 
-//#include <board.h>
+/*#include <board.h> */
 #include <stdio.h>
 #include "dbg_util.h"
 #include "timer.h"
@@ -48,24 +48,24 @@
  *-------------------------------*/
 
 /** Data RX timeout in binary start up */
-#define TIMEOUT_RX_START        (1000*20)
+#define TIMEOUT_RX_START    ( 1000 * 20 )
 /** Data RX timeout default value */
-#define TIMEOUT_RX              (200)
+#define TIMEOUT_RX          ( 200 )
 
 /* ASCII Character Codes */
-#define SOH             0x01
-#define STX             0x02
-#define EOT             0x04
-#define CTRL_D          0x04 /**< Transfer Done */
-#define ACK             0x06
-#define NAK             0x15
-#define CAN             0x18 /**< Cancel transfer */
-#define CTRL_X          0x24
+#define SOH                 0x01
+#define STX                 0x02
+#define EOT                 0x04
+#define CTRL_D              0x04 /**< Transfer Done */
+#define ACK                 0x06
+#define NAK                 0x15
+#define CAN                 0x18 /**< Cancel transfer */
+#define CTRL_X              0x24
 
 /* 1K XMODEM Parameters */
-#define SOH_LENGTH      128
-#define STX_LENGTH      1024
-#define SOH_TIMEOUT     1000
+#define SOH_LENGTH          128
+#define STX_LENGTH          1024
+#define SOH_TIMEOUT         1000
 
 /*-------------------------------
  *          Local functions
@@ -74,19 +74,24 @@
 /**
  * \brief Compute the CRC
  */
-static uint16_t
-_GetCRC(uint8_t bByte, uint16_t wCrc)
+static uint16_t _GetCRC( uint8_t bByte,
+                         uint16_t wCrc )
 {
-	int32_t cnt;
-	uint8_t newBit;
-	for (cnt = 7; cnt >= 0; cnt--) {
-		newBit = ((wCrc >> 15) & 0x1) ^ ((bByte >> cnt) & 0x1);
-		wCrc <<= 1;
-		if (newBit)
-			wCrc ^= (0x1021);
-	}
-	return wCrc;
+    int32_t cnt;
+    uint8_t newBit;
 
+    for( cnt = 7; cnt >= 0; cnt-- )
+    {
+        newBit = ( ( wCrc >> 15 ) & 0x1 ) ^ ( ( bByte >> cnt ) & 0x1 );
+        wCrc <<= 1;
+
+        if( newBit )
+        {
+            wCrc ^= ( 0x1021 );
+        }
+    }
+
+    return wCrc;
 }
 
 /*-------------------------------
@@ -99,29 +104,42 @@ _GetCRC(uint8_t bByte, uint16_t wCrc)
  *              to discard data.
  * \param timeOut timeout setting, in number of ticks.
  */
-uint8_t
-DbgReceiveByte(uint8_t * pByte, uint32_t timeOut)
+uint8_t DbgReceiveByte( uint8_t * pByte,
+                        uint32_t timeOut )
 {
-	uint32_t tick;
-	uint32_t delay;
-	tick = timer_get_tick();
-	while (1) {
-		if (console_is_rx_ready()) {
-			uint8_t tmp = console_get_char();
-			if (pByte)
-				*pByte = tmp;
-			return 1;
-		}
+    uint32_t tick;
+    uint32_t delay;
 
-		if (timeOut == 0) {
-			/* Never timeout */
-		} else {
-			delay = timer_get_interval(tick, timer_get_tick());
-			if (delay > timeOut) {
-				return 0;
-			}
-		}
-	}
+    tick = timer_get_tick();
+
+    while( 1 )
+    {
+        if( console_is_rx_ready() )
+        {
+            uint8_t tmp = console_get_char();
+
+            if( pByte )
+            {
+                *pByte = tmp;
+            }
+
+            return 1;
+        }
+
+        if( timeOut == 0 )
+        {
+            /* Never timeout */
+        }
+        else
+        {
+            delay = timer_get_interval( tick, timer_get_tick() );
+
+            if( delay > timeOut )
+            {
+                return 0;
+            }
+        }
+    }
 }
 
 /**
@@ -131,66 +149,94 @@ DbgReceiveByte(uint8_t * pByte, uint32_t timeOut)
  * \param maxSize max receive data size in bytes
  * \return number of received bytes
  */
-uint32_t
-DbgReceiveBinary(uint8_t bStart, uint32_t address, uint32_t maxSize)
+uint32_t DbgReceiveBinary( uint8_t bStart,
+                           uint32_t address,
+                           uint32_t maxSize )
 {
-	volatile uint32_t tick0;
-	uint32_t delay;
-	uint8_t *pBuffer = (uint8_t *) address;
-	uint8_t xSign = 0;
-	uint32_t rxCnt = 0;
+    volatile uint32_t tick0;
+    uint32_t delay;
+    uint8_t * pBuffer = ( uint8_t * ) address;
+    uint8_t xSign = 0;
+    uint32_t rxCnt = 0;
 
-	if (maxSize == 0)
-		return 0;
+    if( maxSize == 0 )
+    {
+        return 0;
+    }
 
-	if (bStart) {
-		printf("\n\r-- Please start binary data in %d seconds:\n\r",
-		       TIMEOUT_RX_START / 1000);
-		tick0 = timer_get_tick();
-		while (1) {
-			if (console_is_rx_ready()) {
-				pBuffer[rxCnt++] = console_get_char();
-				console_put_char(' ');
-				break;
-			} else {
-				delay = timer_get_interval(tick0, timer_get_tick());
-				if ((delay % 1000) == 0) {
-					if (xSign == 0) {
-						console_put_char('*');
-						xSign = 1;
-					}
-				} else if (xSign) {
-					xSign = 0;
-				}
+    if( bStart )
+    {
+        printf( "\n\r-- Please start binary data in %d seconds:\n\r",
+                TIMEOUT_RX_START / 1000 );
+        tick0 = timer_get_tick();
 
-				if (delay > TIMEOUT_RX_START) {
-					printf("\n\rRX timeout!\n\r");
-					return rxCnt;
-				}
-			}
-		}
-	}
-	/* Get data */
-	while (1) {
-		tick0 = timer_get_tick();
-		while (1) {
-			if (console_is_rx_ready()) {
-				pBuffer[rxCnt++] = console_get_char();
-				if ((rxCnt % (10 * 1024)) == 0) {
-					console_put_char('.');
-				}
-				if (rxCnt >= maxSize) {
-					/* Wait until file transfer finished */
-					return rxCnt;
-				}
-				break;
-			}
-			delay = timer_get_interval(tick0, timer_get_tick());
-			if (delay > TIMEOUT_RX) {
-				return rxCnt;
-			}
-		}
-	}
+        while( 1 )
+        {
+            if( console_is_rx_ready() )
+            {
+                pBuffer[ rxCnt++ ] = console_get_char();
+                console_put_char( ' ' );
+                break;
+            }
+            else
+            {
+                delay = timer_get_interval( tick0, timer_get_tick() );
+
+                if( ( delay % 1000 ) == 0 )
+                {
+                    if( xSign == 0 )
+                    {
+                        console_put_char( '*' );
+                        xSign = 1;
+                    }
+                }
+                else if( xSign )
+                {
+                    xSign = 0;
+                }
+
+                if( delay > TIMEOUT_RX_START )
+                {
+                    printf( "\n\rRX timeout!\n\r" );
+                    return rxCnt;
+                }
+            }
+        }
+    }
+
+    /* Get data */
+    while( 1 )
+    {
+        tick0 = timer_get_tick();
+
+        while( 1 )
+        {
+            if( console_is_rx_ready() )
+            {
+                pBuffer[ rxCnt++ ] = console_get_char();
+
+                if( ( rxCnt % ( 10 * 1024 ) ) == 0 )
+                {
+                    console_put_char( '.' );
+                }
+
+                if( rxCnt >= maxSize )
+                {
+                    /* Wait until file transfer finished */
+                    return rxCnt;
+                }
+
+                break;
+            }
+
+            delay = timer_get_interval( tick0, timer_get_tick() );
+
+            if( delay > TIMEOUT_RX )
+            {
+                return rxCnt;
+            }
+        }
+    }
 }
 
 /**
@@ -203,90 +249,135 @@ DbgReceiveBinary(uint8_t bStart, uint32_t address, uint32_t maxSize)
  * \param maxSize   max receive data size in bytes
  * \return number of received bytes
  */
-uint32_t
-DbgReceive1KXModem(uint8_t * pktBuffer, uint32_t address, uint32_t maxSize)
+uint32_t DbgReceive1KXModem( uint8_t * pktBuffer,
+                             uint32_t address,
+                             uint32_t maxSize )
 {
-	uint8_t inChar;
-	uint32_t i, index = 0, pktLen = 0;
-	uint8_t pktNum = 0, prevPktNum = 0;
-	uint32_t error = 0;
-	uint16_t inCrc, myCrc;
-	uint8_t inCheckSum = 0xFF, checkSum = 0;
-	uint8_t *pBuffer = (uint8_t *) address;
-	uint32_t totalLen = 0;
+    uint8_t inChar;
+    uint32_t i, index = 0, pktLen = 0;
+    uint8_t pktNum = 0, prevPktNum = 0;
+    uint32_t error = 0;
+    uint16_t inCrc, myCrc;
+    uint8_t inCheckSum = 0xFF, checkSum = 0;
+    uint8_t * pBuffer = ( uint8_t * ) address;
+    uint32_t totalLen = 0;
 
-	console_put_char('C');
-	while (1) {
-		if (!DbgReceiveByte(&inChar, SOH_TIMEOUT)) {
-			console_put_char('C');
-			continue;
-		}
-		/* Done */
-		if (EOT == inChar) {
-			error = 0;
-			console_put_char(ACK);
-			break;
-		} else if (CAN == inChar) {
-			error = 2;
-		} else if (CTRL_X == inChar) {
-			error = 3;
-		} else if (SOH == inChar) {
-			pktLen = SOH_LENGTH;
-		} else if (STX == inChar) {
-			pktLen = STX_LENGTH;
-		} else
-			continue;
-		/* Get Packet Number */
-		if (!DbgReceiveByte(&pktNum, SOH_TIMEOUT))
-			error = 4;
-		/* Get 1's complement of packet number */
-		if (!DbgReceiveByte(&inChar, SOH_TIMEOUT))
-			error = 5;
-		/* Get 1 packet of information. */
-		checkSum = 0;
-		myCrc = 0;
-		index = 0;
-		for (i = 0; i < pktLen; i++) {
-			if (!DbgReceiveByte(&inChar, SOH_TIMEOUT))
-				error = 6;
-			checkSum += inChar;
-			myCrc = _GetCRC(inChar, myCrc);
-			if (pktNum != prevPktNum) {
-				pktBuffer[index++] = inChar;
-			}
-		}
-		/* Get CRC bytes */
-		if (!DbgReceiveByte(&inCheckSum, SOH_TIMEOUT))
-			error = 7;
-		inCrc = inCheckSum << 8;
-		if (!DbgReceiveByte(&inCheckSum, SOH_TIMEOUT))
-			error = 7;
-		inCrc += inCheckSum;
-		/* If CRC error, NAK */
-		if (error || (inCrc != myCrc)) {
-			console_put_char(NAK);
-			error = 0;
-		}
-		/* Save packet, ACK and next */
-		else {
-			prevPktNum = pktNum;
+    console_put_char( 'C' );
 
-			/* Buffer full? */
-			if (totalLen + pktLen > maxSize) {
-				/* Copy until buffer full? */
-				/* Stop transfer */
-				console_put_char(CAN);
-				return totalLen;
-			}
+    while( 1 )
+    {
+        if( !DbgReceiveByte( &inChar, SOH_TIMEOUT ) )
+        {
+            console_put_char( 'C' );
+            continue;
+        }
 
-			/* Copy the packet */
-			for (i = 0; i < pktLen; i++) {
-				pBuffer[totalLen + i] = pktBuffer[i];
-			}
-			totalLen += pktLen;
-			console_put_char(ACK);
-		}
-	}
+        /* Done */
+        if( EOT == inChar )
+        {
+            error = 0;
+            console_put_char( ACK );
+            break;
+        }
+        else if( CAN == inChar )
+        {
+            error = 2;
+        }
+        else if( CTRL_X == inChar )
+        {
+            error = 3;
+        }
+        else if( SOH == inChar )
+        {
+            pktLen = SOH_LENGTH;
+        }
+        else if( STX == inChar )
+        {
+            pktLen = STX_LENGTH;
+        }
+        else
+        {
+            continue;
+        }
 
-	return totalLen;
+        /* Get Packet Number */
+        if( !DbgReceiveByte( &pktNum, SOH_TIMEOUT ) )
+        {
+            error = 4;
+        }
+
+        /* Get 1's complement of packet number */
+        if( !DbgReceiveByte( &inChar, SOH_TIMEOUT ) )
+        {
+            error = 5;
+        }
+
+        /* Get 1 packet of information. */
+        checkSum = 0;
+        myCrc = 0;
+        index = 0;
+
+        for( i = 0; i < pktLen; i++ )
+        {
+            if( !DbgReceiveByte( &inChar, SOH_TIMEOUT ) )
+            {
+                error = 6;
+            }
+
+            checkSum += inChar;
+            myCrc = _GetCRC( inChar, myCrc );
+
+            if( pktNum != prevPktNum )
+            {
+                pktBuffer[ index++ ] = inChar;
+            }
+        }
+
+        /* Get CRC bytes */
+        if( !DbgReceiveByte( &inCheckSum, SOH_TIMEOUT ) )
+        {
+            error = 7;
+        }
+
+        inCrc = inCheckSum << 8;
+
+        if( !DbgReceiveByte( &inCheckSum, SOH_TIMEOUT ) )
+        {
+            error = 7;
+        }
+
+        inCrc += inCheckSum;
+
+        /* If CRC error, NAK */
+        if( error || ( inCrc != myCrc ) )
+        {
+            console_put_char( NAK );
+            error = 0;
+        }
+        /* Save packet, ACK and next */
+        else
+        {
+            prevPktNum = pktNum;
+
+            /* Buffer full? */
+            if( totalLen + pktLen > maxSize )
+            {
+                /* Copy until buffer full? */
+                /* Stop transfer */
+                console_put_char( CAN );
+                return totalLen;
+            }
+
+            /* Copy the packet */
+            for( i = 0; i < pktLen; i++ )
+            {
+                pBuffer[ totalLen + i ] = pktBuffer[ i ];
+            }
+
+            totalLen += pktLen;
+            console_put_char( ACK );
+        }
+    }
+
+    return totalLen;
 }

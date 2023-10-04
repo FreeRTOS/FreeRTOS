@@ -66,7 +66,7 @@
  * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
  * application will be run.
  */
-#define mainSELECTED_APPLICATION	1
+#define mainSELECTED_APPLICATION    1
 
 /*-----------------------------------------------------------*/
 
@@ -80,200 +80,218 @@ static void prvSetupHardware( void );
  * mainSELECTED_APPLICATION definition.
  */
 #if ( mainSELECTED_APPLICATION == 0 )
-	extern void main_blinky( void );
+    extern void main_blinky( void );
 #elif ( mainSELECTED_APPLICATION == 1 )
-	extern void main_full( void );
+    extern void main_full( void );
 #else
-	#error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
+    #error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
 #endif
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file. */
+ * within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
 /* The interrupt controller is initialised in this file, and made available to
-other modules. */
+ * other modules. */
 XScuGic xInterruptController;
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-	/* See http://www.FreeRTOS.org/RTOS-Xilinx-UltraScale_MPSoC_64-bit.html for
-	additional information on this demo. */
+    /* See http://www.FreeRTOS.org/RTOS-Xilinx-UltraScale_MPSoC_64-bit.html for
+     * additional information on this demo. */
 
-	/* Configure the hardware ready to run the demo. */
-	prvSetupHardware();
+    /* Configure the hardware ready to run the demo. */
+    prvSetupHardware();
 
-	/* The mainSELECTED_APPLICATION setting is described at the top
-	of this file. */
-	#if( mainSELECTED_APPLICATION == 0 )
-	{
-		main_blinky();
-	}
-	#elif( mainSELECTED_APPLICATION == 1 )
-	{
-		main_full();
-	}
-	#endif
+    /* The mainSELECTED_APPLICATION setting is described at the top
+     * of this file. */
+    #if ( mainSELECTED_APPLICATION == 0 )
+    {
+        main_blinky();
+    }
+    #elif ( mainSELECTED_APPLICATION == 1 )
+    {
+        main_full();
+    }
+    #endif
 
-	/* Don't expect to reach here. */
-	return 0;
+    /* Don't expect to reach here. */
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-BaseType_t xStatus;
-XScuGic_Config *pxGICConfig;
+    BaseType_t xStatus;
+    XScuGic_Config * pxGICConfig;
 
-	/* Ensure no interrupts execute while the scheduler is in an inconsistent
-	state.  Interrupts are automatically enabled when the scheduler is
-	started. */
-	portDISABLE_INTERRUPTS();
+    /* Ensure no interrupts execute while the scheduler is in an inconsistent
+     * state.  Interrupts are automatically enabled when the scheduler is
+     * started. */
+    portDISABLE_INTERRUPTS();
 
-	/* Obtain the configuration of the GIC. */
-	pxGICConfig = XScuGic_LookupConfig( XPAR_SCUGIC_SINGLE_DEVICE_ID );
+    /* Obtain the configuration of the GIC. */
+    pxGICConfig = XScuGic_LookupConfig( XPAR_SCUGIC_SINGLE_DEVICE_ID );
 
-	/* Sanity check the FreeRTOSConfig.h settings are correct for the
-	hardware. */
-	configASSERT( pxGICConfig );
-	configASSERT( pxGICConfig->CpuBaseAddress == ( configINTERRUPT_CONTROLLER_BASE_ADDRESS + configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ) );
-	configASSERT( pxGICConfig->DistBaseAddress == configINTERRUPT_CONTROLLER_BASE_ADDRESS );
+    /* Sanity check the FreeRTOSConfig.h settings are correct for the
+     * hardware. */
+    configASSERT( pxGICConfig );
+    configASSERT( pxGICConfig->CpuBaseAddress == ( configINTERRUPT_CONTROLLER_BASE_ADDRESS + configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ) );
+    configASSERT( pxGICConfig->DistBaseAddress == configINTERRUPT_CONTROLLER_BASE_ADDRESS );
 
-	/* Install a default handler for each GIC interrupt. */
-	xStatus = XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
-	configASSERT( xStatus == XST_SUCCESS );
-	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
+    /* Install a default handler for each GIC interrupt. */
+    xStatus = XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
+    configASSERT( xStatus == XST_SUCCESS );
+    ( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Called if a call to pvPortMalloc() fails because there is insufficient
+     * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     * internally by FreeRTOS API functions that create tasks, queues, software
+     * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeHeapSpace;
+    volatile size_t xFreeHeapSpace;
 
-	/* This is just a trivial example of an idle hook.  It is called on each
-	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-	idle task just queries the amount of FreeRTOS heap that remains.  See the
-	memory management section on the http://www.FreeRTOS.org web site for memory
-	management options.  If there is a lot of heap memory free then the
-	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();
+    /* This is just a trivial example of an idle hook.  It is called on each
+     * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+     * idle task just queries the amount of FreeRTOS heap that remains.  See the
+     * memory management section on the http://www.FreeRTOS.org web site for memory
+     * management options.  If there is a lot of heap memory free then the
+     * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+     * RAM. */
+    xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
-	( void ) xFreeHeapSpace;
+    /* Remove compiler warning about xFreeHeapSpace being set but never used. */
+    ( void ) xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	#if( mainSELECTED_APPLICATION == 1 )
-	{
-		/* Only the comprehensive demo actually uses the tick hook. */
-		extern void vFullDemoTickHook( void );
-		vFullDemoTickHook();
-	}
-	#endif
+    #if ( mainSELECTED_APPLICATION == 1 )
+    {
+        /* Only the comprehensive demo actually uses the tick hook. */
+        extern void vFullDemoTickHook( void );
+        vFullDemoTickHook();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
-implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
-used by the Idle task. */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+ * implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
+ * used by the Idle task. */
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize )
 {
 /* If the buffers to be provided to the Idle task are declared inside this
-function then they must be declared static - otherwise they will be allocated on
-the stack and so not exists after this function exits. */
-static StaticTask_t xIdleTaskTCB;
-static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+ * function then they must be declared static - otherwise they will be allocated on
+ * the stack and so not exists after this function exits. */
+    static StaticTask_t xIdleTaskTCB;
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Idle task's
-	state will be stored. */
-	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
+     * state will be stored. */
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
-	/* Pass out the array that will be used as the Idle task's stack. */
-	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    /* Pass out the array that will be used as the Idle task's stack. */
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-	Note that, as the array is necessarily of type StackType_t,
-	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+     * Note that, as the array is necessarily of type StackType_t,
+     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
-application must provide an implementation of vApplicationGetTimerTaskMemory()
-to provide the memory that is used by the Timer service task. */
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
+ * application must provide an implementation of vApplicationGetTimerTaskMemory()
+ * to provide the memory that is used by the Timer service task. */
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     uint32_t * pulTimerTaskStackSize )
 {
 /* If the buffers to be provided to the Timer task are declared inside this
-function then they must be declared static - otherwise they will be allocated on
-the stack and so not exists after this function exits. */
-static StaticTask_t xTimerTaskTCB;
-static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+ * function then they must be declared static - otherwise they will be allocated on
+ * the stack and so not exists after this function exits. */
+    static StaticTask_t xTimerTaskTCB;
+    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Timer
-	task's state will be stored. */
-	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Timer
+     * task's state will be stored. */
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
 
-	/* Pass out the array that will be used as the Timer task's stack. */
-	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
+    /* Pass out the array that will be used as the Timer task's stack. */
+    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
-	Note that, as the array is necessarily of type StackType_t,
-	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+    /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+     * Note that, as the array is necessarily of type StackType_t,
+     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/
 
-void vMainAssertCalled( const char *pcFileName, uint32_t ulLineNumber )
+void vMainAssertCalled( const char * pcFileName,
+                        uint32_t ulLineNumber )
 {
-	xil_printf( "ASSERT!  Line %lu of file %s\r\n", ulLineNumber, pcFileName );
-	taskENTER_CRITICAL();
-	for( ;; );
+    xil_printf( "ASSERT!  Line %lu of file %s\r\n", ulLineNumber, pcFileName );
+    taskENTER_CRITICAL();
+
+    for( ; ; )
+    {
+    }
 }
 
-void *____memset(void *str, int c, size_t n)
+void * ____memset( void * str,
+                   int c,
+                   size_t n )
 {
-size_t x;
-uint8_t *puc = ( uint8_t * ) str;
+    size_t x;
+    uint8_t * puc = ( uint8_t * ) str;
 
-	for( x = 0; x < c; x++ )
-	{
-		puc[ x ] = ( uint8_t ) c;
-	}
+    for( x = 0; x < c; x++ )
+    {
+        puc[ x ] = ( uint8_t ) c;
+    }
 
-	return str;
+    return str;
 }

@@ -29,7 +29,7 @@
  *
  * It calls a function called vHandleMemoryFault.
  */
-void MemManage_Handler( void ) __attribute__ ( ( naked ) );
+void MemManage_Handler( void ) __attribute__( ( naked ) );
 /*-----------------------------------------------------------*/
 
 void MemManage_Handler( void ) /* __attribute__ ( ( naked ) ) */

@@ -29,10 +29,10 @@
 
 #include "board.h"
 
-int main(void)
+int main( void )
 {
-	board_cfg_ddram();
-	asm("BKPT");
-	/* never reached */
-	return 0;
+    board_cfg_ddram();
+    asm ( "BKPT" );
+    /* never reached */
+    return 0;
 }

@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_sci.h"
@@ -42,13 +42,13 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
-uint8_t * gp_sci7_tx_address;               /* SCI7 transmit buffer address */
-uint16_t  g_sci7_tx_count;                  /* SCI7 transmit data number */
-uint8_t * gp_sci7_rx_address;               /* SCI7 receive buffer address */
-uint16_t  g_sci7_rx_count;                  /* SCI7 receive data number */
-uint16_t  g_sci7_rx_length;                 /* SCI7 receive data length */
+uint8_t * gp_sci7_tx_address; /* SCI7 transmit buffer address */
+uint16_t g_sci7_tx_count;     /* SCI7 transmit data number */
+uint8_t * gp_sci7_rx_address; /* SCI7 receive buffer address */
+uint16_t g_sci7_rx_count;     /* SCI7 receive data number */
+uint16_t g_sci7_rx_length;    /* SCI7 receive data length */
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
@@ -58,14 +58,14 @@ uint16_t  g_sci7_rx_length;                 /* SCI7 receive data length */
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_SCI7_Create(void)
+void R_SCI7_Create( void )
 {
     /* Cancel SCI7 module stop state */
-    MSTP(SCI7) = 0U;
+    MSTP( SCI7 ) = 0U;
 
     /* Set interrupt priority */
-    IPR(SCI7, RXI7) = _0F_SCI_PRIORITY_LEVEL15;
-    IPR(SCI7, TXI7) = _0F_SCI_PRIORITY_LEVEL15;
+    IPR( SCI7, RXI7 ) = _0F_SCI_PRIORITY_LEVEL15;
+    IPR( SCI7, TXI7 ) = _0F_SCI_PRIORITY_LEVEL15;
 
     /* Clear the control register */
     SCI7.SCR.BYTE = 0x00U;
@@ -98,47 +98,50 @@ void R_SCI7_Create(void)
     PORT9.PDR.BYTE |= 0x01U;
     PORT9.PMR.BYTE |= 0x01U;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCI7_Start
 * Description  : This function starts SCI7.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_SCI7_Start(void)
+void R_SCI7_Start( void )
 {
     /* Clear interrupt flag */
-    IR(SCI7, TXI7) = 0U;
-    IR(SCI7, RXI7) = 0U;
+    IR( SCI7, TXI7 ) = 0U;
+    IR( SCI7, RXI7 ) = 0U;
 
     /* Enable SCI interrupt */
-    IEN(SCI7, TXI7) = 1U;
+    IEN( SCI7, TXI7 ) = 1U;
     ICU.GENBL0.BIT.EN14 = 1U;
-    IEN(SCI7, RXI7) = 1U;
+    IEN( SCI7, RXI7 ) = 1U;
     ICU.GENBL0.BIT.EN15 = 1U;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCI7_Stop
 * Description  : This function stops SCI7.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_SCI7_Stop(void)
+void R_SCI7_Stop( void )
 {
     /* Set TXD7 pin */
     PORT9.PMR.BYTE &= 0xFEU;
-    SCI7.SCR.BIT.TE = 0U;      /* Disable serial transmit */
-    SCI7.SCR.BIT.RE = 0U;      /* Disable serial receive */
+    SCI7.SCR.BIT.TE = 0U; /* Disable serial transmit */
+    SCI7.SCR.BIT.RE = 0U; /* Disable serial receive */
 
     /* Disable SCI interrupt */
-    SCI7.SCR.BIT.TIE = 0U;     /* Disable TXI interrupt */
-    SCI7.SCR.BIT.RIE = 0U;     /* Disable RXI and ERI interrupt */
-    IR(SCI7, TXI7) = 0U;
-    IEN(SCI7, TXI7) = 0U;
+    SCI7.SCR.BIT.TIE = 0U; /* Disable TXI interrupt */
+    SCI7.SCR.BIT.RIE = 0U; /* Disable RXI and ERI interrupt */
+    IR( SCI7, TXI7 ) = 0U;
+    IEN( SCI7, TXI7 ) = 0U;
     ICU.GENBL0.BIT.EN14 = 0U;
-    IR(SCI7, RXI7) = 0U;
-    IEN(SCI7, RXI7) = 0U;
+    IR( SCI7, RXI7 ) = 0U;
+    IEN( SCI7, RXI7 ) = 0U;
     ICU.GENBL0.BIT.EN15 = 0U;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCI7_Serial_Receive
 * Description  : This function receives SCI7 data.
@@ -149,11 +152,12 @@ void R_SCI7_Stop(void)
 * Return Value : status -
 *                    MD_OK or MD_ARGERROR
 ***********************************************************************************************************************/
-MD_STATUS R_SCI7_Serial_Receive(uint8_t * const rx_buf, uint16_t rx_num)
+MD_STATUS R_SCI7_Serial_Receive( uint8_t * const rx_buf,
+                                 uint16_t rx_num )
 {
     MD_STATUS status = MD_OK;
 
-    if (1U > rx_num)
+    if( 1U > rx_num )
     {
         status = MD_ARGERROR;
     }
@@ -166,8 +170,9 @@ MD_STATUS R_SCI7_Serial_Receive(uint8_t * const rx_buf, uint16_t rx_num)
         SCI7.SCR.BIT.RE = 1U;
     }
 
-    return (status);
+    return( status );
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCI7_Serial_Send
 * Description  : This function transmits SCI7 data.
@@ -178,11 +183,12 @@ MD_STATUS R_SCI7_Serial_Receive(uint8_t * const rx_buf, uint16_t rx_num)
 * Return Value : status -
 *                    MD_OK or MD_ARGERROR
 ***********************************************************************************************************************/
-MD_STATUS R_SCI7_Serial_Send(uint8_t * const tx_buf, uint16_t tx_num)
+MD_STATUS R_SCI7_Serial_Send( uint8_t * const tx_buf,
+                              uint16_t tx_num )
 {
     MD_STATUS status = MD_OK;
 
-    if (1U > tx_num)
+    if( 1U > tx_num )
     {
         status = MD_ARGERROR;
     }
@@ -197,7 +203,7 @@ MD_STATUS R_SCI7_Serial_Send(uint8_t * const tx_buf, uint16_t tx_num)
         SCI7.SCR.BIT.TE = 1U;
     }
 
-    return (status);
+    return( status );
 }
 
 /* Start user code for adding. Do not edit comment generated here */

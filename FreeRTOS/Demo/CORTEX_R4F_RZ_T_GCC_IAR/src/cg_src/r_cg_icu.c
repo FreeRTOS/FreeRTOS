@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_icu.h"
@@ -42,7 +42,7 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
@@ -53,15 +53,14 @@ Global variables and functions
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_ICU_Create(void)
+void R_ICU_Create( void )
 {
-
     /* Disable IRQ12 interrupt */
     VIC.IEC0.LONG = 0x00010000UL;
 
     /* Set IRQ12 edge detection type */
     VIC.PLS0.LONG |= 0x00010000UL;
-    ICU.IRQCR12.BIT.IRQMD = (uint8_t)_ICU_IRQ_EDGE_FALLING;
+    ICU.IRQCR12.BIT.IRQMD = ( uint8_t ) _ICU_IRQ_EDGE_FALLING;
 
     /* Enable IRQ12 digital filter */
     ICU.IRQFLTE.BIT.FLTEN12 = 1U;
@@ -73,26 +72,28 @@ void R_ICU_Create(void)
     VIC.PRL16.LONG = _ICU_PRIORITY_LEVEL3;
 
     /* Set IRQ12 interupt address */
-    VIC.VAD16.LONG = (uint32_t)r_icu_irq12_interrupt;
+    VIC.VAD16.LONG = ( uint32_t ) r_icu_irq12_interrupt;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_ICU_IRQ12_Start
 * Description  : This function enables IRQ12 interrupt.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_ICU_IRQ12_Start(void)
+void R_ICU_IRQ12_Start( void )
 {
     /* Enable IRQ12 interrupt */
     VIC.IEN0.LONG |= 0x00010000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_ICU_IRQ12_Stop
 * Description  : This function disables IRQ12 interrupt.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_ICU_IRQ12_Stop(void)
+void R_ICU_IRQ12_Stop( void )
 {
     /* Disable IRQ12 interrupt */
     VIC.IEC0.LONG = 0x00010000UL;

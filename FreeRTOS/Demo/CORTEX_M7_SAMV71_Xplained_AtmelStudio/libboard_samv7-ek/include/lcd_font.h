@@ -71,11 +71,12 @@
 /** \brief Describes the font (width, height, supported characters, etc.) used by
  * the LCD driver draw API.
  */
-typedef struct _Font {
-	/* Font width in pixels. */
-	uint8_t width;
-	/* Font height in pixels. */
-	uint8_t height;
+typedef struct _Font
+{
+    /* Font width in pixels. */
+    uint8_t width;
+    /* Font height in pixels. */
+    uint8_t height;
 } Font;
 
 /*----------------------------------------------------------------------------
@@ -89,20 +90,17 @@ extern const Font gFont;
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void LCDD_DrawChar(
-						uint16_t* pCanvasBuffer, 
-						uint32_t x, 
-						uint32_t y, 
-						uint8_t c, 
-						uint32_t color );
+extern void LCDD_DrawChar( uint16_t * pCanvasBuffer,
+                           uint32_t x,
+                           uint32_t y,
+                           uint8_t c,
+                           uint32_t color );
 
-extern void LCD_DrawString(
-					uint16_t* pCanvasBuffer,
-					uint32_t dwX,
-					uint32_t dwY,
-					const uint8_t *pString,
-					uint32_t color );
+extern void LCD_DrawString( uint16_t * pCanvasBuffer,
+                            uint32_t dwX,
+                            uint32_t dwY,
+                            const uint8_t * pString,
+                            uint32_t color );
 
 
 #endif /* #ifndef LCD_FONT_ */
-

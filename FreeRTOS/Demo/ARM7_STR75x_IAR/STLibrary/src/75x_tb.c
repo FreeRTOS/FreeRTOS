@@ -24,58 +24,58 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-#define TB_IT_Enable_Mask   0x7FFF
-#define TB_IT_Clear_Mask    0x7FFF
-#define TB_IC_Enable        0x0004
-#define TB_ICPolarity_Set   0x0008
-#define TB_ICPolarity_Reset 0xFFF7
-#define TB_UFS_Reset        0xFFFE
-#define TB_UFS_Set          0x0001
+#define TB_IT_Enable_Mask             0x7FFF
+#define TB_IT_Clear_Mask              0x7FFF
+#define TB_IC_Enable                  0x0004
+#define TB_ICPolarity_Set             0x0008
+#define TB_ICPolarity_Reset           0xFFF7
+#define TB_UFS_Reset                  0xFFFE
+#define TB_UFS_Set                    0x0001
 
 /* TB debug state */
-#define TB_DBGC_Set    0x0400
-#define TB_DBGC_Reset  0xFB7F
+#define TB_DBGC_Set                   0x0400
+#define TB_DBGC_Reset                 0xFB7F
 
 /* TB counter state */
-#define TB_COUNTER_Reset  0x0002
-#define TB_COUNTER_Start  0x0004
-#define TB_COUNTER_Stop   0xFFFB
+#define TB_COUNTER_Reset              0x0002
+#define TB_COUNTER_Start              0x0004
+#define TB_COUNTER_Stop               0xFFFB
 
-#define TB_SMS_EXTCLK_Set   0x0008
-#define TB_SMS_RESETCLK_Set 0x0000
+#define TB_SMS_EXTCLK_Set             0x0008
+#define TB_SMS_RESETCLK_Set           0x0000
 
 /* TB Slave Mode Enable Set/Reset value */
-#define TB_SME_Reset  0x731B
-#define TB_SME_Set    0x0004
+#define TB_SME_Reset                  0x731B
+#define TB_SME_Set                    0x0004
 
 /* TB Trigger Selection value */
-#define TB_TS_IC1_Set  0x0200
+#define TB_TS_IC1_Set                 0x0200
 
 /* TB SCR Masks bit */
-#define TB_SlaveModeSelection_Mask        0x7307
-#define TB_TriggerSelection_Mask          0x701F
+#define TB_SlaveModeSelection_Mask    0x7307
+#define TB_TriggerSelection_Mask      0x701F
 
 /* Reset Register Masks */
-#define TB_Prescaler_Reset_Mask   0x0000
-#define TB_CounterMode_Mask       0xFF8F
-#define TB_AutoReload_Reset_Mask  0xFFFF
+#define TB_Prescaler_Reset_Mask       0x0000
+#define TB_CounterMode_Mask           0xFF8F
+#define TB_AutoReload_Reset_Mask      0xFFFF
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
- /******************************************************************************
-* Function Name  : TB_DeInit
-* Description    : Deinitializes the TB peripheral registers to their default
-*                  reset values.
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void TB_DeInit(void)
+/******************************************************************************
+ * Function Name  : TB_DeInit
+ * Description    : Deinitializes the TB peripheral registers to their default
+ *                  reset values.
+ * Input          : None
+ * Output         : None
+ * Return         : None
+ *******************************************************************************/
+void TB_DeInit( void )
 {
- /* Enters and exits the TB peripheral to and from reset */
- MRCC_PeripheralSWResetConfig(MRCC_Peripheral_TB,ENABLE);
- MRCC_PeripheralSWResetConfig(MRCC_Peripheral_TB,DISABLE);
+    /* Enters and exits the TB peripheral to and from reset */
+    MRCC_PeripheralSWResetConfig( MRCC_Peripheral_TB, ENABLE );
+    MRCC_PeripheralSWResetConfig( MRCC_Peripheral_TB, DISABLE );
 }
 
 /*******************************************************************************
@@ -87,47 +87,47 @@ void TB_DeInit(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_Init(TB_InitTypeDef* TB_InitStruct)
+void TB_Init( TB_InitTypeDef * TB_InitStruct )
 {
-  /* Set the TB prescaler value */
-  TB->PSC = TB_InitStruct->TB_Prescaler;
+    /* Set the TB prescaler value */
+    TB->PSC = TB_InitStruct->TB_Prescaler;
 
-  /* Set the TB period value */
-  TB->ARR = TB_InitStruct->TB_AutoReload;
+    /* Set the TB period value */
+    TB->ARR = TB_InitStruct->TB_AutoReload;
 
-  /* Set the corresponding counter mode */
-  TB->CR = (TB->CR & TB_CounterMode_Mask) | TB_InitStruct->TB_CounterMode;
+    /* Set the corresponding counter mode */
+    TB->CR = ( TB->CR & TB_CounterMode_Mask ) | TB_InitStruct->TB_CounterMode;
 
-  /* Set the corresponding clock source */
-  if(TB_InitStruct->TB_ClockSource == TB_ClockSource_CKRTC)
-  {  
-    TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
-    TB->SCR |= TB_SMS_EXTCLK_Set | TB_SME_Set | TB_TS_IC1_Set;
-  }
-  else
-  {
-    TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
-  }
-
-  if(TB_InitStruct->TB_Mode == TB_Mode_IC)
-  {
-    /* Set the corresponding value in TB SCR register */
-    TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
-    TB->SCR |= TB_SMS_RESETCLK_Set | TB_SME_Set | TB_TS_IC1_Set;
-
-    /* Set the IC1 enable bit */
-    TB->IMCR |= TB_IC_Enable;
-
-    /* Set the input signal polarity */
-    if (TB_InitStruct->TB_ICAPolarity == TB_ICAPolarity_Falling)
+    /* Set the corresponding clock source */
+    if( TB_InitStruct->TB_ClockSource == TB_ClockSource_CKRTC )
     {
-      TB->IMCR |= TB_ICPolarity_Set;
+        TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
+        TB->SCR |= TB_SMS_EXTCLK_Set | TB_SME_Set | TB_TS_IC1_Set;
     }
     else
     {
-      TB->IMCR &= TB_ICPolarity_Reset;
+        TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
     }
-  }
+
+    if( TB_InitStruct->TB_Mode == TB_Mode_IC )
+    {
+        /* Set the corresponding value in TB SCR register */
+        TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
+        TB->SCR |= TB_SMS_RESETCLK_Set | TB_SME_Set | TB_TS_IC1_Set;
+
+        /* Set the IC1 enable bit */
+        TB->IMCR |= TB_IC_Enable;
+
+        /* Set the input signal polarity */
+        if( TB_InitStruct->TB_ICAPolarity == TB_ICAPolarity_Falling )
+        {
+            TB->IMCR |= TB_ICPolarity_Set;
+        }
+        else
+        {
+            TB->IMCR &= TB_ICPolarity_Reset;
+        }
+    }
 }
 
 /*******************************************************************************
@@ -138,14 +138,14 @@ void TB_Init(TB_InitTypeDef* TB_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_StructInit(TB_InitTypeDef *TB_InitStruct)
+void TB_StructInit( TB_InitTypeDef * TB_InitStruct )
 {
-  TB_InitStruct->TB_Mode = TB_Mode_Timing;
-  TB_InitStruct->TB_ClockSource = TB_ClockSource_CKTIM;
-  TB_InitStruct->TB_CounterMode = TB_CounterMode_Up;
-  TB_InitStruct->TB_ICAPolarity = TB_ICAPolarity_Rising;
-  TB_InitStruct->TB_Prescaler = TB_Prescaler_Reset_Mask;
-  TB_InitStruct->TB_AutoReload = TB_AutoReload_Reset_Mask;
+    TB_InitStruct->TB_Mode = TB_Mode_Timing;
+    TB_InitStruct->TB_ClockSource = TB_ClockSource_CKTIM;
+    TB_InitStruct->TB_CounterMode = TB_CounterMode_Up;
+    TB_InitStruct->TB_ICAPolarity = TB_ICAPolarity_Rising;
+    TB_InitStruct->TB_Prescaler = TB_Prescaler_Reset_Mask;
+    TB_InitStruct->TB_AutoReload = TB_AutoReload_Reset_Mask;
 }
 
 /*******************************************************************************
@@ -156,16 +156,16 @@ void TB_StructInit(TB_InitTypeDef *TB_InitStruct)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_Cmd(FunctionalState Newstate)
+void TB_Cmd( FunctionalState Newstate )
 {
-  if(Newstate == ENABLE)
-  {
-    TB->CR |= TB_COUNTER_Start;
-  }
-  else
-  {
-    TB->CR &= TB_COUNTER_Stop;
-  }
+    if( Newstate == ENABLE )
+    {
+        TB->CR |= TB_COUNTER_Start;
+    }
+    else
+    {
+        TB->CR &= TB_COUNTER_Stop;
+    }
 }
 
 /*******************************************************************************
@@ -182,35 +182,37 @@ void TB_Cmd(FunctionalState Newstate)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_ITConfig(u16 TB_IT, FunctionalState Newstate)
+void TB_ITConfig( u16 TB_IT,
+                  FunctionalState Newstate )
 {
-  u16 TB_IT_Enable = 0;
+    u16 TB_IT_Enable = 0;
 
-  TB_IT_Enable = TB_IT & TB_IT_Enable_Mask;
+    TB_IT_Enable = TB_IT & TB_IT_Enable_Mask;
 
-  if(Newstate == ENABLE)
-  {
-   /* Update interrupt global source: overflow/undeflow, counter reset operation
-   or slave mode controller in reset mode */
-   if ((TB_IT & TB_IT_GlobalUpdate) == TB_IT_GlobalUpdate)
-   {
-     TB->CR &= TB_UFS_Reset;
+    if( Newstate == ENABLE )
+    {
+        /* Update interrupt global source: overflow/undeflow, counter reset operation
+         * or slave mode controller in reset mode */
+        if( ( TB_IT & TB_IT_GlobalUpdate ) == TB_IT_GlobalUpdate )
+        {
+            TB->CR &= TB_UFS_Reset;
+        }
+        /* Update interrupt source: counter overflow/underflow */
+        else if( ( TB_IT & TB_IT_Update ) == TB_IT_Update )
+        {
+            TB->CR |= TB_UFS_Set;
+        }
+
+        /* Select and enable the interrupts requests */
+        TB->RSR |= TB_IT_Enable;
+        TB->RER |= TB_IT_Enable;
     }
-   /* Update interrupt source: counter overflow/underflow */
-   else if ((TB_IT & TB_IT_Update) == TB_IT_Update)
-   {
-    TB->CR |= TB_UFS_Set;
-   }
-   /* Select and enable the interrupts requests */
-   TB->RSR |= TB_IT_Enable;
-   TB->RER |= TB_IT_Enable;
-  }
-  /* Disable the interrupts requests */
-  else
-  {
-   TB->RSR &= ~TB_IT_Enable;
-   TB->RER &= ~TB_IT_Enable;
-  }
+    /* Disable the interrupts requests */
+    else
+    {
+        TB->RSR &= ~TB_IT_Enable;
+        TB->RER &= ~TB_IT_Enable;
+    }
 }
 
 /*******************************************************************************
@@ -220,10 +222,10 @@ void TB_ITConfig(u16 TB_IT, FunctionalState Newstate)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_SetPrescaler(u16 Prescaler)
+void TB_SetPrescaler( u16 Prescaler )
 {
-  /* Sets the prescaler value */
-  TB->PSC = Prescaler;
+    /* Sets the prescaler value */
+    TB->PSC = Prescaler;
 }
 
 /*******************************************************************************
@@ -234,10 +236,10 @@ void TB_SetPrescaler(u16 Prescaler)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_ResetCounter(void)
+void TB_ResetCounter( void )
 {
-  /* Re-intializes TB counter */
-  TB->CR |= TB_COUNTER_Reset;
+    /* Re-intializes TB counter */
+    TB->CR |= TB_COUNTER_Reset;
 }
 
 /*******************************************************************************
@@ -248,16 +250,16 @@ void TB_ResetCounter(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_DebugCmd(FunctionalState Newstate)
+void TB_DebugCmd( FunctionalState Newstate )
 {
-  if(Newstate == ENABLE)
-  {
-    TB->CR |= TB_DBGC_Set;
-  }
-  else
-  {
-    TB->CR &= TB_DBGC_Reset;
-  }
+    if( Newstate == ENABLE )
+    {
+        TB->CR |= TB_DBGC_Set;
+    }
+    else
+    {
+        TB->CR &= TB_DBGC_Reset;
+    }
 }
 
 /*******************************************************************************
@@ -271,11 +273,11 @@ void TB_DebugCmd(FunctionalState Newstate)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_CounterModeConfig(u16 TB_CounterMode)
+void TB_CounterModeConfig( u16 TB_CounterMode )
 {
-  /* Counter mode configuration */
-  TB->CR &= TB_CounterMode_Mask;
-  TB->CR |= TB_CounterMode;
+    /* Counter mode configuration */
+    TB->CR &= TB_CounterMode_Mask;
+    TB->CR |= TB_CounterMode;
 }
 
 /*******************************************************************************
@@ -283,22 +285,23 @@ void TB_CounterModeConfig(u16 TB_CounterMode)
 * Description    : Configures the TB slave Mode.
 * Input          : TB_SMSMode: specifies the TB slave mode to be used.
 *                  This parameter can be one of the following values:
-*                         - TB_SMSMode_Trigger: The counter starts at a rising 
-*                           edge of the trigger 
-*                         - TB_SMSMode_Gated: The counter clock is enabled when 
+*                         - TB_SMSMode_Trigger: The counter starts at a rising
+*                           edge of the trigger
+*                         - TB_SMSMode_Gated: The counter clock is enabled when
 *                           trigger signal is high
 *                         - TB_SMSMode_External: The rising edge of selected trigger
 *                           clocks the counter
-*                         - TB_SMSMode_Reset: The rising edge of the selected 
+*                         - TB_SMSMode_Reset: The rising edge of the selected
 *                           trigger signal resets the counter
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_SLaveModeConfig(u16 TB_SMSMode)
+void TB_SLaveModeConfig( u16 TB_SMSMode )
 {
-  TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
-  TB->SCR |= TB_SME_Set | TB_SMSMode | TB_TS_IC1_Set; 
+    TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
+    TB->SCR |= TB_SME_Set | TB_SMSMode | TB_TS_IC1_Set;
 }
+
 /*******************************************************************************
 * Function Name  : TB_GetCounter
 * Description    : Gets the TB Counter value.
@@ -306,9 +309,9 @@ void TB_SLaveModeConfig(u16 TB_SMSMode)
 * Output         : None
 * Return         : The TB counter register value.
 *******************************************************************************/
-u16 TB_GetCounter(void)
+u16 TB_GetCounter( void )
 {
-  return TB->CNT;
+    return TB->CNT;
 }
 
 /*******************************************************************************
@@ -318,9 +321,9 @@ u16 TB_GetCounter(void)
 * Output         : None
 * Return         : The TB ICR1 register value.
 *******************************************************************************/
-u16 TB_GetICAP1(void)
+u16 TB_GetICAP1( void )
 {
-  return TB->ICR1;
+    return TB->ICR1;
 }
 
 /*******************************************************************************
@@ -330,9 +333,9 @@ u16 TB_GetICAP1(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_SetCounter(u16 Counter)
+void TB_SetCounter( u16 Counter )
 {
-  TB->CNT = Counter;
+    TB->CNT = Counter;
 }
 
 /*******************************************************************************
@@ -345,16 +348,16 @@ void TB_SetCounter(u16 Counter)
 * Output         : None
 * Return         : The new state of the TB_FLAG (SET or RESET).
 *******************************************************************************/
-FlagStatus TB_GetFlagStatus(u16 TB_FLAG)
+FlagStatus TB_GetFlagStatus( u16 TB_FLAG )
 {
-  if((TB->ISR & TB_FLAG) != RESET )
-  {
-   return SET;
-  }
-  else
-  {
-   return RESET;
-  }
+    if( ( TB->ISR & TB_FLAG ) != RESET )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
@@ -367,10 +370,10 @@ FlagStatus TB_GetFlagStatus(u16 TB_FLAG)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_ClearFlag(u16 TB_FLAG)
+void TB_ClearFlag( u16 TB_FLAG )
 {
-  /* Clears the flags */
-  TB->ISR &= ~TB_FLAG;
+    /* Clears the flags */
+    TB->ISR &= ~TB_FLAG;
 }
 
 /*******************************************************************************
@@ -384,21 +387,21 @@ void TB_ClearFlag(u16 TB_FLAG)
 * Output         : None
 * Return         : The new state of the TB_IT (SET or RESET).
 *******************************************************************************/
-ITStatus TB_GetITStatus(u16 TB_IT)
+ITStatus TB_GetITStatus( u16 TB_IT )
 {
-  u16 TB_IT_Check = 0;
+    u16 TB_IT_Check = 0;
 
-  /* Calculates the pending bits to be checked */
-  TB_IT_Check = TB_IT & TB_IT_Clear_Mask;
-  
-  if((TB->ISR & TB_IT_Check) != RESET )
-  {
-   return SET;
-  }
-  else
-  {
-   return RESET;
-  }
+    /* Calculates the pending bits to be checked */
+    TB_IT_Check = TB_IT & TB_IT_Clear_Mask;
+
+    if( ( TB->ISR & TB_IT_Check ) != RESET )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /*******************************************************************************
@@ -412,14 +415,14 @@ ITStatus TB_GetITStatus(u16 TB_IT)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_ClearITPendingBit(u16 TB_IT)
+void TB_ClearITPendingBit( u16 TB_IT )
 {
-  u16 TB_IT_Clear = 0;
+    u16 TB_IT_Clear = 0;
 
-  /* Calculates the pending bits to be cleared */
-  TB_IT_Clear = TB_IT & TB_IT_Clear_Mask;
+    /* Calculates the pending bits to be cleared */
+    TB_IT_Clear = TB_IT & TB_IT_Clear_Mask;
 
-  /* Clears the pending bits */
-  TB->ISR &= ~TB_IT_Clear;
+    /* Clears the pending bits */
+    TB->ISR &= ~TB_IT_Clear;
 }
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

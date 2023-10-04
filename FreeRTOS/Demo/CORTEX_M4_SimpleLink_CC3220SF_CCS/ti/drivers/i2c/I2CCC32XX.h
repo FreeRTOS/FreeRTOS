@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       I2CCC32XX.h
  *
@@ -46,29 +47,29 @@
  */
 
 #ifndef ti_drivers_i2c_I2CCC32XX__include
-#define ti_drivers_i2c_I2CCC32XX__include
+    #define ti_drivers_i2c_I2CCC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
+    #include <stdint.h>
+    #include <stdbool.h>
 
-#include <ti/drivers/I2C.h>
-#include <ti/drivers/dpl/HwiP.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
-#include <ti/drivers/Power.h>
+    #include <ti/drivers/I2C.h>
+    #include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/Power.h>
 
 /* macros defining possible I2C signal pin mux options */
-#define I2CCC32XX_PIN_01_I2C_SCL  0x100 /*!< PIN 1 is used for I2C_SCL */
-#define I2CCC32XX_PIN_02_I2C_SDA  0x101 /*!< PIN 2 is used for I2C_SDA */
-#define I2CCC32XX_PIN_03_I2C_SCL  0x502 /*!< PIN 3 is used for I2C_SCL */
-#define I2CCC32XX_PIN_04_I2C_SDA  0x503 /*!< PIN 4 is used for I2C_SDA */
-#define I2CCC32XX_PIN_05_I2C_SCL  0x504 /*!< PIN 5 is used for I2C_SCL */
-#define I2CCC32XX_PIN_06_I2C_SDA  0x505 /*!< PIN 6 is used for I2C_SDA */
-#define I2CCC32XX_PIN_16_I2C_SCL  0x90F /*!< PIN 16 is used for I2C_SCL */
-#define I2CCC32XX_PIN_17_I2C_SDA  0x910 /*!< PIN 17 is used for I2C_SDA */
+    #define I2CCC32XX_PIN_01_I2C_SCL    0x100 /*!< PIN 1 is used for I2C_SCL */
+    #define I2CCC32XX_PIN_02_I2C_SDA    0x101 /*!< PIN 2 is used for I2C_SDA */
+    #define I2CCC32XX_PIN_03_I2C_SCL    0x502 /*!< PIN 3 is used for I2C_SCL */
+    #define I2CCC32XX_PIN_04_I2C_SDA    0x503 /*!< PIN 4 is used for I2C_SDA */
+    #define I2CCC32XX_PIN_05_I2C_SCL    0x504 /*!< PIN 5 is used for I2C_SCL */
+    #define I2CCC32XX_PIN_06_I2C_SDA    0x505 /*!< PIN 6 is used for I2C_SDA */
+    #define I2CCC32XX_PIN_16_I2C_SCL    0x90F /*!< PIN 16 is used for I2C_SCL */
+    #define I2CCC32XX_PIN_17_I2C_SDA    0x910 /*!< PIN 17 is used for I2C_SDA */
 
 /**
  *  @addtogroup I2C_STATUS
@@ -99,7 +100,7 @@ extern "C" {
 /** @}*/
 
 /* I2C function table pointer */
-extern const I2C_FxnTable I2CCC32XX_fxnTable;
+    extern const I2C_FxnTable I2CCC32XX_fxnTable;
 
 /*!
  *  @cond NODOC
@@ -107,16 +108,17 @@ extern const I2C_FxnTable I2CCC32XX_fxnTable;
  *
  *  This enum defines the state of the I2C driver's state machine.
  */
-typedef enum I2CCC32XX_Mode {
-    /*! I2C is idle, and not performing a transaction */
-    I2CCC32XX_IDLE_MODE = 0,
-    /*! I2C is currently performing a write operation */
-    I2CCC32XX_WRITE_MODE,
-    /*! I2C is currently performing a read operation */
-    I2CCC32XX_READ_MODE,
-    /*! I2C error has occurred */
-    I2CCC32XX_ERROR = 0xFF
-} I2CCC32XX_Mode;
+    typedef enum I2CCC32XX_Mode
+    {
+        /*! I2C is idle, and not performing a transaction */
+        I2CCC32XX_IDLE_MODE = 0,
+        /*! I2C is currently performing a write operation */
+        I2CCC32XX_WRITE_MODE,
+        /*! I2C is currently performing a read operation */
+        I2CCC32XX_READ_MODE,
+        /*! I2C error has occurred */
+        I2CCC32XX_ERROR = 0xFF
+    } I2CCC32XX_Mode;
 /*! @endcond */
 
 /*!
@@ -155,56 +157,58 @@ typedef enum I2CCC32XX_Mode {
  *  };
  *  @endcode
  */
-typedef struct I2CCC32XX_HWAttrsV1 {
-    /*! I2C Peripheral's base address */
-    unsigned int baseAddr;
-    /*! I2C Peripheral's interrupt vector */
-    unsigned int intNum;
-    /*! I2C Peripheral's interrupt priority */
-    unsigned int intPriority;
-    /*! I2C clock pin configuration */
-    uint16_t clkPin;
-    /*! I2C data pin configuration */
-    uint16_t dataPin;
-} I2CCC32XX_HWAttrsV1;
+    typedef struct I2CCC32XX_HWAttrsV1
+    {
+        /*! I2C Peripheral's base address */
+        unsigned int baseAddr;
+        /*! I2C Peripheral's interrupt vector */
+        unsigned int intNum;
+        /*! I2C Peripheral's interrupt priority */
+        unsigned int intPriority;
+        /*! I2C clock pin configuration */
+        uint16_t clkPin;
+        /*! I2C data pin configuration */
+        uint16_t dataPin;
+    } I2CCC32XX_HWAttrsV1;
 
 /*!
  *  @cond NODOC
  *  I2CCC32XX Object.  Applications must not access any member variables of
  *  this structure!
  */
-typedef struct I2CCC32XX_Object {
-    SemaphoreP_Handle   mutex;            /* Grants exclusive access to I2C */
-    SemaphoreP_Handle   transferComplete; /* Signals I2C transfer completion */
+    typedef struct I2CCC32XX_Object
+    {
+        SemaphoreP_Handle mutex;            /* Grants exclusive access to I2C */
+        SemaphoreP_Handle transferComplete; /* Signals I2C transfer completion */
 
-    HwiP_Handle         hwiHandle;
+        HwiP_Handle hwiHandle;
 
-    I2C_TransferMode    transferMode;        /* Blocking or Callback mode */
-    I2C_CallbackFxn     transferCallbackFxn; /* Callback function pointer */
+        I2C_TransferMode transferMode;        /* Blocking or Callback mode */
+        I2C_CallbackFxn transferCallbackFxn;  /* Callback function pointer */
 
-    volatile I2CCC32XX_Mode mode;            /* Stores the I2C state */
+        volatile I2CCC32XX_Mode mode;         /* Stores the I2C state */
 
-    I2C_Transaction    *currentTransaction; /* Pointer to current transaction */
+        I2C_Transaction * currentTransaction; /* Pointer to current transaction */
 
-    uint8_t            *writeBufIdx;    /* Internal inc. writeBuf index */
-    size_t              writeCountIdx;  /* Internal dec. writeCounter */
+        uint8_t * writeBufIdx;                /* Internal inc. writeBuf index */
+        size_t writeCountIdx;                 /* Internal dec. writeCounter */
 
-    uint8_t            *readBufIdx;     /* Internal inc. readBuf index */
-    size_t              readCountIdx;   /* Internal dec. readCounter */
+        uint8_t * readBufIdx;                 /* Internal inc. readBuf index */
+        size_t readCountIdx;                  /* Internal dec. readCounter */
 
-    /* I2C transaction pointers for I2C_MODE_CALLBACK */
-    I2C_Transaction    *headPtr;        /* Head ptr for queued transactions */
-    I2C_Transaction    *tailPtr;        /* Tail ptr for queued transactions */
+        /* I2C transaction pointers for I2C_MODE_CALLBACK */
+        I2C_Transaction * headPtr;      /* Head ptr for queued transactions */
+        I2C_Transaction * tailPtr;      /* Tail ptr for queued transactions */
 
-    bool                isOpen;         /* Flag to indicate module is open */
+        bool isOpen;                    /* Flag to indicate module is open */
 
-    Power_NotifyObj     notifyObj;      /* For notification of wake from LPDS */
-    I2C_BitRate         bitRate;        /* I2C bus bit rate */
-} I2CCC32XX_Object;
+        Power_NotifyObj notifyObj;      /* For notification of wake from LPDS */
+        I2C_BitRate bitRate;            /* I2C bus bit rate */
+    } I2CCC32XX_Object;
 /*! @endcond */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_i2c_I2CCC32XX__include */

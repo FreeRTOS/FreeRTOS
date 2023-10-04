@@ -154,36 +154,39 @@
 #include "stm32h745i_discovery.h"
 
 /* When the cores boot they very crudely wait for each other in a non chip
-specific way by waiting for the other core to start incrementing a shared
-variable within an array.  mainINDEX_TO_TEST sets the index within the array to
-the variable this core tests to see if it is incrementing, and
-mainINDEX_TO_INCREMENT sets the index within the array to the variable this core
-increments to indicate to the other core that it is at the sync point.  Note
-this is not a foolproof method and it is better to use a hardware specific
-solution, such as having one core boot the other core when it was ready, or
-using some kind of shared semaphore or interrupt. */
-#define mainINDEX_TO_TEST		0
-#define mainINDEX_TO_INCREMENT	1
+ * specific way by waiting for the other core to start incrementing a shared
+ * variable within an array.  mainINDEX_TO_TEST sets the index within the array to
+ * the variable this core tests to see if it is incrementing, and
+ * mainINDEX_TO_INCREMENT sets the index within the array to the variable this core
+ * increments to indicate to the other core that it is at the sync point.  Note
+ * this is not a foolproof method and it is better to use a hardware specific
+ * solution, such as having one core boot the other core when it was ready, or
+ * using some kind of shared semaphore or interrupt. */
+#define mainINDEX_TO_TEST         0
+#define mainINDEX_TO_INCREMENT    1
 
 /*-----------------------------------------------------------*/
 
 /*
  * Implements the task that sends messages to the M7 core.
  */
-static void prvM7CoreTasks( void *pvParameters );
+static void prvM7CoreTasks( void * pvParameters );
 
 /*
  * configSUPPORT_STATIC_ALLOCATION is set to 1, requiring this callback to
  * provide statically allocated data for use by the idle task, which is a task
  * created by the scheduler when it starts.
  */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, uint32_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    uint32_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize );
 
 /*
  * Just waits to see a variable being incremented by the M4 core to know when
  * the M4 has created the message buffers used for core to core communication.
  */
-static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest, uint32_t ulIndexToIncrement );
+static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest,
+                                        uint32_t ulIndexToIncrement );
 
 /*
  * Setup the hardware ready to run this demo.
@@ -196,299 +199,319 @@ static TaskHandle_t xM7AMPTask = NULL;
 
 int main( void )
 {
-BaseType_t x;
+    BaseType_t x;
 
-	/*** See the comments at the top of this page ***/
+    /*** See the comments at the top of this page ***/
 
-	prvSetupHardware();
+    prvSetupHardware();
 
-	/* Create the control and data message buffers, as described at the top of
-	this file.  The message buffers are statically allocated at a known location
-	as both cores need to know where they are.  See MessageBufferLocations.h. */
-	xControlMessageBuffer = xMessageBufferCreateStatic( /* The buffer size in bytes. */
-														mbaCONTROL_MESSAGE_BUFFER_SIZE,
-														/* Statically allocated buffer storage area. */
-														ucControlBufferStorage,
-														/* Message buffer handle. */
-														&xControlMessageBufferStruct );
-	for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
-	{
-		xDataMessageBuffers[ x ] = xMessageBufferCreateStatic( mbaTASK_MESSAGE_BUFFER_SIZE,
-															   &( ucDataBufferStorage[ x ][ 0 ] ),
-															   &( xDataMessageBufferStructs[ x ] ) );
-	}
+    /* Create the control and data message buffers, as described at the top of
+     * this file.  The message buffers are statically allocated at a known location
+     * as both cores need to know where they are.  See MessageBufferLocations.h. */
+    xControlMessageBuffer = xMessageBufferCreateStatic( /* The buffer size in bytes. */
+        mbaCONTROL_MESSAGE_BUFFER_SIZE,
+        /* Statically allocated buffer storage area. */
+        ucControlBufferStorage,
+        /* Message buffer handle. */
+        &xControlMessageBufferStruct );
 
-	/* The message buffers have been initialised so it is safe for both cores to
-	synchronise their startup. */
-	prvWaitForOtherCoreToStart( mainINDEX_TO_TEST, mainINDEX_TO_INCREMENT );
+    for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
+    {
+        xDataMessageBuffers[ x ] = xMessageBufferCreateStatic( mbaTASK_MESSAGE_BUFFER_SIZE,
+                                                               &( ucDataBufferStorage[ x ][ 0 ] ),
+                                                               &( xDataMessageBufferStructs[ x ] ) );
+    }
 
-	/* Start the task that executes on the M7 core. */
-	xTaskCreate( prvM7CoreTasks, 			/* Function that implements the task. */
-				 "AMPM7Core", 				/* Task name, for debugging only. */
-				 configMINIMAL_STACK_SIZE,  /* Size of stack (in words) to allocate for this task. */
-				 NULL, 						/* Task parameter, not used in this case. */
-				 tskIDLE_PRIORITY, 			/* Task priority. */
-				 &xM7AMPTask );				/* Task handle, used to unblock task from interrupt. */
+    /* The message buffers have been initialised so it is safe for both cores to
+     * synchronise their startup. */
+    prvWaitForOtherCoreToStart( mainINDEX_TO_TEST, mainINDEX_TO_INCREMENT );
 
-	/* Start scheduler */
-	vTaskStartScheduler();
+    /* Start the task that executes on the M7 core. */
+    xTaskCreate( prvM7CoreTasks,           /* Function that implements the task. */
+                 "AMPM7Core",              /* Task name, for debugging only. */
+                 configMINIMAL_STACK_SIZE, /* Size of stack (in words) to allocate for this task. */
+                 NULL,                     /* Task parameter, not used in this case. */
+                 tskIDLE_PRIORITY,         /* Task priority. */
+                 &xM7AMPTask );            /* Task handle, used to unblock task from interrupt. */
 
-	/* Will not get here if the scheduler starts successfully.  If you do end up
-	here then there wasn't enough heap memory available to start either the idle
-	task or the timer/daemon task.  https://www.freertos.org/a00111.html */
-	for( ;; );
+    /* Start scheduler */
+    vTaskStartScheduler();
+
+    /* Will not get here if the scheduler starts successfully.  If you do end up
+     * here then there wasn't enough heap memory available to start either the idle
+     * task or the timer/daemon task.  https://www.freertos.org/a00111.html */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvM7CoreTasks( void *pvParameters )
+static void prvM7CoreTasks( void * pvParameters )
 {
-BaseType_t x;
-uint32_t ulNextValue = 0;
-char cString[ 15 ];
-size_t xStringLength;
+    BaseType_t x;
+    uint32_t ulNextValue = 0;
+    char cString[ 15 ];
+    size_t xStringLength;
 
-	/* Remove warning about unused parameters. */
-	( void ) pvParameters;
+    /* Remove warning about unused parameters. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Create the next string to send.  The value is incremented on each
-		loop iteration, and the length of the string changes as the number of
-		digits in the value increases. */
-		sprintf( cString, "%lu", ( unsigned long ) ulNextValue );
-		xStringLength = strlen( cString );
+    for( ; ; )
+    {
+        /* Create the next string to send.  The value is incremented on each
+         * loop iteration, and the length of the string changes as the number of
+         * digits in the value increases. */
+        sprintf( cString, "%lu", ( unsigned long ) ulNextValue );
+        xStringLength = strlen( cString );
 
-		/* This task runs on the M7 core, use the message buffers to send the
-		strings to the tasks running on the M4 core.  This will result in
-		sbSEND_COMPLETED() being executed, which in turn will write the handle
-		of the message buffer written to into xControlMessageBuffer then
-		generate an interrupt in M4 core. */
-		for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
-		{
-			while( xMessageBufferSend( 	xDataMessageBuffers[ x ],
-									  	( void * ) cString,
-										xStringLength,
-										portMAX_DELAY ) != xStringLength );
-		}
+        /* This task runs on the M7 core, use the message buffers to send the
+         * strings to the tasks running on the M4 core.  This will result in
+         * sbSEND_COMPLETED() being executed, which in turn will write the handle
+         * of the message buffer written to into xControlMessageBuffer then
+         * generate an interrupt in M4 core. */
+        for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
+        {
+            while( xMessageBufferSend( xDataMessageBuffers[ x ],
+                                       ( void * ) cString,
+                                       xStringLength,
+                                       portMAX_DELAY ) != xStringLength )
+            {
+            }
+        }
 
-		ulNextValue++;
-	}
+        ulNextValue++;
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vGenerateM7ToM4Interrupt( void * xUpdatedMessageBuffer )
 {
-MessageBufferHandle_t xUpdatedBuffer = ( MessageBufferHandle_t ) xUpdatedMessageBuffer;
+    MessageBufferHandle_t xUpdatedBuffer = ( MessageBufferHandle_t ) xUpdatedMessageBuffer;
 
-	/* Called by the implementation of sbSEND_COMPLETED() in FreeRTOSConfig.h.
-	See the comments at the top of this file.  Write the handle of the data
-	message buffer to which data was written to the control message buffer. */
-	if( xUpdatedBuffer != xControlMessageBuffer )
-	{
-		while( xMessageBufferSend( xControlMessageBuffer, &xUpdatedBuffer, sizeof( xUpdatedBuffer ), mbaDONT_BLOCK ) != sizeof( xUpdatedBuffer ) )
-		{
-			/* Nothing to do here. */
-		}
+    /* Called by the implementation of sbSEND_COMPLETED() in FreeRTOSConfig.h.
+    *  See the comments at the top of this file.  Write the handle of the data
+    *  message buffer to which data was written to the control message buffer. */
+    if( xUpdatedBuffer != xControlMessageBuffer )
+    {
+        while( xMessageBufferSend( xControlMessageBuffer, &xUpdatedBuffer, sizeof( xUpdatedBuffer ), mbaDONT_BLOCK ) != sizeof( xUpdatedBuffer ) )
+        {
+            /* Nothing to do here. */
+        }
 
-		/* Generate interrupt in the M4 core. */
-		HAL_EXTI_D1_EventInputConfig( EXTI_LINE0, EXTI_MODE_IT, DISABLE );
-		HAL_EXTI_D2_EventInputConfig( EXTI_LINE0, EXTI_MODE_IT, ENABLE );
-		HAL_EXTI_GenerateSWInterrupt( EXTI_LINE0 );
-	}
+        /* Generate interrupt in the M4 core. */
+        HAL_EXTI_D1_EventInputConfig( EXTI_LINE0, EXTI_MODE_IT, DISABLE );
+        HAL_EXTI_D2_EventInputConfig( EXTI_LINE0, EXTI_MODE_IT, ENABLE );
+        HAL_EXTI_GenerateSWInterrupt( EXTI_LINE0 );
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, uint32_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    uint32_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize )
 {
 /* If the buffers to be provided to the Idle task are declared inside this
-function then they must be declared static - otherwise they will be allocated on
-the stack and so not exists after this function exits. */
-static StaticTask_t xIdleTaskTCB;
-static uint32_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+ * function then they must be declared static - otherwise they will be allocated on
+ * the stack and so not exists after this function exits. */
+    static StaticTask_t xIdleTaskTCB;
+    static uint32_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-	/* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide
-	an implementation of vApplicationGetIdleTaskMemory() to provide the memory
-	that is used by the Idle task.
-	https://www.freertos.org/a00110.html#configSUPPORT_STATIC_ALLOCATION */
+    /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide
+     * an implementation of vApplicationGetIdleTaskMemory() to provide the memory
+     * that is used by the Idle task.
+     * https://www.freertos.org/a00110.html#configSUPPORT_STATIC_ALLOCATION */
 
-	/* Pass out a pointer to the StaticTask_t structure in which the Idle task's
-	state will be stored. */
-	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
+     * state will be stored. */
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
-	/* Pass out the array that will be used as the Idle task's stack. */
-	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    /* Pass out the array that will be used as the Idle task's stack. */
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
 
-	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-	Note that, as the array is necessarily of type StackType_t,
-	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+     * Note that, as the array is necessarily of type StackType_t,
+     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
-static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest, uint32_t ulIndexToIncrement )
+static void prvWaitForOtherCoreToStart( uint32_t ulIndexToTest,
+                                        uint32_t ulIndexToIncrement )
 {
-volatile uint32_t ulInitialCount = ulStartSyncCounters[ ulIndexToTest ], x;
-const uint32_t ulCrudeLoopDelay = 0xfffffUL;
+    volatile uint32_t ulInitialCount = ulStartSyncCounters[ ulIndexToTest ], x;
+    const uint32_t ulCrudeLoopDelay = 0xfffffUL;
 
-	/* When the cores boot they very crudely wait for each other in a non chip
-	specific way by waiting for the other core to start incrementing a shared
-	variable within an array.  mainINDEX_TO_TEST sets the index within the array
-	to the variable this core tests to see if it is incrementing, and
-	mainINDEX_TO_INCREMENT sets the index within the array to the variable this
-	core increments to indicate to the other core that it is at the sync point.
-	Note this is not a foolproof method and it is better to use a hardware
-	specific solution, such as having one core boot the other core when it was
-	ready, or using some kind of shared semaphore or interrupt. */
+    /* When the cores boot they very crudely wait for each other in a non chip
+     * specific way by waiting for the other core to start incrementing a shared
+     * variable within an array.  mainINDEX_TO_TEST sets the index within the array
+     * to the variable this core tests to see if it is incrementing, and
+     * mainINDEX_TO_INCREMENT sets the index within the array to the variable this
+     * core increments to indicate to the other core that it is at the sync point.
+     * Note this is not a foolproof method and it is better to use a hardware
+     * specific solution, such as having one core boot the other core when it was
+     * ready, or using some kind of shared semaphore or interrupt. */
 
-	/* Wait for the other core to reach the synchronisation point. */
-	while( ulStartSyncCounters[ ulIndexToTest ] == ulInitialCount );
-	ulInitialCount = ulStartSyncCounters[ ulIndexToTest ];
+    /* Wait for the other core to reach the synchronisation point. */
+    while( ulStartSyncCounters[ ulIndexToTest ] == ulInitialCount )
+    {
+    }
 
-	for( ;; )
-	{
-		ulStartSyncCounters[ ulIndexToIncrement ]++;
-		if( ulStartSyncCounters[ ulIndexToTest ] != ulInitialCount )
-		{
-			ulStartSyncCounters[ ulIndexToIncrement ]++;
-			break;
-		}
+    ulInitialCount = ulStartSyncCounters[ ulIndexToTest ];
 
-		/* Unlike the M4 core, this core does not have direct access to the UART,
-		so simply toggle an LED to show its status. */
-		for( x = 0; x < ulCrudeLoopDelay; x++ ) __asm volatile( "NOP" );
-		BSP_LED_Off( LED2 );
-		for( x = 0; x < ulCrudeLoopDelay; x++ ) __asm volatile( "NOP" );
-		BSP_LED_On( LED2 );
-	}
+    for( ; ; )
+    {
+        ulStartSyncCounters[ ulIndexToIncrement ]++;
+
+        if( ulStartSyncCounters[ ulIndexToTest ] != ulInitialCount )
+        {
+            ulStartSyncCounters[ ulIndexToIncrement ]++;
+            break;
+        }
+
+        /* Unlike the M4 core, this core does not have direct access to the UART,
+         * so simply toggle an LED to show its status. */
+        for( x = 0; x < ulCrudeLoopDelay; x++ )
+        {
+            __asm volatile ( "NOP" );
+        }
+
+        BSP_LED_Off( LED2 );
+
+        for( x = 0; x < ulCrudeLoopDelay; x++ )
+        {
+            __asm volatile ( "NOP" );
+        }
+
+        BSP_LED_On( LED2 );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void HAL_GPIO_EXTI_Callback( uint16_t GPIO_Pin )
 {
-BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-uint32_t x;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    uint32_t x;
 
-	configASSERT( xM7AMPTask );
+    configASSERT( xM7AMPTask );
 
-	HAL_EXTI_D1_ClearFlag( EXTI_LINE1 );
+    HAL_EXTI_D1_ClearFlag( EXTI_LINE1 );
 
-	/* Task can't be blocked on both so just send the notification to both. */
-	for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
-	{
-		xMessageBufferReceiveCompletedFromISR( xDataMessageBuffers[ x ], &xHigherPriorityTaskWoken );
-	}
+    /* Task can't be blocked on both so just send the notification to both. */
+    for( x = 0; x < mbaNUMBER_OF_CORE_2_TASKS; x++ )
+    {
+        xMessageBufferReceiveCompletedFromISR( xDataMessageBuffers[ x ], &xHigherPriorityTaskWoken );
+    }
 
-	/* Normal FreeRTOS "yield from interrupt" semantics, where
-	xHigherPriorityTaskWoken is initialized to pdFALSE and will then get set to
-	pdTRUE if the interrupt unblocks a task that has a priority above that of
-	the currently executing task. */
-	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    /* Normal FreeRTOS "yield from interrupt" semantics, where
+     * xHigherPriorityTaskWoken is initialized to pdFALSE and will then get set to
+     * pdTRUE if the interrupt unblocks a task that has a priority above that of
+     * the currently executing task. */
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-MPU_Region_InitTypeDef MPU_InitStruct;
-RCC_ClkInitTypeDef RCC_ClkInitStruct;
-RCC_OscInitTypeDef RCC_OscInitStruct;
+    MPU_Region_InitTypeDef MPU_InitStruct;
+    RCC_ClkInitTypeDef RCC_ClkInitStruct;
+    RCC_OscInitTypeDef RCC_OscInitStruct;
 
-	/* Configure the MPU attributes as Not Cachable for Internal D3SRAM.  The
-	Base Address is 0x38000000 (D3_SRAM_BASE), and the size is 64K. */
-	HAL_MPU_Disable();
-	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-	MPU_InitStruct.BaseAddress = D3_SRAM_BASE;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
-	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-	MPU_InitStruct.SubRegionDisable = 0x00;
-	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
-	HAL_MPU_ConfigRegion(&MPU_InitStruct);
-	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+    /* Configure the MPU attributes as Not Cachable for Internal D3SRAM.  The
+     * Base Address is 0x38000000 (D3_SRAM_BASE), and the size is 64K. */
+    HAL_MPU_Disable();
+    MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+    MPU_InitStruct.BaseAddress = D3_SRAM_BASE;
+    MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
+    MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+    MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+    MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+    MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+    MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+    MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+    MPU_InitStruct.SubRegionDisable = 0x00;
+    MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+    HAL_MPU_ConfigRegion( &MPU_InitStruct );
+    HAL_MPU_Enable( MPU_PRIVILEGED_DEFAULT );
 
-	/* Enable I-Cache */
-	SCB_EnableICache();
+    /* Enable I-Cache */
+    SCB_EnableICache();
 
-	/* Enable D-Cache */
-	SCB_EnableDCache();
+    /* Enable D-Cache */
+    SCB_EnableDCache();
 
-	HAL_Init();
-	BSP_LED_Init(LED1);
+    HAL_Init();
+    BSP_LED_Init( LED1 );
 
 
-	/*
-	System Clock Configuration:
-		System Clock source    = PLL (HSE)
-		SYSCLK(Hz)             = 400000000 (Cortex-M7 CPU Clock)
-		HCLK(Hz)               = 200000000 (Cortex-M4 CPU, Bus matrix Clocks)
-		AHB Prescaler          = 2
-		D1 APB3 Prescaler      = 2 (APB3 Clock  100MHz)
-		D2 APB1 Prescaler      = 2 (APB1 Clock  100MHz)
-		D2 APB2 Prescaler      = 2 (APB2 Clock  100MHz)
-		D3 APB4 Prescaler      = 2 (APB4 Clock  100MHz)
-		HSE Frequency(Hz)      = 25000000
-		PLL_M                  = 5
-		PLL_N                  = 160
-		PLL_P                  = 2
-		PLL_Q                  = 4
-		PLL_R                  = 2
-		VDD(V)                 = 3.3
-		Flash Latency(WS)      = 4
-	*/
+    /*
+     * System Clock Configuration:
+     *  System Clock source    = PLL (HSE)
+     *  SYSCLK(Hz)             = 400000000 (Cortex-M7 CPU Clock)
+     *  HCLK(Hz)               = 200000000 (Cortex-M4 CPU, Bus matrix Clocks)
+     *  AHB Prescaler          = 2
+     *  D1 APB3 Prescaler      = 2 (APB3 Clock  100MHz)
+     *  D2 APB1 Prescaler      = 2 (APB1 Clock  100MHz)
+     *  D2 APB2 Prescaler      = 2 (APB2 Clock  100MHz)
+     *  D3 APB4 Prescaler      = 2 (APB4 Clock  100MHz)
+     *  HSE Frequency(Hz)      = 25000000
+     *  PLL_M                  = 5
+     *  PLL_N                  = 160
+     *  PLL_P                  = 2
+     *  PLL_Q                  = 4
+     *  PLL_R                  = 2
+     *  VDD(V)                 = 3.3
+     *  Flash Latency(WS)      = 4
+     */
 
-	HAL_PWREx_ConfigSupply(PWR_DIRECT_SMPS_SUPPLY);
+    HAL_PWREx_ConfigSupply( PWR_DIRECT_SMPS_SUPPLY );
 
-	/* The voltage scaling allows optimizing the power consumption when the
-	device is clocked below the maximum system frequency, to update the voltage
-	scaling value regarding system frequency refer to product datasheet. */
-	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+    /* The voltage scaling allows optimizing the power consumption when the
+    *  device is clocked below the maximum system frequency, to update the voltage
+    *  scaling value regarding system frequency refer to product datasheet. */
+    __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
 
-	while( !__HAL_PWR_GET_FLAG( PWR_FLAG_VOSRDY ) )
-	{
-		__asm volatile ( "NOP" );
-	}
+    while( !__HAL_PWR_GET_FLAG( PWR_FLAG_VOSRDY ) )
+    {
+        __asm volatile ( "NOP" );
+    }
 
-	/* Enable HSE Oscillator and activate PLL with HSE as source */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-	RCC_OscInitStruct.HSIState = RCC_HSI_OFF;
-	RCC_OscInitStruct.CSIState = RCC_CSI_OFF;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+    /* Enable HSE Oscillator and activate PLL with HSE as source */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+    RCC_OscInitStruct.HSIState = RCC_HSI_OFF;
+    RCC_OscInitStruct.CSIState = RCC_CSI_OFF;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
 
-	RCC_OscInitStruct.PLL.PLLM = 5;
-	RCC_OscInitStruct.PLL.PLLN = 160;
-	RCC_OscInitStruct.PLL.PLLFRACN = 0;
-	RCC_OscInitStruct.PLL.PLLP = 2;
-	RCC_OscInitStruct.PLL.PLLR = 2;
-	RCC_OscInitStruct.PLL.PLLQ = 4;
+    RCC_OscInitStruct.PLL.PLLM = 5;
+    RCC_OscInitStruct.PLL.PLLN = 160;
+    RCC_OscInitStruct.PLL.PLLFRACN = 0;
+    RCC_OscInitStruct.PLL.PLLP = 2;
+    RCC_OscInitStruct.PLL.PLLR = 2;
+    RCC_OscInitStruct.PLL.PLLQ = 4;
 
-	RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
-	RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
-	configASSERT( HAL_RCC_OscConfig( &RCC_OscInitStruct ) == HAL_OK );
+    RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
+    RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
+    configASSERT( HAL_RCC_OscConfig( &RCC_OscInitStruct ) == HAL_OK );
 
-	/* Select PLL as system clock source and configure  bus clocks dividers */
-	RCC_ClkInitStruct.ClockType = ( RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_D1PCLK1 | RCC_CLOCKTYPE_PCLK1 | \
-								    RCC_CLOCKTYPE_PCLK2  | RCC_CLOCKTYPE_D3PCLK1 );
+    /* Select PLL as system clock source and configure  bus clocks dividers */
+    RCC_ClkInitStruct.ClockType = ( RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_D1PCLK1 | RCC_CLOCKTYPE_PCLK1 | \
+                                    RCC_CLOCKTYPE_PCLK2 | RCC_CLOCKTYPE_D3PCLK1 );
 
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-	RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
-	RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
-	RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
-	configASSERT( HAL_RCC_ClockConfig( &RCC_ClkInitStruct, FLASH_LATENCY_4 ) == HAL_OK );
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
+    RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
+    RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
+    configASSERT( HAL_RCC_ClockConfig( &RCC_ClkInitStruct, FLASH_LATENCY_4 ) == HAL_OK );
 
-	/* AIEC Common configuration: make CPU1 and CPU2 SWI line0 sensitive to
-	rising edge. */
-	HAL_EXTI_EdgeConfig( EXTI_LINE0, EXTI_RISING_EDGE );
+    /* AIEC Common configuration: make CPU1 and CPU2 SWI line0 sensitive to
+     * rising edge. */
+    HAL_EXTI_EdgeConfig( EXTI_LINE0, EXTI_RISING_EDGE );
 
-	/* Interrupt used for M4 to M7 notifications. */
-	HAL_NVIC_SetPriority( EXTI1_IRQn, 0xFU, 0U );
-	HAL_NVIC_EnableIRQ( EXTI1_IRQn );
+    /* Interrupt used for M4 to M7 notifications. */
+    HAL_NVIC_SetPriority( EXTI1_IRQn, 0xFU, 0U );
+    HAL_NVIC_EnableIRQ( EXTI1_IRQn );
 }
-

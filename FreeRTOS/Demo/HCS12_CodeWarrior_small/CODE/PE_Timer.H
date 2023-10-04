@@ -30,7 +30,10 @@
 
 /* MODULE PE_Timer. */
 
-bool PE_Timer_LngHi1(dword Low, dword High, word *Out);
+bool PE_Timer_LngHi1( dword Low,
+                      dword High,
+                      word * Out );
+
 /*
 ** ===================================================================
 **     Method      :  PE_Timer_LngHi1 (bean PE_Timer)
@@ -43,10 +46,11 @@ bool PE_Timer_LngHi1(dword Low, dword High, word *Out);
 
 
 #endif /* END PE_Timer. */
+
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

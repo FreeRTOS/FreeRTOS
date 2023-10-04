@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -66,49 +66,56 @@
  *---------------------------------------------------------------------------*/
 
 /** The reset length setting for external reset configuration */
-#define GMACB_RESET_LENGTH         0xD
+#define GMACB_RESET_LENGTH    0xD
 
 /*---------------------------------------------------------------------------
  *         Types
  *---------------------------------------------------------------------------*/
- 
- 
+
+
 /** The DM9161 instance */
-typedef struct _GMacb {
-				/**< Driver */
-				sGmacd *pGmacd;
-				/** The retry & timeout settings */
-				uint32_t retryMax;
-				/** PHY address ( pre-defined by pins on reset ) */
-				uint8_t phyAddress;
-		} GMacb;
+typedef struct _GMacb
+{
+    /**< Driver */
+    sGmacd * pGmacd;
+    /** The retry & timeout settings */
+    uint32_t retryMax;
+    /** PHY address ( pre-defined by pins on reset ) */
+    uint8_t phyAddress;
+} GMacb;
 
 /*---------------------------------------------------------------------------
  *         Exported functions
  *---------------------------------------------------------------------------*/
-extern void GMACB_SetupTimeout(GMacb *pMacb, uint32_t toMax);
+extern void GMACB_SetupTimeout( GMacb * pMacb,
+                                uint32_t toMax );
 
-extern void GMACB_Init(GMacb *pMacb, sGmacd *pGmacd, uint8_t phyAddress);
+extern void GMACB_Init( GMacb * pMacb,
+                        sGmacd * pGmacd,
+                        uint8_t phyAddress );
 
-extern uint8_t GMACB_InitPhy(
-				GMacb *pMacb, 
-				uint32_t mck,
-				const Pin *pResetPins,
-				uint32_t nbResetPins,
-				const Pin *pEmacPins,
-				uint32_t nbEmacPins);
+extern uint8_t GMACB_InitPhy( GMacb * pMacb,
+                              uint32_t mck,
+                              const Pin * pResetPins,
+                              uint32_t nbResetPins,
+                              const Pin * pEmacPins,
+                              uint32_t nbEmacPins );
 
-extern uint8_t GMACB_AutoNegotiate(GMacb *pMacb);
+extern uint8_t GMACB_AutoNegotiate( GMacb * pMacb );
 
-extern uint8_t GMACB_GetLinkSpeed(GMacb *pMacb, uint8_t applySettings);
+extern uint8_t GMACB_GetLinkSpeed( GMacb * pMacb,
+                                   uint8_t applySettings );
 
-extern uint8_t GMACB_Send(GMacb *pMacb, void *pBuffer, uint32_t size);
+extern uint8_t GMACB_Send( GMacb * pMacb,
+                           void * pBuffer,
+                           uint32_t size );
 
-extern uint32_t GMACB_Poll(GMacb *pMacb, uint8_t *pBuffer, uint32_t size);
+extern uint32_t GMACB_Poll( GMacb * pMacb,
+                            uint8_t * pBuffer,
+                            uint32_t size );
 
-extern void GMACB_DumpRegisters(GMacb *pMacb);
+extern void GMACB_DumpRegisters( GMacb * pMacb );
 
-extern uint8_t GMACB_ResetPhy(GMacb *pMacb);
+extern uint8_t GMACB_ResetPhy( GMacb * pMacb );
 
 #endif // #ifndef _GMACB_H
-

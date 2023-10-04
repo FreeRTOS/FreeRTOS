@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -28,6 +28,7 @@
  */
 
 /** \file */
+
 /**
  * \ingroup lib_board
  * \addtogroup cand_module CAN Driver
@@ -63,6 +64,7 @@
 #ifndef _CAND_H_
 #define _CAND_H_
 /**@{*/
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -78,15 +80,15 @@
 /** \addtogroup cand_rc CAN Driver Status (Return Codes)
  *      @{*/
 /** Operation success */
-#define CAND_OK             0
+#define CAND_OK           0
 /** The driver/mailbox is busy */
-#define CAND_BUSY           1
+#define CAND_BUSY         1
 /** General error */
-#define CAND_ERROR          0x10
+#define CAND_ERROR        0x10
 /** Bad operation because of wrong state */
-#define CAND_ERR_STATE      0x11
+#define CAND_ERR_STATE    0x11
 /** Bad operation for parameter error */
-#define CAND_ERR_PARAM      0xFE
+#define CAND_ERR_PARAM    0xFE
 /**     @}*/
 
 /*----------------------------------------------------------------------------
@@ -94,47 +96,50 @@
  *----------------------------------------------------------------------------*/
 
 /* CAN Driver General callback */
-//typedef void(*CandCallback)(uint8_t bEvent, void* pArg);
+/*typedef void(*CandCallback)(uint8_t bEvent, void* pArg); */
 
 /** CAN Driver Mailbox settings */
-typedef struct _CandMbCfg {
-    uint32_t dwMsgMask;     /**< Message ID Mask _MAMx */
-    uint8_t  bMsgType;      /**< Message type */
-    uint8_t  bTxPriority;   /**< Priority for TX */
+typedef struct _CandMbCfg
+{
+    uint32_t dwMsgMask;  /**< Message ID Mask _MAMx */
+    uint8_t bMsgType;    /**< Message type */
+    uint8_t bTxPriority; /**< Priority for TX */
 } sCandMbCfg;
 
 /** CAN Driver Transfer Parameters */
-typedef struct _CandTransfer {
-    //void* fCallback;        /**< Callback function when transfer finished */
-    //void* pArg;             /**< Callback arguments */
+typedef struct _CandTransfer
+{
+    /*void* fCallback;        / **< Callback function when transfer finished * / */
+    /*void* pArg;             / **< Callback arguments * / */
 
-    uint32_t dwMsgID;       /**< Message ID _MIDx */
-    uint32_t msgData[2];    /**< Message data */
-    uint8_t bMailbox;       /**< Mailbox used */
-    uint8_t bMsgLen;        /**< Message length */
-    uint8_t bState;         /**< Transfer state */
-    uint8_t bRC;            /**< Transfer return code */
+    uint32_t dwMsgID;      /**< Message ID _MIDx */
+    uint32_t msgData[ 2 ]; /**< Message data */
+    uint8_t bMailbox;      /**< Mailbox used */
+    uint8_t bMsgLen;       /**< Message length */
+    uint8_t bState;        /**< Transfer state */
+    uint8_t bRC;           /**< Transfer return code */
 } sCandTransfer;
 
 /** CAN Driver Transfer callback */
-typedef void(*CandTransferCallback)(sCandTransfer* pXfr);
+typedef void (* CandTransferCallback)( sCandTransfer * pXfr );
 
 /**
  * CAN Driver instance struct.
  */
-typedef struct _Cand {
-    Can* pHw;                   /**< Pointer to HW register base */
+typedef struct _Cand
+{
+    Can * pHw; /**< Pointer to HW register base */
 
-    //CandCallback fCallback;     /**< Pointer to Callback function */
-    //void*        pArg;          /**< Pointer to Callback argument */
+    /*CandCallback fCallback;     / **< Pointer to Callback function * / */
+    /*void*        pArg;          / **< Pointer to Callback argument * / */
 
-    sCandTransfer *pMbs[CAN_NUM_MAILBOX];   /**< Pointer list to mailboxes */
+    sCandTransfer * pMbs[ CAN_NUM_MAILBOX ]; /**< Pointer list to mailboxes */
 
-    uint32_t dwMck;             /**< MCK for baudrate calculating */
-    uint16_t wBaudrate;         /**< Current working baudrate */
+    uint32_t dwMck;                          /**< MCK for baudrate calculating */
+    uint16_t wBaudrate;                      /**< Current working baudrate */
 
-    uint8_t bID;                /**< Peripheral ID */
-    uint8_t bState;             /**< CAN states */
+    uint8_t bID;                             /**< Peripheral ID */
+    uint8_t bState;                          /**< CAN states */
 } sCand;
 
 
@@ -142,20 +147,27 @@ typedef struct _Cand {
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint8_t CAND_Init(sCand * pCand,
-                         Can * pHw,uint8_t bID,
-                         uint16_t wBaudrate,uint32_t dwMck);
-extern void CAND_Activate(sCand * pCand);
-extern void CAND_Sleep(sCand * pCand);
-extern uint8_t CAND_IsReady(sCand * pCand);
-extern void CAND_Handler(sCand * pCand);
-extern uint8_t CAND_IsMailboxReady(sCand * pCand,uint8_t bMb);
-extern void CAND_ResetMailbox(sCand * pCand,uint8_t bMb,sCandMbCfg * pCfg);
-extern uint8_t CAND_ConfigureTransfer(sCand * pCand,
-                                      sCandMbCfg * pCfg,
-                                      sCandTransfer * pXfr);
-extern uint8_t CAND_Transfer(sCand * pCand,sCandTransfer * pXfr);
-extern void CAND_StartTransfers(sCand * pCand,uint32_t bmMbs);
-extern uint8_t CAND_IsTransferDone(sCandTransfer * pXfr);
+extern uint8_t CAND_Init( sCand * pCand,
+                          Can * pHw,
+                          uint8_t bID,
+                          uint16_t wBaudrate,
+                          uint32_t dwMck );
+extern void CAND_Activate( sCand * pCand );
+extern void CAND_Sleep( sCand * pCand );
+extern uint8_t CAND_IsReady( sCand * pCand );
+extern void CAND_Handler( sCand * pCand );
+extern uint8_t CAND_IsMailboxReady( sCand * pCand,
+                                    uint8_t bMb );
+extern void CAND_ResetMailbox( sCand * pCand,
+                               uint8_t bMb,
+                               sCandMbCfg * pCfg );
+extern uint8_t CAND_ConfigureTransfer( sCand * pCand,
+                                       sCandMbCfg * pCfg,
+                                       sCandTransfer * pXfr );
+extern uint8_t CAND_Transfer( sCand * pCand,
+                              sCandTransfer * pXfr );
+extern void CAND_StartTransfers( sCand * pCand,
+                                 uint32_t bmMbs );
+extern uint8_t CAND_IsTransferDone( sCandTransfer * pXfr );
 /**@}*/
 #endif /* #ifndef _CAN_H_ */

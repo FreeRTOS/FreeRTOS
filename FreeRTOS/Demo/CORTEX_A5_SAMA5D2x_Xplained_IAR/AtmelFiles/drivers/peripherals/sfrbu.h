@@ -46,17 +46,17 @@
 /**
  * \brief Enable DDR backup
  */
-extern void sfrbu_enable_ddr_backup(void);
+extern void sfrbu_enable_ddr_backup( void );
 
 /**
  * \brief Disable DDR backup
  */
-extern void sfrbu_disable_ddr_backup(void);
+extern void sfrbu_disable_ddr_backup( void );
 
 /**
  * \brief Get DDR backup status
  * \return true if DDR BU Mode is enabled, false otherwise
  */
-extern bool sfrbu_is_ddr_backup_enabled(void);
+extern bool sfrbu_is_ddr_backup_enabled( void );
 
 #endif //#ifndef _SFRBU_H

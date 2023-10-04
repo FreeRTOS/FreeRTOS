@@ -45,62 +45,62 @@
 #define _SAMD20_TC2_INSTANCE_
 
 /* ========== Register definition for TC2 peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_TC2_CTRLA              (0x42002800U) /**< \brief (TC2) Control A Register */
-#define REG_TC2_READREQ            (0x42002802U) /**< \brief (TC2) Read Request Register */
-#define REG_TC2_CTRLBCLR           (0x42002804U) /**< \brief (TC2) Control B Clear Register */
-#define REG_TC2_CTRLBSET           (0x42002805U) /**< \brief (TC2) Control B Set Register */
-#define REG_TC2_CTRLC              (0x42002806U) /**< \brief (TC2) Control C Register */
-#define REG_TC2_DBGCTRL            (0x42002808U) /**< \brief (TC2) Debug Register */
-#define REG_TC2_EVCTRL             (0x4200280AU) /**< \brief (TC2) Event Control Register */
-#define REG_TC2_INTENCLR           (0x4200280CU) /**< \brief (TC2) Interrupt Enable Clear Register */
-#define REG_TC2_INTENSET           (0x4200280DU) /**< \brief (TC2) Interrupt Enable Set Register */
-#define REG_TC2_INTFLAG            (0x4200280EU) /**< \brief (TC2) Interrupt Flag Status and Clear Register */
-#define REG_TC2_STATUS             (0x4200280FU) /**< \brief (TC2) Status Register */
-#define REG_TC2_COUNT8_COUNT       (0x42002810U) /**< \brief (TC2) COUNT8 Count Register */
-#define REG_TC2_COUNT16_COUNT      (0x42002810U) /**< \brief (TC2) COUNT16 Count Register */
-#define REG_TC2_COUNT32_COUNT      (0x42002810U) /**< \brief (TC2) COUNT32 Count Register */
-#define REG_TC2_COUNT8_PER         (0x42002814U) /**< \brief (TC2) COUNT8 Period Register */
-#define REG_TC2_COUNT32_PER        (0x42002814U) /**< \brief (TC2) COUNT32 Period Register */
-#define REG_TC2_COUNT8_CC0         (0x42002818U) /**< \brief (TC2) COUNT8 Compare and Capture Register 0 */
-#define REG_TC2_COUNT8_CC1         (0x42002819U) /**< \brief (TC2) COUNT8 Compare and Capture Register 1 */
-#define REG_TC2_COUNT16_CC0        (0x42002818U) /**< \brief (TC2) COUNT16 Compare and Capture Register 0 */
-#define REG_TC2_COUNT16_CC1        (0x4200281AU) /**< \brief (TC2) COUNT16 Compare and Capture Register 1 */
-#define REG_TC2_COUNT32_CC0        (0x42002818U) /**< \brief (TC2) COUNT32 Compare and Capture Register 0 */
-#define REG_TC2_COUNT32_CC1        (0x4200281CU) /**< \brief (TC2) COUNT32 Compare and Capture Register 1 */
-#else
-#define REG_TC2_CTRLA              (*(RwReg16*)0x42002800U) /**< \brief (TC2) Control A Register */
-#define REG_TC2_READREQ            (*(RwReg16*)0x42002802U) /**< \brief (TC2) Read Request Register */
-#define REG_TC2_CTRLBCLR           (*(RwReg8 *)0x42002804U) /**< \brief (TC2) Control B Clear Register */
-#define REG_TC2_CTRLBSET           (*(RwReg8 *)0x42002805U) /**< \brief (TC2) Control B Set Register */
-#define REG_TC2_CTRLC              (*(RwReg8 *)0x42002806U) /**< \brief (TC2) Control C Register */
-#define REG_TC2_DBGCTRL            (*(RwReg8 *)0x42002808U) /**< \brief (TC2) Debug Register */
-#define REG_TC2_EVCTRL             (*(RwReg16*)0x4200280AU) /**< \brief (TC2) Event Control Register */
-#define REG_TC2_INTENCLR           (*(RwReg8 *)0x4200280CU) /**< \brief (TC2) Interrupt Enable Clear Register */
-#define REG_TC2_INTENSET           (*(RwReg8 *)0x4200280DU) /**< \brief (TC2) Interrupt Enable Set Register */
-#define REG_TC2_INTFLAG            (*(RwReg8 *)0x4200280EU) /**< \brief (TC2) Interrupt Flag Status and Clear Register */
-#define REG_TC2_STATUS             (*(RoReg8 *)0x4200280FU) /**< \brief (TC2) Status Register */
-#define REG_TC2_COUNT8_COUNT       (*(RwReg8 *)0x42002810U) /**< \brief (TC2) COUNT8 Count Register */
-#define REG_TC2_COUNT16_COUNT      (*(RwReg16*)0x42002810U) /**< \brief (TC2) COUNT16 Count Register */
-#define REG_TC2_COUNT32_COUNT      (*(RwReg  *)0x42002810U) /**< \brief (TC2) COUNT32 Count Register */
-#define REG_TC2_COUNT8_PER         (*(RwReg8 *)0x42002814U) /**< \brief (TC2) COUNT8 Period Register */
-#define REG_TC2_COUNT32_PER        (*(RwReg  *)0x42002814U) /**< \brief (TC2) COUNT32 Period Register */
-#define REG_TC2_COUNT8_CC0         (*(RwReg8 *)0x42002818U) /**< \brief (TC2) COUNT8 Compare and Capture Register 0 */
-#define REG_TC2_COUNT8_CC1         (*(RwReg8 *)0x42002819U) /**< \brief (TC2) COUNT8 Compare and Capture Register 1 */
-#define REG_TC2_COUNT16_CC0        (*(RwReg16*)0x42002818U) /**< \brief (TC2) COUNT16 Compare and Capture Register 0 */
-#define REG_TC2_COUNT16_CC1        (*(RwReg16*)0x4200281AU) /**< \brief (TC2) COUNT16 Compare and Capture Register 1 */
-#define REG_TC2_COUNT32_CC0        (*(RwReg  *)0x42002818U) /**< \brief (TC2) COUNT32 Compare and Capture Register 0 */
-#define REG_TC2_COUNT32_CC1        (*(RwReg  *)0x4200281CU) /**< \brief (TC2) COUNT32 Compare and Capture Register 1 */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_TC2_CTRLA            ( 0x42002800U )                /**< \brief (TC2) Control A Register */
+    #define REG_TC2_READREQ          ( 0x42002802U )                /**< \brief (TC2) Read Request Register */
+    #define REG_TC2_CTRLBCLR         ( 0x42002804U )                /**< \brief (TC2) Control B Clear Register */
+    #define REG_TC2_CTRLBSET         ( 0x42002805U )                /**< \brief (TC2) Control B Set Register */
+    #define REG_TC2_CTRLC            ( 0x42002806U )                /**< \brief (TC2) Control C Register */
+    #define REG_TC2_DBGCTRL          ( 0x42002808U )                /**< \brief (TC2) Debug Register */
+    #define REG_TC2_EVCTRL           ( 0x4200280AU )                /**< \brief (TC2) Event Control Register */
+    #define REG_TC2_INTENCLR         ( 0x4200280CU )                /**< \brief (TC2) Interrupt Enable Clear Register */
+    #define REG_TC2_INTENSET         ( 0x4200280DU )                /**< \brief (TC2) Interrupt Enable Set Register */
+    #define REG_TC2_INTFLAG          ( 0x4200280EU )                /**< \brief (TC2) Interrupt Flag Status and Clear Register */
+    #define REG_TC2_STATUS           ( 0x4200280FU )                /**< \brief (TC2) Status Register */
+    #define REG_TC2_COUNT8_COUNT     ( 0x42002810U )                /**< \brief (TC2) COUNT8 Count Register */
+    #define REG_TC2_COUNT16_COUNT    ( 0x42002810U )                /**< \brief (TC2) COUNT16 Count Register */
+    #define REG_TC2_COUNT32_COUNT    ( 0x42002810U )                /**< \brief (TC2) COUNT32 Count Register */
+    #define REG_TC2_COUNT8_PER       ( 0x42002814U )                /**< \brief (TC2) COUNT8 Period Register */
+    #define REG_TC2_COUNT32_PER      ( 0x42002814U )                /**< \brief (TC2) COUNT32 Period Register */
+    #define REG_TC2_COUNT8_CC0       ( 0x42002818U )                /**< \brief (TC2) COUNT8 Compare and Capture Register 0 */
+    #define REG_TC2_COUNT8_CC1       ( 0x42002819U )                /**< \brief (TC2) COUNT8 Compare and Capture Register 1 */
+    #define REG_TC2_COUNT16_CC0      ( 0x42002818U )                /**< \brief (TC2) COUNT16 Compare and Capture Register 0 */
+    #define REG_TC2_COUNT16_CC1      ( 0x4200281AU )                /**< \brief (TC2) COUNT16 Compare and Capture Register 1 */
+    #define REG_TC2_COUNT32_CC0      ( 0x42002818U )                /**< \brief (TC2) COUNT32 Compare and Capture Register 0 */
+    #define REG_TC2_COUNT32_CC1      ( 0x4200281CU )                /**< \brief (TC2) COUNT32 Compare and Capture Register 1 */
+#else  /* if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) ) */
+    #define REG_TC2_CTRLA            ( *( RwReg16 * ) 0x42002800U ) /**< \brief (TC2) Control A Register */
+    #define REG_TC2_READREQ          ( *( RwReg16 * ) 0x42002802U ) /**< \brief (TC2) Read Request Register */
+    #define REG_TC2_CTRLBCLR         ( *( RwReg8 * ) 0x42002804U )  /**< \brief (TC2) Control B Clear Register */
+    #define REG_TC2_CTRLBSET         ( *( RwReg8 * ) 0x42002805U )  /**< \brief (TC2) Control B Set Register */
+    #define REG_TC2_CTRLC            ( *( RwReg8 * ) 0x42002806U )  /**< \brief (TC2) Control C Register */
+    #define REG_TC2_DBGCTRL          ( *( RwReg8 * ) 0x42002808U )  /**< \brief (TC2) Debug Register */
+    #define REG_TC2_EVCTRL           ( *( RwReg16 * ) 0x4200280AU ) /**< \brief (TC2) Event Control Register */
+    #define REG_TC2_INTENCLR         ( *( RwReg8 * ) 0x4200280CU )  /**< \brief (TC2) Interrupt Enable Clear Register */
+    #define REG_TC2_INTENSET         ( *( RwReg8 * ) 0x4200280DU )  /**< \brief (TC2) Interrupt Enable Set Register */
+    #define REG_TC2_INTFLAG          ( *( RwReg8 * ) 0x4200280EU )  /**< \brief (TC2) Interrupt Flag Status and Clear Register */
+    #define REG_TC2_STATUS           ( *( RoReg8 * ) 0x4200280FU )  /**< \brief (TC2) Status Register */
+    #define REG_TC2_COUNT8_COUNT     ( *( RwReg8 * ) 0x42002810U )  /**< \brief (TC2) COUNT8 Count Register */
+    #define REG_TC2_COUNT16_COUNT    ( *( RwReg16 * ) 0x42002810U ) /**< \brief (TC2) COUNT16 Count Register */
+    #define REG_TC2_COUNT32_COUNT    ( *( RwReg * ) 0x42002810U )   /**< \brief (TC2) COUNT32 Count Register */
+    #define REG_TC2_COUNT8_PER       ( *( RwReg8 * ) 0x42002814U )  /**< \brief (TC2) COUNT8 Period Register */
+    #define REG_TC2_COUNT32_PER      ( *( RwReg * ) 0x42002814U )   /**< \brief (TC2) COUNT32 Period Register */
+    #define REG_TC2_COUNT8_CC0       ( *( RwReg8 * ) 0x42002818U )  /**< \brief (TC2) COUNT8 Compare and Capture Register 0 */
+    #define REG_TC2_COUNT8_CC1       ( *( RwReg8 * ) 0x42002819U )  /**< \brief (TC2) COUNT8 Compare and Capture Register 1 */
+    #define REG_TC2_COUNT16_CC0      ( *( RwReg16 * ) 0x42002818U ) /**< \brief (TC2) COUNT16 Compare and Capture Register 0 */
+    #define REG_TC2_COUNT16_CC1      ( *( RwReg16 * ) 0x4200281AU ) /**< \brief (TC2) COUNT16 Compare and Capture Register 1 */
+    #define REG_TC2_COUNT32_CC0      ( *( RwReg * ) 0x42002818U )   /**< \brief (TC2) COUNT32 Compare and Capture Register 0 */
+    #define REG_TC2_COUNT32_CC1      ( *( RwReg * ) 0x4200281CU )   /**< \brief (TC2) COUNT32 Compare and Capture Register 1 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC2 peripheral ========== */
-#define TC2_CC8_NUM                 2
-#define TC2_CC16_NUM                2
-#define TC2_CC32_NUM                2
-#define TC2_DITHERING_EXT           0
-#define TC2_GCLK_ID                 20
-#define TC2_OW_NUM                  2
-#define TC2_PERIOD_EXT              0
-#define TC2_SHADOW_EXT              0
+#define TC2_CC8_NUM          2
+#define TC2_CC16_NUM         2
+#define TC2_CC32_NUM         2
+#define TC2_DITHERING_EXT    0
+#define TC2_GCLK_ID          20
+#define TC2_OW_NUM           2
+#define TC2_PERIOD_EXT       0
+#define TC2_SHADOW_EXT       0
 
 #endif /* _SAMD20_TC2_INSTANCE_ */

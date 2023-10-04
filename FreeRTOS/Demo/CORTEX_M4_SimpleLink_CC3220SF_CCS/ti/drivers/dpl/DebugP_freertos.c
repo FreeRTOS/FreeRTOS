@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*
  *  ======== DebugP_freertos.c ========
  */
@@ -40,47 +41,61 @@
 /*
  *  ======== _DebugP_assert ========
  */
-void _DebugP_assert(int expression, const char *file, int line)
+void _DebugP_assert( int expression,
+                     const char * file,
+                     int line )
 {
-#if configASSERT_DEFINED
-    configASSERT(expression);
-#endif
+    #if configASSERT_DEFINED
+        configASSERT( expression );
+    #endif
 }
 
 /*
  *  ======== DebugP_log0 ========
  */
-void DebugP_log0(const char *format)
+void DebugP_log0( const char * format )
 {
-//    printf(format);
+/*    printf(format); */
 }
 
 /*
  *  ======== DebugP_log1 ========
  */
-void DebugP_log1(const char *format, uintptr_t p1)
+void DebugP_log1( const char * format,
+                  uintptr_t p1 )
 {
-//    printf(format, p1);
+/*    printf(format, p1); */
 }
 
 /*
  *  ======== DebugP_log2 ========
  */
-void DebugP_log2(const char *format, uintptr_t p1, uintptr_t p2)
+void DebugP_log2( const char * format,
+                  uintptr_t p1,
+                  uintptr_t p2 )
 {
-//    printf(format, p1, p2);
+/*    printf(format, p1, p2); */
 }
+
 /*
  *  ======== DebugP_log3 ========
  */
-void DebugP_log3(const char *format, uintptr_t p1, uintptr_t p2, uintptr_t p3)
+void DebugP_log3( const char * format,
+                  uintptr_t p1,
+                  uintptr_t p2,
+                  uintptr_t p3 )
 {
-//    printf(format, p1, p2, p3);
+/*    printf(format, p1, p2, p3); */
 }
+
 /*
  *  ======== DebugP_log4 ========
  */
-void DebugP_log4(const char *format, uintptr_t p1, uintptr_t p2, uintptr_t p3, uintptr_t p4)
+void DebugP_log4( const char * format,
+                  uintptr_t p1,
+                  uintptr_t p2,
+                  uintptr_t p3,
+                  uintptr_t p4 )
 {
-//    printf(format, p1, p2, p3, p4);
+/*    printf(format, p1, p2, p3, p4); */
 }

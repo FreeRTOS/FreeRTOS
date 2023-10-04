@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,51 +27,51 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-///
-/// Interface for configuration the Periodic Interval Timer (PIT) peripheral.
-///
-/// !Usage
-///
-/// -# Initialize the PIT with the desired period using PIT_Init().
-///    Alternatively, the Periodic Interval Value (PIV) can be configured
-///    manually using PIT_SetPIV().
-/// -# Start the PIT counting using PIT_Enable().
-/// -# Enable & disable the PIT interrupt using PIT_EnableIT() and
-///    PIT_DisableIT().
-/// -# Retrieve the current status of the PIT using PIT_GetStatus().
-/// -# To get the current value of the internal counter and the number of ticks
-///    that have occurred, use either PIT_GetPIVR() or PIT_GetPIIR() depending
-///    on whether you want the values to be cleared or not.
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Interface for configuration the Periodic Interval Timer (PIT) peripheral. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Initialize the PIT with the desired period using PIT_Init(). */
+/*/    Alternatively, the Periodic Interval Value (PIV) can be configured */
+/*/    manually using PIT_SetPIV(). */
+/*/ -# Start the PIT counting using PIT_Enable(). */
+/*/ -# Enable & disable the PIT interrupt using PIT_EnableIT() and */
+/*/    PIT_DisableIT(). */
+/*/ -# Retrieve the current status of the PIT using PIT_GetStatus(). */
+/*/ -# To get the current value of the internal counter and the number of ticks */
+/*/    that have occurred, use either PIT_GetPIVR() or PIT_GetPIIR() depending */
+/*/    on whether you want the values to be cleared or not. */
+/*------------------------------------------------------------------------------ */
 
 #ifndef PIT_H
 #define PIT_H
 
-//------------------------------------------------------------------------------
-//         Global Functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global Functions */
+/*------------------------------------------------------------------------------ */
 
-extern void PIT_Init(unsigned int period, unsigned int pit_frequency);
+extern void PIT_Init( unsigned int period,
+                      unsigned int pit_frequency );
 
-extern void PIT_SetPIV(unsigned int piv);
+extern void PIT_SetPIV( unsigned int piv );
 
-extern void PIT_Enable(void);
+extern void PIT_Enable( void );
 
-extern void PIT_EnableIT(void);
+extern void PIT_EnableIT( void );
 
-extern void PIT_DisableIT(void);
+extern void PIT_DisableIT( void );
 
-extern unsigned int PIT_GetMode(void);
+extern unsigned int PIT_GetMode( void );
 
-extern unsigned int PIT_GetStatus(void);
+extern unsigned int PIT_GetStatus( void );
 
-extern unsigned int PIT_GetPIIR(void);
+extern unsigned int PIT_GetPIIR( void );
 
-extern unsigned int PIT_GetPIVR(void);
+extern unsigned int PIT_GetPIVR( void );
 
 #endif //#ifndef PIT_H
-

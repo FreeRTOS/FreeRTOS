@@ -41,6 +41,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -56,18 +57,19 @@
  * \{
  */
 
-extern volatile void *volatile stdio_base;
-void (*ptr_get)(void volatile*, char*);
+extern volatile void * volatile stdio_base;
+void (* ptr_get)( void volatile *,
+                  char * );
 
 
-// IAR common implementation
-#if ( defined(__ICCAVR32__) || defined(__ICCAVR__) || defined(__ICCARM__) )
+/* IAR common implementation */
+#if ( defined( __ICCAVR32__ ) || defined( __ICCAVR__ ) || defined( __ICCARM__ ) )
 
-#include <yfuns.h>
+    #include <yfuns.h>
 
-_STD_BEGIN
+    _STD_BEGIN
 
-#pragma module_name = "?__read"
+    #pragma module_name = "?__read"
 
 /*! \brief Reads a number of bytes, at most \a size, into the memory area
  *         pointed to by \a buffer.
@@ -79,89 +81,103 @@ _STD_BEGIN
  * \return The number of bytes read, \c 0 at the end of the file, or
  *         \c _LLIO_ERROR on failure.
  */
-size_t __read(int handle, unsigned char *buffer, size_t size)
-{
-	int nChars = 0;
-	// This implementation only reads from stdin.
-	// For all other file handles, it returns failure.
-	if (handle != _LLIO_STDIN) {
-		return _LLIO_ERROR;
-	}
-	for (; size > 0; --size) {
-		ptr_get(stdio_base, (char*)buffer);
-		buffer++;
-		nChars++;
-	}
-	return nChars;
-}
+    size_t __read( int handle,
+                   unsigned char * buffer,
+                   size_t size )
+    {
+        int nChars = 0;
+
+        /* This implementation only reads from stdin. */
+        /* For all other file handles, it returns failure. */
+        if( handle != _LLIO_STDIN )
+        {
+            return _LLIO_ERROR;
+        }
+
+        for( ; size > 0; --size )
+        {
+            ptr_get( stdio_base, ( char * ) buffer );
+            buffer++;
+            nChars++;
+        }
+
+        return nChars;
+    }
 
 /*! \brief This routine is required by IAR DLIB library since EWAVR V6.10
  * the implementation is empty to be compatible with old IAR version.
  */
-int __close(int handle)
-{
-	UNUSED(handle);
-	return 0;
-}
+    int __close( int handle )
+    {
+        UNUSED( handle );
+        return 0;
+    }
 
 /*! \brief This routine is required by IAR DLIB library since EWAVR V6.10
  * the implementation is empty to be compatible with old IAR version.
  */
-int remove(const char* val)
-{
-	UNUSED(val);
-	return 0;
-}
+    int remove( const char * val )
+    {
+        UNUSED( val );
+        return 0;
+    }
 
 /*! \brief This routine is required by IAR DLIB library since EWAVR V6.10
  * the implementation is empty to be compatible with old IAR version.
  */
-long __lseek(int handle, long val, int val2)
-{
-	UNUSED(handle);
-	UNUSED(val2);
-	return val;
-}
+    long __lseek( int handle,
+                  long val,
+                  int val2 )
+    {
+        UNUSED( handle );
+        UNUSED( val2 );
+        return val;
+    }
 
-_STD_END
+    _STD_END
 
-// GCC AVR32 and SAM implementation
-#elif (defined(__GNUC__) && !XMEGA && !MEGA) 
+/* GCC AVR32 and SAM implementation */
+#elif ( defined( __GNUC__ ) && !XMEGA && !MEGA )
 
-int __attribute__((weak))
-_read (int file, char * ptr, int len); // Remove GCC compiler warning
+    int __attribute__( ( weak ) ) _read( int file,
+                                         char * ptr,
+                                         int len ); /* Remove GCC compiler warning */
 
-int __attribute__((weak))
-_read (int file, char * ptr, int len)
-{
-	int nChars = 0;
+    int __attribute__( ( weak ) ) _read( int file,
+                                         char * ptr,
+                                         int len )
+    {
+        int nChars = 0;
 
-	if (file != 0) {
-		return -1;
-	}
+        if( file != 0 )
+        {
+            return -1;
+        }
 
-	for (; len > 0; --len) {
-		ptr_get(stdio_base, ptr);
-		ptr++;
-		nChars++;
-	}
-	return nChars;
-}
+        for( ; len > 0; --len )
+        {
+            ptr_get( stdio_base, ptr );
+            ptr++;
+            nChars++;
+        }
 
-// GCC AVR implementation
-#elif (defined(__GNUC__) && (XMEGA || MEGA) )
+        return nChars;
+    }
 
-int _read (int *f); // Remove GCC compiler warning
+/* GCC AVR implementation */
+#elif ( defined( __GNUC__ ) && ( XMEGA || MEGA ) )
 
-int _read (int *f)
-{
-	char c;
-	ptr_get(stdio_base,&c);
-	return c;
-}
-#endif
+    int _read( int * f ); /* Remove GCC compiler warning */
+
+    int _read( int * f )
+    {
+        char c;
+
+        ptr_get( stdio_base, &c );
+        return c;
+    }
+#endif /* if ( defined( __ICCAVR32__ ) || defined( __ICCAVR__ ) || defined( __ICCARM__ ) ) */
 
 /**
  * \}
  */
-

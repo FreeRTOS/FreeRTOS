@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -42,8 +42,8 @@
  *------------------------------------------------------------------------------*/
 
 #ifdef PINS_LEDS
-static const Pin pinsLeds[] = { PINS_LEDS } ;
-static const uint32_t numLeds = PIO_LISTSIZE( pinsLeds ) ;
+static const Pin pinsLeds[] = { PINS_LEDS };
+static const uint32_t numLeds = PIO_LISTSIZE( pinsLeds );
 #endif
 
 /*------------------------------------------------------------------------------
@@ -58,19 +58,18 @@ static const uint32_t numLeds = PIO_LISTSIZE( pinsLeds ) ;
  */
 extern uint32_t LED_Configure( uint32_t dwLed )
 {
-#ifdef PINS_LEDS
-    // Check that LED exists
-    if ( dwLed >= numLeds)
-    {
+    #ifdef PINS_LEDS
+        /* Check that LED exists */
+        if( dwLed >= numLeds )
+        {
+            return 0;
+        }
 
+        /* Configure LED */
+        return( PIO_Configure( &pinsLeds[ dwLed ], 1 ) );
+    #else
         return 0;
-    }
-
-    // Configure LED
-    return ( PIO_Configure( &pinsLeds[dwLed], 1 ) ) ;
-#else
-    return 0 ;
-#endif
+    #endif
 }
 
 /**
@@ -80,28 +79,27 @@ extern uint32_t LED_Configure( uint32_t dwLed )
  */
 extern uint32_t LED_Set( uint32_t dwLed )
 {
-#ifdef PINS_LEDS
-    /* Check if LED exists */
-    if ( dwLed >= numLeds )
-    {
-        return 0 ;
-    }
+    #ifdef PINS_LEDS
+        /* Check if LED exists */
+        if( dwLed >= numLeds )
+        {
+            return 0;
+        }
 
-    /* Turn LED on */
-    if ( pinsLeds[dwLed].type == PIO_OUTPUT_0 )
-    {
+        /* Turn LED on */
+        if( pinsLeds[ dwLed ].type == PIO_OUTPUT_0 )
+        {
+            PIO_Set( &pinsLeds[ dwLed ] );
+        }
+        else
+        {
+            PIO_Clear( &pinsLeds[ dwLed ] );
+        }
 
-        PIO_Set( &pinsLeds[dwLed] ) ;
-    }
-    else
-    {
-        PIO_Clear( &pinsLeds[dwLed] ) ;
-    }
-
-    return 1 ;
-#else
-    return 0 ;
-#endif
+        return 1;
+    #else  /* ifdef PINS_LEDS */
+        return 0;
+    #endif /* ifdef PINS_LEDS */
 }
 
 /**
@@ -112,27 +110,27 @@ extern uint32_t LED_Set( uint32_t dwLed )
  */
 extern uint32_t LED_Clear( uint32_t dwLed )
 {
-#ifdef PINS_LEDS
-    /* Check if LED exists */
-    if ( dwLed >= numLeds )
-    {
-        return 0 ;
-    }
+    #ifdef PINS_LEDS
+        /* Check if LED exists */
+        if( dwLed >= numLeds )
+        {
+            return 0;
+        }
 
-    /* Turn LED off */
-    if ( pinsLeds[dwLed].type == PIO_OUTPUT_0 )
-    {
-        PIO_Clear( &pinsLeds[dwLed] ) ;
-    }
-    else
-    {
-        PIO_Set( &pinsLeds[dwLed] ) ;
-    }
+        /* Turn LED off */
+        if( pinsLeds[ dwLed ].type == PIO_OUTPUT_0 )
+        {
+            PIO_Clear( &pinsLeds[ dwLed ] );
+        }
+        else
+        {
+            PIO_Set( &pinsLeds[ dwLed ] );
+        }
 
-    return 1 ;
-#else
-    return 0 ;
-#endif
+        return 1;
+    #else  /* ifdef PINS_LEDS */
+        return 0;
+    #endif /* ifdef PINS_LEDS */
 }
 
 /**
@@ -143,26 +141,25 @@ extern uint32_t LED_Clear( uint32_t dwLed )
  */
 extern uint32_t LED_Toggle( uint32_t dwLed )
 {
-#ifdef PINS_LEDS
-    /* Check if LED exists */
-    if ( dwLed >= numLeds )
-    {
-        return 0 ;
-    }
+    #ifdef PINS_LEDS
+        /* Check if LED exists */
+        if( dwLed >= numLeds )
+        {
+            return 0;
+        }
 
-    /* Toggle LED */
-    if ( PIO_GetOutputDataStatus( &pinsLeds[dwLed] ) )
-    {
-        PIO_Clear( &pinsLeds[dwLed] ) ;
-    }
-    else
-    {
-        PIO_Set( &pinsLeds[dwLed] ) ;
-    }
+        /* Toggle LED */
+        if( PIO_GetOutputDataStatus( &pinsLeds[ dwLed ] ) )
+        {
+            PIO_Clear( &pinsLeds[ dwLed ] );
+        }
+        else
+        {
+            PIO_Set( &pinsLeds[ dwLed ] );
+        }
 
-    return 1 ;
-#else
-    return 0 ;
-#endif
+        return 1;
+    #else  /* ifdef PINS_LEDS */
+        return 0;
+    #endif /* ifdef PINS_LEDS */
 }
-

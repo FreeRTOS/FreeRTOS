@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -29,31 +29,31 @@
 
 /** \file */
 
-/** 
+/**
  * \addtogroup mmu MMU Initialization
  *
  * \section Usage
  *
- * Translation Look-aside Buffers (TLBs) are an implementation technique that 
- * caches translations or translation table entries. TLBs avoid the requirement 
- * for every memory access to perform a translation table lookup. 
- * The ARM architecture does not specify the exact form of the TLB structures 
- * for any design. In a similar way to the requirements for caches, the 
+ * Translation Look-aside Buffers (TLBs) are an implementation technique that
+ * caches translations or translation table entries. TLBs avoid the requirement
+ * for every memory access to perform a translation table lookup.
+ * The ARM architecture does not specify the exact form of the TLB structures
+ * for any design. In a similar way to the requirements for caches, the
  * architecture only defines certain principles for TLBs:
- * 
+ *
  * The MMU supports memory accesses based on memory sections or pages:
- * Super-sections Consist of 16MB blocks of memory. Support for Super sections 
+ * Super-sections Consist of 16MB blocks of memory. Support for Super sections
  * is optional.
  * -# Sections Consist of 1MB blocks of memory.
  * -# Large pages Consist of 64KB blocks of memory.
  * -# Small pages Consist of 4KB blocks of memory.
  *
- * Access to a memory region is controlled by the access permission bits and 
+ * Access to a memory region is controlled by the access permission bits and
  * the domain field in the TLB entry.
  * Memory region attributes
- * Each TLB entry has an associated set of memory region attributes. These 
+ * Each TLB entry has an associated set of memory region attributes. These
  * control accesses to the caches,
- * how the write buffer is used, and if the memory region is Shareable and 
+ * how the write buffer is used, and if the memory region is Shareable and
  * therefore must be kept coherent.
  *
  * Related files:\n
@@ -68,8 +68,9 @@
 
 /*----------------------------------------------------------------------------
  *        Exported functions
-
+ *
  *----------------------------------------------------------------------------*/
+
 /**
  * \brief Enables the MPU module.
  *
@@ -77,7 +78,7 @@
  */
 void MPU_Enable( uint32_t dwMPUEnable )
 {
-	MPU->CTRL = dwMPUEnable ;
+    MPU->CTRL = dwMPUEnable;
 }
 
 /**
@@ -87,7 +88,7 @@ void MPU_Enable( uint32_t dwMPUEnable )
  */
 void MPU_SetRegionNum( uint32_t dwRegionNum )
 {
-	MPU->RNR = dwRegionNum;
+    MPU->RNR = dwRegionNum;
 }
 
 /**
@@ -95,19 +96,20 @@ void MPU_SetRegionNum( uint32_t dwRegionNum )
  */
 extern void MPU_DisableRegion( void )
 {
-	MPU->RASR &= 0xfffffffe;
+    MPU->RASR &= 0xfffffffe;
 }
 
 /**
  * \brief Setup a memory region.
  *
  * \param dwRegionBaseAddr  Memory region base address.
- * \param dwRegionAttr  Memory region attributes.  
+ * \param dwRegionAttr  Memory region attributes.
  */
-void MPU_SetRegion( uint32_t dwRegionBaseAddr, uint32_t dwRegionAttr )
+void MPU_SetRegion( uint32_t dwRegionBaseAddr,
+                    uint32_t dwRegionAttr )
 {
-	MPU->RBAR = dwRegionBaseAddr;
-	MPU->RASR = dwRegionAttr;
+    MPU->RBAR = dwRegionBaseAddr;
+    MPU->RASR = dwRegionAttr;
 }
 
 
@@ -116,19 +118,24 @@ void MPU_SetRegion( uint32_t dwRegionBaseAddr, uint32_t dwRegionAttr )
  */
 uint32_t MPU_CalMPURegionSize( uint32_t dwActualSizeInBytes )
 {
-	uint32_t dwRegionSize = 32;
-	uint32_t dwReturnValue = 4;
+    uint32_t dwRegionSize = 32;
+    uint32_t dwReturnValue = 4;
 
-	while( dwReturnValue < 31 ) {
-		if( dwActualSizeInBytes <= dwRegionSize ) {
-			break;
-		} else {
-			dwReturnValue++;
-		}
-		dwRegionSize <<= 1;
-	}
+    while( dwReturnValue < 31 )
+    {
+        if( dwActualSizeInBytes <= dwRegionSize )
+        {
+            break;
+        }
+        else
+        {
+            dwReturnValue++;
+        }
 
-	return ( dwReturnValue << 1 );
+        dwRegionSize <<= 1;
+    }
+
+    return( dwReturnValue << 1 );
 }
 
 
@@ -137,32 +144,31 @@ uint32_t MPU_CalMPURegionSize( uint32_t dwActualSizeInBytes )
  *
  *  \return Unused (ANSI-C compatibility).
  */
-void MPU_UpdateRegions( uint32_t dwRegionNum, uint32_t dwRegionBaseAddr,
-		uint32_t dwRegionAttr)
+void MPU_UpdateRegions( uint32_t dwRegionNum,
+                        uint32_t dwRegionBaseAddr,
+                        uint32_t dwRegionAttr )
 {
-	
-	/* Disable interrupt */
-	__disable_irq();
+    /* Disable interrupt */
+    __disable_irq();
 
-	/* Clean up data and instruction buffer */
-	__DSB();
-	__ISB();
+    /* Clean up data and instruction buffer */
+    __DSB();
+    __ISB();
 
-	/* Set active region */
-	MPU_SetRegionNum(dwRegionNum);
+    /* Set active region */
+    MPU_SetRegionNum( dwRegionNum );
 
-	/* Disable region */
-	MPU_DisableRegion();
+    /* Disable region */
+    MPU_DisableRegion();
 
-	/* Update region attribute */
-	MPU_SetRegion( dwRegionBaseAddr, dwRegionAttr);
+    /* Update region attribute */
+    MPU_SetRegion( dwRegionBaseAddr, dwRegionAttr );
 
-	/* Clean up data and instruction buffer to make the new region taking 
-	   effect at once */
-	__DSB();
-	__ISB();
+    /* Clean up data and instruction buffer to make the new region taking
+     * effect at once */
+    __DSB();
+    __ISB();
 
-	/* Enable the interrupt */
-	__enable_irq();
+    /* Enable the interrupt */
+    __enable_irq();
 }
-

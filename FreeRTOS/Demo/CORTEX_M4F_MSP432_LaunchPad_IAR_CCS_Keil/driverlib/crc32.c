@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -39,109 +39,136 @@
 #include <debug.h>
 #include <hw_memmap.h>
 
-void CRC32_setSeed(uint32_t seed, uint_fast8_t crcType)
+void CRC32_setSeed( uint32_t seed,
+                    uint_fast8_t crcType )
 {
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
 
-    if (CRC16_MODE == crcType)
+    if( CRC16_MODE == crcType )
+    {
         CRC32->INIRES16 = seed;
+    }
     else
     {
-        CRC32->INIRES32_HI = ((seed & 0xFFFF0000) >> 16);
-        CRC32->INIRES32_LO = (seed & 0xFFFF);
+        CRC32->INIRES32_HI = ( ( seed & 0xFFFF0000 ) >> 16 );
+        CRC32->INIRES32_LO = ( seed & 0xFFFF );
     }
 }
 
-void CRC32_set8BitData(uint8_t dataIn, uint_fast8_t crcType)
+void CRC32_set8BitData( uint8_t dataIn,
+                        uint_fast8_t crcType )
 {
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
 
-    if (CRC16_MODE == crcType)
-        HWREG8(&(CRC32->DI16)) = dataIn;
+    if( CRC16_MODE == crcType )
+    {
+        HWREG8( &( CRC32->DI16 ) ) = dataIn;
+    }
     else
-    	HWREG8(&(CRC32->DI32)) = dataIn;
+    {
+        HWREG8( &( CRC32->DI32 ) ) = dataIn;
+    }
 }
 
-void CRC32_set16BitData(uint16_t dataIn, uint_fast8_t crcType)
+void CRC32_set16BitData( uint16_t dataIn,
+                         uint_fast8_t crcType )
 {
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
 
-    if (CRC16_MODE == crcType)
+    if( CRC16_MODE == crcType )
+    {
         CRC32->DI16 = dataIn;
+    }
     else
+    {
         CRC32->DI32 = dataIn;
+    }
 }
 
-void CRC32_set32BitData(uint32_t dataIn)
+void CRC32_set32BitData( uint32_t dataIn )
 {
-    //CRC32->DI32 = dataIn & 0xFFFF;
-    //CRC32->DI32 = (uint16_t) ((dataIn & 0xFFFF0000) >> 16);
+    /*CRC32->DI32 = dataIn & 0xFFFF; */
+    /*CRC32->DI32 = (uint16_t) ((dataIn & 0xFFFF0000) >> 16); */
 
-    HWREG16(&(CRC32->DI32)) = dataIn & 0xFFFF;
-    HWREG16(&(CRC32->DI32)) = (uint16_t)(
-            (dataIn & 0xFFFF0000) >> 16);
+    HWREG16( &( CRC32->DI32 ) ) = dataIn & 0xFFFF;
+    HWREG16( &( CRC32->DI32 ) ) = ( uint16_t ) (
+        ( dataIn & 0xFFFF0000 ) >> 16 );
 }
 
-void CRC32_set8BitDataReversed(uint8_t dataIn, uint_fast8_t crcType)
+void CRC32_set8BitDataReversed( uint8_t dataIn,
+                                uint_fast8_t crcType )
 {
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
 
-    if (CRC16_MODE == crcType)
-        HWREG8(&(CRC32->DIRB16)) = dataIn;
+    if( CRC16_MODE == crcType )
+    {
+        HWREG8( &( CRC32->DIRB16 ) ) = dataIn;
+    }
     else
-    	HWREG8(&(CRC32->DIRB32)) = dataIn;
+    {
+        HWREG8( &( CRC32->DIRB32 ) ) = dataIn;
+    }
 }
 
-void CRC32_set16BitDataReversed(uint16_t dataIn, uint_fast8_t crcType)
+void CRC32_set16BitDataReversed( uint16_t dataIn,
+                                 uint_fast8_t crcType )
 {
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
 
-    if (CRC16_MODE == crcType)
+    if( CRC16_MODE == crcType )
+    {
         CRC32->DIRB16 = dataIn;
+    }
     else
+    {
         CRC32->DIRB32 = dataIn;
+    }
 }
 
-void CRC32_set32BitDataReversed(uint32_t dataIn)
+void CRC32_set32BitDataReversed( uint32_t dataIn )
 {
-    //CRC32->DIRB32 = dataIn & 0xFFFF;
-    //CRC32->DIRB32 = (uint16_t) ((dataIn & 0xFFFF0000) >> 16);
+    /*CRC32->DIRB32 = dataIn & 0xFFFF; */
+    /*CRC32->DIRB32 = (uint16_t) ((dataIn & 0xFFFF0000) >> 16); */
 
-    HWREG16(&(CRC32->DIRB32)) = dataIn & 0xFFFF;
-    HWREG16(&(CRC32->DIRB32)) = (uint16_t)(
-            (dataIn & 0xFFFF0000) >> 16);
-
+    HWREG16( &( CRC32->DIRB32 ) ) = dataIn & 0xFFFF;
+    HWREG16( &( CRC32->DIRB32 ) ) = ( uint16_t ) (
+        ( dataIn & 0xFFFF0000 ) >> 16 );
 }
 
-uint32_t CRC32_getResult(uint_fast8_t crcType)
+uint32_t CRC32_getResult( uint_fast8_t crcType )
 {
     uint32_t result;
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
 
-    if (CRC16_MODE == crcType)
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
+
+    if( CRC16_MODE == crcType )
+    {
         return CRC32->INIRES16;
+    }
     else
     {
         result = CRC32->INIRES32_HI;
-        result = (result << 16);
+        result = ( result << 16 );
         result |= CRC32->INIRES32_LO;
-        return (result);
+        return( result );
     }
 }
 
-uint32_t CRC32_getResultReversed(uint_fast8_t crcType)
+uint32_t CRC32_getResultReversed( uint_fast8_t crcType )
 {
     uint32_t result;
-    ASSERT((CRC16_MODE == crcType) || (CRC32_MODE == crcType));
 
-    if (CRC16_MODE == crcType)
+    ASSERT( ( CRC16_MODE == crcType ) || ( CRC32_MODE == crcType ) );
+
+    if( CRC16_MODE == crcType )
+    {
         return CRC32->RESR16;
+    }
     else
     {
         result = CRC32->RESR32_HI;
-        result = (result << 16);
+        result = ( result << 16 );
         result |= CRC32->RESR32_LO;
-        return (result);
+        return( result );
     }
 }
-

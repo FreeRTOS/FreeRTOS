@@ -2,7 +2,7 @@
  * Copyright (c) 2013 - 2015, Freescale Semiconductor, Inc.
  * Copyright 2016-2017 NXP
  * All rights reserved.
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
  *
  * Debug console shall provide input and output functions to scan and print formatted data.
@@ -20,9 +20,10 @@
  */
 
 #ifndef _FSL_DEBUGCONSOLE_H_
-#define _FSL_DEBUGCONSOLE_H_
+    #define _FSL_DEBUGCONSOLE_H_
 
-#include "fsl_common.h"
+    #include "fsl_common.h"
+
 /*
  * @addtogroup debugconsole
  * @{
@@ -33,33 +34,33 @@
  ******************************************************************************/
 
 /*! @brief Definition to select sdk or toolchain printf, scanf. */
-#ifndef SDK_DEBUGCONSOLE
-#define SDK_DEBUGCONSOLE 1U
-#endif
+    #ifndef SDK_DEBUGCONSOLE
+        #define SDK_DEBUGCONSOLE    1U
+    #endif
 
-#if defined(SDK_DEBUGCONSOLE) && !(SDK_DEBUGCONSOLE)
-#include <stdio.h>
-#endif
+    #if defined( SDK_DEBUGCONSOLE ) && !( SDK_DEBUGCONSOLE )
+        #include <stdio.h>
+    #endif
 
-#if SDK_DEBUGCONSOLE /* Select printf, scanf, putchar, getchar of SDK version. */
-#define PRINTF DbgConsole_Printf
-#define SCANF DbgConsole_Scanf
-#define PUTCHAR DbgConsole_Putchar
-#define GETCHAR DbgConsole_Getchar
-#else /* Select printf, scanf, putchar, getchar of toolchain. */
-#define PRINTF printf
-#define SCANF scanf
-#define PUTCHAR putchar
-#define GETCHAR getchar
-#endif /* SDK_DEBUGCONSOLE */
+    #if SDK_DEBUGCONSOLE /* Select printf, scanf, putchar, getchar of SDK version. */
+        #define PRINTF     DbgConsole_Printf
+        #define SCANF      DbgConsole_Scanf
+        #define PUTCHAR    DbgConsole_Putchar
+        #define GETCHAR    DbgConsole_Getchar
+    #else /* Select printf, scanf, putchar, getchar of toolchain. */
+        #define PRINTF     printf
+        #define SCANF      scanf
+        #define PUTCHAR    putchar
+        #define GETCHAR    getchar
+    #endif /* SDK_DEBUGCONSOLE */
 
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
 
-#if defined(__cplusplus)
-extern "C" {
-#endif /* __cplusplus */
+    #if defined( __cplusplus )
+    extern "C" {
+    #endif /* __cplusplus */
 
 /*! @name Initialization*/
 /* @{ */
@@ -85,7 +86,10 @@ extern "C" {
  * @retval kStatus_Fail             Execution failure
  * @retval kStatus_InvalidArgument  Invalid argument existed
  */
-status_t DbgConsole_Init(uint32_t baseAddr, uint32_t baudRate, uint8_t device, uint32_t clkSrcFreq);
+    status_t DbgConsole_Init( uint32_t baseAddr,
+                              uint32_t baudRate,
+                              uint8_t device,
+                              uint32_t clkSrcFreq );
 
 /*!
  * @brief De-initializes the peripheral used for debug messages.
@@ -95,7 +99,7 @@ status_t DbgConsole_Init(uint32_t baseAddr, uint32_t baudRate, uint8_t device, u
  *
  * @return Indicates whether de-initialization was successful or not.
  */
-status_t DbgConsole_Deinit(void);
+    status_t DbgConsole_Deinit( void );
 
 /*!
  * @brief Debug console flush log.
@@ -107,9 +111,10 @@ status_t DbgConsole_Deinit(void);
  * 2, log is required to print to terminal immediately
  * @return Indicates whether wait idle was successful or not.
  */
-status_t DbgConsole_Flush(void);
+    status_t DbgConsole_Flush( void );
 
-#if SDK_DEBUGCONSOLE
+    #if SDK_DEBUGCONSOLE
+
 /*!
  * @brief Writes formatted output to the standard output stream.
  *
@@ -118,7 +123,8 @@ status_t DbgConsole_Flush(void);
  * @param   fmt_s Format control string.
  * @return  Returns the number of characters printed or a negative value if an error occurs.
  */
-int DbgConsole_Printf(const char *fmt_s, ...);
+        int DbgConsole_Printf( const char * fmt_s,
+                               ... );
 
 /*!
  * @brief Writes a character to stdout.
@@ -128,7 +134,7 @@ int DbgConsole_Printf(const char *fmt_s, ...);
  * @param   ch Character to be written.
  * @return  Returns the character written.
  */
-int DbgConsole_Putchar(int ch);
+        int DbgConsole_Putchar( int ch );
 
 /*!
  * @brief Reads formatted data from the standard input stream.
@@ -138,7 +144,8 @@ int DbgConsole_Putchar(int ch);
  * @param   fmt_ptr Format control string.
  * @return  Returns the number of fields successfully converted and assigned.
  */
-int DbgConsole_Scanf(char *fmt_ptr, ...);
+        int DbgConsole_Scanf( char * fmt_ptr,
+                              ... );
 
 /*!
  * @brief Reads a character from standard input.
@@ -147,15 +154,15 @@ int DbgConsole_Scanf(char *fmt_ptr, ...);
  *
  * @return Returns the character read.
  */
-int DbgConsole_Getchar(void);
+        int DbgConsole_Getchar( void );
 
-#endif /* SDK_DEBUGCONSOLE */
+    #endif /* SDK_DEBUGCONSOLE */
 
 /*! @} */
 
-#if defined(__cplusplus)
+    #if defined( __cplusplus )
 }
-#endif /* __cplusplus */
+    #endif /* __cplusplus */
 
 /*! @} */
 

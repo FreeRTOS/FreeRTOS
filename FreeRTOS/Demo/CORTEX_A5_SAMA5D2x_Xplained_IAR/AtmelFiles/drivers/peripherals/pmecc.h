@@ -35,32 +35,34 @@
 /*----------------------------------------------------------------------- */
 
 /** Start address of ECC cvalue in spare zone, this must not be 0 since Bad block tag are at 0. */
-#define PMECC_ECC_DEFAULT_START_ADDR   0x02
+#define PMECC_ECC_DEFAULT_START_ADDR    0x02
 
 /*------------------------------------------------------------------------------ */
 /*         Exported functions                                                    */
 /*------------------------------------------------------------------------------ */
 
-extern uint8_t pmecc_initialize(uint8_t sector_size,
-		uint8_t ecc_errors_per_sector,
-		uint32_t page_data_size,
-		uint32_t page_spare_size,
-		uint16_t ecc_offset_in_spare,
-		uint8_t spare_protected);
+extern uint8_t pmecc_initialize( uint8_t sector_size,
+                                 uint8_t ecc_errors_per_sector,
+                                 uint32_t page_data_size,
+                                 uint32_t page_spare_size,
+                                 uint16_t ecc_offset_in_spare,
+                                 uint8_t spare_protected );
 
-extern uint32_t pmecc_get_page_size(void);
+extern uint32_t pmecc_get_page_size( void );
 
-extern uint32_t pmecc_get_ecc_bytes(void);
+extern uint32_t pmecc_get_ecc_bytes( void );
 
-extern uint32_t pmecc_get_ecc_start_address(void);
+extern uint32_t pmecc_get_ecc_start_address( void );
 
-extern uint32_t pmecc_get_ecc_end_address(void);
+extern uint32_t pmecc_get_ecc_end_address( void );
 
-extern uint32_t pmecc_correction(uint32_t pmecc_status, uint32_t page_buffer);
+extern uint32_t pmecc_correction( uint32_t pmecc_status,
+                                  uint32_t page_buffer );
 
-extern void build_gf(uint32_t mm, int32_t *index_of, int32_t *alpha_to);
+extern void build_gf( uint32_t mm,
+                      int32_t * index_of,
+                      int32_t * alpha_to );
 
-extern void pmecc_disable(void);
+extern void pmecc_disable( void );
 
-#endif
-
+#endif /* ifndef PMECC_H */

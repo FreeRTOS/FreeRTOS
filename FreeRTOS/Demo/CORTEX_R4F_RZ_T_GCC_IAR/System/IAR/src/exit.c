@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : exit.c
@@ -33,52 +34,52 @@
 * Description  : exit sequence from main function
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
 *******************************************************************************/
 
 /*******************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 *******************************************************************************/
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
 
 /*******************************************************************************
-Typedef definitions
+*  Typedef definitions
 *******************************************************************************/
 
 /*******************************************************************************
-Imported global variables and functions (from other files)
+*  Imported global variables and functions (from other files)
 *******************************************************************************/
 
 /*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Exported global variables and functions (to be accessed by other files)
 *******************************************************************************/
 
 /*******************************************************************************
-Private variables and functions
+*  Private variables and functions
 *******************************************************************************/
 
 /*******************************************************************************
 * Outline      : exit processing
 * Function Name: __exit
-* Description  : exit sequence from main function.   
-* Arguments    : code 
+* Description  : exit sequence from main function.
+* Arguments    : code
 *                  The return value of main function.
 * Return Value : none
 *******************************************************************************/
-void __exit(int code)
+void __exit( int code )
 {
-   
-    while (1)
+    while( 1 )
     {
-        /* Please describe the exit sequence */   
+        /* Please describe the exit sequence */
     }
-
 }
+
 /*******************************************************************************
- End of function __exit
+*  End of function __exit
 *******************************************************************************/

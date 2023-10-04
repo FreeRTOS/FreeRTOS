@@ -156,7 +156,7 @@ No errors
 
 ## Running All Tests
 
-1. Define all the `configSTART_<Test_Name>_TESTS` macros to `1` in your 
+1. Define all the `configSTART_<Test_Name>_TESTS` macros to `1` in your
 `FreeRTOSConfig.h`.
 2. Build and run the tests. The output should look like the following:
 ```

@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       UARTCC32XX.h
  *
@@ -84,41 +85,41 @@
  */
 
 #ifndef ti_drivers_uart_UARTCC32XX__include
-#define ti_drivers_uart_UARTCC32XX__include
+    #define ti_drivers_uart_UARTCC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
+    #include <stdint.h>
+    #include <stdbool.h>
 
-#include <ti/drivers/dpl/ClockP.h>
-#include <ti/drivers/dpl/HwiP.h>
-#include <ti/drivers/dpl/SemaphoreP.h>
-#include <ti/drivers/Power.h>
-#include <ti/drivers/UART.h>
-#include <ti/drivers/utils/RingBuf.h>
+    #include <ti/drivers/dpl/ClockP.h>
+    #include <ti/drivers/dpl/HwiP.h>
+    #include <ti/drivers/dpl/SemaphoreP.h>
+    #include <ti/drivers/Power.h>
+    #include <ti/drivers/UART.h>
+    #include <ti/drivers/utils/RingBuf.h>
 
 
-#define UARTCC32XX_PIN_01_UART1_TX  0x700
-#define UARTCC32XX_PIN_02_UART1_RX  0x701
-#define UARTCC32XX_PIN_03_UART0_TX  0x702
-#define UARTCC32XX_PIN_04_UART0_RX  0x703
-#define UARTCC32XX_PIN_07_UART1_TX  0x506
-#define UARTCC32XX_PIN_08_UART1_RX  0x507
-#define UARTCC32XX_PIN_16_UART1_TX  0x20F
-#define UARTCC32XX_PIN_17_UART1_RX  0x210
-#define UARTCC32XX_PIN_45_UART0_RX  0x92C
-#define UARTCC32XX_PIN_45_UART1_RX  0x22C
-#define UARTCC32XX_PIN_53_UART0_TX  0x934
-#define UARTCC32XX_PIN_55_UART0_TX  0x336
-#define UARTCC32XX_PIN_55_UART1_TX  0x636
-#define UARTCC32XX_PIN_57_UART0_RX  0x338
-#define UARTCC32XX_PIN_57_UART1_RX  0x638
-#define UARTCC32XX_PIN_58_UART1_TX  0x639
-#define UARTCC32XX_PIN_59_UART1_RX  0x63A
-#define UARTCC32XX_PIN_62_UART0_TX  0xB3D
+    #define UARTCC32XX_PIN_01_UART1_TX    0x700
+    #define UARTCC32XX_PIN_02_UART1_RX    0x701
+    #define UARTCC32XX_PIN_03_UART0_TX    0x702
+    #define UARTCC32XX_PIN_04_UART0_RX    0x703
+    #define UARTCC32XX_PIN_07_UART1_TX    0x506
+    #define UARTCC32XX_PIN_08_UART1_RX    0x507
+    #define UARTCC32XX_PIN_16_UART1_TX    0x20F
+    #define UARTCC32XX_PIN_17_UART1_RX    0x210
+    #define UARTCC32XX_PIN_45_UART0_RX    0x92C
+    #define UARTCC32XX_PIN_45_UART1_RX    0x22C
+    #define UARTCC32XX_PIN_53_UART0_TX    0x934
+    #define UARTCC32XX_PIN_55_UART0_TX    0x336
+    #define UARTCC32XX_PIN_55_UART1_TX    0x636
+    #define UARTCC32XX_PIN_57_UART0_RX    0x338
+    #define UARTCC32XX_PIN_57_UART1_RX    0x638
+    #define UARTCC32XX_PIN_58_UART1_TX    0x639
+    #define UARTCC32XX_PIN_59_UART1_RX    0x63A
+    #define UARTCC32XX_PIN_62_UART0_TX    0xB3D
 
 
 /**
@@ -153,7 +154,7 @@ extern "C" {
  * @b *arg contains @c true if the UART is transmitting,
  * else @c false if all transmissions are complete.
  */
-#define UARTCC32XX_CMD_IS_BUSY                  (UART_CMD_RESERVED + 0)
+    #define UARTCC32XX_CMD_IS_BUSY    ( UART_CMD_RESERVED + 0 )
 
 
 /*!
@@ -164,7 +165,7 @@ extern "C" {
  * @b *arg contains @c true if there is data in the receive FIFO,
  * or @c false if there is no data in the receive FIFO.
  */
-#define UARTCC32XX_CMD_IS_RX_DATA_AVAILABLE     (UART_CMD_RESERVED + 1)
+    #define UARTCC32XX_CMD_IS_RX_DATA_AVAILABLE    ( UART_CMD_RESERVED + 1 )
 
 
 /*!
@@ -175,13 +176,13 @@ extern "C" {
  * @b *arg contains @c true if there is space available in the transmit FIFO,
  * or @c false if there is no space available in the transmit FIFO.
  */
-#define UARTCC32XX_CMD_IS_TX_SPACE_AVAILABLE    (UART_CMD_RESERVED + 2)
+    #define UARTCC32XX_CMD_IS_TX_SPACE_AVAILABLE    ( UART_CMD_RESERVED + 2 )
 
 
 /** @}*/
 
 /* UART function table pointer */
-extern const UART_FxnTable UARTCC32XX_fxnTable;
+    extern const UART_FxnTable UARTCC32XX_fxnTable;
 
 /*!
  *  @brief Complement set of read functions to be used by the UART ISR and
@@ -204,10 +205,11 @@ extern const UART_FxnTable UARTCC32XX_fxnTable;
  *
  *  readIsrFxn:     The required ISR counterpart to readTaskFxn
  */
-typedef struct UARTCC32XX_FxnSet {
-    bool (*readIsrFxn)  (UART_Handle handle);
-    int  (*readTaskFxn) (UART_Handle handle);
-} UARTCC32XX_FxnSet;
+    typedef struct UARTCC32XX_FxnSet
+    {
+        bool ( * readIsrFxn )( UART_Handle handle );
+        int ( * readTaskFxn )( UART_Handle handle );
+    } UARTCC32XX_FxnSet;
 
 /*!
  *  @brief      UARTCC32XX Hardware attributes
@@ -257,96 +259,102 @@ typedef struct UARTCC32XX_FxnSet {
  *  };
  *  @endcode
  */
-typedef struct UARTCC32XX_HWAttrsV1 {
-    /*! UART Peripheral's base address */
-    unsigned int    baseAddr;
-    /*! UART Peripheral's interrupt vector */
-    unsigned int    intNum;
-    /*! UART Peripheral's interrupt priority */
-    unsigned int    intPriority;
-    /*! Hardware flow control setting defined by driverlib */
-    uint32_t        flowControl;
-    /*! Pointer to an application ring buffer */
-    unsigned char  *ringBufPtr;
-    /*! Size of ringBufPtr */
-    size_t          ringBufSize;
-    /*! UART RX pin assignment */
-    uint16_t        rxPin;
-    /*! UART TX pin assignment */
-    uint16_t        txPin;
-} UARTCC32XX_HWAttrsV1;
+    typedef struct UARTCC32XX_HWAttrsV1
+    {
+        /*! UART Peripheral's base address */
+        unsigned int baseAddr;
+        /*! UART Peripheral's interrupt vector */
+        unsigned int intNum;
+        /*! UART Peripheral's interrupt priority */
+        unsigned int intPriority;
+        /*! Hardware flow control setting defined by driverlib */
+        uint32_t flowControl;
+        /*! Pointer to an application ring buffer */
+        unsigned char * ringBufPtr;
+        /*! Size of ringBufPtr */
+        size_t ringBufSize;
+        /*! UART RX pin assignment */
+        uint16_t rxPin;
+        /*! UART TX pin assignment */
+        uint16_t txPin;
+    } UARTCC32XX_HWAttrsV1;
 
 /*!
  *  @brief      UARTCC32XX Object
  *
  *  The application must not access any member variables of this structure!
  */
-typedef struct UARTCC32XX_Object {
-    /* UART state variable */
-    struct {
-        bool             opened:1;         /* Has the obj been opened */
-        UART_Mode        readMode:1;       /* Mode for all read calls */
-        UART_Mode        writeMode:1;      /* Mode for all write calls */
-        UART_DataMode    readDataMode:1;   /* Type of data being read */
-        UART_DataMode    writeDataMode:1;  /* Type of data being written */
-        UART_ReturnMode  readReturnMode:1; /* Receive return mode */
-        UART_Echo        readEcho:1;       /* Echo received data back */
-        /*
-         * Flag to determine if a timeout has occurred when the user called
-         * UART_read(). This flag is set by the timeoutClk clock object.
-         */
-        bool             bufTimeout:1;
-        /*
-         * Flag to determine when an ISR needs to perform a callback; in both
-         * UART_MODE_BLOCKING or UART_MODE_CALLBACK
-         */
-        bool             callCallback:1;
-        /*
-         * Flag to determine if the ISR is in control draining the ring buffer
-         * when in UART_MODE_CALLBACK
-         */
-        bool             drainByISR:1;
-        /* Flag to keep the state of the read Power constraints */
-        bool             rxEnabled:1;
-        /* Flag to keep the state of the write Power constraints */
-        bool             txEnabled:1;
-    } state;
+    typedef struct UARTCC32XX_Object
+    {
+        /* UART state variable */
+        struct
+        {
+            bool opened : 1;                    /* Has the obj been opened */
+            UART_Mode readMode : 1;             /* Mode for all read calls */
+            UART_Mode writeMode : 1;            /* Mode for all write calls */
+            UART_DataMode readDataMode : 1;     /* Type of data being read */
+            UART_DataMode writeDataMode : 1;    /* Type of data being written */
+            UART_ReturnMode readReturnMode : 1; /* Receive return mode */
+            UART_Echo readEcho : 1;             /* Echo received data back */
 
-    HwiP_Handle          hwiHandle;        /* Hwi handle for interrupts */
-    ClockP_Handle        timeoutClk;       /* Clock object to for timeouts */
-    uint32_t             baudRate;         /* Baud rate for UART */
-    UART_LEN             dataLength;       /* Data length for UART */
-    UART_STOP            stopBits;         /* Stop bits for UART */
-    UART_PAR             parityType;       /* Parity bit type for UART */
+            /*
+             * Flag to determine if a timeout has occurred when the user called
+             * UART_read(). This flag is set by the timeoutClk clock object.
+             */
+            bool bufTimeout : 1;
 
-    /* UART read variables */
-    RingBuf_Object       ringBuffer;       /* local circular buffer object */
-    /* A complement pair of read functions for both the ISR and UART_read() */
-    UARTCC32XX_FxnSet    readFxns;
-    unsigned char       *readBuf;          /* Buffer data pointer */
-    size_t               readSize;         /* Desired number of bytes to read */
-    size_t               readCount;        /* Number of bytes left to read */
-    SemaphoreP_Handle    readSem;          /* UART read semaphore */
-    unsigned int         readTimeout;      /* Timeout for read semaphore */
-    UART_Callback        readCallback;     /* Pointer to read callback */
+            /*
+             * Flag to determine when an ISR needs to perform a callback; in both
+             * UART_MODE_BLOCKING or UART_MODE_CALLBACK
+             */
+            bool callCallback : 1;
 
-    /* UART write variables */
-    const unsigned char *writeBuf;         /* Buffer data pointer */
-    size_t               writeSize;        /* Desired number of bytes to write*/
-    size_t               writeCount;       /* Number of bytes left to write */
-    SemaphoreP_Handle    writeSem;         /* UART write semaphore*/
-    unsigned int         writeTimeout;     /* Timeout for write semaphore */
-    UART_Callback        writeCallback;    /* Pointer to write callback */
-    unsigned int         writeEmptyClkTimeout; /* TX FIFO timeout tick count */
+            /*
+             * Flag to determine if the ISR is in control draining the ring buffer
+             * when in UART_MODE_CALLBACK
+             */
+            bool drainByISR : 1;
+            /* Flag to keep the state of the read Power constraints */
+            bool rxEnabled : 1;
+            /* Flag to keep the state of the write Power constraints */
+            bool txEnabled : 1;
+        } state;
 
-    /* For Power management */
-    ClockP_Handle        txFifoEmptyClk;   /* UART TX FIFO empty clock */
-    Power_NotifyObj      postNotify;       /* LPDS wake-up notify object */
-    unsigned int         powerMgrId;       /* Determined from base address */
-} UARTCC32XX_Object, *UARTCC32XX_Handle;
+        HwiP_Handle hwiHandle;             /* Hwi handle for interrupts */
+        ClockP_Handle timeoutClk;          /* Clock object to for timeouts */
+        uint32_t baudRate;                 /* Baud rate for UART */
+        UART_LEN dataLength;               /* Data length for UART */
+        UART_STOP stopBits;                /* Stop bits for UART */
+        UART_PAR parityType;               /* Parity bit type for UART */
 
-#ifdef __cplusplus
+        /* UART read variables */
+        RingBuf_Object ringBuffer;         /* local circular buffer object */
+        /* A complement pair of read functions for both the ISR and UART_read() */
+        UARTCC32XX_FxnSet readFxns;
+        unsigned char * readBuf;           /* Buffer data pointer */
+        size_t readSize;                   /* Desired number of bytes to read */
+        size_t readCount;                  /* Number of bytes left to read */
+        SemaphoreP_Handle readSem;         /* UART read semaphore */
+        unsigned int readTimeout;          /* Timeout for read semaphore */
+        UART_Callback readCallback;        /* Pointer to read callback */
+
+        /* UART write variables */
+        const unsigned char * writeBuf;    /* Buffer data pointer */
+        size_t writeSize;                  /* Desired number of bytes to write*/
+        size_t writeCount;                 /* Number of bytes left to write */
+        SemaphoreP_Handle writeSem;        /* UART write semaphore*/
+        unsigned int writeTimeout;         /* Timeout for write semaphore */
+        UART_Callback writeCallback;       /* Pointer to write callback */
+        unsigned int writeEmptyClkTimeout; /* TX FIFO timeout tick count */
+
+        /* For Power management */
+        ClockP_Handle txFifoEmptyClk;      /* UART TX FIFO empty clock */
+        Power_NotifyObj postNotify;        /* LPDS wake-up notify object */
+        unsigned int powerMgrId;           /* Determined from base address */
+    } UARTCC32XX_Object, * UARTCC32XX_Handle;
+
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_uart_UARTCC32XX__include */

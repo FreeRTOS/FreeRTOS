@@ -35,93 +35,96 @@
  */
 
 #ifndef _UART_DMA_
-#define _UART_DMA_
+    #define _UART_DMA_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "chip.h"
+    #include "chip.h"
 
 /*----------------------------------------------------------------------------
  *        Definitions
  *----------------------------------------------------------------------------*/
 
 /** An unspecified error has occured.*/
-#define UARTD_ERROR          1
+    #define UARTD_ERROR         1
 
 /** UART driver is currently in use.*/
-#define UARTD_ERROR_LOCK     2
+    #define UARTD_ERROR_LOCK    2
 
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
 
 /** UART transfer complete callback. */
-typedef void (*UartdCallback)( uint8_t, void* ) ;
+    typedef void (* UartdCallback)( uint8_t,
+                                    void * );
 
 /** \brief usart Transfer Request prepared by the application upper layer.
  *
  * This structure is sent to the UART_Send or UART_Rcv to start the transfer.
  * At the end of the transfer, the callback is invoked by the interrupt handler.
  */
-typedef struct
-{
-    /** Pointer to the Buffer. */
-    uint8_t *pBuff;
-    /** Buff size in bytes. */
-    uint8_t BuffSize;
-    /** Dma channel num. */
-    uint32_t ChNum;
-    /** Callback function invoked at the end of transfer. */
-    UartdCallback callback;
-    /** Callback arguments. */
-    void *pArgument;
-   /** flag to indicate the current transfer. */
-    volatile uint8_t sempaphore;
-} UartChannel ;
+    typedef struct
+    {
+        /** Pointer to the Buffer. */
+        uint8_t * pBuff;
+        /** Buff size in bytes. */
+        uint8_t BuffSize;
+        /** Dma channel num. */
+        uint32_t ChNum;
+        /** Callback function invoked at the end of transfer. */
+        UartdCallback callback;
+        /** Callback arguments. */
+        void * pArgument;
+        /** flag to indicate the current transfer. */
+        volatile uint8_t sempaphore;
+    } UartChannel;
 
 /** Constant structure associated with UART port. This structure prevents
-    client applications to have access in the same time. */
-typedef struct 
-{
-    /** Pointer to UART Hardware registers */
-    Uart* pUartHw ;
-    /** Current Uart Rx channel */
-    UartChannel *pRxChannel ;
-    /** Current Uart Tx channel */
-    UartChannel *pTxChannel ;
-    /** Pointer to DMA driver */
-    sXdmad* pXdmad;
-    /** USART Id as defined in the product datasheet */
-    uint8_t uartId ;
-} UartDma;
+ *  client applications to have access in the same time. */
+    typedef struct
+    {
+        /** Pointer to UART Hardware registers */
+        Uart * pUartHw;
+        /** Current Uart Rx channel */
+        UartChannel * pRxChannel;
+        /** Current Uart Tx channel */
+        UartChannel * pTxChannel;
+        /** Pointer to DMA driver */
+        sXdmad * pXdmad;
+        /** USART Id as defined in the product datasheet */
+        uint8_t uartId;
+    } UartDma;
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern uint32_t UARTD_Configure( UartDma *pUartd ,
-                                 Uart *pUartHw ,
-                                 uint8_t uartId,
-                                 uint32_t UartMode,
-                                 sXdmad *pXdmad );
+    extern uint32_t UARTD_Configure( UartDma * pUartd,
+                                     Uart * pUartHw,
+                                     uint8_t uartId,
+                                     uint32_t UartMode,
+                                     sXdmad * pXdmad );
 
-extern uint32_t UARTD_EnableTxChannels( UartDma *pUartd, UartChannel *pTxCh);
+    extern uint32_t UARTD_EnableTxChannels( UartDma * pUartd,
+                                            UartChannel * pTxCh );
 
-extern uint32_t UARTD_EnableRxChannels( UartDma *pUartd, UartChannel *pRxCh);
+    extern uint32_t UARTD_EnableRxChannels( UartDma * pUartd,
+                                            UartChannel * pRxCh );
 
-extern uint32_t UARTD_SendData( UartDma* pUartd ) ;
+    extern uint32_t UARTD_SendData( UartDma * pUartd );
 
-extern uint32_t UARTD_RcvData( UartDma *pUartd);
+    extern uint32_t UARTD_RcvData( UartDma * pUartd );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _UART_DMA_ */

@@ -55,9 +55,9 @@
 #include "lwipopts.h"
 
 #ifdef PROCESSOR_LITTLE_ENDIAN
-#define BYTE_ORDER LITTLE_ENDIAN
+    #define BYTE_ORDER    LITTLE_ENDIAN
 #else
-#define BYTE_ORDER BIG_ENDIAN
+    #define BYTE_ORDER    BIG_ENDIAN
 #endif
 
 #endif /* __ARCH_CPU_H__ */

@@ -24,55 +24,64 @@
 #define __TYPE_H__
 
 #ifndef NULL
-#define NULL    ((void *)0)
+    #define NULL    ( ( void * ) 0 )
 #endif
 
 #ifndef FALSE
-#define FALSE   (0)
+    #define FALSE    ( 0 )
 #endif
 
 #ifndef TRUE
-#define TRUE    (1)
+    #define TRUE    ( 1 )
 #endif
 
-#define ABS(value)	(value<0 ? -value : value)
+#define ABS( value )    ( value < 0 ? -value : value )
 
 /**
  * @brief Flag Status and Interrupt Flag Status type definition
  */
-typedef enum {RESET = 0, SET = !RESET} FlagStatus, IntStatus, SetState;
-#define PARAM_SETSTATE(State) ((State==RESET) || (State==SET))
+typedef enum
+{
+    RESET = 0, SET = !RESET
+} FlagStatus, IntStatus, SetState;
+#define PARAM_SETSTATE( State )    ( ( State == RESET ) || ( State == SET ) )
 
 /**
  * @brief Functional State Definition
  */
-typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
-#define PARAM_FUNCTIONALSTATE(State) ((State==DISABLE) || (State==ENABLE))
+typedef enum
+{
+    DISABLE = 0, ENABLE = !DISABLE
+} FunctionalState;
+#define PARAM_FUNCTIONALSTATE( State )    ( ( State == DISABLE ) || ( State == ENABLE ) )
 
 /**
  * @ Status type definition
  */
-typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
+typedef enum
+{
+    ERROR = 0, SUCCESS = !ERROR
+} Status;
 
-typedef unsigned char  BYTE;
-typedef unsigned short WORD;
-typedef unsigned long  DWORD;
-typedef unsigned int   BOOL;
+typedef unsigned char    BYTE;
+typedef unsigned short   WORD;
+typedef unsigned long    DWORD;
+typedef unsigned int     BOOL;
 
 typedef union _BITS
 {
-	unsigned char value;
-	struct _bits
-	{
-		unsigned char bit0:1;
-		unsigned char bit1:1;
-		unsigned char bit2:1;
-		unsigned char bit3:1;
-		unsigned char bit4:1;
-		unsigned char bit5:1;
-		unsigned char bit6:1;
-		unsigned char bit7:1;
-	}bits;
-}BITS;
+    unsigned char value;
+    struct _bits
+    {
+        unsigned char bit0 : 1;
+        unsigned char bit1 : 1;
+        unsigned char bit2 : 1;
+        unsigned char bit3 : 1;
+        unsigned char bit4 : 1;
+        unsigned char bit5 : 1;
+        unsigned char bit6 : 1;
+        unsigned char bit7 : 1;
+    } bits;
+} BITS;
 
-#endif  /* __TYPE_H__ */
+#endif /* __TYPE_H__ */

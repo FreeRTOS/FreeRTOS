@@ -42,51 +42,51 @@
  */
 
 #ifndef PMC_H_INCLUDED
-#define PMC_H_INCLUDED
+    #define PMC_H_INCLUDED
 
-#include "compiler.h"
+    #include "compiler.h"
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
 /** Bit mask for peripheral clocks (PCER0) */
-#define PMC_MASK_STATUS0        (0xFFFFFFFC)
+    #define PMC_MASK_STATUS0          ( 0xFFFFFFFC )
 
 /** Bit mask for peripheral clocks (PCER1) */
-#define PMC_MASK_STATUS1        (0xFFFFFFFF)
+    #define PMC_MASK_STATUS1          ( 0xFFFFFFFF )
 
 /** Loop counter timeout value */
-#define PMC_TIMEOUT             (2048)
+    #define PMC_TIMEOUT               ( 2048 )
 
 /** Key to unlock CKGR_MOR register */
-#define PMC_CKGR_MOR_KEY_VALUE  CKGR_MOR_KEY(0x37)
+    #define PMC_CKGR_MOR_KEY_VALUE    CKGR_MOR_KEY( 0x37 )
 
 /** Key used to write SUPC registers */
-#define SUPC_KEY_VALUE          ((uint32_t) 0xA5)
+    #define SUPC_KEY_VALUE            ( ( uint32_t ) 0xA5 )
 
 /** PMC xtal startup time */
-#define PMC_XTAL_STARTUP_TIME   (0x3F)
+    #define PMC_XTAL_STARTUP_TIME     ( 0x3F )
 
 /** Mask to access fast startup input */
-#define PMC_FAST_STARTUP_Msk    (0x7FFFFu)
+    #define PMC_FAST_STARTUP_Msk      ( 0x7FFFFu )
 
 /** PMC_WPMR Write Protect KEY, unlock it */
-#define PMC_WPMR_WPKEY_VALUE    PMC_WPMR_WPKEY((uint32_t) 0x504D43)
+    #define PMC_WPMR_WPKEY_VALUE      PMC_WPMR_WPKEY( ( uint32_t ) 0x504D43 )
 
 /** Using external oscillator */
-#define PMC_OSC_XTAL            0
+    #define PMC_OSC_XTAL              0
 
 /** Oscillator in bypass mode */
-#define PMC_OSC_BYPASS          1
+    #define PMC_OSC_BYPASS            1
 
-#define PMC_PCK_0               0 /* PCK0 ID */
-#define PMC_PCK_1               1 /* PCK1 ID */
-#define PMC_PCK_2               2 /* PCK2 ID */
+    #define PMC_PCK_0                 0 /* PCK0 ID */
+    #define PMC_PCK_1                 1 /* PCK1 ID */
+    #define PMC_PCK_2                 2 /* PCK2 ID */
 
 /**
  * \name Master clock (MCK) Source and Prescaler configuration
@@ -94,85 +94,89 @@ extern "C" {
  * The following functions may be used to select the clock source and
  * prescaler for the master clock.
  */
-//@{
+/*@{ */
 
-void pmc_mck_set_prescaler(uint32_t ul_pres);
-void pmc_mck_set_source(uint32_t ul_source);
-uint32_t pmc_switch_mck_to_sclk(uint32_t ul_pres);
-uint32_t pmc_switch_mck_to_mainck(uint32_t ul_pres);
-uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres);
-#if (SAM3S || SAM4S)
-uint32_t pmc_switch_mck_to_pllbck(uint32_t ul_pres);
-#endif
-#if (SAM3XA || SAM3U)
-uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres);
-#endif
+    void pmc_mck_set_prescaler( uint32_t ul_pres );
+    void pmc_mck_set_source( uint32_t ul_source );
+    uint32_t pmc_switch_mck_to_sclk( uint32_t ul_pres );
+    uint32_t pmc_switch_mck_to_mainck( uint32_t ul_pres );
+    uint32_t pmc_switch_mck_to_pllack( uint32_t ul_pres );
+    #if ( SAM3S || SAM4S )
+        uint32_t pmc_switch_mck_to_pllbck( uint32_t ul_pres );
+    #endif
+    #if ( SAM3XA || SAM3U )
+        uint32_t pmc_switch_mck_to_upllck( uint32_t ul_pres );
+    #endif
 
-//@}
+/*@} */
 
 /**
  * \name Slow clock (SLCK) oscillator and configuration
  *
  */
-//@{
+/*@{ */
 
-void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass);
-uint32_t pmc_osc_is_ready_32kxtal(void);
+    void pmc_switch_sclk_to_32kxtal( uint32_t ul_bypass );
+    uint32_t pmc_osc_is_ready_32kxtal( void );
 
-//@}
+/*@} */
 
 /**
  * \name Main Clock (MAINCK) oscillator and configuration
  *
  */
-//@{
+/*@{ */
 
-void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf);
-void pmc_osc_enable_fastrc(uint32_t ul_rc);
-void pmc_osc_disable_fastrc(void);
-void pmc_switch_mainck_to_xtal(uint32_t ul_bypass);
-void pmc_osc_disable_xtal(uint32_t ul_bypass);
-uint32_t pmc_osc_is_ready_mainck(void);
+    void pmc_switch_mainck_to_fastrc( uint32_t ul_moscrcf );
+    void pmc_osc_enable_fastrc( uint32_t ul_rc );
+    void pmc_osc_disable_fastrc( void );
+    void pmc_switch_mainck_to_xtal( uint32_t ul_bypass );
+    void pmc_osc_disable_xtal( uint32_t ul_bypass );
+    uint32_t pmc_osc_is_ready_mainck( void );
 
-//@}
+/*@} */
 
 /**
  * \name PLL oscillator and configuration
  *
  */
-//@{
+/*@{ */
 
-void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva);
-void pmc_disable_pllack(void);
-uint32_t pmc_is_locked_pllack(void);
+    void pmc_enable_pllack( uint32_t mula,
+                            uint32_t pllacount,
+                            uint32_t diva );
+    void pmc_disable_pllack( void );
+    uint32_t pmc_is_locked_pllack( void );
 
-#if (SAM3S || SAM4S)
-void pmc_enable_pllbck(uint32_t mulb, uint32_t pllbcount, uint32_t divb);
-void pmc_disable_pllbck(void);
-uint32_t pmc_is_locked_pllbck(void);
-#endif
+    #if ( SAM3S || SAM4S )
+        void pmc_enable_pllbck( uint32_t mulb,
+                                uint32_t pllbcount,
+                                uint32_t divb );
+        void pmc_disable_pllbck( void );
+        uint32_t pmc_is_locked_pllbck( void );
+    #endif
 
-#if (SAM3XA || SAM3U)
-void pmc_enable_upll_clock(void);
-void pmc_disable_upll_clock(void);
-uint32_t pmc_is_locked_upll(void);
-#endif
+    #if ( SAM3XA || SAM3U )
+        void pmc_enable_upll_clock( void );
+        void pmc_disable_upll_clock( void );
+        uint32_t pmc_is_locked_upll( void );
+    #endif
 
-//@}
+/*@} */
 
 /**
  * \name Peripherals clock configuration
  *
  */
-//@{
+/*@{ */
 
-uint32_t pmc_enable_periph_clk(uint32_t ul_id);
-uint32_t pmc_disable_periph_clk(uint32_t ul_id);
-void pmc_enable_all_periph_clk(void);
-void pmc_disable_all_periph_clk(void);
-uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id);
+    uint32_t pmc_enable_periph_clk( uint32_t ul_id );
+    uint32_t pmc_disable_periph_clk( uint32_t ul_id );
+    void pmc_enable_all_periph_clk( void );
+    void pmc_disable_all_periph_clk( void );
+    uint32_t pmc_is_periph_clk_enabled( uint32_t ul_id );
 
-//@}
+/*@} */
 
 /**
  * \name Programmable clock Source and Prescaler configuration
@@ -180,109 +184,116 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id);
  * The following functions may be used to select the clock source and
  * prescaler for the specified programmable clock.
  */
-//@{
+/*@{ */
 
-void pmc_pck_set_prescaler(uint32_t ul_id, uint32_t ul_pres);
-void pmc_pck_set_source(uint32_t ul_id, uint32_t ul_source);
-uint32_t pmc_switch_pck_to_sclk(uint32_t ul_id, uint32_t ul_pres);
-uint32_t pmc_switch_pck_to_mainck(uint32_t ul_id, uint32_t ul_pres);
-uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres);
-#if (SAM3S || SAM4S)
-uint32_t pmc_switch_pck_to_pllbck(uint32_t ul_id, uint32_t ul_pres);
-#endif
-#if (SAM3XA || SAM3U)
-uint32_t pmc_switch_pck_to_upllck(uint32_t ul_id, uint32_t ul_pres);
-#endif
-void pmc_enable_pck(uint32_t ul_id);
-void pmc_disable_pck(uint32_t ul_id);
-void pmc_enable_all_pck(void);
-void pmc_disable_all_pck(void);
-uint32_t pmc_is_pck_enabled(uint32_t ul_id);
+    void pmc_pck_set_prescaler( uint32_t ul_id,
+                                uint32_t ul_pres );
+    void pmc_pck_set_source( uint32_t ul_id,
+                             uint32_t ul_source );
+    uint32_t pmc_switch_pck_to_sclk( uint32_t ul_id,
+                                     uint32_t ul_pres );
+    uint32_t pmc_switch_pck_to_mainck( uint32_t ul_id,
+                                       uint32_t ul_pres );
+    uint32_t pmc_switch_pck_to_pllack( uint32_t ul_id,
+                                       uint32_t ul_pres );
+    #if ( SAM3S || SAM4S )
+        uint32_t pmc_switch_pck_to_pllbck( uint32_t ul_id,
+                                           uint32_t ul_pres );
+    #endif
+    #if ( SAM3XA || SAM3U )
+        uint32_t pmc_switch_pck_to_upllck( uint32_t ul_id,
+                                           uint32_t ul_pres );
+    #endif
+    void pmc_enable_pck( uint32_t ul_id );
+    void pmc_disable_pck( uint32_t ul_id );
+    void pmc_enable_all_pck( void );
+    void pmc_disable_all_pck( void );
+    uint32_t pmc_is_pck_enabled( uint32_t ul_id );
 
-//@}
+/*@} */
 
 /**
  * \name USB clock configuration
  *
  */
-//@{
+/*@{ */
 
-#if (SAM3S || SAM3XA || SAM4S)
-void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv);
-#endif
-#if (SAM3S || SAM4S)
-void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv);
-#endif
-#if (SAM3XA)
-void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv);
-#endif
-#if (SAM3S || SAM3XA || SAM4S)
-void pmc_enable_udpck(void);
-void pmc_disable_udpck(void);
-#endif
+    #if ( SAM3S || SAM3XA || SAM4S )
+        void pmc_switch_udpck_to_pllack( uint32_t ul_usbdiv );
+    #endif
+    #if ( SAM3S || SAM4S )
+        void pmc_switch_udpck_to_pllbck( uint32_t ul_usbdiv );
+    #endif
+    #if ( SAM3XA )
+        void pmc_switch_udpck_to_upllck( uint32_t ul_usbdiv );
+    #endif
+    #if ( SAM3S || SAM3XA || SAM4S )
+        void pmc_enable_udpck( void );
+        void pmc_disable_udpck( void );
+    #endif
 
-//@}
+/*@} */
 
 /**
  * \name Interrupt and status management
  *
  */
-//@{
+/*@{ */
 
-void pmc_enable_interrupt(uint32_t ul_sources);
-void pmc_disable_interrupt(uint32_t ul_sources);
-uint32_t pmc_get_interrupt_mask(void);
-uint32_t pmc_get_status(void);
+    void pmc_enable_interrupt( uint32_t ul_sources );
+    void pmc_disable_interrupt( uint32_t ul_sources );
+    uint32_t pmc_get_interrupt_mask( void );
+    uint32_t pmc_get_status( void );
 
-//@}
+/*@} */
 
 /**
  * \name Power management
  *
- * The following functions are used to configure sleep mode and additional 
+ * The following functions are used to configure sleep mode and additional
  * wake up inputs.
  */
-//@{
+/*@{ */
 
-void pmc_set_fast_startup_input(uint32_t ul_inputs);
-void pmc_clr_fast_startup_input(uint32_t ul_inputs);
-void pmc_enable_sleepmode(uint8_t uc_type);
-void pmc_enable_waitmode(void);
-void pmc_enable_backupmode(void);
+    void pmc_set_fast_startup_input( uint32_t ul_inputs );
+    void pmc_clr_fast_startup_input( uint32_t ul_inputs );
+    void pmc_enable_sleepmode( uint8_t uc_type );
+    void pmc_enable_waitmode( void );
+    void pmc_enable_backupmode( void );
 
-//@}
+/*@} */
 
 /**
  * \name Failure detector
  *
  */
-//@{
+/*@{ */
 
-void pmc_enable_clock_failure_detector(void);
-void pmc_disable_clock_failure_detector(void);
+    void pmc_enable_clock_failure_detector( void );
+    void pmc_disable_clock_failure_detector( void );
 
-//@}
+/*@} */
 
 /**
  * \name Write protection
  *
  */
-//@{
+/*@{ */
 
-void pmc_set_writeprotect(uint32_t ul_enable);
-uint32_t pmc_get_writeprotect_status(void);
+    void pmc_set_writeprotect( uint32_t ul_enable );
+    uint32_t pmc_get_writeprotect_status( void );
 
-//@}
+/*@} */
 
-/// @cond 0
+/*/ @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**INDENT-ON**/
-/// @endcond
+/*/ @endcond */
 
-//! @}
+/*! @} */
 
 /**
  * \page sam_pmc_quickstart Quick start guide for the SAM PMC module
@@ -312,7 +323,7 @@ uint32_t pmc_get_writeprotect_status(void);
  * \subsection pmc_basic_use_case_setup_code Code
  * The following function needs to be added to the user application, to flash a
  * board LED a variable number of times at a rate given in CPU ticks.
- * 
+ *
  * \code
  * #define FLASH_TICK_COUNT   0x00012345
  *
@@ -320,7 +331,7 @@ uint32_t pmc_get_writeprotect_status(void);
  * {
  *     SysTick->CTRL = SysTick_CTRL_ENABLE_Msk;
  *     SysTick->LOAD = tick_count;
- * 
+ *
  *     while (flash_count--)
  *     {
  *         gpio_toggle_pin(LED0_GPIO);
@@ -358,25 +369,25 @@ uint32_t pmc_get_writeprotect_status(void);
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  * -# Switch the Master CPU frequency to the internal 8MHz RC oscillator, flash
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_8_MHz);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  * -# Switch the Master CPU frequency to the internal 4MHz RC oscillator, flash
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  * -# Switch the Master CPU frequency to the external crystal oscillator, flash
  *    a LED on the board several times:
  *   \code
  *   pmc_switch_mainck_to_xtal(0);
- *   flash_led(FLASH_TICK_COUNT, 5); 
+ *   flash_led(FLASH_TICK_COUNT, 5);
  *   \endcode
  */
 
@@ -394,7 +405,7 @@ uint32_t pmc_get_writeprotect_status(void);
  * \subsection pmc_use_case_2_setup_code Code
  * The following code must be added to the user application:
  * \code
- * 	pio_set_peripheral(PIOA, PIO_PERIPH_B, PIO_PA17);
+ *  pio_set_peripheral(PIOA, PIO_PERIPH_B, PIO_PA17);
  * \endcode
  *
  * \subsection pmc_use_case_2_setup_code_workflow Workflow

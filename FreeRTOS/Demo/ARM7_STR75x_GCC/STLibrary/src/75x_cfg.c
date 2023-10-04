@@ -21,7 +21,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define CFG_SWBOOT_Mask	      0xFFFFFFFC
+#define CFG_SWBOOT_Mask       0xFFFFFFFC
 #define CFG_FLASHBusy_Mask    0x00000080
 
 /* Private macro -------------------------------------------------------------*/
@@ -41,18 +41,18 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CFG_BootSpaceConfig(u32 CFG_BootSpace)
+void CFG_BootSpaceConfig( u32 CFG_BootSpace )
 {
-  u32 Temp = 0;
-  
-  /* Clear SW_BOOT[1:0] bits */ 
-  Temp = CFG->GLCONF & CFG_SWBOOT_Mask;
-  
-  /* Set SW_BOOT[1:0] bits according to CFG_BootSpace parameter value */ 
-  Temp |= CFG_BootSpace;
-  
-  /* Store the new value */ 
-  CFG->GLCONF = Temp;   
+    u32 Temp = 0;
+
+    /* Clear SW_BOOT[1:0] bits */
+    Temp = CFG->GLCONF & CFG_SWBOOT_Mask;
+
+    /* Set SW_BOOT[1:0] bits according to CFG_BootSpace parameter value */
+    Temp |= CFG_BootSpace;
+
+    /* Store the new value */
+    CFG->GLCONF = Temp;
 }
 
 /*******************************************************************************
@@ -66,16 +66,16 @@ void CFG_BootSpaceConfig(u32 CFG_BootSpace)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CFG_FLASHBurstConfig(u32 CFG_FLASHBurst)
+void CFG_FLASHBurstConfig( u32 CFG_FLASHBurst )
 {
-  if(CFG_FLASHBurst == CFG_FLASHBurst_Enable)
-  {
-    CFG->GLCONF |= CFG_FLASHBurst_Enable;
-  }
-  else
-  {
-    CFG->GLCONF &= CFG_FLASHBurst_Disable;
-  }
+    if( CFG_FLASHBurst == CFG_FLASHBurst_Enable )
+    {
+        CFG->GLCONF |= CFG_FLASHBurst_Enable;
+    }
+    else
+    {
+        CFG->GLCONF &= CFG_FLASHBurst_Disable;
+    }
 }
 
 /*******************************************************************************
@@ -88,16 +88,16 @@ void CFG_FLASHBurstConfig(u32 CFG_FLASHBurst)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CFG_USBFilterConfig(u32 CFG_USBFilter)
+void CFG_USBFilterConfig( u32 CFG_USBFilter )
 {
-  if(CFG_USBFilter == CFG_USBFilter_Enable)
-  {
-    CFG->GLCONF |= CFG_USBFilter_Enable;
-  }
-  else
-  {
-    CFG->GLCONF &= CFG_USBFilter_Disable;
-  }
+    if( CFG_USBFilter == CFG_USBFilter_Enable )
+    {
+        CFG->GLCONF |= CFG_USBFilter_Enable;
+    }
+    else
+    {
+        CFG->GLCONF &= CFG_USBFilter_Disable;
+    }
 }
 
 /*******************************************************************************
@@ -107,16 +107,16 @@ void CFG_USBFilterConfig(u32 CFG_USBFilter)
 * Output         : None
 * Return         : The new state of FLASH Busy flag (SET or RESET).
 *******************************************************************************/
-FlagStatus CFG_GetFlagStatus(void)
+FlagStatus CFG_GetFlagStatus( void )
 {
-  if((CFG->GLCONF & CFG_FLASHBusy_Mask) != RESET)
-  {
-    return SET;
-  }
-  else
-  {
-    return RESET;
-  }
+    if( ( CFG->GLCONF & CFG_FLASHBusy_Mask ) != RESET )
+    {
+        return SET;
+    }
+    else
+    {
+        return RESET;
+    }
 }
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

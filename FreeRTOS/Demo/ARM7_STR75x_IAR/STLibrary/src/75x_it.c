@@ -38,7 +38,7 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void Undefined_Handler(void)
+void Undefined_Handler( void )
 {
 }
 
@@ -49,7 +49,7 @@ void Undefined_Handler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void FIQ_Handler(void)
+void FIQ_Handler( void )
 {
 }
 
@@ -60,7 +60,7 @@ void FIQ_Handler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SWI_Handler(void)
+void SWI_Handler( void )
 {
 }
 
@@ -71,7 +71,7 @@ void SWI_Handler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void Prefetch_Handler(void)
+void Prefetch_Handler( void )
 {
 }
 
@@ -82,7 +82,7 @@ void Prefetch_Handler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void Abort_Handler(void)
+void Abort_Handler( void )
 {
 }
 
@@ -94,7 +94,7 @@ void Abort_Handler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void WAKUP_IRQHandler(void)
+void WAKUP_IRQHandler( void )
 {
 }
 
@@ -105,7 +105,7 @@ void WAKUP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM2_OC2_IRQHandler(void)
+void TIM2_OC2_IRQHandler( void )
 {
 }
 
@@ -116,7 +116,7 @@ void TIM2_OC2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM2_OC1_IRQHandler(void)
+void TIM2_OC1_IRQHandler( void )
 {
 }
 
@@ -128,7 +128,7 @@ void TIM2_OC1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM2_IC12_IRQHandler(void)
+void TIM2_IC12_IRQHandler( void )
 {
 }
 
@@ -139,7 +139,7 @@ void TIM2_IC12_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM2_UP_IRQHandler(void)
+void TIM2_UP_IRQHandler( void )
 {
 }
 
@@ -150,7 +150,7 @@ void TIM2_UP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_OC2_IRQHandler(void)
+void TIM1_OC2_IRQHandler( void )
 {
 }
 
@@ -161,7 +161,7 @@ void TIM1_OC2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_OC1_IRQHandler(void)
+void TIM1_OC1_IRQHandler( void )
 {
 }
 
@@ -173,7 +173,7 @@ void TIM1_OC1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_IC12_IRQHandler(void)
+void TIM1_IC12_IRQHandler( void )
 {
 }
 
@@ -184,7 +184,7 @@ void TIM1_IC12_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM1_UP_IRQHandler(void)
+void TIM1_UP_IRQHandler( void )
 {
 }
 
@@ -195,7 +195,7 @@ void TIM1_UP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM0_OC2_IRQHandler(void)
+void TIM0_OC2_IRQHandler( void )
 {
 }
 
@@ -206,7 +206,7 @@ void TIM0_OC2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM0_OC1_IRQHandler(void)
+void TIM0_OC1_IRQHandler( void )
 {
 }
 
@@ -218,7 +218,7 @@ void TIM0_OC1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM0_IC12_IRQHandler(void)
+void TIM0_IC12_IRQHandler( void )
 {
 }
 
@@ -229,7 +229,7 @@ void TIM0_IC12_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM0_UP_IRQHandler(void)
+void TIM0_UP_IRQHandler( void )
 {
 }
 
@@ -241,7 +241,7 @@ void TIM0_UP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWM_OC123_IRQHandler(void)
+void PWM_OC123_IRQHandler( void )
 {
 }
 
@@ -252,7 +252,7 @@ void PWM_OC123_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWM_EM_IRQHandler(void)
+void PWM_EM_IRQHandler( void )
 {
 }
 
@@ -263,7 +263,7 @@ void PWM_EM_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void PWM_UP_IRQHandler(void)
+void PWM_UP_IRQHandler( void )
 {
 }
 
@@ -274,7 +274,7 @@ void PWM_UP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void I2C_IRQHandler(void)
+void I2C_IRQHandler( void )
 {
 }
 
@@ -285,7 +285,7 @@ void I2C_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SSP1_IRQHandler(void)
+void SSP1_IRQHandler( void )
 {
 }
 
@@ -296,7 +296,7 @@ void SSP1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SSP0_IRQHandler(void)
+void SSP0_IRQHandler( void )
 {
 }
 
@@ -307,7 +307,7 @@ void SSP0_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART2_IRQHandler(void)
+void UART2_IRQHandler( void )
 {
 }
 
@@ -318,7 +318,7 @@ void UART2_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART1_IRQHandler(void)
+void UART1_IRQHandler( void )
 {
 }
 
@@ -329,7 +329,7 @@ void UART1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART0_IRQHandler(void)
+void UART0_IRQHandler( void )
 {
 }
 
@@ -340,7 +340,7 @@ void UART0_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CAN_IRQHandler(void)
+void CAN_IRQHandler( void )
 {
 }
 
@@ -352,7 +352,7 @@ void CAN_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USB_LP_IRQHandler(void)
+void USB_LP_IRQHandler( void )
 {
 }
 
@@ -364,7 +364,7 @@ void USB_LP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USB_HP_IRQHandler(void)
+void USB_HP_IRQHandler( void )
 {
 }
 
@@ -375,7 +375,7 @@ void USB_HP_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void ADC_IRQHandler(void)
+void ADC_IRQHandler( void )
 {
 }
 
@@ -386,7 +386,7 @@ void ADC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void DMA_IRQHandler(void)
+void DMA_IRQHandler( void )
 {
 }
 
@@ -397,7 +397,7 @@ void DMA_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void EXTIT_IRQHandler(void)
+void EXTIT_IRQHandler( void )
 {
 }
 
@@ -408,7 +408,7 @@ void EXTIT_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void MRCC_IRQHandler(void)
+void MRCC_IRQHandler( void )
 {
 }
 
@@ -419,7 +419,7 @@ void MRCC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void FLASHSMI_IRQHandler(void)
+void FLASHSMI_IRQHandler( void )
 {
 }
 
@@ -430,7 +430,7 @@ void FLASHSMI_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void RTC_IRQHandler(void)
+void RTC_IRQHandler( void )
 {
 }
 
@@ -441,7 +441,7 @@ void RTC_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TB_IRQHandler(void)
+void TB_IRQHandler( void )
 {
 }
 

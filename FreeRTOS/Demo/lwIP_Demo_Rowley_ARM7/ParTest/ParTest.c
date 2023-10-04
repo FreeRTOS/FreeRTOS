@@ -38,43 +38,43 @@
  * Simple parallel port IO routines for the LED's.  LED's can be set, cleared
  * or toggled.
  *-----------------------------------------------------------*/
-const unsigned long ulLED_MASK[ NB_LED ]= { LED1, LED2, LED3, LED4 };
+const unsigned long ulLED_MASK[ NB_LED ] = { LED1, LED2, LED3, LED4 };
 
 void vParTestInitialise( void )
-{	
-	/* Start with all LED's off. */
+{
+    /* Start with all LED's off. */
     AT91C_BASE_PIOB->PIO_SODR = LED_MASK;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	if( uxLED < ( portBASE_TYPE ) NB_LED )
-	{
-		if( xValue )
-		{
-			AT91C_BASE_PIOB->PIO_SODR = ulLED_MASK[ uxLED ];
-		}
-		else
-		{
-			AT91C_BASE_PIOB->PIO_CODR = ulLED_MASK[ uxLED ];
-		}
-	}
+    if( uxLED < ( portBASE_TYPE ) NB_LED )
+    {
+        if( xValue )
+        {
+            AT91C_BASE_PIOB->PIO_SODR = ulLED_MASK[ uxLED ];
+        }
+        else
+        {
+            AT91C_BASE_PIOB->PIO_CODR = ulLED_MASK[ uxLED ];
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < ( portBASE_TYPE ) NB_LED )
-	{
-		if( AT91C_BASE_PIOB->PIO_PDSR & ulLED_MASK[ uxLED ] )
-		{
-			AT91C_BASE_PIOB->PIO_CODR = ulLED_MASK[ uxLED ];
-		}
-		else
-		{
-			AT91C_BASE_PIOB->PIO_SODR = ulLED_MASK[ uxLED ];
-		}
-	}
+    if( uxLED < ( portBASE_TYPE ) NB_LED )
+    {
+        if( AT91C_BASE_PIOB->PIO_PDSR & ulLED_MASK[ uxLED ] )
+        {
+            AT91C_BASE_PIOB->PIO_CODR = ulLED_MASK[ uxLED ];
+        }
+        else
+        {
+            AT91C_BASE_PIOB->PIO_SODR = ulLED_MASK[ uxLED ];
+        }
+    }
 }
-

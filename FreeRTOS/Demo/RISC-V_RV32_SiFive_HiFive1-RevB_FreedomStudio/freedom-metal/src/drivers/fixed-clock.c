@@ -5,23 +5,26 @@
 
 #ifdef METAL_FIXED_CLOCK
 
-#include <metal/drivers/fixed-clock.h>
-#include <metal/machine.h>
-#include <stddef.h>
+    #include <metal/drivers/fixed-clock.h>
+    #include <metal/machine.h>
+    #include <stddef.h>
 
-long __metal_driver_fixed_clock_get_rate_hz(const struct metal_clock *gclk) {
-    return __metal_driver_fixed_clock_rate(gclk);
-}
+    long __metal_driver_fixed_clock_get_rate_hz( const struct metal_clock * gclk )
+    {
+        return __metal_driver_fixed_clock_rate( gclk );
+    }
 
-long __metal_driver_fixed_clock_set_rate_hz(struct metal_clock *gclk,
-                                            long target_hz) {
-    return __metal_driver_fixed_clock_get_rate_hz(gclk);
-}
+    long __metal_driver_fixed_clock_set_rate_hz( struct metal_clock * gclk,
+                                                 long target_hz )
+    {
+        return __metal_driver_fixed_clock_get_rate_hz( gclk );
+    }
 
-__METAL_DEFINE_VTABLE(__metal_driver_vtable_fixed_clock) = {
-    .clock.get_rate_hz = __metal_driver_fixed_clock_get_rate_hz,
-    .clock.set_rate_hz = __metal_driver_fixed_clock_set_rate_hz,
-};
+    __METAL_DEFINE_VTABLE( __metal_driver_vtable_fixed_clock ) =
+    {
+        .clock.get_rate_hz = __metal_driver_fixed_clock_get_rate_hz,
+        .clock.set_rate_hz = __metal_driver_fixed_clock_set_rate_hz,
+    };
 
 #endif /* METAL_FIXED_CLOCK */
 

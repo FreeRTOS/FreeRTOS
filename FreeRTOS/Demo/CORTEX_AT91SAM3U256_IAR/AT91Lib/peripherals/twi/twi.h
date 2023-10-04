@@ -27,124 +27,128 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-///
-/// Interface for configuration the Two Wire Interface (TWI) peripheral.
-///
-/// !Usage
-///
-/// -# Configures a TWI peripheral to operate in master mode, at the given
-/// frequency (in Hz) using TWI_ConfigureMaster().
-/// -# or if hardware possible, configures a TWI peripheral to operate in 
-/// slave mode, at the given frequency (in Hz) using TWI_ConfigureSlave().
-/// -# Sends a STOP condition on the TWI using TWI_Stop().
-/// -# Starts a read operation on the TWI bus with the specified slave using
-/// TWI_StartRead(). Data must then be read using TWI_ReadByte() whenever 
-/// a byte is available (poll using TWI_ByteReceived()).
-/// -# Starts a write operation on the TWI to access the selected slave using
-/// TWI_StartWrite(). A byte of data must be provided to start the write;
-/// other bytes are written next. 
-/// -# Sends a byte of data to one of the TWI slaves on the bus using TWI_WriteByte().
-/// This function must be called once before TWI_StartWrite() with the first byte of data
-/// to send, then it shall be called repeatedly after that to send the remaining bytes.
-/// -# Check if a byte has been received and can be read on the given TWI
-/// peripheral using TWI_ByteReceived(). 
-/// Check if a byte has been sent using TWI_ByteSent().
-/// -# Check if the current transmission is complete (the STOP has been sent)
-/// using TWI_TransferComplete().
-/// -# Enables & disable the selected interrupts sources on a TWI peripheral
-/// using TWI_EnableIt() and TWI_DisableIt().
-/// -# Get current status register of the given TWI peripheral using
-/// TWI_GetStatus(). Get current status register of the given TWI peripheral, but
-/// masking interrupt sources which are not currently enabled using 
-/// TWI_GetMaskedStatus().
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Interface for configuration the Two Wire Interface (TWI) peripheral. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# Configures a TWI peripheral to operate in master mode, at the given */
+/*/ frequency (in Hz) using TWI_ConfigureMaster(). */
+/*/ -# or if hardware possible, configures a TWI peripheral to operate in */
+/*/ slave mode, at the given frequency (in Hz) using TWI_ConfigureSlave(). */
+/*/ -# Sends a STOP condition on the TWI using TWI_Stop(). */
+/*/ -# Starts a read operation on the TWI bus with the specified slave using */
+/*/ TWI_StartRead(). Data must then be read using TWI_ReadByte() whenever */
+/*/ a byte is available (poll using TWI_ByteReceived()). */
+/*/ -# Starts a write operation on the TWI to access the selected slave using */
+/*/ TWI_StartWrite(). A byte of data must be provided to start the write; */
+/*/ other bytes are written next. */
+/*/ -# Sends a byte of data to one of the TWI slaves on the bus using TWI_WriteByte(). */
+/*/ This function must be called once before TWI_StartWrite() with the first byte of data */
+/*/ to send, then it shall be called repeatedly after that to send the remaining bytes. */
+/*/ -# Check if a byte has been received and can be read on the given TWI */
+/*/ peripheral using TWI_ByteReceived(). */
+/*/ Check if a byte has been sent using TWI_ByteSent(). */
+/*/ -# Check if the current transmission is complete (the STOP has been sent) */
+/*/ using TWI_TransferComplete(). */
+/*/ -# Enables & disable the selected interrupts sources on a TWI peripheral */
+/*/ using TWI_EnableIt() and TWI_DisableIt(). */
+/*/ -# Get current status register of the given TWI peripheral using */
+/*/ TWI_GetStatus(). Get current status register of the given TWI peripheral, but */
+/*/ masking interrupt sources which are not currently enabled using */
+/*/ TWI_GetMaskedStatus(). */
+/*------------------------------------------------------------------------------ */
 
 #ifndef TWI_H
 #define TWI_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
 
-//------------------------------------------------------------------------------
-//         Global definitions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global definitions */
+/*------------------------------------------------------------------------------ */
 
-// Missing AT91C_TWI_TXRDY definition.
+/* Missing AT91C_TWI_TXRDY definition. */
 #ifndef AT91C_TWI_TXRDY
-    #define AT91C_TWI_TXRDY   AT91C_TWI_TXRDY_MASTER
+    #define AT91C_TWI_TXRDY    AT91C_TWI_TXRDY_MASTER
 #endif
 
-// Missing AT91C_TWI_TXCOMP definition.
+/* Missing AT91C_TWI_TXCOMP definition. */
 #ifndef AT91C_TWI_TXCOMP
-    #define AT91C_TWI_TXCOMP  AT91C_TWI_TXCOMP_MASTER
+    #define AT91C_TWI_TXCOMP    AT91C_TWI_TXCOMP_MASTER
 #endif
 
-//------------------------------------------------------------------------------
-//         Global macros
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global macros */
+/*------------------------------------------------------------------------------ */
 
-/// Returns 1 if the TXRDY bit (ready to transmit data) is set in the given
-/// status register value.
-#define TWI_STATUS_TXRDY(status) ((status & AT91C_TWI_TXRDY) == AT91C_TWI_TXRDY)
+/*/ Returns 1 if the TXRDY bit (ready to transmit data) is set in the given */
+/*/ status register value. */
+#define TWI_STATUS_TXRDY( status )    ( ( status & AT91C_TWI_TXRDY ) == AT91C_TWI_TXRDY )
 
-/// Returns 1 if the RXRDY bit (ready to receive data) is set in the given
-/// status register value.
-#define TWI_STATUS_RXRDY(status) ((status & AT91C_TWI_RXRDY) == AT91C_TWI_RXRDY)
+/*/ Returns 1 if the RXRDY bit (ready to receive data) is set in the given */
+/*/ status register value. */
+#define TWI_STATUS_RXRDY( status )    ( ( status & AT91C_TWI_RXRDY ) == AT91C_TWI_RXRDY )
 
-/// Returns 1 if the TXCOMP bit (transfer complete) is set in the given
-/// status register value.
-#define TWI_STATUS_TXCOMP(status) ((status & AT91C_TWI_TXCOMP) == AT91C_TWI_TXCOMP)
+/*/ Returns 1 if the TXCOMP bit (transfer complete) is set in the given */
+/*/ status register value. */
+#define TWI_STATUS_TXCOMP( status )    ( ( status & AT91C_TWI_TXCOMP ) == AT91C_TWI_TXCOMP )
 
-//------------------------------------------------------------------------------
-//         Global functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Global functions */
+/*------------------------------------------------------------------------------ */
 
-extern void TWI_ConfigureMaster(AT91S_TWI *pTwi, unsigned int twck, unsigned int mck);
+extern void TWI_ConfigureMaster( AT91S_TWI * pTwi,
+                                 unsigned int twck,
+                                 unsigned int mck );
 
-#ifdef AT91C_TWI_SVEN  // TWI slave
-extern void TWI_ConfigureSlave(AT91S_TWI *pTwi, unsigned char slaveAddress);
+#ifdef AT91C_TWI_SVEN /* TWI slave */
+    extern void TWI_ConfigureSlave( AT91S_TWI * pTwi,
+                                    unsigned char slaveAddress );
 #endif
 
-extern void TWI_Stop(AT91S_TWI *pTwi);
+extern void TWI_Stop( AT91S_TWI * pTwi );
 
-extern void TWI_StartRead(
-    AT91S_TWI *pTwi,
-    unsigned char address,
-    unsigned int iaddress,
-    unsigned char isize);
+extern void TWI_StartRead( AT91S_TWI * pTwi,
+                           unsigned char address,
+                           unsigned int iaddress,
+                           unsigned char isize );
 
-extern unsigned char TWI_ReadByte(AT91S_TWI *pTwi);
+extern unsigned char TWI_ReadByte( AT91S_TWI * pTwi );
 
-extern void TWI_WriteByte(AT91S_TWI *pTwi, unsigned char byte);
+extern void TWI_WriteByte( AT91S_TWI * pTwi,
+                           unsigned char byte );
 
-extern void TWI_StartWrite(
-    AT91S_TWI *pTwi,
-    unsigned char address,
-    unsigned int iaddress,
-    unsigned char isize,
-    unsigned char byte);
+extern void TWI_StartWrite( AT91S_TWI * pTwi,
+                            unsigned char address,
+                            unsigned int iaddress,
+                            unsigned char isize,
+                            unsigned char byte );
 
-extern unsigned char TWI_ByteReceived(AT91S_TWI *pTwi);
+extern unsigned char TWI_ByteReceived( AT91S_TWI * pTwi );
 
-extern unsigned char TWI_ByteSent(AT91S_TWI *pTwi);
+extern unsigned char TWI_ByteSent( AT91S_TWI * pTwi );
 
-extern unsigned char TWI_TransferComplete(AT91S_TWI *pTwi);
+extern unsigned char TWI_TransferComplete( AT91S_TWI * pTwi );
 
-extern void TWI_EnableIt(AT91S_TWI *pTwi, unsigned int sources);
+extern void TWI_EnableIt( AT91S_TWI * pTwi,
+                          unsigned int sources );
 
-extern void TWI_DisableIt(AT91S_TWI *pTwi, unsigned int sources);
+extern void TWI_DisableIt( AT91S_TWI * pTwi,
+                           unsigned int sources );
 
-extern unsigned int TWI_GetStatus(AT91S_TWI *pTwi);
+extern unsigned int TWI_GetStatus( AT91S_TWI * pTwi );
 
-extern unsigned int TWI_GetMaskedStatus(AT91S_TWI *pTwi);
+extern unsigned int TWI_GetMaskedStatus( AT91S_TWI * pTwi );
 
-extern void TWI_SendSTOPCondition(AT91S_TWI *pTwi);
+extern void TWI_SendSTOPCondition( AT91S_TWI * pTwi );
 
 #endif //#ifndef TWI_H

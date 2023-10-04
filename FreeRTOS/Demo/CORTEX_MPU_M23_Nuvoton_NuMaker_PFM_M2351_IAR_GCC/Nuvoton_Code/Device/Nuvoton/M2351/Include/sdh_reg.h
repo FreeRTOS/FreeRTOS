@@ -9,20 +9,20 @@
 #define __SDH_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- SD Card Host Interface -------------------------*/
+
 /**
-    @addtogroup SDH SD Card Host Interface(SDH)
-    Memory Mapped Structure for SDH Controller
-@{ */
+ *  @addtogroup SDH SD Card Host Interface(SDH)
+ *  Memory Mapped Structure for SDH Controller
+ * @{ */
 
 typedef struct
 {
-
     /**
      * @var SDH_T::FB
      * Offset: 0x00~0x7C  Shared Buffer (FIFO)
@@ -335,187 +335,186 @@ typedef struct
      * |        |          |Note: Filling 0x0 into this field will disable hardware time-out function.
      */
 
-    __IO uint32_t FB[32];                /*!< Shared Buffer (FIFO)                                                      */
-    __I  uint32_t RESERVE0[224];
-    __IO uint32_t DMACTL;                /*!< [0x0400] DMA Control and Status Register                                  */
-    __I  uint32_t RESERVE1[1];
-    __IO uint32_t DMASA;                 /*!< [0x0408] DMA Transfer Starting Address Register                           */
-    __I  uint32_t DMABCNT;               /*!< [0x040c] DMA Transfer Byte Count Register                                 */
-    __IO uint32_t DMAINTEN;              /*!< [0x0410] DMA Interrupt Enable Control Register                            */
-    __IO uint32_t DMAINTSTS;             /*!< [0x0414] DMA Interrupt Status Register                                    */
-    __I  uint32_t RESERVE2[250];
-    __IO uint32_t GCTL;                  /*!< [0x0800] Global Control and Status Register                               */
-    __IO uint32_t GINTEN;                /*!< [0x0804] Global Interrupt Control Register                                */
-    __IO uint32_t GINTSTS;               /*!< [0x0808] Global Interrupt Status Register                                 */
-    __I  uint32_t RESERVE3[5];
-    __IO uint32_t CTL;                   /*!< [0x0820] SD Control and Status Register                                   */
-    __IO uint32_t CMDARG;                /*!< [0x0824] SD Command Argument Register                                     */
-    __IO uint32_t INTEN;                 /*!< [0x0828] SD Interrupt Control Register                                    */
-    __IO uint32_t INTSTS;                /*!< [0x082c] SD Interrupt Status Register                                     */
-    __I  uint32_t RESP0;                 /*!< [0x0830] SD Receiving Response Token Register 0                           */
-    __I  uint32_t RESP1;                 /*!< [0x0834] SD Receiving Response Token Register 1                           */
-    __IO uint32_t BLEN;                  /*!< [0x0838] SD Block Length Register                                         */
-    __IO uint32_t TOUT;                  /*!< [0x083c] SD Response/Data-in Time-out Register                            */
-
+    __IO uint32_t FB[ 32 ];  /*!< Shared Buffer (FIFO)                                                      */
+    __I uint32_t RESERVE0[ 224 ];
+    __IO uint32_t DMACTL;    /*!< [0x0400] DMA Control and Status Register                                  */
+    __I uint32_t RESERVE1[ 1 ];
+    __IO uint32_t DMASA;     /*!< [0x0408] DMA Transfer Starting Address Register                           */
+    __I uint32_t DMABCNT;    /*!< [0x040c] DMA Transfer Byte Count Register                                 */
+    __IO uint32_t DMAINTEN;  /*!< [0x0410] DMA Interrupt Enable Control Register                            */
+    __IO uint32_t DMAINTSTS; /*!< [0x0414] DMA Interrupt Status Register                                    */
+    __I uint32_t RESERVE2[ 250 ];
+    __IO uint32_t GCTL;      /*!< [0x0800] Global Control and Status Register                               */
+    __IO uint32_t GINTEN;    /*!< [0x0804] Global Interrupt Control Register                                */
+    __IO uint32_t GINTSTS;   /*!< [0x0808] Global Interrupt Status Register                                 */
+    __I uint32_t RESERVE3[ 5 ];
+    __IO uint32_t CTL;       /*!< [0x0820] SD Control and Status Register                                   */
+    __IO uint32_t CMDARG;    /*!< [0x0824] SD Command Argument Register                                     */
+    __IO uint32_t INTEN;     /*!< [0x0828] SD Interrupt Control Register                                    */
+    __IO uint32_t INTSTS;    /*!< [0x082c] SD Interrupt Status Register                                     */
+    __I uint32_t RESP0;      /*!< [0x0830] SD Receiving Response Token Register 0                           */
+    __I uint32_t RESP1;      /*!< [0x0834] SD Receiving Response Token Register 1                           */
+    __IO uint32_t BLEN;      /*!< [0x0838] SD Block Length Register                                         */
+    __IO uint32_t TOUT;      /*!< [0x083c] SD Response/Data-in Time-out Register                            */
 } SDH_T;
 
 /**
-    @addtogroup SDH_CONST SDH Bit Field Definition
-    Constant Definitions for SDH Controller
-@{ */
+ *  @addtogroup SDH_CONST SDH Bit Field Definition
+ *  Constant Definitions for SDH Controller
+ * @{ */
 
-#define SDH_DMACTL_DMAEN_Pos             (0)                                               /*!< SDH_T::DMACTL: DMAEN Position          */
-#define SDH_DMACTL_DMAEN_Msk             (0x1ul << SDH_DMACTL_DMAEN_Pos)                   /*!< SDH_T::DMACTL: DMAEN Mask              */
+#define SDH_DMACTL_DMAEN_Pos         ( 0 )                                                 /*!< SDH_T::DMACTL: DMAEN Position          */
+#define SDH_DMACTL_DMAEN_Msk         ( 0x1ul << SDH_DMACTL_DMAEN_Pos )                     /*!< SDH_T::DMACTL: DMAEN Mask              */
 
-#define SDH_DMACTL_DMARST_Pos            (1)                                               /*!< SDH_T::DMACTL: DMARST Position         */
-#define SDH_DMACTL_DMARST_Msk            (0x1ul << SDH_DMACTL_DMARST_Pos)                  /*!< SDH_T::DMACTL: DMARST Mask             */
+#define SDH_DMACTL_DMARST_Pos        ( 1 )                                                 /*!< SDH_T::DMACTL: DMARST Position         */
+#define SDH_DMACTL_DMARST_Msk        ( 0x1ul << SDH_DMACTL_DMARST_Pos )                    /*!< SDH_T::DMACTL: DMARST Mask             */
 
-#define SDH_DMACTL_SGEN_Pos              (3)                                               /*!< SDH_T::DMACTL: SGEN Position           */
-#define SDH_DMACTL_SGEN_Msk              (0x1ul << SDH_DMACTL_SGEN_Pos)                    /*!< SDH_T::DMACTL: SGEN Mask               */
+#define SDH_DMACTL_SGEN_Pos          ( 3 )                                                 /*!< SDH_T::DMACTL: SGEN Position           */
+#define SDH_DMACTL_SGEN_Msk          ( 0x1ul << SDH_DMACTL_SGEN_Pos )                      /*!< SDH_T::DMACTL: SGEN Mask               */
 
-#define SDH_DMACTL_DMABUSY_Pos           (9)                                               /*!< SDH_T::DMACTL: DMABUSY Position        */
-#define SDH_DMACTL_DMABUSY_Msk           (0x1ul << SDH_DMACTL_DMABUSY_Pos)                 /*!< SDH_T::DMACTL: DMABUSY Mask            */
+#define SDH_DMACTL_DMABUSY_Pos       ( 9 )                                                 /*!< SDH_T::DMACTL: DMABUSY Position        */
+#define SDH_DMACTL_DMABUSY_Msk       ( 0x1ul << SDH_DMACTL_DMABUSY_Pos )                   /*!< SDH_T::DMACTL: DMABUSY Mask            */
 
-#define SDH_DMASA_ORDER_Pos              (0)                                               /*!< SDH_T::DMASA: ORDER Position           */
-#define SDH_DMASA_ORDER_Msk              (0x1ul << SDH_DMASA_ORDER_Pos)                    /*!< SDH_T::DMASA: ORDER Mask               */
+#define SDH_DMASA_ORDER_Pos          ( 0 )                                                 /*!< SDH_T::DMASA: ORDER Position           */
+#define SDH_DMASA_ORDER_Msk          ( 0x1ul << SDH_DMASA_ORDER_Pos )                      /*!< SDH_T::DMASA: ORDER Mask               */
 
-#define SDH_DMASA_DMASA_Pos              (1)                                               /*!< SDH_T::DMASA: DMASA Position           */
-#define SDH_DMASA_DMASA_Msk              (0x7ffffffful << SDH_DMASA_DMASA_Pos)             /*!< SDH_T::DMASA: DMASA Mask               */
+#define SDH_DMASA_DMASA_Pos          ( 1 )                                                 /*!< SDH_T::DMASA: DMASA Position           */
+#define SDH_DMASA_DMASA_Msk          ( 0x7ffffffful << SDH_DMASA_DMASA_Pos )               /*!< SDH_T::DMASA: DMASA Mask               */
 
-#define SDH_DMABCNT_BCNT_Pos             (0)                                               /*!< SDH_T::DMABCNT: BCNT Position          */
-#define SDH_DMABCNT_BCNT_Msk             (0x3fffffful << SDH_DMABCNT_BCNT_Pos)             /*!< SDH_T::DMABCNT: BCNT Mask              */
+#define SDH_DMABCNT_BCNT_Pos         ( 0 )                                                 /*!< SDH_T::DMABCNT: BCNT Position          */
+#define SDH_DMABCNT_BCNT_Msk         ( 0x3fffffful << SDH_DMABCNT_BCNT_Pos )               /*!< SDH_T::DMABCNT: BCNT Mask              */
 
-#define SDH_DMAINTEN_ABORTIEN_Pos        (0)                                               /*!< SDH_T::DMAINTEN: ABORTIEN Position     */
-#define SDH_DMAINTEN_ABORTIEN_Msk        (0x1ul << SDH_DMAINTEN_ABORTIEN_Pos)              /*!< SDH_T::DMAINTEN: ABORTIEN Mask         */
+#define SDH_DMAINTEN_ABORTIEN_Pos    ( 0 )                                                 /*!< SDH_T::DMAINTEN: ABORTIEN Position     */
+#define SDH_DMAINTEN_ABORTIEN_Msk    ( 0x1ul << SDH_DMAINTEN_ABORTIEN_Pos )                /*!< SDH_T::DMAINTEN: ABORTIEN Mask         */
 
-#define SDH_DMAINTEN_WEOTIEN_Pos         (1)                                               /*!< SDH_T::DMAINTEN: WEOTIEN Position      */
-#define SDH_DMAINTEN_WEOTIEN_Msk         (0x1ul << SDH_DMAINTEN_WEOTIEN_Pos)               /*!< SDH_T::DMAINTEN: WEOTIEN Mask          */
+#define SDH_DMAINTEN_WEOTIEN_Pos     ( 1 )                                                 /*!< SDH_T::DMAINTEN: WEOTIEN Position      */
+#define SDH_DMAINTEN_WEOTIEN_Msk     ( 0x1ul << SDH_DMAINTEN_WEOTIEN_Pos )                 /*!< SDH_T::DMAINTEN: WEOTIEN Mask          */
 
-#define SDH_DMAINTSTS_ABORTIF_Pos        (0)                                               /*!< SDH_T::DMAINTSTS: ABORTIF Position     */
-#define SDH_DMAINTSTS_ABORTIF_Msk        (0x1ul << SDH_DMAINTSTS_ABORTIF_Pos)              /*!< SDH_T::DMAINTSTS: ABORTIF Mask         */
+#define SDH_DMAINTSTS_ABORTIF_Pos    ( 0 )                                                 /*!< SDH_T::DMAINTSTS: ABORTIF Position     */
+#define SDH_DMAINTSTS_ABORTIF_Msk    ( 0x1ul << SDH_DMAINTSTS_ABORTIF_Pos )                /*!< SDH_T::DMAINTSTS: ABORTIF Mask         */
 
-#define SDH_DMAINTSTS_WEOTIF_Pos         (1)                                               /*!< SDH_T::DMAINTSTS: WEOTIF Position      */
-#define SDH_DMAINTSTS_WEOTIF_Msk         (0x1ul << SDH_DMAINTSTS_WEOTIF_Pos)               /*!< SDH_T::DMAINTSTS: WEOTIF Mask          */
+#define SDH_DMAINTSTS_WEOTIF_Pos     ( 1 )                                                 /*!< SDH_T::DMAINTSTS: WEOTIF Position      */
+#define SDH_DMAINTSTS_WEOTIF_Msk     ( 0x1ul << SDH_DMAINTSTS_WEOTIF_Pos )                 /*!< SDH_T::DMAINTSTS: WEOTIF Mask          */
 
-#define SDH_GCTL_GCTLRST_Pos             (0)                                               /*!< SDH_T::GCTL: GCTLRST Position          */
-#define SDH_GCTL_GCTLRST_Msk             (0x1ul << SDH_GCTL_GCTLRST_Pos)                   /*!< SDH_T::GCTL: GCTLRST Mask              */
+#define SDH_GCTL_GCTLRST_Pos         ( 0 )                                                 /*!< SDH_T::GCTL: GCTLRST Position          */
+#define SDH_GCTL_GCTLRST_Msk         ( 0x1ul << SDH_GCTL_GCTLRST_Pos )                     /*!< SDH_T::GCTL: GCTLRST Mask              */
 
-#define SDH_GCTL_SDEN_Pos                (1)                                               /*!< SDH_T::GCTL: SDEN Position             */
-#define SDH_GCTL_SDEN_Msk                (0x1ul << SDH_GCTL_SDEN_Pos)                      /*!< SDH_T::GCTL: SDEN Mask                 */
+#define SDH_GCTL_SDEN_Pos            ( 1 )                                                 /*!< SDH_T::GCTL: SDEN Position             */
+#define SDH_GCTL_SDEN_Msk            ( 0x1ul << SDH_GCTL_SDEN_Pos )                        /*!< SDH_T::GCTL: SDEN Mask                 */
 
-#define SDH_GINTEN_DTAIEN_Pos            (0)                                               /*!< SDH_T::GINTEN: DTAIEN Position         */
-#define SDH_GINTEN_DTAIEN_Msk            (0x1ul << SDH_GINTEN_DTAIEN_Pos)                  /*!< SDH_T::GINTEN: DTAIEN Mask             */
+#define SDH_GINTEN_DTAIEN_Pos        ( 0 )                                                 /*!< SDH_T::GINTEN: DTAIEN Position         */
+#define SDH_GINTEN_DTAIEN_Msk        ( 0x1ul << SDH_GINTEN_DTAIEN_Pos )                    /*!< SDH_T::GINTEN: DTAIEN Mask             */
 
-#define SDH_GINTSTS_DTAIF_Pos            (0)                                               /*!< SDH_T::GINTSTS: DTAIF Position         */
-#define SDH_GINTSTS_DTAIF_Msk            (0x1ul << SDH_GINTSTS_DTAIF_Pos)                  /*!< SDH_T::GINTSTS: DTAIF Mask             */
+#define SDH_GINTSTS_DTAIF_Pos        ( 0 )                                                 /*!< SDH_T::GINTSTS: DTAIF Position         */
+#define SDH_GINTSTS_DTAIF_Msk        ( 0x1ul << SDH_GINTSTS_DTAIF_Pos )                    /*!< SDH_T::GINTSTS: DTAIF Mask             */
 
-#define SDH_CTL_COEN_Pos                 (0)                                               /*!< SDH_T::CTL: COEN Position              */
-#define SDH_CTL_COEN_Msk                 (0x1ul << SDH_CTL_COEN_Pos)                       /*!< SDH_T::CTL: COEN Mask                  */
+#define SDH_CTL_COEN_Pos             ( 0 )                                                 /*!< SDH_T::CTL: COEN Position              */
+#define SDH_CTL_COEN_Msk             ( 0x1ul << SDH_CTL_COEN_Pos )                         /*!< SDH_T::CTL: COEN Mask                  */
 
-#define SDH_CTL_RIEN_Pos                 (1)                                               /*!< SDH_T::CTL: RIEN Position              */
-#define SDH_CTL_RIEN_Msk                 (0x1ul << SDH_CTL_RIEN_Pos)                       /*!< SDH_T::CTL: RIEN Mask                  */
+#define SDH_CTL_RIEN_Pos             ( 1 )                                                 /*!< SDH_T::CTL: RIEN Position              */
+#define SDH_CTL_RIEN_Msk             ( 0x1ul << SDH_CTL_RIEN_Pos )                         /*!< SDH_T::CTL: RIEN Mask                  */
 
-#define SDH_CTL_DIEN_Pos                 (2)                                               /*!< SDH_T::CTL: DIEN Position              */
-#define SDH_CTL_DIEN_Msk                 (0x1ul << SDH_CTL_DIEN_Pos)                       /*!< SDH_T::CTL: DIEN Mask                  */
+#define SDH_CTL_DIEN_Pos             ( 2 )                                                 /*!< SDH_T::CTL: DIEN Position              */
+#define SDH_CTL_DIEN_Msk             ( 0x1ul << SDH_CTL_DIEN_Pos )                         /*!< SDH_T::CTL: DIEN Mask                  */
 
-#define SDH_CTL_DOEN_Pos                 (3)                                               /*!< SDH_T::CTL: DOEN Position              */
-#define SDH_CTL_DOEN_Msk                 (0x1ul << SDH_CTL_DOEN_Pos)                       /*!< SDH_T::CTL: DOEN Mask                  */
+#define SDH_CTL_DOEN_Pos             ( 3 )                                                 /*!< SDH_T::CTL: DOEN Position              */
+#define SDH_CTL_DOEN_Msk             ( 0x1ul << SDH_CTL_DOEN_Pos )                         /*!< SDH_T::CTL: DOEN Mask                  */
 
-#define SDH_CTL_R2EN_Pos                 (4)                                               /*!< SDH_T::CTL: R2EN Position              */
-#define SDH_CTL_R2EN_Msk                 (0x1ul << SDH_CTL_R2EN_Pos)                       /*!< SDH_T::CTL: R2EN Mask                  */
+#define SDH_CTL_R2EN_Pos             ( 4 )                                                 /*!< SDH_T::CTL: R2EN Position              */
+#define SDH_CTL_R2EN_Msk             ( 0x1ul << SDH_CTL_R2EN_Pos )                         /*!< SDH_T::CTL: R2EN Mask                  */
 
-#define SDH_CTL_CLK74OEN_Pos             (5)                                               /*!< SDH_T::CTL: CLK74OEN Position          */
-#define SDH_CTL_CLK74OEN_Msk             (0x1ul << SDH_CTL_CLK74OEN_Pos)                   /*!< SDH_T::CTL: CLK74OEN Mask              */
+#define SDH_CTL_CLK74OEN_Pos         ( 5 )                                                 /*!< SDH_T::CTL: CLK74OEN Position          */
+#define SDH_CTL_CLK74OEN_Msk         ( 0x1ul << SDH_CTL_CLK74OEN_Pos )                     /*!< SDH_T::CTL: CLK74OEN Mask              */
 
-#define SDH_CTL_CLK8OEN_Pos              (6)                                               /*!< SDH_T::CTL: CLK8OEN Position           */
-#define SDH_CTL_CLK8OEN_Msk              (0x1ul << SDH_CTL_CLK8OEN_Pos)                    /*!< SDH_T::CTL: CLK8OEN Mask               */
+#define SDH_CTL_CLK8OEN_Pos          ( 6 )                                                 /*!< SDH_T::CTL: CLK8OEN Position           */
+#define SDH_CTL_CLK8OEN_Msk          ( 0x1ul << SDH_CTL_CLK8OEN_Pos )                      /*!< SDH_T::CTL: CLK8OEN Mask               */
 
-#define SDH_CTL_CLKKEEP_Pos              (7)                                               /*!< SDH_T::CTL: CLKKEEP Position          */
-#define SDH_CTL_CLKKEEP_Msk              (0x1ul << SDH_CTL_CLKKEEP_Pos)                    /*!< SDH_T::CTL: CLKKEEP Mask              */
+#define SDH_CTL_CLKKEEP_Pos          ( 7 )                                                 /*!< SDH_T::CTL: CLKKEEP Position          */
+#define SDH_CTL_CLKKEEP_Msk          ( 0x1ul << SDH_CTL_CLKKEEP_Pos )                      /*!< SDH_T::CTL: CLKKEEP Mask              */
 
-#define SDH_CTL_CMDCODE_Pos              (8)                                               /*!< SDH_T::CTL: CMDCODE Position           */
-#define SDH_CTL_CMDCODE_Msk              (0x3ful << SDH_CTL_CMDCODE_Pos)                   /*!< SDH_T::CTL: CMDCODE Mask               */
+#define SDH_CTL_CMDCODE_Pos          ( 8 )                                                 /*!< SDH_T::CTL: CMDCODE Position           */
+#define SDH_CTL_CMDCODE_Msk          ( 0x3ful << SDH_CTL_CMDCODE_Pos )                     /*!< SDH_T::CTL: CMDCODE Mask               */
 
-#define SDH_CTL_CTLRST_Pos               (14)                                              /*!< SDH_T::CTL: CTLRST Position            */
-#define SDH_CTL_CTLRST_Msk               (0x1ul << SDH_CTL_CTLRST_Pos)                     /*!< SDH_T::CTL: CTLRST Mask                */
+#define SDH_CTL_CTLRST_Pos           ( 14 )                                                /*!< SDH_T::CTL: CTLRST Position            */
+#define SDH_CTL_CTLRST_Msk           ( 0x1ul << SDH_CTL_CTLRST_Pos )                       /*!< SDH_T::CTL: CTLRST Mask                */
 
-#define SDH_CTL_DBW_Pos                  (15)                                              /*!< SDH_T::CTL: DBW Position               */
-#define SDH_CTL_DBW_Msk                  (0x1ul << SDH_CTL_DBW_Pos)                        /*!< SDH_T::CTL: DBW Mask                   */
+#define SDH_CTL_DBW_Pos              ( 15 )                                                /*!< SDH_T::CTL: DBW Position               */
+#define SDH_CTL_DBW_Msk              ( 0x1ul << SDH_CTL_DBW_Pos )                          /*!< SDH_T::CTL: DBW Mask                   */
 
-#define SDH_CTL_BLKCNT_Pos               (16)                                              /*!< SDH_T::CTL: BLKCNT Position            */
-#define SDH_CTL_BLKCNT_Msk               (0xfful << SDH_CTL_BLKCNT_Pos)                    /*!< SDH_T::CTL: BLKCNT Mask                */
+#define SDH_CTL_BLKCNT_Pos           ( 16 )                                                /*!< SDH_T::CTL: BLKCNT Position            */
+#define SDH_CTL_BLKCNT_Msk           ( 0xfful << SDH_CTL_BLKCNT_Pos )                      /*!< SDH_T::CTL: BLKCNT Mask                */
 
-#define SDH_CTL_SDNWR_Pos                (24)                                              /*!< SDH_T::CTL: SDNWR Position             */
-#define SDH_CTL_SDNWR_Msk                (0xful << SDH_CTL_SDNWR_Pos)                      /*!< SDH_T::CTL: SDNWR Mask                 */
+#define SDH_CTL_SDNWR_Pos            ( 24 )                                                /*!< SDH_T::CTL: SDNWR Position             */
+#define SDH_CTL_SDNWR_Msk            ( 0xful << SDH_CTL_SDNWR_Pos )                        /*!< SDH_T::CTL: SDNWR Mask                 */
 
-#define SDH_CMDARG_ARGUMENT_Pos          (0)                                               /*!< SDH_T::CMDARG: ARGUMENT Position       */
-#define SDH_CMDARG_ARGUMENT_Msk          (0xfffffffful << SDH_CMDARG_ARGUMENT_Pos)         /*!< SDH_T::CMDARG: ARGUMENT Mask           */
+#define SDH_CMDARG_ARGUMENT_Pos      ( 0 )                                                 /*!< SDH_T::CMDARG: ARGUMENT Position       */
+#define SDH_CMDARG_ARGUMENT_Msk      ( 0xfffffffful << SDH_CMDARG_ARGUMENT_Pos )           /*!< SDH_T::CMDARG: ARGUMENT Mask           */
 
-#define SDH_INTEN_BLKDIEN_Pos            (0)                                               /*!< SDH_T::INTEN: BLKDIEN Position         */
-#define SDH_INTEN_BLKDIEN_Msk            (0x1ul << SDH_INTEN_BLKDIEN_Pos)                  /*!< SDH_T::INTEN: BLKDIEN Mask             */
+#define SDH_INTEN_BLKDIEN_Pos        ( 0 )                                                 /*!< SDH_T::INTEN: BLKDIEN Position         */
+#define SDH_INTEN_BLKDIEN_Msk        ( 0x1ul << SDH_INTEN_BLKDIEN_Pos )                    /*!< SDH_T::INTEN: BLKDIEN Mask             */
 
-#define SDH_INTEN_CRCIEN_Pos             (1)                                               /*!< SDH_T::INTEN: CRCIEN Position          */
-#define SDH_INTEN_CRCIEN_Msk             (0x1ul << SDH_INTEN_CRCIEN_Pos)                   /*!< SDH_T::INTEN: CRCIEN Mask              */
+#define SDH_INTEN_CRCIEN_Pos         ( 1 )                                                 /*!< SDH_T::INTEN: CRCIEN Position          */
+#define SDH_INTEN_CRCIEN_Msk         ( 0x1ul << SDH_INTEN_CRCIEN_Pos )                     /*!< SDH_T::INTEN: CRCIEN Mask              */
 
-#define SDH_INTEN_CDIEN_Pos              (8)                                               /*!< SDH_T::INTEN: CDIEN Position          */
-#define SDH_INTEN_CDIEN_Msk              (0x1ul << SDH_INTEN_CDIEN_Pos)                    /*!< SDH_T::INTEN: CDIEN Mask              */
+#define SDH_INTEN_CDIEN_Pos          ( 8 )                                                 /*!< SDH_T::INTEN: CDIEN Position          */
+#define SDH_INTEN_CDIEN_Msk          ( 0x1ul << SDH_INTEN_CDIEN_Pos )                      /*!< SDH_T::INTEN: CDIEN Mask              */
 
-#define SDH_INTEN_RTOIEN_Pos             (12)                                              /*!< SDH_T::INTEN: RTOIEN Position          */
-#define SDH_INTEN_RTOIEN_Msk             (0x1ul << SDH_INTEN_RTOIEN_Pos)                   /*!< SDH_T::INTEN: RTOIEN Mask              */
+#define SDH_INTEN_RTOIEN_Pos         ( 12 )                                                /*!< SDH_T::INTEN: RTOIEN Position          */
+#define SDH_INTEN_RTOIEN_Msk         ( 0x1ul << SDH_INTEN_RTOIEN_Pos )                     /*!< SDH_T::INTEN: RTOIEN Mask              */
 
-#define SDH_INTEN_DITOIEN_Pos            (13)                                              /*!< SDH_T::INTEN: DITOIEN Position         */
-#define SDH_INTEN_DITOIEN_Msk            (0x1ul << SDH_INTEN_DITOIEN_Pos)                  /*!< SDH_T::INTEN: DITOIEN Mask             */
+#define SDH_INTEN_DITOIEN_Pos        ( 13 )                                                /*!< SDH_T::INTEN: DITOIEN Position         */
+#define SDH_INTEN_DITOIEN_Msk        ( 0x1ul << SDH_INTEN_DITOIEN_Pos )                    /*!< SDH_T::INTEN: DITOIEN Mask             */
 
-#define SDH_INTEN_WKIEN_Pos              (14)                                              /*!< SDH_T::INTEN: WKIEN Position           */
-#define SDH_INTEN_WKIEN_Msk              (0x1ul << SDH_INTEN_WKIEN_Pos)                    /*!< SDH_T::INTEN: WKIEN Mask               */
+#define SDH_INTEN_WKIEN_Pos          ( 14 )                                                /*!< SDH_T::INTEN: WKIEN Position           */
+#define SDH_INTEN_WKIEN_Msk          ( 0x1ul << SDH_INTEN_WKIEN_Pos )                      /*!< SDH_T::INTEN: WKIEN Mask               */
 
-#define SDH_INTEN_CDSRC_Pos              (30)                                              /*!< SDH_T::INTEN: CDSRC Position          */
-#define SDH_INTEN_CDSRC_Msk              (0x1ul << SDH_INTEN_CDSRC_Pos)                    /*!< SDH_T::INTEN: CDSRC Mask              */
+#define SDH_INTEN_CDSRC_Pos          ( 30 )                                                /*!< SDH_T::INTEN: CDSRC Position          */
+#define SDH_INTEN_CDSRC_Msk          ( 0x1ul << SDH_INTEN_CDSRC_Pos )                      /*!< SDH_T::INTEN: CDSRC Mask              */
 
-#define SDH_INTSTS_BLKDIF_Pos            (0)                                               /*!< SDH_T::INTSTS: BLKDIF Position         */
-#define SDH_INTSTS_BLKDIF_Msk            (0x1ul << SDH_INTSTS_BLKDIF_Pos)                  /*!< SDH_T::INTSTS: BLKDIF Mask             */
+#define SDH_INTSTS_BLKDIF_Pos        ( 0 )                                                 /*!< SDH_T::INTSTS: BLKDIF Position         */
+#define SDH_INTSTS_BLKDIF_Msk        ( 0x1ul << SDH_INTSTS_BLKDIF_Pos )                    /*!< SDH_T::INTSTS: BLKDIF Mask             */
 
-#define SDH_INTSTS_CRCIF_Pos             (1)                                               /*!< SDH_T::INTSTS: CRCIF Position          */
-#define SDH_INTSTS_CRCIF_Msk             (0x1ul << SDH_INTSTS_CRCIF_Pos)                   /*!< SDH_T::INTSTS: CRCIF Mask              */
+#define SDH_INTSTS_CRCIF_Pos         ( 1 )                                                 /*!< SDH_T::INTSTS: CRCIF Position          */
+#define SDH_INTSTS_CRCIF_Msk         ( 0x1ul << SDH_INTSTS_CRCIF_Pos )                     /*!< SDH_T::INTSTS: CRCIF Mask              */
 
-#define SDH_INTSTS_CRC7_Pos              (2)                                               /*!< SDH_T::INTSTS: CRC7 Position           */
-#define SDH_INTSTS_CRC7_Msk              (0x1ul << SDH_INTSTS_CRC7_Pos)                    /*!< SDH_T::INTSTS: CRC7 Mask               */
+#define SDH_INTSTS_CRC7_Pos          ( 2 )                                                 /*!< SDH_T::INTSTS: CRC7 Position           */
+#define SDH_INTSTS_CRC7_Msk          ( 0x1ul << SDH_INTSTS_CRC7_Pos )                      /*!< SDH_T::INTSTS: CRC7 Mask               */
 
-#define SDH_INTSTS_CRC16_Pos             (3)                                               /*!< SDH_T::INTSTS: CRC16 Position          */
-#define SDH_INTSTS_CRC16_Msk             (0x1ul << SDH_INTSTS_CRC16_Pos)                   /*!< SDH_T::INTSTS: CRC16 Mask              */
+#define SDH_INTSTS_CRC16_Pos         ( 3 )                                                 /*!< SDH_T::INTSTS: CRC16 Position          */
+#define SDH_INTSTS_CRC16_Msk         ( 0x1ul << SDH_INTSTS_CRC16_Pos )                     /*!< SDH_T::INTSTS: CRC16 Mask              */
 
-#define SDH_INTSTS_CRCSTS_Pos            (4)                                               /*!< SDH_T::INTSTS: CRCSTS Position         */
-#define SDH_INTSTS_CRCSTS_Msk            (0x7ul << SDH_INTSTS_CRCSTS_Pos)                  /*!< SDH_T::INTSTS: CRCSTS Mask             */
+#define SDH_INTSTS_CRCSTS_Pos        ( 4 )                                                 /*!< SDH_T::INTSTS: CRCSTS Position         */
+#define SDH_INTSTS_CRCSTS_Msk        ( 0x7ul << SDH_INTSTS_CRCSTS_Pos )                    /*!< SDH_T::INTSTS: CRCSTS Mask             */
 
-#define SDH_INTSTS_DAT0STS_Pos           (7)                                               /*!< SDH_T::INTSTS: DAT0STS Position        */
-#define SDH_INTSTS_DAT0STS_Msk           (0x1ul << SDH_INTSTS_DAT0STS_Pos)                 /*!< SDH_T::INTSTS: DAT0STS Mask            */
+#define SDH_INTSTS_DAT0STS_Pos       ( 7 )                                                 /*!< SDH_T::INTSTS: DAT0STS Position        */
+#define SDH_INTSTS_DAT0STS_Msk       ( 0x1ul << SDH_INTSTS_DAT0STS_Pos )                   /*!< SDH_T::INTSTS: DAT0STS Mask            */
 
-#define SDH_INTSTS_CDIF_Pos              (8)                                               /*!< SDH_T::INTSTS: CDIF Position          */
-#define SDH_INTSTS_CDIF_Msk              (0x1ul << SDH_INTSTS_CDIF_Pos)                    /*!< SDH_T::INTSTS: CDIF Mask              */
+#define SDH_INTSTS_CDIF_Pos          ( 8 )                                                 /*!< SDH_T::INTSTS: CDIF Position          */
+#define SDH_INTSTS_CDIF_Msk          ( 0x1ul << SDH_INTSTS_CDIF_Pos )                      /*!< SDH_T::INTSTS: CDIF Mask              */
 
-#define SDH_INTSTS_RTOIF_Pos             (12)                                              /*!< SDH_T::INTSTS: RTOIF Position          */
-#define SDH_INTSTS_RTOIF_Msk             (0x1ul << SDH_INTSTS_RTOIF_Pos)                   /*!< SDH_T::INTSTS: RTOIF Mask              */
+#define SDH_INTSTS_RTOIF_Pos         ( 12 )                                                /*!< SDH_T::INTSTS: RTOIF Position          */
+#define SDH_INTSTS_RTOIF_Msk         ( 0x1ul << SDH_INTSTS_RTOIF_Pos )                     /*!< SDH_T::INTSTS: RTOIF Mask              */
 
-#define SDH_INTSTS_DITOIF_Pos            (13)                                              /*!< SDH_T::INTSTS: DITOIF Position         */
-#define SDH_INTSTS_DITOIF_Msk            (0x1ul << SDH_INTSTS_DITOIF_Pos)                  /*!< SDH_T::INTSTS: DITOIF Mask             */
+#define SDH_INTSTS_DITOIF_Pos        ( 13 )                                                /*!< SDH_T::INTSTS: DITOIF Position         */
+#define SDH_INTSTS_DITOIF_Msk        ( 0x1ul << SDH_INTSTS_DITOIF_Pos )                    /*!< SDH_T::INTSTS: DITOIF Mask             */
 
-#define SDH_INTSTS_CDSTS_Pos             (16)                                              /*!< SDH_T::INTSTS: CDSTS Position         */
-#define SDH_INTSTS_CDSTS_Msk             (0x1ul << SDH_INTSTS_CDSTS_Pos)                   /*!< SDH_T::INTSTS: CDSTS Mask             */
+#define SDH_INTSTS_CDSTS_Pos         ( 16 )                                                /*!< SDH_T::INTSTS: CDSTS Position         */
+#define SDH_INTSTS_CDSTS_Msk         ( 0x1ul << SDH_INTSTS_CDSTS_Pos )                     /*!< SDH_T::INTSTS: CDSTS Mask             */
 
-#define SDH_INTSTS_DAT1STS_Pos           (18)                                              /*!< SDH_T::INTSTS: DAT1STS Position        */
-#define SDH_INTSTS_DAT1STS_Msk           (0x1ul << SDH_INTSTS_DAT1STS_Pos)                 /*!< SDH_T::INTSTS: DAT1STS Mask            */
+#define SDH_INTSTS_DAT1STS_Pos       ( 18 )                                                /*!< SDH_T::INTSTS: DAT1STS Position        */
+#define SDH_INTSTS_DAT1STS_Msk       ( 0x1ul << SDH_INTSTS_DAT1STS_Pos )                   /*!< SDH_T::INTSTS: DAT1STS Mask            */
 
-#define SDH_RESP0_RESPTK0_Pos            (0)                                               /*!< SDH_T::RESP0: RESPTK0 Position         */
-#define SDH_RESP0_RESPTK0_Msk            (0xfffffffful << SDH_RESP0_RESPTK0_Pos)           /*!< SDH_T::RESP0: RESPTK0 Mask             */
+#define SDH_RESP0_RESPTK0_Pos        ( 0 )                                                 /*!< SDH_T::RESP0: RESPTK0 Position         */
+#define SDH_RESP0_RESPTK0_Msk        ( 0xfffffffful << SDH_RESP0_RESPTK0_Pos )             /*!< SDH_T::RESP0: RESPTK0 Mask             */
 
-#define SDH_RESP1_RESPTK1_Pos            (0)                                               /*!< SDH_T::RESP1: RESPTK1 Position         */
-#define SDH_RESP1_RESPTK1_Msk            (0xfful << SDH_RESP1_RESPTK1_Pos)                 /*!< SDH_T::RESP1: RESPTK1 Mask             */
+#define SDH_RESP1_RESPTK1_Pos        ( 0 )                                                 /*!< SDH_T::RESP1: RESPTK1 Position         */
+#define SDH_RESP1_RESPTK1_Msk        ( 0xfful << SDH_RESP1_RESPTK1_Pos )                   /*!< SDH_T::RESP1: RESPTK1 Mask             */
 
-#define SDH_BLEN_BLKLEN_Pos              (0)                                               /*!< SDH_T::BLEN: BLKLEN Position           */
-#define SDH_BLEN_BLKLEN_Msk              (0x7fful << SDH_BLEN_BLKLEN_Pos)                  /*!< SDH_T::BLEN: BLKLEN Mask               */
+#define SDH_BLEN_BLKLEN_Pos          ( 0 )                                                 /*!< SDH_T::BLEN: BLKLEN Position           */
+#define SDH_BLEN_BLKLEN_Msk          ( 0x7fful << SDH_BLEN_BLKLEN_Pos )                    /*!< SDH_T::BLEN: BLKLEN Mask               */
 
-#define SDH_TOUT_TOUT_Pos                (0)                                               /*!< SDH_T::TOUT: TOUT Position             */
-#define SDH_TOUT_TOUT_Msk                (0xfffffful << SDH_TOUT_TOUT_Pos)                 /*!< SDH_T::TOUT: TOUT Mask                 */
+#define SDH_TOUT_TOUT_Pos            ( 0 )                                                 /*!< SDH_T::TOUT: TOUT Position             */
+#define SDH_TOUT_TOUT_Msk            ( 0xfffffful << SDH_TOUT_TOUT_Pos )                   /*!< SDH_T::TOUT: TOUT Mask                 */
 
 /**@}*/ /* SDH_CONST */
 /**@}*/ /* end of SDH register group */

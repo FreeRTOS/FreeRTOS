@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -33,6 +33,7 @@
 
 #ifndef USBLIB_TYPES_H
 #define USBLIB_TYPES_H
+
 /*----------------------------------------------------------------------------
  *         Includes
  *----------------------------------------------------------------------------*/
@@ -45,37 +46,37 @@
 
 /* Define WEAK attribute */
 #ifndef WEAK
-#if defined   ( __CC_ARM   )
-    #define WEAK __attribute__ ((weak))
-#elif defined ( __ICCARM__ )
-    #define WEAK __weak
-#elif defined (  __GNUC__  )
-    #define WEAK __attribute__ ((weak))
-#endif
+    #if defined( __CC_ARM )
+        #define WEAK    __attribute__( ( weak ) )
+    #elif defined( __ICCARM__ )
+        #define WEAK    __weak
+    #elif defined( __GNUC__ )
+        #define WEAK    __attribute__( ( weak ) )
+    #endif
 #endif
 
 /** USB status ReturnCode */
-typedef enum _USBRC {
-    USBRC_OK = 0,      /**< Operation was successful */
-    USBRC_SUCCESS = 0, /**< Operation was successful */
+typedef enum _USBRC
+{
+    USBRC_OK = 0,                  /**< Operation was successful */
+    USBRC_SUCCESS = 0,             /**< Operation was successful */
     /* Bool codes */
-    USBRC_FALSE = 0,   /**< As boolean TRUE */
-    USBRC_TRUE  = 1,   /**< As boolean FALSE */
-    /* Error codes */    
-    USBRC_BUSY,        /**< EP/Device is already busy */
-    USBRC_ABORTED,     /**< Operation aborted due to error or stall */
-    USBRC_CANCELED,    /**< Operation canceled by user */
-    USBRC_RESET,       /**< Operation aborted due to init/reset/un-configure */
-    USBRC_PARTIAL_DONE,/**< Part of operation successfully done */
-    USBRC_FINISHED,    /**< All operation successfully done and terminate */
+    USBRC_FALSE = 0,               /**< As boolean TRUE */
+    USBRC_TRUE = 1,                /**< As boolean FALSE */
+    /* Error codes */
+    USBRC_BUSY,                    /**< EP/Device is already busy */
+    USBRC_ABORTED,                 /**< Operation aborted due to error or stall */
+    USBRC_CANCELED,                /**< Operation canceled by user */
+    USBRC_RESET,                   /**< Operation aborted due to init/reset/un-configure */
+    USBRC_PARTIAL_DONE,            /**< Part of operation successfully done */
+    USBRC_FINISHED,                /**< All operation successfully done and terminate */
 
-    USBRC_PARAM_ERR,   /**< Failed due to parameter error */
-    USBRC_STATE_ERR,   /**< Failed due to state error */
-    USBRC_ERROR,       /**< General error */
+    USBRC_PARAM_ERR,               /**< Failed due to parameter error */
+    USBRC_STATE_ERR,               /**< Failed due to state error */
+    USBRC_ERROR,                   /**< General error */
 
     USBRC_SW_NOT_SUPPORTED = 0xFD, /**< Failed due to SW not supported */
     USBRC_HW_NOT_SUPPORTED = 0xFE  /**< Failed due to HW not supported */
 } USBRC;
- 
-#endif /* #define USBLIB_TYPES_H */
 
+#endif /* #define USBLIB_TYPES_H */

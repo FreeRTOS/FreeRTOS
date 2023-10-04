@@ -9,20 +9,28 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-int __wrap_puts(const char *s)
+int __wrap_puts( const char * s )
 {
-  while (*s != '\0') {
-    while (UART0_REG(UART_REG_TXFIFO) & 0x80000000) ;
-    UART0_REG(UART_REG_TXFIFO) = *s;
+    while( *s != '\0' )
+    {
+        while( UART0_REG( UART_REG_TXFIFO ) & 0x80000000 )
+        {
+        }
 
-    if (*s == '\n') {
-      while (UART0_REG(UART_REG_TXFIFO) & 0x80000000) ;
-      UART0_REG(UART_REG_TXFIFO) = '\r';
+        UART0_REG( UART_REG_TXFIFO ) = *s;
+
+        if( *s == '\n' )
+        {
+            while( UART0_REG( UART_REG_TXFIFO ) & 0x80000000 )
+            {
+            }
+
+            UART0_REG( UART_REG_TXFIFO ) = '\r';
+        }
+
+        ++s;
     }
 
-    ++s;
-  }
-
-  return 0;
+    return 0;
 }
-weak_under_alias(puts);
+weak_under_alias( puts );

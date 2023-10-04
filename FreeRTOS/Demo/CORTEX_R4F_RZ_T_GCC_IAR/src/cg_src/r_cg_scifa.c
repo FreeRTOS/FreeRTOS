@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_scifa.h"
@@ -42,13 +42,13 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
-const uint8_t * gp_scifa2_tx_address;   /* SCIFA2 transmit buffer address */
-uint16_t        g_scifa2_tx_count;      /* SCIFA2 transmit data number */
-uint8_t *       gp_scifa2_rx_address;   /* SCIFA2 receive buffer address */
-uint16_t        g_scifa2_rx_count;      /* SCIFA2 receive data number */
-uint16_t        g_scifa2_rx_length;     /* SCIFA2 receive data length */
+const uint8_t * gp_scifa2_tx_address; /* SCIFA2 transmit buffer address */
+uint16_t g_scifa2_tx_count;           /* SCIFA2 transmit data number */
+uint8_t * gp_scifa2_rx_address;       /* SCIFA2 receive buffer address */
+uint16_t g_scifa2_rx_count;           /* SCIFA2 receive data number */
+uint16_t g_scifa2_rx_length;          /* SCIFA2 receive data length */
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
@@ -58,13 +58,13 @@ uint16_t        g_scifa2_rx_length;     /* SCIFA2 receive data length */
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_SCIFA2_Create(void)
+void R_SCIFA2_Create( void )
 {
     volatile uint16_t dummy;
     uint16_t w_count;
 
     /* Cancel SCIFA2 module stop state */
-    MSTP(SCIFA2) = 0U;
+    MSTP( SCIFA2 ) = 0U;
 
     /* Disable TXIF2 interrupt */
     VIC.IEC3.LONG = 0x00008000UL;
@@ -93,7 +93,7 @@ void R_SCIFA2_Create(void)
     ( void ) dummy;
 
     SCIFA2.FSR.WORD = 0x00U;
-    dummy = (uint16_t) SCIFA2.LSR.BIT.ORER;
+    dummy = ( uint16_t ) SCIFA2.LSR.BIT.ORER;
 
     /* Remove compiler warnings. */
     ( void ) dummy;
@@ -116,7 +116,7 @@ void R_SCIFA2_Create(void)
     SCIFA2.BRR_MDDR.BRR = 0x3CU;
 
     /* Wait for at least 1-bit interval */
-    for (w_count = 0U; w_count < _SCIF_1BIT_INTERVAL_2; w_count++)
+    for( w_count = 0U; w_count < _SCIF_1BIT_INTERVAL_2; w_count++ )
     {
         nop();
     }
@@ -134,33 +134,34 @@ void R_SCIFA2_Create(void)
     VIC.PRL111.LONG = _SCIF_PRIORITY_LEVEL2;
 
     /* Set TXIF2 interrupt address */
-    VIC.VAD111.LONG = (uint32_t)r_scifa2_txif2_interrupt_entry;
+    VIC.VAD111.LONG = ( uint32_t ) r_scifa2_txif2_interrupt_entry;
 
     /* Set RXIF2 interrupt priority */
     VIC.PRL110.LONG = _SCIF_PRIORITY_LEVEL3;
 
     /* Set RXIF2 interrupt address */
-    VIC.VAD110.LONG = (uint32_t)r_scifa2_rxif2_interrupt_entry;
+    VIC.VAD110.LONG = ( uint32_t ) r_scifa2_rxif2_interrupt_entry;
 
     /* Set BRIF2 interrupt priority */
     VIC.PRL109.LONG = _SCIF_PRIORITY_LEVEL5;
 
     /* Set BRIF2 interrupt address */
-    VIC.VAD109.LONG = (uint32_t)r_scifa2_brif2_interrupt_entry;
+    VIC.VAD109.LONG = ( uint32_t ) r_scifa2_brif2_interrupt_entry;
 
     /* Set DRIF2 interrupt priority */
     VIC.PRL112.LONG = _SCIF_PRIORITY_LEVEL4;
 
     /* Set DRIF2 interrupt address */
-    VIC.VAD112.LONG = (uint32_t)r_scifa2_drif2_interrupt_entry;
+    VIC.VAD112.LONG = ( uint32_t ) r_scifa2_drif2_interrupt_entry;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCIFA2_Start
 * Description  : This function starts SCIFA2.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_SCIFA2_Start(void)
+void R_SCIFA2_Start( void )
 {
     /* Enable TXIF2 interrupt */
     VIC.IEN3.LONG |= 0x00008000UL;
@@ -174,13 +175,14 @@ void R_SCIFA2_Start(void)
     /* Enable DRIF2 interrupt */
     VIC.IEN3.LONG |= 0x00010000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCIFA2_Stop
 * Description  : This function stops SCIFA2.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_SCIFA2_Stop(void)
+void R_SCIFA2_Stop( void )
 {
     /* Disable serial transmit */
     SCIFA2.SCR.BIT.TE = 0U;
@@ -206,6 +208,7 @@ void R_SCIFA2_Stop(void)
     /* Disable DRIF2 interrupt */
     VIC.IEC3.LONG = 0x00010000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCIFA2_Serial_Receive
 * Description  : This function receives SCIFA2 data.
@@ -216,11 +219,12 @@ void R_SCIFA2_Stop(void)
 * Return Value : status -
 *                    MD_OK or MD_ARGERROR
 ***********************************************************************************************************************/
-MD_STATUS R_SCIFA2_Serial_Receive(uint8_t * rx_buf, uint16_t rx_num)
+MD_STATUS R_SCIFA2_Serial_Receive( uint8_t * rx_buf,
+                                   uint16_t rx_num )
 {
     MD_STATUS status = MD_OK;
 
-    if (rx_num < 1U)
+    if( rx_num < 1U )
     {
         status = MD_ARGERROR;
     }
@@ -237,8 +241,9 @@ MD_STATUS R_SCIFA2_Serial_Receive(uint8_t * rx_buf, uint16_t rx_num)
         SCIFA2.SCR.BIT.REIE = 1U;
     }
 
-    return (status);
+    return( status );
 }
+
 /***********************************************************************************************************************
 * Function Name: R_SCIFA2_Serial_Send
 * Description  : This function transmits SCIFA2 data.
@@ -249,11 +254,12 @@ MD_STATUS R_SCIFA2_Serial_Receive(uint8_t * rx_buf, uint16_t rx_num)
 * Return Value : status -
 *                    MD_OK or MD_ARGERROR
 ***********************************************************************************************************************/
-MD_STATUS R_SCIFA2_Serial_Send(const uint8_t * tx_buf, uint16_t tx_num)
+MD_STATUS R_SCIFA2_Serial_Send( const uint8_t * tx_buf,
+                                uint16_t tx_num )
 {
     MD_STATUS status = MD_OK;
 
-    if (tx_num < 1U)
+    if( tx_num < 1U )
     {
         status = MD_ARGERROR;
     }
@@ -265,7 +271,7 @@ MD_STATUS R_SCIFA2_Serial_Send(const uint8_t * tx_buf, uint16_t tx_num)
         SCIFA2.SCR.BIT.TIE = 1U;
     }
 
-    return (status);
+    return( status );
 }
 
 /* Start user code for adding. Do not edit comment generated here */

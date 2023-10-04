@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /** ============================================================================
  *  @file       WatchdogCC32XX.h
  *
@@ -93,15 +94,15 @@
  */
 
 #ifndef ti_drivers_watchdog_WatchdogCC32XX__include
-#define ti_drivers_watchdog_WatchdogCC32XX__include
+    #define ti_drivers_watchdog_WatchdogCC32XX__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <ti/drivers/Watchdog.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <ti/drivers/Watchdog.h>
 
 /**
  *  @addtogroup Watchdog_STATUS
@@ -135,7 +136,7 @@ extern "C" {
  *  @b *arg contains @c true if the watchdog timer is enabled,
  *  else @c false if it is not.
  */
-#define WatchdogCC32XX_CMD_IS_TIMER_ENABLE          (Watchdog_CMD_RESERVED + 0)
+    #define WatchdogCC32XX_CMD_IS_TIMER_ENABLE    ( Watchdog_CMD_RESERVED + 0 )
 
 
 /*!
@@ -145,7 +146,7 @@ extern "C" {
  *  With this command code, @b arg is a pointer to an @a integer.
  *  @b *arg contains the current value of the watchdog timer.
  */
-#define WatchdogCC32XX_CMD_GET_TIMER_VALUE          (Watchdog_CMD_RESERVED + 1)
+    #define WatchdogCC32XX_CMD_GET_TIMER_VALUE    ( Watchdog_CMD_RESERVED + 1 )
 
 
 /*!
@@ -156,7 +157,7 @@ extern "C" {
  *  @b *arg contains @c true if the watchdog timer is locked,
  *  else @c false if it is not.
  */
-#define WatchdogCC32XX_CMD_IS_TIMER_LOCKED          (Watchdog_CMD_RESERVED + 2)
+    #define WatchdogCC32XX_CMD_IS_TIMER_LOCKED    ( Watchdog_CMD_RESERVED + 2 )
 
 
 /*!
@@ -167,13 +168,13 @@ extern "C" {
  *  @b *arg contains the current value loaded into the watchdog timer when
  *  the count reaches zero for the first time.
  */
-#define WatchdogCC32XX_CMD_GET_TIMER_RELOAD_VALUE   (Watchdog_CMD_RESERVED + 3)
+    #define WatchdogCC32XX_CMD_GET_TIMER_RELOAD_VALUE    ( Watchdog_CMD_RESERVED + 3 )
 
 
 /** @}*/
 
 /*!  @brief  Watchdog function table for CC32XX */
-extern const Watchdog_FxnTable WatchdogCC32XX_fxnTable;
+    extern const Watchdog_FxnTable WatchdogCC32XX_fxnTable;
 
 /*!
  *  @brief  Watchdog hardware attributes for CC32XX
@@ -188,24 +189,26 @@ extern const Watchdog_FxnTable WatchdogCC32XX_fxnTable;
  *  interrupt priority in an OS specific way.  In the case of the SYS/BIOS
  *  port, intPriority is passed unmodified to Hwi_create().
  */
-typedef struct WatchdogCC32XX_HWAttrs {
-    unsigned int baseAddr;       /*!< Base adddress for Watchdog */
-    unsigned int intNum;         /*!< WDT interrupt number */
-    unsigned int intPriority;    /*!< WDT interrupt priority */
-    uint32_t     reloadValue;    /*!< Reload value for Watchdog */
-} WatchdogCC32XX_HWAttrs;
+    typedef struct WatchdogCC32XX_HWAttrs
+    {
+        unsigned int baseAddr;    /*!< Base adddress for Watchdog */
+        unsigned int intNum;      /*!< WDT interrupt number */
+        unsigned int intPriority; /*!< WDT interrupt priority */
+        uint32_t reloadValue;     /*!< Reload value for Watchdog */
+    } WatchdogCC32XX_HWAttrs;
 
 /*!
  *  @brief      Watchdog Object for CC32XX
  *
  *  Not to be accessed by the user.
  */
-typedef struct WatchdogCC32XX_Object {
-    bool         isOpen;              /* Flag for open/close status */
-} WatchdogCC32XX_Object;
+    typedef struct WatchdogCC32XX_Object
+    {
+        bool isOpen;                  /* Flag for open/close status */
+    } WatchdogCC32XX_Object;
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_watchdog_WatchdogCC32XX__include */

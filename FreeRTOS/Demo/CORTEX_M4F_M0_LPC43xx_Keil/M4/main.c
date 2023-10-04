@@ -96,35 +96,35 @@
 #include "platform_config.h"
 
 /* Priorities for the demo application tasks. */
-#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 1UL )
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
-#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
-#define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
-#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
+#define mainFLASH_TASK_PRIORITY                    ( tskIDLE_PRIORITY + 1UL )
+#define mainQUEUE_POLL_PRIORITY                    ( tskIDLE_PRIORITY + 2UL )
+#define mainSEM_TEST_PRIORITY                      ( tskIDLE_PRIORITY + 1UL )
+#define mainBLOCK_Q_PRIORITY                       ( tskIDLE_PRIORITY + 2UL )
+#define mainCREATOR_TASK_PRIORITY                  ( tskIDLE_PRIORITY + 3UL )
+#define mainFLOP_TASK_PRIORITY                     ( tskIDLE_PRIORITY )
 
 /* The LED used by the check timer. */
-#define mainCHECK_LED 						( 3UL )
+#define mainCHECK_LED                              ( 3UL )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0UL )
+#define mainDONT_BLOCK                             ( 0UL )
 
 /* The period after which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
+ * have been reported by any of the standard demo tasks.  ms are converted to the
+ * equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS                  ( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
+ * reported in one of the standard demo tasks.  ms are converted to the equivalent
+ * in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS            ( 200UL / portTICK_PERIOD_MS )
 
 /* Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 1 to create a simple demo.
-Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0 to create a much more
-comprehensive test application.  See the comments at the top of this file, and
-the documentation page on the http://www.FreeRTOS.org web site for more
-information. */
-#define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY		0
+ * Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0 to create a much more
+ * comprehensive test application.  See the comments at the top of this file, and
+ * the documentation page on the http://www.FreeRTOS.org web site for more
+ * information. */
+#define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY    0
 
 /*-----------------------------------------------------------*/
 
@@ -143,8 +143,8 @@ static void prvCheckTimerCallback( TimerHandle_t xTimer );
  * of the FPU registers, as described at the top of this file.  The nature of
  * these files necessitates that they are written in an assembly file.
  */
-extern void vRegTest1Task( void *pvParameters );
-extern void vRegTest2Task( void *pvParameters );
+extern void vRegTest1Task( void * pvParameters );
+extern void vRegTest2Task( void * pvParameters );
 extern void vRegTestClearFlopRegistersToParameterValue( unsigned long ulValue );
 extern unsigned long ulRegTestCheckFlopRegistersContainParameterValue( unsigned long ulValue );
 
@@ -162,259 +162,270 @@ static void prvOptionallyCreateComprehensveTestApplication( void );
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
-register check tasks to the check software timer.  If the variables keep
-incrementing, then the register check tasks have not discovered any errors.  If
-a variable stops incrementing, then an error has been found. */
+ * register check tasks to the check software timer.  If the variables keep
+ * incrementing, then the register check tasks have not discovered any errors.  If
+ * a variable stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-	/* Configure the hardware ready to run the test. */
-	prvSetupHardware();
+    /* Configure the hardware ready to run the test. */
+    prvSetupHardware();
 
-	/* Start standard demo/test application flash tasks.  See the comments at
-	the top of this file.  The LED flash tasks are always created.  The other
-	tasks are only created if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to
-	0 (at the top of this file).  See the comments at the top of this file for
-	more information. */
-	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+    /* Start standard demo/test application flash tasks.  See the comments at
+     * the top of this file.  The LED flash tasks are always created.  The other
+     * tasks are only created if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to
+     * 0 (at the top of this file).  See the comments at the top of this file for
+     * more information. */
+    vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 
-	/* The following function will only create more tasks and timers if
-	mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 0 (at the top of this
-	file).  See the comments at the top of this file for more information. */
-	prvOptionallyCreateComprehensveTestApplication();
+    /* The following function will only create more tasks and timers if
+     * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 0 (at the top of this
+     * file).  See the comments at the top of this file for more information. */
+    prvOptionallyCreateComprehensveTestApplication();
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* Infinite loop */
-	for( ;; );
+    /* Infinite loop */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
-static long lChangedTimerPeriodAlready = pdFALSE;
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-unsigned long ulErrorFound = pdFALSE;
+    static long lChangedTimerPeriodAlready = pdFALSE;
+    static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+    unsigned long ulErrorFound = pdFALSE;
 
-	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none have detected an error. */
+    /* Check all the demo tasks (other than the flash tasks) to ensure
+     * that they are all still running, and that none have detected an error. */
 
-	if( xAreMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 0UL;
-	}
+    if( xAreMathsTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 0UL;
+    }
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 1UL;
-	}
+    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 1UL;
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 2UL;
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 2UL;
+    }
 
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 3UL;
-	}
+    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 3UL;
+    }
 
-	if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 4UL;
-	}
+    if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 4UL;
+    }
 
-	if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 5UL;
-	}
+    if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 5UL;
+    }
 
-	if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 6UL;
-	}
+    if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 6UL;
+    }
 
-	if( xIsCreateTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 7UL;
-	}
+    if( xIsCreateTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 7UL;
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 8UL;
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 8UL;
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound |= 0x01UL << 9UL;
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound |= 0x01UL << 9UL;
+    }
 
-	/* Check that the register test 1 task is still running. */
-	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
-	{
-		ulErrorFound |= 0x01UL << 10UL;
-	}
-	ulLastRegTest1Value = ulRegTest1LoopCounter;
+    /* Check that the register test 1 task is still running. */
+    if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+    {
+        ulErrorFound |= 0x01UL << 10UL;
+    }
 
-	/* Check that the register test 2 task is still running. */
-	if( ulLastRegTest2Value == ulRegTest2LoopCounter )
-	{
-		ulErrorFound |= 0x01UL << 11UL;
-	}
-	ulLastRegTest2Value = ulRegTest2LoopCounter;
+    ulLastRegTest1Value = ulRegTest1LoopCounter;
 
-	/* Toggle the check LED to give an indication of the system status.  If
-	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
-	everything is ok.  A faster toggle indicates an error. */
-	vParTestToggleLED( mainCHECK_LED );
+    /* Check that the register test 2 task is still running. */
+    if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+    {
+        ulErrorFound |= 0x01UL << 11UL;
+    }
 
-	/* Have any errors been latch in ulErrorFound?  If so, shorten the
-	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
-	This will result in an increase in the rate at which mainCHECK_LED
-	toggles. */
-	if( ulErrorFound != pdFALSE )
-	{
-		if( lChangedTimerPeriodAlready == pdFALSE )
-		{
-			lChangedTimerPeriodAlready = pdTRUE;
+    ulLastRegTest2Value = ulRegTest2LoopCounter;
 
-			/* This call to xTimerChangePeriod() uses a zero block time.
-			Functions called from inside of a timer callback function must
-			*never* attempt	to block. */
-			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
-		}
-	}
+    /* Toggle the check LED to give an indication of the system status.  If
+     * the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
+     * everything is ok.  A faster toggle indicates an error. */
+    vParTestToggleLED( mainCHECK_LED );
+
+    /* Have any errors been latch in ulErrorFound?  If so, shorten the
+     * period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
+     * This will result in an increase in the rate at which mainCHECK_LED
+     * toggles. */
+    if( ulErrorFound != pdFALSE )
+    {
+        if( lChangedTimerPeriodAlready == pdFALSE )
+        {
+            lChangedTimerPeriodAlready = pdTRUE;
+
+            /* This call to xTimerChangePeriod() uses a zero block time.
+             * Functions called from inside of a timer callback function must
+             * never* attempt	to block. */
+            xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-extern void Hitex_CGU_Init( void );
+    extern void Hitex_CGU_Init( void );
 
-	/* Setup system (clock, PLL and Flash configuration) */
-	platformInit();
+    /* Setup system (clock, PLL and Flash configuration) */
+    platformInit();
 
-	/* Wind the clock speed up in steps to its maximum. */
-	Hitex_CGU_Init();
+    /* Wind the clock speed up in steps to its maximum. */
+    Hitex_CGU_Init();
 
-	/* Ensure all priority bits are assigned as preemption priority bits. */
-	NVIC_SetPriorityGrouping( 0 );
+    /* Ensure all priority bits are assigned as preemption priority bits. */
+    NVIC_SetPriorityGrouping( 0 );
 
-	/* Setup the LED outputs. */
-	vParTestInitialise();
+    /* Setup the LED outputs. */
+    vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
 static void prvOptionallyCreateComprehensveTestApplication( void )
 {
-	#if ( mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY == 0 )
-	{
-	TimerHandle_t xCheckTimer = NULL;
+    #if ( mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY == 0 )
+    {
+        TimerHandle_t xCheckTimer = NULL;
 
-		/* Start all the other standard demo/test tasks. */
-		vStartIntegerMathTasks( tskIDLE_PRIORITY );
-		vStartDynamicPriorityTasks();
-		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vCreateBlockTimeTasks();
-		vStartCountingSemaphoreTasks();
-		vStartGenericQueueTasks( tskIDLE_PRIORITY );
-		vStartRecursiveMutexTasks();
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+        /* Start all the other standard demo/test tasks. */
+        vStartIntegerMathTasks( tskIDLE_PRIORITY );
+        vStartDynamicPriorityTasks();
+        vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+        vCreateBlockTimeTasks();
+        vStartCountingSemaphoreTasks();
+        vStartGenericQueueTasks( tskIDLE_PRIORITY );
+        vStartRecursiveMutexTasks();
+        vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+        vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 
-		/* Most importantly, start the tasks that use the FPU. */
-		vStartMathTasks( mainFLOP_TASK_PRIORITY );
+        /* Most importantly, start the tasks that use the FPU. */
+        vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
-		/* Create the register check tasks, as described at the top of this
-		file */
-		xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+        /* Create the register check tasks, as described at the top of this
+         * file */
+        xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+        xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 
-		/* Create the software timer that performs the 'check' functionality,
-		as described at the top of this file. */
-		xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
-									( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,					/* The ID is not used, so can be set to anything. */
-									prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-								  );
+        /* Create the software timer that performs the 'check' functionality,
+         * as described at the top of this file. */
+        xCheckTimer = xTimerCreate( "CheckTimer",                  /* A text name, purely to help debugging. */
+                                    ( mainCHECK_TIMER_PERIOD_MS ), /* The timer period, in this case 3000ms (3s). */
+                                    pdTRUE,                        /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                                    ( void * ) 0,                  /* The ID is not used, so can be set to anything. */
+                                    prvCheckTimerCallback          /* The callback function that inspects the status of all the other tasks. */
+                                    );
 
-		if( xCheckTimer != NULL )
-		{
-			xTimerStart( xCheckTimer, mainDONT_BLOCK );
-		}
+        if( xCheckTimer != NULL )
+        {
+            xTimerStart( xCheckTimer, mainDONT_BLOCK );
+        }
 
-		/* This task has to be created last as it keeps account of the number of
-		tasks it expects to see running. */
-		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	}
-	#else /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
-	{
-		/* Just to prevent compiler warnings when the configuration options are
-		set such that these static functions are not used. */
-		( void ) vRegTest1Task;
-		( void ) vRegTest2Task;
-		( void ) prvCheckTimerCallback;
-		( void ) prvSetupNestedFPUInterruptsTest;
-	}
-	#endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
+        /* This task has to be created last as it keeps account of the number of
+         * tasks it expects to see running. */
+        vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    }
+    #else /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
+    {
+        /* Just to prevent compiler warnings when the configuration options are
+         * set such that these static functions are not used. */
+        ( void ) vRegTest1Task;
+        ( void ) vRegTest2Task;
+        ( void ) prvCheckTimerCallback;
+        ( void ) prvSetupNestedFPUInterruptsTest;
+    }
+    #endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+     * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+     * function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+     * timer or semaphore is created.  It is also called by various parts of the
+     * demo application.  If heap_1.c or heap_2.c are used, then the size of the
+     * heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+     * FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+     * to query the size of free heap space that remains (although it does not
+     * provide information on how the remaining heap might be fragmented). */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
-	task.  It is essential that code added to this hook function never attempts
-	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+    /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+     * to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+     * task.  It is essential that code added to this hook function never attempts
+     * to block in any way (for example, call xQueueReceive() with a block time
+     * specified, or call vTaskDelay()).  If the application makes use of the
+     * vTaskDelete() API function (as this demo application does) then it is also
+     * important that vApplicationIdleHook() is permitted to return to its calling
+     * function, because it is the responsibility of the idle task to clean up
+     * memory allocated by the kernel to any task that has since been deleted. */
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* This function will be called by each tick interrupt if
-	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-	added here, but the tick hook is called from an interrupt context, so
-	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
+    /* This function will be called by each tick interrupt if
+     * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+     * added here, but the tick hook is called from an interrupt context, so
+     * code must not attempt to block, and only the interrupt safe FreeRTOS API
+     * functions can be used (those that end in FromISR()). */
 }
 /*-----------------------------------------------------------*/

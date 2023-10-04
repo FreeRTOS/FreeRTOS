@@ -51,9 +51,9 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void vTaskTickInterrupt(void)
+void vTaskTickInterrupt( void )
 {
-  /* Write your code here ... */
+    /* Write your code here ... */
 }
 
 
@@ -69,9 +69,9 @@ void vTaskTickInterrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void ButtonInterrupt_OnInterrupt(void)
+void ButtonInterrupt_OnInterrupt( void )
 {
-  /* place your ButtonInterrupt interrupt procedure body here */
+    /* place your ButtonInterrupt interrupt procedure body here */
 }
 
 
@@ -80,7 +80,7 @@ void ButtonInterrupt_OnInterrupt(void)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

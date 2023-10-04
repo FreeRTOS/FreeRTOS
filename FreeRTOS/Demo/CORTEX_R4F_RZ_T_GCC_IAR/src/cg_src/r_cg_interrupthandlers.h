@@ -29,87 +29,87 @@
 #define INTERRUPT_HANDLERS_H
 
 /***********************************************************************************************************************
-Macro definitions (Register bit)
+*  Macro definitions (Register bit)
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Global functions
+*  Global functions
 ***********************************************************************************************************************/
 /* FIQ exception handler */
 #ifdef __ICCARM__
-	__irq __arm void r_fiq_handler(void);
+    __irq __arm void r_fiq_handler( void );
 
-	/* ICU IRQ12 */
-	__irq __arm void r_icu_irq12_interrupt(void);
+/* ICU IRQ12 */
+    __irq __arm void r_icu_irq12_interrupt( void );
 
-	/* RSPI1 SPTI1 */
-	__irq __arm void r_rspi1_transmit_interrupt(void);
+/* RSPI1 SPTI1 */
+    __irq __arm void r_rspi1_transmit_interrupt( void );
 
-	/* RSPI1 SPEI1 */
-	__irq __arm void r_rspi1_error_interrupt(void);
+/* RSPI1 SPEI1 */
+    __irq __arm void r_rspi1_error_interrupt( void );
 
-	/* RSPI1 SPII1 */
-	__irq __arm void r_rspi1_idle_interrupt(void);
+/* RSPI1 SPII1 */
+    __irq __arm void r_rspi1_idle_interrupt( void );
 
-	/* SCIFA TXIF2 */
-	__irq __arm void r_scifa2_txif2_interrupt_entry(void);
+/* SCIFA TXIF2 */
+    __irq __arm void r_scifa2_txif2_interrupt_entry( void );
 
-	/* SCIFA DRIF2 */
-	__irq __arm void r_scifa2_drif2_interrupt_entry(void);
+/* SCIFA DRIF2 */
+    __irq __arm void r_scifa2_drif2_interrupt_entry( void );
 
-	/* SCIFA RXIF2 */
-	__irq __arm void r_scifa2_rxif2_interrupt_entry(void);
+/* SCIFA RXIF2 */
+    __irq __arm void r_scifa2_rxif2_interrupt_entry( void );
 
-	/* SCIFA BRIF2 */
-	__irq __arm void r_scifa2_brif2_interrupt_entry(void);
+/* SCIFA BRIF2 */
+    __irq __arm void r_scifa2_brif2_interrupt_entry( void );
 
-	/* CMT CMI4 */
-	__irq __arm void r_cmt_cmi4_interrupt(void);
+/* CMT CMI4 */
+    __irq __arm void r_cmt_cmi4_interrupt( void );
 
-	/* CMT CMI5 */
-	__irq __arm void r_cmt_cmi5_interrupt(void);
+/* CMT CMI5 */
+    __irq __arm void r_cmt_cmi5_interrupt( void );
 #endif /* __ICCARM__ */
 
 #ifdef __GNUC__
-	void r_fiq_handler(void) __attribute__((interrupt ("FIQ")));
+    void r_fiq_handler( void ) __attribute__( ( interrupt( "FIQ" ) ) );
 
-	/* ICU IRQ12 */
-	void r_icu_irq12_interrupt(void) __attribute__((interrupt ("IRQ")));
+/* ICU IRQ12 */
+    void r_icu_irq12_interrupt( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* RSPI1 SPTI1 */
-	void r_rspi1_transmit_interrupt(void) __attribute__((interrupt ("IRQ")));
+/* RSPI1 SPTI1 */
+    void r_rspi1_transmit_interrupt( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* RSPI1 SPEI1 */
-	void r_rspi1_error_interrupt(void) __attribute__((interrupt ("IRQ")));
+/* RSPI1 SPEI1 */
+    void r_rspi1_error_interrupt( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* RSPI1 SPII1 */
-	void r_rspi1_idle_interrupt(void) __attribute__((interrupt ("IRQ")));
+/* RSPI1 SPII1 */
+    void r_rspi1_idle_interrupt( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* SCIFA TXIF2 */
-	void r_scifa2_txif2_interrupt_entry(void) __attribute__((interrupt ("IRQ")));
+/* SCIFA TXIF2 */
+    void r_scifa2_txif2_interrupt_entry( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* SCIFA DRIF2 */
-	void r_scifa2_drif2_interrupt_entry(void) __attribute__((interrupt ("IRQ")));
+/* SCIFA DRIF2 */
+    void r_scifa2_drif2_interrupt_entry( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* SCIFA RXIF2 */
-	void r_scifa2_rxif2_interrupt_entry(void) __attribute__((interrupt ("IRQ")));
+/* SCIFA RXIF2 */
+    void r_scifa2_rxif2_interrupt_entry( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* SCIFA BRIF2 */
-	void r_scifa2_brif2_interrupt_entry(void) __attribute__((interrupt ("IRQ")));
+/* SCIFA BRIF2 */
+    void r_scifa2_brif2_interrupt_entry( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* CMT CMI4 */
-	void r_cmt_cmi4_interrupt(void) __attribute__((interrupt ("IRQ")));
+/* CMT CMI4 */
+    void r_cmt_cmi4_interrupt( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 
-	/* CMT CMI5 */
-	void r_cmt_cmi5_interrupt(void) __attribute__((interrupt ("IRQ")));
+/* CMT CMI5 */
+    void r_cmt_cmi5_interrupt( void ) __attribute__( ( interrupt( "IRQ" ) ) );
 #endif /* __GNUC__ */
 
-#endif
+#endif /* ifndef INTERRUPT_HANDLERS_H */

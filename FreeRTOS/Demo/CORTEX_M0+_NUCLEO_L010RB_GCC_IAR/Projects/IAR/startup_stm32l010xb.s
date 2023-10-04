@@ -1,11 +1,11 @@
 ;*******************************************************************************
 ;* File Name          : startup_stm32l010xb.s
 ;* Author             : MCD Application Team
-;* Description        : STM32L010xB Ultra Low Power Devices vector 
+;* Description        : STM32L010xB Ultra Low Power Devices vector
 ;*                      This module performs:
 ;*                      - Set the initial SP
 ;*                      - Set the initial PC == _iar_program_start,
-;*                      - Set the vector table entries with the exceptions ISR 
+;*                      - Set the vector table entries with the exceptions ISR
 ;*                        address.
 ;*                      - Configure the system clock
 ;*                      - Branches to main in the C library (which eventually
@@ -49,7 +49,7 @@
         SECTION .intvec:CODE:NOROOT(2)
 
         EXTERN  __iar_program_start
-        EXTERN  SystemInit        
+        EXTERN  SystemInit
         PUBLIC  __vector_table
 
         DATA
@@ -97,15 +97,15 @@ __vector_table
                 DCD     0                              ; Reserved
                 DCD     0                              ; Reserved
                 DCD     I2C1_IRQHandler                ; I2C1
-                DCD     0                              ; Reserved    
+                DCD     0                              ; Reserved
                 DCD     SPI1_IRQHandler                ; SPI1
-                DCD     0                              ; Reserved    
-                DCD     0                              ; Reserved  
+                DCD     0                              ; Reserved
+                DCD     0                              ; Reserved
                 DCD     USART2_IRQHandler              ; USART2
                 DCD     LPUART1_IRQHandler             ; LPUART1
-                DCD     0                              ; Reserved    
-                DCD     0                              ; Reserved  
-                
+                DCD     0                              ; Reserved
+                DCD     0                              ; Reserved
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Default interrupt handlers.
@@ -115,20 +115,20 @@ __vector_table
         SECTION .text:CODE:NOROOT:REORDER(2)
 Reset_Handler
         LDR     R0, =sfe(CSTACK)          ; set stack pointer
-        MSR     MSP, R0 
-;;Check if boot space corresponds to system memory 
+        MSR     MSP, R0
+;;Check if boot space corresponds to system memory
         LDR R0,=0x00000004
         LDR R1, [R0]
         LSRS R1, R1, #24
         LDR R2,=0x1F
         CMP R1, R2
-        BNE ApplicationStart       
-;; SYSCFG clock enable         
-        LDR R0,=0x40021034 
+        BNE ApplicationStart
+;; SYSCFG clock enable
+        LDR R0,=0x40021034
         LDR R1,=0x00000001
         STR R1, [R0]
 ;; Set CFGR1 register with flash memory remap at address 0
-        LDR R0,=0x40010000 
+        LDR R0,=0x40010000
         LDR R1,=0x00000000
         STR R1, [R0]
 
@@ -137,143 +137,143 @@ ApplicationStart
         BLX     R0
         LDR     R0, =__iar_program_start
         BX      R0
-        
+
         PUBWEAK NMI_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 NMI_Handler
         B NMI_Handler
-        
-        
+
+
         PUBWEAK HardFault_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 HardFault_Handler
         B HardFault_Handler
-       
-        
+
+
         PUBWEAK SVC_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 SVC_Handler
         B SVC_Handler
-        
-        
+
+
         PUBWEAK PendSV_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
-PendSV_Handler  
+PendSV_Handler
         B PendSV_Handler
-        
-        
+
+
         PUBWEAK SysTick_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 SysTick_Handler
         B SysTick_Handler
-        
-        
+
+
         PUBWEAK WWDG_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 WWDG_IRQHandler
         B WWDG_IRQHandler
-        
-                
+
+
         PUBWEAK RTC_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 RTC_IRQHandler
         B RTC_IRQHandler
-        
-                
+
+
         PUBWEAK FLASH_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 FLASH_IRQHandler
         B FLASH_IRQHandler
-        
-                
+
+
         PUBWEAK RCC_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 RCC_IRQHandler
         B RCC_IRQHandler
-        
-                
+
+
         PUBWEAK EXTI0_1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 EXTI0_1_IRQHandler
         B EXTI0_1_IRQHandler
-        
-                
+
+
         PUBWEAK EXTI2_3_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 EXTI2_3_IRQHandler
         B EXTI2_3_IRQHandler
-        
-                
+
+
         PUBWEAK EXTI4_15_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 EXTI4_15_IRQHandler
         B EXTI4_15_IRQHandler
-        
-            
+
+
         PUBWEAK DMA1_Channel1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 DMA1_Channel1_IRQHandler
         B DMA1_Channel1_IRQHandler
-        
-                
+
+
         PUBWEAK DMA1_Channel2_3_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 DMA1_Channel2_3_IRQHandler
         B DMA1_Channel2_3_IRQHandler
-        
-                
+
+
         PUBWEAK DMA1_Channel4_5_6_7_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 DMA1_Channel4_5_6_7_IRQHandler
         B DMA1_Channel4_5_6_7_IRQHandler
-        
-                
+
+
         PUBWEAK ADC1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 ADC1_IRQHandler
         B ADC1_IRQHandler
-        
-                 
+
+
         PUBWEAK LPTIM1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 LPTIM1_IRQHandler
         B LPTIM1_IRQHandler
-        
-                
+
+
         PUBWEAK TIM2_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 TIM2_IRQHandler
         B TIM2_IRQHandler
-        
-                
+
+
         PUBWEAK TIM21_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 TIM21_IRQHandler
         B TIM21_IRQHandler
-        
+
 
         PUBWEAK I2C1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 I2C1_IRQHandler
         B I2C1_IRQHandler
-        
-                
+
+
         PUBWEAK SPI1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 SPI1_IRQHandler
         B SPI1_IRQHandler
-        
-                
+
+
         PUBWEAK USART2_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 USART2_IRQHandler
         B USART2_IRQHandler
-        
-                
+
+
         PUBWEAK LPUART1_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 LPUART1_IRQHandler
         B LPUART1_IRQHandler
-        
+
         END
 ;************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE*****

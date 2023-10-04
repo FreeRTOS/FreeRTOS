@@ -28,67 +28,67 @@
  */
 
 #ifndef _PIT_H_
-#define _PIT_H_
+    #define _PIT_H_
 
 /*------------------------------------------------------------------------------
  *         Headers
  *------------------------------------------------------------------------------*/
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /**
-* \brief Initialize the Periodic Interval Timer to generate a tick at the
-* specified period, given the current master clock frequency.
-*
-*  \param period Period in micro seconds.
-*/
-extern void pit_init(uint32_t period);
+ * \brief Initialize the Periodic Interval Timer to generate a tick at the
+ * specified period, given the current master clock frequency.
+ *
+ *  \param period Period in micro seconds.
+ */
+    extern void pit_init( uint32_t period );
 
 /**
  * \brief Set the Periodic Interval Value of the PIT.
  *
  *  \param piv  PIV value to set.
  */
-extern void pit_set_piv(uint32_t piv);
+    extern void pit_set_piv( uint32_t piv );
 
 /**
  * \brief Enables the PIT if this is not already the case.
  *
  */
-extern void pit_enable(void);
+    extern void pit_enable( void );
 
 /**
  * \brief Disnables the PIT when PIV value is reached.
  *
  */
-extern void pit_disable(void);
+    extern void pit_disable( void );
 
 /**
  * \brief Enable the PIT periodic interrupt.
  *
  */
-extern void pit_enable_it(void);
+    extern void pit_enable_it( void );
 
 /**
  * \brief Disables the PIT periodic interrupt.
  *
  */
-extern void pit_disable_it(void);
+    extern void pit_disable_it( void );
 
 /**
  * \brief Returns the value of the PIT mode register.
  *
  * \return PIT_MR value.
  */
-extern uint32_t pit_get_mode(void);
+    extern uint32_t pit_get_mode( void );
 
 /**
  * \brief Returns the value of the PIT status register, clearing it as
@@ -96,7 +96,7 @@ extern uint32_t pit_get_mode(void);
  *
  * \return PIT_SR value.
  */
-extern uint32_t pit_get_status(void);
+    extern uint32_t pit_get_status( void );
 
 /**
  * \brief Returns the value of the PIT Image Register, to read PICNT
@@ -104,7 +104,7 @@ extern uint32_t pit_get_status(void);
  *
  * \return PIT_PIIR value.
  */
-extern uint32_t pit_get_piir(void);
+    extern uint32_t pit_get_piir( void );
 
 /**
  * \brief Returns the value of the PIT Value Register, clearing it as
@@ -112,10 +112,10 @@ extern uint32_t pit_get_piir(void);
  *
  * \return PITC_PIVR value.
  */
-extern uint32_t pit_get_pivr(void);
+    extern uint32_t pit_get_pivr( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif	/* #ifndef _PIT_H_ */
+#endif /* #ifndef _PIT_H_ */

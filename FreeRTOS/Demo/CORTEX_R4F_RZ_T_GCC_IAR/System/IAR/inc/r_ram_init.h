@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_ram.h
@@ -33,6 +34,7 @@
 * Description  : Internal extended RAM setting API of RZ/T1
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
@@ -43,22 +45,22 @@
 
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
 
 
 /*******************************************************************************
-Typedef definitions
+*  Typedef definitions
 *******************************************************************************/
 
 /*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Exported global variables and functions (to be accessed by other files)
 *******************************************************************************/
-void R_RAM_Init(void);
-void R_RAM_ECC_Enable(void);
-void R_RAM_WriteEnable(void);
-void R_RAM_WriteDisable(void);
+void R_RAM_Init( void );
+void R_RAM_ECC_Enable( void );
+void R_RAM_WriteEnable( void );
+void R_RAM_WriteDisable( void );
 
-#endif
+#endif /* ifndef _R_RAM_HEADER_ */
 
 /* End of File */

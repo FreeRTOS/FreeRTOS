@@ -21,6 +21,7 @@
 *
 * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
+
 /*******************************************************************************
 * System Name  : RZ/T1 Init program
 * File Name    : r_reset.c
@@ -33,13 +34,14 @@
 * Description  : RESET and Low-Power API of RZ/T1
 * Limitation   : none
 *******************************************************************************/
+
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
 *              :                     First Release
 *******************************************************************************/
 
 /*******************************************************************************
-Includes <System Includes> , "Project Includes"
+*  Includes <System Includes> , "Project Includes"
 *******************************************************************************/
 #include <stdint.h>
 #include <Renesas/ior7s910017.h>
@@ -47,30 +49,30 @@ Includes <System Includes> , "Project Includes"
 #include "r_reset.h"
 
 /*******************************************************************************
-Macro definitions
+*  Macro definitions
 *******************************************************************************/
-#define RST_WRITE_ENABLE  (0x0000A502)
-#define RST_WRITE_DISABLE (0x0000A500)
+#define RST_WRITE_ENABLE     ( 0x0000A502 )
+#define RST_WRITE_DISABLE    ( 0x0000A500 )
 
 /*******************************************************************************
-Typedef definitions
-*******************************************************************************/
-
-
-
-/*******************************************************************************
-Imported global variables and functions (from other files)
-*******************************************************************************/
-
-
-/*******************************************************************************
-Exported global variables and functions (to be accessed by other files)
+*  Typedef definitions
 *******************************************************************************/
 
 
 
 /*******************************************************************************
-Private variables and functions
+*  Imported global variables and functions (from other files)
+*******************************************************************************/
+
+
+/*******************************************************************************
+*  Exported global variables and functions (to be accessed by other files)
+*******************************************************************************/
+
+
+
+/*******************************************************************************
+*  Private variables and functions
 *******************************************************************************/
 
 
@@ -82,18 +84,17 @@ Private variables and functions
 * Arguments    : none
 * Return Value : none
 *******************************************************************************/
-void r_rst_write_enable(void)
+void r_rst_write_enable( void )
 {
     volatile uint32_t dummy;
 
     /* Enables writing to the Reset and Low-Power register */
     SYSTEM.PRCR.LONG = RST_WRITE_ENABLE;
     dummy = SYSTEM.PRCR.LONG;
-
 }
 
 /*******************************************************************************
- End of function r_rst_write_enable
+*  End of function r_rst_write_enable
 *******************************************************************************/
 
 /*******************************************************************************
@@ -104,20 +105,17 @@ void r_rst_write_enable(void)
 * Arguments    : none
 * Return Value : none
 *******************************************************************************/
-void r_rst_write_disable(void)
+void r_rst_write_disable( void )
 {
     volatile uint32_t dummy;
 
     /* Disables writing to the Reset and Low-Power register */
     SYSTEM.PRCR.LONG = RST_WRITE_DISABLE;
     dummy = SYSTEM.PRCR.LONG;
-
 }
 
 /*******************************************************************************
- End of function r_rst_write_disable
+*  End of function r_rst_write_disable
 *******************************************************************************/
 
 /* End of File */
-
-

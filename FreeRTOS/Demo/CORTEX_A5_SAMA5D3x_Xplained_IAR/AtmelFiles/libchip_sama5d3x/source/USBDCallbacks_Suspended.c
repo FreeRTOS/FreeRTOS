@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -27,8 +27,8 @@
  * ----------------------------------------------------------------------------
  */
 
- /** \file */
- 
+/** \file */
+
 /*----------------------------------------------------------------------------
  *         Headers
  *----------------------------------------------------------------------------*/
@@ -42,8 +42,6 @@
 /**
  * Invoked when the USB device gets suspended. By default, turns off all LEDs.
  */
-void USBDCallbacks_Suspended(void)
+void USBDCallbacks_Suspended( void )
 {
-    
 }
-

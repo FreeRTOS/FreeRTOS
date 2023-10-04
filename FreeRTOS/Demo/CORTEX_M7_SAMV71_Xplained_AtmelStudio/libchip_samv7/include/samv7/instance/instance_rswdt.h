@@ -31,14 +31,14 @@
 #define _SAMV71_RSWDT_INSTANCE_
 
 /* ========== Register definition for RSWDT peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_RSWDT_CR                  (0x400E1900U) /**< \brief (RSWDT) Control Register */
-  #define REG_RSWDT_MR                  (0x400E1904U) /**< \brief (RSWDT) Mode Register */
-  #define REG_RSWDT_SR                  (0x400E1908U) /**< \brief (RSWDT) Status Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_RSWDT_CR    ( 0x400E1900U )                      /**< \brief (RSWDT) Control Register */
+    #define REG_RSWDT_MR    ( 0x400E1904U )                      /**< \brief (RSWDT) Mode Register */
+    #define REG_RSWDT_SR    ( 0x400E1908U )                      /**< \brief (RSWDT) Status Register */
 #else
-  #define REG_RSWDT_CR (*(__O  uint32_t*)0x400E1900U) /**< \brief (RSWDT) Control Register */
-  #define REG_RSWDT_MR (*(__IO uint32_t*)0x400E1904U) /**< \brief (RSWDT) Mode Register */
-  #define REG_RSWDT_SR (*(__I  uint32_t*)0x400E1908U) /**< \brief (RSWDT) Status Register */
+    #define REG_RSWDT_CR    ( *( __O uint32_t * ) 0x400E1900U )  /**< \brief (RSWDT) Control Register */
+    #define REG_RSWDT_MR    ( *( __IO uint32_t * ) 0x400E1904U ) /**< \brief (RSWDT) Mode Register */
+    #define REG_RSWDT_SR    ( *( __I uint32_t * ) 0x400E1908U )  /**< \brief (RSWDT) Status Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMV71_RSWDT_INSTANCE_ */

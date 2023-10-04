@@ -29,48 +29,50 @@
 /*-----------------------------------------------------------*/
 
 /* Called by the startup code to initialise the run time system. */
-unsigned char __low_level_init(void);
+unsigned char __low_level_init( void );
 
 /*-----------------------------------------------------------*/
 
-unsigned char __low_level_init(void)
+unsigned char __low_level_init( void )
 {
-unsigned char resetflag = RESF;
-unsigned char psval = 0;
-unsigned portBASE_TYPE i = 0;        
+    unsigned char resetflag = RESF;
+    unsigned char psval = 0;
+    unsigned portBASE_TYPE i = 0;
 
-	/* Setup provided by NEC. */
+    /* Setup provided by NEC. */
 
-	portDISABLE_INTERRUPTS();         /* disable global interrupts */                      
+    portDISABLE_INTERRUPTS(); /* disable global interrupts */
 
-	PRCMD = 0x00;                     /* On-chip debug mode */
-	OCDM = 0x00;
-	VSWC = 0x00;                      /* set system wait control register */
-	WDTM2 = 0x00;                     /* WDT2 setting */
-	PLLON = 0;                        /* PLL stop mode */
-	psval = 0x0A | 0x00;
-	PRCMD = psval;                    /* set Command Register */
-	CKC = psval;                      /* set Clock Control Register */
-	PLLS = 0x03;
-	psval = 0x80;                     /* Set fXX and fCPU */
-	PRCMD = psval;
-	PCC = psval;
-	PLLON = 1;                        /* activate PLL */
-	for( i = 0; i <= 2000; i++ )      /* Wait for stabilisation */
-	{
-	portNOP();
-	}
-	while( LOCK )                     /* Wait for PLL frequency stabiliasation */
-	{
-	;
-	}
-	SELPLL = 1;                       /* Set PLL mode active */
-	RSTOP = 0;                        /* Set fR (enable) */
-	BGCE0 = 0;                        /* Set fBRG(disable) */
-	psval = 0x00;                     /* Stand-by setting */
-	PRCMD = psval;                    /* set Command Register */
-	PSC = psval;                      /* set Power Save Control Register */
+    PRCMD = 0x00;             /* On-chip debug mode */
+    OCDM = 0x00;
+    VSWC = 0x00;              /* set system wait control register */
+    WDTM2 = 0x00;             /* WDT2 setting */
+    PLLON = 0;                /* PLL stop mode */
+    psval = 0x0A | 0x00;
+    PRCMD = psval;            /* set Command Register */
+    CKC = psval;              /* set Clock Control Register */
+    PLLS = 0x03;
+    psval = 0x80;             /* Set fXX and fCPU */
+    PRCMD = psval;
+    PCC = psval;
+    PLLON = 1;                   /* activate PLL */
 
-	return pdTRUE;
+    for( i = 0; i <= 2000; i++ ) /* Wait for stabilisation */
+    {
+        portNOP();
+    }
+
+    while( LOCK ) /* Wait for PLL frequency stabiliasation */
+    {
+    }
+
+    SELPLL = 1;    /* Set PLL mode active */
+    RSTOP = 0;     /* Set fR (enable) */
+    BGCE0 = 0;     /* Set fBRG(disable) */
+    psval = 0x00;  /* Stand-by setting */
+    PRCMD = psval; /* set Command Register */
+    PSC = psval;   /* set Power Save Control Register */
+
+    return pdTRUE;
 }
 /*-----------------------------------------------------------*/

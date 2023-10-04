@@ -48,12 +48,12 @@
  *------------------------------------------------------------------------------*/
 
 /** Parse data extention for descriptor parsing  */
-typedef struct _CDCDParseData {
+typedef struct _CDCDParseData
+{
     /** Pointer to CDCDSerialPort instance */
     CDCDSerialPort * pCdcd;
     /** Pointer to found interface descriptor */
     USBInterfaceDescriptor * pIfDesc;
-    
 } CDCDParseData;
 
 /*------------------------------------------------------------------------------
@@ -72,65 +72,90 @@ static CDCLineCoding lineCoding;
  * \param desc Pointer to descriptor list.
  * \param arg  Argument, pointer to AUDDParseData instance.
  */
-static uint32_t _Interfaces_Parse(USBGenericDescriptor *pDesc,
-                                  CDCDParseData * pArg)
+static uint32_t _Interfaces_Parse( USBGenericDescriptor * pDesc,
+                                   CDCDParseData * pArg )
 {
-    CDCDSerialPort *pCdcd = pArg->pCdcd;
+    CDCDSerialPort * pCdcd = pArg->pCdcd;
 
     /* Not a valid descriptor */
-    if (pDesc->bLength == 0)
+    if( pDesc->bLength == 0 )
+    {
         return USBRC_PARAM_ERR;
+    }
 
     /* Find interface descriptor */
-    if (pDesc->bDescriptorType == USBGenericDescriptor_INTERFACE) {
-        USBInterfaceDescriptor *pIf = (USBInterfaceDescriptor*)pDesc;
+    if( pDesc->bDescriptorType == USBGenericDescriptor_INTERFACE )
+    {
+        USBInterfaceDescriptor * pIf = ( USBInterfaceDescriptor * ) pDesc;
 
         /* Obtain interface from descriptor */
-        if (pCdcd->bInterfaceNdx == 0xFF) {
+        if( pCdcd->bInterfaceNdx == 0xFF )
+        {
             /* First interface is communication */
-            if (pIf->bInterfaceClass ==
-                CDCCommunicationInterfaceDescriptor_CLASS) {
+            if( pIf->bInterfaceClass ==
+                CDCCommunicationInterfaceDescriptor_CLASS )
+            {
                 pCdcd->bInterfaceNdx = pIf->bInterfaceNumber;
                 pCdcd->bNumInterface = 2;
             }
             /* Only data interface */
-            else if(pIf->bInterfaceClass == CDCDataInterfaceDescriptor_CLASS) {
+            else if( pIf->bInterfaceClass == CDCDataInterfaceDescriptor_CLASS )
+            {
                 pCdcd->bInterfaceNdx = pIf->bInterfaceNumber;
                 pCdcd->bNumInterface = 1;
             }
+
             pArg->pIfDesc = pIf;
         }
-        else if (pCdcd->bInterfaceNdx <= pIf->bInterfaceNumber
-            &&   pCdcd->bInterfaceNdx + pCdcd->bNumInterface
-                                       > pIf->bInterfaceNumber) {
+        else if( ( pCdcd->bInterfaceNdx <= pIf->bInterfaceNumber ) &&
+                 ( pCdcd->bInterfaceNdx + pCdcd->bNumInterface
+                   > pIf->bInterfaceNumber ) )
+        {
             pArg->pIfDesc = pIf;
         }
     }
 
     /* Parse valid interfaces */
-    if (pArg->pIfDesc == 0)
+    if( pArg->pIfDesc == 0 )
+    {
         return 0;
+    }
 
     /* Find endpoint descriptors */
-    if (pDesc->bDescriptorType == USBGenericDescriptor_ENDPOINT) {
-        USBEndpointDescriptor *pEp = (USBEndpointDescriptor*)pDesc;
-        switch(pEp->bmAttributes & 0x3) {
+    if( pDesc->bDescriptorType == USBGenericDescriptor_ENDPOINT )
+    {
+        USBEndpointDescriptor * pEp = ( USBEndpointDescriptor * ) pDesc;
+
+        switch( pEp->bmAttributes & 0x3 )
+        {
             case USBEndpointDescriptor_INTERRUPT:
-                if (pEp->bEndpointAddress & 0x80)
+
+                if( pEp->bEndpointAddress & 0x80 )
+                {
                     pCdcd->bIntInPIPE = pEp->bEndpointAddress & 0x7F;
+                }
+
                 break;
+
             case USBEndpointDescriptor_BULK:
-                if (pEp->bEndpointAddress & 0x80)
+
+                if( pEp->bEndpointAddress & 0x80 )
+                {
                     pCdcd->bBulkInPIPE = pEp->bEndpointAddress & 0x7F;
+                }
                 else
+                {
                     pCdcd->bBulkOutPIPE = pEp->bEndpointAddress;
+                }
         }
     }
 
-    if (    pCdcd->bInterfaceNdx != 0xFF
-        &&  pCdcd->bBulkInPIPE != 0
-        &&  pCdcd->bBulkOutPIPE != 0)
+    if( ( pCdcd->bInterfaceNdx != 0xFF ) &&
+        ( pCdcd->bBulkInPIPE != 0 ) &&
+        ( pCdcd->bBulkOutPIPE != 0 ) )
+    {
         return USBRC_FINISHED;
+    }
 
     return 0;
 }
@@ -141,40 +166,53 @@ static uint32_t _Interfaces_Parse(USBGenericDescriptor *pDesc,
  * to the host for acknowledging the request.
  * \param pCdcd Pointer to CDCDSerialPort instance.
  */
-static void _SetLineCodingCallback(CDCDSerialPort * pCdcd)
+static void _SetLineCodingCallback( CDCDSerialPort * pCdcd )
 {
     uint32_t exec = 1;
-    if (pCdcd->fEventHandler) {
+
+    if( pCdcd->fEventHandler )
+    {
         uint32_t rc = pCdcd->fEventHandler(
-                                        CDCDSerialPortEvent_SETLINECODING,
-                                        (uint32_t)(&lineCoding),
-                                        pCdcd->pArg);
-        if (rc == USBD_STATUS_SUCCESS) {
-            pCdcd->lineCoding.dwDTERate   = lineCoding.dwDTERate;
+            CDCDSerialPortEvent_SETLINECODING,
+            ( uint32_t ) ( &lineCoding ),
+            pCdcd->pArg );
+
+        if( rc == USBD_STATUS_SUCCESS )
+        {
+            pCdcd->lineCoding.dwDTERate = lineCoding.dwDTERate;
             pCdcd->lineCoding.bCharFormat = lineCoding.bCharFormat;
             pCdcd->lineCoding.bParityType = lineCoding.bParityType;
-            pCdcd->lineCoding.bDataBits   = lineCoding.bDataBits;
+            pCdcd->lineCoding.bDataBits = lineCoding.bDataBits;
         }
         else
+        {
             exec = 0;
+        }
     }
-    if (exec)   USBD_Write(0, 0, 0, 0, 0);
-    else        USBD_Stall(0);
+
+    if( exec )
+    {
+        USBD_Write( 0, 0, 0, 0, 0 );
+    }
+    else
+    {
+        USBD_Stall( 0 );
+    }
 }
 
 /**
  * Receives new line coding information from the USB host.
  * \param pCdcd Pointer to CDCDSerialPort instance.
  */
-static void _SetLineCoding(CDCDSerialPort * pCdcd)
+static void _SetLineCoding( CDCDSerialPort * pCdcd )
 {
-    TRACE_INFO_WP("sLineCoding ");
+    TRACE_INFO_WP( "sLineCoding " );
 
-    USBD_Read(0,
-              (void *) & (lineCoding),
-              sizeof(CDCLineCoding),
-              (TransferCallback)_SetLineCodingCallback,
-              (void*)pCdcd);
+    USBD_Read( 0,
+               ( void * ) &( lineCoding ),
+               sizeof( CDCLineCoding ),
+               ( TransferCallback ) _SetLineCodingCallback,
+               ( void * ) pCdcd );
 }
 
 /**
@@ -182,15 +220,15 @@ static void _SetLineCoding(CDCDSerialPort * pCdcd)
  * endpoint 0.
  * \param pCdcd Pointer to CDCDSerialPort instance.
  */
-static void _GetLineCoding(CDCDSerialPort * pCdcd)
+static void _GetLineCoding( CDCDSerialPort * pCdcd )
 {
-    TRACE_INFO_WP("gLineCoding ");
+    TRACE_INFO_WP( "gLineCoding " );
 
-    USBD_Write(0,
-               (void *) &(pCdcd->lineCoding),
-               sizeof(CDCLineCoding),
-               0,
-               0);
+    USBD_Write( 0,
+                ( void * ) &( pCdcd->lineCoding ),
+                sizeof( CDCLineCoding ),
+                0,
+                0 );
 }
 
 /**
@@ -200,26 +238,27 @@ static void _GetLineCoding(CDCDSerialPort * pCdcd)
  * \param pCdcd Pointer to CDCDSerialPort instance.
  * \param request Pointer to a USBGenericRequest instance.
  */
-static void _SetControlLineState(
-    CDCDSerialPort * pCdcd,
-    const USBGenericRequest *request)
+static void _SetControlLineState( CDCDSerialPort * pCdcd,
+                                  const USBGenericRequest * request )
 {
-  #if (TRACE_LEVEL >= TRACE_LEVEL_INFO)
-    uint8_t DTR, RTS;
+    #if ( TRACE_LEVEL >= TRACE_LEVEL_INFO )
+        uint8_t DTR, RTS;
 
-    DTR = ((request->wValue & CDCControlLineState_DTR) > 0);
-    RTS = ((request->wValue & CDCControlLineState_RTS) > 0);
-    TRACE_INFO_WP("sControlLineState(%d, %d) ", DTR, RTS);
-  #endif
+        DTR = ( ( request->wValue & CDCControlLineState_DTR ) > 0 );
+        RTS = ( ( request->wValue & CDCControlLineState_RTS ) > 0 );
+        TRACE_INFO_WP( "sControlLineState(%d, %d) ", DTR, RTS );
+    #endif
 
-    pCdcd->bControlLineState = (uint8_t)request->wValue;
-    USBD_Write(0, 0, 0, 0, 0);
+    pCdcd->bControlLineState = ( uint8_t ) request->wValue;
+    USBD_Write( 0, 0, 0, 0, 0 );
 
-    if (pCdcd->fEventHandler)
-        pCdcd->fEventHandler(CDCDSerialPortEvent_SETCONTROLLINESTATE,
+    if( pCdcd->fEventHandler )
+    {
+        pCdcd->fEventHandler( CDCDSerialPortEvent_SETCONTROLLINESTATE,
 
-                             (uint32_t)pCdcd->bControlLineState,
-                             pCdcd->pArg);
+                              ( uint32_t ) pCdcd->bControlLineState,
+                              pCdcd->pArg );
+    }
 }
 
 /*------------------------------------------------------------------------------
@@ -235,13 +274,14 @@ static void _SetControlLineState(
  *                       (0xFF to parse from descriptors).
  * \param numInterface   Number of interfaces for the function.
  */
-void CDCDSerialPort_Initialize(CDCDSerialPort * pCdcd,
-                               USBDDriver * pUsbd,
-                               CDCDSerialPortEventHandler fEventHandler,
-                               void * pArg,
-                               uint8_t firstInterface,uint8_t numInterface)
+void CDCDSerialPort_Initialize( CDCDSerialPort * pCdcd,
+                                USBDDriver * pUsbd,
+                                CDCDSerialPortEventHandler fEventHandler,
+                                void * pArg,
+                                uint8_t firstInterface,
+                                uint8_t numInterface )
 {
-    TRACE_INFO("CDCDSerialPort_Initialize\n\r");
+    TRACE_INFO( "CDCDSerialPort_Initialize\n\r" );
 
     /* Initialize event handler */
     pCdcd->fEventHandler = fEventHandler;
@@ -251,18 +291,18 @@ void CDCDSerialPort_Initialize(CDCDSerialPort * pCdcd,
     pCdcd->pUsbd = pUsbd;
     pCdcd->bInterfaceNdx = firstInterface;
     pCdcd->bNumInterface = numInterface;
-    pCdcd->bIntInPIPE   = 0;
-    pCdcd->bBulkInPIPE  = 0;
+    pCdcd->bIntInPIPE = 0;
+    pCdcd->bBulkInPIPE = 0;
     pCdcd->bBulkOutPIPE = 0;
 
     /* Initialize Abstract Control Model attributes */
     pCdcd->bControlLineState = 0;
-    pCdcd->wSerialState      = 0;
-    CDCLineCoding_Initialize(&(pCdcd->lineCoding),
-                             115200,
-                             CDCLineCoding_ONESTOPBIT,
-                             CDCLineCoding_NOPARITY,
-                             8);
+    pCdcd->wSerialState = 0;
+    CDCLineCoding_Initialize( &( pCdcd->lineCoding ),
+                              115200,
+                              CDCLineCoding_ONESTOPBIT,
+                              CDCLineCoding_NOPARITY,
+                              8 );
 }
 
 /**
@@ -274,20 +314,19 @@ void CDCDSerialPort_Initialize(CDCDSerialPort * pCdcd,
  * \param pDescriptors Pointer to descriptor list.
  * \param dwLength     Descriptor list size in bytes.
  */
-USBGenericDescriptor *CDCDSerialPort_ParseInterfaces(
-    CDCDSerialPort *pCdcd,
-    USBGenericDescriptor *pDescriptors,
-    uint32_t dwLength)
+USBGenericDescriptor * CDCDSerialPort_ParseInterfaces( CDCDSerialPort * pCdcd,
+                                                       USBGenericDescriptor * pDescriptors,
+                                                       uint32_t dwLength )
 {
     CDCDParseData parseData;
 
-    parseData.pCdcd   = pCdcd;
+    parseData.pCdcd = pCdcd;
     parseData.pIfDesc = 0;
 
     return USBGenericDescriptor_Parse(
-                    pDescriptors, dwLength,
-                    (USBDescriptorParseFunction)_Interfaces_Parse,
-                    &parseData);
+        pDescriptors, dwLength,
+        ( USBDescriptorParseFunction ) _Interfaces_Parse,
+        &parseData );
 }
 
 
@@ -298,39 +337,42 @@ USBGenericDescriptor *CDCDSerialPort_ParseInterfaces(
  * \param request Pointer to a USBGenericRequest instance.
  * \return USBRC_SUCCESS if request handled, otherwise error.
  */
-uint32_t CDCDSerialPort_RequestHandler(
-    CDCDSerialPort *pCdcd,
-    const USBGenericRequest *request)
+uint32_t CDCDSerialPort_RequestHandler( CDCDSerialPort * pCdcd,
+                                        const USBGenericRequest * request )
 {
-    if (USBGenericRequest_GetType(request) != USBGenericRequest_CLASS)
+    if( USBGenericRequest_GetType( request ) != USBGenericRequest_CLASS )
+    {
         return USBRC_PARAM_ERR;
+    }
 
-    TRACE_INFO_WP("Cdcs ");
+    TRACE_INFO_WP( "Cdcs " );
 
     /* Validate interface */
-    if (request->wIndex >= pCdcd->bInterfaceNdx &&
-        request->wIndex < pCdcd->bInterfaceNdx + pCdcd->bNumInterface) {
+    if( ( request->wIndex >= pCdcd->bInterfaceNdx ) &&
+        ( request->wIndex < pCdcd->bInterfaceNdx + pCdcd->bNumInterface ) )
+    {
     }
-    else {
+    else
+    {
         return USBRC_PARAM_ERR;
     }
 
     /* Handle the request */
-    switch (USBGenericRequest_GetRequest(request)) {
-
+    switch( USBGenericRequest_GetRequest( request ) )
+    {
         case CDCGenericRequest_SETLINECODING:
 
-            _SetLineCoding(pCdcd);
+            _SetLineCoding( pCdcd );
             break;
 
         case CDCGenericRequest_GETLINECODING:
 
-            _GetLineCoding(pCdcd);
+            _GetLineCoding( pCdcd );
             break;
 
         case CDCGenericRequest_SETCONTROLLINESTATE:
 
-            _SetControlLineState(pCdcd, request);
+            _SetControlLineState( pCdcd, request );
             break;
 
         default:
@@ -353,16 +395,20 @@ uint32_t CDCDSerialPort_RequestHandler(
  * \return USBD_STATUS_SUCCESS if the read operation has been started normally;
  *         otherwise, the corresponding error code.
  */
-uint32_t CDCDSerialPort_Read(const CDCDSerialPort * pCdcd,
-                          void * pData,uint32_t dwSize,
-                          TransferCallback fCallback,void * pArg)
+uint32_t CDCDSerialPort_Read( const CDCDSerialPort * pCdcd,
+                              void * pData,
+                              uint32_t dwSize,
+                              TransferCallback fCallback,
+                              void * pArg )
 {
-    if (pCdcd->bBulkOutPIPE == 0)
+    if( pCdcd->bBulkOutPIPE == 0 )
+    {
         return USBRC_PARAM_ERR;
+    }
 
-    return USBD_Read(pCdcd->bBulkOutPIPE,
-                     pData, dwSize,
-                     fCallback, pArg);
+    return USBD_Read( pCdcd->bBulkOutPIPE,
+                      pData, dwSize,
+                      fCallback, pArg );
 }
 
 /**
@@ -377,23 +423,27 @@ uint32_t CDCDSerialPort_Read(const CDCDSerialPort * pCdcd,
  * \return USBD_STATUS_SUCCESS if the read operation has been started normally;
  *         otherwise, the corresponding error code.
  */
-uint32_t CDCDSerialPort_Write(const CDCDSerialPort * pCdcd,
-                                   void * pData, uint32_t dwSize,
-                                   TransferCallback fCallback, void * pArg)
+uint32_t CDCDSerialPort_Write( const CDCDSerialPort * pCdcd,
+                               void * pData,
+                               uint32_t dwSize,
+                               TransferCallback fCallback,
+                               void * pArg )
 {
-    if (pCdcd->bBulkInPIPE == 0)
+    if( pCdcd->bBulkInPIPE == 0 )
+    {
         return USBRC_PARAM_ERR;
+    }
 
-    return USBD_Write(pCdcd->bBulkInPIPE,
-                      pData, dwSize,
-                      fCallback, pArg);
+    return USBD_Write( pCdcd->bBulkInPIPE,
+                       pData, dwSize,
+                       fCallback, pArg );
 }
 
 /**
  * Returns the current control line state of the RS-232 line.
  * \param pCdcd  Pointer to CDCDSerialPort instance.
  */
-uint8_t CDCDSerialPort_GetControlLineState(const CDCDSerialPort * pCdcd)
+uint8_t CDCDSerialPort_GetControlLineState( const CDCDSerialPort * pCdcd )
 {
     return pCdcd->bControlLineState;
 }
@@ -403,14 +453,15 @@ uint8_t CDCDSerialPort_GetControlLineState(const CDCDSerialPort * pCdcd)
  * \param pCdcd  Pointer to CDCDSerialPort instance.
  * \param pLineCoding Pointer to CDCLineCoding instance.
  */
-void CDCDSerialPort_GetLineCoding(const CDCDSerialPort * pCdcd,
-                                  CDCLineCoding* pLineCoding)
+void CDCDSerialPort_GetLineCoding( const CDCDSerialPort * pCdcd,
+                                   CDCLineCoding * pLineCoding )
 {
-    if (pLineCoding) {
-        pLineCoding->dwDTERate   = pCdcd->lineCoding.dwDTERate;
+    if( pLineCoding )
+    {
+        pLineCoding->dwDTERate = pCdcd->lineCoding.dwDTERate;
         pLineCoding->bCharFormat = pCdcd->lineCoding.bCharFormat;
         pLineCoding->bParityType = pCdcd->lineCoding.bParityType;
-        pLineCoding->bDataBits   = pCdcd->lineCoding.bDataBits;
+        pLineCoding->bDataBits = pCdcd->lineCoding.bDataBits;
     }
 }
 
@@ -418,7 +469,7 @@ void CDCDSerialPort_GetLineCoding(const CDCDSerialPort * pCdcd,
  * Returns the current status of the RS-232 line.
  * \param pCdcd  Pointer to CDCDSerialPort instance.
  */
-uint16_t CDCDSerialPort_GetSerialState(const CDCDSerialPort * pCdcd)
+uint16_t CDCDSerialPort_GetSerialState( const CDCDSerialPort * pCdcd )
 {
     return pCdcd->wSerialState;
 }
@@ -428,31 +479,32 @@ uint16_t CDCDSerialPort_GetSerialState(const CDCDSerialPort * pCdcd)
  * \param pCdcd  Pointer to CDCDSerialPort instance.
  * \param wSerialState  New device state.
  */
-void CDCDSerialPort_SetSerialState(CDCDSerialPort * pCdcd,
-                                   uint16_t wSerialState)
+void CDCDSerialPort_SetSerialState( CDCDSerialPort * pCdcd,
+                                    uint16_t wSerialState )
 {
-    if (pCdcd->bIntInPIPE == 0)
+    if( pCdcd->bIntInPIPE == 0 )
+    {
         return;
+    }
 
     /* If new state is different from previous one, send a notification to the
-       host */
-    if (pCdcd->wSerialState != wSerialState) {
-
+     * host */
+    if( pCdcd->wSerialState != wSerialState )
+    {
         pCdcd->wSerialState = wSerialState;
-        USBD_Write(pCdcd->bIntInPIPE,
-                   &(pCdcd->wSerialState),
-                   2,
-                   0,
-                   0);
+        USBD_Write( pCdcd->bIntInPIPE,
+                    &( pCdcd->wSerialState ),
+                    2,
+                    0,
+                    0 );
 
         /* Reset one-time flags */
-        pCdcd->wSerialState &= ~(CDCSerialState_OVERRUN
-                              | CDCSerialState_PARITY
-                              | CDCSerialState_FRAMING
-                              | CDCSerialState_RINGSIGNAL
-                              | CDCSerialState_BREAK);
+        pCdcd->wSerialState &= ~( CDCSerialState_OVERRUN
+                                  | CDCSerialState_PARITY
+                                  | CDCSerialState_FRAMING
+                                  | CDCSerialState_RINGSIGNAL
+                                  | CDCSerialState_BREAK );
     }
 }
 
 /**@}*/
-

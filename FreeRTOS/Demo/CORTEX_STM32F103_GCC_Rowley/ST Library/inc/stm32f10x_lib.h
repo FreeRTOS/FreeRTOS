@@ -22,102 +22,102 @@
 #include "stm32f10x_map.h"
 
 #ifdef _ADC
-  #include "stm32f10x_adc.h"
+    #include "stm32f10x_adc.h"
 #endif /*_ADC */
 
 #ifdef _BKP
-  #include "stm32f10x_bkp.h"
+    #include "stm32f10x_bkp.h"
 #endif /*_BKP */
 
 #ifdef _CAN
-  #include "stm32f10x_can.h"
+    #include "stm32f10x_can.h"
 #endif /*_CAN */
 
 #ifdef _CRC
-  #include "stm32f10x_crc.h"
+    #include "stm32f10x_crc.h"
 #endif /*_CRC */
 
 #ifdef _DAC
-  #include "stm32f10x_dac.h"
+    #include "stm32f10x_dac.h"
 #endif /*_DAC */
 
 #ifdef _DBGMCU
-  #include "stm32f10x_dbgmcu.h"
+    #include "stm32f10x_dbgmcu.h"
 #endif /*_DBGMCU */
 
 #ifdef _DMA
-  #include "stm32f10x_dma.h"
+    #include "stm32f10x_dma.h"
 #endif /*_DMA */
 
 #ifdef _EXTI
-  #include "stm32f10x_exti.h"
+    #include "stm32f10x_exti.h"
 #endif /*_EXTI */
 
 #ifdef _FLASH
-  #include "stm32f10x_flash.h"
+    #include "stm32f10x_flash.h"
 #endif /*_FLASH */
 
 #ifdef _FSMC
-  #include "stm32f10x_fsmc.h"
+    #include "stm32f10x_fsmc.h"
 #endif /*_FSMC */
 
 #ifdef _GPIO
-  #include "stm32f10x_gpio.h"
+    #include "stm32f10x_gpio.h"
 #endif /*_GPIO */
 
 #ifdef _I2C
-  #include "stm32f10x_i2c.h"
+    #include "stm32f10x_i2c.h"
 #endif /*_I2C */
 
 #ifdef _IWDG
-  #include "stm32f10x_iwdg.h"
+    #include "stm32f10x_iwdg.h"
 #endif /*_IWDG */
 
 #ifdef _NVIC
-  #include "stm32f10x_nvic.h"
+    #include "stm32f10x_nvic.h"
 #endif /*_NVIC */
 
 #ifdef _PWR
-  #include "stm32f10x_pwr.h"
+    #include "stm32f10x_pwr.h"
 #endif /*_PWR */
 
 #ifdef _RCC
-  #include "stm32f10x_rcc.h"
+    #include "stm32f10x_rcc.h"
 #endif /*_RCC */
 
 #ifdef _RTC
-  #include "stm32f10x_rtc.h"
+    #include "stm32f10x_rtc.h"
 #endif /*_RTC */
 
 #ifdef _SDIO
-  #include "stm32f10x_sdio.h"
+    #include "stm32f10x_sdio.h"
 #endif /*_SDIO */
 
 #ifdef _SPI
-  #include "stm32f10x_spi.h"
+    #include "stm32f10x_spi.h"
 #endif /*_SPI */
 
 #ifdef _SysTick
-  #include "stm32f10x_systick.h"
+    #include "stm32f10x_systick.h"
 #endif /*_SysTick */
 
 #ifdef _TIM
-  #include "stm32f10x_tim.h"
+    #include "stm32f10x_tim.h"
 #endif /*_TIM */
 
 #ifdef _USART
-  #include "stm32f10x_usart.h"
+    #include "stm32f10x_usart.h"
 #endif /*_USART */
 
 #ifdef _WWDG
-  #include "stm32f10x_wwdg.h"
+    #include "stm32f10x_wwdg.h"
 #endif /*_WWDG */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void debug(void);
+void debug( void );
 
 #endif /* __STM32F10x_LIB_H */
 

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,98 +30,95 @@
 #ifndef EFC_H
 #define EFC_H
 
-//------------------------------------------------------------------------------
-//         Headers
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Headers */
+/*------------------------------------------------------------------------------ */
 
 #include <board.h>
 
 #ifdef BOARD_FLASH_EFC
 
-//------------------------------------------------------------------------------
-//         Constants
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Constants */
+/*------------------------------------------------------------------------------ */
 
-/// Number of GPNVMs available on each chip.
-#if defined(at91sam7s16) || defined(at91sam7s161) || defined(at91sam7s32) \
-    || defined(at91sam7s321) || defined(at91sam7s64) || defined(at91sam7s128) \
-    || defined(at91sam7s256) || defined(at91sam7s512)
+/*/ Number of GPNVMs available on each chip. */
+    #if defined( at91sam7s16 ) || defined( at91sam7s161 ) || defined( at91sam7s32 ) \
+    || defined( at91sam7s321 ) || defined( at91sam7s64 ) || defined( at91sam7s128 ) \
+    || defined( at91sam7s256 ) || defined( at91sam7s512 )
 
-    #define EFC_NUM_GPNVMS          2
+        #define EFC_NUM_GPNVMS    2
 
-#elif defined(at91sam7se32) || defined(at91sam7se256) || defined(at91sam7se512) \
-      || defined(at91sam7x128) || defined(at91sam7x256) || defined(at91sam7x512) \
-      || defined(at91sam7xc128) || defined(at91sam7xc256) || defined(at91sam7xc512) \
+    #elif defined( at91sam7se32 ) || defined( at91sam7se256 ) || defined( at91sam7se512 ) \
+    || defined( at91sam7x128 ) || defined( at91sam7x256 ) || defined( at91sam7x512 )      \
+    || defined( at91sam7xc128 ) || defined( at91sam7xc256 ) || defined( at91sam7xc512 )   \
 
-    #define EFC_NUM_GPNVMS          3
+        #define EFC_NUM_GPNVMS    3
 
-#elif defined(at91sam7a3)
+    #elif defined( at91sam7a3 )
 
-    #define EFC_NUM_GPNVMS          0
-#endif
+        #define EFC_NUM_GPNVMS    0
+    #endif /* if defined( at91sam7s16 ) || defined( at91sam7s161 ) || defined( at91sam7s32 ) || defined( at91sam7s321 ) || defined( at91sam7s64 ) || defined( at91sam7s128 ) || defined( at91sam7s256 ) || defined( at91sam7s512 ) */
 
-// Missing FRDY bit for SAM7A3
-#if defined(at91sam7a3)
-    #define AT91C_MC_FRDY       (AT91C_MC_EOP | AT91C_MC_EOL)
-#endif
+/* Missing FRDY bit for SAM7A3 */
+    #if defined( at91sam7a3 )
+        #define AT91C_MC_FRDY    ( AT91C_MC_EOP | AT91C_MC_EOL )
+    #endif
 
-// No security bit on SAM7A3
-#if defined(at91sam7a3)
-    #define EFC_NO_SECURITY_BIT
-#endif
+/* No security bit on SAM7A3 */
+    #if defined( at91sam7a3 )
+        #define EFC_NO_SECURITY_BIT
+    #endif
 
-//------------------------------------------------------------------------------
-//         Types
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Types */
+/*------------------------------------------------------------------------------ */
 
-// For chips which do not define AT91S_EFC
-#if !defined(AT91C_BASE_EFC) && !defined(AT91C_BASE_EFC0)
-typedef struct _AT91S_EFC {
+/* For chips which do not define AT91S_EFC */
+    #if !defined( AT91C_BASE_EFC ) && !defined( AT91C_BASE_EFC0 )
+        typedef struct _AT91S_EFC
+        {
+            AT91_REG EFC_FMR;
+            AT91_REG EFC_FCR;
+            AT91_REG EFC_FSR;
+        } AT91S_EFC, * AT91PS_EFC;
+        #define AT91C_BASE_EFC    ( AT91_CAST( AT91PS_EFC ) 0xFFFFFF60 )
+    #endif
 
-    AT91_REG EFC_FMR;
-    AT91_REG EFC_FCR;
-    AT91_REG EFC_FSR;
+/*------------------------------------------------------------------------------ */
+/*         Functions */
+/*------------------------------------------------------------------------------ */
 
-} AT91S_EFC, *AT91PS_EFC;
-	#define AT91C_BASE_EFC       (AT91_CAST(AT91PS_EFC)	0xFFFFFF60) 
-#endif	
+    extern void EFC_SetMasterClock( unsigned int mck );
 
-//------------------------------------------------------------------------------
-//         Functions
-//------------------------------------------------------------------------------
+    extern void EFC_EnableIt( AT91S_EFC * pEfc,
+                              unsigned int sources );
 
-extern void EFC_SetMasterClock(unsigned int mck);
+    extern void EFC_DisableIt( AT91S_EFC * pEfc,
+                               unsigned int sources );
 
-extern void EFC_EnableIt(AT91S_EFC *pEfc, unsigned int sources);
+    extern void EFC_SetEraseBeforeProgramming( AT91S_EFC * pEfc,
+                                               unsigned char enable );
 
-extern void EFC_DisableIt(AT91S_EFC *pEfc, unsigned int sources);
+    extern void EFC_TranslateAddress( unsigned int address,
+                                      AT91S_EFC ** ppEfc,
+                                      unsigned short * pPage,
+                                      unsigned short * pOffset );
 
-extern void EFC_SetEraseBeforeProgramming(AT91S_EFC *pEfc, unsigned char enable);
+    extern void EFC_ComputeAddress( AT91S_EFC * pEfc,
+                                    unsigned short page,
+                                    unsigned short offset,
+                                    unsigned int * pAddress );
 
-extern void EFC_TranslateAddress(
-    unsigned int address,
-    AT91S_EFC **ppEfc,
-    unsigned short *pPage,
-    unsigned short *pOffset);
+    extern void EFC_StartCommand( AT91S_EFC * pEfc,
+                                  unsigned char command,
+                                  unsigned short argument );
 
-extern void EFC_ComputeAddress(
-    AT91S_EFC *pEfc,
-    unsigned short page,
-    unsigned short offset,
-    unsigned int *pAddress);
+    extern unsigned char EFC_PerformCommand( AT91S_EFC * pEfc,
+                                             unsigned char command,
+                                             unsigned short argument );
 
-extern void EFC_StartCommand(
-    AT91S_EFC *pEfc,
-    unsigned char command,
-    unsigned short argument);
-
-extern unsigned char EFC_PerformCommand(
-    AT91S_EFC *pEfc,
-    unsigned char command,
-    unsigned short argument);
-
-extern unsigned int EFC_GetStatus(AT91S_EFC *pEfc);
+    extern unsigned int EFC_GetStatus( AT91S_EFC * pEfc );
 
 #endif //#ifdef BOARD_FLASH_EFC
 #endif //#ifndef EFC_H
-

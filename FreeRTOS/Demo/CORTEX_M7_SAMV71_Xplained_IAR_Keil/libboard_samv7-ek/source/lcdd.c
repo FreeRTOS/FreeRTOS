@@ -52,21 +52,20 @@
  */
 extern void LCDD_Initialize( void )
 {
-    
     /* Initialize LCD controller */
-    ILI9488_Initialize() ;
+    ILI9488_Initialize();
 
     /* Initialize LCD controller */
-    ILI9488_SetDisplayPortrait( 0 ) ;
+    ILI9488_SetDisplayPortrait( 0 );
 
     /* Set LCD backlight */
-    LCDD_SetBacklight( 16 ) ;
+    LCDD_SetBacklight( 16 );
 }
 
 /**
  * \brief Turn on the LCD.
  */
-void LCDD_On(void)
+void LCDD_On( void )
 {
     ILI9488_On();
 }
@@ -74,7 +73,7 @@ void LCDD_On(void)
 /**
  * \brief Turn off the LCD.
  */
-void LCDD_Off(void)
+void LCDD_Off( void )
 {
     ILI9488_Off();
 }
@@ -84,12 +83,11 @@ void LCDD_Off(void)
  *
  * \param level   Backlight brightness level [1..16], 1 means maximum brightness.
  */
-void LCDD_SetBacklight (uint32_t level)
+void LCDD_SetBacklight( uint32_t level )
 {
-    
     /* Ensure valid level */
-    level = (level < 1) ? 1 : level;
-    level = (level > 16) ? 16 : level;
+    level = ( level < 1 ) ? 1 : level;
+    level = ( level > 16 ) ? 16 : level;
 
-   PWMC_SetDutyCycle(PWM0, CHANNEL_PWM_LCD, level);
+    PWMC_SetDutyCycle( PWM0, CHANNEL_PWM_LCD, level );
 }

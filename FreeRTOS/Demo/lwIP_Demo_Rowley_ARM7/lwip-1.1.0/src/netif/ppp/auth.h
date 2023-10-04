@@ -7,13 +7,13 @@
 * The authors hereby grant permission to use, copy, modify, distribute,
 * and license this software and its documentation for any purpose, provided
 * that existing copyright notices are retained in all copies and that this
-* notice and the following disclaimer are included verbatim in any 
+* notice and the following disclaimer are included verbatim in any
 * distributions. No written agreement, license, or royalty fee is required
 * for any of the authorized uses.
 *
 * THIS SOFTWARE IS PROVIDED BY THE CONTRIBUTORS *AS IS* AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
 * IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
 * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
@@ -30,6 +30,7 @@
 * 97-12-04 Guy Lancaster <lancasterg@acm.org>, Global Election Systems Inc.
 *	Original derived from BSD pppd.h.
 *****************************************************************************/
+
 /*
  * pppd.h - PPP daemon global declarations.
  *
@@ -56,39 +57,60 @@
 /***********************
 *** PUBLIC FUNCTIONS ***
 ***********************/
-void link_required (int);		/* we are starting to use the link */
-void link_terminated (int);	/* we are finished with the link */
-void link_down (int);			/* the LCP layer has left the Opened state */
-void link_established (int);	/* the link is up; authenticate now */
-void np_up (int, u16_t);			/* a network protocol has come up */
-void np_down (int, u16_t);		/* a network protocol has gone down */
-void np_finished (int, u16_t);	/* a network protocol no longer needs link */
-void auth_peer_fail (int, u16_t);/* peer failed to authenticate itself */
+void link_required( int );    /* we are starting to use the link */
+void link_terminated( int );  /* we are finished with the link */
+void link_down( int );        /* the LCP layer has left the Opened state */
+void link_established( int ); /* the link is up; authenticate now */
+void np_up( int,
+            u16_t );          /* a network protocol has come up */
+void np_down( int,
+              u16_t );        /* a network protocol has gone down */
+void np_finished( int,
+                  u16_t );    /* a network protocol no longer needs link */
+void auth_peer_fail( int,
+                     u16_t ); /* peer failed to authenticate itself */
 
 /* peer successfully authenticated itself */
-void auth_peer_success (int, u16_t, char *, int);
+void auth_peer_success( int,
+                        u16_t,
+                        char *,
+                        int );
 
 /* we failed to authenticate ourselves */
-void auth_withpeer_fail (int, u16_t);
+void auth_withpeer_fail( int,
+                         u16_t );
 
 /* we successfully authenticated ourselves */
-void auth_withpeer_success (int, u16_t);
+void auth_withpeer_success( int,
+                            u16_t );
 
 /* check authentication options supplied */
-void auth_check_options (void);
-void auth_reset (int);			/* check what secrets we have */
+void auth_check_options( void );
+void auth_reset( int ); /* check what secrets we have */
 
 /* Check peer-supplied username/password */
-int  check_passwd (int, char *, int, char *, int, char **, int *);
+int check_passwd( int,
+                  char *,
+                  int,
+                  char *,
+                  int,
+                  char **,
+                  int * );
 
 /* get "secret" for chap */
-int  get_secret (int, char *, char *, char *, int *, int);
+int get_secret( int,
+                char *,
+                char *,
+                char *,
+                int *,
+                int );
 
 /* check if IP address is authorized */
-int  auth_ip_addr (int, u32_t);
+int auth_ip_addr( int,
+                  u32_t );
 
 /* check if IP address is unreasonable */
-int  bad_ip_adrs (u32_t);
+int bad_ip_adrs( u32_t );
 
 
 #endif /* AUTH_H */

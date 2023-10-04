@@ -16,6 +16,7 @@
 *
 * Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : r_switches.c
 * Description  : Functions for using switches with callback functions.
@@ -29,7 +30,7 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Board and MCU support. */
 #include "platform.h"
@@ -37,73 +38,74 @@ Includes   <System Includes> , "Project Includes"
 #include "r_switches_if.h"
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 /* This helps reduce the amount of unique code for each supported board. */
-#define X_IRQ( x )   XX_IRQ( x )
-#define XX_IRQ( x )  _ICU_IRQ##x
+#define X_IRQ( x )     XX_IRQ( x )
+#define XX_IRQ( x )    _ICU_IRQ ## x
 
 /* These macros define which IRQ pins are used for the switches. Note that these defintions cannot have parentheses
-   around them. */
-#if   defined(PLATFORM_BOARD_RDKRX63N)
-    #define SW1_IRQ_NUMBER     8
-    #define SW2_IRQ_NUMBER     9
-    #define SW3_IRQ_NUMBER     12
-#elif defined(PLATFORM_BOARD_RSKRX63N)
-    #define SW1_IRQ_NUMBER     2
-    #define SW2_IRQ_NUMBER     8
-    #define SW3_IRQ_NUMBER     15
-#elif defined(PLATFORM_BOARD_RSKRX630)
-    #define SW1_IRQ_NUMBER     2
-    #define SW2_IRQ_NUMBER     12
-    #define SW3_IRQ_NUMBER     15
-#elif defined(PLATFORM_BOARD_RSKRX62N)
-    #define SW1_IRQ_NUMBER     8
-    #define SW2_IRQ_NUMBER     9
-    #define SW3_IRQ_NUMBER     15
-#elif defined(PLATFORM_BOARD_RDKRX62N)
-    #define SW1_IRQ_NUMBER     8
-    #define SW2_IRQ_NUMBER     9
-    #define SW3_IRQ_NUMBER     10
-#elif defined(PLATFORM_BOARD_RSKRX62T)
-    #define SW1_IRQ_NUMBER     0
-    #define SW2_IRQ_NUMBER     1
-    #define SW3_IRQ_NUMBER     3
-#elif defined(PLATFORM_BOARD_RSKRX610)
-    #define SW1_IRQ_NUMBER     8
-    #define SW2_IRQ_NUMBER     9
-    #define SW3_IRQ_NUMBER     3
-#elif defined(PLATFORM_BOARD_RSKRX210)
-    #define SW1_IRQ_NUMBER     1
-    #define SW2_IRQ_NUMBER     3
-    #define SW3_IRQ_NUMBER     4
-#elif defined(PLATFORM_BOARD_RSKRX111)
-    #define SW1_IRQ_NUMBER     0
-    #define SW2_IRQ_NUMBER     1
-    #define SW3_IRQ_NUMBER     4
-#endif
+ * around them. */
+#if   defined( PLATFORM_BOARD_RDKRX63N )
+    #define SW1_IRQ_NUMBER    8
+    #define SW2_IRQ_NUMBER    9
+    #define SW3_IRQ_NUMBER    12
+#elif defined( PLATFORM_BOARD_RSKRX63N )
+    #define SW1_IRQ_NUMBER    2
+    #define SW2_IRQ_NUMBER    8
+    #define SW3_IRQ_NUMBER    15
+#elif defined( PLATFORM_BOARD_RSKRX630 )
+    #define SW1_IRQ_NUMBER    2
+    #define SW2_IRQ_NUMBER    12
+    #define SW3_IRQ_NUMBER    15
+#elif defined( PLATFORM_BOARD_RSKRX62N )
+    #define SW1_IRQ_NUMBER    8
+    #define SW2_IRQ_NUMBER    9
+    #define SW3_IRQ_NUMBER    15
+#elif defined( PLATFORM_BOARD_RDKRX62N )
+    #define SW1_IRQ_NUMBER    8
+    #define SW2_IRQ_NUMBER    9
+    #define SW3_IRQ_NUMBER    10
+#elif defined( PLATFORM_BOARD_RSKRX62T )
+    #define SW1_IRQ_NUMBER    0
+    #define SW2_IRQ_NUMBER    1
+    #define SW3_IRQ_NUMBER    3
+#elif defined( PLATFORM_BOARD_RSKRX610 )
+    #define SW1_IRQ_NUMBER    8
+    #define SW2_IRQ_NUMBER    9
+    #define SW3_IRQ_NUMBER    3
+#elif defined( PLATFORM_BOARD_RSKRX210 )
+    #define SW1_IRQ_NUMBER    1
+    #define SW2_IRQ_NUMBER    3
+    #define SW3_IRQ_NUMBER    4
+#elif defined( PLATFORM_BOARD_RSKRX111 )
+    #define SW1_IRQ_NUMBER    0
+    #define SW2_IRQ_NUMBER    1
+    #define SW3_IRQ_NUMBER    4
+#endif /* if   defined( PLATFORM_BOARD_RDKRX63N ) */
 
 /* Number of switches on this board. */
-#define SWITCHES_NUM            (3)
+#define SWITCHES_NUM    ( 3 )
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 typedef struct
 {
-    bool    active;
+    bool active;
     int32_t debounce_cnt;
 } switch_t;
 
 /***********************************************************************************************************************
-Private global variables and functions
+*  Private global variables and functions
 ***********************************************************************************************************************/
 #if SWITCHES_DETECTION_MODE == 1
 /* Update Hz */
-static uint32_t g_sw_debounce_cnts;
+    static uint32_t g_sw_debounce_cnts;
 /* Used for debounce. */
-switch_t g_switches[SWITCHES_NUM];
+    switch_t g_switches[ SWITCHES_NUM ];
 #endif
 
 /***********************************************************************************************************************
@@ -117,270 +119,256 @@ switch_t g_switches[SWITCHES_NUM];
 *                    which R_SWITCHES_Update() will likely lower this number.
 * Return Value : none
 ***********************************************************************************************************************/
-void R_SWITCHES_Init (uint32_t detection_hz, uint32_t debounce_counts)
+void R_SWITCHES_Init( uint32_t detection_hz,
+                      uint32_t debounce_counts )
 {
     uint32_t i;
 
     /* The SW#_XXX defintions are common macros amongst different boards. To see the definitions for these macros
-       see the board defintion file. For example, this file for the RSKRX63N is rskrx63n.h. */
+     * see the board defintion file. For example, this file for the RSKRX63N is rskrx63n.h. */
 
-#if defined(MCU_RX62N) || defined(MCU_RX62T) || defined(MCU_RX621) || defined(MCU_RX610)
+    #if defined( MCU_RX62N ) || defined( MCU_RX62T ) || defined( MCU_RX621 ) || defined( MCU_RX610 )
+        /* Make switch pins inputs. */
+        SW1_DDR = 0;
+        SW2_DDR = 0;
+        SW3_DDR = 0;
 
-    /* Make switch pins inputs. */
-    SW1_DDR = 0;
-    SW2_DDR = 0;
-    SW3_DDR = 0;
+        /* Enable input buffer control registers. */
+        SW1_ICR = 1;
+        SW2_ICR = 1;
+        SW3_ICR = 1;
+    #elif defined( MCU_RX63N ) || defined( MCU_RX630 ) || defined( MCU_RX631 ) || defined( MCU_RX210 ) || defined( MCU_RX111 )
+        /* Unlock protection register */
+        MPC.PWPR.BIT.B0WI = 0;
+        /* Unlock MPC registers */
+        MPC.PWPR.BIT.PFSWE = 1;
 
-    /* Enable input buffer control registers. */
-    SW1_ICR = 1;
-    SW2_ICR = 1;
-    SW3_ICR = 1;
+        /* Make switch pins inputs. */
+        SW1_PDR = 0;
+        SW2_PDR = 0;
+        SW3_PDR = 0;
 
-#elif defined(MCU_RX63N) || defined(MCU_RX630) || defined(MCU_RX631) || defined(MCU_RX210) || defined(MCU_RX111)
+        /* Set port mode registers for switches. */
+        SW1_PMR = 0;
+        SW2_PMR = 0;
+        SW3_PMR = 0;
+    #endif /* if defined( MCU_RX62N ) || defined( MCU_RX62T ) || defined( MCU_RX621 ) || defined( MCU_RX610 ) */
 
-    /* Unlock protection register */
-    MPC.PWPR.BIT.B0WI = 0 ;
-    /* Unlock MPC registers */
-    MPC.PWPR.BIT.PFSWE = 1 ;
+    #if SWITCHES_DETECTION_MODE == 0
+        #if defined( PLATFORM_BOARD_RDKRX63N )
 
-    /* Make switch pins inputs. */
-    SW1_PDR = 0;
-    SW2_PDR = 0;
-    SW3_PDR = 0;
+            /* The switches on the RDKRX63N are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P4.0    IRQ8
+             * SW2     P4.1    IRQ9
+             * SW3     P4.4    IRQ12
+             */
 
-    /* Set port mode registers for switches. */
-    SW1_PMR = 0;
-    SW2_PMR = 0;
-    SW3_PMR = 0;
+            MPC.P40PFS.BYTE = 0x40; /* P40 is used as IRQ pin */
+            MPC.P41PFS.BYTE = 0x40; /* P40 is used as IRQ pin */
+            MPC.P44PFS.BYTE = 0x40; /* P40 is used as IRQ pin */
+        #elif defined( PLATFORM_BOARD_RSKRX63N )
 
-#endif
+            /* The switches on the RSKRX63N are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P3.2    IRQ2
+             * SW2     P0.0    IRQ8
+             * SW3     P0.7    IRQ15
+             */
 
-#if SWITCHES_DETECTION_MODE == 0
+            MPC.P32PFS.BYTE = 0x40; /* P32 is used as IRQ pin */
+            MPC.P00PFS.BYTE = 0x40; /* P00 is used as IRQ pin */
+            MPC.P07PFS.BYTE = 0x40; /* P07 is used as IRQ pin */
+        #elif defined( PLATFORM_BOARD_RSKRX630 )
 
-    #if defined(PLATFORM_BOARD_RDKRX63N)
+            /* The switches on the RSKRX630 are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P3.2    IRQ2
+             * SW2     P4.4    IRQ12
+             * SW3     P0.7    IRQ15
+             */
 
-    /* The switches on the RDKRX63N are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P4.0    IRQ8
-    SW2     P4.1    IRQ9
-    SW3     P4.4    IRQ12
-    */
+            MPC.P32PFS.BYTE = 0x40; /* P32 is used as IRQ pin */
+            MPC.P44PFS.BYTE = 0x40; /* P44 is used as IRQ pin */
+            MPC.P07PFS.BYTE = 0x40; /* P07 is used as IRQ pin */
+        #elif defined( PLATFORM_BOARD_RSKRX62N )
 
-    MPC.P40PFS.BYTE = 0x40;    /* P40 is used as IRQ pin */
-    MPC.P41PFS.BYTE = 0x40;    /* P40 is used as IRQ pin */
-    MPC.P44PFS.BYTE = 0x40;    /* P40 is used as IRQ pin */
+            /* The switches on the RSKRX62N are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P0.0    IRQ8-A
+             * SW2     P0.1    IRQ9-A
+             * SW3     P0.7    IRQ15-A
+             */
 
-    #elif defined(PLATFORM_BOARD_RSKRX63N)
+            IOPORT.PF8IRQ.BIT.ITS8 = 0;  /* IRQ8-A pin is used. */
+            IOPORT.PF8IRQ.BIT.ITS9 = 0;  /* IRQ9-A pin is used. */
+            IOPORT.PF8IRQ.BIT.ITS15 = 0; /* IRQ15-A pin is used. */
+        #elif defined( PLATFORM_BOARD_RDKRX62N )
 
-    /* The switches on the RSKRX63N are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P3.2    IRQ2
-    SW2     P0.0    IRQ8
-    SW3     P0.7    IRQ15
-    */
+            /* The switches on the RDKRX62N are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P4.0    IRQ8
+             * SW2     P4.1    IRQ9
+             * SW3     P4.2    IRQ10
+             */
 
-    MPC.P32PFS.BYTE  = 0x40;    /* P32 is used as IRQ pin */
-    MPC.P00PFS.BYTE  = 0x40;    /* P00 is used as IRQ pin */
-    MPC.P07PFS.BYTE  = 0x40;    /* P07 is used as IRQ pin */
+            /* Nothing else needed to do here since RDK has 100-pin package and there are no alternate pins to choose. */
+        #elif defined( PLATFORM_BOARD_RSKRX62T )
 
-    #elif defined(PLATFORM_BOARD_RSKRX630)
+            /* The switches on the RSKRX62T are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     PE.5    IRQ0-B
+             * SW2     PE.4    IRQ1-B
+             * SW3     PB.4    IRQ3
+             */
 
-    /* The switches on the RSKRX630 are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P3.2    IRQ2
-    SW2     P4.4    IRQ12
-    SW3     P0.7    IRQ15
-    */
+            IOPORT.PF8IRQ.BIT.ITS0 = 1; /* IRQ0-B pin is used. */
+            IOPORT.PF8IRQ.BIT.ITS1 = 1; /* IRQ1-B pin is used. */
+            /* IRQ3 is only on 1 pin. */
+        #elif defined( PLATFORM_BOARD_RSKRX610 )
 
-    MPC.P32PFS.BYTE  = 0x40;    /* P32 is used as IRQ pin */
-    MPC.P44PFS.BYTE  = 0x40;    /* P44 is used as IRQ pin */
-    MPC.P07PFS.BYTE  = 0x40;    /* P07 is used as IRQ pin */
+            /* The switches on the RSKRX610 are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P0.0    IRQ8-A
+             * SW2     P0.1    IRQ9-A
+             * SW3     P1.3    IRQ3-B
+             */
 
-    #elif defined(PLATFORM_BOARD_RSKRX62N)
+            IOPORT.PFCR8.BIT.ITS8 = 0; /* IRQ8-A pin is used. */
+            IOPORT.PFCR8.BIT.ITS9 = 0; /* IRQ9-A pin is used. */
+            IOPORT.PFCR9.BIT.ITS3 = 1; /* IRQ3-B pin is used. */
 
-    /* The switches on the RSKRX62N are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P0.0    IRQ8-A
-    SW2     P0.1    IRQ9-A
-    SW3     P0.7    IRQ15-A
-    */
+            /* Enable IRQ detection. */
+            ICU.IRQER[ SW1_IRQ_NUMBER ].BIT.IRQEN = 1;
+            ICU.IRQER[ SW2_IRQ_NUMBER ].BIT.IRQEN = 1;
+            ICU.IRQER[ SW3_IRQ_NUMBER ].BIT.IRQEN = 1;
+        #elif defined( PLATFORM_BOARD_RSKRX210 )
 
-    IOPORT.PF8IRQ.BIT.ITS8  = 0;    /* IRQ8-A pin is used. */
-    IOPORT.PF8IRQ.BIT.ITS9  = 0;    /* IRQ9-A pin is used. */
-    IOPORT.PF8IRQ.BIT.ITS15 = 0;    /* IRQ15-A pin is used. */
+            /* The switches on the RSKRX210 are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P3.1    IRQ1
+             * SW2     P3.3    IRQ3
+             * SW3     P3.4    IRQ4
+             */
 
-    #elif defined(PLATFORM_BOARD_RDKRX62N)
+            MPC.P31PFS.BYTE = 0x40; /* P31 is used as IRQ pin */
+            MPC.P33PFS.BYTE = 0x40; /* P33 is used as IRQ pin */
+            MPC.P34PFS.BYTE = 0x40; /* P34 is used as IRQ pin */
+        #elif defined( PLATFORM_BOARD_RSKRX111 )
 
-    /* The switches on the RDKRX62N are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P4.0    IRQ8
-    SW2     P4.1    IRQ9
-    SW3     P4.2    IRQ10
-    */
+            /* The switches on the RSKRX210 are connected to the following pins/IRQ's
+             * Switch  Port    IRQ
+             * ------  ----    ----
+             * SW1     P3.0    IRQ0
+             * SW2     P3.1    IRQ1
+             * SW3     PE.4    IRQ4
+             */
 
-    /* Nothing else needed to do here since RDK has 100-pin package and there are no alternate pins to choose. */
-
-    #elif defined(PLATFORM_BOARD_RSKRX62T)
-
-    /* The switches on the RSKRX62T are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     PE.5    IRQ0-B
-    SW2     PE.4    IRQ1-B
-    SW3     PB.4    IRQ3
-    */
-
-    IOPORT.PF8IRQ.BIT.ITS0  = 1;    /* IRQ0-B pin is used. */
-    IOPORT.PF8IRQ.BIT.ITS1  = 1;    /* IRQ1-B pin is used. */
-    /* IRQ3 is only on 1 pin. */
-
-    #elif defined(PLATFORM_BOARD_RSKRX610)
-
-    /* The switches on the RSKRX610 are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P0.0    IRQ8-A
-    SW2     P0.1    IRQ9-A
-    SW3     P1.3    IRQ3-B
-    */
-
-    IOPORT.PFCR8.BIT.ITS8  = 0;    /* IRQ8-A pin is used. */
-    IOPORT.PFCR8.BIT.ITS9  = 0;    /* IRQ9-A pin is used. */
-    IOPORT.PFCR9.BIT.ITS3  = 1;    /* IRQ3-B pin is used. */
-
-    /* Enable IRQ detection. */
-    ICU.IRQER[SW1_IRQ_NUMBER].BIT.IRQEN = 1;
-    ICU.IRQER[SW2_IRQ_NUMBER].BIT.IRQEN = 1;
-    ICU.IRQER[SW3_IRQ_NUMBER].BIT.IRQEN = 1;
-
-    #elif defined(PLATFORM_BOARD_RSKRX210)
-
-    /* The switches on the RSKRX210 are connected to the following pins/IRQ's
-    Switch  Port    IRQ
-    ------  ----    ----
-    SW1     P3.1    IRQ1
-    SW2     P3.3    IRQ3
-    SW3     P3.4    IRQ4
-    */
-
-    MPC.P31PFS.BYTE  = 0x40;    /* P31 is used as IRQ pin */
-    MPC.P33PFS.BYTE  = 0x40;    /* P33 is used as IRQ pin */
-    MPC.P34PFS.BYTE  = 0x40;    /* P34 is used as IRQ pin */
-
-#elif defined(PLATFORM_BOARD_RSKRX111)
-
-    /* The switches on the RSKRX210 are connected to the following pins/IRQ's
-	Switch  Port    IRQ
-	------  ----    ----
-	SW1     P3.0    IRQ0
-	SW2     P3.1    IRQ1
-	SW3     PE.4    IRQ4
-    */
-
-    MPC.P30PFS.BYTE  = 0x40;    /* P30 is used as IRQ pin */
-    MPC.P31PFS.BYTE  = 0x40;    /* P31 is used as IRQ pin */
-    MPC.PE4PFS.BYTE  = 0x40;    /* PE4 is used as IRQ pin */
-
-    #endif
+            MPC.P30PFS.BYTE = 0x40; /* P30 is used as IRQ pin */
+            MPC.P31PFS.BYTE = 0x40; /* P31 is used as IRQ pin */
+            MPC.PE4PFS.BYTE = 0x40; /* PE4 is used as IRQ pin */
+        #endif /* if defined( PLATFORM_BOARD_RDKRX63N ) */
 
 
-    /* Set IRQ type (falling edge) */
-    ICU.IRQCR[SW1_IRQ_NUMBER].BIT.IRQMD  = 0x01;
-    ICU.IRQCR[SW2_IRQ_NUMBER].BIT.IRQMD  = 0x01;
-    ICU.IRQCR[SW3_IRQ_NUMBER].BIT.IRQMD  = 0x01;
+        /* Set IRQ type (falling edge) */
+        ICU.IRQCR[ SW1_IRQ_NUMBER ].BIT.IRQMD = 0x01;
+        ICU.IRQCR[ SW2_IRQ_NUMBER ].BIT.IRQMD = 0x01;
+        ICU.IRQCR[ SW3_IRQ_NUMBER ].BIT.IRQMD = 0x01;
 
-    /* Set interrupt priorities which muse be below
-    configMAX_SYSCALL_INTERRUPT_PRIORITY. */
-    _IPR( X_IRQ(SW1_IRQ_NUMBER) ) = configKERNEL_INTERRUPT_PRIORITY;
-    _IPR( X_IRQ(SW2_IRQ_NUMBER) ) = configKERNEL_INTERRUPT_PRIORITY;
-    _IPR( X_IRQ(SW3_IRQ_NUMBER) ) = configKERNEL_INTERRUPT_PRIORITY;
+        /* Set interrupt priorities which muse be below
+         * configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+        _IPR( X_IRQ( SW1_IRQ_NUMBER ) ) = configKERNEL_INTERRUPT_PRIORITY;
+        _IPR( X_IRQ( SW2_IRQ_NUMBER ) ) = configKERNEL_INTERRUPT_PRIORITY;
+        _IPR( X_IRQ( SW3_IRQ_NUMBER ) ) = configKERNEL_INTERRUPT_PRIORITY;
 
-    /* Clear any pending interrupts */
-    _IR( X_IRQ(SW1_IRQ_NUMBER) ) = 0;
-    _IR( X_IRQ(SW2_IRQ_NUMBER) ) = 0;
-    _IR( X_IRQ(SW3_IRQ_NUMBER) ) = 0;
+        /* Clear any pending interrupts */
+        _IR( X_IRQ( SW1_IRQ_NUMBER ) ) = 0;
+        _IR( X_IRQ( SW2_IRQ_NUMBER ) ) = 0;
+        _IR( X_IRQ( SW3_IRQ_NUMBER ) ) = 0;
 
-    /* Enable the interrupts */
-    _IEN( X_IRQ(SW1_IRQ_NUMBER) )  = 1;
-    _IEN( X_IRQ(SW2_IRQ_NUMBER) )  = 1;
-    _IEN( X_IRQ(SW3_IRQ_NUMBER) )  = 1;
+        /* Enable the interrupts */
+        _IEN( X_IRQ( SW1_IRQ_NUMBER ) ) = 1;
+        _IEN( X_IRQ( SW2_IRQ_NUMBER ) ) = 1;
+        _IEN( X_IRQ( SW3_IRQ_NUMBER ) ) = 1;
+    #else  /* if SWITCHES_DETECTION_MODE == 0 */
+        /* This is based upon having 3 counts at 10Hz. */
+        g_sw_debounce_cnts = debounce_counts;
 
-#else
-
-    /* This is based upon having 3 counts at 10Hz. */
-    g_sw_debounce_cnts = debounce_counts;
-
-    /* Init debounce structures. */
-    for (i = 0; i < SWITCHES_NUM; i++)
-    {
-        g_switches[i].active = false;
-        g_switches[i].debounce_cnt = 0;
-    }
-
-#endif /* SWITCHES_DETECTION_MODE */
-
+        /* Init debounce structures. */
+        for( i = 0; i < SWITCHES_NUM; i++ )
+        {
+            g_switches[ i ].active = false;
+            g_switches[ i ].debounce_cnt = 0;
+        }
+    #endif /* SWITCHES_DETECTION_MODE */
 }
 
 /* Only define interrupts in interrupt detection mode. */
 #if SWITCHES_DETECTION_MODE == 0
 
-    #if defined(SW1_CALLBACK_FUNCTION)
+    #if defined( SW1_CALLBACK_FUNCTION )
+
 /***********************************************************************************************************************
 * Function name: sw1_isr
 * Description  : Sample ISR for switch 1 input (must do hardware setup first!)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-#pragma interrupt (sw1_isr (vect=_VECT(X_IRQ(SW1_IRQ_NUMBER))))
-static void sw1_isr (void)
-{
-    /* TODO: Add some debouncing! */
+        #pragma interrupt (sw1_isr (vect=_VECT(X_IRQ(SW1_IRQ_NUMBER))))
+        static void sw1_isr( void )
+        {
+            /* TODO: Add some debouncing! */
 
-    /* Call callback function. */
-    SW1_CALLBACK_FUNCTION();
-}
+            /* Call callback function. */
+            SW1_CALLBACK_FUNCTION();
+        }
     #endif /* SW1_CALLBACK_FUNCTION */
 
-    #if defined(SW2_CALLBACK_FUNCTION)
+    #if defined( SW2_CALLBACK_FUNCTION )
+
 /***********************************************************************************************************************
 * Function name: sw2_isr
 * Description  : Sample ISR for switch 2 input (must do hardware setup first!)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-#pragma interrupt (sw2_isr (vect=_VECT(X_IRQ(SW2_IRQ_NUMBER))))
-static void sw2_isr (void)
-{
-    /* TODO: Add some debouncing! */
+        #pragma interrupt (sw2_isr (vect=_VECT(X_IRQ(SW2_IRQ_NUMBER))))
+        static void sw2_isr( void )
+        {
+            /* TODO: Add some debouncing! */
 
-    /* Call callback function. */
-    SW2_CALLBACK_FUNCTION();
-}
+            /* Call callback function. */
+            SW2_CALLBACK_FUNCTION();
+        }
     #endif /* SW2_CALLBACK_FUNCTION */
 
-    #if defined(SW3_CALLBACK_FUNCTION)
+    #if defined( SW3_CALLBACK_FUNCTION )
+
 /***********************************************************************************************************************
 * Function name: sw3_isr
 * Description  : Sample ISR for switch 3 input (must do hardware setup first!)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-#pragma interrupt (sw3_isr (vect=_VECT(X_IRQ(SW3_IRQ_NUMBER))))
-static void sw3_isr (void)
-{
-    /* TODO: Add some debouncing! */
+        #pragma interrupt (sw3_isr (vect=_VECT(X_IRQ(SW3_IRQ_NUMBER))))
+        static void sw3_isr( void )
+        {
+            /* TODO: Add some debouncing! */
 
-    /* Call callback function. */
-    SW3_CALLBACK_FUNCTION();
-}
+            /* Call callback function. */
+            SW3_CALLBACK_FUNCTION();
+        }
     #endif /* SW3_CALLBACK_FUNCTION */
 
-#endif
+#endif /* if SWITCHES_DETECTION_MODE == 0 */
 
 /* If using polling then the user must call the update function. */
 
@@ -392,92 +380,89 @@ static void sw3_isr (void)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-void R_SWITCHES_Update (void)
+void R_SWITCHES_Update( void )
 {
-#if SWITCHES_DETECTION_MODE == 1
-    /* This code is only needed for polling mode. */
-    /* Check switch 1. */
-    if (SW1 == SW_ACTIVE)
-    {
-        if (g_switches[0].active != true)
+    #if SWITCHES_DETECTION_MODE == 1
+        /* This code is only needed for polling mode. */
+        /* Check switch 1. */
+        if( SW1 == SW_ACTIVE )
         {
-            if (++g_switches[0].debounce_cnt >= g_sw_debounce_cnts)
+            if( g_switches[ 0 ].active != true )
             {
-                /* Set this to true so we only call the callback function once per press. */
-                g_switches[0].active = true;
+                if( ++g_switches[ 0 ].debounce_cnt >= g_sw_debounce_cnts )
+                {
+                    /* Set this to true so we only call the callback function once per press. */
+                    g_switches[ 0 ].active = true;
 
-                /* Call callback function. */
-                SW1_CALLBACK_FUNCTION();
+                    /* Call callback function. */
+                    SW1_CALLBACK_FUNCTION();
+                }
             }
-        }
-    }
-    else
-    {
-        if (0 == g_switches[0].debounce_cnt)
-        {
-            g_switches[0].active = false;
         }
         else
         {
-            g_switches[0].debounce_cnt--;
-        }
-    }
-
-    /* Check switch 2. */
-    if (SW2 == SW_ACTIVE)
-    {
-        if (g_switches[1].active != true)
-        {
-            if (++g_switches[1].debounce_cnt >= g_sw_debounce_cnts)
+            if( 0 == g_switches[ 0 ].debounce_cnt )
             {
-                /* Set this to true so we only call the callback function once per press. */
-                g_switches[1].active = true;
-
-                /* Call callback function. */
-                SW2_CALLBACK_FUNCTION();
+                g_switches[ 0 ].active = false;
+            }
+            else
+            {
+                g_switches[ 0 ].debounce_cnt--;
             }
         }
-    }
-    else
-    {
-        if (0 == g_switches[1].debounce_cnt)
+
+        /* Check switch 2. */
+        if( SW2 == SW_ACTIVE )
         {
-            g_switches[1].active = false;
+            if( g_switches[ 1 ].active != true )
+            {
+                if( ++g_switches[ 1 ].debounce_cnt >= g_sw_debounce_cnts )
+                {
+                    /* Set this to true so we only call the callback function once per press. */
+                    g_switches[ 1 ].active = true;
+
+                    /* Call callback function. */
+                    SW2_CALLBACK_FUNCTION();
+                }
+            }
         }
         else
         {
-            g_switches[1].debounce_cnt--;
-        }
-    }
-
-    /* Check switch 3. */
-    if (SW3 == SW_ACTIVE)
-    {
-        if (g_switches[2].active != true)
-        {
-            if (++g_switches[2].debounce_cnt >= g_sw_debounce_cnts)
+            if( 0 == g_switches[ 1 ].debounce_cnt )
             {
-                /* Set this to true so we only call the callback function once per press. */
-                g_switches[2].active = true;
-
-                /* Call callback function. */
-                SW3_CALLBACK_FUNCTION();
+                g_switches[ 1 ].active = false;
+            }
+            else
+            {
+                g_switches[ 1 ].debounce_cnt--;
             }
         }
-    }
-    else
-    {
-        if (0 == g_switches[2].debounce_cnt)
+
+        /* Check switch 3. */
+        if( SW3 == SW_ACTIVE )
         {
-            g_switches[2].active = false;
+            if( g_switches[ 2 ].active != true )
+            {
+                if( ++g_switches[ 2 ].debounce_cnt >= g_sw_debounce_cnts )
+                {
+                    /* Set this to true so we only call the callback function once per press. */
+                    g_switches[ 2 ].active = true;
+
+                    /* Call callback function. */
+                    SW3_CALLBACK_FUNCTION();
+                }
+            }
         }
         else
         {
-            g_switches[2].debounce_cnt--;
+            if( 0 == g_switches[ 2 ].debounce_cnt )
+            {
+                g_switches[ 2 ].active = false;
+            }
+            else
+            {
+                g_switches[ 2 ].debounce_cnt--;
+            }
         }
-    }
-#endif /* SWITCHES_DETECTION_MODE */
+    #endif /* SWITCHES_DETECTION_MODE */
 }
-
-
-

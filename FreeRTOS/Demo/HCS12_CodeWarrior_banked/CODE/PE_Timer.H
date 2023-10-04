@@ -30,7 +30,10 @@
 
 /* MODULE PE_Timer. */
 
-void PE_Timer_LngMul(dword va1, dword va2, dlong *var);
+void PE_Timer_LngMul( dword va1,
+                      dword va2,
+                      dlong * var );
+
 /*
 ** ===================================================================
 **     Method      :  PE_Timer_LngMul (bean PE_Timer)
@@ -41,7 +44,10 @@ void PE_Timer_LngMul(dword va1, dword va2, dlong *var);
 ** ===================================================================
 */
 
-bool PE_Timer_LngHi1(dword Low, dword High, word *Out);
+bool PE_Timer_LngHi1( dword Low,
+                      dword High,
+                      word * Out );
+
 /*
 ** ===================================================================
 **     Method      :  PE_Timer_LngHi1 (bean PE_Timer)
@@ -52,7 +58,10 @@ bool PE_Timer_LngHi1(dword Low, dword High, word *Out);
 ** ===================================================================
 */
 
-bool PE_Timer_LngHi2(dword Low, dword High, word *Out);
+bool PE_Timer_LngHi2( dword Low,
+                      dword High,
+                      word * Out );
+
 /*
 ** ===================================================================
 **     Method      :  PE_Timer_LngHi2 (bean PE_Timer)
@@ -63,7 +72,10 @@ bool PE_Timer_LngHi2(dword Low, dword High, word *Out);
 ** ===================================================================
 */
 
-bool PE_Timer_LngHi3(dword Low, dword High, word *Out);
+bool PE_Timer_LngHi3( dword Low,
+                      dword High,
+                      word * Out );
+
 /*
 ** ===================================================================
 **     Method      :  PE_Timer_LngHi3 (bean PE_Timer)
@@ -74,7 +86,10 @@ bool PE_Timer_LngHi3(dword Low, dword High, word *Out);
 ** ===================================================================
 */
 
-bool PE_Timer_LngHi4(dword Low, dword High, word *Out);
+bool PE_Timer_LngHi4( dword Low,
+                      dword High,
+                      word * Out );
+
 /*
 ** ===================================================================
 **     Method      :  PE_Timer_LngHi4 (bean PE_Timer)
@@ -87,10 +102,11 @@ bool PE_Timer_LngHi4(dword Low, dword High, word *Out);
 
 
 #endif /* END PE_Timer. */
+
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

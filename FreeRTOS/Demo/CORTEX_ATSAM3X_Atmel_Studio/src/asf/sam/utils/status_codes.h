@@ -56,30 +56,31 @@
  * however, but make sure that any message string tables are updated
  * at the same time.
  */
-enum status_code {
-	STATUS_OK		    =     0, //!< Success
-	ERR_IO_ERROR		=    -1, //!< I/O error
-	ERR_FLUSHED		    =    -2, //!< Request flushed from queue
-	ERR_TIMEOUT		    =    -3, //!< Operation timed out
-	ERR_BAD_DATA		=    -4, //!< Data integrity check failed
-	ERR_PROTOCOL		=    -5, //!< Protocol error
-	ERR_UNSUPPORTED_DEV	=    -6, //!< Unsupported device
-	ERR_NO_MEMORY		=    -7, //!< Insufficient memory
-	ERR_INVALID_ARG		=    -8, //!< Invalid argument
-	ERR_BAD_ADDRESS		=    -9, //!< Bad address
-	ERR_BUSY		    =   -10, //!< Resource is busy
-	ERR_BAD_FORMAT      =   -11, //!< Data format not recognized
+enum status_code
+{
+    STATUS_OK = 0,            /*!< Success */
+    ERR_IO_ERROR = -1,        /*!< I/O error */
+    ERR_FLUSHED = -2,         /*!< Request flushed from queue */
+    ERR_TIMEOUT = -3,         /*!< Operation timed out */
+    ERR_BAD_DATA = -4,        /*!< Data integrity check failed */
+    ERR_PROTOCOL = -5,        /*!< Protocol error */
+    ERR_UNSUPPORTED_DEV = -6, /*!< Unsupported device */
+    ERR_NO_MEMORY = -7,       /*!< Insufficient memory */
+    ERR_INVALID_ARG = -8,     /*!< Invalid argument */
+    ERR_BAD_ADDRESS = -9,     /*!< Bad address */
+    ERR_BUSY = -10,           /*!< Resource is busy */
+    ERR_BAD_FORMAT = -11,     /*!< Data format not recognized */
 
-	/**
-	 * \brief Operation in progress
-	 *
-	 * This status code is for driver-internal use when an operation
-	 * is currently being performed.
-	 *
-	 * \note Drivers should never return this status code to any
-	 * callers. It is strictly for internal use.
-	 */
-	OPERATION_IN_PROGRESS	= -128,
+    /**
+     * \brief Operation in progress
+     *
+     * This status code is for driver-internal use when an operation
+     * is currently being performed.
+     *
+     * \note Drivers should never return this status code to any
+     * callers. It is strictly for internal use.
+     */
+    OPERATION_IN_PROGRESS = -128,
 };
 
 typedef enum status_code status_code_t;

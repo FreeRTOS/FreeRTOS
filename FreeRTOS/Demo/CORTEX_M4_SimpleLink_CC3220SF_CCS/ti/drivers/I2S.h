@@ -29,6 +29,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*!*****************************************************************************
  *  @file       I2S.h
  *
@@ -238,16 +239,16 @@
  */
 
 #ifndef ti_drivers_I2S__include
-#define ti_drivers_I2S__include
+    #define ti_drivers_I2S__include
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#include <stdint.h>
-#include <stddef.h>
+    #include <stdint.h>
+    #include <stddef.h>
 
-#include <ti/drivers/utils/List.h>
+    #include <ti/drivers/utils/List.h>
 
 /**
  *  @defgroup I2S_CONTROL I2S_control command and status codes
@@ -266,7 +267,7 @@ extern "C" {
  * #define I2SXYZ_CMD_COMMAND1     I2S_CMD_RESERVED + 1
  * @endcode
  */
-#define I2S_CMD_RESERVED            (32)
+    #define I2S_CMD_RESERVED       ( 32 )
 
 /*!
  * Common I2S_control status code reservation offset.
@@ -280,7 +281,7 @@ extern "C" {
  * #define I2SXYZ_STATUS_ERROR2    I2S_STATUS_RESERVED - 2
  * @endcode
  */
-#define I2S_STATUS_RESERVED        (-32)
+    #define I2S_STATUS_RESERVED    ( -32 )
 
 /**
  *  @defgroup I2S_STATUS Status Codes
@@ -295,7 +296,7 @@ extern "C" {
  * I2S_control() returns I2S_STATUS_SUCCESS if the control code was executed
  * successfully.
  */
-#define I2S_STATUS_SUCCESS         (0)
+    #define I2S_STATUS_SUCCESS         ( 0 )
 
 /*!
  * @brief   Generic error status code returned by I2S_control().
@@ -303,7 +304,7 @@ extern "C" {
  * I2S_control() returns I2S_STATUS_ERROR if the control code was not executed
  * successfully.
  */
-#define I2S_STATUS_ERROR          (-1)
+    #define I2S_STATUS_ERROR           ( -1 )
 
 /*!
  * @brief   An error status code returned by I2S_control() for undefined
@@ -312,7 +313,7 @@ extern "C" {
  * I2S_control() returns I2S_STATUS_UNDEFINEDCMD if the control code is not
  * recognized by the driver implementation.
  */
-#define I2S_STATUS_UNDEFINEDCMD   (-2)
+    #define I2S_STATUS_UNDEFINEDCMD    ( -2 )
 /** @}*/
 
 /**
@@ -329,35 +330,35 @@ extern "C" {
 
 /** @}*/
 
-#define I2S_ERROR  (I2S_STATUS_ERROR)
+    #define I2S_ERROR           ( I2S_STATUS_ERROR )
 
 /*!
  *  @brief    Wait forever define
  */
-#define I2S_WAIT_FOREVER (~(0U))
+    #define I2S_WAIT_FOREVER    ( ~( 0U ) )
 
 /*!
  *  @brief      A handle that is returned from a I2S_open() call.
  */
-typedef struct I2S_Config_ *I2S_Handle;
+    typedef struct I2S_Config_ * I2S_Handle;
 
 /*!
  *  @brief I2S buffer descriptor for issue/reclaim mode.
  */
-typedef struct I2S_BufDesc_ {
+    typedef struct I2S_BufDesc_
+    {
+        /*! Used internally to link descriptors together */
+        List_Elem qElem;
 
-    /*! Used internally to link descriptors together */
-    List_Elem              qElem;
+        /*! Pointer to the buffer */
+        void * bufPtr;
 
-    /*! Pointer to the buffer */
-    void                   *bufPtr;
+        /*! Size of the buffer (target MAUs). */
+        size_t bufSize;
 
-    /*! Size of the buffer (target MAUs). */
-    size_t                 bufSize;
-
-    /*! Optional argument associated with the descriptor. */
-    uintptr_t              descArg;
-} I2S_BufDesc;
+        /*! Optional argument associated with the descriptor. */
+        uintptr_t descArg;
+    } I2S_BufDesc;
 
 /*!
  *  @brief      The definition of a callback function used by the I2S driver
@@ -369,7 +370,8 @@ typedef struct I2S_BufDesc_ {
  *
  *  @param      count                   Number of elements read/written
  */
-typedef void (*I2S_Callback)(I2S_Handle handle, I2S_BufDesc *desc);
+    typedef void (* I2S_Callback)( I2S_Handle handle,
+                                   I2S_BufDesc * desc );
 
 /*!
  *  @brief      I2S mode settings
@@ -377,32 +379,34 @@ typedef void (*I2S_Callback)(I2S_Handle handle, I2S_BufDesc *desc);
  *  This enum defines the read and write modes for the
  *  configured I2S.
  */
-typedef enum I2S_DataMode_ {
-    /*!
-     *  Non-blocking and will return immediately.  When the transfer by the intr
-     *  is finished the configured callback function is called.
-     */
-    I2S_MODE_CALLBACK,
+    typedef enum I2S_DataMode_
+    {
+        /*!
+         *  Non-blocking and will return immediately.  When the transfer by the intr
+         *  is finished the configured callback function is called.
+         */
+        I2S_MODE_CALLBACK,
 
-    /*!
-     *  Use I2S_readIssue, I2S_writeIssue calls to queue buffers to the
-     *  I2S.  I2S_readReclaim() blocks until a buffer of data is available.
-     *  I2S_writeReclaim() blocks until a buffer of data has been written
-     *  and the descriptor can be returned back to the caller.
-     */
-    I2S_MODE_ISSUERECLAIM
-} I2S_DataMode;
+        /*!
+         *  Use I2S_readIssue, I2S_writeIssue calls to queue buffers to the
+         *  I2S.  I2S_readReclaim() blocks until a buffer of data is available.
+         *  I2S_writeReclaim() blocks until a buffer of data has been written
+         *  and the descriptor can be returned back to the caller.
+         */
+        I2S_MODE_ISSUERECLAIM
+    } I2S_DataMode;
 
 /*!
  *  @brief      I2S mode settings
  *
  *  This enumeration defines the mode for I2S operation.
  */
-typedef enum I2S_OpMode_ {
-    I2S_OPMODE_TX_ONLY,       /*!< Only Transmit enabled */
-    I2S_OPMODE_RX_ONLY,       /*!< Only Receive enabled */
-    I2S_OPMODE_TX_RX_SYNC     /*!< Receive and Transmit are enabled in Sync */
-} I2S_OpMode;
+    typedef enum I2S_OpMode_
+    {
+        I2S_OPMODE_TX_ONLY,   /*!< Only Transmit enabled */
+        I2S_OPMODE_RX_ONLY,   /*!< Only Receive enabled */
+        I2S_OPMODE_TX_RX_SYNC /*!< Receive and Transmit are enabled in Sync */
+    } I2S_OpMode;
 
 /*!
  *  @brief    I2S Serializer InActive state settings
@@ -410,22 +414,24 @@ typedef enum I2S_OpMode_ {
  *  This enumeration defines the Serializer configuration
  *  in inactive state.
  */
-typedef enum I2S_SerInActiveConfig_ {
-    I2S_SERCONFIG_INACT_TRI_STATE,  /*!< Inactive state to tristate */
-    I2S_SERCONFIG_INACT_LOW_LEVEL,  /*!< Inactive state to low */
-    I2S_SERCONFIG_INACT_HIGH_LEVEL  /*!< Inactive state to high */
-} I2S_SerInActiveConfig;
+    typedef enum I2S_SerInActiveConfig_
+    {
+        I2S_SERCONFIG_INACT_TRI_STATE, /*!< Inactive state to tristate */
+        I2S_SERCONFIG_INACT_LOW_LEVEL, /*!< Inactive state to low */
+        I2S_SERCONFIG_INACT_HIGH_LEVEL /*!< Inactive state to high */
+    } I2S_SerInActiveConfig;
 
 /*!
  *  @brief    I2S serial pin mode
  *
  *  This enumeration defines the Serial pin configuration
  */
-typedef enum I2S_PinMode_ {
-    I2S_PINMODE_RX,                 /*!< Operate the pin in Rx mode */
-    I2S_PINMODE_TX,                 /*!< Operate the pin in Tx mode */
-    I2S_PINMODE_INACTIVE            /*!< Pin in inactive mode       */
-} I2S_PinMode;
+    typedef enum I2S_PinMode_
+    {
+        I2S_PINMODE_RX,             /*!< Operate the pin in Rx mode */
+        I2S_PINMODE_TX,             /*!< Operate the pin in Tx mode */
+        I2S_PINMODE_INACTIVE        /*!< Pin in inactive mode       */
+    } I2S_PinMode;
 
 /*!
  *  @brief    Basic I2S Parameters
@@ -435,113 +441,117 @@ typedef enum I2S_PinMode_ {
  *
  *  @sa       I2S_Params_init()
  */
-typedef struct I2S_Params_ {
-    /*!< I2S operational mode */
-    I2S_OpMode            operationMode;
+    typedef struct I2S_Params_
+    {
+        /*!< I2S operational mode */
+        I2S_OpMode operationMode;
 
-    /*!< I2S sampling frequency configuration in samples/second */
-    uint32_t              samplingFrequency;
+        /*!< I2S sampling frequency configuration in samples/second */
+        uint32_t samplingFrequency;
 
-    /*!< Slot length */
-    uint8_t               slotLength;
+        /*!< Slot length */
+        uint8_t slotLength;
 
-    /*!< Bits per sample (Word length) */
-    uint8_t               bitsPerSample;
+        /*!< Bits per sample (Word length) */
+        uint8_t bitsPerSample;
 
-    /*!< Number of channels (slots per frame) */
-    uint8_t               numChannels;
+        /*!< Number of channels (slots per frame) */
+        uint8_t numChannels;
 
-    /*!< Mode for all read calls   */
-    I2S_DataMode          readMode;
+        /*!< Mode for all read calls   */
+        I2S_DataMode readMode;
 
-    /*!< Pointer to read callback */
-    I2S_Callback          readCallback;
+        /*!< Pointer to read callback */
+        I2S_Callback readCallback;
 
-    /*!< Timeout for read semaphore */
-    uint32_t              readTimeout;
+        /*!< Timeout for read semaphore */
+        uint32_t readTimeout;
 
-    /*!< Mode for all write calls   */
-    I2S_DataMode          writeMode;
+        /*!< Mode for all write calls   */
+        I2S_DataMode writeMode;
 
-    /*!< Pointer to write callback */
-    I2S_Callback          writeCallback;
+        /*!< Pointer to write callback */
+        I2S_Callback writeCallback;
 
-    /*!< Timeout for write semaphore */
-    uint32_t              writeTimeout;
+        /*!< Timeout for write semaphore */
+        uint32_t writeTimeout;
 
-    /*!< Pointer to device specific custom params */
-    void                 *customParams;
-} I2S_Params;
+        /*!< Pointer to device specific custom params */
+        void * customParams;
+    } I2S_Params;
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2S_CloseFxn().
  */
-typedef void (*I2S_CloseFxn) (I2S_Handle handle);
+    typedef void (* I2S_CloseFxn) ( I2S_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2S_control().
  */
-typedef int_fast16_t (*I2S_ControlFxn)(I2S_Handle handle,
-                                       uint_fast16_t cmd,
-                                       void *arg);
+    typedef int_fast16_t (* I2S_ControlFxn)( I2S_Handle handle,
+                                             uint_fast16_t cmd,
+                                             void * arg );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2S_init().
  */
-typedef void (*I2S_InitFxn)(I2S_Handle handle);
+    typedef void (* I2S_InitFxn)( I2S_Handle handle );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2S_OpenFxn().
  */
-typedef I2S_Handle (*I2S_OpenFxn)(I2S_Handle handle, I2S_Params *params);
+    typedef I2S_Handle (* I2S_OpenFxn)( I2S_Handle handle,
+                                        I2S_Params * params );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2S_IssueFxn().
  */
-typedef int_fast16_t (*I2S_IssueFxn)(I2S_Handle handle, I2S_BufDesc *desc);
+    typedef int_fast16_t (* I2S_IssueFxn)( I2S_Handle handle,
+                                           I2S_BufDesc * desc );
 
 /*!
  *  @brief      A function pointer to a driver specific implementation of
  *              I2S_ReclaimFxn().
  */
-typedef size_t (*I2S_ReclaimFxn)(I2S_Handle handle, I2S_BufDesc **desc);
+    typedef size_t (* I2S_ReclaimFxn)( I2S_Handle handle,
+                                       I2S_BufDesc ** desc );
 
 /*!
  *  @brief      The definition of a I2S function table that contains the
  *              required set of functions to control a specific I2S driver
  *              implementation.
  */
-typedef struct I2S_FxnTable_ {
-    /*! Function to close the specified peripheral */
-    I2S_CloseFxn           closeFxn;
+    typedef struct I2S_FxnTable_
+    {
+        /*! Function to close the specified peripheral */
+        I2S_CloseFxn closeFxn;
 
-    /*! Function to implementation specific control function */
-    I2S_ControlFxn         controlFxn;
+        /*! Function to implementation specific control function */
+        I2S_ControlFxn controlFxn;
 
-    /*! Function to initialize the given data object */
-    I2S_InitFxn            initFxn;
+        /*! Function to initialize the given data object */
+        I2S_InitFxn initFxn;
 
-    /*! Function to open the specified peripheral */
-    I2S_OpenFxn            openFxn;
+        /*! Function to open the specified peripheral */
+        I2S_OpenFxn openFxn;
 
-    /*! Function to queue a buffer for reading from the specified peripheral */
-    I2S_IssueFxn           readIssueFxn;
+        /*! Function to queue a buffer for reading from the specified peripheral */
+        I2S_IssueFxn readIssueFxn;
 
-    /*! Function to retrieve a received buffer of data from the specified peripheral */
-    I2S_ReclaimFxn         readReclaimFxn;
+        /*! Function to retrieve a received buffer of data from the specified peripheral */
+        I2S_ReclaimFxn readReclaimFxn;
 
-    /*! Function to queue a buffer for writing from the specified peripheral */
-    I2S_IssueFxn           writeIssueFxn;
+        /*! Function to queue a buffer for writing from the specified peripheral */
+        I2S_IssueFxn writeIssueFxn;
 
-    /*! Function to retrieve a sent buffer of data from the specified peripheral */
-    I2S_ReclaimFxn         writeReclaimFxn;
-
-} I2S_FxnTable;
+        /*! Function to retrieve a sent buffer of data from the specified peripheral */
+        I2S_ReclaimFxn writeReclaimFxn;
+    } I2S_FxnTable;
 
 /*! @brief  I2S Global configuration
  *
@@ -553,17 +563,18 @@ typedef struct I2S_FxnTable_ {
  *
  *  @sa     I2S_init()
  */
-typedef struct I2S_Config_ {
-    /*! Pointer to a table of a driver-specific implementation of I2S
-        functions */
-    I2S_FxnTable const    *fxnTablePtr;
+    typedef struct I2S_Config_
+    {
+        /*! Pointer to a table of a driver-specific implementation of I2S
+         *  functions */
+        I2S_FxnTable const * fxnTablePtr;
 
-    /*! Pointer to a driver specific data object */
-    void                   *object;
+        /*! Pointer to a driver specific data object */
+        void * object;
 
-    /*! Pointer to a driver specific hardware attributes structure */
-    void          const    *hwAttrs;
-} I2S_Config;
+        /*! Pointer to a driver specific hardware attributes structure */
+        void const * hwAttrs;
+    } I2S_Config;
 
 /*!
  *  @brief  Function to close a given I2S peripheral specified by the I2S
@@ -575,7 +586,7 @@ typedef struct I2S_Config_ {
  *
  *  @sa     I2S_open()
  */
-extern void I2S_close(I2S_Handle handle);
+    extern void I2S_close( I2S_Handle handle );
 
 /*!
  *  @brief  Function performs implementation specific features on a given
@@ -614,9 +625,9 @@ extern void I2S_close(I2S_Handle handle);
  *
  *  @sa     I2S_open()
  */
-extern int_fast16_t I2S_control(I2S_Handle handle,
-                                uint_fast16_t cmd,
-                                void *arg);
+    extern int_fast16_t I2S_control( I2S_Handle handle,
+                                     uint_fast16_t cmd,
+                                     void * arg );
 
 /*!
  *  @brief  Function to initializes the I2S module
@@ -626,7 +637,7 @@ extern int_fast16_t I2S_control(I2S_Handle handle,
  *          any other I2S driver APIs. This function call does not modify any
  *          peripheral registers.
  */
-extern void I2S_init(void);
+    extern void I2S_init( void );
 
 /*!
  *  @brief  Function to initialize a given I2S peripheral specified by the
@@ -648,7 +659,8 @@ extern void I2S_init(void);
  *  @sa     I2S_init()
  *  @sa     I2S_close()
  */
-extern I2S_Handle I2S_open(uint_least8_t index, I2S_Params *params);
+    extern I2S_Handle I2S_open( uint_least8_t index,
+                                I2S_Params * params );
 
 /*!
  *  @brief  Function to initialize the I2S_Params struct to its defaults
@@ -674,7 +686,7 @@ extern I2S_Handle I2S_open(uint_least8_t index, I2S_Params *params);
  *
  *  @param  params  Parameter structure to initialize
  */
-extern void I2S_Params_init(I2S_Params *params);
+    extern void I2S_Params_init( I2S_Params * params );
 
 /*!
  *  @brief Function to queue a buffer of data to the I2S in callback mode
@@ -688,10 +700,11 @@ extern void I2S_Params_init(I2S_Params *params);
  *  @return             Returns 0 if successful else would return
  *                      I2S_STATUS_UNDEFINEDCMD on an error.
  */
-extern int_fast16_t I2S_read(I2S_Handle handle, I2S_BufDesc *desc);
+    extern int_fast16_t I2S_read( I2S_Handle handle,
+                                  I2S_BufDesc * desc );
 
 /*!
-
+ *
  *  @brief Function to queue a buffer of data to the I2S in Issue/Reclaim
  *          mode for reading.
  *
@@ -704,7 +717,8 @@ extern int_fast16_t I2S_read(I2S_Handle handle, I2S_BufDesc *desc);
  *                      I2S_STATUS_UNDEFINEDCMD on an error.
  */
 
-extern int_fast16_t I2S_readIssue(I2S_Handle handle, I2S_BufDesc *desc);
+    extern int_fast16_t I2S_readIssue( I2S_Handle handle,
+                                       I2S_BufDesc * desc );
 
 /*!
  *  @brief Function to retrieve a full buffer of data read by the I2S.
@@ -715,7 +729,8 @@ extern int_fast16_t I2S_readIssue(I2S_Handle handle, I2S_BufDesc *desc);
  *
  *  @return Returns the number of bytes read from the I2S, or 0 on timeout.
  */
-extern size_t I2S_readReclaim(I2S_Handle handle, I2S_BufDesc **pDesc);
+    extern size_t I2S_readReclaim( I2S_Handle handle,
+                                   I2S_BufDesc ** pDesc );
 
 /*!
  *  @brief Function to queue a buffer of data to the I2S in
@@ -729,7 +744,8 @@ extern size_t I2S_readReclaim(I2S_Handle handle, I2S_BufDesc **pDesc);
  *  @return             Returns 0 if successful else would return
  *                      I2S_STATUS_UNDEFINEDCMD on an error.
  */
-extern int_fast16_t I2S_write(I2S_Handle handle, I2S_BufDesc *desc);
+    extern int_fast16_t I2S_write( I2S_Handle handle,
+                                   I2S_BufDesc * desc );
 
 /*!
  *  @brief Function to queue a buffer of data to the I2S in
@@ -743,7 +759,8 @@ extern int_fast16_t I2S_write(I2S_Handle handle, I2S_BufDesc *desc);
  *  @return             Returns 0 if successful else would return
  *                      I2S_STATUS_UNDEFINEDCMD on an error.
  */
-extern int_fast16_t I2S_writeIssue(I2S_Handle handle, I2S_BufDesc *desc);
+    extern int_fast16_t I2S_writeIssue( I2S_Handle handle,
+                                        I2S_BufDesc * desc );
 
 /*!
  *  @brief Function to retrieve a buffer that the I2S has finished writing.
@@ -755,10 +772,11 @@ extern int_fast16_t I2S_writeIssue(I2S_Handle handle, I2S_BufDesc *desc);
  *  @return Returns the number of bytes that have been written to the I2S,
  *          0 on timeout.
  */
-extern size_t I2S_writeReclaim(I2S_Handle handle, I2S_BufDesc **pDesc);
+    extern size_t I2S_writeReclaim( I2S_Handle handle,
+                                    I2S_BufDesc ** pDesc );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* ti_drivers_I2S__include */

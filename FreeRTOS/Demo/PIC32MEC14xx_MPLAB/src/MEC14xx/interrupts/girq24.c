@@ -19,8 +19,9 @@
 *****************************************************************************/
 
 /** @file girq24.c
- *Interrupt service routines for MIPS using vanilla GCC and MCHP XC32
+ * Interrupt service routines for MIPS using vanilla GCC and MCHP XC32
  */
+
 /** @defgroup MEC14xx ISR
  *  @{
  */
@@ -34,38 +35,37 @@
 #include "MEC14xx/mec14xx_trace_func.h"
 
 
-typedef void (* GIRQ24_FPVU8)(uint8_t);
+typedef void (* GIRQ24_FPVU8)( uint8_t );
 
 
 /* MIPS M14K internal counter is connected to GIRQ24 bit[0]
- * It is a simple counter which fires an interrupt when its 
+ * It is a simple counter which fires an interrupt when its
  * count value is equal to a match value.
- * 
+ *
  */
- 
+
 #if GIRQ24_DISAGG == 0
 
 
-void girq24_dflt_handler(uint8_t inum)
-{
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].EN_CLR = (1ul << inum);
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << inum);
-}
+    void girq24_dflt_handler( uint8_t inum )
+    {
+        JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].EN_CLR = ( 1ul << inum );
+        JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].SOURCE = ( 1ul << inum );
+    }
 
-void __attribute__((weak)) m14k_counter_handler(uint8_t inum)
-{
-    uint32_t r;
+    void __attribute__( ( weak ) ) m14k_counter_handler( uint8_t inum )
+    {
+        uint32_t r;
 
-    (void) inum;
+        ( void ) inum;
 
-    r = _CP0_GET_COUNT();
-    r += (M14K_TIMER_COMPARE);
-    /* Write of CP0.Compare clears status in M14K */
-    _CP0_SET_COUNT(r);
+        r = _CP0_GET_COUNT();
+        r += ( M14K_TIMER_COMPARE );
+        /* Write of CP0.Compare clears status in M14K */
+        _CP0_SET_COUNT( r );
 
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 0);
-
-}
+        JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].SOURCE = ( 1ul << 0 );
+    }
 
 /*
  * TODO - FreeRTOS M14K Software Interrupt 0 handler
@@ -76,97 +76,90 @@ void __attribute__((weak)) m14k_counter_handler(uint8_t inum)
  * of girq24_handler below. It must determine which GIRQ24 source
  * was active: M14K counter, SoftIRQ0, or SoftIRQ1.
  */
-void __attribute__((weak)) m14k_soft_irq0(uint8_t inum)
-{
-    (void) inum;
-
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 1);
-
-}
-
-void __attribute__((weak)) m14k_soft_irq1(uint8_t inum)
-{
-    (void) inum;
-
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 2);
-    
-}
-
-void girq24_b_0_2( void )
-{
-    uint32_t d;
-
-    d = JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].RESULT & (GIRQ24_SRC_MASK);
-
-    if ( d & (1ul << 0) )
+    void __attribute__( ( weak ) ) m14k_soft_irq0( uint8_t inum )
     {
-        m14k_counter_handler(0);
+        ( void ) inum;
+
+        JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].SOURCE = ( 1ul << 1 );
     }
 
-    if ( d & (1ul << 2) )
+    void __attribute__( ( weak ) ) m14k_soft_irq1( uint8_t inum )
     {
-        m14k_soft_irq1(2);
+        ( void ) inum;
+
+        JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].SOURCE = ( 1ul << 2 );
     }
-}
 
-
-const GIRQ24_FPVU8 girq24_htable[GIRQ24_NUM_SOURCES] =
-{
-    m14k_counter_handler,   /* m14k_counter_handler, */
-    m14k_soft_irq0,         /* m14k_soft_irq0, */
-    m14k_soft_irq1,         /* m14k_soft_irq1 */
-};
-
-void __attribute__((weak, interrupt, nomips16, section(".girqs")))
-girq24_isr(void)
-{
-    uint32_t d;
-    uint8_t bitpos;
-
-    d = JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].RESULT & (GIRQ24_SRC_MASK);
-    while ( 0 != d )
+    void girq24_b_0_2( void )
     {
-        bitpos = 31 - ((uint8_t)__builtin_clz(d) & 0x1F);
-        (girq24_htable[bitpos])(bitpos);
-        d &= ~(1ul << bitpos);
+        uint32_t d;
+
+        d = JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].RESULT & ( GIRQ24_SRC_MASK );
+
+        if( d & ( 1ul << 0 ) )
+        {
+            m14k_counter_handler( 0 );
+        }
+
+        if( d & ( 1ul << 2 ) )
+        {
+            m14k_soft_irq1( 2 );
+        }
     }
-}
 
-#else
 
-void __attribute__((weak, interrupt, nomips16))
-girq24_b0(void)
-{
-    uint32_t r;
-    
-    r = _CP0_GET_COUNT();
-    r += (M14K_TIMER_COMPARE);
-    _CP0_SET_COUNT(r);
+    const GIRQ24_FPVU8 girq24_htable[ GIRQ24_NUM_SOURCES ] =
+    {
+        m14k_counter_handler, /* m14k_counter_handler, */
+        m14k_soft_irq0,       /* m14k_soft_irq0, */
+        m14k_soft_irq1,       /* m14k_soft_irq1 */
+    };
 
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 0);    
-}
+    void __attribute__( ( weak, interrupt, nomips16, section( ".girqs" ) ) ) girq24_isr( void )
+    {
+        uint32_t d;
+        uint8_t bitpos;
 
-void __attribute__((weak, interrupt, nomips16))
-girq24_b1(void)
-{
+        d = JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].RESULT & ( GIRQ24_SRC_MASK );
 
-    _CP0_BIC_CAUSE(0x100ul);
- 
-    jtvic_clr_source(MEC14xx_GIRQ24_ID, 1);
-}
+        while( 0 != d )
+        {
+            bitpos = 31 - ( ( uint8_t ) __builtin_clz( d ) & 0x1F );
+            ( girq24_htable[ bitpos ] )( bitpos );
+            d &= ~( 1ul << bitpos );
+        }
+    }
 
-void __attribute__((weak, interrupt, nomips16))
-girq24_b2(void)
-{
+#else  /* if GIRQ24_DISAGG == 0 */
 
-    _CP0_BIC_CAUSE(0x200ul);
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq24_b0( void )
+    {
+        uint32_t r;
 
-    jtvic_clr_source(MEC14xx_GIRQ24_ID, 2);
-}
+        r = _CP0_GET_COUNT();
+        r += ( M14K_TIMER_COMPARE );
+        _CP0_SET_COUNT( r );
 
-#endif
+        JTVIC_GIRQ->REGS[ MEC14xx_GIRQ24_ID ].SOURCE = ( 1ul << 0 );
+    }
+
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq24_b1( void )
+    {
+        _CP0_BIC_CAUSE( 0x100ul );
+
+        jtvic_clr_source( MEC14xx_GIRQ24_ID, 1 );
+    }
+
+    void __attribute__( ( weak, interrupt, nomips16 ) ) girq24_b2( void )
+    {
+        _CP0_BIC_CAUSE( 0x200ul );
+
+        jtvic_clr_source( MEC14xx_GIRQ24_ID, 2 );
+    }
+
+#endif /* if GIRQ24_DISAGG == 0 */
 
 /* end girq24.c */
+
 /**   @}
  */
-

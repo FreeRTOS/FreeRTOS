@@ -42,13 +42,13 @@
  */
 #include "sercom_interrupt.h"
 
-void *_sercom_instances[SERCOM_INST_NUM];
+void * _sercom_instances[ SERCOM_INST_NUM ];
 
 /** Save status of initialized handlers. */
 static bool _handler_table_initialized = false;
 
 /** Void pointers for saving device instance structures. */
-static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(const uint8_t instance);
+static void (* _sercom_interrupt_handlers[ SERCOM_INST_NUM ])( const uint8_t instance );
 
 /**
  * \internal
@@ -56,11 +56,10 @@ static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(const uint8_t instanc
  *
  * \param[in] instance SERCOM instance used.
  */
-static void _sercom_default_handler(
-		const uint8_t instance)
+static void _sercom_default_handler( const uint8_t instance )
 {
-	( void ) instance;
-	Assert(false);
+    ( void ) instance;
+    Assert( false );
 }
 
 /**
@@ -71,22 +70,23 @@ static void _sercom_default_handler(
  *
  * \return Index of given instance.
  */
-uint8_t _sercom_get_sercom_inst_index(
-		Sercom *const sercom_instance)
+uint8_t _sercom_get_sercom_inst_index( Sercom * const sercom_instance )
 {
-	/* Save all available SERCOM instances for compare. */
-	Sercom *sercom_instances[SERCOM_INST_NUM] = SERCOM_INSTS;
+    /* Save all available SERCOM instances for compare. */
+    Sercom * sercom_instances[ SERCOM_INST_NUM ] = SERCOM_INSTS;
 
-	/* Find index for sercom instance. */
-	for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
-		if ((uintptr_t)sercom_instance == (uintptr_t)sercom_instances[i]) {
-			return i;
-		}
-	}
+    /* Find index for sercom instance. */
+    for( uint32_t i = 0; i < SERCOM_INST_NUM; i++ )
+    {
+        if( ( uintptr_t ) sercom_instance == ( uintptr_t ) sercom_instances[ i ] )
+        {
+            return i;
+        }
+    }
 
-	/* Invalid data given. */
-	Assert(false);
-	return 0;
+    /* Invalid data given. */
+    Assert( false );
+    return 0;
 }
 
 /**
@@ -96,39 +96,40 @@ uint8_t _sercom_get_sercom_inst_index(
  * \param[in]  instance           Instance index.
  * \param[in]  interrupt_handler  Pointer to instance callback handler.
  */
-void _sercom_set_handler(
-		const uint8_t instance,
-		const sercom_handler_t interrupt_handler)
+void _sercom_set_handler( const uint8_t instance,
+                          const sercom_handler_t interrupt_handler )
 {
-	/* Initialize handlers with default handler and device instances with 0. */
-	if (_handler_table_initialized == false) {
-		for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
-			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
-			_sercom_instances[i] = NULL;
-		}
+    /* Initialize handlers with default handler and device instances with 0. */
+    if( _handler_table_initialized == false )
+    {
+        for( uint32_t i = 0; i < SERCOM_INST_NUM; i++ )
+        {
+            _sercom_interrupt_handlers[ i ] = &_sercom_default_handler;
+            _sercom_instances[ i ] = NULL;
+        }
 
-		_handler_table_initialized = true;
-	}
+        _handler_table_initialized = true;
+    }
 
-	/* Save interrupt handler. */
-	_sercom_interrupt_handlers[instance] = interrupt_handler;
+    /* Save interrupt handler. */
+    _sercom_interrupt_handlers[ instance ] = interrupt_handler;
 }
 
 
 /** \internal
  * Converts a given SERCOM index to its interrupt vector index.
  */
-#define _SERCOM_INTERRUPT_VECT_NUM(n, unused) \
-		SYSTEM_INTERRUPT_MODULE_SERCOM##n,
+#define _SERCOM_INTERRUPT_VECT_NUM( n, unused ) \
+    SYSTEM_INTERRUPT_MODULE_SERCOM ## n,
 
 /** \internal
  * Generates a SERCOM interrupt handler function for a given SERCOM index.
  */
-#define _SERCOM_INTERRUPT_HANDLER(n, unused) \
-		void SERCOM##n##_Handler(void) \
-		{ \
-			_sercom_interrupt_handlers[n](n); \
-		}
+#define _SERCOM_INTERRUPT_HANDLER( n, unused ) \
+    void SERCOM ## n ## _Handler( void )       \
+    {                                          \
+        _sercom_interrupt_handlers[ n ]( n );  \
+    }
 
 /**
  * \internal
@@ -146,20 +147,19 @@ void _sercom_set_handler(
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM6
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM7
  */
-enum system_interrupt_vector _sercom_get_interrupt_vector(
-		Sercom *const sercom_instance)
+enum system_interrupt_vector _sercom_get_interrupt_vector( Sercom * const sercom_instance )
 {
-	const uint8_t sercom_int_vectors[SERCOM_INST_NUM] =
-		{
-			MREPEAT(SERCOM_INST_NUM, _SERCOM_INTERRUPT_VECT_NUM, ~)
-		};
+    const uint8_t sercom_int_vectors[ SERCOM_INST_NUM ] =
+    {
+        MREPEAT( SERCOM_INST_NUM, _SERCOM_INTERRUPT_VECT_NUM, ~ )
+    };
 
-	/* Retrieve the index of the SERCOM being requested */
-	uint8_t instance_index = _sercom_get_sercom_inst_index(sercom_instance);
+    /* Retrieve the index of the SERCOM being requested */
+    uint8_t instance_index = _sercom_get_sercom_inst_index( sercom_instance );
 
-	/* Get the vector number from the lookup table for the requested SERCOM */
-	return (enum system_interrupt_vector)sercom_int_vectors[instance_index];
+    /* Get the vector number from the lookup table for the requested SERCOM */
+    return ( enum system_interrupt_vector ) sercom_int_vectors[ instance_index ];
 }
 
 /** Auto-generate a set of interrupt handlers for each SERCOM in the device */
-MREPEAT(SERCOM_INST_NUM, _SERCOM_INTERRUPT_HANDLER, ~)
+MREPEAT( SERCOM_INST_NUM, _SERCOM_INTERRUPT_HANDLER, ~ )

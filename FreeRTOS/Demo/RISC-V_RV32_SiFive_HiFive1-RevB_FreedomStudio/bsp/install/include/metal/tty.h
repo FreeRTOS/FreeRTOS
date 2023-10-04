@@ -18,7 +18,7 @@
  * @param c The character to write to the terminal
  * @return 0 on success, or -1 on failure.
  */
-int metal_tty_putc(int c);
+int metal_tty_putc( int c );
 
 /*!
  * @brief Get a byte from the default output device
@@ -30,6 +30,6 @@ int metal_tty_putc(int c);
  *
  * @return 0 on success, or -1 on failure.
  */
-int metal_tty_getc(int *c);
+int metal_tty_getc( int * c );
 
-#endif
+#endif /* ifndef METAL__TTY_H */

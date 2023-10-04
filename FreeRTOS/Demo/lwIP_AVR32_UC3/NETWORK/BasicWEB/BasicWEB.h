@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief Basic WEB Server for AVR32 UC3.
@@ -54,4 +55,3 @@
 portTASK_FUNCTION_PROTO( vBasicWEBServer, pvParameters );
 
 #endif
-

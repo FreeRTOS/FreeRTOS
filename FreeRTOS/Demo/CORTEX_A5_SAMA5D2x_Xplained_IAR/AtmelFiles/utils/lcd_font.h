@@ -63,6 +63,7 @@
 
 #ifndef _LCD_FONT_
 #define _LCD_FONT_
+
 /** \addtogroup lcdd_font
  *@{
  */
@@ -82,9 +83,10 @@
 /** \brief Describes the font (width, height, supported characters, etc.) used by
  * the LCD driver draw API.
  */
-struct _font {
-	uint8_t width;	/* Font width in pixels. */
-	uint8_t height;	/* Font height in pixels. */
+struct _font
+{
+    uint8_t width;  /* Font width in pixels. */
+    uint8_t height; /* Font height in pixels. */
 };
 
 /*----------------------------------------------------------------------------
@@ -99,14 +101,20 @@ struct _font {
 /** \addtogroup lcdd_font_func Font Functions */
 /** @{*/
 
-extern struct _font_parameters* lcdd_select_font (_FONT_enum font);
+extern struct _font_parameters * lcdd_select_font( _FONT_enum font );
 
-extern uint8_t lcdd_get_selected_font (void);
+extern uint8_t lcdd_get_selected_font( void );
 
-extern void lcdd_draw_char(uint32_t x, uint32_t y, uint8_t c, uint32_t color);
+extern void lcdd_draw_char( uint32_t x,
+                            uint32_t y,
+                            uint8_t c,
+                            uint32_t color );
 
-extern void lcdd_draw_char_with_bgcolor(uint32_t x, uint32_t y, uint8_t c,
-				     uint32_t fontColor, uint32_t bgColor);
+extern void lcdd_draw_char_with_bgcolor( uint32_t x,
+                                         uint32_t y,
+                                         uint8_t c,
+                                         uint32_t fontColor,
+                                         uint32_t bgColor );
 /** @}*/
 /**@}*/
-#endif				/* #ifndef LCD_FONT_ */
+#endif /* #ifndef LCD_FONT_ */

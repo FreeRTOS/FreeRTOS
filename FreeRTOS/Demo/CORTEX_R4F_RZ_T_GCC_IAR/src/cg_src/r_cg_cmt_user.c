@@ -27,13 +27,13 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Pragma directive
+*  Pragma directive
 ***********************************************************************************************************************/
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-Includes
+*  Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_cmt.h"
@@ -42,7 +42,7 @@ Includes
 #include "r_cg_userdefine.h"
 
 /***********************************************************************************************************************
-Global variables and functions
+*  Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 
@@ -59,9 +59,9 @@ volatile uint32_t g_time_us_count;
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__arm __irq
+    __arm __irq
 #endif
-void r_cmt_cmi4_interrupt(void)
+void r_cmt_cmi4_interrupt( void )
 {
     /* Clear the interrupt source CMI4 */
     VIC.PIC9.LONG = 0x00000800UL;
@@ -76,6 +76,7 @@ void r_cmt_cmi4_interrupt(void)
     /* Dummy write */
     VIC.HVA0.LONG = 0x00000000UL;
 }
+
 /***********************************************************************************************************************
 * Function Name: r_cmt_cmi5_interrupt
 * Description  : This function is CMI5 interrupt service routine.
@@ -83,9 +84,9 @@ void r_cmt_cmi4_interrupt(void)
 * Return Value : None
 ***********************************************************************************************************************/
 #ifdef __ICCARM__
-	__arm __irq
+    __arm __irq
 #endif
-void r_cmt_cmi5_interrupt(void)
+void r_cmt_cmi5_interrupt( void )
 {
     /* Clear the interrupt source CMI5 */
     VIC.PIC9.LONG = 0x00001000UL;

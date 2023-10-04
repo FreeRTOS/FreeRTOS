@@ -25,19 +25,19 @@
  */
 
 /*
-Changes from V3.0.0
-
-Changes from V3.0.1
-*/
+ * Changes from V3.0.0
+ *
+ * Changes from V3.0.1
+ */
 
 /*
- * Instead of the normal single demo application, the PIC18F demo is split 
- * into several smaller programs of which this is the first.  This enables the 
+ * Instead of the normal single demo application, the PIC18F demo is split
+ * into several smaller programs of which this is the first.  This enables the
  * demo's to be executed on the RAM limited PIC-devices.
  *
- * The Demo1 project is configured for a PIC18F4620 device.  Main.c starts 9 
+ * The Demo1 project is configured for a PIC18F4620 device.  Main.c starts 9
  * tasks (including the idle task).
-
+ *
  * This first demo is included to do a quick check on the FreeRTOS
  * installation. It is also included to demonstrate a minimal project-setup
  * to use FreeRTOS in a wizC environment.
@@ -52,81 +52,82 @@ Changes from V3.0.1
  * When testing on a real chip, changing the value to eg. 500 milliseconds
  * would be appropiate.
  */
- 
+
 /* Scheduler include files. */
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define mainBLINK_LED_INTERVAL	( ( TickType_t ) 100 / ( portTICK_PERIOD_MS ) )
+#define mainBLINK_LED_INTERVAL     ( ( TickType_t ) 100 / ( portTICK_PERIOD_MS ) )
 
 /* The LED that is flashed by the B0 task. */
-#define mainBLINK_LED0_PORT		LATD
-#define mainBLINK_LED0_TRIS		TRISD
-#define mainBLINK_LED0_PIN		0
-#define mainBLINK_LED0_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED0_PIN))
+#define mainBLINK_LED0_PORT        LATD
+#define mainBLINK_LED0_TRIS        TRISD
+#define mainBLINK_LED0_PIN         0
+#define mainBLINK_LED0_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED0_PIN ) )
 
 /* The LED that is flashed by the B1 task. */
-#define mainBLINK_LED1_PORT		LATD
-#define mainBLINK_LED1_TRIS		TRISD
-#define mainBLINK_LED1_PIN		1
-#define mainBLINK_LED1_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED1_PIN))
+#define mainBLINK_LED1_PORT        LATD
+#define mainBLINK_LED1_TRIS        TRISD
+#define mainBLINK_LED1_PIN         1
+#define mainBLINK_LED1_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED1_PIN ) )
 
 /* The LED that is flashed by the B2 task. */
-#define mainBLINK_LED2_PORT		LATD
-#define mainBLINK_LED2_TRIS		TRISD
-#define mainBLINK_LED2_PIN		2
-#define mainBLINK_LED2_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED2_PIN))
+#define mainBLINK_LED2_PORT        LATD
+#define mainBLINK_LED2_TRIS        TRISD
+#define mainBLINK_LED2_PIN         2
+#define mainBLINK_LED2_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED2_PIN ) )
 
 /* The LED that is flashed by the B3 task. */
-#define mainBLINK_LED3_PORT		LATD
-#define mainBLINK_LED3_TRIS		TRISD
-#define mainBLINK_LED3_PIN		3
-#define mainBLINK_LED3_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED3_PIN))
+#define mainBLINK_LED3_PORT        LATD
+#define mainBLINK_LED3_TRIS        TRISD
+#define mainBLINK_LED3_PIN         3
+#define mainBLINK_LED3_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED3_PIN ) )
 
 /* The LED that is flashed by the B4 task. */
-#define mainBLINK_LED4_PORT		LATD
-#define mainBLINK_LED4_TRIS		TRISD
-#define mainBLINK_LED4_PIN		4
-#define mainBLINK_LED4_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED4_PIN))
+#define mainBLINK_LED4_PORT        LATD
+#define mainBLINK_LED4_TRIS        TRISD
+#define mainBLINK_LED4_PIN         4
+#define mainBLINK_LED4_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED4_PIN ) )
 
 /* The LED that is flashed by the B5 task. */
-#define mainBLINK_LED5_PORT		LATD
-#define mainBLINK_LED5_TRIS		TRISD
-#define mainBLINK_LED5_PIN		5
-#define mainBLINK_LED5_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED5_PIN))
+#define mainBLINK_LED5_PORT        LATD
+#define mainBLINK_LED5_TRIS        TRISD
+#define mainBLINK_LED5_PIN         5
+#define mainBLINK_LED5_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED5_PIN ) )
 
 /* The LED that is flashed by the B6 task. */
-#define mainBLINK_LED6_PORT		LATD
-#define mainBLINK_LED6_TRIS		TRISD
-#define mainBLINK_LED6_PIN		6
-#define mainBLINK_LED6_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED6_PIN))
+#define mainBLINK_LED6_PORT        LATD
+#define mainBLINK_LED6_TRIS        TRISD
+#define mainBLINK_LED6_PIN         6
+#define mainBLINK_LED6_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED6_PIN ) )
 
 /* The LED that is flashed by the B7 task. */
-#define mainBLINK_LED7_PORT		LATD
-#define mainBLINK_LED7_TRIS		TRISD
-#define mainBLINK_LED7_PIN		7
-#define mainBLINK_LED7_INTERVAL	((mainBLINK_LED_INTERVAL) << (mainBLINK_LED7_PIN))
+#define mainBLINK_LED7_PORT        LATD
+#define mainBLINK_LED7_TRIS        TRISD
+#define mainBLINK_LED7_PIN         7
+#define mainBLINK_LED7_INTERVAL    ( ( mainBLINK_LED_INTERVAL ) << ( mainBLINK_LED7_PIN ) )
 
-typedef struct {
-	unsigned char *port;
-	unsigned char *tris;
-	unsigned char pin;
-	TickType_t  interval;
+typedef struct
+{
+    unsigned char * port;
+    unsigned char * tris;
+    unsigned char pin;
+    TickType_t interval;
 } SBLINK;
 
-const SBLINK sled0 = {&mainBLINK_LED0_PORT, &mainBLINK_LED0_TRIS, mainBLINK_LED0_PIN, mainBLINK_LED0_INTERVAL};
-const SBLINK sled1 = {&mainBLINK_LED1_PORT, &mainBLINK_LED1_TRIS, mainBLINK_LED1_PIN, mainBLINK_LED1_INTERVAL};
-const SBLINK sled2 = {&mainBLINK_LED2_PORT, &mainBLINK_LED2_TRIS, mainBLINK_LED2_PIN, mainBLINK_LED2_INTERVAL};
-const SBLINK sled3 = {&mainBLINK_LED3_PORT, &mainBLINK_LED3_TRIS, mainBLINK_LED3_PIN, mainBLINK_LED3_INTERVAL};
-const SBLINK sled4 = {&mainBLINK_LED4_PORT, &mainBLINK_LED4_TRIS, mainBLINK_LED4_PIN, mainBLINK_LED4_INTERVAL};
-const SBLINK sled5 = {&mainBLINK_LED5_PORT, &mainBLINK_LED5_TRIS, mainBLINK_LED5_PIN, mainBLINK_LED5_INTERVAL};
-const SBLINK sled6 = {&mainBLINK_LED6_PORT, &mainBLINK_LED6_TRIS, mainBLINK_LED6_PIN, mainBLINK_LED6_INTERVAL};
-const SBLINK sled7 = {&mainBLINK_LED7_PORT, &mainBLINK_LED7_TRIS, mainBLINK_LED7_PIN, mainBLINK_LED7_INTERVAL};
+const SBLINK sled0 = { &mainBLINK_LED0_PORT, &mainBLINK_LED0_TRIS, mainBLINK_LED0_PIN, mainBLINK_LED0_INTERVAL };
+const SBLINK sled1 = { &mainBLINK_LED1_PORT, &mainBLINK_LED1_TRIS, mainBLINK_LED1_PIN, mainBLINK_LED1_INTERVAL };
+const SBLINK sled2 = { &mainBLINK_LED2_PORT, &mainBLINK_LED2_TRIS, mainBLINK_LED2_PIN, mainBLINK_LED2_INTERVAL };
+const SBLINK sled3 = { &mainBLINK_LED3_PORT, &mainBLINK_LED3_TRIS, mainBLINK_LED3_PIN, mainBLINK_LED3_INTERVAL };
+const SBLINK sled4 = { &mainBLINK_LED4_PORT, &mainBLINK_LED4_TRIS, mainBLINK_LED4_PIN, mainBLINK_LED4_INTERVAL };
+const SBLINK sled5 = { &mainBLINK_LED5_PORT, &mainBLINK_LED5_TRIS, mainBLINK_LED5_PIN, mainBLINK_LED5_INTERVAL };
+const SBLINK sled6 = { &mainBLINK_LED6_PORT, &mainBLINK_LED6_TRIS, mainBLINK_LED6_PIN, mainBLINK_LED6_INTERVAL };
+const SBLINK sled7 = { &mainBLINK_LED7_PORT, &mainBLINK_LED7_TRIS, mainBLINK_LED7_PIN, mainBLINK_LED7_INTERVAL };
 
 /*
  * The task code for the "vBlink" task.
  */
-static portTASK_FUNCTION_PROTO(vBlink, pvParameters);
+static portTASK_FUNCTION_PROTO( vBlink, pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -135,62 +136,62 @@ static portTASK_FUNCTION_PROTO(vBlink, pvParameters);
  */
 void main( void )
 {
-	/*
-	 * Start the blink tasks defined in this file.
-	 */
-	xTaskCreate( vBlink,  "B0", configMINIMAL_STACK_SIZE, &sled0, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B1", configMINIMAL_STACK_SIZE, &sled1, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B2", configMINIMAL_STACK_SIZE, &sled2, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B3", configMINIMAL_STACK_SIZE, &sled3, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B4", configMINIMAL_STACK_SIZE, &sled4, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B5", configMINIMAL_STACK_SIZE, &sled5, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B6", configMINIMAL_STACK_SIZE, &sled6, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlink,  "B7", configMINIMAL_STACK_SIZE, &sled7, tskIDLE_PRIORITY, NULL );
+    /*
+     * Start the blink tasks defined in this file.
+     */
+    xTaskCreate( vBlink, "B0", configMINIMAL_STACK_SIZE, &sled0, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B1", configMINIMAL_STACK_SIZE, &sled1, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B2", configMINIMAL_STACK_SIZE, &sled2, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B3", configMINIMAL_STACK_SIZE, &sled3, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B4", configMINIMAL_STACK_SIZE, &sled4, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B5", configMINIMAL_STACK_SIZE, &sled5, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B6", configMINIMAL_STACK_SIZE, &sled6, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vBlink, "B7", configMINIMAL_STACK_SIZE, &sled7, tskIDLE_PRIORITY, NULL );
 
-	/*
-	 * Start the scheduler.
-	 */
-	vTaskStartScheduler( );
-	
-	while(1)	/* This point should never be reached. */
-	{
-	}
+    /*
+     * Start the scheduler.
+     */
+    vTaskStartScheduler();
+
+    while( 1 ) /* This point should never be reached. */
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static portTASK_FUNCTION(vBlink, pvParameters)
+static portTASK_FUNCTION( vBlink, pvParameters )
 {
-	unsigned char	*Port		= ((SBLINK *)pvParameters)->port;
-	unsigned char	*Tris		= ((SBLINK *)pvParameters)->tris;
-	unsigned char	Pin			= ((SBLINK *)pvParameters)->pin;
-	TickType_t	Interval	= ((SBLINK *)pvParameters)->interval;
-	
-	TickType_t	xLastWakeTime;
+    unsigned char * Port = ( ( SBLINK * ) pvParameters )->port;
+    unsigned char * Tris = ( ( SBLINK * ) pvParameters )->tris;
+    unsigned char Pin = ( ( SBLINK * ) pvParameters )->pin;
+    TickType_t Interval = ( ( SBLINK * ) pvParameters )->interval;
 
-	/*
-	 * Initialize the hardware
-	 */
-	*Tris &= ~(1<<Pin);	// Set the pin that is used by this task to ouput
-	*Port &= ~(1<<Pin);	// Drive the pin low
-	
-	/*
-	 * Initialise the xLastWakeTime variable with the current time.
-	 */
-	xLastWakeTime = xTaskGetTickCount();
+    TickType_t xLastWakeTime;
 
-	/*
-	 * Cycle for ever, delaying then toggle the LED.
-	 */
-	for( ;; )
-	{
-		/*
-		 * Wait until it is time to toggle
-		 */
-		vTaskDelayUntil( &xLastWakeTime, Interval );
+    /*
+     * Initialize the hardware
+     */
+    *Tris &= ~( 1 << Pin ); /* Set the pin that is used by this task to ouput */
+    *Port &= ~( 1 << Pin ); /* Drive the pin low */
 
-		/*
-		 * Toggle the LED for visual feedback.
-		 */
-		*Port ^= 1<<Pin;
-	}
+    /*
+     * Initialise the xLastWakeTime variable with the current time.
+     */
+    xLastWakeTime = xTaskGetTickCount();
+
+    /*
+     * Cycle for ever, delaying then toggle the LED.
+     */
+    for( ; ; )
+    {
+        /*
+         * Wait until it is time to toggle
+         */
+        vTaskDelayUntil( &xLastWakeTime, Interval );
+
+        /*
+         * Toggle the LED for visual feedback.
+         */
+        *Port ^= 1 << Pin;
+    }
 }

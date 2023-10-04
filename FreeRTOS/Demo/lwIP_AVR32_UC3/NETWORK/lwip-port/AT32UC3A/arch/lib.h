@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief lwIP abstraction layer for AVR32 UC3.

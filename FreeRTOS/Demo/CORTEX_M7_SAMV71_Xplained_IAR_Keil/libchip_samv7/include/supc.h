@@ -28,12 +28,12 @@
  */
 
 #ifndef _SUPC_H_
-#define _SUPC_H_
+    #define _SUPC_H_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include <stdint.h>
+    #include <stdint.h>
 
 
 /*----------------------------------------------------------------------------
@@ -46,17 +46,16 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 
 
-extern void SUPC_SelectExtCrystal32K(void);
+    extern void SUPC_SelectExtCrystal32K( void );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _PMC_ */
-

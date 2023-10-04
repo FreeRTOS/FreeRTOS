@@ -47,10 +47,15 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-extern uint8_t ILI9488_SpiInitializeWithDma(sXdmad * dmad);
-extern uint8_t ILI9488_SpiDmaTxTransfer( uint8_t *pTxBuffer, uint32_t wTxSize);
-extern uint8_t ILI9488_SpiDmaRxTransfer( uint32_t *pRxBuffer,uint32_t wRxSize);
-extern uint8_t ILI9488_SpiSendCommand(uint8_t Instr, uint8_t* pTxData,
-		uint32_t* pRxData, AccessIli_t ReadWrite, uint32_t size);
+extern uint8_t ILI9488_SpiInitializeWithDma( sXdmad * dmad );
+extern uint8_t ILI9488_SpiDmaTxTransfer( uint8_t * pTxBuffer,
+                                         uint32_t wTxSize );
+extern uint8_t ILI9488_SpiDmaRxTransfer( uint32_t * pRxBuffer,
+                                         uint32_t wRxSize );
+extern uint8_t ILI9488_SpiSendCommand( uint8_t Instr,
+                                       uint8_t * pTxData,
+                                       uint32_t * pRxData,
+                                       AccessIli_t ReadWrite,
+                                       uint32_t size );
 
 #endif /* #ifndef ILI9488_SPI_DMA */

@@ -32,7 +32,7 @@
  *
  * \section Purpose
  *
- * Interface for configuration the Enhanced Embedded Flash Controller (EEFC) 
+ * Interface for configuration the Enhanced Embedded Flash Controller (EEFC)
  * peripheral.
  *
  * \section Usage
@@ -49,80 +49,87 @@
  */
 
 #ifndef _EEFC_
-#define _EEFC_
+    #define _EEFC_
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include "chip.h"
+    #include "chip.h"
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*----------------------------------------------------------------------------
  *        Definitions
  *----------------------------------------------------------------------------*/
 /* TODO: Temporary definition for missing symbol in header file */
-#define IFLASH_SECTOR_SIZE      65536u
+    #define IFLASH_SECTOR_SIZE    65536u
 
 
 /* EFC command */
-#define EFC_FCMD_GETD    0x00 /* Get Flash Descriptor */
-#define EFC_FCMD_WP      0x01 /* Write page */
-#define EFC_FCMD_WPL     0x02 /* Write page and lock */
-#define EFC_FCMD_EWP     0x03 /* Erase page and write page */
-#define EFC_FCMD_EWPL    0x04 /* Erase page and write page then lock */
-#define EFC_FCMD_EA      0x05 /* Erase all */
-#define EFC_FCMD_EPA     0x07 /* Erase pages */
-#define EFC_FCMD_SLB     0x08 /* Set Lock Bit */
-#define EFC_FCMD_CLB     0x09 /* Clear Lock Bit */
-#define EFC_FCMD_GLB     0x0A /* Get Lock Bit */
-#define EFC_FCMD_SFB     0x0B /* Set GPNVM Bit */
-#define EFC_FCMD_CFB     0x0C /* Clear GPNVM Bit */
-#define EFC_FCMD_GFB     0x0D /* Get GPNVM Bit */
-#define EFC_FCMD_STUI    0x0E /* Start unique ID */
-#define EFC_FCMD_SPUI    0x0F /* Stop unique ID */
-#define EFC_FCMD_GCALB   0x10 /* Get CALIB Bit */
-#define EFC_FCMD_ES      0x11 /* Erase Sector */
-#define EFC_FCMD_WUS     0x12 /* Write User Signature */
-#define EFC_FCMD_EUS     0x13 /* Erase User Signature */
-#define EFC_FCMD_STUS    0x14 /* Start Read User Signature */
-#define EFC_FCMD_SPUS    0x15 /* Stop Read User Signature */
+    #define EFC_FCMD_GETD             0x00 /* Get Flash Descriptor */
+    #define EFC_FCMD_WP               0x01 /* Write page */
+    #define EFC_FCMD_WPL              0x02 /* Write page and lock */
+    #define EFC_FCMD_EWP              0x03 /* Erase page and write page */
+    #define EFC_FCMD_EWPL             0x04 /* Erase page and write page then lock */
+    #define EFC_FCMD_EA               0x05 /* Erase all */
+    #define EFC_FCMD_EPA              0x07 /* Erase pages */
+    #define EFC_FCMD_SLB              0x08 /* Set Lock Bit */
+    #define EFC_FCMD_CLB              0x09 /* Clear Lock Bit */
+    #define EFC_FCMD_GLB              0x0A /* Get Lock Bit */
+    #define EFC_FCMD_SFB              0x0B /* Set GPNVM Bit */
+    #define EFC_FCMD_CFB              0x0C /* Clear GPNVM Bit */
+    #define EFC_FCMD_GFB              0x0D /* Get GPNVM Bit */
+    #define EFC_FCMD_STUI             0x0E /* Start unique ID */
+    #define EFC_FCMD_SPUI             0x0F /* Stop unique ID */
+    #define EFC_FCMD_GCALB            0x10 /* Get CALIB Bit */
+    #define EFC_FCMD_ES               0x11 /* Erase Sector */
+    #define EFC_FCMD_WUS              0x12 /* Write User Signature */
+    #define EFC_FCMD_EUS              0x13 /* Erase User Signature */
+    #define EFC_FCMD_STUS             0x14 /* Start Read User Signature */
+    #define EFC_FCMD_SPUS             0x15 /* Stop Read User Signature */
 
 /* The IAP function entry addreass */
-#define CHIP_FLASH_IAP_ADDRESS  (0x00800008)
+    #define CHIP_FLASH_IAP_ADDRESS    ( 0x00800008 )
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void EFC_EnableFrdyIt( Efc* efc ) ;
+    extern void EFC_EnableFrdyIt( Efc * efc );
 
-extern void EFC_DisableFrdyIt( Efc* efc ) ;
+    extern void EFC_DisableFrdyIt( Efc * efc );
 
-extern void EFC_SetWaitState( Efc* efc, uint8_t cycles ) ;
+    extern void EFC_SetWaitState( Efc * efc,
+                                  uint8_t cycles );
 
-extern void EFC_TranslateAddress( Efc** pEfc, uint32_t dwAddress, 
-		uint16_t *pwPage, uint16_t *pwOffset ) ;
+    extern void EFC_TranslateAddress( Efc ** pEfc,
+                                      uint32_t dwAddress,
+                                      uint16_t * pwPage,
+                                      uint16_t * pwOffset );
 
-extern void EFC_ComputeAddress( Efc* efc, uint16_t wPage, uint16_t wOffset, 
-		uint32_t *pdwAddress ) ;
+    extern void EFC_ComputeAddress( Efc * efc,
+                                    uint16_t wPage,
+                                    uint16_t wOffset,
+                                    uint32_t * pdwAddress );
 
-extern uint32_t EFC_PerformCommand( Efc* efc, uint32_t dwCommand, 
-		uint32_t dwArgument, uint32_t dwUseIAP ) ;
+    extern uint32_t EFC_PerformCommand( Efc * efc,
+                                        uint32_t dwCommand,
+                                        uint32_t dwArgument,
+                                        uint32_t dwUseIAP );
 
-extern uint32_t EFC_GetStatus( Efc* efc ) ;
+    extern uint32_t EFC_GetStatus( Efc * efc );
 
-extern uint32_t EFC_GetResult( Efc* efc ) ;
+    extern uint32_t EFC_GetResult( Efc * efc );
 
-extern void EFC_SetFlashAccessMode(Efc* efc, uint32_t dwMode) ;
+    extern void EFC_SetFlashAccessMode( Efc * efc,
+                                        uint32_t dwMode );
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* #ifndef _EEFC_ */
-

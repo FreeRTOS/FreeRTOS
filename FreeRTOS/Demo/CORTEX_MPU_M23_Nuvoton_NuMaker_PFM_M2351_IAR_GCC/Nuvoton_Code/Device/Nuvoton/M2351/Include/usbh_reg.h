@@ -9,22 +9,21 @@
 #define __USBH_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 
 /*---------------------- USB Host Controller -------------------------*/
+
 /**
-    @addtogroup USBH USB Host Controller(USBH)
-    Memory Mapped Structure for USBH Controller
-@{ */
+ *  @addtogroup USBH USB Host Controller(USBH)
+ *  Memory Mapped Structure for USBH Controller
+ * @{ */
 
 typedef struct
 {
-
-
     /**
      * @var USBH_T::HcRevision
      * Offset: 0x00  Host Controller Revision Register
@@ -531,257 +530,256 @@ typedef struct
      * |        |          |0 = The connection between USB host controller and transceiver of port 1 Enabled.
      * |        |          |1 = The connection between USB host controller and transceiver of port 1 Disabled and the transceiver of port 1 will also be forced into the standby mode.
      */
-    __I  uint32_t HcRevision;            /*!< [0x0000] Host Controller Revision Register                                */
-    __IO uint32_t HcControl;             /*!< [0x0004] Host Controller Control Register                                 */
-    __IO uint32_t HcCommandStatus;       /*!< [0x0008] Host Controller Command Status Register                          */
-    __IO uint32_t HcInterruptStatus;     /*!< [0x000c] Host Controller Interrupt Status Register                        */
-    __IO uint32_t HcInterruptEnable;     /*!< [0x0010] Host Controller Interrupt Enable Register                        */
-    __IO uint32_t HcInterruptDisable;    /*!< [0x0014] Host Controller Interrupt Disable Register                       */
-    __IO uint32_t HcHCCA;                /*!< [0x0018] Host Controller Communication Area Register                      */
-    __IO uint32_t HcPeriodCurrentED;     /*!< [0x001c] Host Controller Period Current ED Register                       */
-    __IO uint32_t HcControlHeadED;       /*!< [0x0020] Host Controller Control Head ED Register                         */
-    __IO uint32_t HcControlCurrentED;    /*!< [0x0024] Host Controller Control Current ED Register                      */
-    __IO uint32_t HcBulkHeadED;          /*!< [0x0028] Host Controller Bulk Head ED Register                            */
-    __IO uint32_t HcBulkCurrentED;       /*!< [0x002c] Host Controller Bulk Current ED Register                         */
-    __IO uint32_t HcDoneHead;            /*!< [0x0030] Host Controller Done Head Register                               */
-    __IO uint32_t HcFmInterval;          /*!< [0x0034] Host Controller Frame Interval Register                          */
-    __I  uint32_t HcFmRemaining;         /*!< [0x0038] Host Controller Frame Remaining Register                         */
-    __I  uint32_t HcFmNumber;            /*!< [0x003c] Host Controller Frame Number Register                            */
-    __IO uint32_t HcPeriodicStart;       /*!< [0x0040] Host Controller Periodic Start Register                          */
-    __IO uint32_t HcLSThreshold;         /*!< [0x0044] Host Controller Low-speed Threshold Register                     */
-    __IO uint32_t HcRhDescriptorA;       /*!< [0x0048] Host Controller Root Hub Descriptor A Register                   */
-    __IO uint32_t HcRhDescriptorB;       /*!< [0x004c] Host Controller Root Hub Descriptor B Register                   */
-    __IO uint32_t HcRhStatus;            /*!< [0x0050] Host Controller Root Hub Status Register                         */
-    __IO uint32_t HcRhPortStatus[2];     /*!< [0x0054] Host Controller Root Hub Port Status                             */
-    __I  uint32_t RESERVE0[105];
-    __IO uint32_t HcPhyControl;          /*!< [0x0200] Host Controller PHY Control Register                             */
-    __IO uint32_t HcMiscControl;         /*!< [0x0204] Host Controller Miscellaneous Control Register                   */
-
+    __I uint32_t HcRevision;           /*!< [0x0000] Host Controller Revision Register                                */
+    __IO uint32_t HcControl;           /*!< [0x0004] Host Controller Control Register                                 */
+    __IO uint32_t HcCommandStatus;     /*!< [0x0008] Host Controller Command Status Register                          */
+    __IO uint32_t HcInterruptStatus;   /*!< [0x000c] Host Controller Interrupt Status Register                        */
+    __IO uint32_t HcInterruptEnable;   /*!< [0x0010] Host Controller Interrupt Enable Register                        */
+    __IO uint32_t HcInterruptDisable;  /*!< [0x0014] Host Controller Interrupt Disable Register                       */
+    __IO uint32_t HcHCCA;              /*!< [0x0018] Host Controller Communication Area Register                      */
+    __IO uint32_t HcPeriodCurrentED;   /*!< [0x001c] Host Controller Period Current ED Register                       */
+    __IO uint32_t HcControlHeadED;     /*!< [0x0020] Host Controller Control Head ED Register                         */
+    __IO uint32_t HcControlCurrentED;  /*!< [0x0024] Host Controller Control Current ED Register                      */
+    __IO uint32_t HcBulkHeadED;        /*!< [0x0028] Host Controller Bulk Head ED Register                            */
+    __IO uint32_t HcBulkCurrentED;     /*!< [0x002c] Host Controller Bulk Current ED Register                         */
+    __IO uint32_t HcDoneHead;          /*!< [0x0030] Host Controller Done Head Register                               */
+    __IO uint32_t HcFmInterval;        /*!< [0x0034] Host Controller Frame Interval Register                          */
+    __I uint32_t HcFmRemaining;        /*!< [0x0038] Host Controller Frame Remaining Register                         */
+    __I uint32_t HcFmNumber;           /*!< [0x003c] Host Controller Frame Number Register                            */
+    __IO uint32_t HcPeriodicStart;     /*!< [0x0040] Host Controller Periodic Start Register                          */
+    __IO uint32_t HcLSThreshold;       /*!< [0x0044] Host Controller Low-speed Threshold Register                     */
+    __IO uint32_t HcRhDescriptorA;     /*!< [0x0048] Host Controller Root Hub Descriptor A Register                   */
+    __IO uint32_t HcRhDescriptorB;     /*!< [0x004c] Host Controller Root Hub Descriptor B Register                   */
+    __IO uint32_t HcRhStatus;          /*!< [0x0050] Host Controller Root Hub Status Register                         */
+    __IO uint32_t HcRhPortStatus[ 2 ]; /*!< [0x0054] Host Controller Root Hub Port Status                             */
+    __I uint32_t RESERVE0[ 105 ];
+    __IO uint32_t HcPhyControl;        /*!< [0x0200] Host Controller PHY Control Register                             */
+    __IO uint32_t HcMiscControl;       /*!< [0x0204] Host Controller Miscellaneous Control Register                   */
 } USBH_T;
 
 /**
-    @addtogroup USBH_CONST USBH Bit Field Definition
-    Constant Definitions for USBH Controller
-@{ */
+ *  @addtogroup USBH_CONST USBH Bit Field Definition
+ *  Constant Definitions for USBH Controller
+ * @{ */
 
-#define USBH_HcRevision_REV_Pos          (0)                                               /*!< USBH_T::HcRevision: REV Position       */
-#define USBH_HcRevision_REV_Msk          (0xfful << USBH_HcRevision_REV_Pos)               /*!< USBH_T::HcRevision: REV Mask           */
+#define USBH_HcRevision_REV_Pos             ( 0 )                                               /*!< USBH_T::HcRevision: REV Position       */
+#define USBH_HcRevision_REV_Msk             ( 0xfful << USBH_HcRevision_REV_Pos )               /*!< USBH_T::HcRevision: REV Mask           */
 
-#define USBH_HcControl_CBSR_Pos          (0)                                               /*!< USBH_T::HcControl: CBSR Position       */
-#define USBH_HcControl_CBSR_Msk          (0x3ul << USBH_HcControl_CBSR_Pos)                /*!< USBH_T::HcControl: CBSR Mask           */
+#define USBH_HcControl_CBSR_Pos             ( 0 )                                               /*!< USBH_T::HcControl: CBSR Position       */
+#define USBH_HcControl_CBSR_Msk             ( 0x3ul << USBH_HcControl_CBSR_Pos )                /*!< USBH_T::HcControl: CBSR Mask           */
 
-#define USBH_HcControl_PLE_Pos           (2)                                               /*!< USBH_T::HcControl: PLE Position        */
-#define USBH_HcControl_PLE_Msk           (0x1ul << USBH_HcControl_PLE_Pos)                 /*!< USBH_T::HcControl: PLE Mask            */
+#define USBH_HcControl_PLE_Pos              ( 2 )                                               /*!< USBH_T::HcControl: PLE Position        */
+#define USBH_HcControl_PLE_Msk              ( 0x1ul << USBH_HcControl_PLE_Pos )                 /*!< USBH_T::HcControl: PLE Mask            */
 
-#define USBH_HcControl_IE_Pos            (3)                                               /*!< USBH_T::HcControl: IE Position         */
-#define USBH_HcControl_IE_Msk            (0x1ul << USBH_HcControl_IE_Pos)                  /*!< USBH_T::HcControl: IE Mask             */
+#define USBH_HcControl_IE_Pos               ( 3 )                                               /*!< USBH_T::HcControl: IE Position         */
+#define USBH_HcControl_IE_Msk               ( 0x1ul << USBH_HcControl_IE_Pos )                  /*!< USBH_T::HcControl: IE Mask             */
 
-#define USBH_HcControl_CLE_Pos           (4)                                               /*!< USBH_T::HcControl: CLE Position        */
-#define USBH_HcControl_CLE_Msk           (0x1ul << USBH_HcControl_CLE_Pos)                 /*!< USBH_T::HcControl: CLE Mask            */
+#define USBH_HcControl_CLE_Pos              ( 4 )                                               /*!< USBH_T::HcControl: CLE Position        */
+#define USBH_HcControl_CLE_Msk              ( 0x1ul << USBH_HcControl_CLE_Pos )                 /*!< USBH_T::HcControl: CLE Mask            */
 
-#define USBH_HcControl_BLE_Pos           (5)                                               /*!< USBH_T::HcControl: BLE Position        */
-#define USBH_HcControl_BLE_Msk           (0x1ul << USBH_HcControl_BLE_Pos)                 /*!< USBH_T::HcControl: BLE Mask            */
+#define USBH_HcControl_BLE_Pos              ( 5 )                                               /*!< USBH_T::HcControl: BLE Position        */
+#define USBH_HcControl_BLE_Msk              ( 0x1ul << USBH_HcControl_BLE_Pos )                 /*!< USBH_T::HcControl: BLE Mask            */
 
-#define USBH_HcControl_HCFS_Pos          (6)                                               /*!< USBH_T::HcControl: HCFS Position       */
-#define USBH_HcControl_HCFS_Msk          (0x3ul << USBH_HcControl_HCFS_Pos)                /*!< USBH_T::HcControl: HCFS Mask           */
+#define USBH_HcControl_HCFS_Pos             ( 6 )                                               /*!< USBH_T::HcControl: HCFS Position       */
+#define USBH_HcControl_HCFS_Msk             ( 0x3ul << USBH_HcControl_HCFS_Pos )                /*!< USBH_T::HcControl: HCFS Mask           */
 
-#define USBH_HcCommandStatus_HCR_Pos     (0)                                               /*!< USBH_T::HcCommandStatus: HCR Position  */
-#define USBH_HcCommandStatus_HCR_Msk     (0x1ul << USBH_HcCommandStatus_HCR_Pos)           /*!< USBH_T::HcCommandStatus: HCR Mask      */
+#define USBH_HcCommandStatus_HCR_Pos        ( 0 )                                               /*!< USBH_T::HcCommandStatus: HCR Position  */
+#define USBH_HcCommandStatus_HCR_Msk        ( 0x1ul << USBH_HcCommandStatus_HCR_Pos )           /*!< USBH_T::HcCommandStatus: HCR Mask      */
 
-#define USBH_HcCommandStatus_CLF_Pos     (1)                                               /*!< USBH_T::HcCommandStatus: CLF Position  */
-#define USBH_HcCommandStatus_CLF_Msk     (0x1ul << USBH_HcCommandStatus_CLF_Pos)           /*!< USBH_T::HcCommandStatus: CLF Mask      */
+#define USBH_HcCommandStatus_CLF_Pos        ( 1 )                                               /*!< USBH_T::HcCommandStatus: CLF Position  */
+#define USBH_HcCommandStatus_CLF_Msk        ( 0x1ul << USBH_HcCommandStatus_CLF_Pos )           /*!< USBH_T::HcCommandStatus: CLF Mask      */
 
-#define USBH_HcCommandStatus_BLF_Pos     (2)                                               /*!< USBH_T::HcCommandStatus: BLF Position  */
-#define USBH_HcCommandStatus_BLF_Msk     (0x1ul << USBH_HcCommandStatus_BLF_Pos)           /*!< USBH_T::HcCommandStatus: BLF Mask      */
+#define USBH_HcCommandStatus_BLF_Pos        ( 2 )                                               /*!< USBH_T::HcCommandStatus: BLF Position  */
+#define USBH_HcCommandStatus_BLF_Msk        ( 0x1ul << USBH_HcCommandStatus_BLF_Pos )           /*!< USBH_T::HcCommandStatus: BLF Mask      */
 
-#define USBH_HcCommandStatus_SOC_Pos     (16)                                              /*!< USBH_T::HcCommandStatus: SOC Position  */
-#define USBH_HcCommandStatus_SOC_Msk     (0x3ul << USBH_HcCommandStatus_SOC_Pos)           /*!< USBH_T::HcCommandStatus: SOC Mask      */
+#define USBH_HcCommandStatus_SOC_Pos        ( 16 )                                              /*!< USBH_T::HcCommandStatus: SOC Position  */
+#define USBH_HcCommandStatus_SOC_Msk        ( 0x3ul << USBH_HcCommandStatus_SOC_Pos )           /*!< USBH_T::HcCommandStatus: SOC Mask      */
 
-#define USBH_HcInterruptStatus_SO_Pos    (0)                                               /*!< USBH_T::HcInterruptStatus: SO Position */
-#define USBH_HcInterruptStatus_SO_Msk    (0x1ul << USBH_HcInterruptStatus_SO_Pos)          /*!< USBH_T::HcInterruptStatus: SO Mask     */
+#define USBH_HcInterruptStatus_SO_Pos       ( 0 )                                               /*!< USBH_T::HcInterruptStatus: SO Position */
+#define USBH_HcInterruptStatus_SO_Msk       ( 0x1ul << USBH_HcInterruptStatus_SO_Pos )          /*!< USBH_T::HcInterruptStatus: SO Mask     */
 
-#define USBH_HcInterruptStatus_WDH_Pos   (1)                                               /*!< USBH_T::HcInterruptStatus: WDH Position*/
-#define USBH_HcInterruptStatus_WDH_Msk   (0x1ul << USBH_HcInterruptStatus_WDH_Pos)         /*!< USBH_T::HcInterruptStatus: WDH Mask    */
+#define USBH_HcInterruptStatus_WDH_Pos      ( 1 )                                               /*!< USBH_T::HcInterruptStatus: WDH Position*/
+#define USBH_HcInterruptStatus_WDH_Msk      ( 0x1ul << USBH_HcInterruptStatus_WDH_Pos )         /*!< USBH_T::HcInterruptStatus: WDH Mask    */
 
-#define USBH_HcInterruptStatus_SF_Pos    (2)                                               /*!< USBH_T::HcInterruptStatus: SF Position */
-#define USBH_HcInterruptStatus_SF_Msk    (0x1ul << USBH_HcInterruptStatus_SF_Pos)          /*!< USBH_T::HcInterruptStatus: SF Mask     */
+#define USBH_HcInterruptStatus_SF_Pos       ( 2 )                                               /*!< USBH_T::HcInterruptStatus: SF Position */
+#define USBH_HcInterruptStatus_SF_Msk       ( 0x1ul << USBH_HcInterruptStatus_SF_Pos )          /*!< USBH_T::HcInterruptStatus: SF Mask     */
 
-#define USBH_HcInterruptStatus_RD_Pos    (3)                                               /*!< USBH_T::HcInterruptStatus: RD Position */
-#define USBH_HcInterruptStatus_RD_Msk    (0x1ul << USBH_HcInterruptStatus_RD_Pos)          /*!< USBH_T::HcInterruptStatus: RD Mask     */
+#define USBH_HcInterruptStatus_RD_Pos       ( 3 )                                               /*!< USBH_T::HcInterruptStatus: RD Position */
+#define USBH_HcInterruptStatus_RD_Msk       ( 0x1ul << USBH_HcInterruptStatus_RD_Pos )          /*!< USBH_T::HcInterruptStatus: RD Mask     */
 
-#define USBH_HcInterruptStatus_FNO_Pos   (5)                                               /*!< USBH_T::HcInterruptStatus: FNO Position*/
-#define USBH_HcInterruptStatus_FNO_Msk   (0x1ul << USBH_HcInterruptStatus_FNO_Pos)         /*!< USBH_T::HcInterruptStatus: FNO Mask    */
+#define USBH_HcInterruptStatus_FNO_Pos      ( 5 )                                               /*!< USBH_T::HcInterruptStatus: FNO Position*/
+#define USBH_HcInterruptStatus_FNO_Msk      ( 0x1ul << USBH_HcInterruptStatus_FNO_Pos )         /*!< USBH_T::HcInterruptStatus: FNO Mask    */
 
-#define USBH_HcInterruptStatus_RHSC_Pos  (6)                                               /*!< USBH_T::HcInterruptStatus: RHSC Position*/
-#define USBH_HcInterruptStatus_RHSC_Msk  (0x1ul << USBH_HcInterruptStatus_RHSC_Pos)        /*!< USBH_T::HcInterruptStatus: RHSC Mask   */
+#define USBH_HcInterruptStatus_RHSC_Pos     ( 6 )                                               /*!< USBH_T::HcInterruptStatus: RHSC Position*/
+#define USBH_HcInterruptStatus_RHSC_Msk     ( 0x1ul << USBH_HcInterruptStatus_RHSC_Pos )        /*!< USBH_T::HcInterruptStatus: RHSC Mask   */
 
-#define USBH_HcInterruptEnable_SO_Pos    (0)                                               /*!< USBH_T::HcInterruptEnable: SO Position */
-#define USBH_HcInterruptEnable_SO_Msk    (0x1ul << USBH_HcInterruptEnable_SO_Pos)          /*!< USBH_T::HcInterruptEnable: SO Mask     */
+#define USBH_HcInterruptEnable_SO_Pos       ( 0 )                                               /*!< USBH_T::HcInterruptEnable: SO Position */
+#define USBH_HcInterruptEnable_SO_Msk       ( 0x1ul << USBH_HcInterruptEnable_SO_Pos )          /*!< USBH_T::HcInterruptEnable: SO Mask     */
 
-#define USBH_HcInterruptEnable_WDH_Pos   (1)                                               /*!< USBH_T::HcInterruptEnable: WDH Position*/
-#define USBH_HcInterruptEnable_WDH_Msk   (0x1ul << USBH_HcInterruptEnable_WDH_Pos)         /*!< USBH_T::HcInterruptEnable: WDH Mask    */
+#define USBH_HcInterruptEnable_WDH_Pos      ( 1 )                                               /*!< USBH_T::HcInterruptEnable: WDH Position*/
+#define USBH_HcInterruptEnable_WDH_Msk      ( 0x1ul << USBH_HcInterruptEnable_WDH_Pos )         /*!< USBH_T::HcInterruptEnable: WDH Mask    */
 
-#define USBH_HcInterruptEnable_SF_Pos    (2)                                               /*!< USBH_T::HcInterruptEnable: SF Position */
-#define USBH_HcInterruptEnable_SF_Msk    (0x1ul << USBH_HcInterruptEnable_SF_Pos)          /*!< USBH_T::HcInterruptEnable: SF Mask     */
+#define USBH_HcInterruptEnable_SF_Pos       ( 2 )                                               /*!< USBH_T::HcInterruptEnable: SF Position */
+#define USBH_HcInterruptEnable_SF_Msk       ( 0x1ul << USBH_HcInterruptEnable_SF_Pos )          /*!< USBH_T::HcInterruptEnable: SF Mask     */
 
-#define USBH_HcInterruptEnable_RD_Pos    (3)                                               /*!< USBH_T::HcInterruptEnable: RD Position */
-#define USBH_HcInterruptEnable_RD_Msk    (0x1ul << USBH_HcInterruptEnable_RD_Pos)          /*!< USBH_T::HcInterruptEnable: RD Mask     */
+#define USBH_HcInterruptEnable_RD_Pos       ( 3 )                                               /*!< USBH_T::HcInterruptEnable: RD Position */
+#define USBH_HcInterruptEnable_RD_Msk       ( 0x1ul << USBH_HcInterruptEnable_RD_Pos )          /*!< USBH_T::HcInterruptEnable: RD Mask     */
 
-#define USBH_HcInterruptEnable_FNO_Pos   (5)                                               /*!< USBH_T::HcInterruptEnable: FNO Position*/
-#define USBH_HcInterruptEnable_FNO_Msk   (0x1ul << USBH_HcInterruptEnable_FNO_Pos)         /*!< USBH_T::HcInterruptEnable: FNO Mask    */
+#define USBH_HcInterruptEnable_FNO_Pos      ( 5 )                                               /*!< USBH_T::HcInterruptEnable: FNO Position*/
+#define USBH_HcInterruptEnable_FNO_Msk      ( 0x1ul << USBH_HcInterruptEnable_FNO_Pos )         /*!< USBH_T::HcInterruptEnable: FNO Mask    */
 
-#define USBH_HcInterruptEnable_RHSC_Pos  (6)                                               /*!< USBH_T::HcInterruptEnable: RHSC Position*/
-#define USBH_HcInterruptEnable_RHSC_Msk  (0x1ul << USBH_HcInterruptEnable_RHSC_Pos)        /*!< USBH_T::HcInterruptEnable: RHSC Mask   */
+#define USBH_HcInterruptEnable_RHSC_Pos     ( 6 )                                               /*!< USBH_T::HcInterruptEnable: RHSC Position*/
+#define USBH_HcInterruptEnable_RHSC_Msk     ( 0x1ul << USBH_HcInterruptEnable_RHSC_Pos )        /*!< USBH_T::HcInterruptEnable: RHSC Mask   */
 
-#define USBH_HcInterruptEnable_MIE_Pos   (31)                                              /*!< USBH_T::HcInterruptEnable: MIE Position*/
-#define USBH_HcInterruptEnable_MIE_Msk   (0x1ul << USBH_HcInterruptEnable_MIE_Pos)         /*!< USBH_T::HcInterruptEnable: MIE Mask    */
+#define USBH_HcInterruptEnable_MIE_Pos      ( 31 )                                              /*!< USBH_T::HcInterruptEnable: MIE Position*/
+#define USBH_HcInterruptEnable_MIE_Msk      ( 0x1ul << USBH_HcInterruptEnable_MIE_Pos )         /*!< USBH_T::HcInterruptEnable: MIE Mask    */
 
-#define USBH_HcInterruptDisable_SO_Pos   (0)                                               /*!< USBH_T::HcInterruptDisable: SO Position*/
-#define USBH_HcInterruptDisable_SO_Msk   (0x1ul << USBH_HcInterruptDisable_SO_Pos)         /*!< USBH_T::HcInterruptDisable: SO Mask    */
+#define USBH_HcInterruptDisable_SO_Pos      ( 0 )                                               /*!< USBH_T::HcInterruptDisable: SO Position*/
+#define USBH_HcInterruptDisable_SO_Msk      ( 0x1ul << USBH_HcInterruptDisable_SO_Pos )         /*!< USBH_T::HcInterruptDisable: SO Mask    */
 
-#define USBH_HcInterruptDisable_WDH_Pos  (1)                                               /*!< USBH_T::HcInterruptDisable: WDH Position*/
-#define USBH_HcInterruptDisable_WDH_Msk  (0x1ul << USBH_HcInterruptDisable_WDH_Pos)        /*!< USBH_T::HcInterruptDisable: WDH Mask   */
+#define USBH_HcInterruptDisable_WDH_Pos     ( 1 )                                               /*!< USBH_T::HcInterruptDisable: WDH Position*/
+#define USBH_HcInterruptDisable_WDH_Msk     ( 0x1ul << USBH_HcInterruptDisable_WDH_Pos )        /*!< USBH_T::HcInterruptDisable: WDH Mask   */
 
-#define USBH_HcInterruptDisable_SF_Pos   (2)                                               /*!< USBH_T::HcInterruptDisable: SF Position*/
-#define USBH_HcInterruptDisable_SF_Msk   (0x1ul << USBH_HcInterruptDisable_SF_Pos)         /*!< USBH_T::HcInterruptDisable: SF Mask    */
+#define USBH_HcInterruptDisable_SF_Pos      ( 2 )                                               /*!< USBH_T::HcInterruptDisable: SF Position*/
+#define USBH_HcInterruptDisable_SF_Msk      ( 0x1ul << USBH_HcInterruptDisable_SF_Pos )         /*!< USBH_T::HcInterruptDisable: SF Mask    */
 
-#define USBH_HcInterruptDisable_RD_Pos   (3)                                               /*!< USBH_T::HcInterruptDisable: RD Position*/
-#define USBH_HcInterruptDisable_RD_Msk   (0x1ul << USBH_HcInterruptDisable_RD_Pos)         /*!< USBH_T::HcInterruptDisable: RD Mask    */
+#define USBH_HcInterruptDisable_RD_Pos      ( 3 )                                               /*!< USBH_T::HcInterruptDisable: RD Position*/
+#define USBH_HcInterruptDisable_RD_Msk      ( 0x1ul << USBH_HcInterruptDisable_RD_Pos )         /*!< USBH_T::HcInterruptDisable: RD Mask    */
 
-#define USBH_HcInterruptDisable_FNO_Pos  (5)                                               /*!< USBH_T::HcInterruptDisable: FNO Position*/
-#define USBH_HcInterruptDisable_FNO_Msk  (0x1ul << USBH_HcInterruptDisable_FNO_Pos)        /*!< USBH_T::HcInterruptDisable: FNO Mask   */
+#define USBH_HcInterruptDisable_FNO_Pos     ( 5 )                                               /*!< USBH_T::HcInterruptDisable: FNO Position*/
+#define USBH_HcInterruptDisable_FNO_Msk     ( 0x1ul << USBH_HcInterruptDisable_FNO_Pos )        /*!< USBH_T::HcInterruptDisable: FNO Mask   */
 
-#define USBH_HcInterruptDisable_RHSC_Pos (6)                                               /*!< USBH_T::HcInterruptDisable: RHSC Position*/
-#define USBH_HcInterruptDisable_RHSC_Msk (0x1ul << USBH_HcInterruptDisable_RHSC_Pos)       /*!< USBH_T::HcInterruptDisable: RHSC Mask  */
+#define USBH_HcInterruptDisable_RHSC_Pos    ( 6 )                                               /*!< USBH_T::HcInterruptDisable: RHSC Position*/
+#define USBH_HcInterruptDisable_RHSC_Msk    ( 0x1ul << USBH_HcInterruptDisable_RHSC_Pos )       /*!< USBH_T::HcInterruptDisable: RHSC Mask  */
 
-#define USBH_HcInterruptDisable_MIE_Pos  (31)                                              /*!< USBH_T::HcInterruptDisable: MIE Position*/
-#define USBH_HcInterruptDisable_MIE_Msk  (0x1ul << USBH_HcInterruptDisable_MIE_Pos)        /*!< USBH_T::HcInterruptDisable: MIE Mask   */
+#define USBH_HcInterruptDisable_MIE_Pos     ( 31 )                                              /*!< USBH_T::HcInterruptDisable: MIE Position*/
+#define USBH_HcInterruptDisable_MIE_Msk     ( 0x1ul << USBH_HcInterruptDisable_MIE_Pos )        /*!< USBH_T::HcInterruptDisable: MIE Mask   */
 
-#define USBH_HcHCCA_HCCA_Pos             (8)                                               /*!< USBH_T::HcHCCA: HCCA Position          */
-#define USBH_HcHCCA_HCCA_Msk             (0xfffffful << USBH_HcHCCA_HCCA_Pos)              /*!< USBH_T::HcHCCA: HCCA Mask              */
+#define USBH_HcHCCA_HCCA_Pos                ( 8 )                                               /*!< USBH_T::HcHCCA: HCCA Position          */
+#define USBH_HcHCCA_HCCA_Msk                ( 0xfffffful << USBH_HcHCCA_HCCA_Pos )              /*!< USBH_T::HcHCCA: HCCA Mask              */
 
-#define USBH_HcPeriodCurrentED_PCED_Pos  (4)                                               /*!< USBH_T::HcPeriodCurrentED: PCED Position*/
-#define USBH_HcPeriodCurrentED_PCED_Msk  (0xffffffful << USBH_HcPeriodCurrentED_PCED_Pos)  /*!< USBH_T::HcPeriodCurrentED: PCED Mask   */
+#define USBH_HcPeriodCurrentED_PCED_Pos     ( 4 )                                               /*!< USBH_T::HcPeriodCurrentED: PCED Position*/
+#define USBH_HcPeriodCurrentED_PCED_Msk     ( 0xffffffful << USBH_HcPeriodCurrentED_PCED_Pos )  /*!< USBH_T::HcPeriodCurrentED: PCED Mask   */
 
-#define USBH_HcControlHeadED_CHED_Pos    (4)                                               /*!< USBH_T::HcControlHeadED: CHED Position */
-#define USBH_HcControlHeadED_CHED_Msk    (0xffffffful << USBH_HcControlHeadED_CHED_Pos)    /*!< USBH_T::HcControlHeadED: CHED Mask     */
+#define USBH_HcControlHeadED_CHED_Pos       ( 4 )                                               /*!< USBH_T::HcControlHeadED: CHED Position */
+#define USBH_HcControlHeadED_CHED_Msk       ( 0xffffffful << USBH_HcControlHeadED_CHED_Pos )    /*!< USBH_T::HcControlHeadED: CHED Mask     */
 
-#define USBH_HcControlCurrentED_CCED_Pos (4)                                               /*!< USBH_T::HcControlCurrentED: CCED Position*/
-#define USBH_HcControlCurrentED_CCED_Msk (0xffffffful << USBH_HcControlCurrentED_CCED_Pos) /*!< USBH_T::HcControlCurrentED: CCED Mask  */
+#define USBH_HcControlCurrentED_CCED_Pos    ( 4 )                                               /*!< USBH_T::HcControlCurrentED: CCED Position*/
+#define USBH_HcControlCurrentED_CCED_Msk    ( 0xffffffful << USBH_HcControlCurrentED_CCED_Pos ) /*!< USBH_T::HcControlCurrentED: CCED Mask  */
 
-#define USBH_HcBulkHeadED_BHED_Pos       (4)                                               /*!< USBH_T::HcBulkHeadED: BHED Position    */
-#define USBH_HcBulkHeadED_BHED_Msk       (0xffffffful << USBH_HcBulkHeadED_BHED_Pos)       /*!< USBH_T::HcBulkHeadED: BHED Mask        */
+#define USBH_HcBulkHeadED_BHED_Pos          ( 4 )                                               /*!< USBH_T::HcBulkHeadED: BHED Position    */
+#define USBH_HcBulkHeadED_BHED_Msk          ( 0xffffffful << USBH_HcBulkHeadED_BHED_Pos )       /*!< USBH_T::HcBulkHeadED: BHED Mask        */
 
-#define USBH_HcBulkCurrentED_BCED_Pos    (4)                                               /*!< USBH_T::HcBulkCurrentED: BCED Position */
-#define USBH_HcBulkCurrentED_BCED_Msk    (0xffffffful << USBH_HcBulkCurrentED_BCED_Pos)    /*!< USBH_T::HcBulkCurrentED: BCED Mask     */
+#define USBH_HcBulkCurrentED_BCED_Pos       ( 4 )                                               /*!< USBH_T::HcBulkCurrentED: BCED Position */
+#define USBH_HcBulkCurrentED_BCED_Msk       ( 0xffffffful << USBH_HcBulkCurrentED_BCED_Pos )    /*!< USBH_T::HcBulkCurrentED: BCED Mask     */
 
-#define USBH_HcDoneHead_DH_Pos           (4)                                               /*!< USBH_T::HcDoneHead: DH Position        */
-#define USBH_HcDoneHead_DH_Msk           (0xffffffful << USBH_HcDoneHead_DH_Pos)           /*!< USBH_T::HcDoneHead: DH Mask            */
+#define USBH_HcDoneHead_DH_Pos              ( 4 )                                               /*!< USBH_T::HcDoneHead: DH Position        */
+#define USBH_HcDoneHead_DH_Msk              ( 0xffffffful << USBH_HcDoneHead_DH_Pos )           /*!< USBH_T::HcDoneHead: DH Mask            */
 
-#define USBH_HcFmInterval_FI_Pos         (0)                                               /*!< USBH_T::HcFmInterval: FI Position      */
-#define USBH_HcFmInterval_FI_Msk         (0x3ffful << USBH_HcFmInterval_FI_Pos)            /*!< USBH_T::HcFmInterval: FI Mask          */
+#define USBH_HcFmInterval_FI_Pos            ( 0 )                                               /*!< USBH_T::HcFmInterval: FI Position      */
+#define USBH_HcFmInterval_FI_Msk            ( 0x3ffful << USBH_HcFmInterval_FI_Pos )            /*!< USBH_T::HcFmInterval: FI Mask          */
 
-#define USBH_HcFmInterval_FSMPS_Pos      (16)                                              /*!< USBH_T::HcFmInterval: FSMPS Position   */
-#define USBH_HcFmInterval_FSMPS_Msk      (0x7ffful << USBH_HcFmInterval_FSMPS_Pos)         /*!< USBH_T::HcFmInterval: FSMPS Mask       */
+#define USBH_HcFmInterval_FSMPS_Pos         ( 16 )                                              /*!< USBH_T::HcFmInterval: FSMPS Position   */
+#define USBH_HcFmInterval_FSMPS_Msk         ( 0x7ffful << USBH_HcFmInterval_FSMPS_Pos )         /*!< USBH_T::HcFmInterval: FSMPS Mask       */
 
-#define USBH_HcFmInterval_FIT_Pos        (31)                                              /*!< USBH_T::HcFmInterval: FIT Position     */
-#define USBH_HcFmInterval_FIT_Msk        (0x1ul << USBH_HcFmInterval_FIT_Pos)              /*!< USBH_T::HcFmInterval: FIT Mask         */
+#define USBH_HcFmInterval_FIT_Pos           ( 31 )                                              /*!< USBH_T::HcFmInterval: FIT Position     */
+#define USBH_HcFmInterval_FIT_Msk           ( 0x1ul << USBH_HcFmInterval_FIT_Pos )              /*!< USBH_T::HcFmInterval: FIT Mask         */
 
-#define USBH_HcFmRemaining_FR_Pos        (0)                                               /*!< USBH_T::HcFmRemaining: FR Position     */
-#define USBH_HcFmRemaining_FR_Msk        (0x3ffful << USBH_HcFmRemaining_FR_Pos)           /*!< USBH_T::HcFmRemaining: FR Mask         */
+#define USBH_HcFmRemaining_FR_Pos           ( 0 )                                               /*!< USBH_T::HcFmRemaining: FR Position     */
+#define USBH_HcFmRemaining_FR_Msk           ( 0x3ffful << USBH_HcFmRemaining_FR_Pos )           /*!< USBH_T::HcFmRemaining: FR Mask         */
 
-#define USBH_HcFmRemaining_FRT_Pos       (31)                                              /*!< USBH_T::HcFmRemaining: FRT Position    */
-#define USBH_HcFmRemaining_FRT_Msk       (0x1ul << USBH_HcFmRemaining_FRT_Pos)             /*!< USBH_T::HcFmRemaining: FRT Mask        */
+#define USBH_HcFmRemaining_FRT_Pos          ( 31 )                                              /*!< USBH_T::HcFmRemaining: FRT Position    */
+#define USBH_HcFmRemaining_FRT_Msk          ( 0x1ul << USBH_HcFmRemaining_FRT_Pos )             /*!< USBH_T::HcFmRemaining: FRT Mask        */
 
-#define USBH_HcFmNumber_FN_Pos           (0)                                               /*!< USBH_T::HcFmNumber: FN Position        */
-#define USBH_HcFmNumber_FN_Msk           (0xfffful << USBH_HcFmNumber_FN_Pos)              /*!< USBH_T::HcFmNumber: FN Mask            */
+#define USBH_HcFmNumber_FN_Pos              ( 0 )                                               /*!< USBH_T::HcFmNumber: FN Position        */
+#define USBH_HcFmNumber_FN_Msk              ( 0xfffful << USBH_HcFmNumber_FN_Pos )              /*!< USBH_T::HcFmNumber: FN Mask            */
 
-#define USBH_HcPeriodicStart_PS_Pos      (0)                                               /*!< USBH_T::HcPeriodicStart: PS Position   */
-#define USBH_HcPeriodicStart_PS_Msk      (0x3ffful << USBH_HcPeriodicStart_PS_Pos)         /*!< USBH_T::HcPeriodicStart: PS Mask       */
+#define USBH_HcPeriodicStart_PS_Pos         ( 0 )                                               /*!< USBH_T::HcPeriodicStart: PS Position   */
+#define USBH_HcPeriodicStart_PS_Msk         ( 0x3ffful << USBH_HcPeriodicStart_PS_Pos )         /*!< USBH_T::HcPeriodicStart: PS Mask       */
 
-#define USBH_HcLSThreshold_LST_Pos       (0)                                               /*!< USBH_T::HcLSThreshold: LST Position    */
-#define USBH_HcLSThreshold_LST_Msk       (0xffful << USBH_HcLSThreshold_LST_Pos)           /*!< USBH_T::HcLSThreshold: LST Mask        */
+#define USBH_HcLSThreshold_LST_Pos          ( 0 )                                               /*!< USBH_T::HcLSThreshold: LST Position    */
+#define USBH_HcLSThreshold_LST_Msk          ( 0xffful << USBH_HcLSThreshold_LST_Pos )           /*!< USBH_T::HcLSThreshold: LST Mask        */
 
-#define USBH_HcRhDescriptorA_NDP_Pos     (0)                                               /*!< USBH_T::HcRhDescriptorA: NDP Position  */
-#define USBH_HcRhDescriptorA_NDP_Msk     (0xfful << USBH_HcRhDescriptorA_NDP_Pos)          /*!< USBH_T::HcRhDescriptorA: NDP Mask      */
+#define USBH_HcRhDescriptorA_NDP_Pos        ( 0 )                                               /*!< USBH_T::HcRhDescriptorA: NDP Position  */
+#define USBH_HcRhDescriptorA_NDP_Msk        ( 0xfful << USBH_HcRhDescriptorA_NDP_Pos )          /*!< USBH_T::HcRhDescriptorA: NDP Mask      */
 
-#define USBH_HcRhDescriptorA_PSM_Pos     (8)                                               /*!< USBH_T::HcRhDescriptorA: PSM Position  */
-#define USBH_HcRhDescriptorA_PSM_Msk     (0x1ul << USBH_HcRhDescriptorA_PSM_Pos)           /*!< USBH_T::HcRhDescriptorA: PSM Mask      */
+#define USBH_HcRhDescriptorA_PSM_Pos        ( 8 )                                               /*!< USBH_T::HcRhDescriptorA: PSM Position  */
+#define USBH_HcRhDescriptorA_PSM_Msk        ( 0x1ul << USBH_HcRhDescriptorA_PSM_Pos )           /*!< USBH_T::HcRhDescriptorA: PSM Mask      */
 
-#define USBH_HcRhDescriptorA_OCPM_Pos    (11)                                              /*!< USBH_T::HcRhDescriptorA: OCPM Position */
-#define USBH_HcRhDescriptorA_OCPM_Msk    (0x1ul << USBH_HcRhDescriptorA_OCPM_Pos)          /*!< USBH_T::HcRhDescriptorA: OCPM Mask     */
+#define USBH_HcRhDescriptorA_OCPM_Pos       ( 11 )                                              /*!< USBH_T::HcRhDescriptorA: OCPM Position */
+#define USBH_HcRhDescriptorA_OCPM_Msk       ( 0x1ul << USBH_HcRhDescriptorA_OCPM_Pos )          /*!< USBH_T::HcRhDescriptorA: OCPM Mask     */
 
-#define USBH_HcRhDescriptorA_NOCP_Pos    (12)                                              /*!< USBH_T::HcRhDescriptorA: NOCP Position */
-#define USBH_HcRhDescriptorA_NOCP_Msk    (0x1ul << USBH_HcRhDescriptorA_NOCP_Pos)          /*!< USBH_T::HcRhDescriptorA: NOCP Mask     */
+#define USBH_HcRhDescriptorA_NOCP_Pos       ( 12 )                                              /*!< USBH_T::HcRhDescriptorA: NOCP Position */
+#define USBH_HcRhDescriptorA_NOCP_Msk       ( 0x1ul << USBH_HcRhDescriptorA_NOCP_Pos )          /*!< USBH_T::HcRhDescriptorA: NOCP Mask     */
 
-#define USBH_HcRhDescriptorB_PPCM_Pos    (16)                                              /*!< USBH_T::HcRhDescriptorB: PPCM Position */
-#define USBH_HcRhDescriptorB_PPCM_Msk    (0xfffful << USBH_HcRhDescriptorB_PPCM_Pos)       /*!< USBH_T::HcRhDescriptorB: PPCM Mask     */
+#define USBH_HcRhDescriptorB_PPCM_Pos       ( 16 )                                              /*!< USBH_T::HcRhDescriptorB: PPCM Position */
+#define USBH_HcRhDescriptorB_PPCM_Msk       ( 0xfffful << USBH_HcRhDescriptorB_PPCM_Pos )       /*!< USBH_T::HcRhDescriptorB: PPCM Mask     */
 
-#define USBH_HcRhStatus_LPS_Pos          (0)                                               /*!< USBH_T::HcRhStatus: LPS Position       */
-#define USBH_HcRhStatus_LPS_Msk          (0x1ul << USBH_HcRhStatus_LPS_Pos)                /*!< USBH_T::HcRhStatus: LPS Mask           */
+#define USBH_HcRhStatus_LPS_Pos             ( 0 )                                               /*!< USBH_T::HcRhStatus: LPS Position       */
+#define USBH_HcRhStatus_LPS_Msk             ( 0x1ul << USBH_HcRhStatus_LPS_Pos )                /*!< USBH_T::HcRhStatus: LPS Mask           */
 
-#define USBH_HcRhStatus_OCI_Pos          (1)                                               /*!< USBH_T::HcRhStatus: OCI Position       */
-#define USBH_HcRhStatus_OCI_Msk          (0x1ul << USBH_HcRhStatus_OCI_Pos)                /*!< USBH_T::HcRhStatus: OCI Mask           */
+#define USBH_HcRhStatus_OCI_Pos             ( 1 )                                               /*!< USBH_T::HcRhStatus: OCI Position       */
+#define USBH_HcRhStatus_OCI_Msk             ( 0x1ul << USBH_HcRhStatus_OCI_Pos )                /*!< USBH_T::HcRhStatus: OCI Mask           */
 
-#define USBH_HcRhStatus_DRWE_Pos         (15)                                              /*!< USBH_T::HcRhStatus: DRWE Position      */
-#define USBH_HcRhStatus_DRWE_Msk         (0x1ul << USBH_HcRhStatus_DRWE_Pos)               /*!< USBH_T::HcRhStatus: DRWE Mask          */
+#define USBH_HcRhStatus_DRWE_Pos            ( 15 )                                              /*!< USBH_T::HcRhStatus: DRWE Position      */
+#define USBH_HcRhStatus_DRWE_Msk            ( 0x1ul << USBH_HcRhStatus_DRWE_Pos )               /*!< USBH_T::HcRhStatus: DRWE Mask          */
 
-#define USBH_HcRhStatus_LPSC_Pos         (16)                                              /*!< USBH_T::HcRhStatus: LPSC Position      */
-#define USBH_HcRhStatus_LPSC_Msk         (0x1ul << USBH_HcRhStatus_LPSC_Pos)               /*!< USBH_T::HcRhStatus: LPSC Mask          */
+#define USBH_HcRhStatus_LPSC_Pos            ( 16 )                                              /*!< USBH_T::HcRhStatus: LPSC Position      */
+#define USBH_HcRhStatus_LPSC_Msk            ( 0x1ul << USBH_HcRhStatus_LPSC_Pos )               /*!< USBH_T::HcRhStatus: LPSC Mask          */
 
-#define USBH_HcRhStatus_OCIC_Pos         (17)                                              /*!< USBH_T::HcRhStatus: OCIC Position      */
-#define USBH_HcRhStatus_OCIC_Msk         (0x1ul << USBH_HcRhStatus_OCIC_Pos)               /*!< USBH_T::HcRhStatus: OCIC Mask          */
+#define USBH_HcRhStatus_OCIC_Pos            ( 17 )                                              /*!< USBH_T::HcRhStatus: OCIC Position      */
+#define USBH_HcRhStatus_OCIC_Msk            ( 0x1ul << USBH_HcRhStatus_OCIC_Pos )               /*!< USBH_T::HcRhStatus: OCIC Mask          */
 
-#define USBH_HcRhStatus_CRWE_Pos         (31)                                              /*!< USBH_T::HcRhStatus: CRWE Position      */
-#define USBH_HcRhStatus_CRWE_Msk         (0x1ul << USBH_HcRhStatus_CRWE_Pos)               /*!< USBH_T::HcRhStatus: CRWE Mask          */
+#define USBH_HcRhStatus_CRWE_Pos            ( 31 )                                              /*!< USBH_T::HcRhStatus: CRWE Position      */
+#define USBH_HcRhStatus_CRWE_Msk            ( 0x1ul << USBH_HcRhStatus_CRWE_Pos )               /*!< USBH_T::HcRhStatus: CRWE Mask          */
 
-#define USBH_HcRhPortStatus_CCS_Pos      (0)                                               /*!< USBH_T::HcRhPortStatus: CCS Position   */
-#define USBH_HcRhPortStatus_CCS_Msk      (0x1ul << USBH_HcRhPortStatus_CCS_Pos)            /*!< USBH_T::HcRhPortStatus: CCS Mask       */
+#define USBH_HcRhPortStatus_CCS_Pos         ( 0 )                                               /*!< USBH_T::HcRhPortStatus: CCS Position   */
+#define USBH_HcRhPortStatus_CCS_Msk         ( 0x1ul << USBH_HcRhPortStatus_CCS_Pos )            /*!< USBH_T::HcRhPortStatus: CCS Mask       */
 
-#define USBH_HcRhPortStatus_PES_Pos      (1)                                               /*!< USBH_T::HcRhPortStatus: PES Position   */
-#define USBH_HcRhPortStatus_PES_Msk      (0x1ul << USBH_HcRhPortStatus_PES_Pos)            /*!< USBH_T::HcRhPortStatus: PES Mask       */
+#define USBH_HcRhPortStatus_PES_Pos         ( 1 )                                               /*!< USBH_T::HcRhPortStatus: PES Position   */
+#define USBH_HcRhPortStatus_PES_Msk         ( 0x1ul << USBH_HcRhPortStatus_PES_Pos )            /*!< USBH_T::HcRhPortStatus: PES Mask       */
 
-#define USBH_HcRhPortStatus_PSS_Pos      (2)                                               /*!< USBH_T::HcRhPortStatus: PSS Position   */
-#define USBH_HcRhPortStatus_PSS_Msk      (0x1ul << USBH_HcRhPortStatus_PSS_Pos)            /*!< USBH_T::HcRhPortStatus: PSS Mask       */
+#define USBH_HcRhPortStatus_PSS_Pos         ( 2 )                                               /*!< USBH_T::HcRhPortStatus: PSS Position   */
+#define USBH_HcRhPortStatus_PSS_Msk         ( 0x1ul << USBH_HcRhPortStatus_PSS_Pos )            /*!< USBH_T::HcRhPortStatus: PSS Mask       */
 
-#define USBH_HcRhPortStatus_POCI_Pos     (3)                                               /*!< USBH_T::HcRhPortStatus: POCI Position  */
-#define USBH_HcRhPortStatus_POCI_Msk     (0x1ul << USBH_HcRhPortStatus_POCI_Pos)           /*!< USBH_T::HcRhPortStatus: POCI Mask      */
+#define USBH_HcRhPortStatus_POCI_Pos        ( 3 )                                               /*!< USBH_T::HcRhPortStatus: POCI Position  */
+#define USBH_HcRhPortStatus_POCI_Msk        ( 0x1ul << USBH_HcRhPortStatus_POCI_Pos )           /*!< USBH_T::HcRhPortStatus: POCI Mask      */
 
-#define USBH_HcRhPortStatus_PRS_Pos      (4)                                               /*!< USBH_T::HcRhPortStatus: PRS Position   */
-#define USBH_HcRhPortStatus_PRS_Msk      (0x1ul << USBH_HcRhPortStatus_PRS_Pos)            /*!< USBH_T::HcRhPortStatus: PRS Mask       */
+#define USBH_HcRhPortStatus_PRS_Pos         ( 4 )                                               /*!< USBH_T::HcRhPortStatus: PRS Position   */
+#define USBH_HcRhPortStatus_PRS_Msk         ( 0x1ul << USBH_HcRhPortStatus_PRS_Pos )            /*!< USBH_T::HcRhPortStatus: PRS Mask       */
 
-#define USBH_HcRhPortStatus_PPS_Pos      (8)                                               /*!< USBH_T::HcRhPortStatus: PPS Position   */
-#define USBH_HcRhPortStatus_PPS_Msk      (0x1ul << USBH_HcRhPortStatus_PPS_Pos)            /*!< USBH_T::HcRhPortStatus: PPS Mask       */
+#define USBH_HcRhPortStatus_PPS_Pos         ( 8 )                                               /*!< USBH_T::HcRhPortStatus: PPS Position   */
+#define USBH_HcRhPortStatus_PPS_Msk         ( 0x1ul << USBH_HcRhPortStatus_PPS_Pos )            /*!< USBH_T::HcRhPortStatus: PPS Mask       */
 
-#define USBH_HcRhPortStatus_LSDA_Pos     (9)                                               /*!< USBH_T::HcRhPortStatus: LSDA Position  */
-#define USBH_HcRhPortStatus_LSDA_Msk     (0x1ul << USBH_HcRhPortStatus_LSDA_Pos)           /*!< USBH_T::HcRhPortStatus: LSDA Mask      */
+#define USBH_HcRhPortStatus_LSDA_Pos        ( 9 )                                               /*!< USBH_T::HcRhPortStatus: LSDA Position  */
+#define USBH_HcRhPortStatus_LSDA_Msk        ( 0x1ul << USBH_HcRhPortStatus_LSDA_Pos )           /*!< USBH_T::HcRhPortStatus: LSDA Mask      */
 
-#define USBH_HcRhPortStatus_CSC_Pos      (16)                                              /*!< USBH_T::HcRhPortStatus: CSC Position   */
-#define USBH_HcRhPortStatus_CSC_Msk      (0x1ul << USBH_HcRhPortStatus_CSC_Pos)            /*!< USBH_T::HcRhPortStatus: CSC Mask       */
+#define USBH_HcRhPortStatus_CSC_Pos         ( 16 )                                              /*!< USBH_T::HcRhPortStatus: CSC Position   */
+#define USBH_HcRhPortStatus_CSC_Msk         ( 0x1ul << USBH_HcRhPortStatus_CSC_Pos )            /*!< USBH_T::HcRhPortStatus: CSC Mask       */
 
-#define USBH_HcRhPortStatus_PESC_Pos     (17)                                              /*!< USBH_T::HcRhPortStatus: PESC Position  */
-#define USBH_HcRhPortStatus_PESC_Msk     (0x1ul << USBH_HcRhPortStatus_PESC_Pos)           /*!< USBH_T::HcRhPortStatus: PESC Mask      */
+#define USBH_HcRhPortStatus_PESC_Pos        ( 17 )                                              /*!< USBH_T::HcRhPortStatus: PESC Position  */
+#define USBH_HcRhPortStatus_PESC_Msk        ( 0x1ul << USBH_HcRhPortStatus_PESC_Pos )           /*!< USBH_T::HcRhPortStatus: PESC Mask      */
 
-#define USBH_HcRhPortStatus_PSSC_Pos     (18)                                              /*!< USBH_T::HcRhPortStatus: PSSC Position  */
-#define USBH_HcRhPortStatus_PSSC_Msk     (0x1ul << USBH_HcRhPortStatus_PSSC_Pos)           /*!< USBH_T::HcRhPortStatus: PSSC Mask      */
+#define USBH_HcRhPortStatus_PSSC_Pos        ( 18 )                                              /*!< USBH_T::HcRhPortStatus: PSSC Position  */
+#define USBH_HcRhPortStatus_PSSC_Msk        ( 0x1ul << USBH_HcRhPortStatus_PSSC_Pos )           /*!< USBH_T::HcRhPortStatus: PSSC Mask      */
 
-#define USBH_HcRhPortStatus_OCIC_Pos     (19)                                              /*!< USBH_T::HcRhPortStatus: OCIC Position  */
-#define USBH_HcRhPortStatus_OCIC_Msk     (0x1ul << USBH_HcRhPortStatus_OCIC_Pos)           /*!< USBH_T::HcRhPortStatus: OCIC Mask      */
+#define USBH_HcRhPortStatus_OCIC_Pos        ( 19 )                                              /*!< USBH_T::HcRhPortStatus: OCIC Position  */
+#define USBH_HcRhPortStatus_OCIC_Msk        ( 0x1ul << USBH_HcRhPortStatus_OCIC_Pos )           /*!< USBH_T::HcRhPortStatus: OCIC Mask      */
 
-#define USBH_HcRhPortStatus_PRSC_Pos     (20)                                              /*!< USBH_T::HcRhPortStatus: PRSC Position  */
-#define USBH_HcRhPortStatus_PRSC_Msk     (0x1ul << USBH_HcRhPortStatus_PRSC_Pos)           /*!< USBH_T::HcRhPortStatus: PRSC Mask      */
+#define USBH_HcRhPortStatus_PRSC_Pos        ( 20 )                                              /*!< USBH_T::HcRhPortStatus: PRSC Position  */
+#define USBH_HcRhPortStatus_PRSC_Msk        ( 0x1ul << USBH_HcRhPortStatus_PRSC_Pos )           /*!< USBH_T::HcRhPortStatus: PRSC Mask      */
 
-#define USBH_HcPhyControl_STBYEN_Pos     (27)                                              /*!< USBH_T::HcPhyControl: STBYEN Position  */
-#define USBH_HcPhyControl_STBYEN_Msk     (0x1ul << USBH_HcPhyControl_STBYEN_Pos)           /*!< USBH_T::HcPhyControl: STBYEN Mask      */
+#define USBH_HcPhyControl_STBYEN_Pos        ( 27 )                                              /*!< USBH_T::HcPhyControl: STBYEN Position  */
+#define USBH_HcPhyControl_STBYEN_Msk        ( 0x1ul << USBH_HcPhyControl_STBYEN_Pos )           /*!< USBH_T::HcPhyControl: STBYEN Mask      */
 
-#define USBH_HcMiscControl_ABORT_Pos     (1)                                               /*!< USBH_T::HcMiscControl: ABORT Position  */
-#define USBH_HcMiscControl_ABORT_Msk     (0x1ul << USBH_HcMiscControl_ABORT_Pos)           /*!< USBH_T::HcMiscControl: ABORT Mask      */
+#define USBH_HcMiscControl_ABORT_Pos        ( 1 )                                               /*!< USBH_T::HcMiscControl: ABORT Position  */
+#define USBH_HcMiscControl_ABORT_Msk        ( 0x1ul << USBH_HcMiscControl_ABORT_Pos )           /*!< USBH_T::HcMiscControl: ABORT Mask      */
 
-#define USBH_HcMiscControl_OCAL_Pos      (3)                                               /*!< USBH_T::HcMiscControl: OCAL Position   */
-#define USBH_HcMiscControl_OCAL_Msk      (0x1ul << USBH_HcMiscControl_OCAL_Pos)            /*!< USBH_T::HcMiscControl: OCAL Mask       */
+#define USBH_HcMiscControl_OCAL_Pos         ( 3 )                                               /*!< USBH_T::HcMiscControl: OCAL Position   */
+#define USBH_HcMiscControl_OCAL_Msk         ( 0x1ul << USBH_HcMiscControl_OCAL_Pos )            /*!< USBH_T::HcMiscControl: OCAL Mask       */
 
-#define USBH_HcMiscControl_DPRT1_Pos     (16)                                              /*!< USBH_T::HcMiscControl: DPRT1 Position  */
-#define USBH_HcMiscControl_DPRT1_Msk     (0x1ul << USBH_HcMiscControl_DPRT1_Pos)           /*!< USBH_T::HcMiscControl: DPRT1 Mask      */
+#define USBH_HcMiscControl_DPRT1_Pos        ( 16 )                                              /*!< USBH_T::HcMiscControl: DPRT1 Position  */
+#define USBH_HcMiscControl_DPRT1_Msk        ( 0x1ul << USBH_HcMiscControl_DPRT1_Pos )           /*!< USBH_T::HcMiscControl: DPRT1 Mask      */
 
 /**@}*/ /* USBH_CONST */
 /**@}*/ /* end of USBH register group */

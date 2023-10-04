@@ -93,22 +93,22 @@
 /**
  * @brief Length of the interrupt queue.
  */
-#define USER_IRQ_QUEUE_LEN          8
-#define USER_IRQ_QUEUE_BUF_SIZE     ( sizeof( UserIrqRequest_t ) * USER_IRQ_QUEUE_LEN )
+#define USER_IRQ_QUEUE_LEN         8
+#define USER_IRQ_QUEUE_BUF_SIZE    ( sizeof( UserIrqRequest_t ) * USER_IRQ_QUEUE_LEN )
 
 /**
  * @brief UART_MEM_START to (UART_MEM_START + UART_MEM_LEN) cover the range
  * used by USART_WriteBlocking().
  */
-#define UART_MEM_START              ( USART0 )
-#define UART_MEM_LEN                ( 3648 )
+#define UART_MEM_START             ( USART0 )
+#define UART_MEM_LEN               ( 3648 )
 
 /**
  * @brief GPIO_MEM_START to (GPIO_MEM_START + GPIO_MEM_LEN) covers the range
  * used for setting and clearing GPIO pins.
  */
-#define GPIO_MEM_START              ( 0x4008E200u )
-#define GPIO_MEM_LEN                ( 256 )
+#define GPIO_MEM_START             ( 0x4008E200u )
+#define GPIO_MEM_LEN               ( 256 )
 
 /**
  * @brief Handle and storage for the interrupt queue shared between IRQ handlers
@@ -140,7 +140,8 @@ static void prvInitializeUartReceivedInterrupt( void );
  * The handler enqueues a user IRQ request for the IRQ to be further processed
  * in the unprivileged interrupt handler.
  */
-static void userButtonPressedHandler( pint_pin_int_t xInterruptType, uint32_t ulMatchStatus );
+static void userButtonPressedHandler( pint_pin_int_t xInterruptType,
+                                      uint32_t ulMatchStatus );
 
 /**
  * @brief Handler for UART interrupt when UART data is received.
@@ -194,6 +195,7 @@ static void prvInitializeUserButtonInterrupt( void )
 static void prvInitializeUartReceivedInterrupt( void )
 {
     usart_config_t config;
+
     USART_GetDefaultConfig( &( config ) );
     config.enableTx = true;
     config.enableRx = true;
@@ -205,7 +207,8 @@ static void prvInitializeUartReceivedInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-static void userButtonPressedHandler( pint_pin_int_t xInterruptType, uint32_t ulMatchStatus )
+static void userButtonPressedHandler( pint_pin_int_t xInterruptType,
+                                      uint32_t ulMatchStatus )
 {
     UserIrqRequest_t xIrqRequest;
     BaseType_t xHigherPriorityTaskWoken;
@@ -231,7 +234,7 @@ static void userButtonPressedHandler( pint_pin_int_t xInterruptType, uint32_t ul
 /*-----------------------------------------------------------*/
 
 /* Override weak definition of FLEXCOMM0_IRQHandler */
-void FLEXCOMM0_IRQHandler(void)
+void FLEXCOMM0_IRQHandler( void )
 {
     UserIrqRequest_t xIrqRequest;
     BaseType_t xHigherPriorityTaskWoken;
@@ -265,7 +268,7 @@ static void prvCreateDemoTasks( void )
     extern TaskHandle_t xUartDemoTaskHandle;
     extern uint32_t __user_irq_shared_memory_start__[];
     extern uint32_t __user_irq_shared_memory_end__[];
-    uint32_t ulSharedMemoryLength = ( uint32_t )__user_irq_shared_memory_end__ - ( uint32_t )__user_irq_shared_memory_start__ + 1;
+    uint32_t ulSharedMemoryLength = ( uint32_t ) __user_irq_shared_memory_end__ - ( uint32_t ) __user_irq_shared_memory_start__ + 1;
 
     /* The interrupt handler task needs access to UART memory region too as we
      * write the response to UART from the interrupt handler in the UART demo. */
@@ -343,12 +346,15 @@ int main( void )
     vTaskStartScheduler();
 
     /* Should never reach here. */
-    for( ; ; );
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 /* Stack overflow hook. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * pcTaskName )
 {
     /* Force an assert. */
     configASSERT( pcTaskName == 0 );

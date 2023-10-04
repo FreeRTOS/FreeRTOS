@@ -31,10 +31,10 @@
 #define _SAMA5_BSC_INSTANCE_
 
 /* ========== Register definition for BSC peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_BSC_CR          (0xFFFFFE54U) /**< \brief (BSC) Boot Sequence Configuration Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_BSC_CR    ( 0xFFFFFE54U )              /**< \brief (BSC) Boot Sequence Configuration Register */
 #else
-#define REG_BSC_CR (*(RwReg*)0xFFFFFE54U) /**< \brief (BSC) Boot Sequence Configuration Register */
+    #define REG_BSC_CR    ( *( RwReg * ) 0xFFFFFE54U ) /**< \brief (BSC) Boot Sequence Configuration Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_BSC_INSTANCE_ */

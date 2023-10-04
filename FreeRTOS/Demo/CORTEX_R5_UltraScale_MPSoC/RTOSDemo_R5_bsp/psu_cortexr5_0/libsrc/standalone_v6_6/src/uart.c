@@ -30,24 +30,25 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-* @file uart.c
-*
-* This file contains APIs for configuring the UART.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who  Date     Changes
-* ----- ---- -------- ---------------------------------------------------
-* 5.00 	pkp  02/20/14 First release
-* </pre>
-*
-* @note
-*
-* None.
-*
-******************************************************************************/
+ * @file uart.c
+ *
+ * This file contains APIs for configuring the UART.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who  Date     Changes
+ * ----- ---- -------- ---------------------------------------------------
+ * 5.00     pkp  02/20/14 First release
+ * </pre>
+ *
+ * @note
+ *
+ * None.
+ *
+ ******************************************************************************/
 
 #include "xil_types.h"
 #include "xparameters.h"
@@ -55,106 +56,112 @@
 #include "xil_io.h"
 
 /* Register offsets */
-#define UART_CR_OFFSET		0x00000000U
-#define UART_MR_OFFSET		0x00000004U
-#define UART_BAUDGEN_OFFSET	0x00000018U
-#define UART_BAUDDIV_OFFSET	0x00000034U
+#define UART_CR_OFFSET         0x00000000U
+#define UART_MR_OFFSET         0x00000004U
+#define UART_BAUDGEN_OFFSET    0x00000018U
+#define UART_BAUDDIV_OFFSET    0x00000034U
 
-#define MAX_BAUD_ERROR_RATE	0x00000003U	/* max % error allowed */
-#define UART_BAUDRATE	115200U
-#define CSU_VERSION_REG     0xFFCA0044U
+#define MAX_BAUD_ERROR_RATE    0x00000003U /* max % error allowed */
+#define UART_BAUDRATE          115200U
+#define CSU_VERSION_REG        0xFFCA0044U
 
-void Init_Uart(void);
+void Init_Uart( void );
 
-void Init_Uart(void)
+void Init_Uart( void )
 {
-#ifdef STDOUT_BASEADDRESS
-	u8 IterBAUDDIV;		/* Iterator for available baud divisor values */
-	u32 BRGR_Value;		/* Calculated value for baud rate generator */
-	u32 CalcBaudRate;	/* Calculated baud rate */
-	u32 BaudError;		/* Diff between calculated and requested baud rate */
-	u32 Best_BRGR = 0U;	/* Best value for baud rate generator */
-	u8 Best_BAUDDIV = 0U;	/* Best value for baud divisor */
-	u32 Best_Error = 0xFFFFFFFFU;
-	u32 PercentError;
-	u32 InputClk;
-   u32 BaudRate = UART_BAUDRATE;
+    #ifdef STDOUT_BASEADDRESS
+        u8 IterBAUDDIV;       /* Iterator for available baud divisor values */
+        u32 BRGR_Value;       /* Calculated value for baud rate generator */
+        u32 CalcBaudRate;     /* Calculated baud rate */
+        u32 BaudError;        /* Diff between calculated and requested baud rate */
+        u32 Best_BRGR = 0U;   /* Best value for baud rate generator */
+        u8 Best_BAUDDIV = 0U; /* Best value for baud divisor */
+        u32 Best_Error = 0xFFFFFFFFU;
+        u32 PercentError;
+        u32 InputClk;
+        u32 BaudRate = UART_BAUDRATE;
 
-#if (STDOUT_BASEADDRESS == XPAR_XUARTPS_0_BASEADDR)
-	InputClk = XPAR_XUARTPS_0_UART_CLK_FREQ_HZ;
-#elif (STDOUT_BASEADDRESS == XPAR_XUARTPS_1_BASEADDR)
-	InputClk = XPAR_XUARTPS_1_UART_CLK_FREQ_HZ;
-#else
-	/* STDIO is not set or axi_uart is being used for STDIO */
-	return;
-#endif
-InputClk = 25000000U;
-	/*
-	 * Determine the Baud divider. It can be 4to 254.
-	 * Loop through all possible combinations
-	 */
-	for (IterBAUDDIV = 4U; IterBAUDDIV < 255U; IterBAUDDIV++) {
+        #if ( STDOUT_BASEADDRESS == XPAR_XUARTPS_0_BASEADDR )
+            InputClk = XPAR_XUARTPS_0_UART_CLK_FREQ_HZ;
+        #elif ( STDOUT_BASEADDRESS == XPAR_XUARTPS_1_BASEADDR )
+            InputClk = XPAR_XUARTPS_1_UART_CLK_FREQ_HZ;
+        #else
+            /* STDIO is not set or axi_uart is being used for STDIO */
+            return;
+        #endif
+        InputClk = 25000000U;
 
-		/*
-		 * Calculate the value for BRGR register
-		 */
-		BRGR_Value = InputClk / (BaudRate * ((u32)IterBAUDDIV + 0x00000001U));
+        /*
+         * Determine the Baud divider. It can be 4to 254.
+         * Loop through all possible combinations
+         */
+        for( IterBAUDDIV = 4U; IterBAUDDIV < 255U; IterBAUDDIV++ )
+        {
+            /*
+             * Calculate the value for BRGR register
+             */
+            BRGR_Value = InputClk / ( BaudRate * ( ( u32 ) IterBAUDDIV + 0x00000001U ) );
 
-		/*
-		 * Calculate the baud rate from the BRGR value
-		 */
-		CalcBaudRate = InputClk/ (BRGR_Value * ((u32)IterBAUDDIV + 0x00000001U));
+            /*
+             * Calculate the baud rate from the BRGR value
+             */
+            CalcBaudRate = InputClk / ( BRGR_Value * ( ( u32 ) IterBAUDDIV + 0x00000001U ) );
 
-		/*
-		 * Avoid unsigned integer underflow
-		 */
-		if (BaudRate > CalcBaudRate) {
-			BaudError = BaudRate - CalcBaudRate;
-		} else {
-			BaudError = CalcBaudRate - BaudRate;
-		}
+            /*
+             * Avoid unsigned integer underflow
+             */
+            if( BaudRate > CalcBaudRate )
+            {
+                BaudError = BaudRate - CalcBaudRate;
+            }
+            else
+            {
+                BaudError = CalcBaudRate - BaudRate;
+            }
 
-		/*
-		 * Find the calculated baud rate closest to requested baud rate.
-		 */
-		if (Best_Error > BaudError) {
+            /*
+             * Find the calculated baud rate closest to requested baud rate.
+             */
+            if( Best_Error > BaudError )
+            {
+                Best_BRGR = BRGR_Value;
+                Best_BAUDDIV = IterBAUDDIV;
+                Best_Error = BaudError;
+            }
+        }
 
-			Best_BRGR = BRGR_Value;
-			Best_BAUDDIV = IterBAUDDIV;
-			Best_Error = BaudError;
+        /*
+         * Make sure the best error is not too large.
+         */
+        PercentError = ( Best_Error * 100U ) / BaudRate;
 
-		}
-	}
+        if( MAX_BAUD_ERROR_RATE < PercentError )
+        {
+            return;
+        }
 
-	/*
-	 * Make sure the best error is not too large.
-	 */
-	PercentError = (Best_Error * 100U) / BaudRate;
-	if (MAX_BAUD_ERROR_RATE < PercentError) {
-		return;
-	}
+        /* set CD and BDIV */
+        Xil_Out32( STDOUT_BASEADDRESS + UART_BAUDGEN_OFFSET, Best_BRGR );
+        Xil_Out32( STDOUT_BASEADDRESS + UART_BAUDDIV_OFFSET, ( u32 ) Best_BAUDDIV );
 
-	/* set CD and BDIV */
-	Xil_Out32(STDOUT_BASEADDRESS + UART_BAUDGEN_OFFSET, Best_BRGR);
-	Xil_Out32(STDOUT_BASEADDRESS + UART_BAUDDIV_OFFSET, (u32)Best_BAUDDIV);
+        /*
+         * Veloce specific code
+         */
+        if( ( Xil_In32( CSU_VERSION_REG ) & 0x0000F000U ) == 0x00002000U )
+        {
+            Xil_Out32( STDOUT_BASEADDRESS + UART_BAUDGEN_OFFSET, 0x00000002U );
+            Xil_Out32( STDOUT_BASEADDRESS + UART_BAUDDIV_OFFSET, 0x00000004U );
+        }
 
-    /*
-     * Veloce specific code
-     */
-    if((Xil_In32(CSU_VERSION_REG) & 0x0000F000U) == 0x00002000U ) {
-	Xil_Out32(STDOUT_BASEADDRESS + UART_BAUDGEN_OFFSET, 0x00000002U);
-	    Xil_Out32(STDOUT_BASEADDRESS + UART_BAUDDIV_OFFSET, 0x00000004U);
-    }
+        /*
+         * 8 data, 1 stop, 0 parity bits
+         * sel_clk=uart_clk=APB clock
+         */
+        Xil_Out32( STDOUT_BASEADDRESS + UART_MR_OFFSET, 0x00000020U );
 
-	/*
-	 * 8 data, 1 stop, 0 parity bits
-	 * sel_clk=uart_clk=APB clock
-	 */
-	Xil_Out32(STDOUT_BASEADDRESS + UART_MR_OFFSET, 0x00000020U);
+        /* enable Tx/Rx and reset Tx/Rx data path */
+        Xil_Out32( ( STDOUT_BASEADDRESS + UART_CR_OFFSET ), 0x00000017U );
 
-	/* enable Tx/Rx and reset Tx/Rx data path */
-	Xil_Out32((STDOUT_BASEADDRESS + UART_CR_OFFSET), 0x00000017U);
-
-	return;
-#endif
+        return;
+    #endif /* ifdef STDOUT_BASEADDRESS */
 }

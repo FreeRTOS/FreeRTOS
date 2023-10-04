@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -27,73 +27,72 @@
  * ----------------------------------------------------------------------------
  */
 
-//------------------------------------------------------------------------------
-/// \unit
-///
-/// !Purpose
-/// 
-/// Interface for configuration the Image Sensor Interface (ISI) peripheral.
-/// 
-/// !Usage
-/// 
-/// -# ISI_Init: initialize ISI with default parameters
-/// -# ISI_EnableInterrupt: enable one or more interrupts
-/// -# ISI_DisableInterrupt: disable one or more interrupts
-/// -# ISI_Enable: enable isi module
-/// -# ISI_Disable: disable isi module
-/// -# ISI_CodecPathFull: enable codec path
-/// -# ISI_SetFrame: set frame rate
-/// -# ISI_BytesForOnePixel: return number of byte for one pixel
-/// -# ISI_StatusRegister: return ISI status register
-/// -# ISI_Reset: make a software reset
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*/ \unit */
+/*/ */
+/*/ !Purpose */
+/*/ */
+/*/ Interface for configuration the Image Sensor Interface (ISI) peripheral. */
+/*/ */
+/*/ !Usage */
+/*/ */
+/*/ -# ISI_Init: initialize ISI with default parameters */
+/*/ -# ISI_EnableInterrupt: enable one or more interrupts */
+/*/ -# ISI_DisableInterrupt: disable one or more interrupts */
+/*/ -# ISI_Enable: enable isi module */
+/*/ -# ISI_Disable: disable isi module */
+/*/ -# ISI_CodecPathFull: enable codec path */
+/*/ -# ISI_SetFrame: set frame rate */
+/*/ -# ISI_BytesForOnePixel: return number of byte for one pixel */
+/*/ -# ISI_StatusRegister: return ISI status register */
+/*/ -# ISI_Reset: make a software reset */
+/*------------------------------------------------------------------------------ */
 
 #ifndef ISI_H
 #define ISI_H
 
-//------------------------------------------------------------------------------
-//         Types
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Types */
+/*------------------------------------------------------------------------------ */
 
-/// ISI descriptors
+/*/ ISI descriptors */
 typedef struct
 {
-    /// Current LCD index, used with AT91C_ISI_MAX_PREV_BUFFER
+    /*/ Current LCD index, used with AT91C_ISI_MAX_PREV_BUFFER */
     unsigned int CurrentLcdIndex;
-    /// set if Fifo Codec Empty is present
+    /*/ set if Fifo Codec Empty is present */
     volatile unsigned int DisplayCodec;
-    /// upgrade for each Fifo Codec Overflow (statistics use)
+    /*/ upgrade for each Fifo Codec Overflow (statistics use) */
     unsigned int nb_codec_ovf;
-    /// upgrade for each Fifo Preview Overflow (statistics use)
+    /*/ upgrade for each Fifo Preview Overflow (statistics use) */
     unsigned int nb_prev_ovf;
-}ISI_Descriptors;
+} ISI_Descriptors;
 
-/// Frame Buffer Descriptors
+/*/ Frame Buffer Descriptors */
 typedef struct
 {
-    /// Address of the Current FrameBuffer
+    /*/ Address of the Current FrameBuffer */
     unsigned int Current;
-#if defined (BOARD_ISI_V200)
-    /// Address of the Control
-    unsigned int Control;
-#endif
-    /// Address of the Next FrameBuffer
+    #if defined( BOARD_ISI_V200 )
+        /*/ Address of the Control */
+        unsigned int Control;
+    #endif
+    /*/ Address of the Next FrameBuffer */
     unsigned int Next;
-}ISI_FrameBufferDescriptors;
+} ISI_FrameBufferDescriptors;
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
-extern void ISI_Enable(void);
-extern void ISI_Disable(void);
-extern void ISI_EnableInterrupt(unsigned int flag);
-extern void ISI_DisableInterrupt(unsigned int flag);
-extern void ISI_CodecPathFull(void);
-extern void ISI_SetFrame(unsigned int frate);
-extern unsigned char ISI_BytesForOnePixel(unsigned char bmpRgb);
-extern void ISI_Reset(void);
-extern void ISI_Init(AT91PS_VIDEO pVideo);
-extern unsigned int ISI_StatusRegister(void);
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
+extern void ISI_Enable( void );
+extern void ISI_Disable( void );
+extern void ISI_EnableInterrupt( unsigned int flag );
+extern void ISI_DisableInterrupt( unsigned int flag );
+extern void ISI_CodecPathFull( void );
+extern void ISI_SetFrame( unsigned int frate );
+extern unsigned char ISI_BytesForOnePixel( unsigned char bmpRgb );
+extern void ISI_Reset( void );
+extern void ISI_Init( AT91PS_VIDEO pVideo );
+extern unsigned int ISI_StatusRegister( void );
 
 #endif //#ifndef ISI_H
-

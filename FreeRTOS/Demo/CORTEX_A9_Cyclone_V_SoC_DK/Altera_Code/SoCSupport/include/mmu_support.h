@@ -33,8 +33,8 @@
 
 #include "hwlib.h"
 
-ALT_STATUS_CODE mmu_init(void);
-ALT_STATUS_CODE mmu_uninit(void);
+ALT_STATUS_CODE mmu_init( void );
+ALT_STATUS_CODE mmu_uninit( void );
 
 #endif /* MMU_SUPPORT_H_ */
 /* md5sum:dfae487bb7fe641d39c46b8c06396d48 2013-09-28 20:48:16 */

@@ -11,16 +11,18 @@
 #include <metal/interrupt.h>
 #include <metal/watchdog.h>
 
-struct __metal_driver_vtable_sifive_wdog0 {
+struct __metal_driver_vtable_sifive_wdog0
+{
     const struct metal_watchdog_vtable watchdog;
 };
 
 struct __metal_driver_sifive_wdog0;
 
-__METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_wdog0)
+__METAL_DECLARE_VTABLE( __metal_driver_vtable_sifive_wdog0 )
 
-struct __metal_driver_sifive_wdog0 {
+struct __metal_driver_sifive_wdog0
+{
     const struct metal_watchdog watchdog;
 };
 
-#endif
+#endif /* ifndef METAL__DRIVERS__SIFIVE_WDOG0_H */

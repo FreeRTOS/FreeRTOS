@@ -43,15 +43,15 @@
 #define _SAM3S8_
 
 #if defined __SAM3SD8B__
-  #include "sam3sd8b.h"
+    #include "sam3sd8b.h"
 #elif defined __SAM3SD8C__
-  #include "sam3sd8c.h"
+    #include "sam3sd8c.h"
 #elif defined __SAM3S8B__
-  #include "sam3s8b.h"
+    #include "sam3s8b.h"
 #elif defined __SAM3S8C__
-  #include "sam3s8c.h"
+    #include "sam3s8c.h"
 #else
-  #error Library does not support the specified device.
+    #error Library does not support the specified device.
 #endif
 
 #endif /* _SAM3S8_ */

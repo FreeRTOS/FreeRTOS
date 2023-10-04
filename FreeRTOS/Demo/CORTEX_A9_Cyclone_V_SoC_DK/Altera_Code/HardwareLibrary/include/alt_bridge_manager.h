@@ -5,20 +5,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -29,36 +29,38 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_BRG_MGR_H__
-#define __ALT_BRG_MGR_H__
+    #define __ALT_BRG_MGR_H__
 
-#include "hwlib.h"
+    #include "hwlib.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif  /* __cplusplus */
+    #ifdef __cplusplus
+        extern "C"
+        {
+    #endif /* __cplusplus */
 
 /******************************************************************************/
+
 /*! \addtogroup ALT_BRIDGE The AXI Bridge Manager
  *
  * The functions in this group manage access, configuration, and control of the
  * AXI bridges between the FPGA and HPS.
- * 
+ *
  * @{
  */
 
 /******************************************************************************/
+
 /*!
  * This type definition enumerates the AXI bridge interfaces between the FPGA
  * and HPS.
  */
-typedef enum ALT_BRIDGE_e
-{
-    ALT_BRIDGE_F2H,             /*!< FPGA-to-HPS AXI bridge providing a
+    typedef enum ALT_BRIDGE_e
+    {
+        ALT_BRIDGE_F2H,         /*!< FPGA-to-HPS AXI bridge providing a
                                  *   high-performance, statically configurable
                                  *   width interface that gives the FPGA the
                                  *   ability to:
@@ -70,7 +72,7 @@ typedef enum ALT_BRIDGE_e
                                  *   is statically configurable at design time
                                  *   using \e Quartus.
                                  */
-    ALT_BRIDGE_H2F,             /*!< HPS-to-FPGA AXI bridge providing a
+        ALT_BRIDGE_H2F,         /*!< HPS-to-FPGA AXI bridge providing a
                                  *   statically configurable width,
                                  *   high-performance master interface to the
                                  *   FPGA fabric. The bridge provides a 1GB
@@ -78,7 +80,7 @@ typedef enum ALT_BRIDGE_e
                                  *   HPS system access to logic, peripherals,
                                  *   and memory implemented in the FPGA.
                                  */
-    ALT_BRIDGE_LWH2F            /*!< Lightweight HPS-to-FPGA AXI bridge
+        ALT_BRIDGE_LWH2F        /*!< Lightweight HPS-to-FPGA AXI bridge
                                  *   providing a secondary, fixed-width, smaller
                                  *   address space, lower-performance master
                                  *   interface to the FPGA fabric. The bridge
@@ -104,9 +106,10 @@ typedef enum ALT_BRIDGE_e
                                  *   HPS-to-FPGA bridge, which can improve
                                  *   overall performance.
                                  */
-} ALT_BRIDGE_t;
+    } ALT_BRIDGE_t;
 
 /******************************************************************************/
+
 /*!
  * Type definition for a callback function prototype used by the
  * alt_bridge_init() bridge initialization function to determine whether the
@@ -127,7 +130,7 @@ typedef enum ALT_BRIDGE_e
  *              data that might be needed to support the user defined FPGA
  *              readiness signaling protocol.
  *
- * \retval      ALT_E_SUCCESS   The FPGA is ready to commence bridge interface 
+ * \retval      ALT_E_SUCCESS   The FPGA is ready to commence bridge interface
  *                              transactions.
  * \retval      ALT_E_ERROR     An error has occurred. The FPGA is not ready to
  *                              commence bridge interface transactions.
@@ -135,9 +138,10 @@ typedef enum ALT_BRIDGE_e
  *                              bridge interface transactions indication before
  *                              the response timeout period expired.
  */
-typedef ALT_STATUS_CODE (*alt_bridge_fpga_is_ready_t)(void* user_arg);
+    typedef ALT_STATUS_CODE (* alt_bridge_fpga_is_ready_t)( void * user_arg );
 
 /******************************************************************************/
+
 /*!
  * Initialize the bridge for bus transactions by bringing up the interface in a
  * safe, controlled sequence.
@@ -180,11 +184,12 @@ typedef ALT_STATUS_CODE (*alt_bridge_fpga_is_ready_t)(void* user_arg);
  * \retval      ALT_E_SUCCESS   The operation was succesful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_bridge_init(ALT_BRIDGE_t bridge,
-                                alt_bridge_fpga_is_ready_t fpga_is_ready,
-                                void* user_arg);
+    ALT_STATUS_CODE alt_bridge_init( ALT_BRIDGE_t bridge,
+                                     alt_bridge_fpga_is_ready_t fpga_is_ready,
+                                     void * user_arg );
 
 /******************************************************************************/
+
 /*!
  * Type definition for a callback function prototype used by the
  * alt_bridge_uninit() function to conduct a handshake protocol with the FPGA
@@ -211,20 +216,21 @@ ALT_STATUS_CODE alt_bridge_init(ALT_BRIDGE_t bridge,
  *              notification protocol.
  *
  * \retval      ALT_E_SUCCESS   The handshake notification protocol was successful.
- * \retval      ALT_E_ERROR     An error has occurred. The handshake notification 
+ * \retval      ALT_E_ERROR     An error has occurred. The handshake notification
  *                              protocol was unsuccessful.
  * \retval      ALT_E_TMO       The handshake notification protocol failed
  *                              because a response timeout period expired.
  */
-typedef ALT_STATUS_CODE (*alt_bridge_teardown_handshake_t)(void* user_arg);
+    typedef ALT_STATUS_CODE (* alt_bridge_teardown_handshake_t)( void * user_arg );
 
 /******************************************************************************/
+
 /*!
  * Uninitialize the bridge by tearing down the interface in a safe and
  * controlled sequence.
  *
  * The process of taking down the bridge interface entails:
- * * Optional: Conduct teardown handshake notification protocol 
+ * * Optional: Conduct teardown handshake notification protocol
  *   - Bridge Manager informs FPGA that the bridge interface is being torn down.
  *   - Bridge Manager waits for FPGA response to notification.
  * * Processor waits for the completion of outstanding transactions on the AXI
@@ -257,13 +263,13 @@ typedef ALT_STATUS_CODE (*alt_bridge_teardown_handshake_t)(void* user_arg);
  * \retval      ALT_E_SUCCESS   The operation was successful.
  * \retval      ALT_E_ERROR     The operation failed.
  */
-ALT_STATUS_CODE alt_bridge_uninit(ALT_BRIDGE_t bridge,
-                                  alt_bridge_teardown_handshake_t handshake,
-                                  void* user_arg);
+    ALT_STATUS_CODE alt_bridge_uninit( ALT_BRIDGE_t bridge,
+                                       alt_bridge_teardown_handshake_t handshake,
+                                       void * user_arg );
 
 /*! @} */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif  /* __cplusplus */
-#endif  /* __ALT_BRG_MGR_H__ */
+    #endif /* __cplusplus */
+#endif /* __ALT_BRG_MGR_H__ */

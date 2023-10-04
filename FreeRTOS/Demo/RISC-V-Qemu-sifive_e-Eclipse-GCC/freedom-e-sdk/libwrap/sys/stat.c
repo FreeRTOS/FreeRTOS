@@ -5,8 +5,9 @@
 #include "stub.h"
 #include "weak_under_alias.h"
 
-int __wrap_stat(const char* file, struct stat* st)
+int __wrap_stat( const char * file,
+                 struct stat * st )
 {
-  return _stub(EACCES);
+    return _stub( EACCES );
 }
-weak_under_alias(stat);
+weak_under_alias( stat );

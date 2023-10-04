@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  *    so they can be re-implemented elsewhere in the application in a
  *    transparent way.
  *
- * \addtogroup usbd_interface 
+ * \addtogroup usbd_interface
  *@{
  */
 
@@ -51,7 +51,7 @@
 /**
  * Invoked after the USB driver has been initialized. By default, do nothing.
  */
-WEAK void USBDCallbacks_Initialized(void)
+WEAK void USBDCallbacks_Initialized( void )
 {
     /* Does nothing */
 }
@@ -59,7 +59,7 @@ WEAK void USBDCallbacks_Initialized(void)
 /**
  * Invoked when the USB driver is reset. Does nothing by default.
  */
-WEAK void USBDCallbacks_Reset(void)
+WEAK void USBDCallbacks_Reset( void )
 {
     /* Does nothing*/
 }
@@ -67,23 +67,27 @@ WEAK void USBDCallbacks_Reset(void)
 /**
  * Invoked when the USB device gets suspended. By default, do nothing.
  */
-WEAK void USBDCallbacks_Suspended(void) {}
+WEAK void USBDCallbacks_Suspended( void )
+{
+}
 
 /**
  * Invoked when the USB device leaves the Suspended state. By default,
  * Do nothing.
  */
-WEAK void USBDCallbacks_Resumed(void) {}
+WEAK void USBDCallbacks_Resumed( void )
+{
+}
 
 /**
  * USBDCallbacks_RequestReceived - Invoked when a new SETUP request is
  * received. Does nothing by default.
  * \param request Pointer to the request to handle.
  */
-WEAK void USBDCallbacks_RequestReceived(const USBGenericRequest *request)
+WEAK void USBDCallbacks_RequestReceived( const USBGenericRequest * request )
 {
     /* Does basic enumeration */
-    USBDDriver_RequestHandler(USBD_GetDriver(), request);
+    USBDDriver_RequestHandler( USBD_GetDriver(), request );
 }
 
 /**@}*/

@@ -41,13 +41,33 @@
  *        Exported functions
  *----------------------------------------------------------------------------*/
 
-extern void FB_SetFrameBuffer(LcdColor_t *pBuffer, uint8_t ucWidth, uint8_t ucHeight);
-extern void FB_SetColor(uint32_t color);
-extern uint32_t FB_DrawLine ( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY2 );
-extern uint32_t FB_DrawPixel( uint32_t x, uint32_t y );
-extern uint32_t FB_DrawCircle( uint32_t x, uint32_t y, uint32_t r );
-extern uint32_t FB_DrawFilledCircle( uint32_t dwX, uint32_t dwY, uint32_t dwRadius);
-extern uint32_t FB_DrawRectangle( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY2 );
-extern uint32_t FB_DrawFilledRectangle( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY2 );
-extern uint32_t FB_DrawPicture( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY2, const void *pBuffer );
+extern void FB_SetFrameBuffer( LcdColor_t * pBuffer,
+                               uint8_t ucWidth,
+                               uint8_t ucHeight );
+extern void FB_SetColor( uint32_t color );
+extern uint32_t FB_DrawLine( uint32_t dwX1,
+                             uint32_t dwY1,
+                             uint32_t dwX2,
+                             uint32_t dwY2 );
+extern uint32_t FB_DrawPixel( uint32_t x,
+                              uint32_t y );
+extern uint32_t FB_DrawCircle( uint32_t x,
+                               uint32_t y,
+                               uint32_t r );
+extern uint32_t FB_DrawFilledCircle( uint32_t dwX,
+                                     uint32_t dwY,
+                                     uint32_t dwRadius );
+extern uint32_t FB_DrawRectangle( uint32_t dwX1,
+                                  uint32_t dwY1,
+                                  uint32_t dwX2,
+                                  uint32_t dwY2 );
+extern uint32_t FB_DrawFilledRectangle( uint32_t dwX1,
+                                        uint32_t dwY1,
+                                        uint32_t dwX2,
+                                        uint32_t dwY2 );
+extern uint32_t FB_DrawPicture( uint32_t dwX1,
+                                uint32_t dwY1,
+                                uint32_t dwX2,
+                                uint32_t dwY2,
+                                const void * pBuffer );
 #endif /* #ifndef _FRAME_BUFFER_ */

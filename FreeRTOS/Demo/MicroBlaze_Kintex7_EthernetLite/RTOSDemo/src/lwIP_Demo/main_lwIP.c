@@ -75,14 +75,14 @@
 #include "lwip/tcpip.h"
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the portTICK_PERIOD_MS constant. */
-#define mainTIMER_PERIOD_MS			( pdMS_TO_TICKS( 200 ) )
+ * to ticks using the portTICK_PERIOD_MS constant. */
+#define mainTIMER_PERIOD_MS    ( pdMS_TO_TICKS( 200 ) )
 
 /* The LED toggled by the Rx task. */
-#define mainTIMER_LED				( 0 )
+#define mainTIMER_LED          ( 0 )
 
 /* A block time of zero just means "don't block". */
-#define mainDONT_BLOCK				( 0 )
+#define mainDONT_BLOCK         ( 0 )
 
 /*-----------------------------------------------------------*/
 
@@ -95,55 +95,57 @@ static void prvLEDToggleTimer( TimerHandle_t pxTimer );
 /*
  * Defined in lwIPApps.c.
  */
-extern void lwIPAppsInit( void *pvArguments );
+extern void lwIPAppsInit( void * pvArguments );
 
 /*-----------------------------------------------------------*/
 
 void main_lwIP( void )
 {
-TimerHandle_t xTimer;
+    TimerHandle_t xTimer;
 
-	/* Init lwIP and start lwIP tasks. */
-	tcpip_init( lwIPAppsInit, NULL );
+    /* Init lwIP and start lwIP tasks. */
+    tcpip_init( lwIPAppsInit, NULL );
 
-	/* A timer is used to toggle an LED just to show the application is
-	executing. */
-	xTimer = xTimerCreate( 	"LED", 					/* Text name to make debugging easier. */
-							mainTIMER_PERIOD_MS, 	/* The timer's period. */
-							pdTRUE,					/* This is an auto reload timer. */
-							NULL,					/* ID is not used. */
-							prvLEDToggleTimer );	/* The callback function. */
+    /* A timer is used to toggle an LED just to show the application is
+     * executing. */
+    xTimer = xTimerCreate( "LED",               /* Text name to make debugging easier. */
+                           mainTIMER_PERIOD_MS, /* The timer's period. */
+                           pdTRUE,              /* This is an auto reload timer. */
+                           NULL,                /* ID is not used. */
+                           prvLEDToggleTimer ); /* The callback function. */
 
-	/* Start the timer. */
-	configASSERT( xTimer );
-	xTimerStart( xTimer, mainDONT_BLOCK );
+    /* Start the timer. */
+    configASSERT( xTimer );
+    xTimerStart( xTimer, mainDONT_BLOCK );
 
-	/* Start the tasks and timer running. */
-	vTaskStartScheduler();
+    /* Start the tasks and timer running. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the Idle and/or
-	timer tasks to be created.  See the memory management section on the
-	FreeRTOS web site for more details on the FreeRTOS heap
-	http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the Idle and/or
+     * timer tasks to be created.  See the memory management section on the
+     * FreeRTOS web site for more details on the FreeRTOS heap
+     * http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvLEDToggleTimer( TimerHandle_t pxTimer )
 {
-	/* Prevent compiler warnings. */
-	( void ) pxTimer;
+    /* Prevent compiler warnings. */
+    ( void ) pxTimer;
 
-	/* Just toggle an LED to show the application is running. */
-	vParTestToggleLED( mainTIMER_LED );
+    /* Just toggle an LED to show the application is running. */
+    vParTestToggleLED( mainTIMER_LED );
 }
 
 /*-----------------------------------------------------------*/
 
-char *pcMainGetTaskStatusMessage( void )
+char * pcMainGetTaskStatusMessage( void )
 {
-	return "Running lwIP demo";
+    return "Running lwIP demo";
 }
 /*-----------------------------------------------------------*/

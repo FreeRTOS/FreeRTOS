@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -31,6 +31,7 @@
 
 #ifndef UDPHS_H
 #define UDPHS_H
+
 /** addtogroup usbd_hal
  *@{
  */
@@ -42,19 +43,19 @@
 #define CHIP_USB_PULLUP_INTERNAL
 
 /** Number of USB endpoints */
-#define CHIP_USB_NUMENDPOINTS   7
+#define CHIP_USB_NUMENDPOINTS    7
 
 /** Endpoints max paxcket size */
-#define CHIP_USB_ENDPOINTS_MAXPACKETSIZE(i) \
-   ((i == 0) ? 64 : 1024)
+#define CHIP_USB_ENDPOINTS_MAXPACKETSIZE( i ) \
+    ( ( i == 0 ) ? 64 : 1024 )
 
 /** Endpoints Number of Bank */
-#define CHIP_USB_ENDPOINTS_BANKS(i) \
-   ((i == 0) ? 1 : ((i == 1) ? 3 : ((i == 2) ? 3 : 2)))
+#define CHIP_USB_ENDPOINTS_BANKS( i ) \
+    ( ( i == 0 ) ? 1 : ( ( i == 1 ) ? 3 : ( ( i == 2 ) ? 3 : 2 ) ) )
 
 /** Endpoints DMA support */
-#define CHIP_USB_ENDPOINTS_DMA(i) \
-    ((i == 0) ? 0 : 1)
+#define CHIP_USB_ENDPOINTS_DMA( i ) \
+    ( ( i == 0 ) ? 0 : 1 )
 
 /**@}*/
 #endif /* #ifndef UDPHS_H */

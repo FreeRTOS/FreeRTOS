@@ -47,32 +47,32 @@
 /* SAM3 family */
 
 /* SAM3S series */
-#if (SAM3S)
-# if (SAM3S8 || SAM3SD8)
-#  include "sam3s8.h"
-# else
-#  include "sam3s.h"
-# endif
+#if ( SAM3S )
+    #if ( SAM3S8 || SAM3SD8 )
+        #include "sam3s8.h"
+    #else
+        #include "sam3s.h"
+    #endif
 #endif
 
 /* SAM3U series */
-#if (SAM3U)
-#  include "sam3u.h"
+#if ( SAM3U )
+    #include "sam3u.h"
 #endif
 
 /* SAM3N series */
-#if (SAM3N)
-#  include "sam3n.h"
+#if ( SAM3N )
+    #include "sam3n.h"
 #endif
 
 /* SAM3XA series */
-#if (SAM3XA)
-#  include "sam3xa.h"
+#if ( SAM3XA )
+    #include "sam3xa.h"
 #endif
 
 /* SAM4S series */
-#if (SAM4S)
-#  include "sam4s.h"
+#if ( SAM4S )
+    #include "sam4s.h"
 #endif
 
 #endif /* _SAM_IO_ */

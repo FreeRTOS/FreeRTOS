@@ -66,41 +66,41 @@
 /**
  * Priorities at which the tasks are created.
  */
-#define mainCHECK_TASK_PRIORITY             ( configMAX_PRIORITIES - 2 )
-#define mainQUEUE_POLL_PRIORITY             ( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY               ( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY                ( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY             ( tskIDLE_PRIORITY + 1 )
-#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
-#define mainGEN_QUEUE_TASK_PRIORITY         ( tskIDLE_PRIORITY )
-#define mainFLOP_TASK_PRIORITY              ( tskIDLE_PRIORITY )
-#define mainQUEUE_OVERWRITE_PRIORITY        ( tskIDLE_PRIORITY )
-#define mainREGISTER_TEST_PRIORITY          ( tskIDLE_PRIORITY )
+#define mainCHECK_TASK_PRIORITY           ( configMAX_PRIORITIES - 2 )
+#define mainQUEUE_POLL_PRIORITY           ( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY             ( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY              ( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY         ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY           ( tskIDLE_PRIORITY + 1 )
+#define mainINTEGER_TASK_PRIORITY         ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY       ( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY            ( tskIDLE_PRIORITY )
+#define mainQUEUE_OVERWRITE_PRIORITY      ( tskIDLE_PRIORITY )
+#define mainREGISTER_TEST_PRIORITY        ( tskIDLE_PRIORITY )
 
 /* The period of the check task, in ms, converted to ticks using the
  * pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors
  * have been found, mainERROR_CHECK_TASK_PERIOD is used if an error has been
  * found. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD      pdMS_TO_TICKS( 3000UL )
-#define mainERROR_CHECK_TASK_PERIOD         pdMS_TO_TICKS( 500UL )
+#define mainNO_ERROR_CHECK_TASK_PERIOD    pdMS_TO_TICKS( 3000UL )
+#define mainERROR_CHECK_TASK_PERIOD       pdMS_TO_TICKS( 500UL )
 
 /**
  * Period used in timer tests.
  */
-#define mainTIMER_TEST_PERIOD               ( 50 )
+#define mainTIMER_TEST_PERIOD             ( 50 )
 
 /**
  * Success output messages. This is used by the CI - do not change.
  */
-#define mainDEMO_SUCCESS_MESSAGE            "FreeRTOS Demo SUCCESS\r\n"
+#define mainDEMO_SUCCESS_MESSAGE          "FreeRTOS Demo SUCCESS\r\n"
 /*-----------------------------------------------------------*/
 
 /**
  * The task that periodically checks that all the standard demo tasks are
  * still executing and error free.
  */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /**
  * Called by main() to run the full demo (as opposed to the blinky demo) when
@@ -117,163 +117,163 @@ void vFullDemoTickHook( void );
 
 void main_full( void )
 {
-BaseType_t xResult;
+    BaseType_t xResult;
 
     xResult = xTaskCreate( prvCheckTask,
-                          "Check",
-                          configMINIMAL_STACK_SIZE,
-                          NULL,
-                          mainCHECK_TASK_PRIORITY,
-                          NULL );
+                           "Check",
+                           configMINIMAL_STACK_SIZE,
+                           NULL,
+                           mainCHECK_TASK_PRIORITY,
+                           NULL );
 
     if( xResult == pdPASS )
     {
-        #if( configSTART_TASK_NOTIFY_TESTS == 1 )
+        #if ( configSTART_TASK_NOTIFY_TESTS == 1 )
         {
             vStartTaskNotifyTask();
         }
         #endif /* configSTART_TASK_NOTIFY_TESTS */
 
-        #if( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
+        #if ( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
         {
             vStartTaskNotifyArrayTask();
         }
         #endif /* configSTART_TASK_NOTIFY_ARRAY_TESTS */
 
-        #if( configSTART_BLOCKING_QUEUE_TESTS == 1 )
+        #if ( configSTART_BLOCKING_QUEUE_TESTS == 1 )
         {
             vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
         }
         #endif /* configSTART_BLOCKING_QUEUE_TESTS */
 
-        #if( configSTART_SEMAPHORE_TESTS == 1 )
+        #if ( configSTART_SEMAPHORE_TESTS == 1 )
         {
             vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
         }
         #endif /* configSTART_SEMAPHORE_TESTS */
 
-        #if( configSTART_POLLED_QUEUE_TESTS == 1 )
+        #if ( configSTART_POLLED_QUEUE_TESTS == 1 )
         {
             vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
         }
         #endif /* configSTART_POLLED_QUEUE_TESTS */
 
-        #if( configSTART_INTEGER_MATH_TESTS == 1 )
+        #if ( configSTART_INTEGER_MATH_TESTS == 1 )
         {
             vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
         }
         #endif /* configSTART_INTEGER_MATH_TESTS */
 
-        #if( configSTART_GENERIC_QUEUE_TESTS == 1 )
+        #if ( configSTART_GENERIC_QUEUE_TESTS == 1 )
         {
             vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
         }
         #endif /* configSTART_GENERIC_QUEUE_TESTS */
 
-        #if( configSTART_PEEK_QUEUE_TESTS == 1 )
+        #if ( configSTART_PEEK_QUEUE_TESTS == 1 )
         {
             vStartQueuePeekTasks();
         }
         #endif /* configSTART_PEEK_QUEUE_TESTS */
 
-        #if( configSTART_MATH_TESTS == 1 )
+        #if ( configSTART_MATH_TESTS == 1 )
         {
             vStartMathTasks( mainFLOP_TASK_PRIORITY );
         }
         #endif /* configSTART_MATH_TESTS */
 
-        #if( configSTART_RECURSIVE_MUTEX_TESTS == 1 )
+        #if ( configSTART_RECURSIVE_MUTEX_TESTS == 1 )
         {
             vStartRecursiveMutexTasks();
         }
         #endif /* configSTART_RECURSIVE_MUTEX_TESTS */
 
-        #if( configSTART_COUNTING_SEMAPHORE_TESTS == 1 )
+        #if ( configSTART_COUNTING_SEMAPHORE_TESTS == 1 )
         {
             vStartCountingSemaphoreTasks();
         }
         #endif /* configSTART_COUNTING_SEMAPHORE_TESTS */
 
-        #if( configSTART_QUEUE_SET_TESTS == 1 )
+        #if ( configSTART_QUEUE_SET_TESTS == 1 )
         {
             vStartQueueSetTasks();
         }
         #endif /* configSTART_QUEUE_SET_TESTS */
 
-        #if( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
+        #if ( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
         {
             vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
         }
         #endif /* configSTART_QUEUE_OVERWRITE_TESTS */
 
-        #if( configSTART_EVENT_GROUP_TESTS == 1 )
+        #if ( configSTART_EVENT_GROUP_TESTS == 1 )
         {
             vStartEventGroupTasks();
         }
         #endif /* configSTART_EVENT_GROUP_TESTS */
 
-        #if( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
+        #if ( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
         {
             vStartInterruptSemaphoreTasks();
         }
         #endif /* configSTART_INTERRUPT_SEMAPHORE_TESTS */
 
-        #if( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
+        #if ( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
         {
             vStartQueueSetPollingTask();
         }
         #endif /* configSTART_QUEUE_SET_POLLING_TESTS */
 
-        #if( configSTART_BLOCK_TIME_TESTS == 1 )
+        #if ( configSTART_BLOCK_TIME_TESTS == 1 )
         {
             vCreateBlockTimeTasks();
         }
         #endif /* configSTART_BLOCK_TIME_TESTS */
 
-        #if( configSTART_ABORT_DELAY_TESTS == 1 )
+        #if ( configSTART_ABORT_DELAY_TESTS == 1 )
         {
             vCreateAbortDelayTasks();
         }
         #endif /* configSTART_ABORT_DELAY_TESTS */
 
-        #if( configSTART_MESSAGE_BUFFER_TESTS == 1 )
+        #if ( configSTART_MESSAGE_BUFFER_TESTS == 1 )
         {
             vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
         }
         #endif /* configSTART_MESSAGE_BUFFER_TESTS */
 
-        #if(configSTART_STREAM_BUFFER_TESTS  == 1 )
+        #if ( configSTART_STREAM_BUFFER_TESTS == 1 )
         {
             vStartStreamBufferTasks();
         }
         #endif /* configSTART_STREAM_BUFFER_TESTS */
 
-        #if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
+        #if ( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
         {
             vStartStreamBufferInterruptDemo();
         }
         #endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */
 
-        #if( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
+        #if ( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
         {
             /* Don't expect these tasks to pass when preemption is not used. */
             vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
         }
         #endif /* ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) */
 
-        #if( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
+        #if ( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
         {
             vStartInterruptQueueTasks();
         }
         #endif /* configSTART_INTERRUPT_QUEUE_TESTS */
 
-        #if( configSTART_REGISTER_TESTS == 1 )
+        #if ( configSTART_REGISTER_TESTS == 1 )
         {
             vStartRegisterTasks( mainREGISTER_TEST_PRIORITY );
         }
         #endif /* configSTART_REGISTER_TESTS */
 
-        #if( configSTART_DELETE_SELF_TESTS == 1 )
+        #if ( configSTART_DELETE_SELF_TESTS == 1 )
         {
             /* The suicide tasks must be created last as they need to know how many
              * tasks were running prior to their creation.  This then allows them to
@@ -293,68 +293,68 @@ void vFullDemoTickHook( void )
     /* Called from vApplicationTickHook() when the project is configured to
      * build the full test/demo applications. */
 
-    #if( configSTART_TASK_NOTIFY_TESTS == 1 )
+    #if ( configSTART_TASK_NOTIFY_TESTS == 1 )
     {
         xNotifyTaskFromISR();
     }
     #endif /* configSTART_TASK_NOTIFY_TESTS */
 
-    #if( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
+    #if ( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
     {
         xNotifyArrayTaskFromISR();
     }
     #endif /* configSTART_TASK_NOTIFY_ARRAY_TESTS */
 
-    #if( configSTART_QUEUE_SET_TESTS == 1 )
+    #if ( configSTART_QUEUE_SET_TESTS == 1 )
     {
         vQueueSetAccessQueueSetFromISR();
     }
     #endif /* configSTART_QUEUE_SET_TESTS */
 
-    #if( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
+    #if ( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
     {
         vQueueOverwritePeriodicISRDemo();
     }
     #endif /* configSTART_QUEUE_OVERWRITE_TESTS */
 
-    #if( configSTART_EVENT_GROUP_TESTS == 1 )
+    #if ( configSTART_EVENT_GROUP_TESTS == 1 )
     {
         vPeriodicEventGroupsProcessing();
     }
     #endif /* configSTART_EVENT_GROUP_TESTS */
 
-    #if( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
+    #if ( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
     {
         vInterruptSemaphorePeriodicTest();
     }
     #endif /* configSTART_INTERRUPT_SEMAPHORE_TESTS */
 
-    #if( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
+    #if ( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
     {
         vQueueSetPollingInterruptAccess();
     }
     #endif /* configSTART_QUEUE_SET_POLLING_TESTS */
 
-    #if( configSTART_STREAM_BUFFER_TESTS == 1 )
+    #if ( configSTART_STREAM_BUFFER_TESTS == 1 )
     {
         vPeriodicStreamBufferProcessing();
     }
     #endif /* configSTART_STREAM_BUFFER_TESTS */
 
-    #if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
+    #if ( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
     {
         vBasicStreamBufferSendFromISR();
     }
     #endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */
 
-    #if( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
+    #if ( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
     {
         /* Only created when preemption is used. */
         vTimerPeriodicISRTests();
     }
     #endif /* ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) */
 
-    #if( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
+    #if ( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
     {
         portYIELD_FROM_ISR( xFirstTimerHandler() );
     }
@@ -362,13 +362,13 @@ void vFullDemoTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-TickType_t xNextWakeTime;
-TickType_t xCycleFrequency = mainNO_ERROR_CHECK_TASK_PERIOD;
-char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
-char * pcStatusMessage = pcPassMessage;
-extern void vToggleLED( void );
+    TickType_t xNextWakeTime;
+    TickType_t xCycleFrequency = mainNO_ERROR_CHECK_TASK_PERIOD;
+    char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
+    char * pcStatusMessage = pcPassMessage;
+    extern void vToggleLED( void );
 
     /* Silence compiler warnings about unused variables. */
     ( void ) pvParameters;
@@ -379,12 +379,12 @@ extern void vToggleLED( void );
     /* Initialise xNextWakeTime - this only needs to be done once. */
     xNextWakeTime = xTaskGetTickCount();
 
-    for( ;; )
+    for( ; ; )
     {
         /* Place this task in the blocked state until it is time to run again. */
         vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
-        #if( configSTART_TASK_NOTIFY_TESTS == 1 )
+        #if ( configSTART_TASK_NOTIFY_TESTS == 1 )
         {
             if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
             {
@@ -393,7 +393,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_TASK_NOTIFY_TESTS */
 
-        #if( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
+        #if ( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
         {
             if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
             {
@@ -402,7 +402,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_TASK_NOTIFY_ARRAY_TESTS */
 
-        #if( configSTART_BLOCKING_QUEUE_TESTS == 1 )
+        #if ( configSTART_BLOCKING_QUEUE_TESTS == 1 )
         {
             if( xAreBlockingQueuesStillRunning() != pdTRUE )
             {
@@ -411,7 +411,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_BLOCKING_QUEUE_TESTS */
 
-        #if( configSTART_SEMAPHORE_TESTS == 1 )
+        #if ( configSTART_SEMAPHORE_TESTS == 1 )
         {
             if( xAreSemaphoreTasksStillRunning() != pdTRUE )
             {
@@ -420,7 +420,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_SEMAPHORE_TESTS */
 
-        #if( configSTART_POLLED_QUEUE_TESTS == 1 )
+        #if ( configSTART_POLLED_QUEUE_TESTS == 1 )
         {
             if( xArePollingQueuesStillRunning() != pdTRUE )
             {
@@ -429,7 +429,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_POLLED_QUEUE_TESTS */
 
-        #if( configSTART_INTEGER_MATH_TESTS == 1 )
+        #if ( configSTART_INTEGER_MATH_TESTS == 1 )
         {
             if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
             {
@@ -438,7 +438,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_INTEGER_MATH_TESTS */
 
-        #if( configSTART_GENERIC_QUEUE_TESTS == 1 )
+        #if ( configSTART_GENERIC_QUEUE_TESTS == 1 )
         {
             if( xAreGenericQueueTasksStillRunning() != pdTRUE )
             {
@@ -447,7 +447,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_GENERIC_QUEUE_TESTS */
 
-        #if( configSTART_PEEK_QUEUE_TESTS == 1 )
+        #if ( configSTART_PEEK_QUEUE_TESTS == 1 )
         {
             if( xAreQueuePeekTasksStillRunning() != pdTRUE )
             {
@@ -456,7 +456,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_PEEK_QUEUE_TESTS */
 
-        #if( configSTART_MATH_TESTS == 1 )
+        #if ( configSTART_MATH_TESTS == 1 )
         {
             if( xAreMathsTaskStillRunning() != pdPASS )
             {
@@ -465,7 +465,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_MATH_TESTS */
 
-        #if( configSTART_RECURSIVE_MUTEX_TESTS == 1 )
+        #if ( configSTART_RECURSIVE_MUTEX_TESTS == 1 )
         {
             if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
             {
@@ -474,7 +474,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_RECURSIVE_MUTEX_TESTS */
 
-        #if( configSTART_COUNTING_SEMAPHORE_TESTS == 1 )
+        #if ( configSTART_COUNTING_SEMAPHORE_TESTS == 1 )
         {
             if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
             {
@@ -483,7 +483,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_COUNTING_SEMAPHORE_TESTS */
 
-        #if( configSTART_QUEUE_SET_TESTS == 1 )
+        #if ( configSTART_QUEUE_SET_TESTS == 1 )
         {
             if( xAreQueueSetTasksStillRunning() != pdPASS )
             {
@@ -492,7 +492,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_QUEUE_SET_TESTS */
 
-        #if( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
+        #if ( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
         {
             if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
             {
@@ -501,7 +501,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_QUEUE_OVERWRITE_TESTS */
 
-        #if( configSTART_EVENT_GROUP_TESTS == 1 )
+        #if ( configSTART_EVENT_GROUP_TESTS == 1 )
         {
             if( xAreEventGroupTasksStillRunning() != pdTRUE )
             {
@@ -510,7 +510,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_EVENT_GROUP_TESTS */
 
-        #if( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
+        #if ( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
         {
             if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
             {
@@ -519,7 +519,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_INTERRUPT_SEMAPHORE_TESTS */
 
-        #if( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
+        #if ( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
         {
             if( xAreQueueSetPollTasksStillRunning() != pdPASS )
             {
@@ -528,7 +528,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_QUEUE_SET_POLLING_TESTS */
 
-        #if( configSTART_BLOCK_TIME_TESTS == 1 )
+        #if ( configSTART_BLOCK_TIME_TESTS == 1 )
         {
             if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
             {
@@ -537,7 +537,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_BLOCK_TIME_TESTS */
 
-        #if( configSTART_ABORT_DELAY_TESTS == 1 )
+        #if ( configSTART_ABORT_DELAY_TESTS == 1 )
         {
             if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
             {
@@ -546,7 +546,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_ABORT_DELAY_TESTS */
 
-        #if( configSTART_MESSAGE_BUFFER_TESTS == 1 )
+        #if ( configSTART_MESSAGE_BUFFER_TESTS == 1 )
         {
             if( xAreMessageBufferTasksStillRunning() != pdTRUE )
             {
@@ -555,7 +555,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_MESSAGE_BUFFER_TESTS */
 
-        #if( configSTART_STREAM_BUFFER_TESTS == 1 )
+        #if ( configSTART_STREAM_BUFFER_TESTS == 1 )
         {
             if( xAreStreamBufferTasksStillRunning() != pdTRUE )
             {
@@ -564,7 +564,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_STREAM_BUFFER_TESTS */
 
-        #if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
+        #if ( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
         {
             if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
             {
@@ -573,7 +573,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */
 
-        #if( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
+        #if ( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
         {
             if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
             {
@@ -582,7 +582,7 @@ extern void vToggleLED( void );
         }
         #endif /* ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) */
 
-        #if( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
+        #if ( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
         {
             if( xAreIntQueueTasksStillRunning() != pdTRUE )
             {
@@ -591,7 +591,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_INTERRUPT_QUEUE_TESTS */
 
-        #if( configSTART_REGISTER_TESTS == 1 )
+        #if ( configSTART_REGISTER_TESTS == 1 )
         {
             if( xAreRegisterTasksStillRunning() != pdTRUE )
             {
@@ -600,7 +600,7 @@ extern void vToggleLED( void );
         }
         #endif /* configSTART_REGISTER_TESTS */
 
-        #if( configSTART_DELETE_SELF_TESTS == 1 )
+        #if ( configSTART_DELETE_SELF_TESTS == 1 )
         {
             if( xIsCreateTaskStillRunning() != pdTRUE )
             {

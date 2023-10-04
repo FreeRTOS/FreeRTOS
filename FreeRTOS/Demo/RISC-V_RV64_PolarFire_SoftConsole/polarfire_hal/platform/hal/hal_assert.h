@@ -7,49 +7,50 @@
  *
  */
 #ifndef HAL_ASSERT_HEADER
-#define HAL_ASSERT_HEADER
+    #define HAL_ASSERT_HEADER
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /***************************************************************************//**
  * ASSERT() implementation.
  ******************************************************************************/
 /* Disable assertions if we do not recognize the compiler. */
-#if defined ( __GNUC__ )
-#if defined(NDEBUG)
-#define ASSERT(CHECK)
-#else
-#define ASSERT(CHECK)\
-    do { \
-        if (!(CHECK)) \
-        { \
-            __asm volatile ("ebreak"); \
-        }\
-    } while(0);
-#endif /* NDEBUG check */
-#endif /* compiler check */
+    #if defined( __GNUC__ )
+        #if defined( NDEBUG )
+            #define ASSERT( CHECK )
+        #else
+            #define ASSERT( CHECK )      \
+    do {                                 \
+        if( !( CHECK ) )                 \
+        {                                \
+            __asm volatile ( "ebreak" ); \
+        }                                \
+    } while( 0 );
+        #endif /* NDEBUG check */
+    #endif /* compiler check */
 
-#if defined(NDEBUG)
+    #if defined( NDEBUG )
+
 /***************************************************************************//**
  * HAL_ASSERT() is defined out when the NDEBUG symbol is used.
  ******************************************************************************/
-#define HAL_ASSERT(CHECK)
+        #define HAL_ASSERT( CHECK )
 
-#else
+    #else
+
 /***************************************************************************//**
  * Default behaviour for HAL_ASSERT() macro:
  *------------------------------------------------------------------------------
-  The behaviour is toolchain specific and project setting specific.
+ * The behaviour is toolchain specific and project setting specific.
  ******************************************************************************/
-#define HAL_ASSERT(CHECK)     ASSERT(CHECK);
+        #define HAL_ASSERT( CHECK )    ASSERT( CHECK );
 
-#endif  /* NDEBUG */
+    #endif /* NDEBUG */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
-#endif  /* HAL_ASSERT_HEADER */
-
+#endif /* HAL_ASSERT_HEADER */

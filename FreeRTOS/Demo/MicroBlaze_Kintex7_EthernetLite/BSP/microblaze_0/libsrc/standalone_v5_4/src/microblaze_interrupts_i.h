@@ -30,46 +30,47 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
-/**
-*
-* @file microblaze_interrupts_i.h
-*
-* This header file contains identifiers and low-level driver functions (or
-* macros) that can be used to access the device.  The user should refer to the
-* hardware device specification for more details of the device operation.
-* High-level driver functions are defined in xintc.h.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Date     Changes
-* ----- -------- -----------------------------------------------
-* 1.00b 10/03/03 First release
-* </pre>
-*
-******************************************************************************/
 
-#ifndef MICROBLAZE_INTERRUPTS_I_H /* prevent circular inclusions */
-#define MICROBLAZE_INTERRUPTS_I_H /* by using protection macros */
+/**
+ *
+ * @file microblaze_interrupts_i.h
+ *
+ * This header file contains identifiers and low-level driver functions (or
+ * macros) that can be used to access the device.  The user should refer to the
+ * hardware device specification for more details of the device operation.
+ * High-level driver functions are defined in xintc.h.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Date     Changes
+ * ----- -------- -----------------------------------------------
+ * 1.00b 10/03/03 First release
+ * </pre>
+ *
+ ******************************************************************************/
+
+#ifndef MICROBLAZE_INTERRUPTS_I_H     /* prevent circular inclusions */
+    #define MICROBLAZE_INTERRUPTS_I_H /* by using protection macros */
 
 /***************************** Include Files *********************************/
 
-#include "xil_types.h"
-#include "xil_assert.h"
-#include "xil_exception.h"
+    #include "xil_types.h"
+    #include "xil_assert.h"
+    #include "xil_exception.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-typedef struct
-{
-   XInterruptHandler Handler;
-   void *CallBackRef;
-} MB_InterruptVectorTableEntry;
+    typedef struct
+    {
+        XInterruptHandler Handler;
+        void * CallBackRef;
+    } MB_InterruptVectorTableEntry;
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* end of protection macro */

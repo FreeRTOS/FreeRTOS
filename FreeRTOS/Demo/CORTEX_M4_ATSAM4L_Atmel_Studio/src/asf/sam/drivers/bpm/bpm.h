@@ -42,13 +42,13 @@
  */
 
 #ifndef BPM_H_INCLUDED
-#define BPM_H_INCLUDED
+    #define BPM_H_INCLUDED
 
-#include "compiler.h"
+    #include "compiler.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /**
  * \defgroup group_sam_drivers_bpm BPM - Backup Power Manager
@@ -61,82 +61,82 @@ extern "C" {
  */
 
 /** BPM unlock macro */
-#define BPM_UNLOCK(reg) \
-	do { \
-		BPM->BPM_UNLOCK = BPM_UNLOCK_KEY(0xAAu)                          \
-			| BPM_UNLOCK_ADDR((uint32_t)&BPM->BPM_##reg - (uint32_t)BPM);\
-	} while (0)
+    #define BPM_UNLOCK( reg )                                                                     \
+    do {                                                                                          \
+        BPM->BPM_UNLOCK = BPM_UNLOCK_KEY( 0xAAu )                                                 \
+                          | BPM_UNLOCK_ADDR( ( uint32_t ) &BPM->BPM_ ## reg - ( uint32_t ) BPM ); \
+    } while( 0 )
 
 /** \name Sleep mode definitions */
 /* @{ */
-#define BPM_SM_ACTIVE    0    /**< Active mode */
-#define BPM_SM_SLEEP_0   1    /**< Sleep mode 0 */
-#define BPM_SM_SLEEP_1   2    /**< Sleep mode 1 */
-#define BPM_SM_SLEEP_2   3    /**< Sleep mode 2 */
-#define BPM_SM_SLEEP_3   4    /**< Sleep mode 3 */
-#define BPM_SM_WAIT      5    /**< Wait mode */
-#define BPM_SM_RET       6    /**< Retention mode */
-#define BPM_SM_BACKUP    7    /**< Backup mode */
+    #define BPM_SM_ACTIVE     0 /**< Active mode */
+    #define BPM_SM_SLEEP_0    1 /**< Sleep mode 0 */
+    #define BPM_SM_SLEEP_1    2 /**< Sleep mode 1 */
+    #define BPM_SM_SLEEP_2    3 /**< Sleep mode 2 */
+    #define BPM_SM_SLEEP_3    4 /**< Sleep mode 3 */
+    #define BPM_SM_WAIT       5 /**< Wait mode */
+    #define BPM_SM_RET        6 /**< Retention mode */
+    #define BPM_SM_BACKUP     7 /**< Backup mode */
 /* @} */
 
 /** \anchor power_scaling_change_mode */
 /** \name Power scaling change mode */
 /* @{ */
 /** Power scaling change mode: halting the CPU execution */
-#define BPM_PSCM_CPU_HALT           0
+    #define BPM_PSCM_CPU_HALT        0
 /** Power scaling change mode: CPU execution not halted */
-#define BPM_PSCM_CPU_NOT_HALT       1
+    #define BPM_PSCM_CPU_NOT_HALT    1
 /* @} */
 
 /** \anchor power_scaling_mode_value */
 /** \name Power scaling mode value */
 /* @{ */
 /** Power scaling mode 0 */
-#define BPM_PS_0    0
+    #define BPM_PS_0    0
 /** Power scaling mode 1 */
-#define BPM_PS_1    1
+    #define BPM_PS_1    1
 /** Power scaling mode 2 */
-#define BPM_PS_2    2
+    #define BPM_PS_2    2
 /* @} */
 
 /** \anchor CLK32_32Khz_1Khz */
 /** \name CLK32 32Khz-1Khz clock source selection */
 /* @{ */
 /** OSC32K : Low frequency crystal oscillator */
-#define BPM_CLK32_SOURCE_OSC32K  0
+    #define BPM_CLK32_SOURCE_OSC32K    0
 /** RC32K : Internal Low frequency RC oscillator */
-#define BPM_CLK32_SOURCE_RC32K   1
+    #define BPM_CLK32_SOURCE_RC32K     1
 /* @} */
 
 /** \anchor backup_wake_up_sources */
 /** \name Backup wake up sources */
 /* @{ */
 /** EIC wake up */
-#define BPM_BKUP_WAKEUP_SRC_EIC       (1UL << BPM_BKUPWEN_EIC)
+    #define BPM_BKUP_WAKEUP_SRC_EIC         ( 1UL << BPM_BKUPWEN_EIC )
 /** AST wake up */
-#define BPM_BKUP_WAKEUP_SRC_AST       (1UL << BPM_BKUPWEN_AST)
+    #define BPM_BKUP_WAKEUP_SRC_AST         ( 1UL << BPM_BKUPWEN_AST )
 /** WDT wake up */
-#define BPM_BKUP_WAKEUP_SRC_WDT       (1UL << BPM_BKUPWEN_WDT)
+    #define BPM_BKUP_WAKEUP_SRC_WDT         ( 1UL << BPM_BKUPWEN_WDT )
 /** BOD33 wake up */
-#define BPM_BKUP_WAKEUP_SRC_BOD33     (1UL << BPM_BKUPWEN_BOD33)
+    #define BPM_BKUP_WAKEUP_SRC_BOD33       ( 1UL << BPM_BKUPWEN_BOD33 )
 /** BOD18 wake up */
-#define BPM_BKUP_WAKEUP_SRC_BOD18     (1UL << BPM_BKUPWEN_BOD18)
+    #define BPM_BKUP_WAKEUP_SRC_BOD18       ( 1UL << BPM_BKUPWEN_BOD18 )
 /** PICOUART wake up */
-#define BPM_BKUP_WAKEUP_SRC_PICOUART  (1UL << BPM_BKUPWEN_PICOUART)
+    #define BPM_BKUP_WAKEUP_SRC_PICOUART    ( 1UL << BPM_BKUPWEN_PICOUART )
 /* @} */
 
 /** \anchor backup_pin_muxing */
 /** \name Backup pin muxing */
 /* @{ */
-#define BPM_BKUP_PIN_PB01_EIC0    BPM_BKUPPMUX_BKUPPMUX(0)
-#define BPM_BKUP_PIN_PA06_EIC1    BPM_BKUPPMUX_BKUPPMUX(1)
-#define BPM_BKUP_PIN_PA04_EIC2    BPM_BKUPPMUX_BKUPPMUX(2)
-#define BPM_BKUP_PIN_PA05_EIC3    BPM_BKUPPMUX_BKUPPMUX(3)
-#define BPM_BKUP_PIN_PA07_EIC4    BPM_BKUPPMUX_BKUPPMUX(4)
-#define BPM_BKUP_PIN_PC03_EIC5    BPM_BKUPPMUX_BKUPPMUX(5)
-#define BPM_BKUP_PIN_PC04_EIC6    BPM_BKUPPMUX_BKUPPMUX(6)
-#define BPM_BKUP_PIN_PC05_EIC7    BPM_BKUPPMUX_BKUPPMUX(7)
-#define BPM_BKUP_PIN_PC06_EIC8    BPM_BKUPPMUX_BKUPPMUX(8)
+    #define BPM_BKUP_PIN_PB01_EIC0    BPM_BKUPPMUX_BKUPPMUX( 0 )
+    #define BPM_BKUP_PIN_PA06_EIC1    BPM_BKUPPMUX_BKUPPMUX( 1 )
+    #define BPM_BKUP_PIN_PA04_EIC2    BPM_BKUPPMUX_BKUPPMUX( 2 )
+    #define BPM_BKUP_PIN_PA05_EIC3    BPM_BKUPPMUX_BKUPPMUX( 3 )
+    #define BPM_BKUP_PIN_PA07_EIC4    BPM_BKUPPMUX_BKUPPMUX( 4 )
+    #define BPM_BKUP_PIN_PC03_EIC5    BPM_BKUPPMUX_BKUPPMUX( 5 )
+    #define BPM_BKUP_PIN_PC04_EIC6    BPM_BKUPPMUX_BKUPPMUX( 6 )
+    #define BPM_BKUP_PIN_PC05_EIC7    BPM_BKUPPMUX_BKUPPMUX( 7 )
+    #define BPM_BKUP_PIN_PC06_EIC8    BPM_BKUPPMUX_BKUPPMUX( 8 )
 /* @} */
 
 /**
@@ -153,7 +153,8 @@ extern "C" {
  * \param ps_value  Power scaling value, see \ref power_scaling_mode_value.
  *
  */
-void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
+    void bpm_power_scaling_cpu( Bpm * bpm,
+                                uint32_t ps_value );
 
 /**
  * \brief Change Power Scaling mode and check results
@@ -166,8 +167,9 @@ void bpm_power_scaling_cpu(Bpm *bpm, uint32_t ps_value);
  * \param timeout Timeout, in number of processor clocks, max 0xFFFFFF.
  * \return true if PSOK is ready.
  */
-bool bpm_power_scaling_cpu_failsafe(Bpm *bpm, uint32_t ps_value,
-		uint32_t timeout);
+    bool bpm_power_scaling_cpu_failsafe( Bpm * bpm,
+                                         uint32_t ps_value,
+                                         uint32_t timeout );
 
 /**
  * \brief Configure power scaling mode.
@@ -182,30 +184,33 @@ bool bpm_power_scaling_cpu_failsafe(Bpm *bpm, uint32_t ps_value,
  *                  and bpm_power_scaling_cpu_failsafe()
  * \return true if no error.
  */
-__always_inline static
-bool bpm_configure_power_scaling(Bpm *bpm, uint32_t ps_value, uint32_t no_halt)
-{
-	if (!no_halt) {
-		bpm_power_scaling_cpu(bpm, ps_value);
-		return true;
-	}
+    __always_inline static
+    bool bpm_configure_power_scaling( Bpm * bpm,
+                                      uint32_t ps_value,
+                                      uint32_t no_halt )
+    {
+        if( !no_halt )
+        {
+            bpm_power_scaling_cpu( bpm, ps_value );
+            return true;
+        }
 
-	return bpm_power_scaling_cpu_failsafe(bpm, ps_value, 240000);
-}
+        return bpm_power_scaling_cpu_failsafe( bpm, ps_value, 240000 );
+    }
 
 /**
  * \brief Enable fast wakeup for analog modules.
  *
  * \param bpm  Base address of the BPM instance.
  */
-void bpm_enable_fast_wakeup(Bpm *bpm);
+    void bpm_enable_fast_wakeup( Bpm * bpm );
 
 /**
  * \brief Disable fast wakeup for analog modules.
  *
  * \param bpm  Base address of the BPM instance.
  */
-void bpm_disable_fast_wakeup(Bpm *bpm);
+    void bpm_disable_fast_wakeup( Bpm * bpm );
 
 /**
  * \brief Set clock source for 32KHz clock.
@@ -213,14 +218,15 @@ void bpm_disable_fast_wakeup(Bpm *bpm);
  * \param bpm  Base address of the BPM instance.
  * \param source  Clock source, see \ref CLK32_32Khz_1Khz.
  */
-void bpm_set_clk32_source(Bpm *bpm, uint32_t source);
+    void bpm_set_clk32_source( Bpm * bpm,
+                               uint32_t source );
 
 /**
  * \brief Get wakeup cause from backup mode.
  *
  * \param bpm  Base address of the BPM instance.
  */
-uint32_t bpm_get_backup_wakeup_cause(Bpm *bpm);
+    uint32_t bpm_get_backup_wakeup_cause( Bpm * bpm );
 
 /**
  * \brief Enable wakeup source.
@@ -228,7 +234,8 @@ uint32_t bpm_get_backup_wakeup_cause(Bpm *bpm);
  * \param bpm  Base address of the BPM instance.
  * \param sources  Wakeup source mask, see \ref backup_wake_up_sources.
  */
-void bpm_enable_wakeup_source(Bpm *bpm, uint32_t sources);
+    void bpm_enable_wakeup_source( Bpm * bpm,
+                                   uint32_t sources );
 
 /**
  * \brief Disable wakeup source.
@@ -236,7 +243,8 @@ void bpm_enable_wakeup_source(Bpm *bpm, uint32_t sources);
  * \param bpm  Base address of the BPM instance.
  * \param sources  Wakeup source mask, see \ref backup_wake_up_sources.
  */
-void bpm_disable_wakeup_source(Bpm *bpm, uint32_t sources);
+    void bpm_disable_wakeup_source( Bpm * bpm,
+                                    uint32_t sources );
 
 /**
  * \brief Enable backup pin for wakeup.
@@ -244,7 +252,8 @@ void bpm_disable_wakeup_source(Bpm *bpm, uint32_t sources);
  * \param bpm  Base address of the BPM instance.
  * \param backup_pins  Backup pin mask, see \ref backup_pin_muxing.
  */
-void bpm_enable_backup_pin(Bpm *bpm, uint32_t backup_pins);
+    void bpm_enable_backup_pin( Bpm * bpm,
+                                uint32_t backup_pins );
 
 /**
  * \brief Disable backup pin for wakeup.
@@ -252,21 +261,22 @@ void bpm_enable_backup_pin(Bpm *bpm, uint32_t backup_pins);
  * \param bpm  Base address of the BPM instance.
  * \param backup_pins  Backup pin mask, see \ref backup_pin_muxing.
  */
-void bpm_disable_backup_pin(Bpm *bpm, uint32_t backup_pins);
+    void bpm_disable_backup_pin( Bpm * bpm,
+                                 uint32_t backup_pins );
 
 /**
  * \brief Enable IO retention for backup mode.
  *
  * \param bpm  Base address of the BPM instance.
  */
-void bpm_enable_io_retention(Bpm *bpm);
+    void bpm_enable_io_retention( Bpm * bpm );
 
 /**
  * \brief Disable IO retention for backup mode.
  *
  * \param bpm  Base address of the BPM instance.
  */
-void bpm_disable_io_retention(Bpm *bpm);
+    void bpm_disable_io_retention( Bpm * bpm );
 /* @} */
 
 /**
@@ -280,7 +290,8 @@ void bpm_disable_io_retention(Bpm *bpm);
  * \param bpm  Base address of the BPM instance.
  * \param sources BPM interrupt source mask.
  */
-void bpm_enable_interrupt(Bpm *bpm, uint32_t sources);
+    void bpm_enable_interrupt( Bpm * bpm,
+                               uint32_t sources );
 
 /**
  * \brief Disable interrupt with given sources mask.
@@ -288,7 +299,8 @@ void bpm_enable_interrupt(Bpm *bpm, uint32_t sources);
  * \param bpm  Base address of the BPM instance.
  * \param sources BPM interrupt source mask.
  */
-void bpm_disable_interrupt(Bpm *bpm, uint32_t sources);
+    void bpm_disable_interrupt( Bpm * bpm,
+                                uint32_t sources );
 
 /**
  * \brief Get BPM interrupt mask.
@@ -297,7 +309,7 @@ void bpm_disable_interrupt(Bpm *bpm, uint32_t sources);
  *
  * \return BPM interrupt mask.
  */
-uint32_t bpm_get_interrupt_mask(Bpm *bpm);
+    uint32_t bpm_get_interrupt_mask( Bpm * bpm );
 
 /**
  * \brief Get BPM interrupt status.
@@ -306,7 +318,7 @@ uint32_t bpm_get_interrupt_mask(Bpm *bpm);
  *
  * \return BPM interrupt status.
  */
-uint32_t bpm_get_interrupt_status(Bpm *bpm);
+    uint32_t bpm_get_interrupt_status( Bpm * bpm );
 
 /**
  * \brief Clear BPM interrupt.
@@ -314,7 +326,8 @@ uint32_t bpm_get_interrupt_status(Bpm *bpm);
  * \param bpm  Base address of the BPM instance.
  * \param sources BPM interrupt source mask.
  */
-void bpm_clear_interrupt(Bpm *bpm, uint32_t sources);
+    void bpm_clear_interrupt( Bpm * bpm,
+                              uint32_t sources );
 
 /**
  * \brief Get BPM status.
@@ -323,7 +336,7 @@ void bpm_clear_interrupt(Bpm *bpm, uint32_t sources);
  *
  * \return BPM status.
  */
-uint32_t bpm_get_status(Bpm *bpm);
+    uint32_t bpm_get_status( Bpm * bpm );
 
 /**
  * \brief Get version of BPM module.
@@ -332,13 +345,13 @@ uint32_t bpm_get_status(Bpm *bpm);
  *
  * \return Version of BPM module.
  */
-uint32_t bpm_get_version(Bpm *bpm);
+    uint32_t bpm_get_version( Bpm * bpm );
 /* @} */
 
 /* @} */
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 /**
  * \page sam_bpm_quickstart Quick start guide for the SAM BPM module

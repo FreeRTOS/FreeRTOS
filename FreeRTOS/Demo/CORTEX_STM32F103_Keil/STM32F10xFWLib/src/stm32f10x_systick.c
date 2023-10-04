@@ -24,11 +24,11 @@
 /* Private define ------------------------------------------------------------*/
 /* ---------------------- SysTick registers bit mask -------------------- */
 /* CTRL TICKINT Mask */
-#define CTRL_TICKINT_Set      ((u32)0x00000002)
-#define CTRL_TICKINT_Reset    ((u32)0xFFFFFFFD)
+#define CTRL_TICKINT_Set      ( ( u32 ) 0x00000002 )
+#define CTRL_TICKINT_Reset    ( ( u32 ) 0xFFFFFFFD )
 
 /* SysTick Flag Mask */
-#define FLAG_Mask             ((u8)0x1F)
+#define FLAG_Mask             ( ( u8 ) 0x1F )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -47,19 +47,19 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SysTick_CLKSourceConfig(u32 SysTick_CLKSource)
+void SysTick_CLKSourceConfig( u32 SysTick_CLKSource )
 {
-  /* Check the parameters */
-  assert(IS_SYSTICK_CLK_SOURCE(SysTick_CLKSource));
+    /* Check the parameters */
+    assert( IS_SYSTICK_CLK_SOURCE( SysTick_CLKSource ) );
 
-  if (SysTick_CLKSource == SysTick_CLKSource_HCLK)
-  {
-    SysTick->CTRL |= SysTick_CLKSource_HCLK;
-  }
-  else
-  {
-    SysTick->CTRL &= SysTick_CLKSource_HCLK_Div8;
-  }
+    if( SysTick_CLKSource == SysTick_CLKSource_HCLK )
+    {
+        SysTick->CTRL |= SysTick_CLKSource_HCLK;
+    }
+    else
+    {
+        SysTick->CTRL &= SysTick_CLKSource_HCLK_Div8;
+    }
 }
 
 /*******************************************************************************
@@ -70,12 +70,12 @@ void SysTick_CLKSourceConfig(u32 SysTick_CLKSource)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SysTick_SetReload(u32 Reload)
+void SysTick_SetReload( u32 Reload )
 {
-  /* Check the parameters */
-  assert(IS_SYSTICK_RELOAD(Reload));
+    /* Check the parameters */
+    assert( IS_SYSTICK_RELOAD( Reload ) );
 
-  SysTick->LOAD = Reload;
+    SysTick->LOAD = Reload;
 }
 
 /*******************************************************************************
@@ -89,26 +89,26 @@ void SysTick_SetReload(u32 Reload)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SysTick_CounterCmd(u32 SysTick_Counter)
+void SysTick_CounterCmd( u32 SysTick_Counter )
 {
-  /* Check the parameters */
-  assert(IS_SYSTICK_COUNTER(SysTick_Counter));
+    /* Check the parameters */
+    assert( IS_SYSTICK_COUNTER( SysTick_Counter ) );
 
-  if (SysTick_Counter == SysTick_Counter_Clear)
-  {
-    SysTick->VAL = SysTick_Counter_Clear;
-  }
-  else
-  {
-    if (SysTick_Counter == SysTick_Counter_Enable)
+    if( SysTick_Counter == SysTick_Counter_Clear )
     {
-      SysTick->CTRL |= SysTick_Counter_Enable;
+        SysTick->VAL = SysTick_Counter_Clear;
     }
     else
     {
-      SysTick->CTRL &= SysTick_Counter_Disable;
+        if( SysTick_Counter == SysTick_Counter_Enable )
+        {
+            SysTick->CTRL |= SysTick_Counter_Enable;
+        }
+        else
+        {
+            SysTick->CTRL &= SysTick_Counter_Disable;
+        }
     }
-  }
 }
 
 /*******************************************************************************
@@ -119,19 +119,19 @@ void SysTick_CounterCmd(u32 SysTick_Counter)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SysTick_ITConfig(FunctionalState NewState)
+void SysTick_ITConfig( FunctionalState NewState )
 {
-  /* Check the parameters */
-  assert(IS_FUNCTIONAL_STATE(NewState));
+    /* Check the parameters */
+    assert( IS_FUNCTIONAL_STATE( NewState ) );
 
-  if (NewState != DISABLE)
-  {
-    SysTick->CTRL |= CTRL_TICKINT_Set;
-  }
-  else
-  {
-    SysTick->CTRL &= CTRL_TICKINT_Reset;
-  }
+    if( NewState != DISABLE )
+    {
+        SysTick->CTRL |= CTRL_TICKINT_Set;
+    }
+    else
+    {
+        SysTick->CTRL &= CTRL_TICKINT_Reset;
+    }
 }
 
 /*******************************************************************************
@@ -141,9 +141,9 @@ void SysTick_ITConfig(FunctionalState NewState)
 * Output         : None
 * Return         : SysTick current value
 *******************************************************************************/
-u32 SysTick_GetCounter(void)
+u32 SysTick_GetCounter( void )
 {
-  return(SysTick->VAL);
+    return( SysTick->VAL );
 }
 
 /*******************************************************************************
@@ -157,39 +157,40 @@ u32 SysTick_GetCounter(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-FlagStatus SysTick_GetFlagStatus(u8 SysTick_FLAG)
+FlagStatus SysTick_GetFlagStatus( u8 SysTick_FLAG )
 {
-  u32 tmp = 0;
-  u32 statusreg = 0;
-  FlagStatus bitstatus = RESET;
+    u32 tmp = 0;
+    u32 statusreg = 0;
+    FlagStatus bitstatus = RESET;
 
-  /* Check the parameters */
-  assert(IS_SYSTICK_FLAG(SysTick_FLAG));
+    /* Check the parameters */
+    assert( IS_SYSTICK_FLAG( SysTick_FLAG ) );
 
-  /* Get the SysTick register index */
-  tmp = SysTick_FLAG >> 5;
+    /* Get the SysTick register index */
+    tmp = SysTick_FLAG >> 5;
 
-  if (tmp == 1) /* The flag to check is in CTRL register */
-  {
-    statusreg = SysTick->CTRL;
-  }
-  else          /* The flag to check is in CALIB register */
-  {
-    statusreg = SysTick->CALIB;
-  }
+    if( tmp == 1 ) /* The flag to check is in CTRL register */
+    {
+        statusreg = SysTick->CTRL;
+    }
+    else        /* The flag to check is in CALIB register */
+    {
+        statusreg = SysTick->CALIB;
+    }
 
-  /* Get the flag position */
-  tmp = SysTick_FLAG & FLAG_Mask;
+    /* Get the flag position */
+    tmp = SysTick_FLAG & FLAG_Mask;
 
-  if ((statusreg & ((u32)1 << tmp)) != (u32)RESET)
-  {
-    bitstatus = SET;
-  }
-  else
-  {
-    bitstatus = RESET;
-  }
-  return bitstatus;
+    if( ( statusreg & ( ( u32 ) 1 << tmp ) ) != ( u32 ) RESET )
+    {
+        bitstatus = SET;
+    }
+    else
+    {
+        bitstatus = RESET;
+    }
+
+    return bitstatus;
 }
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

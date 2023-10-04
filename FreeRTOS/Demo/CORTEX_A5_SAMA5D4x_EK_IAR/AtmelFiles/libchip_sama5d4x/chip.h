@@ -14,28 +14,28 @@
 
 
 /* Define attribute */
-#if defined   ( __CC_ARM   ) /* Keil µVision 4 */
-    #define WEAK __attribute__ ((weak))
-#elif defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
-    #define WEAK __weak
-#elif defined (  __GNUC__  ) /* GCC CS3 2009q3-68 */
-    #define WEAK __attribute__ ((weak))
+#if defined( __CC_ARM )     /* Keil µVision 4 */
+    #define WEAK    __attribute__( ( weak ) )
+#elif defined( __ICCARM__ ) /* IAR Ewarm 5.41+ */
+    #define WEAK    __weak
+#elif defined( __GNUC__ )   /* GCC CS3 2009q3-68 */
+    #define WEAK    __attribute__( ( weak ) )
 #endif
 
 /* Define NO_INIT attribute and compiler specific symbols */
-#if defined   ( __CC_ARM   )
+#if defined( __CC_ARM )
     #define NO_INIT
-    #define __ASM            __asm                                    /*!< asm keyword for ARM Compiler          */
-    #define __INLINE         __inline                                 /*!< inline keyword for ARM Compiler       */
-#elif defined ( __ICCARM__ )
-    #define NO_INIT __no_init
-    #define __ASM           __asm                                     /*!< asm keyword for IAR Compiler           */
-    #define __INLINE        inline                                    /*!< inline keyword for IAR Compiler. Only avaiable in High optimization mode! */
-#elif defined (  __GNUC__  )
-    #define __ASM            asm                                      /*!< asm keyword for GNU Compiler          */
-    #define __INLINE         inline                                   /*!< inline keyword for GNU Compiler       */
+    #define __ASM       __asm                                         /*!< asm keyword for ARM Compiler          */
+    #define __INLINE    __inline                                      /*!< inline keyword for ARM Compiler       */
+#elif defined( __ICCARM__ )
+    #define NO_INIT     __no_init
+    #define __ASM       __asm                                         /*!< asm keyword for IAR Compiler           */
+    #define __INLINE    inline                                        /*!< inline keyword for IAR Compiler. Only avaiable in High optimization mode! */
+#elif defined( __GNUC__ )
+    #define __ASM       asm                                           /*!< asm keyword for GNU Compiler          */
+    #define __INLINE    inline                                        /*!< inline keyword for GNU Compiler       */
     #define NO_INIT
-#endif
+#endif /* if defined( __CC_ARM ) */
 
 #define CP15_PRESENT
 
@@ -58,7 +58,7 @@
 #include "include/usart.h"
 #include "include/xdmac.h"
 #include "include/spi.h"
-#include "include/pit.h" 
+#include "include/pit.h"
 #include "include/wdt.h"
 #include "include/tc.h"
 #include "include/smcNfc.h"

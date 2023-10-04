@@ -16,6 +16,7 @@
 *
 * Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
+
 /***********************************************************************************************************************
 * File Name    : r_switches.c
 * Description  : Functions for using switches with callback functions.
@@ -29,7 +30,7 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
+*  Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 /* Board and MCU support. */
 #include "platform.h"
@@ -40,47 +41,47 @@ Includes   <System Includes> , "Project Includes"
 typedef int bool;
 
 /***********************************************************************************************************************
-Macro definitions
+*  Macro definitions
 ***********************************************************************************************************************/
 /* This helps reduce the amount of unique code for each supported board. */
-#define X_IRQ( x )   XX_IRQ( x )
-#define XX_IRQ( x )  _ICU_IRQ##x
+#define X_IRQ( x )     XX_IRQ( x )
+#define XX_IRQ( x )    _ICU_IRQ ## x
 
 /* These macros define which IRQ pins are used for the switches. Note that these defintions cannot have parentheses
-   around them. */
-#if defined(PLATFORM_BOARD_RSKRX111)
-    #define SW1_IRQ_NUMBER     0
-    #define SW2_IRQ_NUMBER     1
-    #define SW3_IRQ_NUMBER     4
+ * around them. */
+#if defined( PLATFORM_BOARD_RSKRX111 )
+    #define SW1_IRQ_NUMBER    0
+    #define SW2_IRQ_NUMBER    1
+    #define SW3_IRQ_NUMBER    4
 #else
-	#error This file is only for use on the RX100 RSK
+    #error This file is only for use on the RX100 RSK
 #endif
 
 /* Number of switches on this board. */
-#define SWITCHES_NUM            (3)
+#define SWITCHES_NUM      ( 3 )
 
 /* Register definitions not yet correct in iorx111.h. */
-#define MPC_P30PFS_REG	( * ( unsigned char * ) 0x0008C158 )
-#define MPC_P31PFS_REG ( * ( unsigned char * ) 0x0008C159 )
-#define MPC_PE4PFS_REG ( * ( unsigned char * ) 0x0008C1B4 )
+#define MPC_P30PFS_REG    ( *( unsigned char * ) 0x0008C158 )
+#define MPC_P31PFS_REG    ( *( unsigned char * ) 0x0008C159 )
+#define MPC_PE4PFS_REG    ( *( unsigned char * ) 0x0008C1B4 )
 
 /***********************************************************************************************************************
-Typedef definitions
+*  Typedef definitions
 ***********************************************************************************************************************/
 typedef struct
 {
-    bool    active;
+    bool active;
     int32_t debounce_cnt;
 } switch_t;
 
 /***********************************************************************************************************************
-Private global variables and functions
+*  Private global variables and functions
 ***********************************************************************************************************************/
 #if SWITCHES_DETECTION_MODE == 1
 /* Update Hz */
-static uint32_t g_sw_debounce_cnts;
+    static uint32_t g_sw_debounce_cnts;
 /* Used for debounce. */
-switch_t g_switches[SWITCHES_NUM];
+    switch_t g_switches[ SWITCHES_NUM ];
 #endif
 
 /***********************************************************************************************************************
@@ -90,7 +91,7 @@ switch_t g_switches[SWITCHES_NUM];
 * Return Value : none
 ***********************************************************************************************************************/
 
-void R_SWITCHES_Init (void)
+void R_SWITCHES_Init( void )
 {
     /* Unlock protection register */
     MPC.PWPR.BYTE &= 0x7F;
@@ -105,30 +106,30 @@ void R_SWITCHES_Init (void)
     PORT3.PMR.BYTE &= 0xFC;
     PORTE.PMR.BYTE &= 0xEF;
 
-    MPC_P30PFS_REG = 0x40;    /* P30 is used as IRQ pin */
-    MPC_P31PFS_REG  = 0x40;    /* P31 is used as IRQ pin */
-    MPC_PE4PFS_REG  = 0x40;    /* PE4 is used as IRQ pin */
+    MPC_P30PFS_REG = 0x40; /* P30 is used as IRQ pin */
+    MPC_P31PFS_REG = 0x40; /* P31 is used as IRQ pin */
+    MPC_PE4PFS_REG = 0x40; /* PE4 is used as IRQ pin */
 
     /* Set IRQ type (falling edge) */
-    ICU.IRQCR[ SW1_IRQ_NUMBER ].BYTE  = 0x04;
-    ICU.IRQCR[ SW2_IRQ_NUMBER ].BYTE  = 0x04;
-    ICU.IRQCR[ SW3_IRQ_NUMBER ].BYTE  = 0x04;
+    ICU.IRQCR[ SW1_IRQ_NUMBER ].BYTE = 0x04;
+    ICU.IRQCR[ SW2_IRQ_NUMBER ].BYTE = 0x04;
+    ICU.IRQCR[ SW3_IRQ_NUMBER ].BYTE = 0x04;
 
     /* Set interrupt priorities, which must be below
-    configMAX_SYSCALL_INTERRUPT_PRIORITY. */
-    _IPR( X_IRQ(SW1_IRQ_NUMBER) ) = configKERNEL_INTERRUPT_PRIORITY;
-    _IPR( X_IRQ(SW2_IRQ_NUMBER) ) = configKERNEL_INTERRUPT_PRIORITY;
-    _IPR( X_IRQ(SW3_IRQ_NUMBER) ) = configKERNEL_INTERRUPT_PRIORITY;
+     * configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+    _IPR( X_IRQ( SW1_IRQ_NUMBER ) ) = configKERNEL_INTERRUPT_PRIORITY;
+    _IPR( X_IRQ( SW2_IRQ_NUMBER ) ) = configKERNEL_INTERRUPT_PRIORITY;
+    _IPR( X_IRQ( SW3_IRQ_NUMBER ) ) = configKERNEL_INTERRUPT_PRIORITY;
 
     /* Clear any pending interrupts */
-    _IR( X_IRQ(SW1_IRQ_NUMBER) ) = 0;
-    _IR( X_IRQ(SW2_IRQ_NUMBER) ) = 0;
-    _IR( X_IRQ(SW3_IRQ_NUMBER) ) = 0;
+    _IR( X_IRQ( SW1_IRQ_NUMBER ) ) = 0;
+    _IR( X_IRQ( SW2_IRQ_NUMBER ) ) = 0;
+    _IR( X_IRQ( SW3_IRQ_NUMBER ) ) = 0;
 
     /* Enable the interrupts */
-    _IEN( X_IRQ(SW1_IRQ_NUMBER) )  = 1;
-    _IEN( X_IRQ(SW2_IRQ_NUMBER) )  = 1;
-    _IEN( X_IRQ(SW3_IRQ_NUMBER) )  = 1;
+    _IEN( X_IRQ( SW1_IRQ_NUMBER ) ) = 1;
+    _IEN( X_IRQ( SW2_IRQ_NUMBER ) ) = 1;
+    _IEN( X_IRQ( SW3_IRQ_NUMBER ) ) = 1;
 }
 
 /* If using polling then the user must call the update function. */
@@ -141,92 +142,89 @@ void R_SWITCHES_Init (void)
 * Arguments    : none
 * Return value : none
 ***********************************************************************************************************************/
-void R_SWITCHES_Update (void)
+void R_SWITCHES_Update( void )
 {
-#if SWITCHES_DETECTION_MODE == 1
-    /* This code is only needed for polling mode. */
-    /* Check switch 1. */
-    if (SW1 == SW_ACTIVE)
-    {
-        if (g_switches[0].active != true)
+    #if SWITCHES_DETECTION_MODE == 1
+        /* This code is only needed for polling mode. */
+        /* Check switch 1. */
+        if( SW1 == SW_ACTIVE )
         {
-            if (++g_switches[0].debounce_cnt >= g_sw_debounce_cnts)
+            if( g_switches[ 0 ].active != true )
             {
-                /* Set this to true so we only call the callback function once per press. */
-                g_switches[0].active = true;
+                if( ++g_switches[ 0 ].debounce_cnt >= g_sw_debounce_cnts )
+                {
+                    /* Set this to true so we only call the callback function once per press. */
+                    g_switches[ 0 ].active = true;
 
-                /* Call callback function. */
-                SW1_CALLBACK_FUNCTION();
+                    /* Call callback function. */
+                    SW1_CALLBACK_FUNCTION();
+                }
             }
-        }
-    }
-    else
-    {
-        if (0 == g_switches[0].debounce_cnt)
-        {
-            g_switches[0].active = false;
         }
         else
         {
-            g_switches[0].debounce_cnt--;
-        }
-    }
-
-    /* Check switch 2. */
-    if (SW2 == SW_ACTIVE)
-    {
-        if (g_switches[1].active != true)
-        {
-            if (++g_switches[1].debounce_cnt >= g_sw_debounce_cnts)
+            if( 0 == g_switches[ 0 ].debounce_cnt )
             {
-                /* Set this to true so we only call the callback function once per press. */
-                g_switches[1].active = true;
-
-                /* Call callback function. */
-                SW2_CALLBACK_FUNCTION();
+                g_switches[ 0 ].active = false;
+            }
+            else
+            {
+                g_switches[ 0 ].debounce_cnt--;
             }
         }
-    }
-    else
-    {
-        if (0 == g_switches[1].debounce_cnt)
+
+        /* Check switch 2. */
+        if( SW2 == SW_ACTIVE )
         {
-            g_switches[1].active = false;
+            if( g_switches[ 1 ].active != true )
+            {
+                if( ++g_switches[ 1 ].debounce_cnt >= g_sw_debounce_cnts )
+                {
+                    /* Set this to true so we only call the callback function once per press. */
+                    g_switches[ 1 ].active = true;
+
+                    /* Call callback function. */
+                    SW2_CALLBACK_FUNCTION();
+                }
+            }
         }
         else
         {
-            g_switches[1].debounce_cnt--;
-        }
-    }
-
-    /* Check switch 3. */
-    if (SW3 == SW_ACTIVE)
-    {
-        if (g_switches[2].active != true)
-        {
-            if (++g_switches[2].debounce_cnt >= g_sw_debounce_cnts)
+            if( 0 == g_switches[ 1 ].debounce_cnt )
             {
-                /* Set this to true so we only call the callback function once per press. */
-                g_switches[2].active = true;
-
-                /* Call callback function. */
-                SW3_CALLBACK_FUNCTION();
+                g_switches[ 1 ].active = false;
+            }
+            else
+            {
+                g_switches[ 1 ].debounce_cnt--;
             }
         }
-    }
-    else
-    {
-        if (0 == g_switches[2].debounce_cnt)
+
+        /* Check switch 3. */
+        if( SW3 == SW_ACTIVE )
         {
-            g_switches[2].active = false;
+            if( g_switches[ 2 ].active != true )
+            {
+                if( ++g_switches[ 2 ].debounce_cnt >= g_sw_debounce_cnts )
+                {
+                    /* Set this to true so we only call the callback function once per press. */
+                    g_switches[ 2 ].active = true;
+
+                    /* Call callback function. */
+                    SW3_CALLBACK_FUNCTION();
+                }
+            }
         }
         else
         {
-            g_switches[2].debounce_cnt--;
+            if( 0 == g_switches[ 2 ].debounce_cnt )
+            {
+                g_switches[ 2 ].active = false;
+            }
+            else
+            {
+                g_switches[ 2 ].debounce_cnt--;
+            }
         }
-    }
-#endif /* SWITCHES_DETECTION_MODE */
+    #endif /* SWITCHES_DETECTION_MODE */
 }
-
-
-

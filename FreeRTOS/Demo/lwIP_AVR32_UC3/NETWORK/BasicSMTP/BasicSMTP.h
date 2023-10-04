@@ -1,4 +1,5 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
  *
  * \brief Basic SMTP Client for AVR32 UC3.
@@ -51,5 +52,4 @@ portTASK_FUNCTION_PROTO( vBasicSMTPClient, pvParameters );
 
 
 
-#endif
-
+#endif /* ifndef BASIC_SMTP_SERVER_H */

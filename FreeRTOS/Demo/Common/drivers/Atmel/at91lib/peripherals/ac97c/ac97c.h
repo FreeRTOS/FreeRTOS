@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,70 +31,73 @@
 #ifndef AC97C_H
 #define AC97C_H
 
-//------------------------------------------------------------------------------
-//         Constants
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Constants */
+/*------------------------------------------------------------------------------ */
 
-/// The channel is already busy with a transfer.
+/*/ The channel is already busy with a transfer. */
 #define AC97C_ERROR_BUSY            1
-/// The transfer has been stopped by the user.
+/*/ The transfer has been stopped by the user. */
 #define AC97C_ERROR_STOPPED         2
 
-/// Codec channel index.
-#define AC97C_CHANNEL_CODEC	        0
-/// Channel A index.
-#define AC97C_CHANNEL_A	            1
-/// Channel B index.
-#define AC97C_CHANNEL_B	            2
+/*/ Codec channel index. */
+#define AC97C_CHANNEL_CODEC         0
+/*/ Channel A index. */
+#define AC97C_CHANNEL_A             1
+/*/ Channel B index. */
+#define AC97C_CHANNEL_B             2
 
-/// Codec transmit/receive transfer index.
+/*/ Codec transmit/receive transfer index. */
 #define AC97C_CODEC_TRANSFER        0
-/// Channel A receive transfer index.
+/*/ Channel A receive transfer index. */
 #define AC97C_CHANNEL_A_RECEIVE     1
-/// Channel A transmit transfer index.
+/*/ Channel A transmit transfer index. */
 #define AC97C_CHANNEL_A_TRANSMIT    2
-/// Channel B receive transfer index.
+/*/ Channel B receive transfer index. */
 #define AC97C_CHANNEL_B_RECEIVE     3
-/// Channel B transmit transfer index.
+/*/ Channel B transmit transfer index. */
 #define AC97C_CHANNEL_B_TRANSMIT    4
 
-//------------------------------------------------------------------------------
-//         Types
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Types */
+/*------------------------------------------------------------------------------ */
 
-/// AC97C transfer callback function.
-typedef void (*Ac97Callback)(void *pArg,
-                             unsigned char status,
-                             unsigned int remaining);
+/*/ AC97C transfer callback function. */
+typedef void (* Ac97Callback)( void * pArg,
+                               unsigned char status,
+                               unsigned int remaining );
 
-//------------------------------------------------------------------------------
-//         Exported functions
-//------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------ */
+/*         Exported functions */
+/*------------------------------------------------------------------------------ */
 
 extern void AC97C_Configure();
 
-extern void AC97C_ConfigureChannel(unsigned char channel, unsigned int cfg);
+extern void AC97C_ConfigureChannel( unsigned char channel,
+                                    unsigned int cfg );
 
-extern void AC97C_AssignInputSlots(unsigned char channel, unsigned int slots);
+extern void AC97C_AssignInputSlots( unsigned char channel,
+                                    unsigned int slots );
 
-extern void AC97C_AssignOutputSlots(unsigned char channel, unsigned int slots);
+extern void AC97C_AssignOutputSlots( unsigned char channel,
+                                     unsigned int slots );
 
-extern unsigned char AC97C_Transfer(
-				unsigned char channel,
-				unsigned char *pBuffer,
-				unsigned int numSamples,
-				Ac97Callback callback,
-				void *pArg);
+extern unsigned char AC97C_Transfer( unsigned char channel,
+                                     unsigned char * pBuffer,
+                                     unsigned int numSamples,
+                                     Ac97Callback callback,
+                                     void * pArg );
 
-extern unsigned char AC97C_IsFinished(unsigned char channel);
+extern unsigned char AC97C_IsFinished( unsigned char channel );
 
-extern void AC97C_WriteCodec(unsigned char address, unsigned short data);
+extern void AC97C_WriteCodec( unsigned char address,
+                              unsigned short data );
 
-extern unsigned short AC97C_ReadCodec(unsigned char address);
+extern unsigned short AC97C_ReadCodec( unsigned char address );
 
-extern void AC97C_SetChannelSize(unsigned char channel, unsigned char size);
+extern void AC97C_SetChannelSize( unsigned char channel,
+                                  unsigned char size );
 
-extern void AC97C_CancelTransfer(unsigned char channel);
+extern void AC97C_CancelTransfer( unsigned char channel );
 
 #endif //#ifndef AC97C_H
-

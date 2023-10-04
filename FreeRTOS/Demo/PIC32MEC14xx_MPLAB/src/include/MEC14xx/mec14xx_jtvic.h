@@ -19,57 +19,67 @@
 *****************************************************************************/
 
 /** @file mec14xx_jtvic.h
- *MEC14xx JTVIC HW defines
+ * MEC14xx JTVIC HW defines
  */
+
 /** @defgroup MEC14xx Peripherals JTVIC
  */
 
 #ifndef _MEC14XX_JTVIC_H
-#define _MEC14XX_JTVIC_H
+    #define _MEC14XX_JTVIC_H
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-#define JTVIC_PRI1          0
-#define JTVIC_PRI3          1
-#define JTVIC_PRI5          2
-#define JTVIC_PRI7          3
+    #define JTVIC_PRI1    0
+    #define JTVIC_PRI3    1
+    #define JTVIC_PRI5    2
+    #define JTVIC_PRI7    3
 
-/* Each JTVIC GIRQx has 4 32-bit priority registers where each nibble 
+/* Each JTVIC GIRQx has 4 32-bit priority registers where each nibble
  * encodes one of four priorities.
- * Generate JTVIC GIRQx Priority Register value for field number b with 
- * priority p 
+ * Generate JTVIC GIRQx Priority Register value for field number b with
+ * priority p
  * b is the field [0,7]
  * p is the priority 0=IPL1, 1=IPL3, 2=IPL5, 3=IPL7
  */
-#define JTVIC_PRI_VAL(b,p) ((uint32_t)((p) & 0x03) << (((b) & 0x07) << 2))
+    #define JTVIC_PRI_VAL( b, p )    ( ( uint32_t ) ( ( p ) & 0x03 ) << ( ( ( b ) & 0x07 ) << 2 ) )
 
-#define JTVIC_GIRQ_NPRI_REGS     (4)
-typedef struct {
-    uint32_t isr_addr;
-    uint32_t pri[JTVIC_GIRQ_NPRI_REGS];
-} JTVIC_CFG;
+    #define JTVIC_GIRQ_NPRI_REGS    ( 4 )
+    typedef struct
+    {
+        uint32_t isr_addr;
+        uint32_t pri[ JTVIC_GIRQ_NPRI_REGS ];
+    } JTVIC_CFG;
 
-#define JTVIC_FLAG_DISAGR_SPACING_8      (0)
-#define JTVIC_FLAG_DISAGR_SPACING_512    (1ul << 0)
+    #define JTVIC_FLAG_DISAGR_SPACING_8      ( 0 )
+    #define JTVIC_FLAG_DISAGR_SPACING_512    ( 1ul << 0 )
 
-#define JTVIC_NO_CLR_SRC    (0)
-#define JTVIC_CLR_SRC       (1)
+    #define JTVIC_NO_CLR_SRC                 ( 0 )
+    #define JTVIC_CLR_SRC                    ( 1 )
 
-void jtvic_init(const JTVIC_CFG *ih_table, uint32_t disagg_bitmap, uint32_t cflags);
-void jtvic_clr_source(uint8_t girq_num, uint8_t bit_num);
-void jtvic_dis_clr_source(uint8_t girq_num, uint8_t bit_num, uint8_t clr_src);
-void jtvic_en_source(uint8_t girq_num, uint8_t bit_num, uint8_t clr_src);
+    void jtvic_init( const JTVIC_CFG * ih_table,
+                     uint32_t disagg_bitmap,
+                     uint32_t cflags );
+    void jtvic_clr_source( uint8_t girq_num,
+                           uint8_t bit_num );
+    void jtvic_dis_clr_source( uint8_t girq_num,
+                               uint8_t bit_num,
+                               uint8_t clr_src );
+    void jtvic_en_source( uint8_t girq_num,
+                          uint8_t bit_num,
+                          uint8_t clr_src );
 
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif // #ifndef _MEC14XX_JTVIC_H
 /* end mec14XX_jtvic.h */
+
 /**   @}
  */

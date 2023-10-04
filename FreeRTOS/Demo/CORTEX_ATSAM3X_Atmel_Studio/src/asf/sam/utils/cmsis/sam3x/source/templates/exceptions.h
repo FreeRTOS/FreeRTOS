@@ -42,29 +42,29 @@
  */
 
 #ifndef EXCEPTIONS_H_INCLUDED
-#define EXCEPTIONS_H_INCLUDED
+    #define EXCEPTIONS_H_INCLUDED
 
-#include "sam3xa.h"
+    #include "sam3xa.h"
 
 /* @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 /**INDENT-ON**/
 /* @endcond */
 
 /* Function prototype for exception table items (interrupt handler). */
-typedef void (*IntFunc) (void);
+    typedef void (* IntFunc) ( void );
 
 /* Default empty handler */
-void Dummy_Handler(void);
+    void Dummy_Handler( void );
 
 /* @cond 0 */
 /**INDENT-OFF**/
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 /**INDENT-ON**/
 /* @endcond */
 

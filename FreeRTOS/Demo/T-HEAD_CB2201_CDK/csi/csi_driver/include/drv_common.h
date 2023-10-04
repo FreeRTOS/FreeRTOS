@@ -15,11 +15,11 @@
  */
 
 /******************************************************************************
- * @file     drv_common.h
- * @brief    Header File for Common Driver
- * @version  V1.0
- * @date     02. June 2017
- ******************************************************************************/
+* @file     drv_common.h
+* @brief    Header File for Common Driver
+* @version  V1.0
+* @date     02. June 2017
+******************************************************************************/
 
 #ifndef _DRV_COMMON_H_
 #define _DRV_COMMON_H_
@@ -29,19 +29,19 @@
 #include "config.h"
 
 /** pin definition */
-typedef int32_t pin_t;
+typedef int32_t   pin_t;
 
-/// \details driver handle
-typedef void *drv_handle_t;
+/*/ \details driver handle */
+typedef void      * drv_handle_t;
 
 /**
-\brief General power states
-*/
-typedef enum  {
-    DRV_POWER_OFF,                        ///< Power off: no operation possible
-    DRV_POWER_LOW,                        ///< Low Power mode: retain state, detect and signal wake-up events
-    DRV_POWER_FULL                        ///< Power on: full operation at maximum performance
+ * \brief General power states
+ */
+typedef enum
+{
+    DRV_POWER_OFF, /*/< Power off: no operation possible */
+    DRV_POWER_LOW, /*/< Low Power mode: retain state, detect and signal wake-up events */
+    DRV_POWER_FULL /*/< Power on: full operation at maximum performance */
 } csi_power_stat_e;
 
 #endif /* _DRV_COMMON_H */
-

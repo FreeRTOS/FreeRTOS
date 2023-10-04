@@ -9,20 +9,20 @@
 #define __ECAP_REG_H__
 
 /** @addtogroup REGISTER Control Register
-
-  @{
-
-*/
+ *
+ * @{
+ *
+ */
 
 /*---------------------- Enhanced Input Capture Timer -------------------------*/
+
 /**
-    @addtogroup ECAP Enhanced Input Capture Timer(ECAP)
-    Memory Mapped Structure for ECAP Controller
-@{ */
+ *  @addtogroup ECAP Enhanced Input Capture Timer(ECAP)
+ *  Memory Mapped Structure for ECAP Controller
+ * @{ */
 
 typedef struct
 {
-
     /**
      * @var ECAP_T::CNT
      * Offset: 0x00  Input Capture Counter (24-bit up counter)
@@ -234,147 +234,146 @@ typedef struct
      * |        |          |Reflecting the value of input channel 2, CAP2.
      * |        |          |(The bit is read only and write is ignored)
      */
-    __IO uint32_t CNT;                   /*!< [0x0000] Input Capture Counter                                            */
-    __IO uint32_t HLD0;                  /*!< [0x0004] Input Capture Hold Register 0                                    */
-    __IO uint32_t HLD1;                  /*!< [0x0008] Input Capture Hold Register 1                                    */
-    __IO uint32_t HLD2;                  /*!< [0x000c] Input Capture Hold Register 2                                    */
-    __IO uint32_t CNTCMP;                /*!< [0x0010] Input Capture Compare Register                                   */
-    __IO uint32_t CTL0;                  /*!< [0x0014] Input Capture Control Register 0                                 */
-    __IO uint32_t CTL1;                  /*!< [0x0018] Input Capture Control Register 1                                 */
-    __IO uint32_t STATUS;                /*!< [0x001c] Input Capture Status Register                                    */
-
+    __IO uint32_t CNT;    /*!< [0x0000] Input Capture Counter                                            */
+    __IO uint32_t HLD0;   /*!< [0x0004] Input Capture Hold Register 0                                    */
+    __IO uint32_t HLD1;   /*!< [0x0008] Input Capture Hold Register 1                                    */
+    __IO uint32_t HLD2;   /*!< [0x000c] Input Capture Hold Register 2                                    */
+    __IO uint32_t CNTCMP; /*!< [0x0010] Input Capture Compare Register                                   */
+    __IO uint32_t CTL0;   /*!< [0x0014] Input Capture Control Register 0                                 */
+    __IO uint32_t CTL1;   /*!< [0x0018] Input Capture Control Register 1                                 */
+    __IO uint32_t STATUS; /*!< [0x001c] Input Capture Status Register                                    */
 } ECAP_T;
 
 /**
-    @addtogroup ECAP_CONST ECAP Bit Field Definition
-    Constant Definitions for ECAP Controller
-@{ */
+ *  @addtogroup ECAP_CONST ECAP Bit Field Definition
+ *  Constant Definitions for ECAP Controller
+ * @{ */
 
-#define ECAP_CNT_CNT_Pos                 (0)                                               /*!< ECAP_T::CNT: CNT Position              */
-#define ECAP_CNT_CNT_Msk                 (0xfffffful << ECAP_CNT_CNT_Pos)                  /*!< ECAP_T::CNT: CNT Mask                  */
+#define ECAP_CNT_CNT_Pos           ( 0 )                                                   /*!< ECAP_T::CNT: CNT Position              */
+#define ECAP_CNT_CNT_Msk           ( 0xfffffful << ECAP_CNT_CNT_Pos )                      /*!< ECAP_T::CNT: CNT Mask                  */
 
-#define ECAP_HLD0_HOLD_Pos               (0)                                               /*!< ECAP_T::HLD0: HOLD Position            */
-#define ECAP_HLD0_HOLD_Msk               (0xfffffful << ECAP_HLD0_HOLD_Pos)                /*!< ECAP_T::HLD0: HOLD Mask                */
+#define ECAP_HLD0_HOLD_Pos         ( 0 )                                                   /*!< ECAP_T::HLD0: HOLD Position            */
+#define ECAP_HLD0_HOLD_Msk         ( 0xfffffful << ECAP_HLD0_HOLD_Pos )                    /*!< ECAP_T::HLD0: HOLD Mask                */
 
-#define ECAP_HLD1_HOLD_Pos               (0)                                               /*!< ECAP_T::HLD1: HOLD Position            */
-#define ECAP_HLD1_HOLD_Msk               (0xfffffful << ECAP_HLD1_HOLD_Pos)                /*!< ECAP_T::HLD1: HOLD Mask                */
+#define ECAP_HLD1_HOLD_Pos         ( 0 )                                                   /*!< ECAP_T::HLD1: HOLD Position            */
+#define ECAP_HLD1_HOLD_Msk         ( 0xfffffful << ECAP_HLD1_HOLD_Pos )                    /*!< ECAP_T::HLD1: HOLD Mask                */
 
-#define ECAP_HLD2_HOLD_Pos               (0)                                               /*!< ECAP_T::HLD2: HOLD Position            */
-#define ECAP_HLD2_HOLD_Msk               (0xfffffful << ECAP_HLD2_HOLD_Pos)                /*!< ECAP_T::HLD2: HOLD Mask                */
+#define ECAP_HLD2_HOLD_Pos         ( 0 )                                                   /*!< ECAP_T::HLD2: HOLD Position            */
+#define ECAP_HLD2_HOLD_Msk         ( 0xfffffful << ECAP_HLD2_HOLD_Pos )                    /*!< ECAP_T::HLD2: HOLD Mask                */
 
-#define ECAP_CNTCMP_CNTCMP_Pos           (0)                                               /*!< ECAP_T::CNTCMP: CNTCMP Position        */
-#define ECAP_CNTCMP_CNTCMP_Msk           (0xfffffful << ECAP_CNTCMP_CNTCMP_Pos)            /*!< ECAP_T::CNTCMP: CNTCMP Mask            */
+#define ECAP_CNTCMP_CNTCMP_Pos     ( 0 )                                                   /*!< ECAP_T::CNTCMP: CNTCMP Position        */
+#define ECAP_CNTCMP_CNTCMP_Msk     ( 0xfffffful << ECAP_CNTCMP_CNTCMP_Pos )                /*!< ECAP_T::CNTCMP: CNTCMP Mask            */
 
-#define ECAP_CTL0_NFCLKSEL_Pos           (0)                                               /*!< ECAP_T::CTL0: NFCLKSEL Position        */
-#define ECAP_CTL0_NFCLKSEL_Msk           (0x7ul << ECAP_CTL0_NFCLKSEL_Pos)                 /*!< ECAP_T::CTL0: NFCLKSEL Mask            */
+#define ECAP_CTL0_NFCLKSEL_Pos     ( 0 )                                                   /*!< ECAP_T::CTL0: NFCLKSEL Position        */
+#define ECAP_CTL0_NFCLKSEL_Msk     ( 0x7ul << ECAP_CTL0_NFCLKSEL_Pos )                     /*!< ECAP_T::CTL0: NFCLKSEL Mask            */
 
-#define ECAP_CTL0_CAPNFDIS_Pos           (3)                                               /*!< ECAP_T::CTL0: CAPNFDIS Position        */
-#define ECAP_CTL0_CAPNFDIS_Msk           (0x1ul << ECAP_CTL0_CAPNFDIS_Pos)                 /*!< ECAP_T::CTL0: CAPNFDIS Mask            */
+#define ECAP_CTL0_CAPNFDIS_Pos     ( 3 )                                                   /*!< ECAP_T::CTL0: CAPNFDIS Position        */
+#define ECAP_CTL0_CAPNFDIS_Msk     ( 0x1ul << ECAP_CTL0_CAPNFDIS_Pos )                     /*!< ECAP_T::CTL0: CAPNFDIS Mask            */
 
-#define ECAP_CTL0_IC0EN_Pos              (4)                                               /*!< ECAP_T::CTL0: IC0EN Position           */
-#define ECAP_CTL0_IC0EN_Msk              (0x1ul << ECAP_CTL0_IC0EN_Pos)                    /*!< ECAP_T::CTL0: IC0EN Mask               */
+#define ECAP_CTL0_IC0EN_Pos        ( 4 )                                                   /*!< ECAP_T::CTL0: IC0EN Position           */
+#define ECAP_CTL0_IC0EN_Msk        ( 0x1ul << ECAP_CTL0_IC0EN_Pos )                        /*!< ECAP_T::CTL0: IC0EN Mask               */
 
-#define ECAP_CTL0_IC1EN_Pos              (5)                                               /*!< ECAP_T::CTL0: IC1EN Position           */
-#define ECAP_CTL0_IC1EN_Msk              (0x1ul << ECAP_CTL0_IC1EN_Pos)                    /*!< ECAP_T::CTL0: IC1EN Mask               */
+#define ECAP_CTL0_IC1EN_Pos        ( 5 )                                                   /*!< ECAP_T::CTL0: IC1EN Position           */
+#define ECAP_CTL0_IC1EN_Msk        ( 0x1ul << ECAP_CTL0_IC1EN_Pos )                        /*!< ECAP_T::CTL0: IC1EN Mask               */
 
-#define ECAP_CTL0_IC2EN_Pos              (6)                                               /*!< ECAP_T::CTL0: IC2EN Position           */
-#define ECAP_CTL0_IC2EN_Msk              (0x1ul << ECAP_CTL0_IC2EN_Pos)                    /*!< ECAP_T::CTL0: IC2EN Mask               */
+#define ECAP_CTL0_IC2EN_Pos        ( 6 )                                                   /*!< ECAP_T::CTL0: IC2EN Position           */
+#define ECAP_CTL0_IC2EN_Msk        ( 0x1ul << ECAP_CTL0_IC2EN_Pos )                        /*!< ECAP_T::CTL0: IC2EN Mask               */
 
-#define ECAP_CTL0_CAPSEL0_Pos            (8)                                               /*!< ECAP_T::CTL0: CAPSEL0 Position         */
-#define ECAP_CTL0_CAPSEL0_Msk            (0x3ul << ECAP_CTL0_CAPSEL0_Pos)                  /*!< ECAP_T::CTL0: CAPSEL0 Mask             */
+#define ECAP_CTL0_CAPSEL0_Pos      ( 8 )                                                   /*!< ECAP_T::CTL0: CAPSEL0 Position         */
+#define ECAP_CTL0_CAPSEL0_Msk      ( 0x3ul << ECAP_CTL0_CAPSEL0_Pos )                      /*!< ECAP_T::CTL0: CAPSEL0 Mask             */
 
-#define ECAP_CTL0_CAPSEL1_Pos            (10)                                              /*!< ECAP_T::CTL0: CAPSEL1 Position         */
-#define ECAP_CTL0_CAPSEL1_Msk            (0x3ul << ECAP_CTL0_CAPSEL1_Pos)                  /*!< ECAP_T::CTL0: CAPSEL1 Mask             */
+#define ECAP_CTL0_CAPSEL1_Pos      ( 10 )                                                  /*!< ECAP_T::CTL0: CAPSEL1 Position         */
+#define ECAP_CTL0_CAPSEL1_Msk      ( 0x3ul << ECAP_CTL0_CAPSEL1_Pos )                      /*!< ECAP_T::CTL0: CAPSEL1 Mask             */
 
-#define ECAP_CTL0_CAPSEL2_Pos            (12)                                              /*!< ECAP_T::CTL0: CAPSEL2 Position         */
-#define ECAP_CTL0_CAPSEL2_Msk            (0x3ul << ECAP_CTL0_CAPSEL2_Pos)                  /*!< ECAP_T::CTL0: CAPSEL2 Mask             */
+#define ECAP_CTL0_CAPSEL2_Pos      ( 12 )                                                  /*!< ECAP_T::CTL0: CAPSEL2 Position         */
+#define ECAP_CTL0_CAPSEL2_Msk      ( 0x3ul << ECAP_CTL0_CAPSEL2_Pos )                      /*!< ECAP_T::CTL0: CAPSEL2 Mask             */
 
-#define ECAP_CTL0_CAPIEN0_Pos            (16)                                              /*!< ECAP_T::CTL0: CAPIEN0 Position         */
-#define ECAP_CTL0_CAPIEN0_Msk            (0x1ul << ECAP_CTL0_CAPIEN0_Pos)                  /*!< ECAP_T::CTL0: CAPIEN0 Mask             */
+#define ECAP_CTL0_CAPIEN0_Pos      ( 16 )                                                  /*!< ECAP_T::CTL0: CAPIEN0 Position         */
+#define ECAP_CTL0_CAPIEN0_Msk      ( 0x1ul << ECAP_CTL0_CAPIEN0_Pos )                      /*!< ECAP_T::CTL0: CAPIEN0 Mask             */
 
-#define ECAP_CTL0_CAPIEN1_Pos            (17)                                              /*!< ECAP_T::CTL0: CAPIEN1 Position         */
-#define ECAP_CTL0_CAPIEN1_Msk            (0x1ul << ECAP_CTL0_CAPIEN1_Pos)                  /*!< ECAP_T::CTL0: CAPIEN1 Mask             */
+#define ECAP_CTL0_CAPIEN1_Pos      ( 17 )                                                  /*!< ECAP_T::CTL0: CAPIEN1 Position         */
+#define ECAP_CTL0_CAPIEN1_Msk      ( 0x1ul << ECAP_CTL0_CAPIEN1_Pos )                      /*!< ECAP_T::CTL0: CAPIEN1 Mask             */
 
-#define ECAP_CTL0_CAPIEN2_Pos            (18)                                              /*!< ECAP_T::CTL0: CAPIEN2 Position         */
-#define ECAP_CTL0_CAPIEN2_Msk            (0x1ul << ECAP_CTL0_CAPIEN2_Pos)                  /*!< ECAP_T::CTL0: CAPIEN2 Mask             */
+#define ECAP_CTL0_CAPIEN2_Pos      ( 18 )                                                  /*!< ECAP_T::CTL0: CAPIEN2 Position         */
+#define ECAP_CTL0_CAPIEN2_Msk      ( 0x1ul << ECAP_CTL0_CAPIEN2_Pos )                      /*!< ECAP_T::CTL0: CAPIEN2 Mask             */
 
-#define ECAP_CTL0_OVIEN_Pos              (20)                                              /*!< ECAP_T::CTL0: OVIEN Position           */
-#define ECAP_CTL0_OVIEN_Msk              (0x1ul << ECAP_CTL0_OVIEN_Pos)                    /*!< ECAP_T::CTL0: OVIEN Mask               */
+#define ECAP_CTL0_OVIEN_Pos        ( 20 )                                                  /*!< ECAP_T::CTL0: OVIEN Position           */
+#define ECAP_CTL0_OVIEN_Msk        ( 0x1ul << ECAP_CTL0_OVIEN_Pos )                        /*!< ECAP_T::CTL0: OVIEN Mask               */
 
-#define ECAP_CTL0_CMPIEN_Pos             (21)                                              /*!< ECAP_T::CTL0: CMPIEN Position          */
-#define ECAP_CTL0_CMPIEN_Msk             (0x1ul << ECAP_CTL0_CMPIEN_Pos)                   /*!< ECAP_T::CTL0: CMPIEN Mask              */
+#define ECAP_CTL0_CMPIEN_Pos       ( 21 )                                                  /*!< ECAP_T::CTL0: CMPIEN Position          */
+#define ECAP_CTL0_CMPIEN_Msk       ( 0x1ul << ECAP_CTL0_CMPIEN_Pos )                       /*!< ECAP_T::CTL0: CMPIEN Mask              */
 
-#define ECAP_CTL0_CNTEN_Pos              (24)                                              /*!< ECAP_T::CTL0: CNTEN Position           */
-#define ECAP_CTL0_CNTEN_Msk              (0x1ul << ECAP_CTL0_CNTEN_Pos)                    /*!< ECAP_T::CTL0: CNTEN Mask               */
+#define ECAP_CTL0_CNTEN_Pos        ( 24 )                                                  /*!< ECAP_T::CTL0: CNTEN Position           */
+#define ECAP_CTL0_CNTEN_Msk        ( 0x1ul << ECAP_CTL0_CNTEN_Pos )                        /*!< ECAP_T::CTL0: CNTEN Mask               */
 
-#define ECAP_CTL0_CMPCLREN_Pos           (25)                                              /*!< ECAP_T::CTL0: CMPCLREN Position        */
-#define ECAP_CTL0_CMPCLREN_Msk           (0x1ul << ECAP_CTL0_CMPCLREN_Pos)                 /*!< ECAP_T::CTL0: CMPCLREN Mask            */
+#define ECAP_CTL0_CMPCLREN_Pos     ( 25 )                                                  /*!< ECAP_T::CTL0: CMPCLREN Position        */
+#define ECAP_CTL0_CMPCLREN_Msk     ( 0x1ul << ECAP_CTL0_CMPCLREN_Pos )                     /*!< ECAP_T::CTL0: CMPCLREN Mask            */
 
-#define ECAP_CTL0_CMPEN_Pos              (28)                                              /*!< ECAP_T::CTL0: CMPEN Position           */
-#define ECAP_CTL0_CMPEN_Msk              (0x1ul << ECAP_CTL0_CMPEN_Pos)                    /*!< ECAP_T::CTL0: CMPEN Mask               */
+#define ECAP_CTL0_CMPEN_Pos        ( 28 )                                                  /*!< ECAP_T::CTL0: CMPEN Position           */
+#define ECAP_CTL0_CMPEN_Msk        ( 0x1ul << ECAP_CTL0_CMPEN_Pos )                        /*!< ECAP_T::CTL0: CMPEN Mask               */
 
-#define ECAP_CTL0_CAPEN_Pos              (29)                                              /*!< ECAP_T::CTL0: CAPEN Position           */
-#define ECAP_CTL0_CAPEN_Msk              (0x1ul << ECAP_CTL0_CAPEN_Pos)                    /*!< ECAP_T::CTL0: CAPEN Mask               */
+#define ECAP_CTL0_CAPEN_Pos        ( 29 )                                                  /*!< ECAP_T::CTL0: CAPEN Position           */
+#define ECAP_CTL0_CAPEN_Msk        ( 0x1ul << ECAP_CTL0_CAPEN_Pos )                        /*!< ECAP_T::CTL0: CAPEN Mask               */
 
-#define ECAP_CTL1_EDGESEL0_Pos           (0)                                               /*!< ECAP_T::CTL1: EDGESEL0 Position        */
-#define ECAP_CTL1_EDGESEL0_Msk           (0x3ul << ECAP_CTL1_EDGESEL0_Pos)                 /*!< ECAP_T::CTL1: EDGESEL0 Mask            */
+#define ECAP_CTL1_EDGESEL0_Pos     ( 0 )                                                   /*!< ECAP_T::CTL1: EDGESEL0 Position        */
+#define ECAP_CTL1_EDGESEL0_Msk     ( 0x3ul << ECAP_CTL1_EDGESEL0_Pos )                     /*!< ECAP_T::CTL1: EDGESEL0 Mask            */
 
-#define ECAP_CTL1_EDGESEL1_Pos           (2)                                               /*!< ECAP_T::CTL1: EDGESEL1 Position        */
-#define ECAP_CTL1_EDGESEL1_Msk           (0x3ul << ECAP_CTL1_EDGESEL1_Pos)                 /*!< ECAP_T::CTL1: EDGESEL1 Mask            */
+#define ECAP_CTL1_EDGESEL1_Pos     ( 2 )                                                   /*!< ECAP_T::CTL1: EDGESEL1 Position        */
+#define ECAP_CTL1_EDGESEL1_Msk     ( 0x3ul << ECAP_CTL1_EDGESEL1_Pos )                     /*!< ECAP_T::CTL1: EDGESEL1 Mask            */
 
-#define ECAP_CTL1_EDGESEL2_Pos           (4)                                               /*!< ECAP_T::CTL1: EDGESEL2 Position        */
-#define ECAP_CTL1_EDGESEL2_Msk           (0x3ul << ECAP_CTL1_EDGESEL2_Pos)                 /*!< ECAP_T::CTL1: EDGESEL2 Mask            */
+#define ECAP_CTL1_EDGESEL2_Pos     ( 4 )                                                   /*!< ECAP_T::CTL1: EDGESEL2 Position        */
+#define ECAP_CTL1_EDGESEL2_Msk     ( 0x3ul << ECAP_CTL1_EDGESEL2_Pos )                     /*!< ECAP_T::CTL1: EDGESEL2 Mask            */
 
-#define ECAP_CTL1_CAP0RLDEN_Pos          (8)                                               /*!< ECAP_T::CTL1: CAP0RLDEN Position       */
-#define ECAP_CTL1_CAP0RLDEN_Msk          (0x1ul << ECAP_CTL1_CAP0RLDEN_Pos)                /*!< ECAP_T::CTL1: CAP0RLDEN Mask           */
+#define ECAP_CTL1_CAP0RLDEN_Pos    ( 8 )                                                   /*!< ECAP_T::CTL1: CAP0RLDEN Position       */
+#define ECAP_CTL1_CAP0RLDEN_Msk    ( 0x1ul << ECAP_CTL1_CAP0RLDEN_Pos )                    /*!< ECAP_T::CTL1: CAP0RLDEN Mask           */
 
-#define ECAP_CTL1_CAP1RLDEN_Pos          (9)                                               /*!< ECAP_T::CTL1: CAP1RLDEN Position       */
-#define ECAP_CTL1_CAP1RLDEN_Msk          (0x1ul << ECAP_CTL1_CAP1RLDEN_Pos)                /*!< ECAP_T::CTL1: CAP1RLDEN Mask           */
+#define ECAP_CTL1_CAP1RLDEN_Pos    ( 9 )                                                   /*!< ECAP_T::CTL1: CAP1RLDEN Position       */
+#define ECAP_CTL1_CAP1RLDEN_Msk    ( 0x1ul << ECAP_CTL1_CAP1RLDEN_Pos )                    /*!< ECAP_T::CTL1: CAP1RLDEN Mask           */
 
-#define ECAP_CTL1_CAP2RLDEN_Pos          (10)                                              /*!< ECAP_T::CTL1: CAP2RLDEN Position       */
-#define ECAP_CTL1_CAP2RLDEN_Msk          (0x1ul << ECAP_CTL1_CAP2RLDEN_Pos)                /*!< ECAP_T::CTL1: CAP2RLDEN Mask           */
+#define ECAP_CTL1_CAP2RLDEN_Pos    ( 10 )                                                  /*!< ECAP_T::CTL1: CAP2RLDEN Position       */
+#define ECAP_CTL1_CAP2RLDEN_Msk    ( 0x1ul << ECAP_CTL1_CAP2RLDEN_Pos )                    /*!< ECAP_T::CTL1: CAP2RLDEN Mask           */
 
-#define ECAP_CTL1_OVRLDEN_Pos            (11)                                              /*!< ECAP_T::CTL1: OVRLDEN Position         */
-#define ECAP_CTL1_OVRLDEN_Msk            (0x1ul << ECAP_CTL1_OVRLDEN_Pos)                  /*!< ECAP_T::CTL1: OVRLDEN Mask             */
+#define ECAP_CTL1_OVRLDEN_Pos      ( 11 )                                                  /*!< ECAP_T::CTL1: OVRLDEN Position         */
+#define ECAP_CTL1_OVRLDEN_Msk      ( 0x1ul << ECAP_CTL1_OVRLDEN_Pos )                      /*!< ECAP_T::CTL1: OVRLDEN Mask             */
 
-#define ECAP_CTL1_CLKSEL_Pos             (12)                                              /*!< ECAP_T::CTL1: CLKSEL Position          */
-#define ECAP_CTL1_CLKSEL_Msk             (0x7ul << ECAP_CTL1_CLKSEL_Pos)                   /*!< ECAP_T::CTL1: CLKSEL Mask              */
+#define ECAP_CTL1_CLKSEL_Pos       ( 12 )                                                  /*!< ECAP_T::CTL1: CLKSEL Position          */
+#define ECAP_CTL1_CLKSEL_Msk       ( 0x7ul << ECAP_CTL1_CLKSEL_Pos )                       /*!< ECAP_T::CTL1: CLKSEL Mask              */
 
-#define ECAP_CTL1_CNTSRCSEL_Pos          (16)                                              /*!< ECAP_T::CTL1: CNTSRCSEL Position       */
-#define ECAP_CTL1_CNTSRCSEL_Msk          (0x3ul << ECAP_CTL1_CNTSRCSEL_Pos)                /*!< ECAP_T::CTL1: CNTSRCSEL Mask           */
+#define ECAP_CTL1_CNTSRCSEL_Pos    ( 16 )                                                  /*!< ECAP_T::CTL1: CNTSRCSEL Position       */
+#define ECAP_CTL1_CNTSRCSEL_Msk    ( 0x3ul << ECAP_CTL1_CNTSRCSEL_Pos )                    /*!< ECAP_T::CTL1: CNTSRCSEL Mask           */
 
-#define ECAP_CTL1_CAP0CLREN_Pos          (20)                                              /*!< ECAP_T::CTL1: CAP0CLREN Position       */
-#define ECAP_CTL1_CAP0CLREN_Msk          (0x1ul << ECAP_CTL1_CAP0CLREN_Pos)                /*!< ECAP_T::CTL1: CAP0CLREN Mask           */
+#define ECAP_CTL1_CAP0CLREN_Pos    ( 20 )                                                  /*!< ECAP_T::CTL1: CAP0CLREN Position       */
+#define ECAP_CTL1_CAP0CLREN_Msk    ( 0x1ul << ECAP_CTL1_CAP0CLREN_Pos )                    /*!< ECAP_T::CTL1: CAP0CLREN Mask           */
 
-#define ECAP_CTL1_CAP1CLREN_Pos          (21)                                              /*!< ECAP_T::CTL1: CAP1CLREN Position       */
-#define ECAP_CTL1_CAP1CLREN_Msk          (0x1ul << ECAP_CTL1_CAP1CLREN_Pos)                /*!< ECAP_T::CTL1: CAP1CLREN Mask           */
+#define ECAP_CTL1_CAP1CLREN_Pos    ( 21 )                                                  /*!< ECAP_T::CTL1: CAP1CLREN Position       */
+#define ECAP_CTL1_CAP1CLREN_Msk    ( 0x1ul << ECAP_CTL1_CAP1CLREN_Pos )                    /*!< ECAP_T::CTL1: CAP1CLREN Mask           */
 
-#define ECAP_CTL1_CAP2CLREN_Pos          (22)                                              /*!< ECAP_T::CTL1: CAP2CLREN Position       */
-#define ECAP_CTL1_CAP2CLREN_Msk          (0x1ul << ECAP_CTL1_CAP2CLREN_Pos)                /*!< ECAP_T::CTL1: CAP2CLREN Mask           */
+#define ECAP_CTL1_CAP2CLREN_Pos    ( 22 )                                                  /*!< ECAP_T::CTL1: CAP2CLREN Position       */
+#define ECAP_CTL1_CAP2CLREN_Msk    ( 0x1ul << ECAP_CTL1_CAP2CLREN_Pos )                    /*!< ECAP_T::CTL1: CAP2CLREN Mask           */
 
-#define ECAP_STATUS_CAPTF0_Pos           (0)                                               /*!< ECAP_T::STATUS: CAPTF0 Position        */
-#define ECAP_STATUS_CAPTF0_Msk           (0x1ul << ECAP_STATUS_CAPTF0_Pos)                 /*!< ECAP_T::STATUS: CAPTF0 Mask            */
+#define ECAP_STATUS_CAPTF0_Pos     ( 0 )                                                   /*!< ECAP_T::STATUS: CAPTF0 Position        */
+#define ECAP_STATUS_CAPTF0_Msk     ( 0x1ul << ECAP_STATUS_CAPTF0_Pos )                     /*!< ECAP_T::STATUS: CAPTF0 Mask            */
 
-#define ECAP_STATUS_CAPTF1_Pos           (1)                                               /*!< ECAP_T::STATUS: CAPTF1 Position        */
-#define ECAP_STATUS_CAPTF1_Msk           (0x1ul << ECAP_STATUS_CAPTF1_Pos)                 /*!< ECAP_T::STATUS: CAPTF1 Mask            */
+#define ECAP_STATUS_CAPTF1_Pos     ( 1 )                                                   /*!< ECAP_T::STATUS: CAPTF1 Position        */
+#define ECAP_STATUS_CAPTF1_Msk     ( 0x1ul << ECAP_STATUS_CAPTF1_Pos )                     /*!< ECAP_T::STATUS: CAPTF1 Mask            */
 
-#define ECAP_STATUS_CAPTF2_Pos           (2)                                               /*!< ECAP_T::STATUS: CAPTF2 Position        */
-#define ECAP_STATUS_CAPTF2_Msk           (0x1ul << ECAP_STATUS_CAPTF2_Pos)                 /*!< ECAP_T::STATUS: CAPTF2 Mask            */
+#define ECAP_STATUS_CAPTF2_Pos     ( 2 )                                                   /*!< ECAP_T::STATUS: CAPTF2 Position        */
+#define ECAP_STATUS_CAPTF2_Msk     ( 0x1ul << ECAP_STATUS_CAPTF2_Pos )                     /*!< ECAP_T::STATUS: CAPTF2 Mask            */
 
-#define ECAP_STATUS_CAPCMPF_Pos          (4)                                               /*!< ECAP_T::STATUS: CAPCMPF Position       */
-#define ECAP_STATUS_CAPCMPF_Msk          (0x1ul << ECAP_STATUS_CAPCMPF_Pos)                /*!< ECAP_T::STATUS: CAPCMPF Mask           */
+#define ECAP_STATUS_CAPCMPF_Pos    ( 4 )                                                   /*!< ECAP_T::STATUS: CAPCMPF Position       */
+#define ECAP_STATUS_CAPCMPF_Msk    ( 0x1ul << ECAP_STATUS_CAPCMPF_Pos )                    /*!< ECAP_T::STATUS: CAPCMPF Mask           */
 
-#define ECAP_STATUS_CAPOVF_Pos           (5)                                               /*!< ECAP_T::STATUS: CAPOVF Position        */
-#define ECAP_STATUS_CAPOVF_Msk           (0x1ul << ECAP_STATUS_CAPOVF_Pos)                 /*!< ECAP_T::STATUS: CAPOVF Mask            */
+#define ECAP_STATUS_CAPOVF_Pos     ( 5 )                                                   /*!< ECAP_T::STATUS: CAPOVF Position        */
+#define ECAP_STATUS_CAPOVF_Msk     ( 0x1ul << ECAP_STATUS_CAPOVF_Pos )                     /*!< ECAP_T::STATUS: CAPOVF Mask            */
 
-#define ECAP_STATUS_CAP0_Pos             (8)                                               /*!< ECAP_T::STATUS: CAP0 Position          */
-#define ECAP_STATUS_CAP0_Msk             (0x1ul << ECAP_STATUS_CAP0_Pos)                   /*!< ECAP_T::STATUS: CAP0 Mask              */
+#define ECAP_STATUS_CAP0_Pos       ( 8 )                                                   /*!< ECAP_T::STATUS: CAP0 Position          */
+#define ECAP_STATUS_CAP0_Msk       ( 0x1ul << ECAP_STATUS_CAP0_Pos )                       /*!< ECAP_T::STATUS: CAP0 Mask              */
 
-#define ECAP_STATUS_CAP1_Pos             (9)                                               /*!< ECAP_T::STATUS: CAP1 Position          */
-#define ECAP_STATUS_CAP1_Msk             (0x1ul << ECAP_STATUS_CAP1_Pos)                   /*!< ECAP_T::STATUS: CAP1 Mask              */
+#define ECAP_STATUS_CAP1_Pos       ( 9 )                                                   /*!< ECAP_T::STATUS: CAP1 Position          */
+#define ECAP_STATUS_CAP1_Msk       ( 0x1ul << ECAP_STATUS_CAP1_Pos )                       /*!< ECAP_T::STATUS: CAP1 Mask              */
 
-#define ECAP_STATUS_CAP2_Pos             (10)                                              /*!< ECAP_T::STATUS: CAP2 Position          */
-#define ECAP_STATUS_CAP2_Msk             (0x1ul << ECAP_STATUS_CAP2_Pos)                   /*!< ECAP_T::STATUS: CAP2 Mask              */
+#define ECAP_STATUS_CAP2_Pos       ( 10 )                                                  /*!< ECAP_T::STATUS: CAP2 Position          */
+#define ECAP_STATUS_CAP2_Msk       ( 0x1ul << ECAP_STATUS_CAP2_Pos )                       /*!< ECAP_T::STATUS: CAP2 Mask              */
 
 /**@}*/ /* ECAP_CONST */
 /**@}*/ /* end of ECAP register group */

@@ -73,19 +73,21 @@
  *----------------------------------------------------------------------------*/
 
 static trng_callback_t _trng_callback;
-static void*           _trng_callback_arg;
+static void * _trng_callback_arg;
 
 /*------------------------------------------------------------------------------
  *         Local functions
  *------------------------------------------------------------------------------*/
 
-static void _trng_handler(void)
+static void _trng_handler( void )
 {
-	if (TRNG->TRNG_ISR & TRNG_ISR_DATRDY) {
-		if (_trng_callback) {
-			_trng_callback(TRNG->TRNG_ODATA, _trng_callback_arg);
-		}
-	}
+    if( TRNG->TRNG_ISR & TRNG_ISR_DATRDY )
+    {
+        if( _trng_callback )
+        {
+            _trng_callback( TRNG->TRNG_ODATA, _trng_callback_arg );
+        }
+    }
 }
 
 /*------------------------------------------------------------------------------
@@ -94,35 +96,39 @@ static void _trng_handler(void)
 
 void trng_enable()
 {
-	pmc_enable_peripheral(ID_TRNG);
-	TRNG->TRNG_CR = TRNG_CR_ENABLE | TRNG_CR_KEY_PASSWD;
+    pmc_enable_peripheral( ID_TRNG );
+    TRNG->TRNG_CR = TRNG_CR_ENABLE | TRNG_CR_KEY_PASSWD;
 }
 
 void trng_disable()
 {
-	TRNG->TRNG_CR = TRNG_CR_KEY_PASSWD;
-	pmc_disable_peripheral(ID_TRNG);
+    TRNG->TRNG_CR = TRNG_CR_KEY_PASSWD;
+    pmc_disable_peripheral( ID_TRNG );
 }
 
-void trng_enable_it(trng_callback_t cb, void* user_arg)
+void trng_enable_it( trng_callback_t cb,
+                     void * user_arg )
 {
-	_trng_callback = cb;
-	_trng_callback_arg = user_arg;
-	aic_set_source_vector(ID_TRNG, _trng_handler);
-	aic_enable(ID_TRNG);
-	TRNG->TRNG_IER = TRNG_IER_DATRDY;
+    _trng_callback = cb;
+    _trng_callback_arg = user_arg;
+    aic_set_source_vector( ID_TRNG, _trng_handler );
+    aic_enable( ID_TRNG );
+    TRNG->TRNG_IER = TRNG_IER_DATRDY;
 }
 
-void trng_disable_it(void)
+void trng_disable_it( void )
 {
-	TRNG->TRNG_IDR = TRNG_IDR_DATRDY;
-	aic_disable(ID_TRNG);
-	_trng_callback = NULL;
-	_trng_callback_arg = NULL;
+    TRNG->TRNG_IDR = TRNG_IDR_DATRDY;
+    aic_disable( ID_TRNG );
+    _trng_callback = NULL;
+    _trng_callback_arg = NULL;
 }
 
-uint32_t trng_get_random_data(void)
+uint32_t trng_get_random_data( void )
 {
-	while (!(TRNG->TRNG_ISR & TRNG_ISR_DATRDY));
-	return TRNG->TRNG_ODATA;
+    while( !( TRNG->TRNG_ISR & TRNG_ISR_DATRDY ) )
+    {
+    }
+
+    return TRNG->TRNG_ODATA;
 }

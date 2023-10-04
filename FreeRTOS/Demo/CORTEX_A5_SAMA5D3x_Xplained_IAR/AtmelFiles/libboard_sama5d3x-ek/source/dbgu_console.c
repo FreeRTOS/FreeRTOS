@@ -48,16 +48,16 @@
  *----------------------------------------------------------------------------*/
 
 /** The Pheripheral has no HW ID */
-#define ID_NOTUSED         0xFF
+#define ID_NOTUSED             0xFF
 
 /** Usart Hw ID (ID_USART0) */
-#define CONSOLE_ID              (pDbgPort->bID)
+#define CONSOLE_ID             ( pDbgPort->bID )
 /** Usart Hw interface used by the console (USART0). */
-#define CONSOLE_DBGU            ((Dbgu*)pDbgPort->pHw)
+#define CONSOLE_DBGU           ( ( Dbgu * ) pDbgPort->pHw )
 /** Pins description list */
-#define CONSOLE_PINLIST         (pDbgPort->pPioList)
+#define CONSOLE_PINLIST        ( pDbgPort->pPioList )
 /** Pins description list size */
-#define CONSOLE_PINLISTSIZE     (pDbgPort->bPioListSize)
+#define CONSOLE_PINLISTSIZE    ( pDbgPort->bPioListSize )
 
 /*----------------------------------------------------------------------------
  *        Types
@@ -66,11 +66,12 @@
 /**
  * Debug port struct
  */
-typedef struct _DbgPort {
-    const  void*   pHw;
-    const  Pin*    pPioList;
-    const  uint8_t bPioListSize;
-    const  uint8_t bID;
+typedef struct _DbgPort
+{
+    const void * pHw;
+    const Pin * pPioList;
+    const uint8_t bPioListSize;
+    const uint8_t bID;
 } sDbgPort;
 
 /*----------------------------------------------------------------------------
@@ -78,52 +79,53 @@ typedef struct _DbgPort {
  *----------------------------------------------------------------------------*/
 
 /** Pins for DBGU */
-static const Pin pinsDbgu[] = {PINS_DBGU};
+static const Pin pinsDbgu[] = { PINS_DBGU };
 /** Pins for USART0 */
-static const Pin pinsUs0[] = {PIN_USART0_TXD, PIN_USART0_RXD};
+static const Pin pinsUs0[] = { PIN_USART0_TXD, PIN_USART0_RXD };
 /** Pins for USART1 */
-static const Pin pinsUs1[] = {PIN_USART1_TXD, PIN_USART1_RXD};
+static const Pin pinsUs1[] = { PIN_USART1_TXD, PIN_USART1_RXD };
 
 /** Uses DBGU as debug port */
 static sDbgPort dbgpDbgu =
 {
     DBGU,
-    pinsDbgu, PIO_LISTSIZE(pinsDbgu),
+    pinsDbgu,PIO_LISTSIZE( pinsDbgu ),
     ID_DBGU
 };
 /** Uses USART0 as debug port */
-static sDbgPort dbgpUs0  =
+static sDbgPort dbgpUs0 =
 {
     USART0,
-    pinsUs0, PIO_LISTSIZE(pinsUs0),
+    pinsUs0,PIO_LISTSIZE( pinsUs0 ),
     ID_USART0
 };
 
 /** Uses USART0 as debug port */
-static sDbgPort dbgpUs1  =
+static sDbgPort dbgpUs1 =
 {
     USART1,
-    pinsUs1, PIO_LISTSIZE(pinsUs1),
+    pinsUs1,PIO_LISTSIZE( pinsUs1 ),
     ID_USART1
 };
 
 /** Current used debug port */
-static sDbgPort *pDbgPort = &dbgpDbgu;
+static sDbgPort * pDbgPort = &dbgpDbgu;
 /** Console initialize status */
 uint8_t _bConsoleIsInitialized = 0;
 
 /**
  * \brief Select USART0 as DBGU port.
  */
-void DBGU_ConsoleUseUSART0(void)
+void DBGU_ConsoleUseUSART0( void )
 {
     pDbgPort = &dbgpUs0;
     _bConsoleIsInitialized = 0;
 }
+
 /**
  * \brief Select USART1 as DBGU port.
  */
-void DBGU_ConsoleUseUSART1(void)
+void DBGU_ConsoleUseUSART1( void )
 {
     pDbgPort = &dbgpUs1;
     _bConsoleIsInitialized = 0;
@@ -132,7 +134,7 @@ void DBGU_ConsoleUseUSART1(void)
 /**
  * \brief Select DBGU as DBGU port.
  */
-void DBGU_ConsoleUseDBGU(void)
+void DBGU_ConsoleUseDBGU( void )
 {
     pDbgPort = &dbgpDbgu;
     _bConsoleIsInitialized = 0;
@@ -144,36 +146,39 @@ void DBGU_ConsoleUseDBGU(void)
  * \param baudrate  Baudrate at which the DBGU should operate (in Hz).
  * \param masterClock  Frequency of the system master clock (in Hz).
  */
-extern void DBGU_Configure( uint32_t baudrate, uint32_t masterClock)
+extern void DBGU_Configure( uint32_t baudrate,
+                            uint32_t masterClock )
 {
-
     /* Configure PIO */
-    PIO_Configure(CONSOLE_PINLIST, CONSOLE_PINLISTSIZE);
+    PIO_Configure( CONSOLE_PINLIST, CONSOLE_PINLISTSIZE );
 
-    if ( ID_NOTUSED != CONSOLE_ID )
+    if( ID_NOTUSED != CONSOLE_ID )
     {
-        PMC_EnablePeripheral(CONSOLE_ID);
+        PMC_EnablePeripheral( CONSOLE_ID );
     }
 
     /* Configure mode register */
-    if (CONSOLE_DBGU!= DBGU ) {
+    if( CONSOLE_DBGU != DBGU )
+    {
         CONSOLE_DBGU->DBGU_MR = DBGU_MR_CHMODE_NORM | DBGU_MR_PAR_NONE | US_MR_CHRL_8_BIT;
     }
-    else {
+    else
+    {
         CONSOLE_DBGU->DBGU_MR = DBGU_MR_CHMODE_NORM | DBGU_MR_PAR_NONE;
     }
+
     /* Reset and disable receiver & transmitter */
     CONSOLE_DBGU->DBGU_CR = DBGU_CR_RSTRX | DBGU_CR_RSTTX;
     CONSOLE_DBGU->DBGU_IDR = 0xFFFFFFFF;
     CONSOLE_DBGU->DBGU_CR = DBGU_CR_RXDIS | DBGU_CR_TXDIS;
     /* Configure baudrate */
-    CONSOLE_DBGU->DBGU_BRGR = (masterClock / baudrate) / 16;
+    CONSOLE_DBGU->DBGU_BRGR = ( masterClock / baudrate ) / 16;
     /* Enable receiver and transmitter */
     CONSOLE_DBGU->DBGU_CR = DBGU_CR_RXEN | DBGU_CR_TXEN;
-    _bConsoleIsInitialized = 1 ;
-#if defined(__GNUC__)
-    setvbuf(stdout, (char*)NULL, _IONBF, 0);
-#endif
+    _bConsoleIsInitialized = 1;
+    #if defined( __GNUC__ )
+        setvbuf( stdout, ( char * ) NULL, _IONBF, 0 );
+    #endif
 }
 
 /**
@@ -184,16 +189,18 @@ extern void DBGU_Configure( uint32_t baudrate, uint32_t masterClock)
  */
 extern void DBGU_PutChar( uint8_t c )
 {
-    if ( !_bConsoleIsInitialized )
+    if( !_bConsoleIsInitialized )
     {
-        DBGU_Configure(CONSOLE_BAUDRATE, BOARD_MCK);
+        DBGU_Configure( CONSOLE_BAUDRATE, BOARD_MCK );
     }
 
     /* Wait for the transmitter to be ready */
-    while ( (CONSOLE_DBGU->DBGU_SR & DBGU_SR_TXEMPTY) == 0 ) ;
+    while( ( CONSOLE_DBGU->DBGU_SR & DBGU_SR_TXEMPTY ) == 0 )
+    {
+    }
 
     /* Send character */
-    CONSOLE_DBGU->DBGU_THR=c ;
+    CONSOLE_DBGU->DBGU_THR = c;
 }
 
 /**
@@ -204,13 +211,16 @@ extern void DBGU_PutChar( uint8_t c )
  */
 extern uint32_t DBGU_GetChar( void )
 {
-    if ( !_bConsoleIsInitialized )
+    if( !_bConsoleIsInitialized )
     {
-        DBGU_Configure(CONSOLE_BAUDRATE, BOARD_MCK);
+        DBGU_Configure( CONSOLE_BAUDRATE, BOARD_MCK );
     }
 
-    while ( (CONSOLE_DBGU->DBGU_SR & DBGU_SR_RXRDY) == 0 ) ;
-    return CONSOLE_DBGU->DBGU_RHR ;
+    while( ( CONSOLE_DBGU->DBGU_SR & DBGU_SR_RXRDY ) == 0 )
+    {
+    }
+
+    return CONSOLE_DBGU->DBGU_RHR;
 }
 
 /**
@@ -220,11 +230,12 @@ extern uint32_t DBGU_GetChar( void )
  */
 extern uint32_t DBGU_IsRxReady( void )
 {
-    if ( !_bConsoleIsInitialized )
+    if( !_bConsoleIsInitialized )
     {
-        //DBGU_Configure( CONSOLE_BAUDRATE, BOARD_MCK ) ;
+        /*DBGU_Configure( CONSOLE_BAUDRATE, BOARD_MCK ) ; */
     }
-    return (CONSOLE_DBGU->DBGU_SR & DBGU_SR_RXRDY) > 0 ;
+
+    return ( CONSOLE_DBGU->DBGU_SR & DBGU_SR_RXRDY ) > 0;
 }
 
 /**
@@ -233,16 +244,17 @@ extern uint32_t DBGU_IsRxReady( void )
  *  \param pucFrame Pointer to the frame to dump.
  *  \param dwSize   Buffer size in bytes.
  */
-extern void DBGU_DumpFrame( uint8_t* pucFrame, uint32_t dwSize )
+extern void DBGU_DumpFrame( uint8_t * pucFrame,
+                            uint32_t dwSize )
 {
-    uint32_t dw ;
+    uint32_t dw;
 
-    for ( dw=0 ; dw < dwSize ; dw++ )
+    for( dw = 0; dw < dwSize; dw++ )
     {
-        printf( "%02X ", pucFrame[dw] ) ;
+        printf( "%02X ", pucFrame[ dw ] );
     }
 
-    printf( "\n\r" ) ;
+    printf( "\n\r" );
 }
 
 /**
@@ -252,63 +264,67 @@ extern void DBGU_DumpFrame( uint8_t* pucFrame, uint32_t dwSize )
  *  \param dwSize     Buffer size in bytes.
  *  \param dwAddress  Start address to display
  */
-extern void DBGU_DumpMemory( uint8_t* pucBuffer, uint32_t dwSize, uint32_t dwAddress )
+extern void DBGU_DumpMemory( uint8_t * pucBuffer,
+                             uint32_t dwSize,
+                             uint32_t dwAddress )
 {
-    uint32_t i ;
-    uint32_t j ;
-    uint32_t dwLastLineStart ;
-    uint8_t* pucTmp ;
+    uint32_t i;
+    uint32_t j;
+    uint32_t dwLastLineStart;
+    uint8_t * pucTmp;
 
-    for ( i=0 ; i < (dwSize / 16) ; i++ )
+    for( i = 0; i < ( dwSize / 16 ); i++ )
     {
-        printf( "0x%08X: ", (unsigned int )(dwAddress + ( i * 16) )) ;
-        pucTmp = (uint8_t*)&pucBuffer[i*16] ;
+        printf( "0x%08X: ", ( unsigned int ) ( dwAddress + ( i * 16 ) ) );
+        pucTmp = ( uint8_t * ) &pucBuffer[ i * 16 ];
 
-        for ( j=0 ; j < 4 ; j++ )
+        for( j = 0; j < 4; j++ )
         {
-            printf( "%02X%02X%02X%02X ", pucTmp[0], pucTmp[1], pucTmp[2], pucTmp[3] ) ;
-            pucTmp += 4 ;
+            printf( "%02X%02X%02X%02X ", pucTmp[ 0 ], pucTmp[ 1 ], pucTmp[ 2 ], pucTmp[ 3 ] );
+            pucTmp += 4;
         }
 
-        pucTmp=(uint8_t*)&pucBuffer[i*16] ;
+        pucTmp = ( uint8_t * ) &pucBuffer[ i * 16 ];
 
-        for ( j=0 ; j < 16 ; j++ )
+        for( j = 0; j < 16; j++ )
         {
-            DBGU_PutChar( *pucTmp++ ) ;
+            DBGU_PutChar( *pucTmp++ );
         }
 
-        printf( "\n\r" ) ;
+        printf( "\n\r" );
     }
 
-    if ( (dwSize%16) != 0 )
+    if( ( dwSize % 16 ) != 0 )
     {
-        dwLastLineStart=dwSize - (dwSize%16) ;
+        dwLastLineStart = dwSize - ( dwSize % 16 );
 
-        printf( "0x%08X: ", (unsigned int ) (dwAddress + dwLastLineStart )) ;
-        for ( j=dwLastLineStart ; j < dwLastLineStart+16 ; j++ )
+        printf( "0x%08X: ", ( unsigned int ) ( dwAddress + dwLastLineStart ) );
+
+        for( j = dwLastLineStart; j < dwLastLineStart + 16; j++ )
         {
-            if ( (j!=dwLastLineStart) && (j%4 == 0) )
+            if( ( j != dwLastLineStart ) && ( j % 4 == 0 ) )
             {
-                printf( " " ) ;
+                printf( " " );
             }
 
-            if ( j < dwSize )
+            if( j < dwSize )
             {
-                printf( "%02X", pucBuffer[j] ) ;
+                printf( "%02X", pucBuffer[ j ] );
             }
             else
             {
-                printf("  ") ;
+                printf( "  " );
             }
         }
 
-        printf( " " ) ;
-        for ( j=dwLastLineStart ; j < dwSize ; j++ )
+        printf( " " );
+
+        for( j = dwLastLineStart; j < dwSize; j++ )
         {
-            DBGU_PutChar( pucBuffer[j] ) ;
+            DBGU_PutChar( pucBuffer[ j ] );
         }
 
-        printf( "\n\r" ) ;
+        printf( "\n\r" );
     }
 }
 
@@ -317,44 +333,44 @@ extern void DBGU_DumpMemory( uint8_t* pucBuffer, uint32_t dwSize, uint32_t dwAdd
  *
  *  \param pdwValue  Pointer to the uint32_t variable to contain the input value.
  */
-extern uint32_t DBGU_GetInteger( uint32_t* pdwValue )
+extern uint32_t DBGU_GetInteger( uint32_t * pdwValue )
 {
-    uint8_t ucKey ;
-    uint8_t ucNbNb=0 ;
-    uint32_t dwValue=0 ;
+    uint8_t ucKey;
+    uint8_t ucNbNb = 0;
+    uint32_t dwValue = 0;
 
-    while ( 1 )
+    while( 1 )
     {
-        ucKey=DBGU_GetChar() ;
-        DBGU_PutChar( ucKey ) ;
+        ucKey = DBGU_GetChar();
+        DBGU_PutChar( ucKey );
 
-        if ( ucKey >= '0' &&  ucKey <= '9' )
+        if( ( ucKey >= '0' ) && ( ucKey <= '9' ) )
         {
-            dwValue = (dwValue * 10) + (ucKey - '0');
-            ucNbNb++ ;
+            dwValue = ( dwValue * 10 ) + ( ucKey - '0' );
+            ucNbNb++;
         }
         else
         {
-            if ( ucKey == 0x0D || ucKey == ' ' )
+            if( ( ucKey == 0x0D ) || ( ucKey == ' ' ) )
             {
-                if ( ucNbNb == 0 )
+                if( ucNbNb == 0 )
                 {
-                    printf( "\n\rWrite a number and press ENTER or SPACE!\n\r" ) ;
-                    return 0 ;
+                    printf( "\n\rWrite a number and press ENTER or SPACE!\n\r" );
+                    return 0;
                 }
                 else
                 {
-                    printf( "\n\r" ) ;
-                    *pdwValue=dwValue ;
+                    printf( "\n\r" );
+                    *pdwValue = dwValue;
 
-                    return 1 ;
+                    return 1;
                 }
             }
             else
             {
-                printf( "\n\r'%c' not a number!\n\r", ucKey ) ;
+                printf( "\n\r'%c' not a number!\n\r", ucKey );
 
-                return 0 ;
+                return 0;
             }
         }
     }
@@ -367,27 +383,29 @@ extern uint32_t DBGU_GetInteger( uint32_t* pdwValue )
  *  \param dwMin     Minimum value
  *  \param dwMax     Maximum value
  */
-extern uint32_t DBGU_GetIntegerMinMax( uint32_t* pdwValue, uint32_t dwMin, uint32_t dwMax )
+extern uint32_t DBGU_GetIntegerMinMax( uint32_t * pdwValue,
+                                       uint32_t dwMin,
+                                       uint32_t dwMax )
 {
-    uint32_t dwValue=0 ;
+    uint32_t dwValue = 0;
 
-    if ( DBGU_GetInteger( &dwValue ) == 0 )
+    if( DBGU_GetInteger( &dwValue ) == 0 )
     {
-        return 0 ;
+        return 0;
     }
 
-    if ( dwValue < dwMin || dwValue > dwMax )
- {
-        printf( "\n\rThe number have to be between %u and %u\n\r", (unsigned int)dwMin, (unsigned int)dwMax ) ;
+    if( ( dwValue < dwMin ) || ( dwValue > dwMax ) )
+    {
+        printf( "\n\rThe number have to be between %u and %u\n\r", ( unsigned int ) dwMin, ( unsigned int ) dwMax );
 
-        return 0 ;
+        return 0;
     }
 
-    printf( "\n\r" ) ;
+    printf( "\n\r" );
 
-    *pdwValue = dwValue ;
+    *pdwValue = dwValue;
 
-    return 1 ;
+    return 1;
 }
 
 /**
@@ -395,50 +413,51 @@ extern uint32_t DBGU_GetIntegerMinMax( uint32_t* pdwValue, uint32_t dwMin, uint3
  *
  *  \param pdwValue  Pointer to the uint32_t variable to contain the input value.
  */
-extern uint32_t DBGU_GetHexa32( uint32_t* pdwValue )
+extern uint32_t DBGU_GetHexa32( uint32_t * pdwValue )
 {
-    uint8_t ucKey ;
-    uint32_t dw = 0 ;
-    uint32_t dwValue = 0 ;
+    uint8_t ucKey;
+    uint32_t dw = 0;
+    uint32_t dwValue = 0;
 
-    for ( dw=0 ; dw < 8 ; dw++ )
+    for( dw = 0; dw < 8; dw++ )
     {
-        ucKey = DBGU_GetChar() ;
-        DBGU_PutChar( ucKey ) ;
+        ucKey = DBGU_GetChar();
+        DBGU_PutChar( ucKey );
 
-        if ( ucKey >= '0' &&  ucKey <= '9' )
+        if( ( ucKey >= '0' ) && ( ucKey <= '9' ) )
         {
-            dwValue = (dwValue * 16) + (ucKey - '0') ;
+            dwValue = ( dwValue * 16 ) + ( ucKey - '0' );
         }
         else
         {
-            if ( ucKey >= 'A' &&  ucKey <= 'F' )
+            if( ( ucKey >= 'A' ) && ( ucKey <= 'F' ) )
             {
-                dwValue = (dwValue * 16) + (ucKey - 'A' + 10) ;
+                dwValue = ( dwValue * 16 ) + ( ucKey - 'A' + 10 );
             }
             else
             {
-                if ( ucKey >= 'a' &&  ucKey <= 'f' )
+                if( ( ucKey >= 'a' ) && ( ucKey <= 'f' ) )
                 {
-                    dwValue = (dwValue * 16) + (ucKey - 'a' + 10) ;
+                    dwValue = ( dwValue * 16 ) + ( ucKey - 'a' + 10 );
                 }
                 else
                 {
-                    printf( "\n\rIt is not a hexa character!\n\r" ) ;
+                    printf( "\n\rIt is not a hexa character!\n\r" );
 
-                    return 0 ;
+                    return 0;
                 }
             }
         }
     }
 
-    printf("\n\r" ) ;
-    *pdwValue = dwValue ;
+    printf( "\n\r" );
+    *pdwValue = dwValue;
 
-    return 1 ;
+    return 1;
 }
 
 #if defined __ICCARM__ /* IAR Ewarm 5.41+ */
+
 /**
  * \brief Outputs a character on the DBGU.
  *
@@ -446,12 +465,10 @@ extern uint32_t DBGU_GetHexa32( uint32_t* pdwValue )
  *
  * \return The character that was output.
  */
-extern WEAK signed int putchar( signed int c )
-{
-    DBGU_PutChar( c ) ;
+    extern WEAK signed int putchar( signed int c )
+    {
+        DBGU_PutChar( c );
 
-    return c ;
-}
+        return c;
+    }
 #endif // defined __ICCARM__
-
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -45,80 +45,80 @@ extern void defaultFiqHandler( void );
 extern void defaultIrqHandler( void );
 
 /* Cortex-A5 core handlers */
-/*
-*/
 
-extern void SYS_IrqHandler( void ) ;
-extern void Spurious_handler( void ) ;
+/*
+ */
+
+extern void SYS_IrqHandler( void );
+extern void Spurious_handler( void );
 
 /* Peripherals handlers */
-extern void SAIC0_Handler(void);
-extern void ARM_IrqHandler(void);
-extern void PIT_IrqHandler(void);
-extern void WDT_IrqHandler(void);
-extern void PIOD_IrqHandler(void);
-extern void USART0_IrqHandler(void);
-extern void USART1_IrqHandler(void);
-extern void XDMAC0_IrqHandler(void);
-extern void ICM_IrqHandler(void);
-extern void PKCC_IrqHandler(void);
-extern void SCI_IrqHandler(void);
-extern void AES_IrqHandler(void);
-extern void AESB_IrqHandler(void);
-extern void TDES_IrqHandler(void);
-extern void SHA_IrqHandler(void);
-extern void MPDDRC_IrqHandler(void);
-extern void H32MX_IrqHandler(void);
-extern void H64MX_IrqHandler(void);
-extern void VDEC_IrqHandler(void);
-extern void SECUMOD_IrqHandler(void);
-extern void MSADCC_IrqHandler(void);
-extern void HSMC_IrqHandler(void);
-extern void PIOA_IrqHandler(void);
-extern void PIOB_IrqHandler(void);
-extern void PIOC_IrqHandler(void);
-extern void PIOE_IrqHandler(void);
-extern void UART0_IrqHandler(void);
-extern void UART1_IrqHandler(void);
-extern void USART2_IrqHandler(void);
-extern void USART3_IrqHandler(void);
-extern void USART4_IrqHandler(void);
-extern void TWI0_IrqHandler(void);
-extern void TWI1_IrqHandler(void);
-extern void TWI2_IrqHandler(void);
-extern void HSMCI0_IrqHandler(void);
-extern void HSMCI1_IrqHandler(void);
-extern void SPI0_IrqHandler(void);
-extern void SPI1_IrqHandler(void);
-extern void SPI2_IrqHandler(void);
-extern void TC0_IrqHandler(void);
-extern void TC1_IrqHandler(void);
-extern void TC2_IrqHandler(void);
-extern void PWM_IrqHandler(void);
-extern void ADC_IrqHandler(void);
-extern void DBGU_IrqHandler(void);
-extern void UHPHS_IrqHandler(void);
-extern void UDPHS_IrqHandler(void);
-extern void SSC0_IrqHandler(void);
-extern void SSC1_IrqHandler(void);
-extern void XDMAC1_IrqHandler(void);
-extern void LCDC_IrqHandler(void);
-extern void ISI_IrqHandler(void);
-extern void TRNG_IrqHandler(void);
-extern void GMAC0_IrqHandler(void);
-extern void GMAC1_IrqHandler(void);
-extern void AIC0_IrqHandler(void);
-extern void SFC_IrqHandler(void);
-extern void SECURAM_IrqHandler(void);
-extern void CTB_IrqHandler(void);
-extern void SMD_IrqHandler(void);
-extern void TWI3_IrqHandler(void);
-extern void CATB_IrqHandler(void);
-extern void SFR_IrqHandler(void);
-extern void AIC1_IrqHandler(void);
-extern void SAIC1_IrqHandler(void); 
-extern void L2CC_IrqHandler(void);
-extern void LowLevelInit( void ) ;
+extern void SAIC0_Handler( void );
+extern void ARM_IrqHandler( void );
+extern void PIT_IrqHandler( void );
+extern void WDT_IrqHandler( void );
+extern void PIOD_IrqHandler( void );
+extern void USART0_IrqHandler( void );
+extern void USART1_IrqHandler( void );
+extern void XDMAC0_IrqHandler( void );
+extern void ICM_IrqHandler( void );
+extern void PKCC_IrqHandler( void );
+extern void SCI_IrqHandler( void );
+extern void AES_IrqHandler( void );
+extern void AESB_IrqHandler( void );
+extern void TDES_IrqHandler( void );
+extern void SHA_IrqHandler( void );
+extern void MPDDRC_IrqHandler( void );
+extern void H32MX_IrqHandler( void );
+extern void H64MX_IrqHandler( void );
+extern void VDEC_IrqHandler( void );
+extern void SECUMOD_IrqHandler( void );
+extern void MSADCC_IrqHandler( void );
+extern void HSMC_IrqHandler( void );
+extern void PIOA_IrqHandler( void );
+extern void PIOB_IrqHandler( void );
+extern void PIOC_IrqHandler( void );
+extern void PIOE_IrqHandler( void );
+extern void UART0_IrqHandler( void );
+extern void UART1_IrqHandler( void );
+extern void USART2_IrqHandler( void );
+extern void USART3_IrqHandler( void );
+extern void USART4_IrqHandler( void );
+extern void TWI0_IrqHandler( void );
+extern void TWI1_IrqHandler( void );
+extern void TWI2_IrqHandler( void );
+extern void HSMCI0_IrqHandler( void );
+extern void HSMCI1_IrqHandler( void );
+extern void SPI0_IrqHandler( void );
+extern void SPI1_IrqHandler( void );
+extern void SPI2_IrqHandler( void );
+extern void TC0_IrqHandler( void );
+extern void TC1_IrqHandler( void );
+extern void TC2_IrqHandler( void );
+extern void PWM_IrqHandler( void );
+extern void ADC_IrqHandler( void );
+extern void DBGU_IrqHandler( void );
+extern void UHPHS_IrqHandler( void );
+extern void UDPHS_IrqHandler( void );
+extern void SSC0_IrqHandler( void );
+extern void SSC1_IrqHandler( void );
+extern void XDMAC1_IrqHandler( void );
+extern void LCDC_IrqHandler( void );
+extern void ISI_IrqHandler( void );
+extern void TRNG_IrqHandler( void );
+extern void GMAC0_IrqHandler( void );
+extern void GMAC1_IrqHandler( void );
+extern void AIC0_IrqHandler( void );
+extern void SFC_IrqHandler( void );
+extern void SECURAM_IrqHandler( void );
+extern void CTB_IrqHandler( void );
+extern void SMD_IrqHandler( void );
+extern void TWI3_IrqHandler( void );
+extern void CATB_IrqHandler( void );
+extern void SFR_IrqHandler( void );
+extern void AIC1_IrqHandler( void );
+extern void SAIC1_IrqHandler( void );
+extern void L2CC_IrqHandler( void );
+extern void LowLevelInit( void );
 
 #endif /* BOARD_LOWLEVEL_H */
-

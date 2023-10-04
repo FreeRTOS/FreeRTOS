@@ -35,12 +35,12 @@
 /* Demo includes. */
 #include "partest.h"
 
-#define partstNUM_LEDs	4
+#define partstNUM_LEDs    4
 
-#define LED0_MASK		( ( unsigned short ) 0x08 )
-#define LED1_MASK		( ( unsigned short ) 0x10 )
-#define LED2_MASK		( ( unsigned short ) 0x40 )
-#define LED3_MASK		( ( unsigned short ) 0x80 )
+#define LED0_MASK         ( ( unsigned short ) 0x08 )
+#define LED1_MASK         ( ( unsigned short ) 0x10 )
+#define LED2_MASK         ( ( unsigned short ) 0x40 )
+#define LED3_MASK         ( ( unsigned short ) 0x80 )
 
 static const unsigned short xLEDs[ partstNUM_LEDs ] = { LED0_MASK, LED1_MASK, LED2_MASK, LED3_MASK };
 
@@ -48,55 +48,55 @@ static const unsigned short xLEDs[ partstNUM_LEDs ] = { LED0_MASK, LED1_MASK, LE
 
 void vParTestInitialise( void )
 {
-	/* Set GPIO to output. */
-	PM3 &= ~( LED0_MASK | LED1_MASK | LED2_MASK | LED3_MASK );
+    /* Set GPIO to output. */
+    PM3 &= ~( LED0_MASK | LED1_MASK | LED2_MASK | LED3_MASK );
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-unsigned portBASE_TYPE uxLEDMask;
+    unsigned portBASE_TYPE uxLEDMask;
 
-	if( uxLED < partstNUM_LEDs )
-	{
-		uxLEDMask = xLEDs[ uxLED ];
-		
-		taskENTER_CRITICAL();
-		{
-			if( xValue )
-			{
-				P3 |= uxLEDMask;
-			}
-			else
-			{
-				P3 &= ~uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDs )
+    {
+        uxLEDMask = xLEDs[ uxLED ];
+
+        taskENTER_CRITICAL();
+        {
+            if( xValue )
+            {
+                P3 |= uxLEDMask;
+            }
+            else
+            {
+                P3 &= ~uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portBASE_TYPE uxLEDMask;
+    unsigned portBASE_TYPE uxLEDMask;
 
-	if( uxLED < partstNUM_LEDs )
-	{
-		uxLEDMask = xLEDs[ uxLED ];
-		
-		taskENTER_CRITICAL();
-		{
-			if( P3 & uxLEDMask )
-			{
-				P3 &= ~uxLEDMask;
-			}
-			else
-			{
-				P3 |= uxLEDMask;
-			}
-		}
-		taskEXIT_CRITICAL();
-	}
+    if( uxLED < partstNUM_LEDs )
+    {
+        uxLEDMask = xLEDs[ uxLED ];
+
+        taskENTER_CRITICAL();
+        {
+            if( P3 & uxLEDMask )
+            {
+                P3 &= ~uxLEDMask;
+            }
+            else
+            {
+                P3 |= uxLEDMask;
+            }
+        }
+        taskEXIT_CRITICAL();
+    }
 }
-

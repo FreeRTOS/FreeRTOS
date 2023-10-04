@@ -31,20 +31,20 @@
 #define _SAMA5_TRNG_INSTANCE_
 
 /* ========== Register definition for TRNG peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_TRNG_CR             (0xF8040000U) /**< \brief (TRNG) Control Register */
-#define REG_TRNG_IER            (0xF8040010U) /**< \brief (TRNG) Interrupt Enable Register */
-#define REG_TRNG_IDR            (0xF8040014U) /**< \brief (TRNG) Interrupt Disable Register */
-#define REG_TRNG_IMR            (0xF8040018U) /**< \brief (TRNG) Interrupt Mask Register */
-#define REG_TRNG_ISR            (0xF804001CU) /**< \brief (TRNG) Interrupt Status Register */
-#define REG_TRNG_ODATA          (0xF8040050U) /**< \brief (TRNG) Output Data Register */
+#if ( defined( __ASSEMBLY__ ) || defined( __IAR_SYSTEMS_ASM__ ) )
+    #define REG_TRNG_CR       ( 0xF8040000U )              /**< \brief (TRNG) Control Register */
+    #define REG_TRNG_IER      ( 0xF8040010U )              /**< \brief (TRNG) Interrupt Enable Register */
+    #define REG_TRNG_IDR      ( 0xF8040014U )              /**< \brief (TRNG) Interrupt Disable Register */
+    #define REG_TRNG_IMR      ( 0xF8040018U )              /**< \brief (TRNG) Interrupt Mask Register */
+    #define REG_TRNG_ISR      ( 0xF804001CU )              /**< \brief (TRNG) Interrupt Status Register */
+    #define REG_TRNG_ODATA    ( 0xF8040050U )              /**< \brief (TRNG) Output Data Register */
 #else
-#define REG_TRNG_CR    (*(WoReg*)0xF8040000U) /**< \brief (TRNG) Control Register */
-#define REG_TRNG_IER   (*(WoReg*)0xF8040010U) /**< \brief (TRNG) Interrupt Enable Register */
-#define REG_TRNG_IDR   (*(WoReg*)0xF8040014U) /**< \brief (TRNG) Interrupt Disable Register */
-#define REG_TRNG_IMR   (*(RoReg*)0xF8040018U) /**< \brief (TRNG) Interrupt Mask Register */
-#define REG_TRNG_ISR   (*(RoReg*)0xF804001CU) /**< \brief (TRNG) Interrupt Status Register */
-#define REG_TRNG_ODATA (*(RoReg*)0xF8040050U) /**< \brief (TRNG) Output Data Register */
+    #define REG_TRNG_CR       ( *( WoReg * ) 0xF8040000U ) /**< \brief (TRNG) Control Register */
+    #define REG_TRNG_IER      ( *( WoReg * ) 0xF8040010U ) /**< \brief (TRNG) Interrupt Enable Register */
+    #define REG_TRNG_IDR      ( *( WoReg * ) 0xF8040014U ) /**< \brief (TRNG) Interrupt Disable Register */
+    #define REG_TRNG_IMR      ( *( RoReg * ) 0xF8040018U ) /**< \brief (TRNG) Interrupt Mask Register */
+    #define REG_TRNG_ISR      ( *( RoReg * ) 0xF804001CU ) /**< \brief (TRNG) Interrupt Status Register */
+    #define REG_TRNG_ODATA    ( *( RoReg * ) 0xF8040050U ) /**< \brief (TRNG) Output Data Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMA5_TRNG_INSTANCE_ */

@@ -30,25 +30,26 @@
 *
 ******************************************************************************/
 /*****************************************************************************/
+
 /**
-*
-* @file xiicps_sinit.c
-* @addtogroup iicps_v3_5
-* @{
-*
-* The implementation of the XIicPs component's static initialization
-* functionality.
-*
-* <pre>
-* MODIFICATION HISTORY:
-*
-* Ver   Who    Date     Changes
-* ----- ------ -------- --------------------------------------------
-* 1.00a drg/jz 01/30/10 First release
-* 3.00	sk	   01/31/15	Modified the code according to MISRAC 2012 Compliant.
-* </pre>
-*
-******************************************************************************/
+ *
+ * @file xiicps_sinit.c
+ * @addtogroup iicps_v3_5
+ * @{
+ *
+ * The implementation of the XIicPs component's static initialization
+ * functionality.
+ *
+ * <pre>
+ * MODIFICATION HISTORY:
+ *
+ * Ver   Who    Date     Changes
+ * ----- ------ -------- --------------------------------------------
+ * 1.00a drg/jz 01/30/10 First release
+ * 3.00	sk	   01/31/15	Modified the code according to MISRAC 2012 Compliant.
+ * </pre>
+ *
+ ******************************************************************************/
 
 /***************************** Include Files *********************************/
 
@@ -67,36 +68,39 @@
 /************************** Function Prototypes ******************************/
 
 /************************** Variable Definitions *****************************/
-extern XIicPs_Config XIicPs_ConfigTable[XPAR_XIICPS_NUM_INSTANCES];
+extern XIicPs_Config XIicPs_ConfigTable[ XPAR_XIICPS_NUM_INSTANCES ];
 
 /*****************************************************************************/
+
 /**
-*
-* Looks up the device configuration based on the unique device ID. A table
-* contains the configuration info for each device in the system.
-*
-* @param	DeviceId contains the ID of the device to look up the
-*		configuration for.
-*
-* @return	A pointer to the configuration found or NULL if the specified
-*		device ID was not found. See xiicps.h for the definition of
-*		XIicPs_Config.
-*
-* @note		None.
-*
-******************************************************************************/
-XIicPs_Config *XIicPs_LookupConfig(u16 DeviceId)
+ *
+ * Looks up the device configuration based on the unique device ID. A table
+ * contains the configuration info for each device in the system.
+ *
+ * @param	DeviceId contains the ID of the device to look up the
+ *		configuration for.
+ *
+ * @return	A pointer to the configuration found or NULL if the specified
+ *		device ID was not found. See xiicps.h for the definition of
+ *		XIicPs_Config.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+XIicPs_Config * XIicPs_LookupConfig( u16 DeviceId )
 {
-	XIicPs_Config *CfgPtr = NULL;
-	s32 Index;
+    XIicPs_Config * CfgPtr = NULL;
+    s32 Index;
 
-	for (Index = 0; Index < XPAR_XIICPS_NUM_INSTANCES; Index++) {
-		if (XIicPs_ConfigTable[Index].DeviceId == DeviceId) {
-			CfgPtr = &XIicPs_ConfigTable[Index];
-			break;
-		}
-	}
+    for( Index = 0; Index < XPAR_XIICPS_NUM_INSTANCES; Index++ )
+    {
+        if( XIicPs_ConfigTable[ Index ].DeviceId == DeviceId )
+        {
+            CfgPtr = &XIicPs_ConfigTable[ Index ];
+            break;
+        }
+    }
 
-	return (XIicPs_Config *)CfgPtr;
+    return ( XIicPs_Config * ) CfgPtr;
 }
 /** @} */

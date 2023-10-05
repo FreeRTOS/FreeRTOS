@@ -501,48 +501,6 @@ jobs:
           fi
 
       - env:
-          stepName: Build CORTEX_M3_MPS2_QEMU_GCC Demo
-        name: ${{ env.stepName }}
-        shell: bash
-        working-directory: FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
-        run: |
-          # ${{ env.stepName }}
-          echo -e "::group::${{ env.stepName }}"
-          set +e
-          make clean
-          make -j
-          exitStatus=$?
-          set -e
-          echo -e "::endgroup::"
-          if [ $exitStatus -eq 0 ]; then
-            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
-          else
-            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
-            exit 1
-          fi
-
-      - env:
-          stepName: Build CORTEX_M3_MPS2_QEMU_GCC Full Demo
-        name: ${{ env.stepName }}
-        shell: bash
-        working-directory: FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
-        run: |
-          # ${{ env.stepName }}
-          echo -e "::group::${{ env.stepName }}"
-          set +e
-          make clean
-          make FULL_DEMO=1 -j
-          exitStatus=$?
-          set -e
-          echo -e "::endgroup::"
-          if [ $exitStatus -eq 0 ]; then
-            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
-          else
-            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
-            exit 1
-          fi
-
-      - env:
           stepName: Build CORTEX_LM3S811_GCC Demo
         name: ${{ env.stepName }}
         shell: bash

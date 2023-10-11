@@ -187,7 +187,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
   - name: "TraceRecorder"
-    version: "86c5e6d"
+    version: "3aa0355"
     repository:
       type: "git"
       url: "https://github.com/percepio/TraceRecorderSource.git"

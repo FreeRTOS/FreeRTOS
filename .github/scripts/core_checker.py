@@ -312,7 +312,6 @@ FREERTOS_IGNORED_PATTERNS = [
     r'FreeRTOS/Demo/CORTEX_ATSAM3X_Atmel_Studio/src/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/Trace_Recorder_Configuration/.*',
-    
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/pcap/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/IPv6_Multi_WinSim_demo/FreeRTOS_Plus_TCP_IPv6_Multi.props',

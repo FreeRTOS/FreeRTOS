@@ -23,10 +23,9 @@ INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/linux/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/include/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/Compiler/GCC/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/RingBuffer/include
+
 
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
@@ -83,6 +82,7 @@ else
   CPPFLAGS		+= -DprojCOVERAGE_TEST=0
 # Trace library.
   SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/trcKernelPort.c
+  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/RingBuffer/trcStreamPort.c
   SOURCE_FILES	+= $(wildcard ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/*.c )
 endif
 

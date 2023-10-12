@@ -154,22 +154,18 @@ jobs:
         name: ${{ env.stepName }}
         uses: actions/checkout@v3
 
-      - name: Fetch Required Submodules
+      - env:
+          stepName: Fetch Required Submodule
+        name: ${{ env.stepName }}
         shell: bash
         run: |
-          # Fetch Required Submodules
-          echo "::group::Fetch Required Submodules"
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.stepName }}"
           git submodule update --checkout --init --depth 1 \
             FreeRTOS/Source \
             FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
-          echo "::endgroup::"
-          if [[ "$?" = "0" ]]
-          then
-            echo -e "\033[32;3mCloned Submodules\033[0m"
-          else
-            echo -e "\033[32;31mSubmodules Clone Failed...\033[0m"
-            exit 1
-          fi
+          echo -e "::endgroup::"
+          echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
 
       - env:
           stepName: Build WIN32-MingW Full Demo
@@ -245,19 +241,25 @@ jobs:
         name: ${{ env.stepName }}
         uses: actions/checkout@v3
 
-      - name: Fetch Required Submodules
+      - env:
+          stepName: Fetch Required Submodule
+        name: ${{ env.stepName }}
         shell: bash
         run: |
-          # Fetch Required Submodules
-          echo "::group::Fetch Required Submodules"
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.stepName }}"
+          set +e
           git submodule update --checkout --init --depth 1 \
             FreeRTOS/Source \
             FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
-          echo "::endgroup::"
-          if [ "$?" = "0" ]; then
-            echo -e "\033[32;3mCloned Submodules\033[0m"
+          set -e
+          exitStatus=$?
+          set -e
+          echo -e "::endgroup::"
+          if [ $exitStatus -eq 0 ]; then
+            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
           else
-            echo -e "\033[32;31mSubmodules Clone Failed...\033[0m"
+            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
             exit 1
           fi
 

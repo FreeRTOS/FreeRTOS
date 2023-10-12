@@ -3229,7 +3229,7 @@ void test_xTaskGetIdleTaskHandle_success( void )
     /* Api Call */
     ret_idle_handle = xTaskGetIdleTaskHandle();
     ptcb = ret_idle_handle;
-    ret = strcmp( ptcb->pcTaskName, "IDLE" );
+    ret = strncmp( ptcb->pcTaskName, configIDLE_TASK_NAME, configMAX_TASK_NAME_LEN - 1 );
     TEST_ASSERT_EQUAL( 0, ret );
 }
 

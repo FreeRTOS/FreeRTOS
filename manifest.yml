@@ -5,7 +5,7 @@ license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "7372519cb"
+    version: "4bfb9b2d7"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -131,7 +131,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
 
   - name: "FreeRTOS-Community-Supported-Demos"
-    version: "6f2ad44"
+    version: "1ba24b1"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"

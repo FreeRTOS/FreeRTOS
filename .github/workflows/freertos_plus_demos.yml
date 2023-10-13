@@ -1036,7 +1036,8 @@ jobs:
           echo -e "::group::${{ env.stepName }}"
           git submodule update --checkout --init --depth 1 \
           FreeRTOS/Source \
-          FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+          FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+          FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "
 
@@ -1301,6 +1302,7 @@ jobs:
           FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
           FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
           FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+          FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace \
           FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
           FreeRTOS-Plus/Source/coreJSON \
           FreeRTOS-Plus/Source/corePKCS11 \

@@ -186,6 +186,13 @@ dependencies:
       url: "https://github.com/intel/tinycbor.git"
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
+  - name: "TraceRecorder"
+    version: "3aa0355"
+    repository:
+      type: "git"
+      url: "https://github.com/percepio/TraceRecorderSource.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace"
+
   - name: "CMock"
     version: "afa2949"
     repository:

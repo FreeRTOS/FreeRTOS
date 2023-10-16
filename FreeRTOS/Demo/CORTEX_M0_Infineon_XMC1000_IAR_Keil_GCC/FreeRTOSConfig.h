@@ -93,6 +93,10 @@ to exclude the API function. */
 header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
+/* Disable the port's checking the installation of OS handlers. XMC1000 has a
+ROM-based vector table, so it cannot contain the OS handler vectors directly. */
+#define configCHECK_HANDLER_INSTALLATION  0
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names - or at least those used in the unmodified vector table. */
 #define xPortPendSVHandler PendSV_Handler

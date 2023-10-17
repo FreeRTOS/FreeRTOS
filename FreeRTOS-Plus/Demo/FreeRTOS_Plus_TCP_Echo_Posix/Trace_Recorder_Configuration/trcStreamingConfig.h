@@ -1,6 +1,6 @@
 /*
- * Trace Recorder for Tracealyzer v4.6.0
- * Copyright 2021 Percepio AB
+ * Trace Recorder for Tracealyzer v4.8.1
+ * Copyright 2023 Percepio AB
  * www.percepio.com
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -42,7 +42,7 @@
  * which will affect the trace display. In that case, there will be warnings
  * (as User Events) from TzCtrl task, that monitors this.
  */
-    #define TRC_CFG_ENTRY_SYMBOL_MAX_LENGTH    32
+    #define TRC_CFG_ENTRY_SYMBOL_MAX_LENGTH    28
 
     #ifdef __cplusplus
 }

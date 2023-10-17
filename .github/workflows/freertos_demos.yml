@@ -24,16 +24,18 @@ jobs:
           stepName: Checkout Repository
         name: ${{ env.stepName }}
         uses: actions/checkout@v3
-
+          
       - env:
-          stepName: Fetch Kernel Submodule
+          stepName: Fetch Required Submodule
         name: ${{ env.stepName }}
         shell: bash
         run: |
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           set +e
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
           exitStatus=$?
           set -e
           echo -e "::endgroup::"
@@ -153,13 +155,15 @@ jobs:
         uses: actions/checkout@v3
 
       - env:
-          stepName: Fetch Kernel Submodule
+          stepName: Fetch Required Submodule
         name: ${{ env.stepName }}
         shell: bash
         run: |
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
           echo -e "::endgroup::"
           echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"
 
@@ -238,14 +242,16 @@ jobs:
         uses: actions/checkout@v3
 
       - env:
-          stepName: Fetch Kernel Submodule
+          stepName: Fetch Required Submodule
         name: ${{ env.stepName }}
         shell: bash
         run: |
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           set +e
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
           set -e
           exitStatus=$?
           set -e

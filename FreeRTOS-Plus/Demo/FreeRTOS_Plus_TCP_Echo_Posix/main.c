@@ -305,8 +305,9 @@ static void prvSaveTraceFile( void )
         if( pxOutputFile != NULL )
         {
             {
+                extern TraceRingBuffer_t * RecorderDataPtr;
                 xTraceDisable();
-                fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+                fwrite( RecorderDataPtr, sizeof( TraceRingBuffer_t ), 1, pxOutputFile );
                 fclose( pxOutputFile );
                 printf( "\r\nTrace output saved to Trace.dump\r\n" );
                 xTraceEnable( TRC_START );

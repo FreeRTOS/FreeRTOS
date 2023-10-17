@@ -1,6 +1,6 @@
 /*
- * Trace Recorder for Tracealyzer v4.6.0
- * Copyright 2021 Percepio AB
+ * Trace Recorder for Tracealyzer v4.8.1
+ * Copyright 2023 Percepio AB
  * www.percepio.com
  *
  * SPDX-License-Identifier: Apache-2.0

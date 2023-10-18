@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS;..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,7 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINSOCKAPI_;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\include;..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\include;..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,7 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c" />
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcKernelPort.c" />
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\kernelPorts\FreeRTOS\trcKernelPort.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcStreamingRecorder.c" />
     <ClCompile Include="CLI-commands.c" />

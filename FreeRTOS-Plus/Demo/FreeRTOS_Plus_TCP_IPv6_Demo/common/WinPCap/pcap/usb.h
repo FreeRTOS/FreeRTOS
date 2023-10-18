@@ -32,36 +32,37 @@
  *
  * @(#) $Header: /tcpdump/master/libpcap/pcap/usb.h,v 1.6 2007/09/22 02:06:08 guy Exp $
  */
- 
+
 #ifndef _PCAP_USB_STRUCTS_H__
 #define _PCAP_USB_STRUCTS_H__
 
-/* 
+/*
  * possible transfer mode
  */
-#define URB_TRANSFER_IN   0x80
-#define URB_ISOCHRONOUS   0x0
-#define URB_INTERRUPT     0x1
-#define URB_CONTROL       0x2
-#define URB_BULK          0x3
+#define URB_TRANSFER_IN    0x80
+#define URB_ISOCHRONOUS    0x0
+#define URB_INTERRUPT      0x1
+#define URB_CONTROL        0x2
+#define URB_BULK           0x3
 
 /*
  * possible event type
  */
-#define URB_SUBMIT        'S'
-#define URB_COMPLETE      'C'
-#define URB_ERROR         'E'
+#define URB_SUBMIT         'S'
+#define URB_COMPLETE       'C'
+#define URB_ERROR          'E'
 
 /*
  * USB setup header as defined in USB specification.
  * Appears at the front of each packet in DLT_USB captures.
  */
-typedef struct _usb_setup {
-	u_int8_t bmRequestType;
-	u_int8_t bRequest;
-	u_int16_t wValue;
-	u_int16_t wIndex;
-	u_int16_t wLength;
+typedef struct _usb_setup
+{
+    u_int8_t bmRequestType;
+    u_int8_t bRequest;
+    u_int16_t wValue;
+    u_int16_t wIndex;
+    u_int16_t wLength;
 } pcap_usb_setup;
 
 
@@ -69,22 +70,23 @@ typedef struct _usb_setup {
  * Header prepended by linux kernel to each event.
  * Appears at the front of each packet in DLT_USB_LINUX captures.
  */
-typedef struct _usb_header {
-	u_int64_t id;
-	u_int8_t event_type;
-	u_int8_t transfer_type;
-	u_int8_t endpoint_number;
-	u_int8_t device_address;
-	u_int16_t bus_id;
-	char setup_flag;/*if !=0 the urb setup header is not present*/
-	char data_flag; /*if !=0 no urb data is present*/
-	int64_t ts_sec;
-	int32_t ts_usec;
-	int32_t status;
-	u_int32_t urb_len;
-	u_int32_t data_len; /* amount of urb data really present in this event*/
-	pcap_usb_setup setup;
+typedef struct _usb_header
+{
+    u_int64_t id;
+    u_int8_t event_type;
+    u_int8_t transfer_type;
+    u_int8_t endpoint_number;
+    u_int8_t device_address;
+    u_int16_t bus_id;
+    char setup_flag; /*if !=0 the urb setup header is not present*/
+    char data_flag;  /*if !=0 no urb data is present*/
+    int64_t ts_sec;
+    int32_t ts_usec;
+    int32_t status;
+    u_int32_t urb_len;
+    u_int32_t data_len; /* amount of urb data really present in this event*/
+    pcap_usb_setup setup;
 } pcap_usb_header;
 
 
-#endif
+#endif /* ifndef _PCAP_USB_STRUCTS_H__ */

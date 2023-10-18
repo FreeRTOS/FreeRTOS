@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -92,7 +92,7 @@ void test_vQueueDelete_empty( void )
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 
     vQueueDelete( xQueue );
-    /* Veirfy that free was not called */
+    /* Verify that free was not called */
     TEST_ASSERT_EQUAL_PTR( NULL, getLastFreedAddress() );
     free( queueBuffer );
     free( queueData );
@@ -118,7 +118,7 @@ void test_vQueueDelete_half_full( void )
 
     vQueueDelete( xQueue );
 
-    /* Veirfy that free was not called */
+    /* Verify that free was not called */
     TEST_ASSERT_EQUAL_PTR( NULL, getLastFreedAddress() );
     free( queueBuffer );
     free( queueData );
@@ -144,7 +144,7 @@ void test_vQueueDelete_full( void )
 
     vQueueDelete( xQueue );
 
-    /* Veirfy that free was not called */
+    /* Verify that free was not called */
     TEST_ASSERT_EQUAL_PTR( NULL, getLastFreedAddress() );
     free( queueBuffer );
     free( queueData );

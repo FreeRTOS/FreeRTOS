@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -799,10 +799,10 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
      * the server. */
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         if( ( bytesReceived > 0 ) && ( ( FreeRTOS_ntohl( sourceAddress.sin_address.ulIP_IPv4 ) != serverAddr ) ||
-                                    ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
+                                       ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
     #else
         if( ( bytesReceived > 0 ) && ( ( FreeRTOS_ntohl( sourceAddress.sin_addr ) != serverAddr ) ||
-                                    ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
+                                       ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         bytesReceived = 0;
@@ -811,20 +811,20 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
             /* Convert the IP address of the sender's address to string for logging. */
             char stringAddr[ 16 ];
 
-            #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
             {
                 FreeRTOS_inet_ntoa( sourceAddress.sin_address.ulIP_IPv4, stringAddr );
             }
-            #else
+        #else
             {
                 FreeRTOS_inet_ntoa( sourceAddress.sin_addr, stringAddr );
             }
-            #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+        #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
-            /* Log about reception of packet from unexpected sender. */
-            LogWarn( ( "Received UDP packet from unexpected source: Addr=%s Port=%u",
-                       stringAddr, FreeRTOS_ntohs( sourceAddress.sin_port ) ) );
-        #endif
+        /* Log about reception of packet from unexpected sender. */
+        LogWarn( ( "Received UDP packet from unexpected source: Addr=%s Port=%u",
+                   stringAddr, FreeRTOS_ntohs( sourceAddress.sin_port ) ) );
+        #endif /* if defined( LIBRARY_LOG_LEVEL ) && ( LIBRARY_LOG_LEVEL != LOG_NONE ) */
     }
 
     /* Translate the return code of timeout to the UDP transport interface expected

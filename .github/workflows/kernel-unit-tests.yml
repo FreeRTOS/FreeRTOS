@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: 'recursive'
         fetch-depth: 5
@@ -42,12 +42,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: 'recursive'
         fetch-depth: 5
     - name: Checkout the main branch from the FreeRTOS-Kernel repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ./FreeRTOS/Source
         ref: main

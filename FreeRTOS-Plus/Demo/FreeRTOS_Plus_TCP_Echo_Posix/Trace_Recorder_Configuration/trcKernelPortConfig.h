@@ -1,6 +1,6 @@
 /*
- * Trace Recorder for Tracealyzer v4.6.0
- * Copyright 2021 Percepio AB
+ * Trace Recorder for Tracealyzer v4.8.1
+ * Copyright 2023 Percepio AB
  * www.percepio.com
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -11,11 +11,11 @@
  */
 
 #ifndef TRC_KERNEL_PORT_CONFIG_H
-#define TRC_KERNEL_PORT_CONFIG_H
+    #define TRC_KERNEL_PORT_CONFIG_H
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
     extern "C" {
-#endif
+    #endif
 
 /**
  * @def TRC_CFG_RECORDER_MODE
@@ -30,7 +30,7 @@
  * TRC_RECORDER_MODE_SNAPSHOT
  * TRC_RECORDER_MODE_STREAMING
  */
-#define TRC_CFG_RECORDER_MODE                    TRC_RECORDER_MODE_SNAPSHOT
+    #define TRC_CFG_RECORDER_MODE                    TRC_RECORDER_MODE_STREAMING
 
 /**
  * @def TRC_CFG_FREERTOS_VERSION
@@ -54,9 +54,13 @@
  * TRC_FREERTOS_VERSION_10_3_0				If using FreeRTOS v10.3.0
  * TRC_FREERTOS_VERSION_10_3_1				If using FreeRTOS v10.3.1
  * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0
- * TRC_FREERTOS_VERSION_10_4_1				If using FreeRTOS v10.4.1 or later
+ * TRC_FREERTOS_VERSION_10_4_1				If using FreeRTOS v10.4.1
+ * TRC_FREERTOS_VERSION_10_4_2				If using FreeRTOS v10.4.2
+ * TRC_FREERTOS_VERSION_10_4_3				If using FreeRTOS v10.4.3
+ * TRC_FREERTOS_VERSION_10_5_0				If using FreeRTOS v10.5.0
+ * TRC_FREERTOS_VERSION_10_5_1				If using FreeRTOS v10.5.1 or later
  */
-#define TRC_CFG_FREERTOS_VERSION                 TRC_FREERTOS_VERSION_10_4_1
+    #define TRC_CFG_FREERTOS_VERSION                 TRC_FREERTOS_VERSION_10_5_1
 
 /**
  * @def TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS
@@ -66,7 +70,7 @@
  *
  * Default value is 0 (excluded) since dependent on event_groups.c
  */
-#define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS       1
+    #define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS       1
 
 /**
  * @def TRC_CFG_INCLUDE_TIMER_EVENTS
@@ -76,7 +80,7 @@
  *
  * Default value is 0 since dependent on timers.c
  */
-#define TRC_CFG_INCLUDE_TIMER_EVENTS             1
+    #define TRC_CFG_INCLUDE_TIMER_EVENTS             1
 
 /**
  * @def TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS
@@ -87,7 +91,7 @@
  *
  * Default value is 0 since dependent on timers.c
  */
-#define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS    1
+    #define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS    1
 
 /**
  * @def TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS
@@ -98,7 +102,7 @@
  *
  * Default value is 0 since dependent on stream_buffer.c (new in FreeRTOS v10)
  */
-#define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS     1
+    #define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS     1
 
 /**
  * @def TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND
@@ -107,10 +111,10 @@
  * traceQUEUE_SEND to traceQUEUE_SET_SEND in order to tell them apart from
  * other traceQUEUE_SEND trace points. Then set this to TRC_ACKNOWLEDGED.
  */
-#define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND       0 /* TRC_ACKNOWLEDGED */
+    #define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND       0 /* TRC_ACKNOWLEDGED */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* TRC_KERNEL_PORT_CONFIG_H */

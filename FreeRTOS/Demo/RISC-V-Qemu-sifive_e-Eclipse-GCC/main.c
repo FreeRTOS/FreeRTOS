@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -49,7 +49,7 @@
  * This project has only been tested in the QEMU emulation of the HiFive board
  * from SiFive.
  *
- * NOTE - Requires QEMU 1908xx or higher.  Start QEMU using the following command 
+ * NOTE - Requires QEMU 1908xx or higher.  Start QEMU using the following command
  * line:
  *
  * [your_path_1]\qemu-system-riscv32 -kernel [your_path_2]\FreeRTOS\Demo\RISC-V-Qemu-sifive_e-FreedomStudio\Debug\RTOSDemo.elf -S -s -machine sifive_e
@@ -95,6 +95,9 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
+/* Trap handler implemented in the portASM.S file. */
+extern void freertos_risc_v_trap_handler( void );
+
 /*
  * Very simply polling write to the UART.  The full demo only writes single
  * characters at a time so as not to disrupt the timing of the test and demo
@@ -106,6 +109,9 @@ void vSendString( const char * pcString );
 
 int main( void )
 {
+	/* Program mtvec with the FreeRTOS trap handler. */
+	__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+
 	vSendString( "Starting" );
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top

@@ -1,10 +1,11 @@
 name : "FreeRTOS"
 version: "202212.00"
 description: "This is the standard distribution of FreeRTOS."
+license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "7372519cb"
+    version: "4bfb9b2d7"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -130,7 +131,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
 
   - name: "FreeRTOS-Community-Supported-Demos"
-    version: "6f2ad44"
+    version: "1ba24b1"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"
@@ -185,4 +186,23 @@ dependencies:
       url: "https://github.com/intel/tinycbor.git"
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
-license: "MIT"
+  - name: "TraceRecorder"
+    version: "3aa0355"
+    repository:
+      type: "git"
+      url: "https://github.com/percepio/TraceRecorderSource.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace"
+
+  - name: "CMock"
+    version: "afa2949"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS/Test/CMock/CMock"
+
+  - name: "CMock"
+    version: "150573c"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS-Plus/Test/CMock"

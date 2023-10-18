@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -67,8 +67,8 @@ static bool xCallback_Test_1_end_called = pdFALSE;
 static bool xCallback_Test_2_end_called = pdFALSE;
 
 /* =================================  DEFINES  ============================== */
-#define DEFAULT_TIMER_PEIOD    1000
-#define DEFAULT_TIMER_NAME     "ut_timer"
+#define DEFAULT_TIMER_PERIOD    1000
+#define DEFAULT_TIMER_NAME      "ut_timer"
 
 /* =============================  FUNCTION MACROS  ========================== */
 #define ASSERT_APPLICATION_DAEMON_STARTUP_HOOK_CALLED()               \
@@ -278,7 +278,7 @@ static TimerHandle_t create_timer()
     vListInitialiseItem_ExpectAnyArgs();
 
     xTimer = xTimerCreateStatic( DEFAULT_TIMER_NAME,
-                                 DEFAULT_TIMER_PEIOD,
+                                 DEFAULT_TIMER_PERIOD,
                                  pdTRUE,
                                  ( void * ) &pvTimerID,
                                  xCallback_Test,
@@ -576,7 +576,7 @@ void test_xTimerGenericCommand_success_null_timer_not_started( void )
 }
 
 /*!
- * @brief sucess testcase, getter for the timer handle daemon
+ * @brief success testcase, getter for the timer handle daemon
  *        expects a non NULL value
  */
 void test_xTimerGetTimerDaemonTaskHandle_success( void )
@@ -593,7 +593,7 @@ void test_xTimerGetTimerDaemonTaskHandle_success( void )
 }
 
 /*!
- * @brief sucess testcase, getter for the timer period in ticks
+ * @brief success testcase, getter for the timer period in ticks
  *        expects a similar value to the one created
  */
 void test_xTimerGetPeriod_success( void )
@@ -607,11 +607,11 @@ void test_xTimerGetPeriod_success( void )
     /* API Call */
     ret_get_period = xTimerGetPeriod( xTimer );
     /* Validations */
-    TEST_ASSERT_EQUAL( DEFAULT_TIMER_PEIOD, ret_get_period );
+    TEST_ASSERT_EQUAL( DEFAULT_TIMER_PERIOD, ret_get_period );
 }
 
 /*!
- * @brief sucess testcase, set and test timer reload mode
+ * @brief success testcase, set and test timer reload mode
  */
 void test_vTimer_Set_Get_ReloadMode_success( void )
 {
@@ -637,7 +637,7 @@ void test_vTimer_Set_Get_ReloadMode_success( void )
 }
 
 /*!
- * @brief sucess testcase, get timer expiry time
+ * @brief success testcase, get timer expiry time
  */
 void test_xTimerGetExpiryTime( void )
 {
@@ -655,7 +655,7 @@ void test_xTimerGetExpiryTime( void )
 }
 
 /*!
- * @brief sucess testcase, get and test the default timer name
+ * @brief success testcase, get and test the default timer name
  */
 void test_pcTimerGetName( void )
 {
@@ -672,7 +672,7 @@ void test_pcTimerGetName( void )
 }
 
 /*!
- * @brief sucess testcase, get timer status and test if it is active
+ * @brief success testcase, get timer status and test if it is active
  */
 void test_xTimerIsTimerActive_true( void )
 {
@@ -691,7 +691,7 @@ void test_xTimerIsTimerActive_true( void )
 }
 
 /*!
- * @brief sucess testcase, get timer status and test if it is active
+ * @brief success testcase, get timer status and test if it is active
  *        expects the timer not to be active by default
  */
 void test_xTimerIsTimerActive_false( void )
@@ -709,7 +709,7 @@ void test_xTimerIsTimerActive_false( void )
 }
 
 /*!
- * @brief sucess testcase, set timer ID then tests if it was set properly
+ * @brief success testcase, set timer ID then tests if it was set properly
  */
 void test_vTimerSetTimerID( void )
 {
@@ -730,7 +730,7 @@ void test_vTimerSetTimerID( void )
 }
 
 /*!
- * @brief sucess testcase, sets a pended function call
+ * @brief success testcase, sets a pended function call
  */
 void test_xTimerPendFunctionCall_success( void )
 {
@@ -751,7 +751,7 @@ void test_xTimerPendFunctionCall_success( void )
 }
 
 /*!
- * @brief sucess testcase, sets a pended function call from ISR
+ * @brief success testcase, sets a pended function call from ISR
  */
 void test_xTimerPendFunctionCallFromISR_success( void )
 {
@@ -773,7 +773,7 @@ void test_xTimerPendFunctionCallFromISR_success( void )
 }
 
 /*!
- * @brief sucess testcase, expired timer is calling the callback
+ * @brief success testcase, expired timer is calling the callback
  */
 void test_timer_function_expired_callback( void )
 {
@@ -813,8 +813,8 @@ void test_timer_function_expired_callback( void )
 }
 
 /*!
- * @brief sucess testcase, port yields when no context switch happens because of
- *        reusming the scheduler
+ * @brief success testcase, port yields when no context switch happens because of
+ *        resuming the scheduler
  */
 void test_timer_function_success3( void )
 {
@@ -846,7 +846,7 @@ void test_timer_function_success3( void )
 }
 
 /*!
- * @brief sucess testcase,  timer callback called
+ * @brief success testcase,  timer callback called
  */
 void test_timer_function_success4( void )
 {

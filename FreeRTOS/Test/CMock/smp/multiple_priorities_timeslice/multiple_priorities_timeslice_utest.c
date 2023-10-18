@@ -77,7 +77,7 @@ int suiteTearDown( int numFailures )
 }
 
 /* =============================  HELPER FUNCTIONS  ========================= */
-void vApplicationMinimalIdleHook( void )
+void vApplicationPassiveIdleHook( void )
 {
     /* Adding this function to pass compilation. */
 }

@@ -123,8 +123,9 @@ extern BaseType_t prvCreateIdleTasks( void );
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 
-void vApplicationMinimalIdleHook( void )
+void vApplicationPassiveIdleHook( void )
 {
+    /* Adding this function to pass compilation. */
 }
 
 static void vFakeAssertStub( bool x,

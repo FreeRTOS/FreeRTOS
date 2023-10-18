@@ -146,6 +146,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define configMINIMAL_SECURE_STACK_SIZE              ( 1024 )
 #define portALLOCATE_SECURE_CONTEXT                  vFakePortAllocateSecureContext
 
-#define INFINITE_LOOP                                vFakeInfiniteLoop
+#define configCONTROL_INFINITE_LOOP                  vFakeInfiniteLoop
 
 #endif /* FREERTOS_CONFIG_H */

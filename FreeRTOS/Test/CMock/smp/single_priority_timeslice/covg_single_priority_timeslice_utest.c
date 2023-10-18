@@ -60,7 +60,7 @@ extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvIdleTask( void );
-extern void prvMinimalIdleTask( void );
+extern void prvPassiveIdleTask( void );
 extern void prvSelectHighestPriorityTask( BaseType_t xCoreID );
 
 /* ============================  Unity Fixtures  ============================ */
@@ -88,15 +88,16 @@ int suiteTearDown( int numFailures )
 }
 
 /* =============================  HELPER FUNCTIONS  ========================= */
-void vApplicationMinimalIdleHook( void )
+void vApplicationPassiveIdleHook( void )
 {
+    /* Adding this function to pass compilation. */
 }
 
 /* ==============================  Test Cases  ============================== */
 
 /* @brief prvIdleTask - no other idle priority task
  *
- * This test calls the prvMinimalIdleTask to cover the condition that no other idle
+ * This test calls the prvPassiveIdleTask to cover the condition that no other idle
  * priority task in the ready list. The task is still the running task on core 0.
  *
  * <b>Coverage</b>
@@ -147,8 +148,8 @@ void test_coverage_prvIdleTask_no_other_idle_priority_task( void )
 
 /* @brief prvIdleTask - yield for idle priority task
  *
- * This test calls the prvMinimalIdleTask to cover the condition that there are more
- * idle priority level tasks than configNUMBER_OF_CORES. Yield is called in prvMinimalIdleTask.
+ * This test calls the prvPassiveIdleTask to cover the condition that there are more
+ * idle priority level tasks than configNUMBER_OF_CORES. Yield is called in prvPassiveIdleTask.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -206,9 +207,9 @@ void test_coverage_prvIdleTask_yield_for_idle_priority_task( void )
     configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ i ] );
 }
 
-/* @brief prvMinimalIdleTask - no other idle priority task
+/* @brief prvPassiveIdleTask - no other idle priority task
  *
- * This test calls the prvMinimalIdleTask to cover the condition that no other idle
+ * This test calls the prvPassiveIdleTask to cover the condition that no other idle
  * priority task in the ready list. The task is still the running task on core 0.
  *
  * <b>Coverage</b>
@@ -224,7 +225,7 @@ void test_coverage_prvIdleTask_yield_for_idle_priority_task( void )
  * @endcode
  * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is false.
  */
-void test_coverage_prvMinimalIdleTask_no_other_idle_priority_task( void )
+void test_coverage_prvPassiveIdleTask_no_other_idle_priority_task( void )
 {
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { 0 };
     uint32_t i;
@@ -251,16 +252,16 @@ void test_coverage_prvMinimalIdleTask_no_other_idle_priority_task( void )
     vFakeInfiniteLoop_ExpectAndReturn( 0 );
 
     /* API calls. Runs the idle task function on core 0. */
-    prvMinimalIdleTask();
+    prvPassiveIdleTask();
 
     /* Validations. xTaskTCBs[ 0 ] still runs on core 0. */
     configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ 0 ] );
 }
 
-/* @brief prvMinimalIdleTask - yield for idle priority task
+/* @brief prvPassiveIdleTask - yield for idle priority task
  *
- * This test calls the prvMinimalIdleTask to cover the condition that there are more
- * idle priority level tasks than configNUMBER_OF_CORES. Yield is called in prvMinimalIdleTask.
+ * This test calls the prvPassiveIdleTask to cover the condition that there are more
+ * idle priority level tasks than configNUMBER_OF_CORES. Yield is called in prvPassiveIdleTask.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -275,7 +276,7 @@ void test_coverage_prvMinimalIdleTask_no_other_idle_priority_task( void )
  * @endcode
  * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is true.
  */
-void test_coverage_prvMinimalIdleTask_yield_for_idle_priority_task( void )
+void test_coverage_prvPassiveIdleTask_yield_for_idle_priority_task( void )
 {
     TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 1 ] = { 0 };
     uint32_t i;
@@ -312,7 +313,7 @@ void test_coverage_prvMinimalIdleTask_yield_for_idle_priority_task( void )
     vFakeInfiniteLoop_ExpectAndReturn( 0 );
 
     /* API calls. Runs the idle task function on core 0. */
-    prvMinimalIdleTask();
+    prvPassiveIdleTask();
 
     /* Validations. xTaskTCBs[ i ] runs on core 0. */
     configASSERT( pxCurrentTCBs[ 0 ] == &xTaskTCBs[ i ] );

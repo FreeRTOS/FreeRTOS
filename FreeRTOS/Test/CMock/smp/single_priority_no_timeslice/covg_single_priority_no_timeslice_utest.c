@@ -107,37 +107,6 @@ static void prvPortEnableInterruptsCb( int cmock_num_calls )
 
 /* ==============================  Test Cases  ============================== */
 
-
-/**
- * @brief prvCheckForRunStateChange - function called in ISR.
- *
- * This function is called in ISR. Nothing will be udpated. This test shows its result
- * in the coverage report.
- *
- * <b>Coverage</b>
- * @code{c}
- * if( portCHECK_IF_IN_ISR() == pdFALSE )
- * {
- *     ...
- * }
- * @endcode
- * ( portCHECK_IF_IN_ISR() == pdFALSE ) is false.
- */
-void test_coverage_prvCheckForRunStateChange_in_isr( void )
-{
-    /* Clear callback in commonSetUp. */
-    vFakePortCheckIfInISR_StopIgnore();
-
-    /* Expection. */
-    vFakePortCheckIfInISR_ExpectAndReturn( 1 );
-
-    /* API Call. */
-    prvCheckForRunStateChange();
-
-    /* Nothing will be udpated if this API is called in ISR. This test shows its result
-     * in the coverage report. */
-}
-
 /**
  * @brief prvCheckForRunStateChange - first time enter critical section.
  *

@@ -62,7 +62,7 @@ extern BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvIdleTask( void );
-extern void prvMinimalIdleTask( void );
+extern void prvPassiveIdleTask( void );
 extern BaseType_t xTaskIncrementTick( void );
 
 /* ============================  Unity Fixtures  ============================ */

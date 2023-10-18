@@ -81,7 +81,7 @@
 #define portREMOVE_STATIC_QUALIFIER                      1
 #define portCRITICAL_NESTING_IN_TCB                      1
 #define portSTACK_GROWTH                                 ( 1 )
-#define configUSE_MINIMAL_IDLE_HOOK                      1
+#define configUSE_PASSIVE_IDLE_HOOK                      1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1
@@ -153,6 +153,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
     #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
-#define INFINITE_LOOP    vFakeInfiniteLoop
+#define configCONTROL_INFINITE_LOOP    vFakeInfiniteLoop
 
 #endif /* FREERTOS_CONFIG_H */

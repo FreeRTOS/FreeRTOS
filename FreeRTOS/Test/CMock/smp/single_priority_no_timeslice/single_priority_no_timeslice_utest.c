@@ -454,7 +454,7 @@ void test_priority_change_tasks_different_priority_raise( void )
         /* Raise the priority of the task */
         vTaskPrioritySet( xTaskHandles[ i ], 2 );
 
-        /* Verify the priority has been rasied */
+        /* Verify the priority has been raised */
         vTaskGetInfo( xTaskHandles[ i ], &xTaskDetails, pdTRUE, eInvalid );
         TEST_ASSERT_EQUAL( 2, xTaskDetails.xHandle->uxPriority );
 
@@ -978,7 +978,7 @@ void test_task_create_all_cores_equal_priority_higher( void )
 
     /* Create a new task of higher priority */
 
-    /* The created task has higher priority than other tasks. This will casue all
+    /* The created task has higher priority than other tasks. This will cause all
      * the other cores yield. The task is choosen by core yield order which is accending
      * in vYieldCores. Since core 0 create the task, it will yield last due to the mock
      * implementation.
@@ -1702,7 +1702,7 @@ void test_task_suspend_all_cores_different_priority_suspend_high( void )
      * 1. Core 0 will yield itself and call prvSelectHighestPriorityTask
      * 2. In prvSelectHighestPriorityTask, the top running priority is dropped.
      * All the other cores running the idle are requested to yield. The mock implementation
-     * assume that cores yield in accesending order.
+     * assume that cores yield in ascending order.
      * Core 0 will choose xTaskHandles[1]
      * Core 1 will choose xTaskHandles[2]
      * ...

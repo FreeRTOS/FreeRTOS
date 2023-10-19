@@ -82,7 +82,6 @@
 #define portSTACK_GROWTH                                 ( 1 )
 #define configUSE_MINIMAL_IDLE_HOOK                      0     /* Keep this for backward compatibility. */
 #define configUSE_PASSIVE_IDLE_HOOK                      0
-#define configKERNEL_PROVIDED_STATIC_MEMORY              1
 
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS          4
 

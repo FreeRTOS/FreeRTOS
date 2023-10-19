@@ -114,7 +114,7 @@ static bool portClear_Interrupt_from_isr_called = false;
 static bool portSet_Interrupt_from_isr_called = false;
 static bool port_invalid_interrupt_called = false;
 static bool vApplicationStackOverflowHook_called = false;
-static bool getIddleTaskMemoryValid = false;
+static bool getIdleTaskMemoryValid = false;
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 static bool getIdleTaskMemory_called = false;
@@ -265,7 +265,7 @@ static void start_scheduler()
 
     xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
     xPortStartScheduler_ExpectAndReturn( pdTRUE );
-    getIddleTaskMemoryValid = true;
+    getIdleTaskMemoryValid = true;
     vTaskStartScheduler();
     ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
     TEST_ASSERT_TRUE( xSchedulerRunning );
@@ -299,7 +299,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
 {
     HOOK_DIAG();
 
-    if( getIddleTaskMemoryValid == true )
+    if( getIdleTaskMemoryValid == true )
     {
         /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
          * state will be stored. */
@@ -608,7 +608,7 @@ void test_vTaskDelayUntil_assert_uxSchedulerSuspended_neq_1( void )
  * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
  *        equal to 1
  */
-void test_vTaskDelay_assert_uxScheduelrSuspended_neq_1( void )
+void test_vTaskDelay_assert_uxSchedulerSuspended_neq_1( void )
 {
     vTaskSuspendAll();
 
@@ -823,7 +823,7 @@ void test_xTaskRemoveFromEventList_assert_event_list_head_entry_null( void )
 
 /*!
  * @brief This test ensures that the code asserts when
- * vTaskRemoveFromUnorderedEventList and the schedueler is not suspended
+ * vTaskRemoveFromUnorderedEventList and the scheduler is not suspended
  */
 void test_vTaskRemoveFromUnorderedEventList_assert_scheduler_running( void )
 {
@@ -857,7 +857,7 @@ void test_vTaskRemoveFromUnorderedEventList_assert_( void )
  * @brief This test ensures that the code asserts when vTaskSettimeOutState is
  *        called with a timeout of zero
  */
-void test_vTaskSetTimeOutState_assert_timeout_zsero( void )
+void test_vTaskSetTimeOutState_assert_timeout_zero( void )
 {
     EXPECT_ASSERT_BREAK( vTaskSetTimeOutState( 0 ) );
 

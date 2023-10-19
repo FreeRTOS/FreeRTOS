@@ -1028,7 +1028,7 @@ void test_prvCheckTasksWaitingTermination_no_waiting_task( void )
 
     /* Validation. */
 
-    /* No task is waiting to be cleand up. Nothing will be updated in this API. This
+    /* No task is waiting to be cleaned up. Nothing will be updated in this API. This
      * test case shows its result in the coverage report. */
 }
 
@@ -3331,7 +3331,7 @@ void test_xTaskIncrementTick_success_unblock_higher_prio_task( void )
     create_task_priority = 1;
     task_handle2 = create_task();
 
-    /* task_handle 2 will be added to pxDelayedTaskList later. To wakup a higher priority
+    /* task_handle 2 will be added to pxDelayedTaskList later. To wakeup a higher priority
      * task, uxPriority is set higher than current task, which is 2. */
     task_handle2->uxPriority = 3;
     ptcb = task_handle;
@@ -5685,7 +5685,7 @@ void test_vTaskGenericNotifyGiveFromISR_success( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
-    /* configASSERT stateement */
+    /* configASSERT statement */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xSuspendedTaskList );
     /*uxListRemove_ExpectAndReturn( &task_to_notify->xStateListItem, pdTRUE ); */

@@ -23,8 +23,8 @@
  * https://github.com/FreeRTOS
  *
  */
-#ifndef GBLOBAL_VARS_H
-#define GBLOBAL_VARS_H
+#ifndef GLOBAL_VARS_H
+#define GLOBAL_VARS_H
 
 #include "task.h"
 
@@ -145,4 +145,4 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
  * below to enable the use of older kernel aware debuggers. */
 typedef tskTCB TCB_t;
 
-#endif /* ifndef GBLOBAL_VARS_H */
+#endif /* ifndef GLOBAL_VARS_H */

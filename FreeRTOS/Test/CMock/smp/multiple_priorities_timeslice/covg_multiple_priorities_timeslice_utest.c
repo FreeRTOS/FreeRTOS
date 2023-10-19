@@ -246,7 +246,7 @@ void test_coverage_xTaskIncrementTick_no_eq_priority_task_yield_pending( void )
 }
 
 /**
- * @brief xTaskIncrementTick - task with preempetion disabled.
+ * @brief xTaskIncrementTick - task with preemption disabled.
  *
  * The running task has preemption disabled. Verify the return value indicates switching
  * is not required.

@@ -31,7 +31,6 @@
 #include "FreeRTOSConfig.h"
 #include "fake_port.h"
 #include "task.h"
-#include "portmacro.h"
 
 /* C runtime includes. */
 #include <stdlib.h>
@@ -46,6 +45,8 @@
 /* Mock includes. */
 #include "mock_fake_assert.h"
 #include "mock_portable.h"
+#include "mock_list.h"
+#include "mock_list_macros.h"
 
 /* =================================  MACROS  =============================== */
 
@@ -341,11 +342,23 @@ int suiteTearDown( int numFailures )
 
 /* ========================  TEST CASES ===================================== */
 
-void test_xTaskCreateStatic_assert_static_task_eq_tcb_t( void )
+/*!
+ * @brief This test ensures that the code asserts when the alignment of the
+ *        stack (growth upwards) is not similar to the basetype alignment
+ */
+void test_xTaskCreateStatic_assert_stack_alignment( void )
 {
     TaskFunction_t xTFunc = NULL;
     StaticTask_t xTaskBuffer[ 200 ];
-    StackType_t xStackBuffer[ 200 ];
+    StackType_t * xStackBuffer;
+
+    char xStackBuffer_unaligned[ 200 ];
+
+    xStackBuffer = ( StackType_t * ) &xStackBuffer_unaligned[ 1 ];
+
+    vListInitialiseItem_Ignore();
+    listSET_LIST_ITEM_VALUE_Ignore();
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn();
 
     EXPECT_ASSERT_BREAK( xTaskCreateStatic( xTFunc,
                                             NULL,

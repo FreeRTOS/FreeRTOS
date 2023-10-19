@@ -231,7 +231,7 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
  *               ( taskTASK_IS_RUNNING( pxCurrentTCBs[ portGET_CORE_ID() ] ) == pdFALSE ) );
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configRUN_MULTIPLE_PRIORITIES = 0
  * configUSE_TASK_PREEMPTION_DISABLE
  */
@@ -303,7 +303,7 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
 {
@@ -336,7 +336,7 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
 {
@@ -374,7 +374,7 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
  * configASSERT( uxSchedulerSuspended == 0 );
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * INCLUDE_vTaskDelete
  */
 void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
@@ -416,7 +416,7 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * INCLUDE_vTaskSuspend
  */
 void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
@@ -445,7 +445,7 @@ void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
 
 /**
  * @brief This test ensures that the code asserts when we try to switch
- *        context with a cuurent task that is holding a
+ *        context with a current task that is holding a
  *        critical section
  *
  * <b>Coverage</b>
@@ -456,7 +456,7 @@ void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
 {
@@ -487,7 +487,7 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_vTaskExitCritical_assert_critical_nesting_eq_zero( void )
 {
@@ -516,7 +516,7 @@ void test_vTaskExitCritical_assert_critical_nesting_eq_zero( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_vTaskExitCriticalFromISR_assertcritical_nesting_eq_zero( void )
 {
@@ -545,7 +545,7 @@ void test_vTaskExitCriticalFromISR_assertcritical_nesting_eq_zero( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configUSE_TICKLESS_IDLE != 0
  */
 void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
@@ -589,7 +589,7 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
 }
 
 /**
- * @brief vTaskStepTick - assert if scheduer suspended.
+ * @brief vTaskStepTick - assert if scheduler suspended.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -647,7 +647,7 @@ void test_prvCheckForRunStateChange_assert_task_state_not_changed( void )
 }
 
 /**
- * @brief vTaskStepTick - assert if scheduer suspended.
+ * @brief vTaskStepTick - assert if scheduler suspended.
  *
  * <b>Coverage</b>
  * @code{c}

@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 
-/* Tasl includes */
+/* Task includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "event_groups.h"
@@ -1308,7 +1308,7 @@ void test_task_block_running_task( void )
     }
 
     /* After ( configNUMBER_OF_CORES + 1 ) ticks, the task 1 will be added back to
-     * the ready list. Verfiy that the task 1 can be scheduled on each core when
+     * the ready list. Verify that the task 1 can be scheduled on each core when
      * xTaskIncrementTick is called. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {

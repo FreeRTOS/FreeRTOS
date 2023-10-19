@@ -484,7 +484,7 @@ void test_coverage_prvYieldCore_runstate_eq_yielding( void )
 /**
  * @brief vTaskDelete - scheduler not running.
  *
- * This test ensures that if xTask Delete is caled and the scheuler is
+ * This test ensures that if vTaskDelete is called and the scheuler is
  * not running, the core is not yielded, but it is removed from the
  * stateList, the eventList and inserted in the taskwaitingtermination
  * list, the uxdeletedtaskwaiting for cleanup is increased and the
@@ -549,7 +549,7 @@ void test_coverage_vTaskDelete_scheduler_not_running( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * INCLUDE_vTaskDelete = 1
  */
 void test_coverage_vTaskDelete_task_not_running( void )
@@ -587,7 +587,7 @@ void test_coverage_vTaskDelete_task_not_running( void )
 
 /**
  * @brief This test ensures that when we call eTaskGetState with a task that is
- *        not running eRady is returned
+ *        not running eReadyis returned
  *
  * <b>Coverage</b>
  * @code{c}
@@ -597,7 +597,7 @@ void test_coverage_vTaskDelete_task_not_running( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * INCLUDE_eTaskGetState = 1
  * configUSE_TRACE_FACILITY = 1
  * INCLUDE_xTaskAbortDelay = 1
@@ -636,7 +636,7 @@ void test_coverage_eTaskGetState_task_not_running( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * INCLUDE_eTaskGetState = 1
  * configUSE_TRACE_FACILITY = 1
  * INCLUDE_xTaskAbortDelay = 1
@@ -676,7 +676,7 @@ void test_coverage_vTaskPreemptionDisable_null_handle( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_coverage_vTaskSuspendAll_critical_nesting_ne_zero( void )
 {
@@ -716,7 +716,7 @@ void test_coverage_vTaskSuspendAll_critical_nesting_ne_zero( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
@@ -786,7 +786,7 @@ void test_coverage_prvGetExpectedIdleTime_top_priority_gt_idle_prio( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
@@ -854,7 +854,7 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_gt_one( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
@@ -953,7 +953,7 @@ void port_assert_if_isr_cb( int num_callbacks )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
@@ -1045,7 +1045,7 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * configUSE_TICKLESS_IDLE != 0
  * configUSE_PORT_OPTIMISED_TASK_SELECTION = 0
  */
@@ -1113,7 +1113,7 @@ void test_coverage_prvGetExpectedIdleTime_top_ready_prio_gt_idle_prio_current_pr
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
 {
@@ -1174,7 +1174,7 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  */
 void test_coverage_prvCreateIdleTasks_name_too_long( void )
 {
@@ -1239,7 +1239,7 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
  *
  * @endcode
  *
- * configNMBER_OF_CORES > 1
+ * configNUMBER_OF_CORES > 1
  * INCLUDE_xTaskGetSchedulerState = 1
  * configUSE_TIMERS = 1
  */

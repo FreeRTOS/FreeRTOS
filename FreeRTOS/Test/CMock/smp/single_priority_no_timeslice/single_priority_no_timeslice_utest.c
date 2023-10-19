@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 
-/* Tasl includes */
+/* Task includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "event_groups.h"
@@ -743,7 +743,7 @@ void test_task_create_tasks_higher_priority( void )
 
     /* Create a new task of higher priority. prvYieldForTask will be called to yield
      * for this task. Since all the core has lower priority than this task. These cores
-     * will be requested to yield. The task is choosed by the core yield order.
+     * will be requested to yield. The task is choosen by the core yield order.
      * This task is created on core 0.
      * vTaskExitCritical does the following:
      * 1. release the spinlock -> All the other cores yield
@@ -979,7 +979,7 @@ void test_task_create_all_cores_equal_priority_higher( void )
     /* Create a new task of higher priority */
 
     /* The created task has higher priority than other tasks. This will casue all
-     * the other cores yield. The task is choosed by core yield order which is accending
+     * the other cores yield. The task is choosen by core yield order which is accending
      * in vYieldCores. Since core 0 create the task, it will yield last due to the mock
      * implementation.
      * core 1 choose xTaskHandles[N]
@@ -1710,7 +1710,7 @@ void test_task_suspend_all_cores_different_priority_suspend_high( void )
      */
     vTaskSuspend( xTaskHandles[ 0 ] );
 
-    /* Verify the suspened task is not running. */
+    /* Verify the suspended task is not running. */
     verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
 
     /* Verify all other tasks are in the running state */
@@ -1728,7 +1728,7 @@ void test_task_suspend_all_cores_different_priority_suspend_high( void )
      * 3. The core 0 will yield last since it is the core to call the FreeRTOS APIs
      * Core N-1 will not yield since it is already running xIdleTaskHandles[N-1]
      * Other cores will yield in the following order:
-     * Tasks will be choosed then idle task in FIFO order
+     * Tasks will be choosen then idle task in FIFO order
      * Core 1 will choose xTaskHandles[0]
      * Core 2 will choose xIdleTaskHandles[0]
      * ...
@@ -2398,7 +2398,7 @@ void test_task_block_all_cores_equal_priority_block_running( void )
 /**
  * @brief AWS_IoT-FreeRTOS_SMP_TC-108
  * Task can inherit or disinherit other higher priority task. This test verify that
- * lower priority task will be selected to run when it inherit a higher priorirty task.
+ * lower priority task will be selected to run when it inherit a higher priority task.
  * The lower priority will be switched out when it disinherits higher priority task.
  *
  * #define configRUN_MULTIPLE_PRIORITIES                    1
@@ -2508,7 +2508,7 @@ void test_task_priority_inherit_disinherit( void )
 /**
  * @brief AWS_IoT-FreeRTOS_SMP_TC-109
  * Task can inherit or disinherit other higher priority task. This test verify that
- * lower priority task will be selected to run when it inherit a higher priorirty task.
+ * lower priority task will be selected to run when it inherit a higher priority task.
  * The lower priority will be switched out when it is disinherited by higher priority
  * task due to timeout.
  *

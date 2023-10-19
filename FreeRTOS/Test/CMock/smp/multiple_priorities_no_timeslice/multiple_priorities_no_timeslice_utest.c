@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 
-/* Tasl includes */
+/* Task includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "event_groups.h"
@@ -1698,7 +1698,7 @@ void test_task_suspend_all_cores_different_priority_suspend_high( void )
     /* Suspend the high priority task */
     vTaskSuspend( xTaskHandles[ 0 ] );
 
-    /* Verify the suspened task is not running. */
+    /* Verify the suspended task is not running. */
     verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
 
     /* Verify all other tasks are in the running state */
@@ -2406,7 +2406,7 @@ void test_task_affinity_out_of_range( void )
     /* Create an additional task which will be in the ready state */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ i ] );
 
-    /* Set the affinitiy mask to a core that is out of range */
+    /* Set the affinity mask to a core that is out of range */
     vTaskCoreAffinitySet( xTaskHandles[ i ], 1 << configNUMBER_OF_CORES );
 
     vTaskStartScheduler();
@@ -2431,7 +2431,7 @@ void test_task_affinity_out_of_range( void )
  * @brief AWS_IoT-FreeRTOS_SMP_TC-69
  * A single task of high priority will be created. A low priority task will be
  * created for each remaining available CPU core. An additional high priority
- * task shall be created in the suspended state and have affinitity for CPU core
+ * task shall be created in the suspended state and have affinity for CPU core
  * 0. This test shall verify that when the suspended task is resumed it remains
  * in the ready state.
  *
@@ -2708,7 +2708,7 @@ void test_task_affinity_modify_priority( void )
  * Preemption Disabled
  * State - Running (core N)	  State - Ready     State - Running
  */
-void test_task_premption_verification( void )
+void test_task_preemption_verification( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;
@@ -2798,7 +2798,7 @@ void test_task_premption_verification( void )
  * Preemption Disabled
  * State - Running (core N)	    State - Ready     State - Running
  */
-void test_task_premption_new_task( void )
+void test_task_preemption_new_task( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;
@@ -2881,7 +2881,7 @@ void test_task_premption_new_task( void )
  * Preemption Disabled
  * State - Running (core N) State - Ready     State - Running
  */
-void test_task_premption_change_priority( void )
+void test_task_preemption_change_priority( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;
@@ -2977,7 +2977,7 @@ void test_task_premption_change_priority( void )
  * Preemption Disabled
  * State - Running (core N)	    State - Ready   State - Running
  */
-void test_task_premption_change_affinity( void )
+void test_task_preemption_change_affinity( void )
 {
     TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
     uint32_t i;
@@ -3260,7 +3260,7 @@ void test_task_yield_run_equal_priority_new_task( void )
 /**
  * @brief AWS_IoT-FreeRTOS_SMP_TC-106
  * Task can inherit or disinherit other higher priority task. This test verify that
- * lower priority task will be selected to run when it inherit a higher priorirty task.
+ * lower priority task will be selected to run when it inherit a higher priority task.
  * The lower priority will be switched out when it disinherits higher priority task.
  *
  * #define configRUN_MULTIPLE_PRIORITIES                    1
@@ -3370,7 +3370,7 @@ void test_task_priority_inherit_disinherit( void )
 /**
  * @brief AWS_IoT-FreeRTOS_SMP_TC-107
  * Task can inherit or disinherit other higher priority task. This test verify that
- * lower priority task will be selected to run when it inherit a higher priorirty task.
+ * lower priority task will be selected to run when it inherit a higher priority task.
  * The lower priority will be switched out when it is disinherited by higher priority
  * task due to timeout.
  *

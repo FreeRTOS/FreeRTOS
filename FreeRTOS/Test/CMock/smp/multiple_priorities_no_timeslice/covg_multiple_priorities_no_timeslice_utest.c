@@ -138,7 +138,7 @@ static void prvPortEnterCriticalSectionCb( int cmock_num_calls )
 {
     ( void ) cmock_num_calls;
 
-    /* This simulate the multiple idle tasks tries to clean the deleleted TCB. */
+    /* This simulate the multiple idle tasks tries to clean the deleted TCB. */
     uxDeletedTasksWaitingCleanUp = 0;
 }
 
@@ -666,7 +666,7 @@ void test_coverage_uxTaskGetStackHighWaterMark_null_task_handle( void )
 /**
  * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with valid core ID.
  *
- * This test verifis the task handle returned with a valid core ID.
+ * This test verifiesthe task handle returned with a valid core ID.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -702,7 +702,7 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_valid_core_id( void )
 /**
  * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with invalid core ID.
  *
- * This test verifis the task handle returned with an invalid core ID.
+ * This test verifiesthe task handle returned with an invalid core ID.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -739,7 +739,7 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_ge( void )
 /**
  * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with invalid core ID.
  *
- * This test verifis the task handle returned with an invalid core ID.
+ * This test verifiesthe task handle returned with an invalid core ID.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -1137,7 +1137,7 @@ void test_coverage_vTaskList_task_eDeleted( void )
  * @brief xTaskDelayUntil - current task should delay.
  *
  * The task delay itself until 5 ticks later. Verify that the return value should
- * indicate the task is actually delayed. Cover the path taht vTaskYieldWithinAPI
+ * indicate the task is actually delayed. Cover the path that vTaskYieldWithinAPI
  * is called for a task calls xTaskDelayUntil if xTaskResumeAll returns pdFALSE.
  *
  * <b>Coverage</b>
@@ -2186,7 +2186,7 @@ void test_coverage_vTaskExitCritical_task_not_in_critical( void )
  *         }
  *     }
  * @endcode
- * ( portGET_CRITICAL_NESTING_COUNT() > 0U ) is ture.
+ * ( portGET_CRITICAL_NESTING_COUNT() > 0U ) is true.
  * ( portGET_CRITICAL_NESTING_COUNT() == 0U ) is false.
  */
 void test_coverage_vTaskExitCriticalFromISR_isr_enter_critical_mt_1( void )
@@ -2249,7 +2249,7 @@ void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check critical nesting count. */
 
     /* API call. */
-    /* The mask value has not effect since ISR is not in critlcal section. */
+    /* The mask value has not effect since ISR is not in critical section. */
     vTaskExitCriticalFromISR( 0x5a5a );
 
     /* Validation. */
@@ -3014,7 +3014,7 @@ void test_coverage_prvCheckTasksWaitingTermination_multiple_idle_tasks( void )
 
     /* Validation. */
 
-    /* No task is waiting to be cleand up. Nothing will be updated in this API. This
+    /* No task is waiting to be cleaned up. Nothing will be updated in this API. This
      * test case shows its result in the coverage report. */
 }
 
@@ -4483,7 +4483,7 @@ void test_coverage_prvSearchForNameWithinSingleList_empty_list( void )
     vListInitialise( &xList );
 
     /* API call. */
-    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TAKS_NOT_EXIST" );
+    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TASK_NOT_EXIST" );
 
     /* Validation. */
     TEST_ASSERT_EQUAL( NULL, pReturnedTCB );
@@ -4565,7 +4565,7 @@ void test_coverage_prvSearchForNameWithinSingleList_task_not_found( void )
     listINSERT_END( &xList, &xTaskTCB.xStateListItem );
 
     /* API call. */
-    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TAKS_NOT_EXIST" );
+    pReturnedTCB = prvSearchForNameWithinSingleList( &xList, "TASK_NOT_EXIST" );
 
     /* Validation. */
     TEST_ASSERT_EQUAL( NULL, pReturnedTCB );

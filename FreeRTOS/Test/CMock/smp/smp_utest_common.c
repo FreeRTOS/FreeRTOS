@@ -165,11 +165,11 @@ void vFakePortEnterCriticalSectionCallback( int cmock_num_calls )
 }
 
 /* vTaskExitCritical release the lock then check if this task is requested to yield.
- * The mock implementation assumes all the cores can be requested to yield immediatly.
+ * The mock implementation assumes all the cores can be requested to yield immediately.
  * If the core is requested to yield, it will yield in the following order.
  * 1. core ID in accsending order if the core is requested to yield and is not xCurrentCoreId.
  * 2. core ID which is requested to yield and the core ID equals xCurrentCoreId.
- * core i : Core ID requested to yield in critical section in accesending order.
+ * core i : Core ID requested to yield in critical section in acesending order.
  * ....
  * core xCurrentCoreId : Core ID equals to xCurrentCoreId and is requested to yield in critical section. */
 void vFakePortExitCriticalSectionCallback( int cmock_num_calls )

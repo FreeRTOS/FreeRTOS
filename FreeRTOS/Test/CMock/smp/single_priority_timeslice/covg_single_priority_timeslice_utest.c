@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 
-/* Tasl includes */
+/* Task includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "event_groups.h"

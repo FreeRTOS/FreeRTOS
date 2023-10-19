@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <string.h>
 
-/* Tasl includes */
+/* Task includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "event_groups.h"
@@ -473,7 +473,7 @@ void test_priority_change_tasks_equal_priority_lower_ready_task( void )
 
     /* Lower the priority of the last task.
      * Before ready list : [ 1(0), 2(1), ..., N(N-1), 0 ]
-     * After raedy list : [ 1(0), 2(1), ..., 0(N-1) ]
+     * After ready list : [ 1(0), 2(1), ..., 0(N-1) ]
      */
     vTaskPrioritySet( xTaskHandles[ configNUMBER_OF_CORES ], 1 );
 
@@ -973,7 +973,7 @@ void test_task_block_running_task( void )
     }
 
     /* After ( configNUMBER_OF_CORES + 1 ) ticks, the task 1 will be added back to
-     * the ready list. Verfiy that the task 1 can be scheduled on each core when
+     * the ready list. Verify that the task 1 can be scheduled on each core when
      * xTaskIncrementTick is called. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {

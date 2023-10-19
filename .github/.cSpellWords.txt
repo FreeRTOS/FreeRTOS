@@ -871,6 +871,7 @@ Cndc
 Cnpb
 Cnpbfi
 Coverity
+covg
 Cp
 Cplt
 Cpsif
@@ -6148,3 +6149,12 @@ yslope
 zeroize
 zipperowiec
 zynqmp
+lteq
+covg
+uxdeletedtaskwaiting
+uxtasknumber
+VTASKLIST
+uxpriority
+equalto
+xidx
+uxtopreadypriority

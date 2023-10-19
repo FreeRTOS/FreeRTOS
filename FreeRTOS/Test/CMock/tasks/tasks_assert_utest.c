@@ -117,7 +117,7 @@ static bool vApplicationStackOverflowHook_called = false;
 static bool getIddleTaskMemoryValid = false;
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
-static bool getIddleTaskMemory_called = false;
+static bool getIdleTaskMemory_called = false;
 static bool vTaskDeletePre_called = false;
 static bool vApplicationIdleHook_called = false;
 static bool vApplicationTickHook_called = false;
@@ -320,7 +320,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
         *pulIdleTaskStackSize = 0;
     }
 
-    getIddleTaskMemory_called = true;
+    getIdleTaskMemory_called = true;
 }
 
 void vPortCurrentTaskDying( void * pvTaskToDelete,

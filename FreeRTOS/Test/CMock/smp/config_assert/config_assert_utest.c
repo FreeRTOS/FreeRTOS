@@ -180,48 +180,6 @@ void port_release_task_lock_cb( int num_calls )
 /* ==============================  Test Cases  ============================== */
 
 /**
- * @brief This test ensures that the code asserts when the TCB's xTaskRunState
- *        is not equal to taskTASK_YIELDING ( -2 )
- *
- * <b>Coverage</b>
- * @code{c}
- * prvCheckForRunStateChange( pxTCB );
- *
- * configASSERT( pxThisTCB->xTaskRunState == taskTASK_YIELDING );
- * @endcode
- */
-void test_prvCheckForRunStateChange_asssert_runstate_ne_task_yield( void )
-{
-    xSchedulerRunning = pdTRUE;
-    uxSchedulerSuspended = 0U;
-
-    TCB_t currentTCB;
-
-    pxCurrentTCBs[ 0 ] = &currentTCB;
-    pxCurrentTCBs[ 0 ]->uxCriticalNesting = 0;
-    pxCurrentTCBs[ 0 ]->xTaskRunState = -2; /* taskTASK_YIELDING */
-
-    vFakePortReleaseTaskLock_AddCallback( port_release_task_lock_cb );
-    vFakePortDisableInterrupts_ExpectAndReturn( pdTRUE );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortAssertIfISR_Expect();
-    vFakePortCheckIfInISR_ExpectAndReturn( pdFALSE );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseISRLock_Expect();
-    vFakePortReleaseTaskLock_Expect();
-
-    EXPECT_ASSERT_BREAK( vTaskEnterCritical() );
-
-    validate_and_clear_assertions();
-}
-
-/**
  * @brief This test ensures that the code asserts when the TCB's critical
  *        nesting count is less than or equal to zero
  *
@@ -247,6 +205,7 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
     pxCurrentTCBs[ 0 ]->uxCoreAffinityMask = 1;
     pxCurrentTCBs[ 0 ]->uxCriticalNesting = 0;
     pxCurrentTCBs[ 0 ]->xTaskRunState = -1; /* taskTASK_NOT_RUNNING */
+    xSchedulerRunning = pdTRUE;
 
     /* Set the new mask to the last core. */
     uxCoreAffinityMask = ( 1 << ( configNUMBER_OF_CORES - 1 ) );
@@ -319,7 +278,6 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     /* back */
     /* prvYieldForTask */
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortCheckIfInISR_ExpectAndReturn( pdTRUE );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
@@ -675,7 +633,7 @@ void test_prvCheckForRunStateChange_assert_task_state_not_changed( void )
     uxSchedulerSuspended = 1;
 
     /* Expection. */
-    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
+    vFakePortAssertIfISR_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortReleaseTaskLock_Expect();

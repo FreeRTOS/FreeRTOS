@@ -287,6 +287,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/lwip-1.1.0/.*',
     r'.*/MSP430X_MSP430F5438_CCS/.*',
     r'.*/Atmel/.*',
+    r'.*/AtmelFiles/.*',
     r'.*/drivers/.*',
     r'.*/lwIP/.*',
     r'.*/ARM7_AT91FR40008_GCC/.*',

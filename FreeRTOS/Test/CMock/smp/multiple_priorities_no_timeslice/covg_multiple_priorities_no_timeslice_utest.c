@@ -1177,7 +1177,7 @@ void test_coverage_xTaskDelayUntil_current_task_should_delay( void )
 
     /* Setup the variables and structure. */
 
-    /* ( PrevousWakeTime + 10 ) is greater than xTickCount. The return value should
+    /* ( xPreviousWakeTime + 10 ) is greater than xTickCount. The return value should
      * indicate that the task is actual delayed. */
     xTickCount = 15;
 

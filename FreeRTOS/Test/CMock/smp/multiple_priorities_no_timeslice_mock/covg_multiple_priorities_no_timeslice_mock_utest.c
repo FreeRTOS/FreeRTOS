@@ -533,7 +533,7 @@ void test_coverage_vTaskDelete_scheduler_not_running( void )
 }
 
 /**
- * @brief This test ensures that if xTask Delete is caled and the scheuler is
+ * @brief This test ensures that if xTask Delete is called and the scheuler is
  *        running while the task runstate is more that the configNUMBER_OF_CORES,
  *        the core is not yielded, but it is removed from the
  *        stateList, the eventList and inserted in the taskwaitingtermination
@@ -587,7 +587,7 @@ void test_coverage_vTaskDelete_task_not_running( void )
 
 /**
  * @brief This test ensures that when we call eTaskGetState with a task that is
- *        not running eReadyis returned
+ *        not running eReady is returned
  *
  * <b>Coverage</b>
  * @code{c}

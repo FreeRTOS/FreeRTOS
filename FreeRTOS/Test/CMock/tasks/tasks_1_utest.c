@@ -1728,6 +1728,96 @@ void test_uxTaskPriorityGetFromISR_success_null_handle( void )
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
+/* ----------------------- testing uxTaskBasePriorityGet API --------------------------- */
+
+/**
+ * @brief Test uxTaskBasePriorityGet with a task.
+ * @details Test uxTaskBasePriorityGet returns the base priority of the task.
+ */
+void test_uxTaskBasePriorityGet_success( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    /* expectations */
+
+    /* API call */
+    ret_priority = uxTaskBasePriorityGet( taskHandle );
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+}
+
+/**
+ * @brief Test uxTaskBasePriorityGet with current task.
+ * @details Test uxTaskBasePriorityGet returns the base priority of current task.
+ */
+void test_uxTaskBasePriorityGet_success_null_handle( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    /* expectations */
+
+    /* API call */
+    ret_priority = uxTaskBasePriorityGet( NULL );
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+}
+
+/* ----------------------- testing uxTaskBasePriorityGetFromISR API --------------------------- */
+
+/**
+ * @brief Test uxTaskBasePriorityGetFromISR with a task.
+ * @details Test uxTaskBasePriorityGetFromISR returns the base priority of the task.
+ */
+void test_uxTaskBasePriorityGetFromISR_success( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    ret_priority = uxTaskBasePriorityGetFromISR( taskHandle );
+
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+}
+
+/**
+ * @brief Test uxTaskBasePriorityGetFromISR with current task.
+ * @details Test uxTaskBasePriorityGetFromISR returns the base priority of current task.
+ */
+void test_uxTaskBasePriorityGetFromISR_success_null_handle( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    ret_priority = uxTaskBasePriorityGetFromISR( NULL );
+
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+}
+
 /* ----------------------- testing vTaskDelay API --------------------------- */
 void test_vTaskDelay_success_gt_0_yield_called( void )
 {

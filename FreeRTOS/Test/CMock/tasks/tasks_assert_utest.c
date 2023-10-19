@@ -774,7 +774,7 @@ void test_vTaskPlaceOnEventList_assert_pxEventList_null( void )
 
 /*!
  * @brief This test ensures that the code asserts when we call
- *        vTaskPlaceOnEventList wtih pxEventList equals to NULL
+ *        vTaskPlaceOnEventList with pxEventList equals to NULL
  */
 void test_vTaskPlaceOnUnorderedEventList_assert_pxEventList_null( void )
 {

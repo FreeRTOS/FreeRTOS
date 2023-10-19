@@ -385,7 +385,6 @@ void test_coverage_vTaskPreemptionEnable_task_running( void )
 
     /* Expectations. */
     vFakePortEnterCriticalSection_Expect();
-    vFakePortCheckIfInISR_ExpectAndReturn( 1 ); /* Expection in prvYieldCore. */
     vFakePortGetCoreID_ExpectAndReturn( 0 );    /* Expection in prvYieldCore. */
     vFakePortExitCriticalSection_Expect();
 
@@ -1301,7 +1300,6 @@ void test_coverage_vTaskCoreAffinitySet_null_task_handle( void )
     vFakePortCheckIfInISR_StopIgnore();
 
     vFakePortEnterCriticalSection_Expect();
-    vFakePortCheckIfInISR_ExpectAndReturn( 1 ); /* portCHECK_IF_IN_ISR in prvYieldCore. */
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */

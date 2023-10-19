@@ -143,7 +143,6 @@ void test_coverage_prvCheckForRunStateChange_first_time_critical_section( void )
     /* Expection. */
     vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
-    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
     vFakePortReleaseISRLock_Expect();
     vFakePortReleaseTaskLock_Expect();
     vFakePortGetTaskLock_Expect();
@@ -193,7 +192,6 @@ void test_coverage_prvCheckForRunStateChange_first_time_suspend_scheduler( void 
     /* Expection. */
     vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
-    vFakePortCheckIfInISR_ExpectAndReturn( 0 );
     vFakePortReleaseTaskLock_Expect();
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();

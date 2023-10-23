@@ -1,6 +1,6 @@
 /*
- * Trace Recorder for Tracealyzer v4.6.0
- * Copyright 2021 Percepio AB
+ * Trace Recorder for Tracealyzer v4.8.1
+ * Copyright 2023 Percepio AB
  * www.percepio.com
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -30,7 +30,7 @@
  * TRC_RECORDER_MODE_SNAPSHOT
  * TRC_RECORDER_MODE_STREAMING
  */
-    #define TRC_CFG_RECORDER_MODE                    TRC_RECORDER_MODE_SNAPSHOT
+    #define TRC_CFG_RECORDER_MODE                    TRC_RECORDER_MODE_STREAMING
 
 /**
  * @def TRC_CFG_FREERTOS_VERSION
@@ -54,9 +54,13 @@
  * TRC_FREERTOS_VERSION_10_3_0				If using FreeRTOS v10.3.0
  * TRC_FREERTOS_VERSION_10_3_1				If using FreeRTOS v10.3.1
  * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0
- * TRC_FREERTOS_VERSION_10_4_1				If using FreeRTOS v10.4.1 or later
+ * TRC_FREERTOS_VERSION_10_4_1				If using FreeRTOS v10.4.1
+ * TRC_FREERTOS_VERSION_10_4_2				If using FreeRTOS v10.4.2
+ * TRC_FREERTOS_VERSION_10_4_3				If using FreeRTOS v10.4.3
+ * TRC_FREERTOS_VERSION_10_5_0				If using FreeRTOS v10.5.0
+ * TRC_FREERTOS_VERSION_10_5_1				If using FreeRTOS v10.5.1 or later
  */
-    #define TRC_CFG_FREERTOS_VERSION                 TRC_FREERTOS_VERSION_10_4_1
+    #define TRC_CFG_FREERTOS_VERSION                 TRC_FREERTOS_VERSION_10_5_1
 
 /**
  * @def TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS

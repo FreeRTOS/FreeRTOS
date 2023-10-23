@@ -1604,6 +1604,96 @@ void test_uxTaskPriorityGetFromISR_success_null_handle( void )
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
+/* ----------------------- testing uxTaskBasePriorityGet API --------------------------- */
+
+/**
+ * @brief Test uxTaskBasePriorityGet with a task.
+ * @details Test uxTaskBasePriorityGet returns the base priority of the task.
+ */
+void test_uxTaskBasePriorityGet_success( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    /* expectations */
+
+    /* API call */
+    ret_priority = uxTaskBasePriorityGet( taskHandle );
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+}
+
+/**
+ * @brief Test uxTaskBasePriorityGet with current task.
+ * @details Test uxTaskBasePriorityGet returns the base priority of current task.
+ */
+void test_uxTaskBasePriorityGet_success_null_handle( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    /* expectations */
+
+    /* API call */
+    ret_priority = uxTaskBasePriorityGet( NULL );
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+}
+
+/* ----------------------- testing uxTaskBasePriorityGetFromISR API --------------------------- */
+
+/**
+ * @brief Test uxTaskBasePriorityGetFromISR with a task.
+ * @details Test uxTaskBasePriorityGetFromISR returns the base priority of the task.
+ */
+void test_uxTaskBasePriorityGetFromISR_success( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    ret_priority = uxTaskBasePriorityGetFromISR( taskHandle );
+
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+}
+
+/**
+ * @brief Test uxTaskBasePriorityGetFromISR with current task.
+ * @details Test uxTaskBasePriorityGetFromISR returns the base priority of current task.
+ */
+void test_uxTaskBasePriorityGetFromISR_success_null_handle( void )
+{
+    TaskHandle_t taskHandle;
+    UBaseType_t ret_priority;
+
+    create_task_priority = 3;
+    taskHandle = create_task();
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, ptcb );
+    ret_priority = uxTaskBasePriorityGetFromISR( NULL );
+
+    TEST_ASSERT_EQUAL( 3, ret_priority );
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+}
+
 /* ----------------------- testing vTaskDelay API --------------------------- */
 void test_vTaskDelay_success_gt_0_yield_called( void )
 {
@@ -3229,7 +3319,7 @@ void test_xTaskGetIdleTaskHandle_success( void )
     /* Api Call */
     ret_idle_handle = xTaskGetIdleTaskHandle();
     ptcb = ret_idle_handle;
-    ret = strcmp( ptcb->pcTaskName, "IDLE" );
+    ret = strncmp( ptcb->pcTaskName, configIDLE_TASK_NAME, configMAX_TASK_NAME_LEN - 1 );
     TEST_ASSERT_EQUAL( 0, ret );
 }
 
@@ -4538,6 +4628,7 @@ void test_ulTaskGenericNotifyTake_success_yield( void )
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem, xTickCount + 9 );
     vListInsert_Expect( pxDelayedTaskList, &ptcb->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -5160,6 +5251,7 @@ void test_xTaskGenericNotifyWait_success_notif_not_received( void )
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
                                     xTickCount + xTicksToWait );
     vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
 
     /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
@@ -5249,6 +5341,7 @@ void test_xTaskGenericNotifyWait_success_notif_received_while_waiting( void )
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem,
                                     xTickCount + xTicksToWait );
     vListInsert_Expect( pxOverflowDelayedTaskList, &ptcb->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     py_operation = &notif_received;
 
     /* API Call */

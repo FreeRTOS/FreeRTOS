@@ -1,4 +1,4 @@
-This harness proves the memory safety of the prvNotifyQueuSetContainer method.
+This harness proves the memory safety of the prvNotifyQueueSetContainer method.
 It assumes that the queue is initalized to a valid datastructure.
 The concurrency functions are abstracted away.
 

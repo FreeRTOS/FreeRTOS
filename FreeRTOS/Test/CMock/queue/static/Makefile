@@ -31,10 +31,10 @@ MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/task.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_assert.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_port.h
 
-# List any addiitonal flags needed by the preprocessor
+# List any additional flags needed by the preprocessor
 CPPFLAGS        +=  -DportUSING_MPU_WRAPPERS=0
 
-# List any addiitonal flags needed by the compiler
+# List any additional flags needed by the compiler
 CFLAGS          +=
 
 # Try not to edit beyond this line unless necessary.

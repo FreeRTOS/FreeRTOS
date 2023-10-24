@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -160,72 +160,72 @@ void vLoggingInit( BaseType_t xLogToStdout,
     configASSERT( xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED );
 
     #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
+    {
+        HANDLE Win32Thread;
+
+        /* Record which output methods are to be used. */
+        xStdoutLoggingUsed = xLogToStdout;
+        xDiskFileLoggingUsed = xLogToFile;
+        xUDPLoggingUsed = xLogToUDP;
+
+        /* If a disk file is used then initialize it now. */
+        if( xDiskFileLoggingUsed != pdFALSE )
         {
-            HANDLE Win32Thread;
-
-            /* Record which output methods are to be used. */
-            xStdoutLoggingUsed = xLogToStdout;
-            xDiskFileLoggingUsed = xLogToFile;
-            xUDPLoggingUsed = xLogToUDP;
-
-            /* If a disk file is used then initialize it now. */
-            if( xDiskFileLoggingUsed != pdFALSE )
-            {
-                prvFileLoggingInit();
-            }
-
-            /* If UDP logging is used then store the address to which the log data
-             * will be sent - but don't create the socket yet because the network is
-             * not initialized. */
-            if( xUDPLoggingUsed != pdFALSE )
-            {
-                /* Set the address to which the print messages are sent. */
-                xPrintUDPAddress.sin_port = FreeRTOS_htons( usRemotePort );
-                xPrintUDPAddress.sin_address.ulIP_IPv4 = ulRemoteIPAddress;
-                xPrintUDPAddress.sin_family = FREERTOS_AF_INET;
-            }
-
-            /* If a disk file or stdout are to be used then Win32 system calls will
-             * have to be made.  Such system calls cannot be made from FreeRTOS tasks
-             * so create a stream buffer to pass the messages to a Win32 thread, then
-             * create the thread itself, along with a Win32 event that can be used to
-             * unblock the thread. */
-            if( ( xStdoutLoggingUsed != pdFALSE ) || ( xDiskFileLoggingUsed != pdFALSE ) )
-            {
-                /* Create the buffer. */
-                xLogStreamBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) + dlLOGGING_STREAM_BUFFER_SIZE + 1 );
-                configASSERT( xLogStreamBuffer );
-                memset( xLogStreamBuffer, '\0', sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) );
-                xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
-
-                /* Create the Windows event. */
-                pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
-
-                /* Create the thread itself. */
-                Win32Thread = CreateThread(
-                    NULL,                  /* Pointer to thread security attributes. */
-                    0,                     /* Initial thread stack size, in bytes. */
-                    prvWin32LoggingThread, /* Pointer to thread function. */
-                    NULL,                  /* Argument for new thread. */
-                    0,                     /* Creation flags. */
-                    NULL );
-
-                /* Use the cores that are not used by the FreeRTOS tasks. */
-                SetThreadAffinityMask( Win32Thread, ~0x01u );
-                SetThreadPriorityBoost( Win32Thread, TRUE );
-                SetThreadPriority( Win32Thread, THREAD_PRIORITY_IDLE );
-            }
+            prvFileLoggingInit();
         }
+
+        /* If UDP logging is used then store the address to which the log data
+         * will be sent - but don't create the socket yet because the network is
+         * not initialized. */
+        if( xUDPLoggingUsed != pdFALSE )
+        {
+            /* Set the address to which the print messages are sent. */
+            xPrintUDPAddress.sin_port = FreeRTOS_htons( usRemotePort );
+            xPrintUDPAddress.sin_address.ulIP_IPv4 = ulRemoteIPAddress;
+            xPrintUDPAddress.sin_family = FREERTOS_AF_INET;
+        }
+
+        /* If a disk file or stdout are to be used then Win32 system calls will
+         * have to be made.  Such system calls cannot be made from FreeRTOS tasks
+         * so create a stream buffer to pass the messages to a Win32 thread, then
+         * create the thread itself, along with a Win32 event that can be used to
+         * unblock the thread. */
+        if( ( xStdoutLoggingUsed != pdFALSE ) || ( xDiskFileLoggingUsed != pdFALSE ) )
+        {
+            /* Create the buffer. */
+            xLogStreamBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) + dlLOGGING_STREAM_BUFFER_SIZE + 1 );
+            configASSERT( xLogStreamBuffer );
+            memset( xLogStreamBuffer, '\0', sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) );
+            xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
+
+            /* Create the Windows event. */
+            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
+
+            /* Create the thread itself. */
+            Win32Thread = CreateThread(
+                NULL,                  /* Pointer to thread security attributes. */
+                0,                     /* Initial thread stack size, in bytes. */
+                prvWin32LoggingThread, /* Pointer to thread function. */
+                NULL,                  /* Argument for new thread. */
+                0,                     /* Creation flags. */
+                NULL );
+
+            /* Use the cores that are not used by the FreeRTOS tasks. */
+            SetThreadAffinityMask( Win32Thread, ~0x01u );
+            SetThreadPriorityBoost( Win32Thread, TRUE );
+            SetThreadPriority( Win32Thread, THREAD_PRIORITY_IDLE );
+        }
+    }
     #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
-        {
-            /* FreeRTOSIPConfig is set such that no print messages will be output.
-             * Avoid compiler warnings about unused parameters. */
-            ( void ) xLogToStdout;
-            ( void ) xLogToFile;
-            ( void ) xLogToUDP;
-            ( void ) usRemotePort;
-            ( void ) ulRemoteIPAddress;
-        }
+    {
+        /* FreeRTOSIPConfig is set such that no print messages will be output.
+         * Avoid compiler warnings about unused parameters. */
+        ( void ) xLogToStdout;
+        ( void ) xLogToFile;
+        ( void ) xLogToUDP;
+        ( void ) usRemotePort;
+        ( void ) ulRemoteIPAddress;
+    }
     #endif /* ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 )  */
 }
 /*-----------------------------------------------------------*/
@@ -258,8 +258,9 @@ static void prvCreatePrintSocket( void * pvParameter1,
 static TickType_t ulTicksToMS( TickType_t uxTicks )
 {
     uint64_t ullCount = uxTicks;
-    ullCount = ullCount * (1000U / configTICK_RATE_HZ);
-    return ( uint32_t )ullCount;
+
+    ullCount = ullCount * ( 1000U / configTICK_RATE_HZ );
+    return ( uint32_t ) ullCount;
 }
 
 void vLoggingPrintf( const char * pcFormat,
@@ -369,24 +370,24 @@ void vLoggingPrintf( const char * pcFormat,
         if( xUDPLoggingUsed != pdFALSE )
         {
             #if 0  /* _HT_ Logging doesn't need UDP logging for WinSim. */
-            if( ( xPrintSocket == FREERTOS_INVALID_SOCKET ) && ( FreeRTOS_IsNetworkUp() != pdFALSE ) )
-            {
-                /* Create and bind the socket to which print messages are sent.  The
-                 * xTimerPendFunctionCall() function is used even though this is
-                 * not an interrupt because this function is called from the IP task
-                 * and the	IP task cannot itself wait for a socket to bind.  The
-                 * parameters to prvCreatePrintSocket() are not required so set to
-                 * NULL or 0. */
-                xTimerPendFunctionCall( prvCreatePrintSocket, NULL, 0, dlDONT_BLOCK );
-            }
+                if( ( xPrintSocket == FREERTOS_INVALID_SOCKET ) && ( FreeRTOS_IsNetworkUp() != pdFALSE ) )
+                {
+                    /* Create and bind the socket to which print messages are sent.  The
+                     * xTimerPendFunctionCall() function is used even though this is
+                     * not an interrupt because this function is called from the IP task
+                     * and the	IP task cannot itself wait for a socket to bind.  The
+                     * parameters to prvCreatePrintSocket() are not required so set to
+                     * NULL or 0. */
+                    xTimerPendFunctionCall( prvCreatePrintSocket, NULL, 0, dlDONT_BLOCK );
+                }
 
-            if( xPrintSocket != FREERTOS_INVALID_SOCKET )
-            {
-                FreeRTOS_sendto( xPrintSocket, cOutputString, xLength, 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
+                if( xPrintSocket != FREERTOS_INVALID_SOCKET )
+                {
+                    FreeRTOS_sendto( xPrintSocket, cOutputString, xLength, 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
 
-                /* Just because the UDP data logger I'm using is dumb. */
-                FreeRTOS_sendto( xPrintSocket, "\r", sizeof( char ), 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
-            }
+                    /* Just because the UDP data logger I'm using is dumb. */
+                    FreeRTOS_sendto( xPrintSocket, "\r", sizeof( char ), 0, &xPrintUDPAddress, sizeof( xPrintUDPAddress ) );
+                }
             #endif /* 0 */
         }
 

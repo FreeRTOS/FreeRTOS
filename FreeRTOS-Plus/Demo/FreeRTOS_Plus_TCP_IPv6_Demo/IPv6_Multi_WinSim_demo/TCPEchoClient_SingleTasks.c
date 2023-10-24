@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -199,24 +199,24 @@
          * configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 
         #ifdef configECHO_SERVER_ADDR_STRING
-            {
-                BaseType_t rc = FreeRTOS_inet_pton( FREERTOS_AF_INET6, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
+        {
+            BaseType_t rc = FreeRTOS_inet_pton( FREERTOS_AF_INET6, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
 
-                if( rc == pdPASS )
-                {
-                    xFamily = FREERTOS_AF_INET6;
-                }
-                else
-                {
-                    rc = FreeRTOS_inet_pton( FREERTOS_AF_INET4, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
-                    configASSERT( rc == pdPASS );
-                    xFamily = FREERTOS_AF_INET4;
-                }
-            }
-        #else  /* ifdef configECHO_SERVER_ADDR_STRING */
+            if( rc == pdPASS )
             {
-                xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
+                xFamily = FREERTOS_AF_INET6;
             }
+            else
+            {
+                rc = FreeRTOS_inet_pton( FREERTOS_AF_INET4, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
+                configASSERT( rc == pdPASS );
+                xFamily = FREERTOS_AF_INET4;
+            }
+        }
+        #else /* ifdef configECHO_SERVER_ADDR_STRING */
+        {
+            xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
+        }
         #endif /* ifdef configECHO_SERVER_ADDR_STRING */
 
         xEchoServerAddress.sin_len = sizeof( xEchoServerAddress );
@@ -364,16 +364,16 @@
             }
 
             configPRINTF( ( "Instance[%u]: Good %u/%u shutdown %u\n",
-                               ( unsigned ) xInstance,
-                               ( unsigned ) ( ulTxRxCycles[ xInstance ] - ulTxRxFailures[ xInstance ] ),
-                               ( unsigned ) ( ulTxRxCycles[ xInstance ] ),
-                               ( unsigned ) uxDuration ) );
+                            ( unsigned ) xInstance,
+                            ( unsigned ) ( ulTxRxCycles[ xInstance ] - ulTxRxFailures[ xInstance ] ),
+                            ( unsigned ) ( ulTxRxCycles[ xInstance ] ),
+                            ( unsigned ) uxDuration ) );
             configPRINTF( ( "%u x %u = %u Exchange %u/%u\n",
-                               ( unsigned ) echoBUFFER_SIZE_MULTIPLIER,
-                               ( unsigned ) echoBUFFER_SIZES,
-                               ( unsigned ) ( echoBUFFER_SIZE_MULTIPLIER * echoBUFFER_SIZES ),
-                               ( unsigned ) xTotalSent,
-                               ( unsigned ) xTotalRecv ) );
+                            ( unsigned ) echoBUFFER_SIZE_MULTIPLIER,
+                            ( unsigned ) echoBUFFER_SIZES,
+                            ( unsigned ) ( echoBUFFER_SIZE_MULTIPLIER * echoBUFFER_SIZES ),
+                            ( unsigned ) xTotalSent,
+                            ( unsigned ) xTotalRecv ) );
             configPRINTF( ( "--------------------------------------\n\n" ) );
 
             /* Close this socket before looping back to create another. */

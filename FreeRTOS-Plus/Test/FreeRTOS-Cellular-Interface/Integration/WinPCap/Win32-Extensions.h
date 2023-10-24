@@ -36,7 +36,7 @@
     #define __WIN32_EXTENSIONS_H__
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /* Definitions */
@@ -46,9 +46,9 @@
  */
     struct pcap_send_queue
     {
-        u_int maxlen;   /*/< Maximum size of the the queue, in bytes. This variable contains the size of the buffer field. */
-        u_int len;      /*/< Current size of the queue, in bytes. */
-        char * buffer;  /*/< Buffer containing the packets to be sent. */
+        u_int maxlen;  /*/< Maximum size of the the queue, in bytes. This variable contains the size of the buffer field. */
+        u_int len;     /*/< Current size of the queue, in bytes. */
+        char * buffer; /*/< Buffer containing the packets to be sent. */
     };
 
     typedef struct pcap_send_queue      pcap_send_queue;
@@ -121,7 +121,7 @@
     PAirpcapHandle pcap_get_airpcap_handle( pcap_t * p );
 
     #ifdef __cplusplus
-        }
+}
     #endif
 
 #endif //__WIN32_EXTENSIONS_H__

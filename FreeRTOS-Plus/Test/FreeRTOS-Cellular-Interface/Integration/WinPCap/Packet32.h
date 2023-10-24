@@ -170,11 +170,11 @@
  */
         struct dump_bpf_hdr
         {
-            struct timeval ts;  /*/< Time stamp of the packet */
-            UINT caplen;        /*/< Length of captured portion. The captured portion can smaller than the */
-                                /*/< the original packet, because it is possible (with a proper filter) to */
-                                /*/< instruct the driver to capture only a portion of the packets. */
-            UINT len;           /*/< Length of the original packet (off wire). */
+            struct timeval ts; /*/< Time stamp of the packet */
+            UINT caplen;       /*/< Length of captured portion. The captured portion can smaller than the */
+                               /*/< the original packet, because it is possible (with a proper filter) to */
+                               /*/< instruct the driver to capture only a portion of the packets. */
+            UINT len;          /*/< Length of the original packet (off wire). */
         };
 
 
@@ -241,7 +241,7 @@
                                                    /*/< ReadEvent will be signaled, also if no packets were captured */
         CHAR Name[ ADAPTER_NAME_LENGTH ];
         PWAN_ADAPTER pWanAdapter;
-        UINT Flags;             /*/< Adapter's flags. Tell if this adapter must be treated in a different way, using the Netmon API or the dagc API. */
+        UINT Flags; /*/< Adapter's flags. Tell if this adapter must be treated in a different way, using the Netmon API or the dagc API. */
 
         #ifdef HAVE_AIRPCAP_API
             PAirpcapHandle AirpcapAd;
@@ -267,14 +267,14 @@
  */
     typedef struct _PACKET
     {
-        HANDLE hEvent;          /*/< \deprecated Still present for compatibility with old applications. */
-        OVERLAPPED OverLapped;  /*/< \deprecated Still present for compatibility with old applications. */
-        PVOID Buffer;           /*/< Buffer with containing the packets. See the PacketReceivePacket() for */
-                                /*/< details about the organization of the data in this buffer */
-        UINT Length;            /*/< Length of the buffer */
-        DWORD ulBytesReceived;  /*/< Number of valid bytes present in the buffer, i.e. amount of data */
-                                /*/< received by the last call to PacketReceivePacket() */
-        BOOLEAN bIoComplete;    /*/< \deprecated Still present for compatibility with old applications. */
+        HANDLE hEvent;         /*/< \deprecated Still present for compatibility with old applications. */
+        OVERLAPPED OverLapped; /*/< \deprecated Still present for compatibility with old applications. */
+        PVOID Buffer;          /*/< Buffer with containing the packets. See the PacketReceivePacket() for */
+                               /*/< details about the organization of the data in this buffer */
+        UINT Length;           /*/< Length of the buffer */
+        DWORD ulBytesReceived; /*/< Number of valid bytes present in the buffer, i.e. amount of data */
+                               /*/< received by the last call to PacketReceivePacket() */
+        BOOLEAN bIoComplete;   /*/< \deprecated Still present for compatibility with old applications. */
     } PACKET, * LPPACKET;
 
 /*!
@@ -286,16 +286,16 @@
  */
     struct _PACKET_OID_DATA
     {
-        ULONG Oid;              /*/< OID code. See the Microsoft DDK documentation or the file ntddndis.h */
-                                /*/< for a complete list of valid codes. */
-        ULONG Length;           /*/< Length of the data field */
-        UCHAR Data[ 1 ];        /*/< variable-lenght field that contains the information passed to or received */
-                                /*/< from the adapter. */
+        ULONG Oid;       /*/< OID code. See the Microsoft DDK documentation or the file ntddndis.h */
+                         /*/< for a complete list of valid codes. */
+        ULONG Length;    /*/< Length of the data field */
+        UCHAR Data[ 1 ]; /*/< variable-length field that contains the information passed to or received */
+                         /*/< from the adapter. */
     };
     typedef struct _PACKET_OID_DATA PACKET_OID_DATA, * PPACKET_OID_DATA;
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /**
@@ -392,7 +392,7 @@
     #define PACKET_START_OEM_NO_NETMON    0x00000001
 
     #ifdef __cplusplus
-        }
+}
     #endif
 
 #endif //__PACKET32

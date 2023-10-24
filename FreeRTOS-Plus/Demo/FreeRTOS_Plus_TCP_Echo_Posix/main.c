@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -118,29 +118,29 @@ int main( void )
 {
     /* Do not include trace code when performing a code coverage analysis. */
     #if ( projCOVERAGE_TEST != 1 )
-        {
-            /* Initialise the trace recorder.  Use of the trace recorder is optional.
-             * See http://www.FreeRTOS.org/trace for more information. */
-            xTraceEnable( TRC_START );
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+         * See http://www.FreeRTOS.org/trace for more information. */
+        xTraceEnable( TRC_START );
 
-            /* Start the trace recording - the recording is written to a file if
-             * configASSERT() is called. */
-            printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-            printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-            traceSTART();
-        }
+        /* Start the trace recording - the recording is written to a file if
+         * configASSERT() is called. */
+        printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+        printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+        traceSTART();
+    }
     #endif
 
     console_init();
     #if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
-        {
-            console_print( "Starting echo client demo\n" );
-            main_tcp_echo_client_tasks();
-        }
+    {
+        console_print( "Starting echo client demo\n" );
+        main_tcp_echo_client_tasks();
+    }
     #else
-        {
-            #error "The selected demo is not valid"
-        }
+    {
+        #error "The selected demo is not valid"
+    }
     #endif /* if ( mainSELECTED_APPLICATION ) */
 
     return 0;
@@ -298,25 +298,26 @@ static void prvSaveTraceFile( void )
 {
     /* Tracing is not used when code coverage analysis is being performed. */
     #if ( projCOVERAGE_TEST != 1 )
-        {
-            FILE * pxOutputFile;
-            pxOutputFile = fopen( "Trace.dump", "wb" );
+    {
+        FILE * pxOutputFile;
+        pxOutputFile = fopen( "Trace.dump", "wb" );
 
-            if( pxOutputFile != NULL )
+        if( pxOutputFile != NULL )
+        {
             {
-                {
-                    xTraceDisable();
-                    fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-                    fclose( pxOutputFile );
-                    printf( "\r\nTrace output saved to Trace.dump\r\n" );
-                    xTraceEnable( TRC_START );
-                }
-            }
-            else
-            {
-                printf( "\r\nFailed to create trace dump file\r\n" );
+                extern TraceRingBuffer_t * RecorderDataPtr;
+                xTraceDisable();
+                fwrite( RecorderDataPtr, sizeof( TraceRingBuffer_t ), 1, pxOutputFile );
+                fclose( pxOutputFile );
+                printf( "\r\nTrace output saved to Trace.dump\r\n" );
+                xTraceEnable( TRC_START );
             }
         }
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+        }
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 }
 /*-----------------------------------------------------------*/

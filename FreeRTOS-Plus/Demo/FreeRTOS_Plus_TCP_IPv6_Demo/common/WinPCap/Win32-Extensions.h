@@ -36,7 +36,7 @@
     #define __WIN32_EXTENSIONS_H__
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /* Definitions */
@@ -121,7 +121,7 @@
     PAirpcapHandle pcap_get_airpcap_handle( pcap_t * p );
 
     #ifdef __cplusplus
-        }
+}
     #endif
 
 #endif /*__WIN32_EXTENSIONS_H__ */

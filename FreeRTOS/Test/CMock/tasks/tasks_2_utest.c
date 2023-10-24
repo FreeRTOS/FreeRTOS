@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -93,14 +93,14 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 static TCB_t * ptcb;
 static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
 static TCB_t tcb[ 10 ]; /* simulate up to 10 tasks: add more if needed */
-static bool getIddleTaskMemoryValid = false;
+static bool getIdleTaskMemoryValid = false;
 static uint32_t critical_section_counter = 0;
 static bool is_first_task = true;
 static uint32_t created_tasks = 0;
 static uint32_t create_task_priority = 3;
 static port_yield_operation py_operation;
 static bool vTaskDeletePre_called = false;
-static bool getIddleTaskMemory_called = false;
+static bool getIdleTaskMemory_called = false;
 static bool vApplicationTickHook_called = false;
 static bool port_yield_called = false;
 static bool port_enable_interrupts_called = false;
@@ -155,7 +155,7 @@ static void start_scheduler()
 
     xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
     xPortStartScheduler_ExpectAndReturn( pdTRUE );
-    getIddleTaskMemoryValid = true;
+    getIdleTaskMemoryValid = true;
     vTaskStartScheduler();
     ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
     TEST_ASSERT_TRUE( xSchedulerRunning );
@@ -253,7 +253,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
 {
     HOOK_DIAG();
 
-    if( getIddleTaskMemoryValid == true )
+    if( getIdleTaskMemoryValid == true )
     {
         /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
          * state will be stored. */
@@ -274,7 +274,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
         *pulIdleTaskStackSize = 0;
     }
 
-    getIddleTaskMemory_called = true;
+    getIdleTaskMemory_called = true;
 }
 
 void vConfigureTimerForRunTimeStats( void )
@@ -661,7 +661,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
 void vTaskEnterCritical( void );
 void vTaskExitCritical( void );
 
-void test_vTaskExitCritical_succes( void )
+void test_vTaskExitCritical_success( void )
 {
     TaskHandle_t task_handle;
 
@@ -725,7 +725,7 @@ void test_vTaskExitCritical_scheduler_off( void )
     ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
 }
 
-void test_vTaskEnterCritical_succes( void )
+void test_vTaskEnterCritical_success( void )
 {
     TaskHandle_t task_handle;
 
@@ -740,7 +740,7 @@ void test_vTaskEnterCritical_succes( void )
     ASSERT_IF_IN_ISR_CALLED();
 }
 
-void test_vTaskEnterCritical_succes_twice( void )
+void test_vTaskEnterCritical_success_twice( void )
 {
     TaskHandle_t task_handle;
 

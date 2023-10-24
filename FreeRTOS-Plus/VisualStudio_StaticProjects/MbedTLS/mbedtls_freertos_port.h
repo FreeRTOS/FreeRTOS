@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -43,13 +43,13 @@ typedef struct mbedtls_threading_mutex
 {
     SemaphoreHandle_t mutexHandle;
 
-    #if( configSUPPORT_STATIC_ALLOCATION == 1 )
+    #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
         StaticSemaphore_t mutexStorage;
     #endif /*  configSUPPORT_STATIC_ALLOCATION == 1 */
 } mbedtls_threading_mutex_t;
 
 #if defined( MBEDTLS_THREADING_ALT )
-int mbedtls_platform_threading_init( void );
+    int mbedtls_platform_threading_init( void );
 #endif
 
 int mbedtls_platform_send( void * ctx,

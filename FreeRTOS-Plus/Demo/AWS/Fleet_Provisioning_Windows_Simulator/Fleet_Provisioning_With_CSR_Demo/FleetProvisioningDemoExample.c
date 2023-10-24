@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -316,11 +316,11 @@ static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
         configASSERT( pxDeserializedInfo->pPublishInfo != NULL );
         pxPublishInfo = pxDeserializedInfo->pPublishInfo;
 
-        xStatus = FleetProvisioning_MatchTopic(pxPublishInfo->pTopicName,
-                                               pxPublishInfo->topicNameLength,
-                                               &xApi);
+        xStatus = FleetProvisioning_MatchTopic( pxPublishInfo->pTopicName,
+                                                pxPublishInfo->topicNameLength,
+                                                &xApi );
 
-        if (xStatus != FleetProvisioningSuccess)
+        if( xStatus != FleetProvisioningSuccess )
         {
             LogWarn( ( "Unexpected publish message received. Topic: %.*s.",
                        ( int ) pxPublishInfo->topicNameLength,
@@ -328,7 +328,7 @@ static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
         }
         else
         {
-            if (xApi == FleetProvCborCreateCertFromCsrAccepted)
+            if( xApi == FleetProvCborCreateCertFromCsrAccepted )
             {
                 LogInfo( ( "Received accepted response from Fleet Provisioning CreateCertificateFromCsr API." ) );
 
@@ -341,13 +341,13 @@ static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
 
                 xPayloadLength = pxPublishInfo->payloadLength;
             }
-            else if (xApi == FleetProvCborCreateCertFromCsrRejected)
+            else if( xApi == FleetProvCborCreateCertFromCsrRejected )
             {
                 LogError( ( "Received rejected response from Fleet Provisioning CreateCertificateFromCsr API." ) );
 
                 xResponseStatus = ResponseRejected;
             }
-            else if (xApi == FleetProvCborRegisterThingAccepted)
+            else if( xApi == FleetProvCborRegisterThingAccepted )
             {
                 LogInfo( ( "Received accepted response from Fleet Provisioning RegisterThing API." ) );
 
@@ -360,7 +360,7 @@ static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
 
                 xPayloadLength = pxPublishInfo->payloadLength;
             }
-            else if (xApi == FleetProvCborRegisterThingRejected)
+            else if( xApi == FleetProvCborRegisterThingRejected )
             {
                 LogError( ( "Received rejected response from Fleet Provisioning RegisterThing API." ) );
 
@@ -804,7 +804,7 @@ int prvFleetProvisioningTask( void * pvParameters )
             }
             else
             {
-                LogInfo( ( "Sucessfully established connection with provisioned credentials." ) );
+                LogInfo( ( "Successfully established connection with provisioned credentials." ) );
                 xConnectionEstablished = true;
             }
         }

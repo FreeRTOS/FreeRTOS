@@ -117,7 +117,7 @@ struct SStringBuf
         ucBytes : { 0, 1, 2, 3 }
     };
 #else
-    const static _U32 u32 = { 0, 1, 2, 3 };
+const static _U32 u32 = { 0, 1, 2, 3 };
 #endif
 
 static void strbuf_init( struct SStringBuf * apStr,
@@ -1003,7 +1003,7 @@ const char * mkSize( unsigned long long aSize,
     #if defined( _NO_CRT_STDIO_INLINE )
         int _vfscanf_l( _Inout_ FILE * const _Stream,
                         char const * const _Format,
-                        const _Locale,
+                        const _locale_t _Locale,
                         va_list _ArgList )
         {
             return __stdio_common_vfscanf(

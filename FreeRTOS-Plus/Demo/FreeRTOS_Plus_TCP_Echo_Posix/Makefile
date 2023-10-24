@@ -22,10 +22,10 @@ INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/linux/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/include/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/Compiler/GCC/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/config
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/RingBuffer/include
+
 
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
@@ -57,7 +57,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/BufferManagement/BufferAllocat
 SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
 SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 
-CFLAGS 			:= -ggdb3 
+CFLAGS 			:= -ggdb3
 LDFLAGS			:= -ggdb3 -pthread
 
 # Get libslirp package configuration (header and library paths)
@@ -81,7 +81,8 @@ ifeq ($(COVERAGE_TEST),1)
 else
   CPPFLAGS		+= -DprojCOVERAGE_TEST=0
 # Trace library.
-  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
+  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/trcKernelPort.c
+  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/RingBuffer/trcStreamPort.c
   SOURCE_FILES	+= $(wildcard ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/*.c )
 endif
 

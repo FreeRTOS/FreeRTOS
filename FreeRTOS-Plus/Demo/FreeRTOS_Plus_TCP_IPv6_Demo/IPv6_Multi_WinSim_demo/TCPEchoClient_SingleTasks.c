@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -131,11 +131,11 @@
                 }
             }
 
-            FreeRTOS_printf( ( "Started %d / %d tasks\n", ( int ) xCount, ( int ) echoNUM_ECHO_CLIENTS ) );
+            configPRINTF( ( "Started %d / %d tasks\n", ( int ) xCount, ( int ) echoNUM_ECHO_CLIENTS ) );
         }
         else
         {
-            FreeRTOS_printf( ( "vStartTCPEchoClientTasks_SingleTasks: already started\n" ) );
+            configPRINTF( ( "vStartTCPEchoClientTasks_SingleTasks: already started\n" ) );
         }
     }
 /*-----------------------------------------------------------*/
@@ -160,7 +160,7 @@
         int32_t lLoopCount = 0UL;
         const int32_t lMaxLoopCount = 1;
         volatile uint32_t ulTxCount = 0UL;
-        BaseType_t xReceivedBytes, xReturned, xInstance;
+        BaseType_t xReceivedBytes, xReturned = 0, xInstance;
         BaseType_t lTransmitted, lStringLength;
         char * pcTransmittedString, * pcReceivedString;
         WinProperties_t xWinProps;
@@ -199,24 +199,24 @@
          * configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 
         #ifdef configECHO_SERVER_ADDR_STRING
-            {
-                BaseType_t rc = FreeRTOS_inet_pton( FREERTOS_AF_INET6, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
+        {
+            BaseType_t rc = FreeRTOS_inet_pton( FREERTOS_AF_INET6, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
 
-                if( rc == pdPASS )
-                {
-                    xFamily = FREERTOS_AF_INET6;
-                }
-                else
-                {
-                    rc = FreeRTOS_inet_pton( FREERTOS_AF_INET4, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
-                    configASSERT( rc == pdPASS );
-                    xFamily = FREERTOS_AF_INET4;
-                }
-            }
-        #else  /* ifdef configECHO_SERVER_ADDR_STRING */
+            if( rc == pdPASS )
             {
-                xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
+                xFamily = FREERTOS_AF_INET6;
             }
+            else
+            {
+                rc = FreeRTOS_inet_pton( FREERTOS_AF_INET4, configECHO_SERVER_ADDR_STRING, ( void * ) xEchoServerAddress.sin_address.xIP_IPv6.ucBytes );
+                configASSERT( rc == pdPASS );
+                xFamily = FREERTOS_AF_INET4;
+            }
+        }
+        #else /* ifdef configECHO_SERVER_ADDR_STRING */
+        {
+            xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
+        }
         #endif /* ifdef configECHO_SERVER_ADDR_STRING */
 
         xEchoServerAddress.sin_len = sizeof( xEchoServerAddress );
@@ -225,6 +225,7 @@
 
         for( ; ; )
         {
+            configPRINTF( ( "-------- Starting New Iteration --------\n" ) );
             BaseType_t xResult;
             /* Create a TCP socket. */
             xSocket = FreeRTOS_socket( xFamily, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
@@ -242,7 +243,7 @@
 
             /* Connect to the echo server. */
             xResult = FreeRTOS_connect( xSocket, &xEchoServerAddress, sizeof( xEchoServerAddress ) );
-            FreeRTOS_printf( ( "FreeRTOS_connect returns %d\n", ( int ) xResult ) );
+            configPRINTF( ( "FreeRTOS_connect returns %d\n", ( int ) xResult ) );
 
             if( xResult == 0 )
             {
@@ -258,18 +259,12 @@
                     sprintf( pcTransmittedString, "TxRx message number %u", ( unsigned ) ulTxCount );
                     ulTxCount++;
 
-                    if( lLoopCount == ( lMaxLoopCount - 1 ) )
-                    {
-                        BaseType_t xTrue = pdTRUE;
-                        /*	FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_CLOSE_AFTER_SEND, &xTrue, sizeof( xTrue ) ); */
-                    }
-
                     /* Send the string to the socket. */
                     lTransmitted = FreeRTOS_send( xSocket,                        /* The socket being sent to. */
                                                   ( void * ) pcTransmittedString, /* The data being sent. */
                                                   lStringLength,                  /* The length of the data being sent. */
                                                   0 );                            /* No flags. */
-                    FreeRTOS_printf( ( "FreeRTOS_send: %u/%u\n", ( unsigned ) lTransmitted, ( unsigned ) lStringLength ) );
+                    configPRINTF( ( "FreeRTOS_send: %u/%u\n", ( unsigned ) lTransmitted, ( unsigned ) lStringLength ) );
 
                     if( xIsFatalError( lTransmitted ) )
                     {
@@ -302,7 +297,7 @@
                         if( xReturned == 0 )
                         {
                             /* Timed out. */
-                            FreeRTOS_printf( ( "recv returned %u\n", ( unsigned ) xReturned ) );
+                            configPRINTF( ( "recv returned %u\n", ( unsigned ) xReturned ) );
                             break;
                         }
 
@@ -368,17 +363,18 @@
                 } while( uxDuration < xReceiveTimeOut );
             }
 
-            FreeRTOS_printf( ( "Instance[%u]: Good %u/%u shutdown %u\n",
-                               ( unsigned ) xInstance,
-                               ( unsigned ) ( ulTxRxCycles[ xInstance ] - ulTxRxFailures[ xInstance ] ),
-                               ( unsigned ) ( ulTxRxCycles[ xInstance ] ),
-                               ( unsigned ) uxDuration ) );
-            FreeRTOS_printf( ( "%u x %u = %u Exchange %u/%u\n",
-                               ( unsigned ) echoBUFFER_SIZE_MULTIPLIER,
-                               ( unsigned ) echoBUFFER_SIZES,
-                               ( unsigned ) ( echoBUFFER_SIZE_MULTIPLIER * echoBUFFER_SIZES ),
-                               ( unsigned ) xTotalSent,
-                               ( unsigned ) xTotalRecv ) );
+            configPRINTF( ( "Instance[%u]: Good %u/%u shutdown %u\n",
+                            ( unsigned ) xInstance,
+                            ( unsigned ) ( ulTxRxCycles[ xInstance ] - ulTxRxFailures[ xInstance ] ),
+                            ( unsigned ) ( ulTxRxCycles[ xInstance ] ),
+                            ( unsigned ) uxDuration ) );
+            configPRINTF( ( "%u x %u = %u Exchange %u/%u\n",
+                            ( unsigned ) echoBUFFER_SIZE_MULTIPLIER,
+                            ( unsigned ) echoBUFFER_SIZES,
+                            ( unsigned ) ( echoBUFFER_SIZE_MULTIPLIER * echoBUFFER_SIZES ),
+                            ( unsigned ) xTotalSent,
+                            ( unsigned ) xTotalRecv ) );
+            configPRINTF( ( "--------------------------------------\n\n" ) );
 
             /* Close this socket before looping back to create another. */
             FreeRTOS_closesocket( xSocket );

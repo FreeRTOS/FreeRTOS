@@ -25,10 +25,10 @@ SUITE_SUPPORT_SRC   :=
 # List the headers used by PROJECT_SRC that you would like to mock
 MOCK_FILES_FP       :=
 
-# List any addiitonal flags needed by the preprocessor
+# List any additional flags needed by the preprocessor
 CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
 
-# List any addiitonal flags needed by the compiler
+# List any additional flags needed by the compiler
 CFLAGS              += -Wno-unused-function
 
 # Try not to edit beyond this line unless necessary.

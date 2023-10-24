@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -33,27 +33,27 @@
  *
  *
  *----------------------------------------------------------------------------*/
-  #define WOLFSSL_TLS13
-  #define HAVE_FFDHE_2048
-  #define WC_RSA_PSS
-  #define HAVE_HKDF
+#define WOLFSSL_TLS13
+#define HAVE_FFDHE_2048
+#define WC_RSA_PSS
+#define HAVE_HKDF
 
-  
-  #define HAVE_AESGCM
-  #define WOLFSSL_AES_128
-  #define HAVE_AES_CBC
-  #define WOLFSSL_SHA512
 
-  #define HAVE_TLS_EXTENSIONS
-  #define HAVE_SUPPORTED_CURVES
-  #define HAVE_ECC
-  #define HAVE_CURVE25519
-  #define CURVE25519_SMALL
-  #define HAVE_ED25519
+#define HAVE_AESGCM
+#define WOLFSSL_AES_128
+#define HAVE_AES_CBC
+#define WOLFSSL_SHA512
 
-  #define WC_RSA_BLINDING
-  #define ECC_TIMING_RESISTANT
-  #define TFM_TIMING_RESISTANT
+#define HAVE_TLS_EXTENSIONS
+#define HAVE_SUPPORTED_CURVES
+#define HAVE_ECC
+#define HAVE_CURVE25519
+#define CURVE25519_SMALL
+#define HAVE_ED25519
+
+#define WC_RSA_BLINDING
+#define ECC_TIMING_RESISTANT
+#define TFM_TIMING_RESISTANT
 
 
 /*-- Debugging options  ------------------------------------------------------
@@ -65,6 +65,6 @@
 /*#define DEBUG_WOLFSSL*/
 
 /* The TCP port used by both the secure client and the secure server. */
-#define configTCP_PORT_NUMBER	5001
+#define configTCP_PORT_NUMBER    5001
 
 #endif /* ifndef USER_SETTINGS_H_ */

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -45,8 +45,8 @@
 #define HAVE_FFDHE_2048
 
 #ifndef WOLFSSL_OPTIONS_IGNORE_SYS
-#undef  _POSIX_THREADS
-#define _POSIX_THREADS
+    #undef  _POSIX_THREADS
+    #define _POSIX_THREADS
 #endif
 
 #define HAVE_THREAD_LS
@@ -93,7 +93,7 @@
 #define WOLFSSL_X86_64_BUILD
 #define WC_NO_ASYNC_THREADING
 #define HAVE_DH_DEFAULT_PARAMS
-#define HAVE___UINT128_T 1
+#define HAVE___UINT128_T    1
 
 #define NO_DSA
 #define NO_HC128
@@ -102,14 +102,15 @@
 #define NO_PSK
 #define NO_MD4
 #define NO_PWDBASED
- /*-- Debugging options  ------------------------------------------------------
+
+/*-- Debugging options  ------------------------------------------------------
  *
  * "DEBUG_WOLFSSL" definition enables log to output into stdout.
  * Note: wolfSSL_Debugging_ON() must be called just after wolfSSL_Init().
  *----------------------------------------------------------------------------*/
 
 /*#define DEBUG_WOLFSSL*/
-	
+
 
 
 #endif /* USER_SETTINGS_H */

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -304,13 +304,13 @@
 
 #ifndef democonfigCLIENT_IDENTIFIER
 
-    /**
-     * @brief The MQTT client identifier used in this example.  Each client identifier
-     * must be unique so edit as required to ensure no two clients connecting to the
-     * same broker use the same client identifier.  Using a #define is for convenience
-     * of demonstration only - production devices should use something unique to the
-     * device that can be read from software - such as a production serial number.
-     */
+/**
+ * @brief The MQTT client identifier used in this example.  Each client identifier
+ * must be unique so edit as required to ensure no two clients connecting to the
+ * same broker use the same client identifier.  Using a #define is for convenience
+ * of demonstration only - production devices should use something unique to the
+ * device that can be read from software - such as a production serial number.
+ */
     #error  "Please define democonfigCLIENT_IDENTIFIER in demo_config.h to something unique for this device."
 #endif
 
@@ -320,14 +320,14 @@
         #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
     #endif
 
-    /* If no username is defined, then a client certificate/key is required. */
+/* If no username is defined, then a client certificate/key is required. */
     #ifndef democonfigCLIENT_USERNAME
 
-    /*
-     *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
-     *!!! convenience of demonstration only.  Production devices should
-     *!!! store keys securely, such as within a secure element.
-     */
+/*
+ *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
+ *!!! convenience of demonstration only.  Production devices should
+ *!!! store keys securely, such as within a secure element.
+ */
 
         #ifndef democonfigCLIENT_CERTIFICATE_PEM
             #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
@@ -337,14 +337,14 @@
         #endif
     #else
 
-        /* If a username is defined, a client password also would need to be defined for
-         * client authentication. */
+/* If a username is defined, a client password also would need to be defined for
+ * client authentication. */
         #ifndef democonfigCLIENT_PASSWORD
             #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
         #endif
 
-        /* AWS IoT MQTT broker port needs to be 443 for client authentication based on
-         * username/password. */
+/* AWS IoT MQTT broker port needs to be 443 for client authentication based on
+ * username/password. */
         #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
             #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
         #endif
@@ -529,7 +529,7 @@ static void prvMQTTAgentTask( void * pParam );
  *
  * The implementation uses MQTT agent to queue a publish request. It then waits
  * for the request complete notification from the agent. The notification along with result of the
- * operation is sent back to the caller task using xTaksNotify API. For publishes involving QOS 1 and
+ * operation is sent back to the caller task using xTaskNotify API. For publishes involving QOS 1 and
  * QOS2 the operation is complete once an acknowledgment (PUBACK) is received. OTA agent uses this function
  * to fetch new job, provide status update and send other control related messages to the MQTT broker.
  *
@@ -593,7 +593,7 @@ static OtaMqttStatus_t prvMQTTUnsubscribe( const char * pTopicFilter,
  * within ota_config.h. This function is used to fetch a free buffer from the pool for processing
  * by the OTA agent task. It uses a mutex for thread safe access to the pool.
  *
- * @return A pointer to an unusued buffer. NULL if there are no buffers available.
+ * @return A pointer to an unused buffer. NULL if there are no buffers available.
  */
 static OtaEventData_t * prvOTAEventBufferGet( void );
 
@@ -667,7 +667,7 @@ static void prvMqttDataCallback( void * pContext,
  *
  * The callback is not subscribed with MQTT broker, but only with local subscription manager.
  * A wildcard OTA job topic is used for subscription so that all unsolicited messages related to OTA is
- * forwarded to this callback for filteration. Right now the callback is used to filter responses to job requests
+ * forwarded to this callback for filtration. Right now the callback is used to filter responses to job requests
  * from the OTA service.
  *
  * @param[in] pvIncomingPublishCallbackContext MQTT context which stores the connection.
@@ -1043,12 +1043,12 @@ static void prvCommandCallback( MQTTAgentCommandContext_t * pxCommandContext,
 static void prvMQTTSubscribeCompleteCallback( MQTTAgentCommandContext_t * pxCommandContext,
                                               MQTTAgentReturnInfo_t * pxReturnInfo )
 {
-    MQTTAgentSubscribeArgs_t * pSubsribeArgs;
+    MQTTAgentSubscribeArgs_t * pSubscribeArgs;
 
     if( pxReturnInfo->returnCode == MQTTSuccess )
     {
-        pSubsribeArgs = ( MQTTAgentSubscribeArgs_t * ) ( pxCommandContext->pArgs );
-        prvRegisterOTACallback( pSubsribeArgs->pSubscribeInfo->pTopicFilter, pSubsribeArgs->pSubscribeInfo->topicFilterLength );
+        pSubscribeArgs = ( MQTTAgentSubscribeArgs_t * ) ( pxCommandContext->pArgs );
+        prvRegisterOTACallback( pSubscribeArgs->pSubscribeInfo->pTopicFilter, pSubscribeArgs->pSubscribeInfo->topicFilterLength );
     }
 
     /* Store the result in the application defined context so the task that
@@ -1288,42 +1288,43 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     NetworkCredentials_t xNetworkCredentials = { 0 };
 
     #if defined( democonfigUSE_AWS_IOT_CORE_BROKER )
-        #if defined( democonfigCLIENT_USERNAME )
-            /*
-            * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-            * to AWS IoT Core with Custom Authentication on port 443.
-            *
-            * Custom Authentication uses the contents of the username and password
-            * fields of the MQTT CONNECT packet to authenticate the client.
-            *
-            * For more information, refer to the documentation at:
-            * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-            */
-            static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
-            #if democonfigMQTT_BROKER_PORT != 443U
-                #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
-            #endif /* democonfigMQTT_BROKER_PORT != 443U */
-        #else /* if !defined( democonfigCLIENT_USERNAME ) */
-            /*
-            * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-            * x509 Certificate Authentication.
-            */
-            static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
-
-        #endif /* !defined( democonfigCLIENT_USERNAME ) */
+    #if defined( democonfigCLIENT_USERNAME )
 
         /*
-        * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
-        * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
-        */
-        #if democonfigMQTT_BROKER_PORT == 443U
-            xNetworkCredentials.pAlpnProtos = ppcAlpnProtocols;
-        #elif democonfigMQTT_BROKER_PORT == 8883U
-            xNetworkCredentials.pAlpnProtos = NULL;
-        #else /* democonfigMQTT_BROKER_PORT != 8883U */
-            xNetworkCredentials.pAlpnProtos = NULL;
-            #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+         * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+         * to AWS IoT Core with Custom Authentication on port 443.
+         *
+         * Custom Authentication uses the contents of the username and password
+         * fields of the MQTT CONNECT packet to authenticate the client.
+         *
+         * For more information, refer to the documentation at:
+         * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+         */
+        static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
+        #if democonfigMQTT_BROKER_PORT != 443U
+        #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
         #endif /* democonfigMQTT_BROKER_PORT != 443U */
+    #else /* if !defined( democonfigCLIENT_USERNAME ) */
+
+        /*
+         * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+         * x509 Certificate Authentication.
+         */
+        static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
+    #endif /* !defined( democonfigCLIENT_USERNAME ) */
+
+    /*
+     * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+     * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+     */
+    #if democonfigMQTT_BROKER_PORT == 443U
+        xNetworkCredentials.pAlpnProtos = ppcAlpnProtocols;
+    #elif democonfigMQTT_BROKER_PORT == 8883U
+        xNetworkCredentials.pAlpnProtos = NULL;
+    #else /* democonfigMQTT_BROKER_PORT != 8883U */
+        xNetworkCredentials.pAlpnProtos = NULL;
+    #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+    #endif /* democonfigMQTT_BROKER_PORT != 443U */
     #else /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
         xNetworkCredentials.pAlpnProtos = NULL;
     #endif /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
@@ -2037,7 +2038,7 @@ static BaseType_t prvRunOTADemo( void )
     }
 
     /**
-     * Remvove callback for receiving messages intended for OTA agent from broker,
+     * Remove callback for receiving messages intended for OTA agent from broker,
      * for which the topic has not been subscribed for.
      */
     removeSubscription( ( SubscriptionElement_t * ) xGlobalMqttAgentContext.pIncomingCallbackContext,
@@ -2086,6 +2087,7 @@ void vOtaDemoTask( void * pvParam )
     if( xPlatformIsNetworkUp() == pdFALSE )
     {
         LogInfo( ( "Waiting for the network link up event..." ) );
+
         while( xPlatformIsNetworkUp() == pdFALSE )
         {
             vTaskDelay( pdMS_TO_TICKS( 1000U ) );

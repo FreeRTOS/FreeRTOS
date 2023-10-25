@@ -1,6 +1,6 @@
 # FreeRTOS Kernel SMP Unit Tests
 
-FreeRTOS Kernel SMP Unit Tests verifies the SMP scheduler logic in tasks.c which is enclosed by `configNUMBER_OF_CORES > 1 `. The common shceduler logic for single core and SMP is still verified in FreeRTOS/FreeRTOS/Test/CMock/tasks.
+FreeRTOS Kernel SMP Unit Tests verifies the SMP scheduler logic in tasks.c which is enclosed by `configNUMBER_OF_CORES > 1 `. The common scheduler logic for single core and SMP is still verified in FreeRTOS/FreeRTOS/Test/CMock/tasks.
 
 ## Folder structure and test group naming
 FreeRTOS SMP unit tests has the following folder structure:
@@ -28,7 +28,7 @@ FreeRTOS SMP unit tests has the following folder structure:
 └── smp_utest_common.h
 ```
 
- FreeRTOS SMP unit tests are divided into groups and each folder represents a test group. These test groups represnt different configurations in FreeRTOSConfig.h.
+ FreeRTOS SMP unit tests are divided into groups and each folder represents a test group. These test groups represent different configurations in FreeRTOSConfig.h.
 
 The following test groups are created for the combinations of `configRUN_MULTIPLE_PRIORITIES` and `configUSE_TIME_SLICING`:
 * single_priority_timeslice

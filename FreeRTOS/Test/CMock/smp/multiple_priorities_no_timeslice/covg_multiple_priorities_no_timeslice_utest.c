@@ -877,9 +877,9 @@ void test_coverage_vTaskList_task_eRunning( void )
 
     pcGeneratedTaskName[ i ] = '\0';
 
-    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskRUNNING_CHAR,
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\t0x%x\r\n", pcGeneratedTaskName, tskRUNNING_CHAR,
              ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
-             ( unsigned int ) xTaskTCB.uxTaskNumber );
+             ( unsigned int ) xTaskTCB.uxTaskNumber, ( unsigned int ) ( ( 1U << configNUMBER_OF_CORES ) - 1U ) );
     xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
     TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
@@ -943,9 +943,9 @@ void test_coverage_vTaskList_task_eReady( void )
 
     pcGeneratedTaskName[ i ] = '\0';
 
-    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskREADY_CHAR,
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\t0x%x\r\n", pcGeneratedTaskName, tskREADY_CHAR,
              ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
-             ( unsigned int ) xTaskTCB.uxTaskNumber );
+             ( unsigned int ) xTaskTCB.uxTaskNumber, ( unsigned int ) ( ( 1U << configNUMBER_OF_CORES ) - 1U ) );
     xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
     TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
@@ -1009,9 +1009,9 @@ void test_coverage_vTaskList_task_eBlocked( void )
 
     pcGeneratedTaskName[ i ] = '\0';
 
-    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskBLOCKED_CHAR,
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\t0x%x\r\n", pcGeneratedTaskName, tskBLOCKED_CHAR,
              ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
-             ( unsigned int ) xTaskTCB.uxTaskNumber );
+             ( unsigned int ) xTaskTCB.uxTaskNumber, ( unsigned int ) ( ( 1U << configNUMBER_OF_CORES ) - 1U ) );
     xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
     TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
@@ -1075,9 +1075,9 @@ void test_coverage_vTaskList_task_eSuspended( void )
 
     pcGeneratedTaskName[ i ] = '\0';
 
-    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskSUSPENDED_CHAR,
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\t0x%x\r\n", pcGeneratedTaskName, tskSUSPENDED_CHAR,
              ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
-             ( unsigned int ) xTaskTCB.uxTaskNumber );
+             ( unsigned int ) xTaskTCB.uxTaskNumber, ( unsigned int ) ( ( 1U << configNUMBER_OF_CORES ) - 1U ) );
     xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
     TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }
@@ -1141,9 +1141,9 @@ void test_coverage_vTaskList_task_eDeleted( void )
 
     pcGeneratedTaskName[ i ] = '\0';
 
-    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\r\n", pcGeneratedTaskName, tskDELETED_CHAR,
+    sprintf( pcExpectedResult, "%s\t%c\t%u\t%u\t%u\t0x%x\r\n", pcGeneratedTaskName, tskDELETED_CHAR,
              ( unsigned int ) xTaskTCB.uxPriority, ( unsigned int ) ( configMINIMAL_STACK_SIZE - 1U ),
-             ( unsigned int ) xTaskTCB.uxTaskNumber );
+             ( unsigned int ) xTaskTCB.uxTaskNumber, ( unsigned int ) ( ( 1U << configNUMBER_OF_CORES ) - 1U ) );
     xStringCompareResult = strcmp( pcExpectedResult, pcWriteBuffer );
     TEST_ASSERT_EQUAL( 0, xStringCompareResult );
 }

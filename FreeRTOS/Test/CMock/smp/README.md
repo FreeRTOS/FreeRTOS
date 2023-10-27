@@ -48,7 +48,8 @@ Each test group has two types of test cases, the functional test cases and cover
 * Functional test : <test_group_name>_utest.c
 
 ### Functional tests
-Functional test cases verify that the SMP scheduler logic performs as described by functional requirements. 
+Functional test cases verify that the SMP scheduler logic performs as described by functional requirements.
+The test case should specify the functional requirement to be verified, the test steps and expected result.
 
 The following is an example of the functional test:
 ```c

@@ -679,13 +679,13 @@ void test_coverage_uxTaskGetStackHighWaterMark_null_task_handle( void )
 }
 
 /**
- * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with valid core ID.
+ * @brief xTaskGetCurrentTaskHandleForCore - get current task handle with valid core ID.
  *
  * This test verifiesthe task handle returned with a valid core ID.
  *
  * <b>Coverage</b>
  * @code{c}
- * TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+ * TaskHandle_t xTaskGetCurrentTaskHandleForCore( BaseType_t xCoreID )
  * {
  *     TaskHandle_t xReturn = NULL;
  *
@@ -699,7 +699,7 @@ void test_coverage_uxTaskGetStackHighWaterMark_null_task_handle( void )
  * @endcode
  * ( taskVALID_CORE_ID( xCoreID ) != pdFALSE ) is true.
  */
-void test_coverage_xTaskGetCurrentTaskHandleCPU_valid_core_id( void )
+void test_coverage_xTaskGetCurrentTaskHandleForCore_valid_core_id( void )
 {
     TCB_t xTaskTCB = { 0 };
     TaskHandle_t xTaskHandle;
@@ -708,20 +708,20 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_valid_core_id( void )
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
     /* API calls. */
-    xTaskHandle = xTaskGetCurrentTaskHandleCPU( 0 );
+    xTaskHandle = xTaskGetCurrentTaskHandleForCore( 0 );
 
     /* Validation. */
     TEST_ASSERT( xTaskHandle == &xTaskTCB );
 }
 
 /**
- * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with invalid core ID.
+ * @brief xTaskGetCurrentTaskHandleForCore - get current task handle with invalid core ID.
  *
  * This test verifiesthe task handle returned with an invalid core ID.
  *
  * <b>Coverage</b>
  * @code{c}
- * TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+ * TaskHandle_t xTaskGetCurrentTaskHandleForCore( BaseType_t xCoreID )
  * {
  *     TaskHandle_t xReturn = NULL;
  *
@@ -736,7 +736,7 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_valid_core_id( void )
  * ( taskVALID_CORE_ID( xCoreID ) != pdFALSE ) is false.
  * xCoreID is greater than or equal to configNUMBER_OF_CORES.
  */
-void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_ge( void )
+void test_coverage_xTaskGetCurrentTaskHandleForCore_invalid_core_id_ge( void )
 {
     TCB_t xTaskTCB = { 0 };
     TaskHandle_t xTaskHandle;
@@ -745,20 +745,20 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_ge( void )
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
     /* API calls. */
-    xTaskHandle = xTaskGetCurrentTaskHandleCPU( configNUMBER_OF_CORES );
+    xTaskHandle = xTaskGetCurrentTaskHandleForCore( configNUMBER_OF_CORES );
 
     /* Validation. */
     TEST_ASSERT( xTaskHandle == NULL );
 }
 
 /**
- * @brief xTaskGetCurrentTaskHandleCPU - get current task handle with invalid core ID.
+ * @brief xTaskGetCurrentTaskHandleForCore - get current task handle with invalid core ID.
  *
  * This test verifiesthe task handle returned with an invalid core ID.
  *
  * <b>Coverage</b>
  * @code{c}
- * TaskHandle_t xTaskGetCurrentTaskHandleCPU( BaseType_t xCoreID )
+ * TaskHandle_t xTaskGetCurrentTaskHandleForCore( BaseType_t xCoreID )
  * {
  *     TaskHandle_t xReturn = NULL;
  *
@@ -773,7 +773,7 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_ge( void )
  * ( taskVALID_CORE_ID( xCoreID ) != pdFALSE ) is false.
  * xCoreID is less than 0.
  */
-void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_lt( void )
+void test_coverage_xTaskGetCurrentTaskHandleForCore_invalid_core_id_lt( void )
 {
     TCB_t xTaskTCB = { 0 };
     TaskHandle_t xTaskHandle;
@@ -782,7 +782,7 @@ void test_coverage_xTaskGetCurrentTaskHandleCPU_invalid_core_id_lt( void )
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
     /* API calls. */
-    xTaskHandle = xTaskGetCurrentTaskHandleCPU( -1 );
+    xTaskHandle = xTaskGetCurrentTaskHandleForCore( -1 );
 
     /* Validation. */
     TEST_ASSERT( xTaskHandle == NULL );

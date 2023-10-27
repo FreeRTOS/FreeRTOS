@@ -1,9 +1,9 @@
-# FreeRTOS Kernel SMP Unit Tests
+# FreeRTOS Kernel SMP Unit Test
 
-FreeRTOS Kernel SMP Unit Tests verifies the SMP scheduler logic in tasks.c which is enclosed by `configNUMBER_OF_CORES > 1 `. The common scheduler logic for single core and SMP is still verified in FreeRTOS/FreeRTOS/Test/CMock/tasks.
+FreeRTOS Kernel SMP unit test verifies the SMP scheduler logic in tasks.c which is enclosed by `configNUMBER_OF_CORES > 1`. The common scheduler logic for single core and SMP is still verified in FreeRTOS/FreeRTOS/Test/CMock/tasks.
 
 ## Folder structure and test group naming
-FreeRTOS SMP unit tests has the following folder structure:
+FreeRTOS SMP unit test has the following folder structure:
 ```
 ./FreeRTOS/FreeRTOS/Test/CMock/smp
 ├── Makefile
@@ -28,7 +28,7 @@ FreeRTOS SMP unit tests has the following folder structure:
 └── smp_utest_common.h
 ```
 
- FreeRTOS SMP unit tests are divided into groups and each folder represents a test group. These test groups represent different configurations in FreeRTOSConfig.h.
+FreeRTOS SMP unit test cases are divided into groups and each folder represents a test group. Test cases with same configurations in FreeRTOSConfig.h are grouped together in a test group.
 
 The following test groups are created for the combinations of `configRUN_MULTIPLE_PRIORITIES` and `configUSE_TIME_SLICING`:
 * single_priority_timeslice
@@ -36,7 +36,8 @@ The following test groups are created for the combinations of `configRUN_MULTIPL
 * multiple_priorities_timeslice
 * multiple_priorities_no_timeslice
 
-In order to increase the test coverage rate, a new test group **multiple_priorities_no_timeslice_mock** is created to mock list.h. The configuration is similar to multiple_priorities_no_timeslice.
+In order to increase the test coverage rate, test group **multiple_priorities_no_timeslice_mock**
+is created to mock the APIs in list.h. The configuration is similar to **multiple_priorities_no_timeslice**.
  * multiple_priorities_no_timeslice_mock
 
 config_assert test group is created to cover `configASSERT` in FreeRTOS SMP scheduler logic.
@@ -44,12 +45,12 @@ config_assert test group is created to cover `configASSERT` in FreeRTOS SMP sche
 
 ## Functional tests and coverage tests
 Each test group has two types of test cases, the functional test cases and coverage test cases. To distinguish these test cases, the source code file has the following naming convention:
-* Coverage test : covg_<test_group_name>_utest.c
-* Functional test : <test_group_name>_utest.c
+* Coverage test : covg_\<test_group_name\>_utest.c
+* Functional test : \<test_group_name\>_utest.c
 
 ### Functional tests
 Functional test cases verify that the SMP scheduler logic performs as described by functional requirements.
-The test case should specify the functional requirement to be verified, the test steps and expected result.
+The test case specifies the functional requirement to be verified, the test steps and expected result in the comment.
 
 The following is an example of the functional test:
 ```c
@@ -99,7 +100,9 @@ void test_priority_verification_tasks_equal_priority( void )
 ```
 
 ### Coverage tests
-Coverage test cases are designed to verify a specific path of SMP scheduler logic. It must specify the lines of code to be covered in the test case. To minimize dependencies, mock functions should be used wherever possible.
+Coverage test cases verify a specific path of SMP scheduler logic.
+The test case specifies the lines of code to be covered in the test case.
+To minimize dependencies, mock functions are used wherever possible.
 
 
 The following is an example of the coverage test:

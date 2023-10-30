@@ -110,7 +110,7 @@ The following is an example of the coverage test:
 /**
  * @brief xTaskResumeFromISR - resume higher priority suspended task
  *
- * A higher priority task from ISR is resumed in the test case when scheduler 
+ * A higher priority task from ISR is resumed in the test case when scheduler
  * suspended. The return value of xTaskResumeFromISR indicates yield required
  * for the core calling this API.
  *

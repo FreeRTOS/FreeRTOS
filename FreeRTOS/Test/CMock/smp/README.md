@@ -1,6 +1,8 @@
 # FreeRTOS Kernel SMP Unit Test
 
-FreeRTOS Kernel SMP unit test verifies the SMP scheduler logic in tasks.c which is enclosed by `configNUMBER_OF_CORES > 1`. The common scheduler logic for single core and SMP is still verified in FreeRTOS/FreeRTOS/Test/CMock/tasks.
+FreeRTOS Kernel SMP unit test verifies the SMP scheduler logic in tasks.c which
+is enclosed by `configNUMBER_OF_CORES > 1`. The common scheduler logic for single
+core and SMP is still verified in FreeRTOS/FreeRTOS/Test/CMock/tasks.
 
 ## Folder structure and test group naming
 FreeRTOS SMP unit test has the following folder structure:
@@ -28,9 +30,12 @@ FreeRTOS SMP unit test has the following folder structure:
 └── smp_utest_common.h
 ```
 
-FreeRTOS SMP unit test cases are divided into groups and each folder represents a test group. Test cases with same configurations in FreeRTOSConfig.h are grouped together in a test group.
+FreeRTOS SMP unit test cases are divided into groups and each folder represents
+a test group. Test cases with same configurations in FreeRTOSConfig.h are grouped
+together in a test group.
 
-The following test groups are created for the combinations of `configRUN_MULTIPLE_PRIORITIES` and `configUSE_TIME_SLICING`:
+The following test groups are created for the combinations of `configRUN_MULTIPLE_PRIORITIES`
+and `configUSE_TIME_SLICING`:
 * single_priority_timeslice
 * single_priority_no_timeslice
 * multiple_priorities_timeslice
@@ -44,13 +49,16 @@ config_assert test group is created to cover `configASSERT` in FreeRTOS SMP sche
 * config_assert
 
 ## Functional tests and coverage tests
-Each test group has two types of test cases, the functional test cases and coverage test cases. To distinguish these test cases, the source code file has the following naming convention:
+Each test group has two types of test cases, the functional test cases and coverage
+test cases. To distinguish these test cases, the source code file has the following
+naming convention:
 * Coverage test : covg_\<test_group_name\>_utest.c
 * Functional test : \<test_group_name\>_utest.c
 
 ### Functional tests
-Functional test cases verify that the SMP scheduler logic performs as described by functional requirements.
-The test case specifies the functional requirement to be verified, the test steps and expected result in the comment.
+Functional test cases verify that the SMP scheduler logic performs as described
+by functional requirements. The test case specifies the functional requirement to
+be verified, the test steps and expected result in the comment.
 
 The following is an example of the functional test:
 ```c

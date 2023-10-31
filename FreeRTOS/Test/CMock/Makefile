@@ -14,6 +14,7 @@ UNITS       +=  queue
 UNITS       +=  stream_buffer
 UNITS       +=  message_buffer
 UNITS       +=  event_groups
+UNITS       +=  smp
 
 .PHONY: makefile.in
 

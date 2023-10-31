@@ -226,11 +226,10 @@ extern uint32_t ulRand();
 #define ipconfigUSE_TCP_WIN                            ( 1 )
 
 /* The MTU is the maximum number of bytes the payload of a network frame can
- * contain.  For normal Ethernet V2 frames the maximum MTU is 1500.  Setting a
- * lower value can save RAM, depending on the buffer management scheme used.  If
- * ipconfigCAN_FRAGMENT_OUTGOING_PACKETS is 1 then (ipconfigNETWORK_MTU - 28) must
- * be divisible by 8. */
-#define ipconfigNETWORK_MTU                            1200U
+ * contain. Setting this to a number lower than that of the network you are
+ * connecting to is likely to cause dropped packets. Do not set this parameter
+ * lower than 1500 unless you fully understand the consequences. */
+#define ipconfigNETWORK_MTU                            1500U
 
 /* Set ipconfigUSE_DNS to 1 to include a basic DNS client/resolver.  DNS is used
  * through the FreeRTOS_gethostbyname() API function. */

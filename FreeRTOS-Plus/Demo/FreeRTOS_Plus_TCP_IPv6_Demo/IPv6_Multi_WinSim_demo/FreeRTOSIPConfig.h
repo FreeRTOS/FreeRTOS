@@ -60,26 +60,26 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /* Define the byte order of the target MCU (the MCU FreeRTOS+TCP is executing
  * on).  Valid options are pdFREERTOS_BIG_ENDIAN and pdFREERTOS_LITTLE_ENDIAN. */
-#define ipconfigBYTE_ORDER                         pdFREERTOS_LITTLE_ENDIAN
+#define ipconfigBYTE_ORDER                             pdFREERTOS_LITTLE_ENDIAN
 
 /* If the network card/driver includes checksum offloading (IP/TCP/UDP checksums)
  * then set ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM to 1 to prevent the software
  * stack repeating the checksum calculations. */
-#define ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM     1
+#define ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM         1
 
 /* Several API's will block until the result is known, or the action has been
  * performed, for example FreeRTOS_send() and FreeRTOS_recv().  The timeouts can be
  * set per socket, using setsockopt().  If not set, the times below will be
  * used as defaults. */
-#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME    ( 5000 )
-#define ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME       ( 5000 )
+#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME        ( 5000 )
+#define ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME           ( 5000 )
 
 /* Include support for LLMNR: Link-local Multicast Name Resolution
  * (non-Microsoft) */
-#define ipconfigUSE_LLMNR                          ( 1 )
+#define ipconfigUSE_LLMNR                              ( 1 )
 
 /* Include support for NBNS: NetBIOS Name Service (Microsoft) */
-#define ipconfigUSE_NBNS                           ( 1 )
+#define ipconfigUSE_NBNS                               ( 1 )
 
 /* Include support for DNS caching.  For TCP, having a small DNS cache is very
  * useful.  When a cache is present, ipconfigDNS_REQUEST_ATTEMPTS can be kept low
@@ -87,13 +87,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * socket has been destroyed, the result will be stored into the cache.  The next
  * call to FreeRTOS_gethostbyname() will return immediately, without even creating
  * a socket. */
-#define ipconfigUSE_DNS_CACHE                      ( 1 )
-#define ipconfigDNS_CACHE_NAME_LENGTH              ( 33 )
-#define ipconfigDNS_CACHE_ENTRIES                  ( 4 )
-#define ipconfigDNS_REQUEST_ATTEMPTS               ( 2 )
+#define ipconfigUSE_DNS_CACHE                          ( 1 )
+#define ipconfigDNS_CACHE_NAME_LENGTH                  ( 33 )
+#define ipconfigDNS_CACHE_ENTRIES                      ( 4 )
+#define ipconfigDNS_REQUEST_ATTEMPTS                   ( 2 )
 
 /* Let DNS wait for 3 seconds for an answer. */
-#define ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS       pdMS_TO_TICKS( 3000U )
+#define ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS           pdMS_TO_TICKS( 3000U )
 
 /* The IP stack executes it its own task (although any application task can make
  * use of its services through the published sockets API). ipconfigUDP_TASK_PRIORITY
@@ -104,14 +104,14 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * FreeRTOSConfig.h, not FreeRTOSIPConfig.h. Consideration needs to be given as to
  * the priority assigned to the task executing the IP stack relative to the
  * priority assigned to tasks that use the IP stack. */
-#define ipconfigIP_TASK_PRIORITY                   ( configMAX_PRIORITIES - 2 )
+#define ipconfigIP_TASK_PRIORITY                       ( configMAX_PRIORITIES - 2 )
 
 /* The size, in words (not bytes), of the stack allocated to the FreeRTOS+TCP
  * task.  This setting is less important when the FreeRTOS Win32 simulator is used
  * as the Win32 simulator only stores a fixed amount of information on the task
  * stack.  FreeRTOS includes optional stack overflow detection, see:
  * http://www.freertos.org/Stacks-and-stack-overflow-checking.html */
-#define ipconfigIP_TASK_STACK_SIZE_WORDS           ( configMINIMAL_STACK_SIZE * 5 )
+#define ipconfigIP_TASK_STACK_SIZE_WORDS               ( configMINIMAL_STACK_SIZE * 5 )
 
 /* If ipconfigUSE_NETWORK_EVENT_HOOK is set to 1 then FreeRTOS+TCP will call the
  * network event hook at the appropriate times.  If ipconfigUSE_NETWORK_EVENT_HOOK

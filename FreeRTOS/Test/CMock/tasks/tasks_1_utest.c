@@ -32,13 +32,17 @@
 #include "fake_port.h"
 #include "task.h"
 
+/* Mock includes. */
 #include "mock_list.h"
 #include "mock_list_macros.h"
 #include "mock_timers.h"
 #include "mock_portable.h"
+#include "mock_fake_assert.h"
+#include "mock_fake_infiniteloop.h"
 
 /* Test includes. */
 #include "unity.h"
+#include "CException.h"
 #include "global_vars.h"
 
 /* C runtime includes. */
@@ -65,7 +69,6 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-
 #ifdef configNUMBER_OF_CORES
     extern volatile BaseType_t xYieldPendings[];
     #define xYieldPending    xYieldPendings[ 0 ]
@@ -75,7 +78,6 @@ extern volatile TickType_t xPendedTicks;
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-
 #ifdef configNUMBER_OF_CORES
     extern TaskHandle_t xIdleTaskHandles[];
     #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
@@ -118,6 +120,11 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 #define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
 #define TCB_ARRAY                       10 /* simulate up to 10 tasks: add more if needed */
 
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E                  0xAA101
+
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
@@ -151,6 +158,18 @@ static bool port_allocate_secure_context_called = false;
 static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
+static int assertionFailed = 0;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion = pdFALSE;
+
+/* ============================  EXTERN FUNCTIONS  ========================== */
+extern void prvCheckTasksWaitingTermination( void );
 
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()
@@ -163,7 +182,7 @@ void vFakePortAssertIfISR( void )
     HOOK_DIAG();
 }
 
-void port_allocate_secure_context( BaseType_t stackSize )
+void vFakePortAllocateSecureContext( BaseType_t stackSize )
 {
     HOOK_DIAG();
     port_allocate_secure_context_called = true;
@@ -259,10 +278,11 @@ void vFakePortYieldFromISR()
     HOOK_DIAG();
 }
 
-void vFakePortDisableInterrupts()
+uint32_t vFakePortDisableInterrupts()
 {
     port_disable_interrupts_called = true;
     HOOK_DIAG();
+    return 0;
 }
 
 void vFakePortEnableInterrupts()
@@ -323,10 +343,53 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
     vApplicationStackOverflowHook_called = true;
 }
 
+unsigned int vFakePortGetCoreID( void )
+{
+    HOOK_DIAG();
+    return 0;
+}
+
+void vFakePortReleaseTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortReleaseISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
+{
+    if( !x )
+    {
+        assertionFailed++;
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            Throw( configASSERT_E );
+        }
+    }
+}
+
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
 {
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
     RESET_ALL_HOOKS();
     pxCurrentTCB = NULL;
     memset( &tcb, 0x00, sizeof( TCB_t ) * TCB_ARRAY );
@@ -335,10 +398,6 @@ void setUp( void )
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
 
-    /*
-     * pxDelayedTaskList = NULL;
-     * pxOverflowDelayedTaskList = NULL;
-     */
     memset( &xPendingReadyList, 0x00, sizeof( List_t ) );
 
     memset( &xTasksWaitingTermination, 0x00, sizeof( List_t ) );
@@ -944,6 +1003,71 @@ void test_vTaskDelete_success_not_current_task_no_yield( void )
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
+/**
+ * @brief prvCheckTasksWaitingTermination - no waiting task.
+ *
+ * No task is waiting to be deleted. This test show it's result in the coverage
+ * report.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U ) is false.
+ */
+void test_prvCheckTasksWaitingTermination_no_waiting_task( void )
+{
+    /* Setup the variables and structure. */
+    uxDeletedTasksWaitingCleanUp = 0;
+
+    /* API Call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+
+    /* No task is waiting to be cleaned up. Nothing will be updated in this API. This
+     * test case shows its result in the coverage report. */
+}
+
+/**
+ * @brief prvCheckTasksWaitingTermination - delete waiting task.
+ *
+ * A task is waiting to be deleted. The number of tasks and number of tasks waiting to
+ * be deleted are verified in this test case.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
+ * {
+ *     ...
+ * }
+ * @endcode
+ * ( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U ) is true.
+ */
+void test_prvCheckTasksWaitingTermination_delete_waiting_task( void )
+{
+    ptcb = ( TCB_t * ) create_task();
+
+    /* Setup the variables and structure. */
+    uxDeletedTasksWaitingCleanUp = 1;
+    uxCurrentNumberOfTasks = 1;
+
+    /* Expectations. */
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn( ptcb );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
+    vPortFree_Expect( stack );
+    vPortFree_Expect( ptcb );
+
+    /* API Call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( uxDeletedTasksWaitingCleanUp, 0 );
+    TEST_ASSERT_EQUAL( uxCurrentNumberOfTasks, 0 );
+}
 
 void test_vTaskStartScheduler_success( void )
 {
@@ -2934,6 +3058,7 @@ void test_pcTaskGetName_success_null_handle( void )
     ret_task_name = pcTaskGetName( NULL );
     TEST_ASSERT_EQUAL_STRING( "create_task", ret_task_name );
 }
+
 void test_xTaskCatchUpTicks( void )
 {
     BaseType_t ret_taskCatchUpTicks;
@@ -2941,11 +3066,18 @@ void test_xTaskCatchUpTicks( void )
 
     task_handle = create_task();
     ptcb = task_handle;
-    uxSchedulerSuspended = pdTRUE;
+    uxSchedulerSuspended = pdFALSE;
+
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
+
     /* API Call */
-    ret_taskCatchUpTicks = xTaskCatchUpTicks( 500 );
+    ret_taskCatchUpTicks = xTaskCatchUpTicks( 1 );
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret_taskCatchUpTicks );
+    /*TEST_ASSERT_EQUAL( pdTRUE, ret_taskCatchUpTicks ); */
+    uxSchedulerSuspended = pdTRUE;
 }
 
 void test_xTaskIncrementTick_success_sched_suspended_no_switch( void )
@@ -2975,11 +3107,11 @@ void test_xTaskIncrementTick_success_tickCount_overlow( void )
     overflow = pxOverflowDelayedTaskList;
     xTickCount = UINT32_MAX; /* overflowed */
     create_task();
-
     /* Expectations */
-    /* prvResetNextTaskUnblockTime */
+    /* taskSWITCH_DELAYED_LISTS */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* back */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ],
                                              2 );
     /* API Call */
@@ -3030,6 +3162,8 @@ void test_xTaskIncrementTick_success_switch( void )
     xTickCount = UINT32_MAX;
 
     /* Expectations */
+    /* taskSWITCH_DELAYED_LISTS(); */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
                                              3 );
@@ -3140,6 +3274,71 @@ void test_xTaskIncrementTick_success_unblock_tasks2( void )
     xNextTaskUnblockTime = 49; /* tasks due unblocking */
     uxSchedulerSuspended = pdFALSE;
     vTaskMissedYield();
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( pxDelayedTaskList, task_handle2 );
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &task_handle2->xStateListItem,
+                                             xTickCount - 5 );
+    listREMOVE_ITEM_Expect( &( task_handle2->xStateListItem ) );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &task_handle2->xEventListItem,
+                                             &xPendingReadyList );
+    listREMOVE_ITEM_Expect( &( task_handle2->xEventListItem ) );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
+    /* back */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
+                                             1 );
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( pdTRUE, ret_task_incrementtick );
+    ASSERT_APP_TICK_HOOK_CALLED();
+    TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
+}
+
+/**
+ * @brief xTaskIncrementTick - Ready a higher priority delayed task.
+ *
+ * Ready a higher priority delayed task. Verify the return value is pdTRUE.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( pxTCB->uxPriority > pxCurrentTCB->uxPriority )
+ * {
+ *     xSwitchRequired = pdTRUE;
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( pxTCB->uxPriority > pxCurrentTCB->uxPriority ) is true.
+ */
+void test_xTaskIncrementTick_success_unblock_higher_prio_task( void )
+{
+    BaseType_t ret_task_incrementtick;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* setup */
+    create_task_priority = 2;
+    task_handle = create_task();
+    create_task_priority = 1;
+    task_handle2 = create_task();
+
+    /* task_handle 2 will be added to pxDelayedTaskList later. To wakeup a higher priority
+     * task, uxPriority is set higher than current task, which is 2. */
+    task_handle2->uxPriority = 3;
+    ptcb = task_handle;
+    xPendedTicks = 0;
+    xTickCount = 50;
+    xNextTaskUnblockTime = 49; /* tasks due unblocking */
+    uxSchedulerSuspended = pdFALSE;
 
     /* Expectations */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
@@ -3483,6 +3682,7 @@ void test_vTaskSwitchContext( void )
     pxCurrentTCB->pxTopOfStack = pxCurrentTCB->pxStack + 4; \
 
     /* Expectations */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
 
     /* API Call */
     vTaskSwitchContext();
@@ -3517,6 +3717,7 @@ void test_vTaskSwitchContext_detect_overflow( void )
     uxSchedulerSuspended = pdFALSE;
     pxCurrentTCB->pxTopOfStack = pxCurrentTCB->pxStack;
     /* Expectations */
+    listCURRENT_LIST_LENGTH_ExpectAnyArgsAndReturn( 0 );
 
     /* API Call */
     vTaskSwitchContext();
@@ -3557,6 +3758,8 @@ void test_vTaskPlaceOnUnorderedEventList( void )
     task_handle = create_task();
     ptcb = task_handle;
     xNextTaskUnblockTime = 600;
+
+    uxSchedulerSuspended = pdTRUE;
 
     /* Expectations */
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xEventListItem, 32 | 0x80000000UL );
@@ -3886,8 +4089,30 @@ void test_vTaskMissedYield( void )
     TEST_ASSERT_TRUE( xYieldPending );
 }
 
-/* TODO: find a way to fix the idle task UnitTest as it is an infinite loop */
-void ignore_test_prvIdleTask_yield( void )
+/**
+ * @brief prvIdleTask - yield
+ *
+ * Test prvIdleTask yield for other idle level priority task.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( ( configUSE_PREEMPTION == 1 ) && ( configIDLE_SHOULD_YIELD == 1 ) )
+ * {
+ *     ...
+ *     if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
+ *     {
+ *         taskYIELD();
+ *     }
+ *     else
+ *     {
+ *         mtCOVERAGE_TEST_MARKER();
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES ) is true.
+ */
+void test_prvIdleTask_yield( void )
 {
     int i = 8;
     void * args = &i;
@@ -3895,25 +4120,92 @@ void ignore_test_prvIdleTask_yield( void )
     create_task_priority = 3;
     create_task();
 
-    /* Setup */
+    /* Setup. */
     uxDeletedTasksWaitingCleanUp = 0;
     portTASK_FUNCTION( prvIdleTask, args );
     ( void ) fool_static2;
-    /* Expectations */
+
+    /* Expectations. */
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+
+    /* List function in prvIdleTask. */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 2 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    /* prvGetExpectedIdleTime */
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 0 );
-    /* API Call */
+
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API Call. */
     prvIdleTask( args );
-    /* Validations */
+
+    /* Validations. */
     ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED();
     ASSERT_PORT_YIELD_CALLED();
     ASSERT_APPLICATION_IDLE_HOOK_CALLED();
 }
+
+/**
+ * @brief prvIdleTask - tickless expected idle time
+ *
+ * Test prvIdleTask expected idle time condition.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_TICKLESS_IDLE != 0 )
+ * {
+ *     TickType_t xExpectedIdleTime;
+ *     ...
+ *     xExpectedIdleTime = prvGetExpectedIdleTime();
+ *
+ *     if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
+ *     {
+ *         vTaskSuspendAll();
+ *         {
+ * #endif
+ * @endcode
+ * ( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP ) is true.
+ */
+void test_prvIdleTask_tickless_expected_idle_time( void )
+{
+    int i = 8;
+    void * args = &i;
+
+    create_task_priority = 0;
+    create_task();
+
+    /* Setup. */
+    uxTopReadyPriority = 0;
+    xTickCount = 0;
+    xNextTaskUnblockTime = configEXPECTED_IDLE_TIME_BEFORE_SLEEP + 1;
+    uxDeletedTasksWaitingCleanUp = 0;
+    portTASK_FUNCTION( prvIdleTask, args );
+    ( void ) fool_static2;
+
+    /* Expectations. */
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 1 );
+
+    /* List function in prvIdleTask. */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 1 );
+
+    /* List functions in prvGetExpectedIdleTime. */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 1 );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ 0 ], 1 );
+
+    /* List functions in xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+
+    /* INFINITE_LOOP in prvIdleTask. */
+    vFakeInfiniteLoop_ExpectAndReturn( 0 );
+
+    /* API Call. */
+    prvIdleTask( args );
+
+    /* Validations. */
+    ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED();
+    ASSERT_APPLICATION_IDLE_HOOK_CALLED();
+}
+
 /* implement */
 /*configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING( xExpectedIdleTime ); */
 
@@ -4683,8 +4975,11 @@ void test_xTaskGenericNotify_success_null_pull( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotify( ptcb,
                                           uxIndexToNotify,
@@ -4715,6 +5010,8 @@ void test_xTaskGenericNotify_success_eIncrement( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4747,6 +5044,8 @@ void test_xTaskGenericNotify_success_eSetValueWithOverwrite( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4779,6 +5078,8 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4869,6 +5170,8 @@ void test_xTaskGenericNotify_success_default( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* API Call */
@@ -4931,7 +5234,10 @@ void test_xTaskGenericNotify_success_null_pull_ISR( void )
     ptcb = task_to_notify;
     vTaskSuspendAll();
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &ptcb->xEventListItem );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -4963,10 +5269,14 @@ void test_xTaskGenericNotify_success_eIncrement_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
+
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -4998,6 +5308,8 @@ void test_xTaskGenericNotify_success_eSetValueWithOverwrite_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -5033,6 +5345,8 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -5140,6 +5454,8 @@ void test_xTaskGenericNotify_success_default_ISR( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -5183,6 +5499,8 @@ void test_xTaskGenericNotify_success_default_ISR_task_woken_null( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     /* Expectations */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listREMOVE_ITEM_Expect( &( ptcb->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -5365,11 +5683,16 @@ void test_vTaskGenericNotifyGiveFromISR_success( void )
     /* Setup */
     task_to_notify = create_task();
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    ptcb = task_to_notify;
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     /*uxListRemove_ExpectAndReturn( &task_to_notify->xStateListItem, pdTRUE ); */
     listREMOVE_ITEM_Expect( &( task_to_notify->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
+
     /* API Call */
     vTaskGenericNotifyGiveFromISR( task_to_notify,
                                    uxIndexToNotify,
@@ -5391,8 +5714,12 @@ void test_vTaskGenericNotifyGiveFromISR_success_scheduler_suspended( void )
     /* Setup */
     task_to_notify = create_task();
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    ptcb = task_to_notify;
     vTaskSuspendAll();
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
 
     /* API Call */
@@ -5425,7 +5752,11 @@ void test_vTaskGenericNotifyGiveFromISR_success_yield_pending( void )
     task_to_notify->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
     ptcb = task_to_notify;
     vTaskSuspendAll();
+
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
 
     /* API Call */
@@ -5458,6 +5789,9 @@ void test_vTaskGenericNotifyGiveFromISR_success_null_higherpriority_task( void )
     ptcb = task_to_notify;
     vTaskSuspendAll();
     /* Expectations */
+    /* configASSERT statement */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
+                                             &xSuspendedTaskList );
     listINSERT_END_Expect( &xPendingReadyList, &task_to_notify->xEventListItem );
 
     /* API Call */

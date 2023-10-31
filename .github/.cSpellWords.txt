@@ -5012,6 +5012,7 @@ VRRSTEN
 VRRSTS
 VSDB
 VSYNC
+VTASKLIST
 VTIR
 VTOFFR
 VTOR
@@ -5340,6 +5341,7 @@ coremqtt
 cortexa
 coverity
 covfs
+covg
 cpas
 cpbs
 cpcdis
@@ -5402,6 +5404,7 @@ enetrg
 epage
 epdisc
 eqcfg
+equalto
 equidistribution
 eret
 ethernetif
@@ -5581,6 +5584,7 @@ lpstart
 lpthread
 lptr
 lsls
+lteq
 ltorg
 ltry
 lums
@@ -6049,10 +6053,14 @@ utilising
 utrhf
 utrhfgdghfg
 ux
+uxdeletedtaskwaiting
 uxindex
+uxpriority
 uxsource
 uxtab
+uxtasknumber
 uxtb
+uxtopreadypriority
 vactive
 vblank
 vcmp
@@ -6120,6 +6128,7 @@ xfindobjectwithlabelandclass
 xfscompat
 xgetslotlist
 xheader
+xidx
 xinitializepkcs
 xlarge
 xlength

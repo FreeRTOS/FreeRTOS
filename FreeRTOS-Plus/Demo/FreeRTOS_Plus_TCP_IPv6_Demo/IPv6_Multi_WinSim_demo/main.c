@@ -955,12 +955,12 @@ static void dns_test( const char * pcHostName )
         FreeRTOS_dnsclear();
         xDNSResult = -2;
         rc = FreeRTOS_getaddrinfo_a( pcHostName,
-                                    NULL,
-                                    &xHints,
-                                    &pxResult, /* An allocated struct, containing the results. */
-                                    vDNSEvent,
-                                    ( void * ) ulID,
-                                    pdMS_TO_TICKS( 1000U ) );
+                                     NULL,
+                                     &xHints,
+                                     &pxResult, /* An allocated struct, containing the results. */
+                                     vDNSEvent,
+                                     ( void * ) ulID,
+                                     pdMS_TO_TICKS( 1000U ) );
         vTaskDelay( pdMS_TO_TICKS( 1000U ) );
         rc = xDNSResult;
         FreeRTOS_printf( ( "Lookup '%s': %d\n", pcHostName, rc ) );

@@ -968,7 +968,7 @@ static void dns_test( const char * pcHostName )
     }
     else
     {
-        FreeRTOS_printf( ( "dns_test: Failed to generate a random Search ID\n" ) );
+        FreeRTOS_printf( ( "dns_test: Failed to generate a random SearchID\n" ) );
     }
 }
 

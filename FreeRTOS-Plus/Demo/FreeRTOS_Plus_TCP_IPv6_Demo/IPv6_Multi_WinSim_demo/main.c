@@ -938,32 +938,38 @@ static void dns_test( const char * pcHostName )
     uint32_t ulID;
     BaseType_t rc;
 
-    ( void ) xApplicationGetRandomNumber( &ulID );
-    FreeRTOS_dnsclear();
+    if( xApplicationGetRandomNumber( &( ulID ) ) != pdFALSE )
+    {
+        FreeRTOS_dnsclear();
 
-    struct freertos_addrinfo xHints;
-    struct freertos_addrinfo * pxResult = NULL;
+        struct freertos_addrinfo xHints;
+        struct freertos_addrinfo * pxResult = NULL;
 
-    memset( &xHints, 0, sizeof xHints );
-    xHints.ai_family = FREERTOS_AF_INET6;
+        memset( &xHints, 0, sizeof xHints );
+        xHints.ai_family = FREERTOS_AF_INET6;
 
-    rc = FreeRTOS_getaddrinfo( pcHostName, NULL, &xHints, &pxResult );
+        rc = FreeRTOS_getaddrinfo( pcHostName, NULL, &xHints, &pxResult );
 
-    FreeRTOS_printf( ( "Lookup '%s': %d\n", pcHostName, rc ) );
+        FreeRTOS_printf( ( "Lookup '%s': %d\n", pcHostName, rc ) );
 
-    FreeRTOS_dnsclear();
-    xDNSResult = -2;
-    rc = FreeRTOS_getaddrinfo_a( pcHostName,
-                                 NULL,
-                                 &xHints,
-                                 &pxResult, /* An allocated struct, containing the results. */
-                                 vDNSEvent,
-                                 ( void * ) ulID,
-                                 pdMS_TO_TICKS( 1000U ) );
-    vTaskDelay( pdMS_TO_TICKS( 1000U ) );
-    rc = xDNSResult;
-    FreeRTOS_printf( ( "Lookup '%s': %d\n", pcHostName, rc ) );
-    /*      FreeRTOS_gethostbyname( pcHostName ); */
+        FreeRTOS_dnsclear();
+        xDNSResult = -2;
+        rc = FreeRTOS_getaddrinfo_a( pcHostName,
+                                    NULL,
+                                    &xHints,
+                                    &pxResult, /* An allocated struct, containing the results. */
+                                    vDNSEvent,
+                                    ( void * ) ulID,
+                                    pdMS_TO_TICKS( 1000U ) );
+        vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+        rc = xDNSResult;
+        FreeRTOS_printf( ( "Lookup '%s': %d\n", pcHostName, rc ) );
+        /*      FreeRTOS_gethostbyname( pcHostName ); */
+    }
+    else
+    {
+        FreeRTOS_printf( ( "dns_test: Failed to generate a random Search ID\n" ) );
+    }
 }
 
 void showAddressInfo( struct freertos_addrinfo * pxAddrInfo )

@@ -417,6 +417,7 @@ void setUp( void )
     uxSchedulerSuspended = ( UBaseType_t ) 0;
     is_first_task = true;
     created_tasks = 0;
+    critical_section_counter = 0;
 
     py_operation = dummy_operation;
 }
@@ -2544,6 +2545,36 @@ void test_vTaskResume_fail_task_ready( void )
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
+}
+
+void test_vTaskResume_fail_task_waiting_notify( void )
+{
+    UBaseType_t uxIndexToNotify = 2;
+    TaskHandle_t task_handle;
+
+    create_task_priority = 3;
+    task_handle = create_task();
+    create_task_priority = 5;
+    create_task();
+    ptcb = task_handle;
+    ptcb->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* API Call */
+    vTaskResume( task_handle ); /* not current tcb */
+    /* Validations */
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
+
+    ptcb->ucNotifyState[ uxIndexToNotify ] = taskWAITING_NOTIFICATION;
 }
 
 void test_vTaskResume_fail_task_event_list_not_orphan( void )

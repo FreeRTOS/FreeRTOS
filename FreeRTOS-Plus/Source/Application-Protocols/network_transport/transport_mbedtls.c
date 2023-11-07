@@ -49,6 +49,18 @@
 /* TLS transport header. */
 #include "transport_mbedtls.h"
 
+#if !defined(MBEDTLS_CONFIG_FILE)
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
+#ifdef MBEDTLS_SSL_PROTO_TLS1_3
+    /* MbedTLS Includes */
+    #include "psa/crypto.h"
+    #include "psa/crypto_values.h"
+#endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -480,11 +492,19 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         returnStatus = TLS_TRANSPORT_INSUFFICIENT_MEMORY;
     }
 
+    #ifdef MBEDTLS_USE_PSA_CRYPTO
+        mbedtlsError = psa_crypto_init();
+        if (mbedtlsError != PSA_SUCCESS)
+        {
+            LogError(("Failed to initialize PSA Crypto implementation: %s", (int)mbedtlsError));
+            returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
+        }
+    #endif /* MBEDTLS_USE_PSA_CRYPTO */
+
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         mbedtlsError = setCredentials( &( pTlsTransportParams->sslContext ),
                                        pNetworkCredentials );
-
         if( mbedtlsError != 0 )
         {
             returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;

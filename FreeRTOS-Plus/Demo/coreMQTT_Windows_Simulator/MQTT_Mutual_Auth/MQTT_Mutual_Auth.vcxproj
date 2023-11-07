@@ -234,6 +234,7 @@ xcopy /y /d "..\..\..\ThirdParty\glib\build\subprojects\pcre2-10.42\pcre2-8-0.dl
     <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="..\Common\core_mqtt_config.h" />
     <ClInclude Include="demo_config.h" />
+    <ClInclude Include="sorenCerts.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">

@@ -25,6 +25,8 @@
  *  limitations under the License.
  */
 
+#ifndef __FREERTOS_MBEDTLS_CONFIG__
+#define __FREERTOS_MBEDTLS_CONFIG__
 /**
  * This is an optional version symbol that enables compatibility handling of
  * config files.
@@ -833,7 +835,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256
  *      MBEDTLS_TLS_RSA_WITH_CAMELLIA_128_CBC_SHA
  */
-#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
+/* #define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED */
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
@@ -888,7 +890,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_RSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256
  */
-#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
+/* #define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED */
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
@@ -910,7 +912,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_CBC_SHA256
  */
-#define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+/* #define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED
@@ -3465,7 +3467,7 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-/* #define MBEDTLS_CONFIG_FILE "mbedtls/mbedtls_config.h" */
+#define MBEDTLS_CONFIG_FILE "mbedtls_config_v3.2.1.h"
 
 /**
  * \def MBEDTLS_USER_CONFIG_FILE
@@ -3814,3 +3816,61 @@ void mbedtls_platform_free( void * ptr );
 /* #define MBEDTLS_ECDH_VARIANT_EVEREST_ENABLED */
 
 /** \} name SECTION: Module configuration options */
+
+#ifndef MBEDTLS_SSL_PROTO_TLS1_2
+    #ifdef MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_RSA_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_PSK_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
+
+    #ifdef MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
+        #error This option is undef'd in build_info.h
+    #endif /* MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
+#endif /* MBEDTLS_SSL_PROTO_TLS1_2*/
+
+#ifdef MBEDTLS_USE_PSA_CRYPTO
+    #ifdef MBEDTLS_PSA_CRYPTO_CONFIG
+        #include MBEDTLS_PSA_CRYPTO_CONFIG
+    #else
+        #include "mbedtls/config_psa.h"
+    #endif /* MBEDTLS_PSA_CRYPTO_CONFIG */
+#endif /* MBEDTLS_USE_PSA_CRYPTO */
+
+#include "mbedtls/check_config.h"
+
+#endif /* __FREERTOS_MBEDTLS_CONFIG__*/

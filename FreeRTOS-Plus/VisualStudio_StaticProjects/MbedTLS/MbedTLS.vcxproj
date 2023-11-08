@@ -57,6 +57,8 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\gcm.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hkdf.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hmac_drbg.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\legacy_or_psa.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\lms.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\mbedtls_config.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md5.h" />
@@ -68,6 +70,7 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pk.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs12.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs5.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs7.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_time.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_util.h" />
@@ -107,7 +110,10 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_types.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_values.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\aesni.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_core.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\bn_mul.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\check_crypto_config.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\cipher_wrap.h" />
@@ -117,6 +123,8 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ecp_internal_alt.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ecp_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\entropy_poll.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\hash_info.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\lmots.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\md_wrap.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\mps_common.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\mps_error.h" />
@@ -157,6 +165,9 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1write.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\base64.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_core.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_mod.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\camellia.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ccm.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\chacha20.c" />
@@ -178,8 +189,11 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy_poll.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\gcm.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\hash_info.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\hkdf.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\hmac_drbg.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\lmots.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\lms.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\md.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\md5.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c" />
@@ -193,6 +207,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs12.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs5.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs7.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkparse.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkwrite.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_wrap.c" />
@@ -207,6 +222,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_hash.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_mac.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_pake.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c" />
@@ -335,7 +351,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

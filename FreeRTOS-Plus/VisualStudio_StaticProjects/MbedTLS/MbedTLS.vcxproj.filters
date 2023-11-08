@@ -378,6 +378,30 @@
     <ClInclude Include="mbedtls_config_v3.2.1.h" />
     <ClInclude Include="mbedtls_freertos_port.h" />
     <ClInclude Include="threading_alt.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_core.h">
+      <Filter>MbedTLS Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod.h">
+      <Filter>MbedTLS Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw.h">
+      <Filter>MbedTLS Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\hash_info.h">
+      <Filter>MbedTLS Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\lmots.h">
+      <Filter>MbedTLS Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\legacy_or_psa.h">
+      <Filter>MbedTLS Headers\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\lms.h">
+      <Filter>MbedTLS Headers\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs7.h">
+      <Filter>MbedTLS Headers\mbedtls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c">
@@ -660,5 +684,29 @@
       <Filter>MbedTLS Source</Filter>
     </ClCompile>
     <ClCompile Include="mbedtls_freertos_port.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_core.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_mod.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\hash_info.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\lmots.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\lms.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs7.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_pake.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

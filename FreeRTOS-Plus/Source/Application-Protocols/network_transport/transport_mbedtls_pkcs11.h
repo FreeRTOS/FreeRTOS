@@ -37,6 +37,12 @@
 
 #define MBEDTLS_ALLOW_PRIVATE_ACCESS
 
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
 #include "mbedtls/private_access.h"
 
 /* TCP Sockets Wrapper include.*/
@@ -46,6 +52,7 @@
 #include "transport_interface.h"
 
 /* mbed TLS includes. */
+#include "mbedtls/build_info.h"
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/entropy.h"
 #include "mbedtls/ssl.h"

@@ -164,7 +164,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-TCP\source\include;..\..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\..\ThirdParty\winpcap\include;..\..\ThirdParty\winpcap\include\pcap;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ThirdParty\MbedTLS;..\..\Source\FreeRTOS-Plus-TCP\source\include;..\..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\..\ThirdParty\winpcap\include;..\..\ThirdParty\winpcap\include\pcap;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>

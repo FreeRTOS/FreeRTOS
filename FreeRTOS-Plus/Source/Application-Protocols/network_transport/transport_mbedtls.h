@@ -32,6 +32,22 @@
 #ifndef USING_MBEDTLS
 #define USING_MBEDTLS
 
+/* MBed TLS includes. */
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
+#include "mbedtls/build_info.h"
+#include "mbedtls/ctr_drbg.h"
+#include "mbedtls/entropy.h"
+#include "mbedtls/ssl.h"
+#include "mbedtls/threading.h"
+#include "mbedtls/x509.h"
+#include "mbedtls/error.h"
+
+
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
 /**************************************************/
@@ -75,15 +91,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /* Transport interface include. */
 #include "transport_interface.h"
-
-/* mbed TLS includes. */
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/ssl.h"
-#include "mbedtls/threading.h"
-#include "mbedtls/x509.h"
-#include "mbedtls/error.h"
-#include "mbedtls/build_info.h"
 
 /**
  * @brief Secured connection context.

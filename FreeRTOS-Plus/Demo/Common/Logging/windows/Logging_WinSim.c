@@ -211,7 +211,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
 
             /* Create the Windows event. */
-            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, _T("StdoutLoggingEvent") );
+            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, _T( "StdoutLoggingEvent" ) );
 
             /* Create the thread itself. */
             Win32Thread = CreateThread(

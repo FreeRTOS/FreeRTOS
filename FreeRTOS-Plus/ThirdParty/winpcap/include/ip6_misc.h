@@ -35,7 +35,7 @@
     #endif
 #endif /* IN_MULTICAST */
 
-#define IN_EXPERIMENTAL( a )     ( ( ( ( u_int32_t ) ( a ) ) & 0xf0000000 ) == 0xf0000000 )
+#define IN_EXPERIMENTAL( a )    ( ( ( ( u_int32_t ) ( a ) ) & 0xf0000000 ) == 0xf0000000 )
 
 #define IN_LOOPBACKNET    127
 

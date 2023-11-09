@@ -41,7 +41,7 @@
 #include <winsock2.h>
 #include <windows.h>
 
- /* Windows Crypt api for uxRand() */
+/* Windows Crypt api for uxRand() */
 #include <wincrypt.h>
 
 /* FreeRTOS includes. */

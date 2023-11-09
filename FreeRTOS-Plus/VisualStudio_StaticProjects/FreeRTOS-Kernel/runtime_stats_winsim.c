@@ -46,7 +46,7 @@
 
 #include <winsock2.h>
 
- /* Define _WINSOCKAPI_ to ensure that winsock.h is not included */
+/* Define _WINSOCKAPI_ to ensure that winsock.h is not included */
 #ifndef _WINSOCKAPI_
     #define _WINSOCKAPI_
 #endif

@@ -330,7 +330,7 @@ FREERTOS_IGNORED_FILES = [
     '.project',
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
-    'mbedtls_config_v3.2.1.h',
+    'mbedtls_config_v3.5.0.h',
     'requirements.txt',
     'run-cbmc-proofs.py',
     '.editorconfig',

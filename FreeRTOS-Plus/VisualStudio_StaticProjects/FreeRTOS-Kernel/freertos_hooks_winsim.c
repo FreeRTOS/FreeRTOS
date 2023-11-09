@@ -32,8 +32,16 @@
  * should an assert get hit. */
 #include <intrin.h>
 
-/* Windows Crypt api for uxRand() */
+
+/** Exclude Windows APIs such as Cryptography, DDE, RPC, Shell,
+ * and Windows Sockets. */
+#ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+#endif
+#include <winsock2.h>
 #include <windows.h>
+
+ /* Windows Crypt api for uxRand() */
 #include <wincrypt.h>
 
 /* FreeRTOS includes. */

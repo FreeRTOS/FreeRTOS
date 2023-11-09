@@ -25,7 +25,7 @@
  */
 
 /**
- * @file tls_freertos.c
+ * @file transport_mbedtls.c
  * @brief TLS transport interface implementations. This implementation uses
  * mbedTLS.
  */
@@ -43,12 +43,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* MbedTLS Bio TCP sockets wrapper include. */
-#include "mbedtls_bio_tcp_sockets_wrapper.h"
-
-/* TLS transport header. */
-#include "transport_mbedtls.h"
-
+/* MBedTLS Includes */
 #if !defined(MBEDTLS_CONFIG_FILE)
     #include "mbedtls/mbedtls_config.h"
 #else
@@ -56,10 +51,16 @@
 #endif
 
 #ifdef MBEDTLS_SSL_PROTO_TLS1_3
-    /* MbedTLS Includes */
+    /* MbedTLS PSA Includes */
     #include "psa/crypto.h"
     #include "psa/crypto_values.h"
 #endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
+
+/* MBedTLS Bio TCP sockets wrapper include. */
+#include "mbedtls_bio_tcp_sockets_wrapper.h"
+
+/* TLS transport header. */
+#include "transport_mbedtls.h"
 
 /*-----------------------------------------------------------*/
 

@@ -67,11 +67,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 #include "logging_stack.h"
 
+/************ End of logging configuration ****************/
 
 /* Soren - I put my certs and endpoint in this file just to create this patch */
 #include "sorenCerts.h"
-
-/************ End of logging configuration ****************/
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier

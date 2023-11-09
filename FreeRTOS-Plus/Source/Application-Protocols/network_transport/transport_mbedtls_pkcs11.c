@@ -47,6 +47,19 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
+/* MBedTLS Includes */
+#if !defined(MBEDTLS_CONFIG_FILE)
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
+#ifdef MBEDTLS_SSL_PROTO_TLS1_3
+    /* MbedTLS PSA Includes */
+    #include "psa/crypto.h"
+    #include "psa/crypto_values.h"
+#endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
+
 /* MbedTLS Bio TCP sockets wrapper include. */
 #include "mbedtls_bio_tcp_sockets_wrapper.h"
 
@@ -273,6 +286,15 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Per mbed TLS docs, mbedtls_ssl_config_defaults only fails on memory allocation. */
         returnStatus = TLS_TRANSPORT_INSUFFICIENT_MEMORY;
     }
+
+    #ifdef MBEDTLS_USE_PSA_CRYPTO
+        mbedtlsError = psa_crypto_init();
+        if (mbedtlsError != PSA_SUCCESS)
+        {
+            LogError(("Failed to initialize PSA Crypto implementation: %s", (int)mbedtlsError));
+            returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
+        }
+    #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {

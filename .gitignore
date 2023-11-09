@@ -1,6 +1,8 @@
 # Ignore MacOS file system related.
 **/*.DS_Store*
 
+sorenCerts.h
+
 # Ignore build results
 [Dd]ebug/
 [Dd]ebugPublic/

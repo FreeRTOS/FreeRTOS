@@ -29,9 +29,11 @@
 
 #include <ws2tcpip.h>
 
-#ifndef __MINGW32__
-    #define IN_MULTICAST( a )    IN_CLASSD( a )
-#endif
+#ifndef IN_MULTICAST
+    #ifndef __MINGW32__
+        #define IN_MULTICAST( a )    IN_CLASSD( a )
+    #endif
+#endif /* IN_MULTICAST */
 
 #define IN_EXPERIMENTAL( a )     ( ( ( ( u_int32_t ) ( a ) ) & 0xf0000000 ) == 0xf0000000 )
 

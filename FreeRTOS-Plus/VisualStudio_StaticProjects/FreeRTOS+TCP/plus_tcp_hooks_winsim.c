@@ -35,6 +35,8 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
+/* Function from freertos_hooks_winsim.c */
+extern UBaseType_t uxRand(void);
 /*-----------------------------------------------------------*/
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
@@ -209,6 +211,8 @@ void vPlatformInitIpStack( void )
                                                                             NetworkInterface_t * pxInterface );
             pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
         #else
+            extern NetworkInterface_t* pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                                           NetworkInterface_t * pxInterface);
             pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
         #endif
 

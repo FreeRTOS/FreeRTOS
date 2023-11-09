@@ -110,8 +110,5 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="sorenCerts.h">
-      <Filter>Config</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

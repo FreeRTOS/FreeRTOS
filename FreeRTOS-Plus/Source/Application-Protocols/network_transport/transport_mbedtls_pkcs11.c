@@ -48,7 +48,7 @@
 #include "FreeRTOS.h"
 
 /* MBedTLS Includes */
-#if !defined(MBEDTLS_CONFIG_FILE)
+#if !defined( MBEDTLS_CONFIG_FILE )
     #include "mbedtls/mbedtls_config.h"
 #else
     #include MBEDTLS_CONFIG_FILE
@@ -289,9 +289,10 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
     #ifdef MBEDTLS_USE_PSA_CRYPTO
         mbedtlsError = psa_crypto_init();
-        if (mbedtlsError != PSA_SUCCESS)
+
+        if( mbedtlsError != PSA_SUCCESS )
         {
-            LogError(("Failed to initialize PSA Crypto implementation: %s", (int)mbedtlsError));
+            LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
             returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
         }
     #endif /* MBEDTLS_USE_PSA_CRYPTO */

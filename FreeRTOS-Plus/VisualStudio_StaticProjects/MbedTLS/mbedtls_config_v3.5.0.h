@@ -7,6 +7,7 @@
  *  or disable features selectively, and reduce the global
  *  memory footprint.
  */
+
 /*
  *  Copyright The Mbed TLS Contributors
  *  SPDX-License-Identifier: Apache-2.0
@@ -26,6 +27,7 @@
 
 #ifndef __FREERTOS_MBEDTLS_CONFIG__
 #define __FREERTOS_MBEDTLS_CONFIG__
+
 /**
  * This is an optional version symbol that enables compatibility handling of
  * config files.
@@ -182,7 +184,7 @@
  * Enabling #MBEDTLS_PLATFORM_MEMORY and specifying
  * MBEDTLS_PLATFORM_{CALLOC,FREE}_MACROs will allow you to specify the
  * alternate function at compile time.
-*
+ *
  * An overview of how the value of mbedtls_calloc is determined:
  *
  * - if !MBEDTLS_PLATFORM_MEMORY
@@ -579,7 +581,7 @@ void mbedtls_platform_free( void * ptr );
  * performance if ROM access is slower than RAM access.
  *
  * This option is independent of \c MBEDTLS_AES_FEWER_TABLES.
-  */
+ */
 #define MBEDTLS_AES_ROM_TABLES
 
 /**
@@ -600,7 +602,7 @@ void mbedtls_platform_free( void * ptr );
  * depends on the system and memory details.
  *
  * This option is independent of \c MBEDTLS_AES_ROM_TABLES.
-  */
+ */
 /* #define MBEDTLS_AES_FEWER_TABLES */
 
 /**
@@ -849,7 +851,7 @@ void mbedtls_platform_free( void * ptr );
  * \note  This option only works with the default software implementation of
  *        elliptic curve functionality. It is incompatible with
  *        MBEDTLS_ECP_ALT, MBEDTLS_ECDH_XXX_ALT, MBEDTLS_ECDSA_XXX_ALT.
-*
+ *
  * Requires: MBEDTLS_ECP_C
  *
  * Uncomment this macro to enable restartable ECC computations.
@@ -1134,7 +1136,7 @@ void mbedtls_platform_free( void * ptr );
  * Requires: MBEDTLS_ECJPAKE_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_JPAKE)
  *           SHA-256 (via MBEDTLS_SHA256_C or a PSA driver)
  *           MBEDTLS_ECP_DP_SECP256R1_ENABLED
-*
+ *
  * \warning If SHA-256 is provided only by a PSA driver, you must call
  * psa_crypto_init() before the first hanshake (even if
  * MBEDTLS_USE_PSA_CRYPTO is disabled).
@@ -1336,7 +1338,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * \warning If using a hash that is only provided by PSA drivers, you must
  * call psa_crypto_init() before doing any PKCS#1 v2.1 operation.
-  *
+ *
  * This enables support for RSAES-OAEP and RSASSA-PSS operations.
  */
 #define MBEDTLS_PKCS1_V21
@@ -1418,7 +1420,7 @@ void mbedtls_platform_free( void * ptr );
  * Partition Manager) integration which separates the code into two parts: a
  * NSPE (Non-Secure Process Environment) and an SPE (Secure Process
  * Environment).
-*
+ *
  * If you enable this option, your build environment must include a header
  * file `"crypto_spe.h"` (either in the `psa` subdirectory of the Mbed TLS
  * header files, or in another directory on the compiler's include search
@@ -1599,7 +1601,7 @@ void mbedtls_platform_free( void * ptr );
  * module to perform private key operations instead of performing the
  * operation inside the library.
  *
-* Requires: MBEDTLS_X509_CRT_PARSE_C
+ * Requires: MBEDTLS_X509_CRT_PARSE_C
  */
 /* #define MBEDTLS_SSL_ASYNC_PRIVATE */
 
@@ -1714,7 +1716,7 @@ void mbedtls_platform_free( void * ptr );
  * If you don't need renegotiation, it's probably better to disable it, since
  * it has been associated with security issues in the past and is easy to
  * misuse/misunderstand.
-*
+ *
  * Requires: MBEDTLS_SSL_PROTO_TLS1_2
  *
  * Comment this to disable support for renegotiation.
@@ -1861,24 +1863,24 @@ void mbedtls_platform_free( void * ptr );
 #define MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
 
 /**
-* \def MBEDTLS_SSL_EARLY_DATA
-*
-* Enable support for RFC 8446 TLS 1.3 early data.
-*
-* Requires: MBEDTLS_SSL_SESSION_TICKETS and either
-*           MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_ENABLED or
-*           MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
-*
-* Comment this to disable support for early data. If MBEDTLS_SSL_PROTO_TLS1_3
-* is not enabled, this option does not have any effect on the build.
-*
-* This feature is experimental, not completed and thus not ready for
-* production.
-*
+ * \def MBEDTLS_SSL_EARLY_DATA
+ *
+ * Enable support for RFC 8446 TLS 1.3 early data.
+ *
+ * Requires: MBEDTLS_SSL_SESSION_TICKETS and either
+ *           MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_ENABLED or
+ *           MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
+ *
+ * Comment this to disable support for early data. If MBEDTLS_SSL_PROTO_TLS1_3
+ * is not enabled, this option does not have any effect on the build.
+ *
+ * This feature is experimental, not completed and thus not ready for
+ * production.
+ *
  * \note The maximum amount of early data can be set with
  *       MBEDTLS_SSL_MAX_EARLY_DATA_SIZE.
-*
-*/
+ *
+ */
 /* #define MBEDTLS_SSL_EARLY_DATA */
 
 /**
@@ -2106,7 +2108,7 @@ void mbedtls_platform_free( void * ptr );
  * TLS's X.509 and TLS modules are not ported to PSA yet. However, these parts
  * will still continue to work as usual, so enabling this option should not
  * break backwards compatibility.
-  *
+ *
  * \warning If you enable this option, you need to call `psa_crypto_init()`
  * before calling any function from the SSL/TLS, X.509 or PK modules, except
  * for the various mbedtls_xxx_init() functions which can be called at any time.
@@ -2121,7 +2123,7 @@ void mbedtls_platform_free( void * ptr );
  * \note See docs/use-psa-crypto.md for a complete description this option.
  *
  * Requires: MBEDTLS_PSA_CRYPTO_C.
-  *
+ *
  * Uncomment this to enable internal use of PSA Crypto and new associated APIs.
  */
 #define MBEDTLS_USE_PSA_CRYPTO
@@ -2185,7 +2187,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * See the documentation of `mbedtls_x509_crt_verify_with_ca_cb()` and
  * `mbedtls_ssl_conf_ca_cb()` for more information.
-*
+ *
  * Requires: MBEDTLS_X509_CRT_PARSE_C
  *
  * Uncomment to enable trusted certificate callbacks.
@@ -2600,7 +2602,7 @@ void mbedtls_platform_free( void * ptr );
  * Enable the CTR_DRBG AES-based random generator.
  * The CTR_DRBG generator uses AES-256 by default.
  * To use AES-128 instead, enable \c MBEDTLS_CTR_DRBG_USE_128_BIT_KEY above.
-*
+ *
  * \note AES-128 will be used if \c MBEDTLS_AES_ONLY_128_BIT_KEY_LENGTH is set.
  *
  * \note To achieve a 256-bit security strength with CTR_DRBG,
@@ -2988,7 +2990,7 @@ void mbedtls_platform_free( void * ptr );
  *          library/x509_csr.c
  *
  * Requires: MBEDTLS_BASE64_C
-*           optionally MBEDTLS_MD5_C, or PSA Crypto with MD5 (see below)
+ *           optionally MBEDTLS_MD5_C, or PSA Crypto with MD5 (see below)
  *
  * \warning When parsing password-protected files, if MD5 is provided only by
  * a PSA driver, you must call psa_crypto_init() before the first file.
@@ -3252,7 +3254,7 @@ void mbedtls_platform_free( void * ptr );
  * \def MBEDTLS_SHA224_C
  *
  * Enable the SHA-224 cryptographic hash algorithm.
-  *
+ *
  * Module:  library/sha256.c
  * Caller:  library/md.c
  *          library/ssl_cookie.c
@@ -3265,7 +3267,7 @@ void mbedtls_platform_free( void * ptr );
  * \def MBEDTLS_SHA256_C
  *
  * Enable the SHA-256 cryptographic hash algorithm.
-  *
+ *
  * Module:  library/sha256.c
  * Caller:  library/entropy.c
  *          library/md.c
@@ -3338,7 +3340,7 @@ void mbedtls_platform_free( void * ptr );
  * \def MBEDTLS_SHA384_C
  *
  * Enable the SHA-384 cryptographic hash algorithm.
-  *
+ *
  * Module:  library/sha512.c
  * Caller:  library/md.c
  *          library/psa_crypto_hash.c
@@ -3705,7 +3707,7 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-#define MBEDTLS_CONFIG_FILE "mbedtls_config_v3.5.0.h"
+#define MBEDTLS_CONFIG_FILE    "mbedtls_config_v3.5.0.h"
 
 /**
  * \def MBEDTLS_USER_CONFIG_FILE
@@ -3819,6 +3821,7 @@ void mbedtls_platform_free( void * ptr );
  * only if you have a good reason and know the consequences.
  * \{
  */
+
 /* The Doxygen documentation here is used when a user comments out a
  * setting and runs doxygen themselves. On the other hand, when we typeset
  * the full documentation including disabled settings, the documentation
@@ -3858,6 +3861,7 @@ void mbedtls_platform_free( void * ptr );
 
 /* Platform options */
 /* #define MBEDTLS_PLATFORM_STD_MEM_HDR   <stdlib.h> /**< Header to include if MBEDTLS_PLATFORM_NO_STD_FUNCTIONS is defined. Don't define if no header is needed. */
+
 /** \def MBEDTLS_PLATFORM_STD_CALLOC
  *
  * Default allocator to use, can be undefined.
@@ -3935,6 +3939,7 @@ void mbedtls_platform_free( void * ptr );
 /* #define MBEDTLS_IGNORE_RETURN( result ) ((void) !(result)) */
 
 /* PSA options */
+
 /**
  * Use HMAC_DRBG with the specified hash algorithm for HMAC_DRBG for the
  * PSA crypto subsystem.
@@ -4180,7 +4185,7 @@ void mbedtls_platform_free( void * ptr );
             #error This option is undef'd in build_info.h
         #endif /* MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
     #endif /* MBEDTLS_SSL_PROTO_TLS1_2*/
-#endif
+#endif /* if 0 */
 #ifdef MBEDTLS_USE_PSA_CRYPTO
     #ifdef MBEDTLS_PSA_CRYPTO_CONFIG
         #include MBEDTLS_PSA_CRYPTO_CONFIG

@@ -27,11 +27,11 @@
 #include <stdlib.h>
 #include <string.h>
 
- /* mbed TLS includes. */
+/* mbed TLS includes. */
 #if defined( MBEDTLS_CONFIG_FILE )
-#include MBEDTLS_CONFIG_FILE
+    #include MBEDTLS_CONFIG_FILE
 #else
-#include "mbedtls/mbedtls_config.h"
+    #include "mbedtls/mbedtls_config.h"
 #endif
 #include "mbedtls/entropy.h"
 

@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-Trace\include;..\..\Source\FreeRTOS-Plus-CLI;.\Trace_Recorder_Configuration;..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS;..\..\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

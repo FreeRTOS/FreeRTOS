@@ -25,7 +25,8 @@
 	url = https://github.com/Mbed-TLS/mbedtls.git
 [submodule "FreeRTOS-Plus/Source/Application-Protocols/corePKCS11"]
 	path = FreeRTOS-Plus/Source/corePKCS11
-	url = https://github.com/FreeRTOS/corePKCS11.git
+	url = https://github.com/skptak/corePKCS11.git
+	branch = mbedtls3_5_0Upgrade
 [submodule "FreeRTOS-Plus/Source/AWS/jobs"]
 	path = FreeRTOS-Plus/Source/AWS/jobs
 	url = https://github.com/aws/jobs-for-aws-iot-embedded-sdk.git

@@ -60,7 +60,7 @@ void vAssertCalled( const char * pcFile,
     ( void ) pcFileName;
     ( void ) ulLineNumber;
 
-    printf( "vAssertCalled( %s, %u\n", pcFile, ulLine );
+    printf( "vAssertCalled( %s, %u )\n", pcFile, ulLine );
 
     /* Setting ulBlockVariable to a non-zero value in the debugger will allow
      * this function to be exited. */

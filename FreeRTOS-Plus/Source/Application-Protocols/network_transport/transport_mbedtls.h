@@ -223,4 +223,24 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend );
 
+
+#ifdef MBEDTLS_DEBUG_C
+    /**
+     * @brief Print function for MBedTLS Debugging
+     *
+     *
+     * @param[in] ssl The ssl context pointer.
+     * @param[in] level The debug message error level
+     * @param[in] file The name of the file where the message is from.
+     * @param[in] line The line number the message is from.
+     * @param[in] str The debug message to be printed
+     *
+     * @return void
+     */
+    void mbedtls_string_printf( void* sslContext,
+                                int level,
+                                const char* file,
+                                int line,
+                                const char* str );
+#endif /* MBEDTLS_DEBUG_C */
 #endif /* ifndef USING_MBEDTLS */

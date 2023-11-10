@@ -2631,7 +2631,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * This module provides debugging functions.
  */
-/* #define MBEDTLS_DEBUG_C */
+#define MBEDTLS_DEBUG_C
 
 /**
  * \def MBEDTLS_DES_C

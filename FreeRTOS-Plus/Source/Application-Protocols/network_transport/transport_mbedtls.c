@@ -33,7 +33,7 @@
 #include "logging_levels.h"
 
 #define LIBRARY_LOG_NAME     "MbedtlsTransport"
-#define LIBRARY_LOG_LEVEL    LOG_INFO
+#define LIBRARY_LOG_LEVEL    LOG_DEBUG
 
 #include "logging_stack.h"
 
@@ -55,6 +55,10 @@
     #include "psa/crypto.h"
     #include "psa/crypto_values.h"
 #endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
+
+#ifdef MBEDTLS_DEBUG_C
+    #include "mbedtls/debug.h"
+#endif /* MBEDTLS_DEBUG_C */
 
 /* MBedTLS Bio TCP sockets wrapper include. */
 #include "mbedtls_bio_tcp_sockets_wrapper.h"
@@ -231,6 +235,19 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                                          mbedtls_ctr_drbg_context * pCtrDrbgContext );
 
 /*-----------------------------------------------------------*/
+#ifdef MBEDTLS_DEBUG_C
+    void mbedtls_string_printf(void* sslContext,
+        int level,
+        const char* file,
+        int line,
+        const char* str)
+    {
+        LogDebug(("%s:%d: [%d] %s", file, line, level, str));
+    }
+#endif /* MBEDTLS_DEBUG_C */
+
+/*-----------------------------------------------------------*/
+
 
 static void sslContextInit( SSLContext_t * pSslContext )
 {
@@ -241,6 +258,12 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_pk_init( &( pSslContext->privKey ) );
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
+    #ifdef MBEDTLS_DEBUG_C
+        mbedtls_debug_set_threshold(LIBRARY_LOG_LEVEL);
+        mbedtls_ssl_conf_dbg( &( pSslContext->config ),
+                              mbedtls_string_printf,
+                              NULL );
+    #endif /* MBEDTLS_DEBUG_C */
 }
 /*-----------------------------------------------------------*/
 

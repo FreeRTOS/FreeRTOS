@@ -242,7 +242,8 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                                 int line,
                                 const char * str )
     {
-        LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        //LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        printf( "%s:%d: [%d] %s", file, line, level, str );
     }
 #endif /* MBEDTLS_DEBUG_C */
 

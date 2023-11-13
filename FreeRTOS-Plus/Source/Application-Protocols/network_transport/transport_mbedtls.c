@@ -260,10 +260,13 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
     #ifdef MBEDTLS_DEBUG_C
-        mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL );
-        mbedtls_ssl_conf_dbg( &( pSslContext->config ),
-                              mbedtls_string_printf,
-                              NULL );
+        if( LIBRARY_LOG_LEVEL != 0) {
+
+            mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
+            mbedtls_ssl_conf_dbg( &( pSslContext->config ),
+                                  mbedtls_string_printf,
+                                  NULL );
+    }
     #endif /* MBEDTLS_DEBUG_C */
 }
 /*-----------------------------------------------------------*/
@@ -517,16 +520,6 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         returnStatus = TLS_TRANSPORT_INSUFFICIENT_MEMORY;
     }
 
-    #ifdef MBEDTLS_USE_PSA_CRYPTO
-        mbedtlsError = psa_crypto_init();
-
-        if( mbedtlsError != PSA_SUCCESS )
-        {
-            LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
-            returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
-        }
-    #endif /* MBEDTLS_USE_PSA_CRYPTO */
-
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         mbedtlsError = setCredentials( &( pTlsTransportParams->sslContext ),
@@ -643,6 +636,19 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                     mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
         returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
     }
+
+    #ifdef MBEDTLS_USE_PSA_CRYPTO
+        if( returnStatus == TLS_TRANSPORT_SUCCESS )
+        {
+            mbedtlsError = psa_crypto_init();
+
+            if( mbedtlsError != PSA_SUCCESS )
+            {
+                LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
+                returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
+            }
+        }
+    #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
@@ -856,8 +862,13 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_read." ) );
+            }
             LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),
@@ -915,8 +926,13 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_write." ) );
+            }
             LogDebug( ( "Failed to send data. However, send can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),

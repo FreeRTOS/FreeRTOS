@@ -4669,7 +4669,7 @@ void test_coverage_prvCreateIdleTasks_get_static_memory( void )
     xReturn = prvCreateIdleTasks();
 
     /* Validation. */
-    TEST_ASSERT_EQUAL( pdTRUE, xReturn );   /* Verify this function should return without error. */
+    TEST_ASSERT_EQUAL( pdTRUE, xReturn ); /* Verify this function should return without error. */
 
     /* Verify that the idle tasks TCB and stack buffer are provided by vApplicationGetIdleTaskMemory and
      * vApplicationGetPassiveIdleTaskMemory. */

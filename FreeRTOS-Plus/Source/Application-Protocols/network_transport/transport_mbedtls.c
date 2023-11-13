@@ -242,7 +242,7 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                                 int line,
                                 const char * str )
     {
-        //LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        /*LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) ); */
         printf( "%s:%d: [%d] %s", file, line, level, str );
     }
 #endif /* MBEDTLS_DEBUG_C */
@@ -260,13 +260,13 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
     #ifdef MBEDTLS_DEBUG_C
-        if( LIBRARY_LOG_LEVEL != 0) {
-
+        if( LIBRARY_LOG_LEVEL != 0 )
+        {
             mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
             mbedtls_ssl_conf_dbg( &( pSslContext->config ),
                                   mbedtls_string_printf,
                                   NULL );
-    }
+        }
     #endif /* MBEDTLS_DEBUG_C */
 }
 /*-----------------------------------------------------------*/
@@ -869,6 +869,7 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
             {
                 LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_read." ) );
             }
+
             LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),
@@ -933,6 +934,7 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
             {
                 LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_write." ) );
             }
+
             LogDebug( ( "Failed to send data. However, send can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),

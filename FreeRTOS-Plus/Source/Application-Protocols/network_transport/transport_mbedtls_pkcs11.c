@@ -465,6 +465,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     #endif /* ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH */
 
     uint32_t connectAttempts = 0x0;
+
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Perform the TLS handshake. */
@@ -473,9 +474,9 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             mbedtlsError = mbedtls_ssl_handshake( &( pTlsTransportParams->sslContext.context ) );
             connectAttempts++;
         } while( ( ++connectAttempts < 0x20 ) && (
-                 ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_READ ) ||
-                 ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
-                 ( mbedtlsError == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) ) );
+                     ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_READ ) ||
+                     ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+                     ( mbedtlsError == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) ) );
 
         if( mbedtlsError != 0 )
         {

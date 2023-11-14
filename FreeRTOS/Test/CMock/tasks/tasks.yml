@@ -1,6 +1,7 @@
 :cmock:
   :mock_prefix: mock_
   :when_no_prototypes: :warn
+  :when_ptr: :smart
   :treat_externs: :include
   :treat_inlines: :include
   :enforce_strict_ordering: TRUE

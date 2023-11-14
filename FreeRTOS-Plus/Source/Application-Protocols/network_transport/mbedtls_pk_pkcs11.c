@@ -40,7 +40,22 @@
 #include <string.h>
 
 /* Mbedtls Includes */
-#define MBEDTLS_ALLOW_PRIVATE_ACCESS
+#ifndef MBEDTLS_ALLOW_PRIVATE_ACCESS
+    #define MBEDTLS_ALLOW_PRIVATE_ACCESS
+#endif /* MBEDTLS_ALLOW_PRIVATE_ACCESS */
+
+/* MBedTLS Includes */
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
+#ifdef MBEDTLS_SSL_PROTO_TLS1_3
+    /* MbedTLS PSA Includes */
+    #include "psa/crypto.h"
+    #include "psa/crypto_values.h"
+#endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
 
 #include "mbedtls/pk.h"
 #include "mbedtls/asn1.h"
@@ -52,6 +67,9 @@
 
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
+
+/* PKCS11 Includes */
+#include "pkcs11t.h"
 
 /*-----------------------------------------------------------*/
 
@@ -148,7 +166,7 @@ static int p11_ecdsa_can_do( mbedtls_pk_type_t xType );
 /**
  * @brief Perform an ECDSA verify operation with the given pk context.
  *
- * Validates that the signature given in the pucSig and xSigLen arguments
+ * @note Validates that the signature given in the pucSig and xSigLen arguments
  * matches the hash given in pucHash and xSigLen for the P11EcDsaCtx_t
  * specified in pvCtx.
  *
@@ -1048,6 +1066,11 @@ static CK_RV p11_rsa_ctx_init( void * pvCtx,
     {
         xResult = CKR_FUNCTION_FAILED;
     }
+
+    #ifdef MBEDTLS_USE_PSA_CRYPTO
+        psa_crypto_init();
+        LogError( ( "Failed to initialize PSA Crypto implementation" ) );
+    #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
     /*
      * TODO: corePKCS11 does not allow exporting RSA public attributes.

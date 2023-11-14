@@ -898,7 +898,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_PSK_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/* #define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED
@@ -945,7 +945,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/* #define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
@@ -968,7 +968,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_RSA_PSK_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/* #define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
@@ -993,7 +993,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256
  *      MBEDTLS_TLS_RSA_WITH_CAMELLIA_128_CBC_SHA
  */
-/* #define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
@@ -1050,7 +1050,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_RSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256
  */
-/* #define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
@@ -1074,7 +1074,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_CBC_SHA256
  */
-/* #define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED
@@ -1122,7 +1122,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384
  */
-/* #define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
@@ -1770,7 +1770,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for TLS 1.2 / DTLS 1.2
  */
-/* #define MBEDTLS_SSL_PROTO_TLS1_2 */
+#define MBEDTLS_SSL_PROTO_TLS1_2
 
 /**
  * \def MBEDTLS_SSL_PROTO_TLS1_3
@@ -4194,6 +4194,7 @@ void mbedtls_platform_free( void * ptr );
     #endif /* MBEDTLS_PSA_CRYPTO_CONFIG */
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
+#include "mbedtls/config_adjust_legacy_crypto.h"
 #include "mbedtls/check_config.h"
 
 #endif /* __FREERTOS_MBEDTLS_CONFIG__*/

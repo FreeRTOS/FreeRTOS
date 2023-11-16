@@ -2626,8 +2626,8 @@ void test_vTaskResume_success_task_event_list_orphan( void )
     /* back */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
     /* prvAddTaskToReadyList*/
-    listINSERT_END_Expect( &pxReadyTasksLists[ create_task_priority ],
-                           &ptcb->xStateListItem );
+    listINSERT_END_ExpectWithArray( &pxReadyTasksLists[ 3 ], 0,
+                                    &ptcb->xStateListItem, 0 );
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */

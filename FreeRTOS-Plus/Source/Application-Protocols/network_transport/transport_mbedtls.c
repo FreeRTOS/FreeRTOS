@@ -235,6 +235,7 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                                          mbedtls_ctr_drbg_context * pCtrDrbgContext );
 
 /*-----------------------------------------------------------*/
+
 #ifdef MBEDTLS_DEBUG_C
     void mbedtls_string_printf( void * sslContext,
                                 int level,
@@ -248,7 +249,6 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
 #endif /* MBEDTLS_DEBUG_C */
 
 /*-----------------------------------------------------------*/
-
 
 static void sslContextInit( SSLContext_t * pSslContext )
 {

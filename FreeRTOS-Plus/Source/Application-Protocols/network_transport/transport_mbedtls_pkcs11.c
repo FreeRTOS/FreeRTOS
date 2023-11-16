@@ -220,6 +220,19 @@ static int32_t privateKeySigningCallback( void * pvContext,
 
 /*-----------------------------------------------------------*/
 
+#ifdef MBEDTLS_DEBUG_C
+    void mbedtls_string_printf( void * sslContext,
+                                int level,
+                                const char * file,
+                                int line,
+                                const char * str )
+    {
+        LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+    }
+#endif /* MBEDTLS_DEBUG_C */
+
+/*-----------------------------------------------------------*/
+
 static void sslContextInit( SSLContext_t * pSslContext )
 {
     configASSERT( pSslContext != NULL );
@@ -228,6 +241,15 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_x509_crt_init( &( pSslContext->rootCa ) );
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
+    #ifdef MBEDTLS_DEBUG_C
+        if( LIBRARY_LOG_LEVEL != 0 )
+        {
+            mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
+            mbedtls_ssl_conf_dbg( &( pSslContext->config ),
+                                  mbedtls_string_printf,
+                                  NULL );
+        }
+    #endif /* MBEDTLS_DEBUG_C */
 
     xInitializePkcs11Session( &( pSslContext->xP11Session ) );
     C_GetFunctionList( &( pSslContext->pxP11FunctionList ) );

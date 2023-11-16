@@ -4676,6 +4676,6 @@ void test_coverage_prvCreateIdleTasks_get_static_memory( void )
     for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
     {
         TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ], &xIdleTaskTCBs[ xCoreID ] );
-        TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ].pxStack, &uxIdleTaskStacks[ xCoreID ][ 0 ] );
+        TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ]->pxStack, &uxIdleTaskStacks[ xCoreID ][ 0 ] );
     }
 }

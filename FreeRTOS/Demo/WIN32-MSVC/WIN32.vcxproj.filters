@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -221,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h">
       <Filter>Configuration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h">
-      <Filter>Demo App Source\FreeRTOS+Trace Recorder\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\Include\trcRecorder.h">
       <Filter>Demo App Source\FreeRTOS+Trace Recorder\include</Filter>

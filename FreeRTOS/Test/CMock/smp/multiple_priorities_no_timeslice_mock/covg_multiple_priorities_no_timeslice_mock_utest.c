@@ -1266,7 +1266,7 @@ void test_coverage_xTaskGetSchedulerState_scheduler_not_running_and_suspended( v
  *
  * All the tasks excepts idle tasks are in suspended list. The system can stay in
  * a low power state. This is a regression test for SMP to ensure uxNonApplicationTasks
- * is set to configNUMBER_OF_CORES in the implemenatation.
+ * is set to configNUMBER_OF_CORES in the implementation.
  *
  * <b>Coverage</b>
  * @code{c}

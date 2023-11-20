@@ -70,6 +70,7 @@ extern List_t xDelayedTaskList1;
 extern List_t xDelayedTaskList2;
 extern List_t * pxDelayedTaskList;
 extern List_t * pxOverflowDelayedTaskList;
+extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 extern void prvAddNewTaskToReadyList( TCB_t * pxNewTCB );
@@ -83,9 +84,13 @@ extern void prvCheckTasksWaitingTermination( void );
 extern void prvDeleteTCB( TCB_t * pxTCB );
 extern TCB_t * prvSearchForNameWithinSingleList( List_t * pxList,
                                                  const char pcNameToQuery[] );
+extern BaseType_t prvCreateIdleTasks( void );
 
 /* ==============================  Global VARIABLES ============================== */
 TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ] = { NULL };
+
+static StaticTask_t xIdleTaskTCBs[ configNUMBER_OF_CORES ];
+static StackType_t uxIdleTaskStacks[ configNUMBER_OF_CORES ][ configMINIMAL_STACK_SIZE ];
 
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
@@ -175,19 +180,24 @@ static void prvInitialiseTestStack( TCB_t * pxTCB,
 
     ( void ) pxTopOfStack;
 }
-
 /* ============================  FreeRTOS static allocate function  ============================ */
 
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize,
-                                    BaseType_t xCoreId )
+                                    uint32_t * pulIdleTaskStackSize )
 {
-    static StaticTask_t xIdleTaskTCBs[ configNUMBER_OF_CORES ];
-    static StackType_t uxIdleTaskStacks[ configNUMBER_OF_CORES ][ configMINIMAL_STACK_SIZE ];
+    *ppxIdleTaskTCBBuffer = &( xIdleTaskTCBs[ 0 ] );
+    *ppxIdleTaskStackBuffer = &( uxIdleTaskStacks[ 0 ][ 0 ] );
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
 
-    *ppxIdleTaskTCBBuffer = &( xIdleTaskTCBs[ xCoreId ] );
-    *ppxIdleTaskStackBuffer = &( uxIdleTaskStacks[ xCoreId ][ 0 ] );
+void vApplicationGetPassiveIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                           StackType_t ** ppxIdleTaskStackBuffer,
+                                           uint32_t * pulIdleTaskStackSize,
+                                           BaseType_t xPassiveIdleTaskIndex )
+{
+    *ppxIdleTaskTCBBuffer = &( xIdleTaskTCBs[ xPassiveIdleTaskIndex + 1 ] );
+    *ppxIdleTaskStackBuffer = &( uxIdleTaskStacks[ xPassiveIdleTaskIndex + 1 ][ 0 ] );
     *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 
@@ -4624,4 +4634,48 @@ void test_coverage_prvSearchForNameWithinSingleList_long_task_name( void )
 
     /* Validation. */
     TEST_ASSERT_EQUAL( NULL, pReturnedTCB );
+}
+
+/**
+ * @brief prvCreateIdleTasks - get static idle task memory.
+ *
+ * Verify get static idle task memory is correct.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configNUMBER_OF_CORES == 1 )
+ *     ...
+ * #else
+ * {
+ *     if( xCoreID == 0 )
+ *     {
+ *         vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &ulIdleTaskStackSize );
+ *     }
+ *     else
+ *     {
+ *         vApplicationGetPassiveIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &ulIdleTaskStackSize, xCoreID - 1 );
+ *     }
+ * }
+ * #endif
+ * @endcode
+ * ( xCoreID == 0 ) both true and false.
+ */
+void test_coverage_prvCreateIdleTasks_get_static_memory( void )
+{
+    BaseType_t xReturn;
+    BaseType_t xCoreID;
+
+    /* API call. */
+    xReturn = prvCreateIdleTasks();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( pdTRUE, xReturn ); /* Verify this function should return without error. */
+
+    /* Verify that the idle tasks TCB and stack buffer are provided by vApplicationGetIdleTaskMemory and
+     * vApplicationGetPassiveIdleTaskMemory. */
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ], &xIdleTaskTCBs[ xCoreID ] );
+        TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ]->pxStack, &uxIdleTaskStacks[ xCoreID ][ 0 ] );
+    }
 }

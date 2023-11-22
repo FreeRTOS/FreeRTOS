@@ -24,8 +24,8 @@ Global
 		{7260CB0D-0BBF-4DAC-91D9-D091022C1F9A}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
 		{7260CB0D-0BBF-4DAC-91D9-D091022C1F9A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7260CB0D-0BBF-4DAC-91D9-D091022C1F9A}.Debug|Win32.Build.0 = Debug|Win32
-		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.ActiveCfg = Debug|Win32
-		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.Build.0 = Debug|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.Build.0 = Debug|Win32
 		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32

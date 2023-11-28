@@ -16,17 +16,10 @@
 extern "C" {
 #endif
 
-/** Exclude Windows APIs such as Cryptography, DDE, RPC, Shell,
-* and Windows Sockets. */
-#ifndef WIN32_LEAN_AND_MEAN
-    #define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <winsock2.h>
-
-/* Define _WINSOCKAPI_ to ensure that winsock.h is not included */
-#ifndef _WINSOCKAPI_
-    #define _WINSOCKAPI_
+#ifdef WIN32_LEAN_AND_MEAN
+    #include <winsock2.h>
+#else
+    #include <winsock.h>
 #endif
 
 

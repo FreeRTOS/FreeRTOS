@@ -38,15 +38,11 @@
     #define SIZEOF_LONG_LONG    8
 #endif
 
-/*
- * Avoids a compiler warning in case this was already defined
- * (someone defined _WINSOCKAPI_ when including 'windows.h', in order
- * to prevent it from including 'winsock.h')
- */
-#ifdef _WINSOCKAPI_
-    #undef _WINSOCKAPI_
+#ifdef WIN32_LEAN_AND_MEAN
+    #include <winsock2.h>
+#else
+    #include <winsock.h>
 #endif
-#include <winsock2.h>
 
 #include <fcntl.h>
 

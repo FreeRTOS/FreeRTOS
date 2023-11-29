@@ -67,7 +67,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 #include "logging_stack.h"
 
-#include "sorenCerts.h"
 /************ End of logging configuration ****************/
 
 /**
@@ -82,7 +81,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigCLIENT_IDENTIFIER    "insert here."
  */
-#define democonfigCLIENT_IDENTIFIER    sorenClient_Identifier
+
 /**
  * @brief Endpoint of the MQTT broker to connect to.
  *
@@ -97,7 +96,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
-#define democonfigMQTT_BROKER_ENDPOINT  sorenAWSIoTEndpoint
+
 /**
  * @brief The port to use for the demo.
  *
@@ -108,7 +107,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigMQTT_BROKER_PORT    "...insert here..."
  */
-#define democonfigMQTT_BROKER_PORT 8883
+
 /**
  * @brief Server's root CA certificate.
  *
@@ -126,7 +125,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigROOT_CA_PEM    "...insert here..."
  */
-#define democonfigROOT_CA_PEM AmazonRootCA1PEM
+
 /**
  * @brief Set the stack size of the main demo task.
  *

@@ -33,7 +33,10 @@
 #include "logging_levels.h"
 
 #define LIBRARY_LOG_NAME     "PkcsTlsTransport"
-#define LIBRARY_LOG_LEVEL    LOG_INFO
+
+#ifndef LIBRARY_LOG_LEVEL 
+    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+#endif /* LIBRARY_LOG_LEVEL */
 
 #include "logging_stack.h"
 

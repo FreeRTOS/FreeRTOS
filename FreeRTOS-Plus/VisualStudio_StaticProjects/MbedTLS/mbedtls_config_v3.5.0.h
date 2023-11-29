@@ -3899,8 +3899,8 @@ void mbedtls_platform_free( void * ptr );
 
 /* To use the following function macros, MBEDTLS_PLATFORM_C must be enabled. */
 /* MBEDTLS_PLATFORM_XXX_MACRO and MBEDTLS_PLATFORM_XXX_ALT cannot both be defined */
-/* #define MBEDTLS_PLATFORM_CALLOC_MACRO        calloc /**< Default allocator macro to use, can be undefined. See MBEDTLS_PLATFORM_STD_CALLOC for requirements. */
-/* #define MBEDTLS_PLATFORM_FREE_MACRO            free /**< Default free macro to use, can be undefined. See MBEDTLS_PLATFORM_STD_FREE for requirements. */
+#define MBEDTLS_PLATFORM_CALLOC_MACRO          mbedtls_platform_calloc /**< Default allocator macro to use, can be undefined. See MBEDTLS_PLATFORM_STD_CALLOC for requirements. */
+#define MBEDTLS_PLATFORM_FREE_MACRO            mbedtls_platform_free /**< Default free macro to use, can be undefined. See MBEDTLS_PLATFORM_STD_FREE for requirements. */
 /* #define MBEDTLS_PLATFORM_EXIT_MACRO            exit /**< Default exit macro to use, can be undefined */
 /* #define MBEDTLS_PLATFORM_SETBUF_MACRO      setbuf /**< Default setbuf macro to use, can be undefined */
 /* #define MBEDTLS_PLATFORM_TIME_MACRO            time /**< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled */
@@ -4186,6 +4186,7 @@ void mbedtls_platform_free( void * ptr );
         #endif /* MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
     #endif /* MBEDTLS_SSL_PROTO_TLS1_2*/
 #endif /* if 0 */
+
 #ifdef MBEDTLS_USE_PSA_CRYPTO
     #ifdef MBEDTLS_PSA_CRYPTO_CONFIG
         #include MBEDTLS_PSA_CRYPTO_CONFIG
@@ -4195,6 +4196,7 @@ void mbedtls_platform_free( void * ptr );
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
 #include "mbedtls/config_adjust_legacy_crypto.h"
+
 #include "mbedtls/check_config.h"
 
 #endif /* __FREERTOS_MBEDTLS_CONFIG__*/

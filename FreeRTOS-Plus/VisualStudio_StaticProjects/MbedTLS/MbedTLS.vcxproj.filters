@@ -467,7 +467,7 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_values.h">
       <Filter>MbedTLS Headers\psa</Filter>
     </ClInclude>
-    <ClInclude Include="mbedtls_config_v3.5.0.h" />
+    <ClInclude Include="mbedtls_config_v3.5.1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mbedtls_freertos_port.c" />

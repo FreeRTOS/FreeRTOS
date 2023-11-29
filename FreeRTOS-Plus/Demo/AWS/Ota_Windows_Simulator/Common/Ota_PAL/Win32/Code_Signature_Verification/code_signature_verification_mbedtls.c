@@ -40,7 +40,7 @@
 
 /* mbedTLS includes. */
 #if !defined( MBEDTLS_CONFIG_FILE )
-    #include "mbedtls_config_v3.5.0.h"
+    #include "mbedtls_config_v3.5.1.h"
 #else
     #include MBEDTLS_CONFIG_FILE
 #endif

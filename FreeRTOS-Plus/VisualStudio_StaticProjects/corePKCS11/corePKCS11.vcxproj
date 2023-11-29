@@ -124,7 +124,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\corePKCS11\source\include;..\..\Source\corePKCS11\source\portable\os;..\..\Source\corePKCS11\source\portable\os\freertos_winsim;..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -138,7 +138,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\corePKCS11\source\include;..\..\Source\corePKCS11\source\portable\os;..\..\Source\corePKCS11\source\portable\os\freertos_winsim;..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -154,7 +154,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\corePKCS11\source\include;..\..\Source\corePKCS11\source\portable\os;..\..\Source\corePKCS11\source\portable\os\freertos_winsim;..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -170,7 +170,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\corePKCS11\source\include;..\..\Source\corePKCS11\source\portable\os;..\..\Source\corePKCS11\source\portable\os\freertos_winsim;..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -184,7 +184,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\corePKCS11\source\include;..\..\Source\corePKCS11\source\portable\os;..\..\Source\corePKCS11\source\portable\os\freertos_winsim;..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -200,7 +200,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\Source\corePKCS11\source\include;..\..\Source\corePKCS11\source\portable\os;..\..\Source\corePKCS11\source\portable\os\freertos_winsim;..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

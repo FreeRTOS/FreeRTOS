@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\Demo\Common\coreMQTT_Agent_Interface\include;.\subscription-manager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -101,7 +101,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\Demo\Common\coreMQTT_Agent_Interface\include;.\subscription-manager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -116,7 +116,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\Demo\Common\coreMQTT_Agent_Interface\include;.\subscription-manager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -131,7 +131,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\Demo\Common\coreMQTT_Agent_Interface\include;.\subscription-manager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

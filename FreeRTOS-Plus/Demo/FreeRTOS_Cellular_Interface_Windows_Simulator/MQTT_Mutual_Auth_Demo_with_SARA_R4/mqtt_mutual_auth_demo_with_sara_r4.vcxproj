@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private;..\..\..\Source\FreeRTOS-Cellular-Interface\source\interface</AdditionalIncludeDirectories>
     </ClCompile>
@@ -102,7 +102,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private;..\..\..\Source\FreeRTOS-Cellular-Interface\source\interface</AdditionalIncludeDirectories>
     </ClCompile>
@@ -118,7 +118,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private;..\..\..\Source\FreeRTOS-Cellular-Interface\source\interface</AdditionalIncludeDirectories>
     </ClCompile>
@@ -133,7 +133,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.0.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common;..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private;..\..\..\Source\FreeRTOS-Cellular-Interface\source\interface</AdditionalIncludeDirectories>
     </ClCompile>

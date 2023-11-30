@@ -35,7 +35,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 #include "task.h"
@@ -44,6 +43,7 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 #include "TCPEchoClient_SingleTasks.h"
+#include "CMSIS/CMSDK_CM3.h"
 
 /* Echo client task parameters  */
 #define mainECHO_CLIENT_TASK_STACK_SIZE     ( configMINIMAL_STACK_SIZE * 2 )                /* Not used in the linux port. */
@@ -161,6 +161,9 @@ void main_tcp_echo_client_tasks( void )
 
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
+
+    /* Set Ethernet interrupt priority to configMAC_INTERRUPT_PRIORITY. */
+    NVIC_SetPriority( ETHERNET_IRQn, configMAC_INTERRUPT_PRIORITY );
 
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         /* Initialise the interface descriptor for WinPCap. */

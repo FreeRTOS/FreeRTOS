@@ -67,6 +67,18 @@ int suiteTearDown( int numFailures )
 
 /* ==========================  Helper functions =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* ==========================  Test Cases =========================== */
 
 /**
@@ -163,6 +175,8 @@ void test_macro_xQueueReset_tasks_waiting_higher_priority( void )
     /* Insert an item into the event list */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
     td_task_addFakeTaskWaitingToSendToQueue( xQueue );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     TEST_ASSERT_EQUAL( pdTRUE, xQueueReset( xQueue ) );
 

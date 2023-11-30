@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        ".cSpellWords.txt": "magic",
+        "mbedtls_pkcs11.h": "c",
+        "crypto_types.h": "c",
+        "crypto_values.h": "c"
+    }
+}

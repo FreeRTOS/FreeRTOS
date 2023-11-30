@@ -19,9 +19,9 @@
 ### List of Objects: adding '"pollq.o"'
 ### List of Objects: adding '"semtest.o"'
 ### ADS-LD Command completed:
---device DARMP "startup.o" "partest.o" "main.o" "serial.o" "serialisr.o" "tasks.o" "list.o" "queue.o" "port.o" "heap_2.o" ".\portasm.o" "flash.o" "comtest.o" "blockq.o" "dynamic.o" "pollq.o" "semtest.o" --strict --scatter "RTOSDemo.sct" 
---autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
---info sizes --info totals --info unused --info veneers 
+--device DARMP "startup.o" "partest.o" "main.o" "serial.o" "serialisr.o" "tasks.o" "list.o" "queue.o" "port.o" "heap_2.o" ".\portasm.o" "flash.o" "comtest.o" "blockq.o" "dynamic.o" "pollq.o" "semtest.o" --strict --scatter "RTOSDemo.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
  --list ".\RTOSDemo.map" -o "RTOSDemo.axf"### Preparing Environment (PrepEnvAds)
 ### ADS-LD Output File: 'RTOSDemo.axf'
 ### ADS-LD Command File: 'RTOSDemo.lnp'

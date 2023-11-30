@@ -155,6 +155,9 @@
 /* Set configUSE_MPU_WRAPPERS_V1 to 0 to use new MPU wrapper.
  * See https://freertos.org/a00110.html#configUSE_MPU_WRAPPERS_V1 for details. */
 #define configUSE_MPU_WRAPPERS_V1                       ( 0 )
+/* Set configENABLE_ACCESS_CONTROL_LIST to 1 to use access control list.
+ * See https://freertos.org/a00110.html#configENABLE_ACCESS_CONTROL_LIST for details. */
+#define configENABLE_ACCESS_CONTROL_LIST		( 1 )
 /* See https://freertos.org/a00110.html#configPROTECTED_KERNEL_OBJECT_POOL_SIZE for details. */
 #define configPROTECTED_KERNEL_OBJECT_POOL_SIZE         ( 150 )
 /* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */

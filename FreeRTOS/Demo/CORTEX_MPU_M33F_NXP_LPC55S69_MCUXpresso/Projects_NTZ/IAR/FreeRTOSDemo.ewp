@@ -70,7 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>9.32.2.57275</state>
+                    <state>9.30.1.50052</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -622,6 +622,7 @@
                 <option>
                     <name>AUserIncludes</name>
                     <state>$PROJ_DIR$\Config</state>
+                    <state>$PROJ_DIR$\..\..\..\..\Source\include</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1136,6 +1137,9 @@
                 <group>
                     <name>ARM_CM33_NTZ</name>
                     <file>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM33_NTZ\non_secure\mpu_wrappers_v2_asm.S</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM33_NTZ\non_secure\port.c</name>
                     </file>
                     <file>
@@ -1143,9 +1147,6 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM33_NTZ\non_secure\portasm.s</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM33_NTZ\non_secure\mpu_wrappers_v2_asm.S</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM33_NTZ\non_secure\portmacro.h</name>

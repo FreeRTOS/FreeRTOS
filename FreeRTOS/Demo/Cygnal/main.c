@@ -27,17 +27,17 @@
 /*
  * Creates the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- * 
+ *
  * Main. c also creates four other tasks:
- * 
+ *
  * 1) vErrorChecks()
- * This only executes every few seconds but has the highest priority so is 
- * guaranteed to get processor time.  Its main function is to check that all 
+ * This only executes every few seconds but has the highest priority so is
+ * guaranteed to get processor time.  Its main function is to check that all
  * the standard demo application tasks are still operational and have not
  * experienced any errors.  vErrorChecks() will toggle the on board LED
  * every mainNO_ERROR_FLASH_PERIOD milliseconds if none of the demo application
  * tasks have reported an error.  Should any task report an error at any time
- * the rate at which the on board LED is toggled is increased to 
+ * the rate at which the on board LED is toggled is increased to
  * mainERROR_FLASH_PERIOD - providing visual feedback that something has gone
  * wrong.
  *
@@ -129,7 +129,7 @@ values to check for in the DPH, DPL and B registers. */
 
 /* Macro that lets vErrorChecks() know that one of the tasks defined in
 main. c has detected an error.  A critical region is used around xLatchError
-as it is accessed from vErrorChecks(), which has a higher priority. */ 
+as it is accessed from vErrorChecks(), which has a higher priority. */
 #define mainLATCH_ERROR()			\
 {									\
 	portENTER_CRITICAL();			\
@@ -138,37 +138,37 @@ as it is accessed from vErrorChecks(), which has a higher priority. */
 }
 
 /*
- * Setup the Cygnal microcontroller for its fastest operation. 
+ * Setup the Cygnal microcontroller for its fastest operation.
  */
 static void prvSetupSystemClock( void );
 
 /*
- * Setup the peripherals, including the on board LED. 
+ * Setup the peripherals, including the on board LED.
  */
 static void prvSetupHardware( void );
 
 /*
- * Toggle the state of the on board LED. 
+ * Toggle the state of the on board LED.
  */
 static void prvToggleOnBoardLED( void );
 
 /*
- * See comments at the top of the file for details. 
+ * See comments at the top of the file for details.
  */
 static void vErrorChecks( void *pvParameters );
 
 /*
- * See comments at the top of the file for details. 
+ * See comments at the top of the file for details.
  */
 static void vRegisterCheck( void *pvParameters );
 
 /*
- * See comments at the top of the file for details. 
+ * See comments at the top of the file for details.
  */
 static void vFLOPCheck1( void *pvParameters );
 
 /*
- * See comments at the top of the file for details. 
+ * See comments at the top of the file for details.
  */
 static void vFLOPCheck2( void *pvParameters );
 
@@ -179,7 +179,7 @@ static portBASE_TYPE xLatchedError = pdFALSE;
 /*-----------------------------------------------------------*/
 
 /*
- * Starts all the other tasks, then starts the scheduler. 
+ * Starts all the other tasks, then starts the scheduler.
  */
 void main( void )
 {
@@ -206,7 +206,7 @@ void main( void )
 		xTaskCreate( vFLOPCheck1, "FLOP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, ( TaskHandle_t * ) NULL );
 		xTaskCreate( vFLOPCheck2, "FLOP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, ( TaskHandle_t * ) NULL );
 	}
-	#endif 
+	#endif
 
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, ( TaskHandle_t * ) NULL );
 
@@ -245,7 +245,7 @@ unsigned char ucOriginalSFRPage;
 	/* Set the on board LED to push pull. */
 	P1MDOUT |= mainPORT_1_BIT_6;
 
-	/* Setup the cross bar to enable serial comms here as it is not part of the 
+	/* Setup the cross bar to enable serial comms here as it is not part of the
 	standard 8051 setup and therefore is not in the driver code. */
 	XBR0 |= mainENABLE_COMS;
 	P0MDOUT |= mainCOMS_LINES_TO_PUSH_PULL;
@@ -331,22 +331,22 @@ static void prvToggleOnBoardLED( void )
 /*-----------------------------------------------------------*/
 
 /*
- * See the documentation at the top of this file. 
+ * See the documentation at the top of this file.
  */
 static void vErrorChecks( void *pvParameters )
 {
 portBASE_TYPE xErrorHasOccurred = pdFALSE;
-	
+
 	/* Just to prevent compiler warnings. */
 	( void ) pvParameters;
-	
+
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error.   The delay period depends on whether an error
 	has ever been detected. */
 	for( ;; )
 	{
 		if( xLatchedError == pdFALSE )
-		{		
+		{
 			/* No errors have been detected so delay for a longer period.  The
 			on board LED will get toggled every mainNO_ERROR_FLASH_PERIOD ms. */
 			vTaskDelay( mainNO_ERROR_FLASH_PERIOD );
@@ -359,8 +359,8 @@ portBASE_TYPE xErrorHasOccurred = pdFALSE;
 			vTaskDelay( mainERROR_FLASH_PERIOD );
 		}
 
-		
-		
+
+
 		/* Check the demo application tasks for errors. */
 
 		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
@@ -383,7 +383,7 @@ portBASE_TYPE xErrorHasOccurred = pdFALSE;
 			xErrorHasOccurred = pdTRUE;
 		}
 
-		/* If an error has occurred, latch it to cause the LED flash rate to 
+		/* If an error has occurred, latch it to cause the LED flash rate to
 		increase. */
 		if( xErrorHasOccurred == pdTRUE )
 		{
@@ -391,7 +391,7 @@ portBASE_TYPE xErrorHasOccurred = pdFALSE;
 		}
 
 		/* Toggle the LED to indicate the completion of a check cycle.  The
-		frequency of check cycles is dependent on whether or not we have 
+		frequency of check cycles is dependent on whether or not we have
 		latched an error. */
 		prvToggleOnBoardLED();
 	}
@@ -458,7 +458,7 @@ volatile portFLOAT fVal1, fVal2, fResult;
 /*-----------------------------------------------------------*/
 
 /*
- * See the documentation at the top of this file. 
+ * See the documentation at the top of this file.
  */
 static void vRegisterCheck( void *pvParameters )
 {
@@ -550,7 +550,7 @@ static void vRegisterCheck( void *pvParameters )
 		if( B != 0x01 )
 		{
 			mainLATCH_ERROR();
-		}			
+		}
 	}
 }
 

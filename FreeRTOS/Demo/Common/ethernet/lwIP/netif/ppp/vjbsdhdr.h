@@ -20,7 +20,7 @@ struct ip
 #if BYTE_ORDER == LITTLE_ENDIAN
 	unsigned ip_hl:4,				/* header length */
 		ip_v:4;						/* version */
-#elif BYTE_ORDER == BIG_ENDIAN 
+#elif BYTE_ORDER == BIG_ENDIAN
 	unsigned ip_v:4,					/* version */
 		ip_hl:4;					/* header length */
 #else
@@ -48,7 +48,7 @@ typedef u32_t tcp_seq;
  * Per RFC 793, September, 1981.
  */
 PACK_STRUCT_BEGIN
-struct tcphdr  
+struct tcphdr
 {
 	u_short	th_sport;		/* source port */
 	u_short	th_dport;		/* destination port */
@@ -61,7 +61,7 @@ struct tcphdr
 	unsigned	th_x2:4,		/* (unused) */
 			th_off:4;		/* data offset */
 #endif
-#if BYTE_ORDER == BIG_ENDIAN 
+#if BYTE_ORDER == BIG_ENDIAN
 	unsigned	th_off:4,		/* data offset */
 			th_x2:4;		/* (unused) */
 #endif

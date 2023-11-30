@@ -7,18 +7,18 @@
  *
  */
 /*******************************************************************************
- * 
+ *
  * file name : mpfs-lim-lma-scratchpad-vma.ld
  * Used when debugging code. The debugger loads the code to LIM.
  * Code starts from LIM and relocates itself to an L2 cache scratchpad mapped in
  * the Zero Device address range.
- * 
+ *
  * You can find details on the PolarFireSoC Memory map in the mpfs-memory-hierarchy.md
  * which can be found under the link below:
  * https://github.com/polarfire-soc/polarfire-soc-documentation
- * 
+ *
  */
- 
+
 OUTPUT_ARCH( "riscv" )
 ENTRY(_start)
 
@@ -29,9 +29,9 @@ ENTRY(_start)
 The MSS reset vector for each hart is stored securely in the MPFS.
 The most common usage will be where the reset vector for each hart will be set
 to the start of the envm at address 0x2022_0100, giving 128K-256B of contiguous
-non-volatile storage. Normally this is where the initial boot-loader will 
-reside. (Note: The first 256B page of envm is used for metadata associated with 
-secure boot. When not using secure boot (mode 0,1), this area is still reserved 
+non-volatile storage. Normally this is where the initial boot-loader will
+reside. (Note: The first 256B page of envm is used for metadata associated with
+secure boot. When not using secure boot (mode 0,1), this area is still reserved
 by convention. It allows easier transition from non-secure to secure boot flow
 during the development process.
 
@@ -40,7 +40,7 @@ during the development process.
 MEMORY
 {
     envm (rx) : ORIGIN  = 0x20220100, LENGTH = 128k - 0x100
-    dtim (rwx) : ORIGIN  = 0x01000000, LENGTH = 7k       
+    dtim (rwx) : ORIGIN  = 0x01000000, LENGTH = 7k
     e51_itim (rwx)     : ORIGIN = 0x01800000, LENGTH = 28k
     u54_1_itim (rwx)   : ORIGIN = 0x01808000, LENGTH = 28k
     u54_2_itim (rwx)   : ORIGIN = 0x01810000, LENGTH = 28k
@@ -49,7 +49,7 @@ MEMORY
     l2lim (rwx)        : ORIGIN = 0x08000000, LENGTH = 256k
     scratchpad(rwx)    : ORIGIN = 0x0A000000, LENGTH = 256k
     /* This 1k of DTIM is used to run code when switching the envm clock */
-    switch_code (rx) :      ORIGIN = 0x01001c00, LENGTH = 1k     
+    switch_code (rx) :      ORIGIN = 0x01001c00, LENGTH = 1k
     /* DDR sections example */
     ddr_cached_32bit (rwx) : ORIGIN  = 0x80000000, LENGTH = 768M
     ddr_non_cached_32bit (rwx) : ORIGIN  = 0xC0000000, LENGTH = 256M
@@ -66,31 +66,31 @@ HEAP_SIZE = 8k;               /* needs to be calculated for your application if 
  */
 SIZE_OF_COMMON_HART_MEM = 4k;
 
-/* 
- * The stack size needs to be calculated for your                                
- * application. It must be Must be aligned                                       
- * Also Thread local storage (AKA hart local storage) is allocated for each hart 
- * as part of the stack                                                          
- * So the memory map will look like once apportion in startup code:              
- * stack hart0  Actual Stack size = (STACK_SIZE_PER_HART - HLS_DEBUG_AREA_SIZE)  
- * TLS hart 0                                                                    
- * stack hart1                                                                   
- * TLS hart 1                                                                    
- * etc                                                                           
- * note: HLS_DEBUG_AREA_SIZE is defined in mss_sw_config.h                       
+/*
+ * The stack size needs to be calculated for your
+ * application. It must be Must be aligned
+ * Also Thread local storage (AKA hart local storage) is allocated for each hart
+ * as part of the stack
+ * So the memory map will look like once apportion in startup code:
+ * stack hart0  Actual Stack size = (STACK_SIZE_PER_HART - HLS_DEBUG_AREA_SIZE)
+ * TLS hart 0
+ * stack hart1
+ * TLS hart 1
+ * etc
+ * note: HLS_DEBUG_AREA_SIZE is defined in mss_sw_config.h
  */
- 
+
 /*
  * STACK_SIZE_xxx_STARTUP
  * Stack size for each hart's startup code.
- * Before copying itself to the scratchpad memory area and executing the code from there, the 
- * startup code is executing from LIM. The scratchpad area is not configured yet. This per-hart 
+ * Before copying itself to the scratchpad memory area and executing the code from there, the
+ * startup code is executing from LIM. The scratchpad area is not configured yet. This per-hart
  * startup stack area is located in LIM and used during this phase of the startup code.
  * STACK_SIZE_xxx_APPLICATION
- * After the startup code executing from LIM configures the scratchpad memory, it configures 
- * the each hart's SP with this stack area for the respective hart's application function, 
+ * After the startup code executing from LIM configures the scratchpad memory, it configures
+ * the each hart's SP with this stack area for the respective hart's application function,
  * (namely e51(), u54_1(), u54_2(), u54_3(), u54_4() ) to use it.
- * This per-hart application stack area is located in scratchpad and used by application when 
+ * This per-hart application stack area is located in scratchpad and used by application when
  * it is executing from scratchpad.
  *
  */
@@ -136,7 +136,7 @@ SECTIONS
     PROVIDE(__u54_3_itim_end = ORIGIN(u54_3_itim) + LENGTH(u54_3_itim));
     PROVIDE(__u54_4_itim_start = ORIGIN(u54_4_itim));
     PROVIDE(__u54_4_itim_end = ORIGIN(u54_4_itim) + LENGTH(u54_4_itim));
-    
+
     . = __l2lim_start;
     .text_init : ALIGN(0x10)
     {
@@ -145,16 +145,16 @@ SECTIONS
         *mtrap.o (.text .text* .rodata .rodata* .srodata*)
         *mss_h2f.o (.text .text* .rodata .rodata* .srodata*)
         *mss_l2_cache.o (.text .text* .rodata .rodata* .srodata*)
-        . = ALIGN(0x10); 
-    } >l2lim 
-  
+        . = ALIGN(0x10);
+    } >l2lim
+
     .text : ALIGN(0x10)
     {
         __text_load = LOADADDR(.text);
         . = ALIGN(0x10);
         __text_start = .;
         /* placed at the start of used scratchpad, used as check to verify enough available in code */
-        __l2_scratchpad_vma_start = .; 
+        __l2_scratchpad_vma_start = .;
         *(.text .text.* .gnu.linkonce.t.*)
         *(.plt)
         . = ALIGN(0x10);
@@ -170,7 +170,7 @@ SECTIONS
 
         *(.rodata .rodata.* .gnu.linkonce.r.*)
         *(.sdata2 .sdata2.* .gnu.linkonce.s2.*)
-        *(.gcc_except_table) 
+        *(.gcc_except_table)
         *(.eh_frame_hdr)
         *(.eh_frame)
 
@@ -195,12 +195,12 @@ SECTIONS
         . = ALIGN(0x10);
         __text_end = .;
     } >scratchpad AT> l2lim
- 
+
     /* short/global data section */
     .sdata : ALIGN(0x10)
     {
         __sdata_load = LOADADDR(.sdata);
-        __sdata_start = .; 
+        __sdata_start = .;
         /* offset used with gp(gloabl pointer) are +/- 12 bits, so set point to middle of expected sdata range */
         /* If sdata more than 4K, linker used direct addressing. Perhaps we should add check/warning to linker script if sdata is > 4k */
         __global_pointer$ = . + 0x800;
@@ -208,12 +208,12 @@ SECTIONS
         . = ALIGN(0x10);
         __sdata_end = .;
     } >scratchpad AT> l2lim
-  
+
     /* data section */
     .data : ALIGN(0x10)
-    { 
+    {
         __data_load = LOADADDR(.data);
-        __data_start = .; 
+        __data_start = .;
         *(.got.plt) *(.got)
         *(.shdata)
         *(.data .data.* .gnu.linkonce.d.*)
@@ -230,10 +230,10 @@ SECTIONS
         . = ALIGN(0x10);
         __sbss_end = .;
     } > scratchpad
-  
+
     /* sbss section */
     .bss : ALIGN(0x10)
-    { 
+    {
         __bss_start = .;
         *(.shbss)
         *(.bss .bss.* .gnu.linkonce.b.*)
@@ -244,7 +244,7 @@ SECTIONS
 
     /* End of uninitialized data segment */
     _end = .;
-  
+
     .heap : ALIGN(0x10)
     {
         __heap_start = .;
@@ -253,7 +253,7 @@ SECTIONS
         . = ALIGN(0x10);
         _heap_end = __heap_end;
     } > scratchpad
-  
+
     /* must be on 4k boundary- corresponds to page size */
     .stack_e51 : /* ALIGN(0x1000) */
     {
@@ -335,10 +335,10 @@ SECTIONS
         PROVIDE(__app_stack_top_h4 = .);
     } > scratchpad
 
-    
-    /* 
-     * memory shared accross harts. 
-     * The boot Hart Local Storage holds a pointer to this area for each hart if 
+
+    /*
+     * memory shared accross harts.
+     * The boot Hart Local Storage holds a pointer to this area for each hart if
      * when enabled by setting MPFS_HAL_SHARED_MEM_ENABLED define in the
      * mss_sw_config.h
      */
@@ -348,10 +348,10 @@ SECTIONS
         . += SIZE_OF_COMMON_HART_MEM;
         PROVIDE(__app_hart_common_end = .);
         /* place at the end of used scratchpad, used as check to verify enough available in code */
-        __l2_scratchpad_vma_end = .; 
+        __l2_scratchpad_vma_end = .;
     } > scratchpad
-    
-    /* 
+
+    /*
     *   The .ram_code section will contain the code That is run from RAM.
     *   We are using this code to switch the clocks including envm clock.
     *   This can not be done when running from envm
@@ -371,5 +371,5 @@ SECTIONS
         /* place __start_of_free_lim$ after last allocation of l2lim */
         PROVIDE(__start_of_free_lim$ = .);
     } >switch_code AT> l2lim     /* On the MPFS for startup code use,  >switch_code AT>envm */
-  
+
 }

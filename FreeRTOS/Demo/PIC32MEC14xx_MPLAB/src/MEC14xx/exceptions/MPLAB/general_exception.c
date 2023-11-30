@@ -46,10 +46,10 @@ typedef struct gen_except_capture
 
 GEN_EXCEPT_CAPTURE gexc_cap;
 
-void 
+void
 __attribute__((nomips16, noreturn)) _general_exception_handler (void)
 {
-    /* 
+    /*
      *  MEC14xx Application General Exception handler
      */
     uint32_t e;
@@ -62,11 +62,11 @@ __attribute__((nomips16, noreturn)) _general_exception_handler (void)
      */
     __asm__ __volatile (
       "move %0,$sp \n\t"
-      "nop        \n\t" 
-      :"=r" (e) 
+      "nop        \n\t"
+      :"=r" (e)
       ::);
     gexc_cap.stack_ptr = e;
-    
+
     gexc_cap.cp0_status = _CP0_GET_STATUS();
     gexc_cap.cp0_cause = _CP0_GET_CAUSE();
     gexc_cap.cp0_epc = _CP0_GET_EPC();
@@ -87,7 +87,7 @@ __attribute__((nomips16, noreturn)) _general_exception_handler (void)
 
     for (;;) {
         __asm__ __volatile ("%(ssnop%)" : :);
-    } 
+    }
 }
 
 

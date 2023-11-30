@@ -14,7 +14,7 @@
     .def     _memoryInit
 
 _memoryInit:
-        ldr   r12, regMinitGcr    ; MINITGCR register pointer 
+        ldr   r12, regMinitGcr    ; MINITGCR register pointer
         mov   r4, #0xA
         str   r4, [r12]
         ldr   r4, ramInitMask     ; load RAM initialization mask
@@ -26,11 +26,11 @@ mloop
         mov   r4, #5
         str   r4, [r12]
         bx    lr
-    
+
 ramInitMask   .word 0x00000001
 regMinitGcr   .word 0xFFFFFF5C
 
-	
+
 
 ;-------------------------------------------------------------------------------
 

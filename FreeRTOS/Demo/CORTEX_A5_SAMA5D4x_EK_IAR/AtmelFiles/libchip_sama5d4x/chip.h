@@ -58,7 +58,7 @@
 #include "include/usart.h"
 #include "include/xdmac.h"
 #include "include/spi.h"
-#include "include/pit.h" 
+#include "include/pit.h"
 #include "include/wdt.h"
 #include "include/tc.h"
 #include "include/smcNfc.h"

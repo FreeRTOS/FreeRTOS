@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -137,7 +137,7 @@ void EFC_StartCommand(unsigned char command, unsigned short argument)
 
         case AT91C_EFC_FCMD_WP:
         case AT91C_EFC_FCMD_WPL:
-        case AT91C_EFC_FCMD_EWP: 
+        case AT91C_EFC_FCMD_EWP:
         case AT91C_EFC_FCMD_EWPL:
         case AT91C_EFC_FCMD_EPL:
         case AT91C_EFC_FCMD_EPA:
@@ -163,7 +163,7 @@ void EFC_StartCommand(unsigned char command, unsigned short argument)
         default: ASSERT(0, "-F- Unknown command %d\n\r", command);
     }
 
-    // Start commandEmbedded flash 
+    // Start commandEmbedded flash
     ASSERT((AT91C_BASE_EFC->EFC_FSR & AT91C_EFC_FRDY) == AT91C_EFC_FRDY, "-F- EEFC is not ready\n\r");
     AT91C_BASE_EFC->EFC_FCR = (0x5A << 24) | (argument << 8) | command;
 }

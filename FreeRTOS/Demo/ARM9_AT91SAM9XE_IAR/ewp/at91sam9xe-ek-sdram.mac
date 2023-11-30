@@ -27,7 +27,7 @@ execUserReset()
     __message "------------------------------ execUserReset ---------------------------------";
     _MapRAMAt0();                          //* Set the RAM memory at 0x00200000 & 0x00000000
     __PllSetting();                        //* Init PLL
-    __PllSetting100MHz();              
+    __PllSetting100MHz();
     __message "-------------------------------Set PC Reset ----------------------------------";
 }
 
@@ -41,8 +41,8 @@ execUserPreload()
     __hwReset(0);                          //* Hardware Reset: CPU is automatically halted after the reset (JTAG is already configured to 32kHz)
     __writeMemory32(0xD3,0x98,"Register"); //*  Set CPSR
     __PllSetting();                        //* Init PLL
-    __PllSetting100MHz();    
-    __initSDRAM();                         //* Init SDRAM before load          
+    __PllSetting100MHz();
+    __initSDRAM();                         //* Init SDRAM before load
     _MapRAMAt0();                          //* Set the RAM memory at 0x0020 0000 & 0x0000 0000
     _InitRSTC();                           //* Enable User Reset to allow execUserReset() execution
 }
@@ -71,7 +71,7 @@ _InitRSTC() {
 */
 __initSDRAM()
 {
-//* Configure EBI Chip select	
+//* Configure EBI Chip select
 //    pCCFG->CCFG_EBICSA |= AT91C_EBI_CS1A_SDRAMC;
 // AT91C_CCFG_EBICSA ((AT91_REG *) 	0xFFFFEF1C) // (CCFG)  EBI Chip Select Assignement Register
     __writeMemory32(0x0001003A,0xFFFFEF1C,"Memory");
@@ -130,7 +130,7 @@ __initSDRAM()
      __writeMemory32(0x00000006,0x20000060,"Memory");
 
 //*	psdrc->SDRAMC_MR	= AT91C_SDRAMC_MODE_RFSH_CMD;		// Set 7 CBR
-      __writeMemory32(0x00000004,0xFFFFEA00,"Memory");	
+      __writeMemory32(0x00000004,0xFFFFEA00,"Memory");
 //*	*(AT91C_SDRAM+0x1c)	= 0x00000007;	// Perform CBR
      __writeMemory32(0x00000007,0x20000070,"Memory");
 
@@ -224,7 +224,7 @@ __PllSetting()
 *
 *       __PllSetting100MHz()
 * Function description
-*   Set core at 200 MHz and MCK at 100 MHz 
+*   Set core at 200 MHz and MCK at 100 MHz
 */
 __PllSetting100MHz()
 {
@@ -237,7 +237,7 @@ __PllSetting100MHz()
 // AT91C_PMC_MCKR  ((AT91_REG *) 	0xFFFFFC30) // (PMC) Master Clock Register
     __writeMemory32(0x00000001,0xFFFFFC30,"Memory");
     __sleep(10000);
-//*   AT91C_BASE_CKGR->CKGR_PLLAR = (AT91C_CKGR_SRCA | ((96 << 16) & AT91C_CKGR_MULA) | 
+//*   AT91C_BASE_CKGR->CKGR_PLLAR = (AT91C_CKGR_SRCA | ((96 << 16) & AT91C_CKGR_MULA) |
 //    (AT91C_CKGR_PLLACOUNT | (AT91C_CKGR_OUTA_0 | (9);
     __writeMemory32(0x2060BF09,0xFFFFFC28,"Memory");
     __sleep(10000);

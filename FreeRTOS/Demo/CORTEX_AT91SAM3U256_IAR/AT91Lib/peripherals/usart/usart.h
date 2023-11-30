@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,7 +30,7 @@
 //------------------------------------------------------------------------------
 /// \dir
 /// !Purpose
-/// 
+///
 /// This module provides several definitions and methods for using an USART
 /// peripheral.
 ///
@@ -65,7 +65,7 @@
 //------------------------------------------------------------------------------
 /// \page "USART modes"
 /// This page lists several common operating modes for an USART peripheral.
-/// 
+///
 /// !Modes
 /// - USART_MODE_ASYNCHRONOUS
 /// - USART_MODE_IRDA
@@ -92,8 +92,8 @@ extern void USART_SetTransmitterEnabled(AT91S_USART *usart, unsigned char enable
 extern void USART_SetReceiverEnabled(AT91S_USART *usart, unsigned char enabled);
 
 extern void USART_Write(
-    AT91S_USART *usart, 
-    unsigned short data, 
+    AT91S_USART *usart,
+    unsigned short data,
     volatile unsigned int timeOut);
 
 extern unsigned char USART_WriteBuffer(
@@ -102,7 +102,7 @@ extern unsigned char USART_WriteBuffer(
     unsigned int size);
 
 extern unsigned short USART_Read(
-    AT91S_USART *usart, 
+    AT91S_USART *usart,
     volatile unsigned int timeOut);
 
 extern unsigned char USART_ReadBuffer(

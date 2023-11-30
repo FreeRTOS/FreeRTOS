@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -42,7 +42,7 @@
 ///    any side-effect; otherwise, the program may not work properly
 ///    anymore when assertions are disabled.
 /// -# Use SANITY_CHECK() to perform checks with a default error message
-///    (outputs the file and line number where the error occured). This 
+///    (outputs the file and line number where the error occured). This
 ///    reduces memory overhead caused by assertion error strings.
 /// -# Initialize the dbgu to see failed assertions at run-time.
 /// -# Assertions can be entirely disabled by defining the NOASSERT symbol
@@ -68,7 +68,7 @@
 #else
 
     #if (TRACE_LEVEL == 0)
-        /// Checks that the given condition is true, 
+        /// Checks that the given condition is true,
         /// otherwise stops the program execution.
         /// \param condition  Condition to verify.
         #define ASSERT(condition, ...)  { \
@@ -93,7 +93,7 @@
             } \
         }
         #define SANITY_ERROR            "Sanity check failed at %s:%d\n\r"
-    
+
         /// Performs the same duty as the ASSERT() macro, except a default error
         /// message is output if the condition is false.
         /// \param condition  Condition to verify.

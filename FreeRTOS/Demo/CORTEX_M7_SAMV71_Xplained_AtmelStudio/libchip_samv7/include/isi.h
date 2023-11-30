@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -56,7 +56,7 @@
 #define YUV_INPUT          0
 #define RGB_INPUT          1
 #define GRAYSCALE_INPUT    2
- 
+
 /*----------------------------------------------------------------------------
  *        Types
  *----------------------------------------------------------------------------*/
@@ -164,11 +164,11 @@ extern void ISI_Init(pIsi_Video pVideo);
 extern uint32_t ISI_StatusRegister(void);
 
 extern void ISI_SetBlank(
-	uint8_t hBlank, 
+	uint8_t hBlank,
 	uint8_t vBlank);
 
 extern void ISI_SetSensorSize(
-	uint32_t hSize, 
+	uint32_t hSize,
 	uint32_t vSize);
 
 extern void ISI_RgbPixelMapping(uint32_t wRgbPixelMapping);
@@ -182,19 +182,19 @@ extern void ISI_setGrayScaleMode(uint32_t wPixelFormat);
 extern void ISI_setInputStream(uint32_t wStreamMode);
 
 extern void ISI_setPreviewSize(
-	uint32_t hSize, 
+	uint32_t hSize,
 	uint32_t vSize);
 
 extern void ISI_calcScalerFactor( void );
 
 extern void ISI_setDmaInPreviewPath(
-	uint32_t baseFrameBufDesc, 
-	uint32_t dmaCtrl, 
+	uint32_t baseFrameBufDesc,
+	uint32_t dmaCtrl,
 	uint32_t frameBufferStartAddr);
 
 extern void ISI_setDmaInCodecPath(
-	uint32_t baseFrameBufDesc, 
-	uint32_t dmaCtrl, 
+	uint32_t baseFrameBufDesc,
+	uint32_t dmaCtrl,
 	uint32_t frameBufferStartAddr);
 
 extern void ISI_SetMatrix4Yuv2Rgb (ISI_Y2R* yuv2rgb);

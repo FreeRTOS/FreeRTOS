@@ -459,7 +459,7 @@ int32_t csi_wifi_restore(void);
   * @attention 1. This API only impact WIFI_MODE_STA or WIFI_MODE_APSTA mode
   * @attention 2. If connecting to an AP, call csi_wifi_disconnect to disconnect.
   *
-  * @return 
+  * @return
   *    - CSI_OK: succeed
   *    - CSI_ERR_WIFI_NOT_INIT: WiFi is not initialized by csi_wifi_init
   *    - CSI_ERR_WIFI_NOT_START: WiFi is not started by csi_wifi_start
@@ -528,7 +528,7 @@ int32_t csi_wifi_scan_stop(void);
 /**
   * @brief     Get AP list found in last scan
   *
-  * @param[inout]  number As input param, it stores max AP number ap_records can hold. 
+  * @param[inout]  number As input param, it stores max AP number ap_records can hold.
   *                As output param, it receives the actual AP number this API returns.
   * @param         ap_records  wifi_ap_record_t array to hold the found APs
   *
@@ -736,7 +736,7 @@ int32_t csi_wifi_set_mac(wifi_interface_t ifx, uint8_t mac[6]);
 int32_t csi_wifi_get_mac(wifi_interface_t ifx, uint8_t mac[6]);
 
 /**
-  * @brief The RX callback function in the promiscuous mode. 
+  * @brief The RX callback function in the promiscuous mode.
   *        Each time a packet is received, the callback function will be called.
   *
   * @param buf  Data received. Type of data in buffer (wifi_promiscuous_pkt_t or wifi_pkt_rx_ctrl_t) indicated by 'type' parameter.
@@ -894,7 +894,7 @@ int32_t csi_wifi_set_vendor_ie(bool enable, wifi_vendor_ie_type_t type, wifi_ven
 /**
   * @brief     Define function pointer for vendor specific element callback
   * @param     ctx  reserved
-  * @param     type  information element type 
+  * @param     type  information element type
   * @param     sa  source address
   * @param     vnd_ie  pointer to a vendor specific element
   * @param     rssi  received signal strength indication
@@ -969,14 +969,14 @@ int32_t csi_wifi_reg_rxcb(wifi_interface_t ifx, wifi_rxcb_t fn);
 /**
   \brief       Add Frame Filter Setting with Filter ID.
   \param[in]   filter  Pointer to filter setting
-  \return      
+  \return
 */
 int32_t csi_wifi_add_framefilter(const wifi_frame_filter_t *filter);
 
 /**
   \brief       Remove Frame Filter Setting.
   \param[in]   filter_id  Frame Filter ID
-  \return      
+  \return
 */
 int32_t csi_wifi_remove_framefilter(uint32_t filter_id);
 
@@ -984,7 +984,7 @@ int32_t csi_wifi_remove_framefilter(uint32_t filter_id);
   \brief       Enable/Disable Specified Frame Filter ID.
   \param[in]   filter_id  Frame Filter ID
   \param[in]   en  Enable or disable
-  \return      
+  \return
 */
 int32_t csi_wifi_en_framefilter(uint32_t filter_id, bool en);
 
@@ -993,7 +993,7 @@ int32_t csi_wifi_en_framefilter(uint32_t filter_id, bool en);
   \param[in]   list  frame filter table list
   \param[in]   count_out  the count of filter setting added
   \param[in]   max_count  max filter setting can be supported
-  \return      
+  \return
 */
 int32_t csi_wifi_get_framefilter(wifi_frame_filter_list_t* list, uint32_t* count_out, uint32_t max_count);
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.SPDX-License-Identifier: BSD
  * -3-ClauseRedistribution and use in source and binary forms, with or withoutmodification, are permitt
- * ed provided that the following conditions are met:1. Redistributions of source code must retain the 
+ * ed provided that the following conditions are met:1. Redistributions of source code must retain the
  * above copyright notice, this list of conditions and the following disclaimer.2. Redistributions in b
  * inary form must reproduce the above copyright notice, this list of conditions and the following disc
  * laimer in the documentation and/or other materials provided with the distribution.3. Neither the nam

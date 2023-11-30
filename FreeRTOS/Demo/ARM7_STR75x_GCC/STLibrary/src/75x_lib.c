@@ -53,7 +53,7 @@ void debug(void)
   MRCC = (MRCC_TypeDef *)  MRCC_BASE;
 #endif /*_MRCC */
 
-/************************************* ADC ************************************/	
+/************************************* ADC ************************************/
 #ifdef _ADC
   ADC = (ADC_TypeDef *)  ADC_BASE;
 #endif /*_ADC */
@@ -144,13 +144,13 @@ void debug(void)
   DMA_Stream0 = (DMA_Stream_TypeDef *)  DMA_Stream0_BASE;
 #endif /*_DMA_Stream0 */
 
-#ifdef _DMA_Stream1  
+#ifdef _DMA_Stream1
   DMA_Stream1 = (DMA_Stream_TypeDef *)  DMA_Stream1_BASE;
-#endif /*_DMA_Stream1 */  
-  
+#endif /*_DMA_Stream1 */
+
 #ifdef _DMA_Stream2
   DMA_Stream2 = (DMA_Stream_TypeDef *)  DMA_Stream2_BASE;
-#endif /*_DMA_Stream2 */  
+#endif /*_DMA_Stream2 */
 
 #ifdef _DMA_Stream3
   DMA_Stream3 = (DMA_Stream_TypeDef *)  DMA_Stream3_BASE;

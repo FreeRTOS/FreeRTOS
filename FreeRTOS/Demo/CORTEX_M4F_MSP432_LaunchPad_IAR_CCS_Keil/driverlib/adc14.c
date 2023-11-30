@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -536,7 +536,7 @@ bool ADC14_setComparatorWindowValue(uint32_t window, int16_t low, int16_t high)
 {
     if (ADCIsConversionRunning())
         return false;
-        
+
     if(BITBAND_PERI(ADC14->CTL1, ADC14_CTL1_DF_OFS))
     {
         low = ((low << 2) | (0x8000 & low)) & 0xFFFC;

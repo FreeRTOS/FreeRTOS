@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the RCC 
+  * @brief   This file contains all the functions prototypes for the RCC
   *          firmware library.
   ******************************************************************************
   * @attention
@@ -61,7 +61,7 @@ typedef struct
   * @{
   */
 
-/** @defgroup RCC_HSE_configuration 
+/** @defgroup RCC_HSE_configuration
   * @{
   */
 
@@ -73,22 +73,22 @@ typedef struct
 
 /**
   * @}
-  */ 
- 
-/** @defgroup RCC_PLL_Clock_Source 
+  */
+
+/** @defgroup RCC_PLL_Clock_Source
   * @{
   */
 
 #define RCC_PLLSource_HSI_Div2           RCC_CFGR_PLLSRC_HSI_Div2
 #define RCC_PLLSource_PREDIV1            RCC_CFGR_PLLSRC_PREDIV1
- 
+
 #define IS_RCC_PLL_SOURCE(SOURCE) (((SOURCE) == RCC_PLLSource_HSI_Div2) || \
                                    ((SOURCE) == RCC_PLLSource_PREDIV1))
 /**
   * @}
-  */ 
+  */
 
-/** @defgroup RCC_PLL_Multiplication_Factor 
+/** @defgroup RCC_PLL_Multiplication_Factor
   * @{
   */
 
@@ -150,8 +150,8 @@ typedef struct
 /**
   * @}
   */
- 
-/** @defgroup RCC_System_Clock_Source 
+
+/** @defgroup RCC_System_Clock_Source
   * @{
   */
 
@@ -185,7 +185,7 @@ typedef struct
                            ((HCLK) == RCC_SYSCLK_Div512))
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup RCC_APB_Clock_Source
   * @{
@@ -202,8 +202,8 @@ typedef struct
 /**
   * @}
   */
-  
-/** @defgroup RCC_ADC_clock_source 
+
+/** @defgroup RCC_ADC_clock_source
   * @{
   */
 
@@ -218,7 +218,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_CEC_clock_source 
+/** @defgroup RCC_CEC_clock_source
   * @{
   */
 
@@ -231,7 +231,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_I2C_clock_source 
+/** @defgroup RCC_I2C_clock_source
   * @{
   */
 
@@ -244,7 +244,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_USART_clock_source 
+/** @defgroup RCC_USART_clock_source
   * @{
   */
 
@@ -259,8 +259,8 @@ typedef struct
 /**
   * @}
   */
-       
-/** @defgroup RCC_Interrupt_Source 
+
+/** @defgroup RCC_Interrupt_Source
   * @{
   */
 
@@ -284,8 +284,8 @@ typedef struct
 /**
   * @}
   */
-  
-/** @defgroup RCC_LSE_Configuration 
+
+/** @defgroup RCC_LSE_Configuration
   * @{
   */
 
@@ -313,7 +313,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_LSE_Drive_Configuration 
+/** @defgroup RCC_LSE_Drive_Configuration
   * @{
   */
 
@@ -326,8 +326,8 @@ typedef struct
 /**
   * @}
   */
-  
-/** @defgroup RCC_AHB_Peripherals 
+
+/** @defgroup RCC_AHB_Peripherals
   * @{
   */
 
@@ -349,7 +349,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RCC_APB2_Peripherals 
+/** @defgroup RCC_APB2_Peripherals
   * @{
   */
 
@@ -367,9 +367,9 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 
-/** @defgroup RCC_APB1_Peripherals 
+/** @defgroup RCC_APB1_Peripherals
   * @{
   */
 
@@ -407,9 +407,9 @@ typedef struct
                                    ((SOURCE) == RCC_MCOSource_HSE) || ((SOURCE) == RCC_MCOSource_PLLCLK_Div2))
 /**
   * @}
-  */ 
+  */
 
-/** @defgroup RCC_Flag 
+/** @defgroup RCC_Flag
   * @{
   */
 #define RCC_FLAG_HSIRDY                  ((uint8_t)0x01)
@@ -511,6 +511,6 @@ void RCC_ClearITPendingBit(uint8_t RCC_IT);
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

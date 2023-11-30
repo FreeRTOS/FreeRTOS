@@ -39,11 +39,11 @@
 #ifdef USE_STM3210B_EVAL
  #define GPIO_CS                  GPIOA
  #define RCC_APB2Periph_GPIO_CS   RCC_APB2Periph_GPIOA
- #define GPIO_Pin_CS              GPIO_Pin_4 
+ #define GPIO_Pin_CS              GPIO_Pin_4
 #else /* USE_STM3210E_EVAL */
  #define GPIO_CS                  GPIOB
  #define RCC_APB2Periph_GPIO_CS   RCC_APB2Periph_GPIOB
- #define GPIO_Pin_CS              GPIO_Pin_2 
+ #define GPIO_Pin_CS              GPIO_Pin_2
 #endif
 
 /* Exported macro ------------------------------------------------------------*/

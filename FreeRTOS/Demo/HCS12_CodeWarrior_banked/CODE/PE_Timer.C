@@ -50,7 +50,7 @@ typedef struct {
 
 typedef union {
   UINT64 val;
-  M_UINT32 m; 
+  M_UINT32 m;
 } OP_UINT64;
 
 /*
@@ -67,19 +67,19 @@ void PE_Timer_LngMul(dword va1, dword va2, dlong *var)
   OP_UINT32 *va = (OP_UINT32*)&va1;
   OP_UINT32 *vb = (OP_UINT32*)&va2;
   OP_UINT64 *vr = (OP_UINT64*)var;
-  
+
   vr->val.hi32 = 0UL;
   vr->val.lo32 = ((UINT32)va->s.lo16)*((UINT32)vb->s.lo16);
   {
     OP_UINT32 tmp;
-    
+
     tmp.val = ((UINT32)va->s.lo16)*((UINT32)vb->s.hi16);
     vr->m.mid += (UINT32)tmp.s.lo16;
     vr->val.hi32 += (UINT32)tmp.s.hi16;
   }
   {
     OP_UINT32 tmp;
-    
+
     tmp.val = ((UINT32)va->s.hi16)*((UINT32)vb->s.lo16);
     vr->m.mid += (UINT32)tmp.s.lo16;
     vr->val.hi32 += (UINT32)tmp.s.hi16;
@@ -96,19 +96,19 @@ void PE_Timer_LngMul(dword va1, dword va2, dlong *var)
 **         only.
 ** ===================================================================
 */
-bool PE_Timer_LngHi1(dword High, dword Low, word *Out) 
+bool PE_Timer_LngHi1(dword High, dword Low, word *Out)
 {
-  if ((High == 0) && ((Low >> 24) == 0)) 
+  if ((High == 0) && ((Low >> 24) == 0))
     if ((Low & 0x80) != 0) {
       if ((Low >> 8) < 0xFFFF) {
         *Out = ((unsigned int)(Low >> 8))+1;
         return FALSE;
-      }  
-    }   
+      }
+    }
     else {
       *Out = (unsigned int)(Low >> 8);
       return FALSE;
-    }  
+    }
   *Out = (unsigned int)(Low >> 8);
   return TRUE;
 }
@@ -122,19 +122,19 @@ bool PE_Timer_LngHi1(dword High, dword Low, word *Out)
 **         only.
 ** ===================================================================
 */
-bool PE_Timer_LngHi2(dword High, dword Low, word *Out) 
+bool PE_Timer_LngHi2(dword High, dword Low, word *Out)
 {
-  if (High == 0) 
+  if (High == 0)
     if ((Low & 0x8000) != 0) {
       if ((Low >> 16) < 0xFFFF) {
         *Out = ((unsigned int)(Low >> 16))+1;
         return FALSE;
-      }  
+      }
     }
     else {
       *Out = (unsigned int)(Low >> 16);
       return FALSE;
-    }  
+    }
   *Out = (unsigned int)(Low >> 16);
   return TRUE;
 }
@@ -148,19 +148,19 @@ bool PE_Timer_LngHi2(dword High, dword Low, word *Out)
 **         only.
 ** ===================================================================
 */
-bool PE_Timer_LngHi3(dword High, dword Low, word *Out) 
+bool PE_Timer_LngHi3(dword High, dword Low, word *Out)
 {
   if ((High >> 8) == 0)
     if ((Low & 0x800000) != 0) {
       if (((Low >> 24) | (High << 8)) < 0xFFFF) {
         *Out = ((unsigned int)((Low >> 24) | (High << 8)))+1;
         return FALSE;
-      } 
-    }   
-    else { 
+      }
+    }
+    else {
       *Out = (unsigned int)((Low >> 24) | (High << 8));
       return FALSE;
-    }  
+    }
   *Out = (unsigned int)((Low >> 24) | (High << 8));
   return TRUE;
 }
@@ -174,19 +174,19 @@ bool PE_Timer_LngHi3(dword High, dword Low, word *Out)
 **         only.
 ** ===================================================================
 */
-bool PE_Timer_LngHi4(dword High, dword Low, word *Out) 
+bool PE_Timer_LngHi4(dword High, dword Low, word *Out)
 {
-  if ((High >> 16) == 0) 
+  if ((High >> 16) == 0)
     if ((Low & 0x80000000) != 0) {
       if (High < 0xFFFF) {
         *Out = ((unsigned int)High)+1;
         return FALSE;
-      }  
-    }  
-    else { 
+      }
+    }
+    else {
       *Out = (unsigned int)High;
       return FALSE;
-    }  
+    }
   *Out = (unsigned int)High;
   return TRUE;
 }
@@ -198,7 +198,7 @@ bool PE_Timer_LngHi4(dword High, dword Low, word *Out)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

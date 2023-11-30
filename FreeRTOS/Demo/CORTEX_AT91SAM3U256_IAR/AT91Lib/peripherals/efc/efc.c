@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -247,7 +247,7 @@ void EFC_StartCommand(
 {
     SANITY_CHECK(pEfc);
     ASSERT(lMck != 0, "-F- Master clock not set.\n\r");
-    
+
     // Check command & argument
     switch (command) {
 

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -80,11 +80,11 @@ low_level_init(struct netif *netif)
 
   /* maximum transfer unit */
   netif->mtu = netifMTU;
-  
+
   /* broadcast capability */
   netif->flags = NETIF_FLAG_BROADCAST;
- 
-  /* Do whatever else is needed to initialize interface. */  
+
+  /* Do whatever else is needed to initialize interface. */
   xNetIf = netif;
 
   /* Initialise the MACB.  This routine contains code that polls status bits.
@@ -149,7 +149,7 @@ err_t xReturn = ERR_OK;
     }
     xSemaphoreGive( xTxSemaphore );
   }
-  
+
 
   #if ETH_PAD_SIZE
     pbuf_header( p, ETH_PAD_SIZE );     /* reclaim the padding word */
@@ -196,19 +196,19 @@ static SemaphoreHandle_t xRxSemaphore = NULL;
       #if ETH_PAD_SIZE
         len += ETH_PAD_SIZE;    /* allow room for Ethernet padding */
       #endif
-  
+
       /* We allocate a pbuf chain of pbufs from the pool. */
       p = pbuf_alloc( PBUF_RAW, len, PBUF_POOL );
-  
+
       if( p != NULL )
       {
         #if ETH_PAD_SIZE
           pbuf_header( p, -ETH_PAD_SIZE );    /* drop the padding word */
         #endif
-  
+
         /* Let the driver know we are going to read a new packet. */
         vMACBRead( NULL, 0, len );
-  
+
         /* We iterate over the pbuf chain until we have read the entire
         packet into the pbuf. */
         for( q = p; q != NULL; q = q->next )
@@ -217,7 +217,7 @@ static SemaphoreHandle_t xRxSemaphore = NULL;
           available data in the pbuf is given by the q->len variable. */
           vMACBRead( q->payload, q->len, len );
         }
-  
+
         #if ETH_PAD_SIZE
           pbuf_header( p, ETH_PAD_SIZE );     /* reclaim the padding word */
         #endif
@@ -252,10 +252,10 @@ static err_t
 ethernetif_output(struct netif *netif, struct pbuf *p,
       struct ip_addr *ipaddr)
 {
-  
+
  /* resolve hardware address, then send (or queue) packet */
   return etharp_output(netif, ipaddr, p);
- 
+
 }
 
 /*
@@ -277,7 +277,7 @@ struct pbuf         *p;
   ( void ) pvParameters;
 
   for( ;; )  {
-   
+
     ethernetif = xNetIf->state;
     do
     {
@@ -297,32 +297,32 @@ struct pbuf         *p;
 
     /* points to packet payload, which starts with an Ethernet header */
     ethhdr = p->payload;
-  
+
     #if LINK_STATS
       lwip_stats.link.recv++;
     #endif /* LINK_STATS */
-  
+
     ethhdr = p->payload;
-  
+
     switch( htons( ethhdr->type ) )
     {
       /* IP packet? */
       case ETHTYPE_IP:
         /* update ARP table */
         etharp_ip_input( xNetIf, p );
-  
+
         /* skip Ethernet header */
         pbuf_header( p, (s16_t)-sizeof(struct eth_hdr) );
-  
+
         /* pass to network layer */
         xNetIf->input( p, xNetIf );
         break;
-  
+
       case ETHTYPE_ARP:
         /* pass p to ARP module */
         etharp_arp_input( xNetIf, ethernetif->ethaddr, p );
         break;
-  
+
       default:
         pbuf_free( p );
         p = NULL;
@@ -352,23 +352,23 @@ ethernetif_init(struct netif *netif)
 {
   struct ethernetif *ethernetif;
   int i;
-    
+
   ethernetif = (struct ethernetif *)mem_malloc(sizeof(struct ethernetif));
-  
+
   if (ethernetif == NULL)
   {
     LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_init: out of memory\n"));
     return ERR_MEM;
   }
-  
+
   netif->state = ethernetif;
   netif->name[0] = IFNAME0;
   netif->name[1] = IFNAME1;
   netif->output = ethernetif_output;
   netif->linkoutput = low_level_output;
-  
+
   for(i = 0; i < 6; i++) netif->hwaddr[i] = MACB_if.hwaddr[i];
-  
+
   low_level_init(netif);
 
   etharp_init();

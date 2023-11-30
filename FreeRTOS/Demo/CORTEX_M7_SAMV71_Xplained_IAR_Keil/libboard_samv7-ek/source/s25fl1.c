@@ -76,7 +76,7 @@
 
 static qspiFrame *pDev, *pMem;
 #define READ_DEV        0
-#define WRITE_DEV       1 
+#define WRITE_DEV       1
 /*----------------------------------------------------------------------------
  *        Local functions
  *----------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ static qspiFrame *pDev, *pMem;
 
 
 static void S25FL1D_DefaultParams(void)
-{      
+{
     pDev->spiMode = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
     pDev->ContinuousRead = 0;
     pDev->DataSize = 0;
@@ -98,7 +98,7 @@ static void S25FL1D_DefaultParams(void)
 
 static uint8_t S25FL1D_SendCommand(uint8_t Instr, AccesType ReadWrite)
 
-{  
+{
     pDev->Instruction = Instr;
     QSPI_SendFrame(QSPI, pDev, ReadWrite);
 
@@ -115,7 +115,7 @@ static uint8_t S25FL1D_ReadStatus(void)
 {
     uint8_t status;
 
-    pDev->DataSize = 1;    
+    pDev->DataSize = 1;
     S25FL1D_SendCommand(0x05, READ_DEV);
     status = *(pDev->pData);
     return status;
@@ -172,7 +172,7 @@ static void S25FL1D_EnableWrite(void)
 
 
     while(status != STATUS_WEL)
-    {      
+    {
         pDev->DataSize = 0;
         S25FL1D_SendCommand(WRITE_ENABLE, READ_DEV);
         status = S25FL1D_ReadStatus();
@@ -187,7 +187,7 @@ static void S25FL1D_DisableWrite(void)
     status = S25FL1D_ReadStatus();
 
     while( (status & STATUS_WEL) != 0)
-    {      
+    {
         pDev->DataSize = 0;
         S25FL1D_SendCommand(WRITE_DISABLE, READ_DEV);
         status = S25FL1D_ReadStatus();
@@ -204,7 +204,7 @@ static void S25FL1D_WriteStatus( uint8_t *pStatus)
     S25FL1D_EnableWrite();
 
     pDev->DataSize = 3;
-    pDev->Instruction = WRITE_STATUS; 
+    pDev->Instruction = WRITE_STATUS;
     pDev->pData = pStatus;
     QSPI_SendFrame(QSPI, pDev, Device_Write);
     S25FL1D_DisableWrite();
@@ -224,7 +224,7 @@ static void S25FL1D_WriteVolatileStatus( uint8_t *pStatus)
     S25FL1D_SendCommand(0x50, READ_DEV);
 
     pDev->DataSize = 3;
-    pDev->Instruction = WRITE_STATUS; 
+    pDev->Instruction = WRITE_STATUS;
     pDev->pData = pStatus;
     QSPI_SendFrame(QSPI, pDev, Device_Write);
     S25FL1D_DisableWrite();
@@ -236,7 +236,7 @@ static void S25FL1D_WriteVolatileStatus( uint8_t *pStatus)
 
 void S25FL1D_InitFlashInterface(void)
 {
-    pDev = (qspiFrame *)malloc (sizeof(qspiFrame));  
+    pDev = (qspiFrame *)malloc (sizeof(qspiFrame));
     memset(pDev, 0, sizeof(qspiFrame));
     pDev->spiMode = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
     pDev->pData = (uint8_t *)malloc (sizeof(uint32_t));
@@ -429,14 +429,14 @@ unsigned char S25FL1D_EraseChip(void)
     char wait_ch[4] = {'\\','|','/','-' };
     uint8_t i=0;
 
-    S25FL1D_EnableWrite();   
+    S25FL1D_EnableWrite();
     pDev->DataSize=0;
     S25FL1D_SendCommand(CHIP_ERASE_2, READ_DEV);
     S25FL1D_ReadStatus();
 
     while(*(pDev->pData) & STATUS_RDYBSY)
     {
-        S25FL1D_ReadStatus();      
+        S25FL1D_ReadStatus();
         Wait(500);
         printf("Erasing flash memory %c\r", wait_ch[i]);
         i++;
@@ -558,8 +558,8 @@ unsigned char S25FL1D_Write(
 
     writeSize = size >> 8;
     S25FL1D_EnableWrite();
-    pMem->Instruction = 0x02; 
-    pMem->InstAddrFlag=1; pMem->InstAddr=address;  
+    pMem->Instruction = 0x02;
+    pMem->InstAddrFlag=1; pMem->InstAddr=address;
     if(writeSize ==0)   // if less than page size
     {
         pMem->pData = (pData);
@@ -567,12 +567,12 @@ unsigned char S25FL1D_Write(
         QSPI_SendFrameToMem(QSPI, pMem, Device_Write);
     }
     else                // mulptiple pagesize
-    {     
+    {
         pMem->DataSize = pageSize;
         for(i=0; i< writeSize; i++)
         {
             S25FL1D_EnableWrite();
-            pMem->pData = pData;        
+            pMem->pData = pData;
             QSPI_SendFrameToMem(QSPI, pMem, Device_Write);
             S25FL1D_IsBusy();
             pData += pageSize;
@@ -583,7 +583,7 @@ unsigned char S25FL1D_Write(
         {
             S25FL1D_EnableWrite();
             pMem->DataSize = (size - (writeSize * pageSize)) ;
-            pMem->pData = pData;        
+            pMem->pData = pData;
             QSPI_SendFrameToMem(QSPI, pMem, Device_Write);
             S25FL1D_IsBusy();
         }
@@ -609,7 +609,7 @@ unsigned char S25FL1D_Read(
         uint8_t *pData,
         uint32_t size,
         uint32_t address)
-{    
+{
     pMem->Instruction = READ_ARRAY_LF;
     pMem->InstAddrFlag=1; pMem->InstAddr=address;
     pMem->pData = pData;
@@ -696,10 +696,10 @@ unsigned char S25FL1D_ReadQuadIO(
 {
 
     pMem->Instruction = READ_ARRAY_QUAD_IO;
-    pMem->InstAddrFlag=1; 
+    pMem->InstAddrFlag=1;
     pMem->InstAddr=address;
     pMem->pData = pData;
-    pMem->DataSize = size;    
+    pMem->DataSize = size;
     pMem->DummyCycles = 6;
     if(ContMode)
     {

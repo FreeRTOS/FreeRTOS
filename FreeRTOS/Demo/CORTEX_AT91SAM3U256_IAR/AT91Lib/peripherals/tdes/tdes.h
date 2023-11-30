@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -34,9 +34,9 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// Methods to manage the Triple DES (3DES)
-/// 
+///
 /// !Usage
 ///
 /// -# Configure TDES

@@ -15,7 +15,7 @@ SECTIONS
 		_text = .;
 		KEEP (*(SORT_NONE(.init)))
 	} >rom AT>rom
-	
+
 	.text :
 	{
 		*(.text.unlikely .text.unlikely.*)
@@ -23,7 +23,7 @@ SECTIONS
 		*(.text .text.*)
 		*(.gnu.linkonce.t.*)
 	} >rom AT>rom
-	
+
 	.fini :
 	{
 		KEEP (*(SORT_NONE(.fini)))

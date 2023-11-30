@@ -430,7 +430,7 @@ ALT_STATUS_CODE alt_dma_program_DMAKILL(ALT_DMA_PROGRAM_t * pgm);
  *
  * \param       mod
  *              The program instruction modifier for the type of transfer.
- *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and 
+ *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and
  *              ALT_DMA_PROGRAM_INST_MOD_BURST are valid options.
  *
  * \retval      ALT_E_SUCCESS       Successful instruction assembly status.
@@ -450,7 +450,7 @@ ALT_STATUS_CODE alt_dma_program_DMALD(ALT_DMA_PROGRAM_t * pgm,
  *
  * \param       mod
  *              The program instruction modifier for the type of transfer.
- *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and 
+ *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and
  *              ALT_DMA_PROGRAM_INST_MOD_BURST are valid options.
  *
  * \param       periph
@@ -598,7 +598,7 @@ ALT_STATUS_CODE alt_dma_program_DMASEV(ALT_DMA_PROGRAM_t * pgm,
  *
  * \param       mod
  *              The program instruction modifier for the type of transfer.
- *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and 
+ *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and
  *              ALT_DMA_PROGRAM_INST_MOD_BURST are valid options.
  *
  * \retval      ALT_E_SUCCESS       Successful instruction assembly status.
@@ -617,7 +617,7 @@ ALT_STATUS_CODE alt_dma_program_DMAST(ALT_DMA_PROGRAM_t * pgm,
  *
  * \param       mod
  *              The program instruction modifier for the type of transfer.
- *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and 
+ *              Only ALT_DMA_PROGRAM_INST_MOD_SINGLE and
  *              ALT_DMA_PROGRAM_INST_MOD_BURST are valid options.
  *
  * \param       periph

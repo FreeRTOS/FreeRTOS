@@ -77,7 +77,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 			{
 				GPIOPinWrite( GPIO_PORTB_BASE, ulLEDs[ uxLED ], ~ulLEDs[ uxLED ] );
 			}
-		}	
+		}
 	}
 	xTaskResumeAll();
 }

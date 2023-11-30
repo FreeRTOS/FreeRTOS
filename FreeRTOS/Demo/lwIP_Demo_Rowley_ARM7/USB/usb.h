@@ -101,9 +101,9 @@
 #define usbCLASS_INTERFACE_REQUEST			( 5 )
 
 
-/* Macros to manipulate the control and status registers.  These registers 
-cannot be accessed using a direct read modify write operation outside of the 
-ISR as some bits are left unchanged by writing with a 0, and some are left 
+/* Macros to manipulate the control and status registers.  These registers
+cannot be accessed using a direct read modify write operation outside of the
+ISR as some bits are left unchanged by writing with a 0, and some are left
 unchanged by writing with a 1. */
 
 

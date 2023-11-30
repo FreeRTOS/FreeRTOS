@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -331,10 +331,10 @@ void LCD_SetHorizontalTimings(
 void* LCD_SetFrameBufferAddress(void *address)
 {
     void *pOldBuffer;
-    
+
     pOldBuffer = (void *) AT91C_BASE_LCDC->LCDC_BA1;
     AT91C_BASE_LCDC->LCDC_BA1 = (unsigned int) address;
-    
+
     return pOldBuffer;
 }
 
@@ -456,10 +456,10 @@ void LCD_DecodeRGB(
             //TRACE_DEBUG("r ");
             while( offsetLine < (width*offset*(bpp/8)) ) {
                 offsetLine++;
-            }            
+            }
         }
         offset++;
-    }        
+    }
 }
 
 #endif

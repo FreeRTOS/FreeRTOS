@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the CRC firmware 
+  * @brief   This file contains all the functions prototypes for the CRC firmware
   *          library.
   ******************************************************************************
   * @attention

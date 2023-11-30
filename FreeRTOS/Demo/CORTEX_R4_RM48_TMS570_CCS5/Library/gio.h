@@ -2,7 +2,7 @@
 *   @brief GIO Driver Definition File
 *   @date 11.August.2009
 *   @version 1.01.000
-*   
+*
 */
 
 /* (c) Texas Instruments 2009-2010, All rights reserved. */

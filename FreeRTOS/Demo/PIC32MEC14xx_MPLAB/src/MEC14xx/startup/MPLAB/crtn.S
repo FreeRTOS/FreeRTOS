@@ -43,8 +43,8 @@
  ********************************************************************/
 
 #ifdef __LIBBUILD__
-	# Replace the standard debugging information with a simple filename. This 
-	# prevents the library build directory from showing up in MPLAB IDE. It 
+	# Replace the standard debugging information with a simple filename. This
+	# prevents the library build directory from showing up in MPLAB IDE. It
 	# also effectively disables source-line debugging.
 	.file 1 "libpic32/startup/crtn.s"
 	.loc 1 0

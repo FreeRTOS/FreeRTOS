@@ -114,7 +114,7 @@ extern void AFEC_Initialize( Afec* pAFE, uint32_t dwID )
  */
 
 extern uint32_t AFEC_SetClock( Afec* pAFE, uint32_t dwClk, uint32_t dwMck )
-{ 
+{
 	uint32_t dwPres, dwMr;
 	/* Formula for PRESCAL is:
 	   PRESCAL = peripheral clock/ fAFE Clock - 1 */
@@ -137,7 +137,7 @@ extern uint32_t AFEC_SetClock( Afec* pAFE, uint32_t dwClk, uint32_t dwMck )
  * \param dwTracking tracking value
  * \param dwSettling settling value
  */
-extern void AFEC_SetTiming( Afec* pAFE, uint32_t dwStartup, uint32_t dwTracking, 
+extern void AFEC_SetTiming( Afec* pAFE, uint32_t dwStartup, uint32_t dwTracking,
 						uint32_t dwSettling )
 {
 	uint32_t dwMr;
@@ -215,7 +215,7 @@ extern void AFEC_SetSequenceMode( Afec *pAFE, uint8_t bEnDis )
 		   AFEC_SEQR1 and AFEC_SEQR2 */
 		pAFE->AFEC_MR |=  AFEC_MR_USEQ;
 	} else {
-		/* Normal Mode: The controller converts channels in a simple 
+		/* Normal Mode: The controller converts channels in a simple
 		numeric order. */
 		pAFE->AFEC_MR &= ~AFEC_MR_USEQ;
 	}

@@ -38,20 +38,20 @@
 ///
 /// -# Configures a TWI peripheral to operate in master mode, at the given
 /// frequency (in Hz) using TWI_ConfigureMaster().
-/// -# or if hardware possible, configures a TWI peripheral to operate in 
+/// -# or if hardware possible, configures a TWI peripheral to operate in
 /// slave mode, at the given frequency (in Hz) using TWI_ConfigureSlave().
 /// -# Sends a STOP condition on the TWI using TWI_Stop().
 /// -# Starts a read operation on the TWI bus with the specified slave using
-/// TWI_StartRead(). Data must then be read using TWI_ReadByte() whenever 
+/// TWI_StartRead(). Data must then be read using TWI_ReadByte() whenever
 /// a byte is available (poll using TWI_ByteReceived()).
 /// -# Starts a write operation on the TWI to access the selected slave using
 /// TWI_StartWrite(). A byte of data must be provided to start the write;
-/// other bytes are written next. 
+/// other bytes are written next.
 /// -# Sends a byte of data to one of the TWI slaves on the bus using TWI_WriteByte().
 /// This function must be called once before TWI_StartWrite() with the first byte of data
 /// to send, then it shall be called repeatedly after that to send the remaining bytes.
 /// -# Check if a byte has been received and can be read on the given TWI
-/// peripheral using TWI_ByteReceived(). 
+/// peripheral using TWI_ByteReceived().
 /// Check if a byte has been sent using TWI_ByteSent().
 /// -# Check if the current transmission is complete (the STOP has been sent)
 /// using TWI_TransferComplete().
@@ -59,7 +59,7 @@
 /// using TWI_EnableIt() and TWI_DisableIt().
 /// -# Get current status register of the given TWI peripheral using
 /// TWI_GetStatus(). Get current status register of the given TWI peripheral, but
-/// masking interrupt sources which are not currently enabled using 
+/// masking interrupt sources which are not currently enabled using
 /// TWI_GetMaskedStatus().
 //------------------------------------------------------------------------------
 

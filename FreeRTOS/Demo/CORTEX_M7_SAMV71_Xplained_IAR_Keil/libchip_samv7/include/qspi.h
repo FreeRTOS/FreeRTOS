@@ -76,22 +76,22 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-   
+
 typedef enum{
      Device_Read,
      Device_Write
 }AccesType;
-       
+
 
 typedef struct {
   uint8_t       Instruction;
-  uint8_t       InstAddrFlag;  
+  uint8_t       InstAddrFlag;
   uint8_t       Option;
   uint8_t       OptionEn;
   uint8_t       OptionLen;
   uint8_t       ContinuousRead;
   uint8_t       DummyCycles;
-  uint8_t       spiMode;  
+  uint8_t       spiMode;
   uint32_t      DataSize;
   uint32_t      InstAddr;
   uint8_t       *pData;

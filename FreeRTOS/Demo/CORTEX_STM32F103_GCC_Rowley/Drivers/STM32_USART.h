@@ -29,7 +29,7 @@
 
 /*
  * Initialise a COM port.  As supplied 2 COM ports are supported, so ulPort can
- * be either 0 or 1.  Note that COM 0 is in effect USART1 in ST library 
+ * be either 0 or 1.  Note that COM 0 is in effect USART1 in ST library
  * terminology.  The baud rate can be any standard baud rate and has been tested
  * up to 115200 baud.
  */
@@ -39,30 +39,30 @@ long lCOMPortInit( unsigned long ulPort, unsigned long ulWantedBaud );
  * Output a single char to a COM port.  As supplied 2 COM ports are supported,
  * so ulPort can be 0 or 1.  Note that COM 0 is in effect USART1 in ST library
  * terminology.  cOutChar is the character to be transmit, and xBlockTime is
- * the time the task should be held in the Blocked state (in ticks) for space 
- * to become available in the queue of characters waiting transmission.  pdPASS 
- * will be returned if the character is successfully queued (possible after 
- * waiting in the Blocked state for up to xBlockTime ticks), otherwise pdFAIL 
+ * the time the task should be held in the Blocked state (in ticks) for space
+ * to become available in the queue of characters waiting transmission.  pdPASS
+ * will be returned if the character is successfully queued (possible after
+ * waiting in the Blocked state for up to xBlockTime ticks), otherwise pdFAIL
  * will be returned.
  */
 signed long xSerialPutChar( long lPort, signed char cOutChar, TickType_t xBlockTime );
 
 /*
- * Retrieve a character from the queue of received characters.  As supplied 2 
- * COM ports are supported, so ulPort can be 0 or 1.  Note that COM 0 is in 
+ * Retrieve a character from the queue of received characters.  As supplied 2
+ * COM ports are supported, so ulPort can be 0 or 1.  Note that COM 0 is in
  * effect USART1 in ST library terminology.  pcRxedChar is the address into
- * which the received character will be copied, and xBlockTime is the time the 
+ * which the received character will be copied, and xBlockTime is the time the
  * task should be held in the Blocked state (in ticks) for a character to be
  * available if one is not available immediately.  pdPASS will be returned if a
- * character is successfully returned (possible after waiting in the Blocked 
+ * character is successfully returned (possible after waiting in the Blocked
  * state for up to xBlockTime ticks), otherwise pdFAIL will be returned.
  */
 signed long xSerialGetChar( long lPort, signed char *pcRxedChar, TickType_t xBlockTime );
 
 /*
- * Send a string of characters to a COM port.  As supplied 2 COM ports are 
- * supported, so ulPort can be 0 or 1.  Note that COM 0 is in effect USART1 in 
- * ST library terminology.  pcString contains the address of the first 
+ * Send a string of characters to a COM port.  As supplied 2 COM ports are
+ * supported, so ulPort can be 0 or 1.  Note that COM 0 is in effect USART1 in
+ * ST library terminology.  pcString contains the address of the first
  * character to be transmit, and ulStringLength the total number of characters
  * from and including *pcString.  pdPASS will be returned if the entire string
  * is queued for transmission successfully, otherwise pdFAIL will be returned.

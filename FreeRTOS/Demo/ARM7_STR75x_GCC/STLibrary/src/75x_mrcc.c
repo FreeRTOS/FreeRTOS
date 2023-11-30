@@ -38,7 +38,7 @@
 #define MRCC_CKRTCOK_Mask            0x08000000
 #define MRCC_LPOSCEN_Mask            0x10000000
 #define MRCC_OSC32KEN_Mask           0x20000000
-            
+
 /* MRCC_CLKCTL mask bits */
 #define MRCC_PPRESC_Set_Mask        0x00000003
 #define MRCC_PPRESC_Reset_Mask      0xFFFFFFFC
@@ -50,7 +50,7 @@
 #define MRCC_XTDIV2_Reset_Mask      0xFFFF7FFF
 #define MRCC_OSC4MBYP_Set_Mask      0x00010000
 #define MRCC_OSC4MBYP_Reset_Mask    0xFFFEFFFF
-#define MRCC_OSC4MOFF_Set_Mask      0x00020000  
+#define MRCC_OSC4MOFF_Set_Mask      0x00020000
 #define MRCC_OSC4MOFF_Reset_Mask    0xFFFDFFFF
 #define MRCC_NCKDF_Set_Mask         0x00040000
 #define MRCC_NCKDF_Reset_Mask       0xFFFBFFFF
@@ -70,19 +70,19 @@
 #define MRCC_PLLEN_LOCK_Mask        0x81000000
 
 /* Typical Value of the OSC4M in Hz */
-#define OSC4M_Value    4000000   
+#define OSC4M_Value    4000000
 
 /* Typical Value of the OSC4M divided by 128 (used to clock the RTC) in Hz */
 #define OSC4M_Div128_Value    31250
-   
+
 /* Typical Value of the OS32K Oscillator Frequency in Hz */
-#define OSC32K_Value    32768     
+#define OSC32K_Value    32768
 
 /* Typical Reset Value of the Internal LPOSC Oscillator Frequency in Hz */
-#define LPOSC_Value    245000   
+#define LPOSC_Value    245000
 
 /* Typical Reset Value of the Internal FREEOSC Oscillator Frequency in Hz */
-#define FREEOSC_Value    5000000 
+#define FREEOSC_Value    5000000
 
 /* Time out for OSC4M start up */
 #define OSC4MStartUp_TimeOut   0xFE
@@ -102,12 +102,12 @@ static void WriteCKOSCSELBit(void);
 /*******************************************************************************
 * Function Name  : MRCC_DeInit
 * Description    : Deinitializes the MRCC peripheral registers to their default
-*                  reset values. 
+*                  reset values.
 *                   - Depending on the system clock state, some bits in MRCC_CLKCTL
 *                     register can’t be reset.
-*                   - The OSC32K, LPOSC and RTC clock selection configuration 
-*                     bits in MRCC_PWRCTRL register are not cleared by this  
-*                     function. To reset those bits, use the dedicated functions 
+*                   - The OSC32K, LPOSC and RTC clock selection configuration
+*                     bits in MRCC_PWRCTRL register are not cleared by this
+*                     function. To reset those bits, use the dedicated functions
 *                     available within this driver.
 *                   - The MRCC_RFSR, MRCC_BKP0 and MRCC_BKP1 registers are not
 *                     reset by this function.
@@ -123,13 +123,13 @@ void MRCC_DeInit(void)
   if((MRCC->CLKCTL & MRCC_NCKDF_Set_Mask) != RESET)
   {/* No clock detected on OSC4M */
 
-    /* Reset LOCKIE, LOCKIF, CKUSBSEL, NCKDIE, OSC4MOFF, OSC4MBYP, MCOS[1:0], 
+    /* Reset LOCKIE, LOCKIF, CKUSBSEL, NCKDIE, OSC4MOFF, OSC4MBYP, MCOS[1:0],
        MCOP, HPRESC[1:0], PPRES[2:0] bits */
     MRCC->CLKCTL &= 0x9FB40000;
-     
+
     if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)
-    { 
-      /* Clear CKOSCSEL bit --------------------------------------------------*/         
+    {
+      /* Clear CKOSCSEL bit --------------------------------------------------*/
       /* Execute CKOSCSEL bit writing sequence */
       WriteCKOSCSELBit();
     }
@@ -138,7 +138,7 @@ void MRCC_DeInit(void)
   {/* Clock present on OSC4M */
 
     if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)
-    { 
+    {
       /* Reset CKSEL bit */
       MRCC->CLKCTL &= MRCC_CKSEL_Reset_Mask;
 
@@ -150,7 +150,7 @@ void MRCC_DeInit(void)
     if((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) == RESET)
     {
       /* Set CKSEL bit */
-      MRCC->CLKCTL |= MRCC_CKSEL_Set_Mask;  
+      MRCC->CLKCTL |= MRCC_CKSEL_Set_Mask;
     }
 
     /* Disable PLL */
@@ -164,27 +164,27 @@ void MRCC_DeInit(void)
     MRCC->CLKCTL &= MRCC_CKSEL_Reset_Mask;
 
     /* Reset OSC4MOFF and OSC4MBYP bits */
-    MRCC->CLKCTL &= 0xFFFCFFFF;   
+    MRCC->CLKCTL &= 0xFFFCFFFF;
   }
 
   /* Reset RTCM, EN33V, LP_PARAM[15:13], WFI_FLASH_EN, LPMC_DBG and LPMC[1:0] bits */
   MRCC->PWRCTRL &= 0xFBFE1FE1;
-  
+
   /* Reset PCLKEN register bits */
   MRCC->PCLKEN = 0x00;
-  
+
   /* Reset PSWRES register bits */
-  MRCC->PSWRES = 0x00;  
+  MRCC->PSWRES = 0x00;
 
   /* Clear NCKDF bit */
-  MRCC->CLKCTL &= MRCC_NCKDF_Reset_Mask; 
+  MRCC->CLKCTL &= MRCC_NCKDF_Reset_Mask;
 }
 
 /*******************************************************************************
 * Function Name  : MRCC_XTDIV2Config
 * Description    : Enables or disables the oscillator divider by 2. This function
 *                  must not be used when the PLL is enabled.
-* Input          : - MRCC_XTDIV2: specifies the new state of the oscillator 
+* Input          : - MRCC_XTDIV2: specifies the new state of the oscillator
 *                    divider by 2.
 *                    This parameter can be one of the following values:
 *                          - MRCC_XTDIV2_Disable: oscillator divider by 2 disbaled
@@ -201,7 +201,7 @@ void MRCC_XTDIV2Config(u32 MRCC_XTDIV2)
   else
   {
     MRCC->CLKCTL &= MRCC_XTDIV2_Disable;
-  }  
+  }
 }
 
 /*******************************************************************************
@@ -257,7 +257,7 @@ ErrorStatus MRCC_CKSYSConfig(u32 MRCC_CKSYS, u32 MRCC_PLL)
 
     case MRCC_CKSYS_RTC:
       if((MRCC_PLL == MRCC_PLL_Disabled) || (MRCC_PLL == MRCC_PLL_NoChange))
-      {    
+      {
         Status = SetCKSYS_RTC(MRCC_PLL);
       }
       break;
@@ -285,15 +285,15 @@ ErrorStatus MRCC_CKSYSConfig(u32 MRCC_CKSYS, u32 MRCC_PLL)
 void MRCC_HCLKConfig(u32 MRCC_HCLK)
 {
   u32 Temp = 0;
-  
+
   /* Clear HPRESC[1:0] bits */
   Temp = MRCC->CLKCTL & MRCC_HPRESC_Reset_Mask;
-  
+
   /* Set HPRESC[1:0] bits according to MRCC_HCLK value */
   Temp |= MRCC_HCLK;
-  
+
   /* Store the new value */
-  MRCC->CLKCTL = Temp;  
+  MRCC->CLKCTL = Temp;
 }
 
 /*******************************************************************************
@@ -312,13 +312,13 @@ void MRCC_HCLKConfig(u32 MRCC_HCLK)
 void MRCC_CKTIMConfig(u32 MRCC_CKTIM)
 {
   u32 Temp = 0;
-  
+
   /* Clear PPRESC[1:0] bits */
   Temp = MRCC->CLKCTL & MRCC_PPRESC_Reset_Mask;
-  
+
   /* Set PPRESC[1:0] bits according to MRCC_CKTIM value */
   Temp |= MRCC_CKTIM;
-  
+
   /* Store the new value */
   MRCC->CLKCTL = Temp;
 }
@@ -326,7 +326,7 @@ void MRCC_CKTIMConfig(u32 MRCC_CKTIM)
 /*******************************************************************************
 * Function Name  : MRCC_PCLKConfig
 * Description    : Configures the APB clock (PCLK).
-* Input          : - MRCC_PCLK: defines the APB clock. This clock is derived 
+* Input          : - MRCC_PCLK: defines the APB clock. This clock is derived
 *                    from the TIM clock(CK_TIM).
 *                    This parameter can be one of the following values:
 *                          - MRCC_CKTIM_Div1: APB clock = CKTIM
@@ -368,12 +368,12 @@ ErrorStatus MRCC_CKRTCConfig(u32 MRCC_CKRTC)
 
   if(((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET) &&
      ((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET))
-  { 
+  {
     /* CK_RTC used as CK_SYS clock source */
     return ERROR;
   }
   else
-  {    
+  {
     /* Clear CKRTCSEL[1:0] bits */
     Tmp = MRCC->PWRCTRL & MRCC_CKRTCSEL_Reset_Mask;
 
@@ -381,7 +381,7 @@ ErrorStatus MRCC_CKRTCConfig(u32 MRCC_CKRTC)
     Tmp |= MRCC_CKRTC;
 
     /* Store the new value */
-    MRCC->PWRCTRL = Tmp;       
+    MRCC->PWRCTRL = Tmp;
   }
 
   return SUCCESS;
@@ -414,7 +414,7 @@ ErrorStatus MRCC_CKUSBConfig(u32 MRCC_CKUSB)
   {
     if((MRCC->CLKCTL & MRCC_PLLEN_LOCK_Mask) != RESET)
     { /* PLL enabled and locked */
-      
+
       /* Enable CK_PLL2 */
       MRCC->CLKCTL |= MRCC_PLL2EN_Set_Mask;
 
@@ -428,7 +428,7 @@ ErrorStatus MRCC_CKUSBConfig(u32 MRCC_CKUSB)
     }
   }
 
-  return SUCCESS;  
+  return SUCCESS;
 }
 
 /*******************************************************************************
@@ -522,7 +522,7 @@ void MRCC_GetClocksStatus(MRCC_ClocksTypeDef*  MRCC_ClocksStatus)
   u32 Presc = 0;
 
   /* Get the Status of PLL */
-  if((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) == RESET)  
+  if((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) == RESET)
   {
     MRCC_ClocksStatus->PLL_Status = OFF;
   }
@@ -530,59 +530,59 @@ void MRCC_GetClocksStatus(MRCC_ClocksTypeDef*  MRCC_ClocksStatus)
   {
     MRCC_ClocksStatus->PLL_Status = ON;
   }
-  
+
   /* Get the Status of OSC4M */
-  if((MRCC->CLKCTL & MRCC_OSC4MOFF_Set_Mask) == RESET)  
+  if((MRCC->CLKCTL & MRCC_OSC4MOFF_Set_Mask) == RESET)
   {
     MRCC_ClocksStatus->OSC4M_Status = ON;
   }
   else
   {
     MRCC_ClocksStatus->OSC4M_Status = OFF;
-  }  
-  
+  }
+
   /* Get the Status of LPOSC */
-  if((MRCC->PWRCTRL & MRCC_LPOSCEN_Mask) == RESET)  
+  if((MRCC->PWRCTRL & MRCC_LPOSCEN_Mask) == RESET)
   {
     MRCC_ClocksStatus->LPOSC_Status = OFF;
   }
   else
   {
     MRCC_ClocksStatus->LPOSC_Status = ON;
-  }  
-  
+  }
+
   /* Get the Status of OSC32K */
-  if((MRCC->PWRCTRL & MRCC_OSC32KEN_Mask) == RESET)  
+  if((MRCC->PWRCTRL & MRCC_OSC32KEN_Mask) == RESET)
   {
     MRCC_ClocksStatus->OSC32K_Status = OFF;
   }
   else
   {
     MRCC_ClocksStatus->OSC32K_Status = ON;
-  } 
-    
-/* Get CKU_SB source ---------------------------------------------------------*/  
+  }
+
+/* Get CKU_SB source ---------------------------------------------------------*/
   if((MRCC->CLKCTL & MRCC_CKUSBSEL_Mask) != RESET)
   {
-    MRCC_ClocksStatus->CKUSB_Source = External;    
+    MRCC_ClocksStatus->CKUSB_Source = External;
   }
   else
-  {  
+  {
     if((MRCC->CLKCTL & MRCC_PLL2EN_Set_Mask) != RESET)
     {
       MRCC_ClocksStatus->CKUSB_Source = Internal;
-    
+
     }
-    else 
+    else
     {
-      MRCC_ClocksStatus->CKUSB_Source = Disabled;    
+      MRCC_ClocksStatus->CKUSB_Source = Disabled;
     }
   }
 
-/* Get CK_RTC source ---------------------------------------------------------*/ 
+/* Get CK_RTC source ---------------------------------------------------------*/
   Temp = MRCC->PWRCTRL & MRCC_CKRTCSEL_Set_Mask;
   Temp = Temp >> 24;
-    
+
   switch(Temp)
   {
     case 0x00:
@@ -596,46 +596,46 @@ void MRCC_GetClocksStatus(MRCC_ClocksTypeDef*  MRCC_ClocksStatus)
     case 0x02:
       MRCC_ClocksStatus->CKRTC_Source = OSC32K;
       break;
-        
+
     case 0x03:
-      MRCC_ClocksStatus->CKRTC_Source = LPOSC;              
+      MRCC_ClocksStatus->CKRTC_Source = LPOSC;
       break;
-        
+
     default:
       MRCC_ClocksStatus->CKRTC_Source = Disabled;
-      break;          
+      break;
   }
-      
-/* Get CK_SYS source ---------------------------------------------------------*/   
+
+/* Get CK_SYS source ---------------------------------------------------------*/
   if((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET)
   {/* CK_OSC used as CK_SYS clock source */
-    
+
     if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)
     { /* CK_RTC used as CK_OSC clock source */
       MRCC_ClocksStatus->CKSYS_Source = CKRTC;
-      
+
       if(MRCC_ClocksStatus->CKRTC_Source == OSC32K)
       {
         /* CK_SYS clock frequency */
-        MRCC_ClocksStatus->CKSYS_Frequency = OSC32K_Value;         
-      }         
+        MRCC_ClocksStatus->CKSYS_Frequency = OSC32K_Value;
+      }
       else if(MRCC_ClocksStatus->CKRTC_Source == LPOSC)
 
       {
         /* CK_SYS clock frequency */
-        MRCC_ClocksStatus->CKSYS_Frequency = LPOSC_Value;             
+        MRCC_ClocksStatus->CKSYS_Frequency = LPOSC_Value;
       }
       else if(MRCC_ClocksStatus->CKRTC_Source == OSC4M_Div128)
 
       {
         /* CK_SYS clock frequency */
-        MRCC_ClocksStatus->CKSYS_Frequency = OSC4M_Div128_Value;             
+        MRCC_ClocksStatus->CKSYS_Frequency = OSC4M_Div128_Value;
       }
     }
     else
     { /* OSC4M used as CK_OSC clock source */
-      MRCC_ClocksStatus->CKSYS_Source = OSC4M; 
-    
+      MRCC_ClocksStatus->CKSYS_Source = OSC4M;
+
       if((MRCC->CLKCTL & MRCC_XTDIV2_Set_Mask) != RESET)
       {
         /* CK_SYS clock frequency */
@@ -645,27 +645,27 @@ void MRCC_GetClocksStatus(MRCC_ClocksTypeDef*  MRCC_ClocksStatus)
       {
         /* CK_SYS clock frequency */
         MRCC_ClocksStatus->CKSYS_Frequency = Main_Oscillator;
-      }          
+      }
     }
-  }     
+  }
   else
   {/* CK_PLL1 used as CK_SYS clock */
-    
+
     if(MRCC_ClocksStatus->PLL_Status == OFF)
     { /* FREEOSC used as CK_PLL1 clock source */
-      MRCC_ClocksStatus->CKSYS_Source = FREEOSC; 
-      
+      MRCC_ClocksStatus->CKSYS_Source = FREEOSC;
+
       /* CK_SYS clock frequency */
-      MRCC_ClocksStatus->CKSYS_Frequency = FREEOSC_Value;               
+      MRCC_ClocksStatus->CKSYS_Frequency = FREEOSC_Value;
     }
     else
     { /* OSC4M followed by PLL used as CK_PLL1 clock source */
       MRCC_ClocksStatus->CKSYS_Source = OSC4MPLL;
-                    
+
       /* Get PLL factor ------------------------------------------------------*/
       Temp = MRCC->CLKCTL & MRCC_MX_Set_Mask;
       Temp = Temp >> 27;
-    
+
       switch(Temp)
       {
         case 0x00:
@@ -679,22 +679,22 @@ void MRCC_GetClocksStatus(MRCC_ClocksTypeDef*  MRCC_ClocksStatus)
         case 0x02:
           PLLMul = 14;
           break;
-        
+
         case 0x03:
           PLLMul = 12;
           break;
-        
+
         default:
           PLLMul = 16;
-          break;          
-      } 
-      
+          break;
+      }
+
       /* CK_SYS clock frequency */
-      MRCC_ClocksStatus->CKSYS_Frequency = OSC4M_Value * PLLMul;     
+      MRCC_ClocksStatus->CKSYS_Frequency = OSC4M_Value * PLLMul;
     }
   }
 
-/* Compute HCLK, CKTIM and PCLK clocks frequencies ---------------------------*/    
+/* Compute HCLK, CKTIM and PCLK clocks frequencies ---------------------------*/
   /* Get HCLK prescaler */
   Presc = MRCC->CLKCTL & MRCC_HPRESC_Set_Mask;
   Presc = Presc >> 3;
@@ -705,7 +705,7 @@ void MRCC_GetClocksStatus(MRCC_ClocksTypeDef*  MRCC_ClocksStatus)
   Presc = MRCC->CLKCTL & MRCC_PPRESC_Set_Mask;
   /* CK_TIM clock frequency */
   MRCC_ClocksStatus->CKTIM_Frequency = MRCC_ClocksStatus->HCLK_Frequency >> Presc;
- 
+
   /* Get PCLK prescaler */
   Presc = MRCC->CLKCTL & MRCC_PPRESC2_Mask;
   Presc = Presc >> 2;
@@ -760,13 +760,13 @@ void MRCC_EnterWFIMode(u32 MRCC_WFIParam)
 /* Low Power mode control parameters configuration ---------------------------*/
   /* Clear LP_PARAM[15:13] and WFI_FLASH_EN bits */
   MRCC->PWRCTRL &= MRCC_WFIParam_Reset_Mask;
-  
+
   if(MRCC_WFIParam != MRCC_WFIParam_FLASHPowerDown)
   {
     /* Set LP_PARAM[15:13] and WFI_FLASH_EN bits according to MRCC_WFIParam value */
     MRCC->PWRCTRL |= MRCC_WFIParam;
   }
-    
+
 /* Execute the Low Power bit writing sequence --------------------------------*/
   WriteLPBit();
 }
@@ -792,7 +792,7 @@ void MRCC_EnterSTOPMode(u32 MRCC_STOPParam)
 /* Low Power mode control parameters configuration ---------------------------*/
   /* Clear LP_PARAM[15:13] bits */
   MRCC->PWRCTRL &= MRCC_LPPARAM_Reset_Mask;
-  
+
   if(MRCC_STOPParam != MRCC_STOPParam_Default)
   {
     /* Set LP_PARAM[15:13] bits according to MRCC_STOPParam value */
@@ -950,7 +950,7 @@ void MRCC_MCOConfig(u32 MRCC_MCO, u32 MCO_MCOPrescaler)
 
   /* Set MCOS[1:0] bits according to MRCC_MCO value */
   Temp |= MRCC_MCO;
-  
+
   /* Store the new value */
   MRCC->CLKCTL = Temp;
 }
@@ -974,40 +974,40 @@ ErrorStatus MRCC_OSC4MConfig(u32 MRCC_OSC4M)
 {
   ErrorStatus Status = SUCCESS;
 
-/* If CK_SYS is driven by OSC4M or the PLL is enabled, exit ------------------*/           
-  if(((MRCC->CLKCTL & MRCC_CKSEL_CKOSCSEL_Mask) == MRCC_CKSEL_Set_Mask) ||    
+/* If CK_SYS is driven by OSC4M or the PLL is enabled, exit ------------------*/
+  if(((MRCC->CLKCTL & MRCC_CKSEL_CKOSCSEL_Mask) == MRCC_CKSEL_Set_Mask) ||
      (((MRCC->CLKCTL & MRCC_CKSEL_CKOSCSEL_Mask) == MRCC_CKSEL_CKOSCSEL_Mask) &&
      ((MRCC->PWRCTRL & MRCC_CKRTCSEL_Reset_Mask) != RESET))||
      ((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) != RESET))
   {
     Status = ERROR;
   }
-/* Else configure the OSC4MOFF and OSC4MBYP bits -----------------------------*/   
+/* Else configure the OSC4MOFF and OSC4MBYP bits -----------------------------*/
   else
-  {  
+  {
     switch(MRCC_OSC4M)
     {
       case MRCC_OSC4M_Default:
         MRCC->CLKCTL &= MRCC_OSC4MOFF_Reset_Mask & MRCC_OSC4MBYP_Reset_Mask;
         break;
-      
+
       case MRCC_OSC4M_Disable:
         MRCC->CLKCTL &= MRCC_OSC4MBYP_Reset_Mask;
         MRCC->CLKCTL |= MRCC_OSC4MOFF_Set_Mask;
         break;
-        
+
       case MRCC_OSC4M_Bypass:
         MRCC->CLKCTL &= MRCC_OSC4MOFF_Reset_Mask;
         MRCC->CLKCTL |= MRCC_OSC4MBYP_Set_Mask;
-        break;        
-      
+        break;
+
       default:
         Status =  ERROR;
-        break;      
+        break;
     }
-  }  
-  
-  return Status; 
+  }
+
+  return Status;
 }
 
 /*******************************************************************************
@@ -1023,23 +1023,23 @@ ErrorStatus MRCC_OSC4MConfig(u32 MRCC_OSC4M)
 *                    bypassed or not.
 *                    This parameter can be one of the following values:
 *                          - MRCC_OSC32KBypass_Disable: OSC32K selected
-*                          - MRCC_OSC32KBypass_Enable: OSC32K bypassed                          
+*                          - MRCC_OSC32KBypass_Enable: OSC32K bypassed
 * Output         : None
 * Return         : An ErrorStatus enumuration value:
 *                         - SUCCESS: Clock configuration succeeded
 *                         - ERROR: Clock configuration failed
 *******************************************************************************/
 ErrorStatus MRCC_OSC32KConfig(u32 MRCC_OSC32K, u32 MRCC_OSC32KBypass)
-{ 
-/* If CK_SYS is driven by CK_RTC, exit ---------------------------------------*/     
+{
+/* If CK_SYS is driven by CK_RTC, exit ---------------------------------------*/
   if(((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET) &&
       ((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET))
   {
     return ERROR;
   }
-/* Else configure the OSC32KEN and OSC32KBYP bits ----------------------------*/ 
+/* Else configure the OSC32KEN and OSC32KBYP bits ----------------------------*/
   else
-  { 
+  {
     /* Configure OSC32KEN bit */
     if(MRCC_OSC32K == MRCC_OSC32K_Enable)
     {
@@ -1049,7 +1049,7 @@ ErrorStatus MRCC_OSC32KConfig(u32 MRCC_OSC32K, u32 MRCC_OSC32KBypass)
     {
       MRCC->PWRCTRL &= MRCC_OSC32K_Disable;
     }
-    
+
     /* Configure OSC32KBYP bit */
     if(MRCC_OSC32KBypass == MRCC_OSC32KBypass_Enable)
     {
@@ -1058,9 +1058,9 @@ ErrorStatus MRCC_OSC32KConfig(u32 MRCC_OSC32K, u32 MRCC_OSC32KBypass)
     else
     {
       MRCC->PWRCTRL &= MRCC_OSC32KBypass_Disable;
-    }   
-     
-    return SUCCESS;   
+    }
+
+    return SUCCESS;
   }
 }
 
@@ -1080,16 +1080,16 @@ ErrorStatus MRCC_OSC32KConfig(u32 MRCC_OSC32K, u32 MRCC_OSC32KBypass)
 *******************************************************************************/
 ErrorStatus MRCC_LPOSCConfig(u32 MRCC_LPOSC)
 {
-/* If CK_SYS is driven by CK_RTC or LPOSC is used as CK_RTC clock source, exit*/      
+/* If CK_SYS is driven by CK_RTC or LPOSC is used as CK_RTC clock source, exit*/
   if((((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET) &&
      ((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)) ||
-     ((MRCC->PWRCTRL & MRCC_CKRTCSEL_Set_Mask) == MRCC_CKRTC_LPOSC)) 
+     ((MRCC->PWRCTRL & MRCC_CKRTCSEL_Set_Mask) == MRCC_CKRTC_LPOSC))
   {
     return ERROR;
   }
-/* Else configure the LPOSCEN bit --------------------------------------------*/  
+/* Else configure the LPOSCEN bit --------------------------------------------*/
   else
-  {   
+  {
     if(MRCC_LPOSC == MRCC_LPOSC_Enable)
     {
       MRCC->PWRCTRL |= MRCC_LPOSC_Enable;
@@ -1100,13 +1100,13 @@ ErrorStatus MRCC_LPOSCConfig(u32 MRCC_LPOSC)
     }
 
     return SUCCESS;
-  }     
+  }
 }
 
 /*******************************************************************************
 * Function Name  : MRCC_RTCMConfig
 * Description    : Enables or disables RTC clock measurement.
-* Input          : - MRCC_RTCM: specifies whether CK_RTC is connected to TB 
+* Input          : - MRCC_RTCM: specifies whether CK_RTC is connected to TB
 *                    timer IC1 or not.
 *                    This parameter can be one of the following values:
 *                          - MRCC_RTCM_Disable: CK_RTC not connected to TB timer IC1
@@ -1123,7 +1123,7 @@ void MRCC_RTCMConfig(u32 MRCC_RTCM)
   else
   {
     MRCC->PWRCTRL &= MRCC_RTCM_Disable;
-  }  
+  }
 }
 
 /*******************************************************************************
@@ -1136,7 +1136,7 @@ void MRCC_RTCMConfig(u32 MRCC_RTCM)
 * Return         : None
 *******************************************************************************/
 void MRCC_SetBuilderCounter(u8 BuilderCounter)
-{ 
+{
   *(u8 *) 0x60000026 = BuilderCounter;
 }
 
@@ -1199,7 +1199,7 @@ FlagStatus MRCC_GetFlagStatus(u8 MRCC_FLAG)
   {
     StatusReg = MRCC->PWRCTRL;
   }
-  
+
   if((StatusReg & (1 << FlagPos))!= RESET)
   {
     return SET;
@@ -1314,7 +1314,7 @@ ErrorStatus MRCC_WaitForOSC4MStartUp(void)
 
   }while((MRCC_GetFlagStatus(MRCC_FLAG_BCOUNT) == RESET)&&
          (StartUpCounter != OSC4MStartUp_TimeOut));
-  
+
   if(MRCC_GetFlagStatus(MRCC_FLAG_BCOUNT) != RESET)
   {
     return SUCCESS;
@@ -1322,7 +1322,7 @@ ErrorStatus MRCC_WaitForOSC4MStartUp(void)
   else
   {
     return ERROR;
-  }  
+  }
 }
 
 /*******************************************************************************
@@ -1338,23 +1338,23 @@ static ErrorStatus SetCKSYS_FREEOSC(void)
 {
   /* Check if the PLL is enabled */
   if((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) != RESET)
-  {  
+  {
     if((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) == RESET)
     { /* CK_PLL1 used as Ck_SYS clock source*/
 
       if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)
-      {/* Check if CK_RTC source clock is present*/ 
-        if((MRCC->PWRCTRL & MRCC_CKRTCSEL_Set_Mask) == RESET) 
+      {/* Check if CK_RTC source clock is present*/
+        if((MRCC->PWRCTRL & MRCC_CKRTCSEL_Set_Mask) == RESET)
         {
           /* CK_RTC disabled*/
           return ERROR;
         }
       }
-      
+
       /* Select CK_OSC as CK_SYS clock source */
       MRCC->CLKCTL |= MRCC_CKSEL_Set_Mask;
-    }  
-    
+    }
+
     /* Disable PLL */
     MRCC->CLKCTL &= MRCC_PLLEN_Reset_Mask;
   }
@@ -1383,24 +1383,24 @@ static ErrorStatus SetCKSYS_FREEOSC(void)
 *******************************************************************************/
 static ErrorStatus SetCKSYS_OSC4M(u32 PLL_State)
 {
-/* If OSC4M is not present, exit ---------------------------------------------*/      
-  if(((MRCC->CLKCTL & MRCC_NCKDF_Set_Mask) != RESET) || 
-     ((MRCC->CLKCTL & MRCC_OSC4MOFF_Set_Mask) != RESET) ) 
+/* If OSC4M is not present, exit ---------------------------------------------*/
+  if(((MRCC->CLKCTL & MRCC_NCKDF_Set_Mask) != RESET) ||
+     ((MRCC->CLKCTL & MRCC_OSC4MOFF_Set_Mask) != RESET) )
   {
     /* OSC4M disabled or OSC4M clock is not present*/
     return ERROR;
   }
 
-/* Else configure CKSEL and CKOSCSEL bits ------------------------------------*/          
+/* Else configure CKSEL and CKOSCSEL bits ------------------------------------*/
   if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)
-  { /* CK_RTC used as CK_OSC clock */   
-  
-    if((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET) 
+  { /* CK_RTC used as CK_OSC clock */
+
+    if((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET)
     {
       /* Select CK_PLL1 as CK_SYS clock source */
       MRCC->CLKCTL &= MRCC_CKSEL_Reset_Mask;
     }
-    
+
     /* Clear CKOSCSEL bit ----------------------------------------------------*/
     /* Execute CKOSCSEL bit writing sequence */
     WriteCKOSCSELBit();
@@ -1410,8 +1410,8 @@ static ErrorStatus SetCKSYS_OSC4M(u32 PLL_State)
     {
       return ERROR;
     }
-  }  
- 
+  }
+
   /* Select CK_OSC as CK_SYS clock source */
   MRCC->CLKCTL |= MRCC_CKSEL_Set_Mask;
 
@@ -1422,13 +1422,13 @@ static ErrorStatus SetCKSYS_OSC4M(u32 PLL_State)
       /* Disable PLL */
       MRCC->CLKCTL &= MRCC_PLLEN_Reset_Mask;
     }
-    
+
     return SUCCESS;
   }
   else
   {
     return ERROR;
-  }  
+  }
 }
 
 /*******************************************************************************
@@ -1444,9 +1444,9 @@ static ErrorStatus SetCKSYS_OSC4M(u32 PLL_State)
 static ErrorStatus SetCKSYS_OSC4MPLL(u32 PLL_Mul)
 {
   /* Check if 4MHz main oscillator clock is present */
-  if(((MRCC->CLKCTL & MRCC_NCKDF_Set_Mask) == RESET) && 
-     ((MRCC->CLKCTL & MRCC_OSC4MOFF_Set_Mask) == RESET)) 
-  {    
+  if(((MRCC->CLKCTL & MRCC_NCKDF_Set_Mask) == RESET) &&
+     ((MRCC->CLKCTL & MRCC_OSC4MOFF_Set_Mask) == RESET))
+  {
     if(((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) != RESET) &&
        ((MRCC->CLKCTL & MRCC_MX_Set_Mask) == PLL_Mul))
     {
@@ -1476,7 +1476,7 @@ static ErrorStatus SetCKSYS_OSC4MPLL(u32 PLL_Mul)
         /* Clear CKOSCSEL bit ------------------------------------------------*/
         /* Execute CKOSCSEL bit writing sequence */
         WriteCKOSCSELBit();
-      
+
         /* Check if CKOSCSEL is set to 0 */
         if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) != RESET)
         {
@@ -1503,7 +1503,7 @@ static ErrorStatus SetCKSYS_OSC4MPLL(u32 PLL_Mul)
         /* Set MX[1:0] bits according to PLL_Mul value */
         MRCC->CLKCTL |= PLL_Mul;
       }
-       
+
       if(Main_Oscillator == 4000000)
       {/* 4 MHz external Quartz oscillator used as main oscillator */
         /* Disable Oscillator Divider by 2 */
@@ -1517,13 +1517,13 @@ static ErrorStatus SetCKSYS_OSC4MPLL(u32 PLL_Mul)
 
       /* Enable PLL */
       MRCC->CLKCTL |= MRCC_PLLEN_Set_Mask;
-   
+
       /* Wait until the PLL is locked */
       while((MRCC->CLKCTL & MRCC_LOCK_Mask) == RESET)
       {
         /* If OSC4M clock disapear or the PLL is disabled, exit */
         if(((MRCC->CLKCTL & MRCC_NCKDF_Set_Mask) != RESET) ||
-           ((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) == RESET))       
+           ((MRCC->CLKCTL & MRCC_PLLEN_Set_Mask) == RESET))
         {
           return ERROR;
         }
@@ -1542,7 +1542,7 @@ static ErrorStatus SetCKSYS_OSC4MPLL(u32 PLL_Mul)
       }
     }
   }
-  else 
+  else
   {
     /* OSC4M disabled or OSC4M clock is not present*/
     return ERROR;
@@ -1566,24 +1566,24 @@ static ErrorStatus SetCKSYS_RTC(u32 PLL_State)
   {
 /* Configure CK_RTC as Ck_SYS clock source -----------------------------------*/
     if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) == RESET)
-    { 
+    {
       /* Select CK_PLL1 as CK_SYS clock source */
       MRCC->CLKCTL &= MRCC_CKSEL_Reset_Mask;
-    
+
       /* Set CKOSCSEL bit ----------------------------------------------------*/
       /* Execute CKOSCSEL bit writing sequence */
       WriteCKOSCSELBit();
-      
+
       /* Check if CKOSCSEL is set to 1 */
       if((MRCC->CLKCTL & MRCC_CKOSCSEL_Set_Mask) == RESET)
       {
          return ERROR;
       }
     }
-    
+
     /* Select CK_OSC as CK_SYS clock source */
-    MRCC->CLKCTL |= MRCC_CKSEL_Set_Mask;          
-    
+    MRCC->CLKCTL |= MRCC_CKSEL_Set_Mask;
+
     if((MRCC->CLKCTL & MRCC_CKSEL_Set_Mask) != RESET)
     {
       if(PLL_State == MRCC_PLL_Disabled)
@@ -1591,19 +1591,19 @@ static ErrorStatus SetCKSYS_RTC(u32 PLL_State)
         /* Disable PLL */
         MRCC->CLKCTL &= MRCC_PLLEN_Reset_Mask;
       }
-    
+
       return SUCCESS;
     }
     else
     {
       return ERROR;
-    }    
+    }
   }
   else
-  {      
+  {
     /* CK_RTC disabled */
     return ERROR;
-  }  
+  }
 }
 
 /*******************************************************************************
@@ -1637,7 +1637,7 @@ static void WriteLPBit(void)
   MRCC->PWRCTRL = Tmp1;
 
   /* Read LP bit*/
-  Tmp = MRCC->PWRCTRL;  
+  Tmp = MRCC->PWRCTRL;
 }
 
 /*******************************************************************************
@@ -1666,7 +1666,7 @@ static void WriteCKOSCSELBit(void)
 
   /* Set CKOSCSEL bit */
   MRCC->CLKCTL = Tmp1;
-  
+
   /* Read CKOSCSEL bit */
   Tmp = MRCC->CLKCTL;
 }

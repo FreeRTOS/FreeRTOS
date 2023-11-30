@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -203,7 +203,7 @@ extern void FPU_setHalfPrecisionMode(uint32_t mode);
 //
 //! Selects the NaN mode.
 //!
-//! \param mode is the mode for NaN results; which is 
+//! \param mode is the mode for NaN results; which is
 //! either \b FPU_NAN_PROPAGATE or \b FPU_NAN_DEFAULT.
 //!
 //! This function selects the handling of NaN results during floating-point

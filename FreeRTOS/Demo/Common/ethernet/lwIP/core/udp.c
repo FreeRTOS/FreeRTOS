@@ -149,12 +149,12 @@ udp_input(struct pbuf *p, struct netif *inp)
     /* compare PCB local addr+port to UDP destination addr+port */
     if ((pcb->local_port == dest) &&
         (ip_addr_isany(&pcb->local_ip) ||
-         ip_addr_cmp(&(pcb->local_ip), &(iphdr->dest)) || 
+         ip_addr_cmp(&(pcb->local_ip), &(iphdr->dest)) ||
          ip_addr_isbroadcast(&(iphdr->dest), inp))) {
       local_match = 1;
-      if ((uncon_pcb == NULL) && 
+      if ((uncon_pcb == NULL) &&
           ((pcb->flags & UDP_FLAGS_CONNECTED) == 0)) {
-        /* the first unconnected matching PCB */     
+        /* the first unconnected matching PCB */
         uncon_pcb = pcb;
       }
     }
@@ -252,7 +252,7 @@ end:
  *
  * If the PCB already has a remote address association, it will
  * be restored after the data is sent.
- * 
+ *
  * @return lwIP error code.
  * - ERR_OK. Successful. No error occured.
  * - ERR_MEM. Out of memory.
@@ -349,7 +349,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
   udphdr->src = htons(pcb->local_port);
   udphdr->dest = htons(pcb->remote_port);
   /* in UDP, 0 checksum means 'no checksum' */
-  udphdr->chksum = 0x0000; 
+  udphdr->chksum = 0x0000;
 
   /* PCB local address is IP_ANY_ADDR? */
   if (ip_addr_isany(&pcb->local_ip)) {
@@ -379,7 +379,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
 #endif
     /* output to IP */
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: ip_output_if (,,,,IP_PROTO_UDPLITE,)\n"));
-    err = ip_output_if(q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDPLITE, netif);    
+    err = ip_output_if(q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDPLITE, netif);
   } else {      /* UDP */
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: UDP packet length %"U16_F"\n", q->tot_len));
     udphdr->len = htons(q->tot_len);
@@ -396,7 +396,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: UDP checksum 0x%04"X16_F"\n", udphdr->chksum));
     LWIP_DEBUGF(UDP_DEBUG, ("udp_send: ip_output_if (,,,,IP_PROTO_UDP,)\n"));
     /* output to IP */
-    err = ip_output_if(q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDP, netif);    
+    err = ip_output_if(q, src_ip, &pcb->remote_ip, pcb->ttl, pcb->tos, IP_PROTO_UDP, netif);
   }
   /* TODO: must this be increased even if error occured? */
   snmp_inc_udpoutdatagrams();

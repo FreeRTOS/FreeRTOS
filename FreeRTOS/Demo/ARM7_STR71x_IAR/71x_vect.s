@@ -22,8 +22,8 @@
 ;*******************************************************************************/
 
             	MODULE	?RESET
-		SECTION	.intvec:CODE(2)				
-		CODE32	
+		SECTION	.intvec:CODE(2)
+		CODE32
 
 EIC_base_addr        EQU    0xFFFFF800; EIC base address.
 CICR_off_addr        EQU    0x04      ; Current Interrupt Channel Register.
@@ -246,7 +246,7 @@ FIQ_Handler_end:
                               ; ...program execution.
 
 
-		
+
 		LTORG
 
   END

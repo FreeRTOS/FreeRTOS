@@ -4,7 +4,7 @@ CMSIS Version 5.0.1 release is now available.
 
 This GitHub repository development branch reflects our current state of development and is constantly updated.
 
-The [pre-built documentation](http://arm-software.github.io/CMSIS_5/General/html/index.html) for the 5.0.1 release 
+The [pre-built documentation](http://arm-software.github.io/CMSIS_5/General/html/index.html) for the 5.0.1 release
 is available under http://arm-software.github.io/CMSIS_5/General/html/index.html
 
 Use *Issues* to provide feedback and report problems for CMSIS Version 5. Note that this repository gives our users and partners contiguous access to the CMSIS development. It allows you to review the work and provide feedback or create pull requests for contributions.
@@ -20,7 +20,7 @@ Use *Issues* to provide feedback and report problems for CMSIS Version 5. Note t
 ## Futher Planned Enhancements
  - Improvements for Cortex-A / M hybrid devices (focus on Cortex-M interaction)
 
- - CMSIS-Pack 
+ - CMSIS-Pack
      - Additions for generic example, project templates, multiple download portals
      - Adoption of IAR Flash Loader technology
 
@@ -28,7 +28,7 @@ For further details see also the [Slides of the Embedded World CMSIS Partner Mee
 
 ## Directory Structure
 
-| Directory       | Content                                        |                
+| Directory       | Content                                        |
 | --------------- | ---------------------------------------------- |
 | CMSIS/Core      | CMSIS-Core related files (for release)         |
 | CMSIS/DAP       | CMSIS-DAP related files and examples           |
@@ -49,11 +49,11 @@ To build a complete CMSIS pack for installation the following additional tools a
  - **doxygen.exe**    Version: 1.8.6 (Documentation Generator)
  - **mscgen.exe**     Version: 0.20  (Message Sequence Chart Converter)
  - **7z.exe (7-Zip)** Version: 16.02 (File Archiver)
-  
+
 Using these tools, you can generate on a Windows PC:
  - **CMSIS Software Pack** using the batch file **gen_pack.bat** (located in ./CMSIS/Utilities). This batch file also generates the documentation.
-  
- - **CMSIS Documentation** using the batch file **genDoc.bat** (located in ./CMSIS/Doxygen). 
+
+ - **CMSIS Documentation** using the batch file **genDoc.bat** (located in ./CMSIS/Doxygen).
 
 The file ./CMSIS/DoxyGen/How2Doc.txt describes the rules for creating API documentation.
 

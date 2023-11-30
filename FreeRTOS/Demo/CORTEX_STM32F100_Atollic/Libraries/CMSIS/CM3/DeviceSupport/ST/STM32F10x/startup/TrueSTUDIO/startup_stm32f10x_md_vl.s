@@ -9,7 +9,7 @@
  *                - Set the initial SP
  *                - Set the initial PC == Reset_Handler,
  *                - Set the vector table entries with the exceptions ISR address
- *                - Configure the clock system   
+ *                - Configure the clock system
  *                - Branches to main in the C library (which eventually
  *                  calls main()).
  *            After Reset the Cortex-M3 processor is in Thread mode,
@@ -89,11 +89,11 @@ LoopFillZerobss:
 	ldr	r3, = _ebss
 	cmp	r2, r3
 	bcc	FillZerobss
-	
+
 /* Call the clock system intitialization function.*/
-  bl  SystemInit 
+  bl  SystemInit
 /* Call static constructors */
-  bl __libc_init_array  
+  bl __libc_init_array
 /* Call the application's entry point.*/
 	bl	main
 	bx	lr
@@ -191,12 +191,12 @@ g_pfnVectors:
 	.word	0
 	.word	0
 	.word	0
-	.word 0  
+	.word 0
 	.word 0
 	.word 0
 	.word 0
 	.word TIM6_DAC_IRQHandler
-	.word TIM7_IRQHandler  
+	.word TIM7_IRQHandler
 	.word 0
 	.word 0
 	.word 0
@@ -240,7 +240,7 @@ g_pfnVectors:
 	.word 0
 	.word 0
 	.word 0
-	.word BootRAM          /* @0x01CC. This is for boot in RAM mode for 
+	.word BootRAM          /* @0x01CC. This is for boot in RAM mode for
                          STM32F10x Medium Value Line Density devices. */
 
 /*******************************************************************************
@@ -251,16 +251,16 @@ g_pfnVectors:
 *
 *******************************************************************************/
 
-    
+
   .weak  NMI_Handler
   .thumb_set NMI_Handler,Default_Handler
-  
+
   .weak  HardFault_Handler
   .thumb_set HardFault_Handler,Default_Handler
-  
+
   .weak  MemManage_Handler
   .thumb_set MemManage_Handler,Default_Handler
-  
+
   .weak  BusFault_Handler
   .thumb_set BusFault_Handler,Default_Handler
 
@@ -400,7 +400,7 @@ g_pfnVectors:
   .thumb_set TIM6_DAC_IRQHandler,Default_Handler
 
   .weak  TIM7_IRQHandler
-  .thumb_set TIM7_IRQHandler,Default_Handler  
+  .thumb_set TIM7_IRQHandler,Default_Handler
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
 

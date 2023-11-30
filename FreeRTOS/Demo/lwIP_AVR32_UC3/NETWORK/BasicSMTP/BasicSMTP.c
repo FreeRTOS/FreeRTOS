@@ -133,10 +133,10 @@ static portBASE_TYPE prvpushb_ISR_NonNakedBehaviour( void );
 //! Basic SMTP client task definition
 portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
 {
-  struct sockaddr_in stServeurSockAddr; 
+  struct sockaddr_in stServeurSockAddr;
   long lRetval;
   long lSocket = -1;
-  
+
   // configure push button 0 to produce IT on falling edge
   gpio_enable_pin_interrupt(GPIO_PUSH_BUTTON_0 , GPIO_FALLING_EDGE);
   // Disable all interrupts
@@ -144,8 +144,8 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
   // register push button 0 handler on level 3
   INTC_register_interrupt( (__int_handler)&vpushb_ISR, AVR32_GPIO_IRQ_0 + (GPIO_PUSH_BUTTON_0/8), INT3);
   // Enable all interrupts
-  vPortExitCritical();  
-  
+  vPortExitCritical();
+
   for (;;)
   {
     // wait for a signal to send a mail
@@ -153,10 +153,10 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
 
     // Disable all interrupts
     vPortEnterCritical();
-    // clear the flag    
+    // clear the flag
     bSendMail = pdFALSE;
     // Enable all interrupts
-    vPortExitCritical();    
+    vPortExitCritical();
     // clear the LED
     vParTestSetLED( 3 , pdFALSE );
     // Set up port
@@ -165,7 +165,7 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
     stServeurSockAddr.sin_addr.s_addr = inet_addr(cServer);
     stServeurSockAddr.sin_port = htons(SMTP_PORT);
     stServeurSockAddr.sin_family = AF_INET;
- 
+
     // socket as a stream
     if ( (lSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
@@ -186,12 +186,12 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
     }
     else
     {
-//Server: 220 SMTP Ready        
-      // wait for SMTP Server answer 
+//Server: 220 SMTP Ready
+      // wait for SMTP Server answer
       do
       {
         lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-      }while (lRetval <= 0);        
+      }while (lRetval <= 0);
       if (strncmp(cTempBuffer, SMTP_EHLO_STRING, sizeof(cTempBuffer)) >= 0)
       {
 //Client: EHLO smtp.domain.com
@@ -199,28 +199,28 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
         send(lSocket, "HELO ", 5, 0);
         send(lSocket, cServer, strlen(cServer), 0);
         send(lSocket, "\r\n", 2, 0);
-//Server: 250 
+//Server: 250
         // wait for SMTP Server answer
         do
         {
           lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-        }while (lRetval <= 0);          
+        }while (lRetval <= 0);
         if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
         {
 //Client: MAIL FROM:<sender@domain.com>
           // send MAIL FROM
-          send(lSocket, cMailfrom, strlen(cMailfrom), 0);            
+          send(lSocket, cMailfrom, strlen(cMailfrom), 0);
 //Server: 250 OK
           // wait for SMTP Server answer
           do
           {
             lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-          }while (lRetval <= 0);       
+          }while (lRetval <= 0);
           if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
           {
 //Client: RCPT TO:<receiver@domain.com>
             // send RCPT TO
-            send(lSocket, cMailto, strlen(cMailto), 0);  
+            send(lSocket, cMailto, strlen(cMailto), 0);
 //Server: 250 OK
             // wait for SMTP Server answer
             do
@@ -231,8 +231,8 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
             {
 //Client: DATA<CRLF>
               // send DATA
-              send(lSocket, SMTP_DATA_STRING, 6, 0);  
-//Server: 354 Start mail input; end with <CRLF>.<CRLF>              
+              send(lSocket, SMTP_DATA_STRING, 6, 0);
+//Server: 354 Start mail input; end with <CRLF>.<CRLF>
               // wait for SMTP Server answer
               do
               {
@@ -241,7 +241,7 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
               if (strncmp(cTempBuffer, SMTP_START_OF_TRANSMISSION_STRING, sizeof(cTempBuffer)) >= 0)
               {
                 // send content
-                send(lSocket, cMailcontent, strlen(cMailcontent), 0);                 
+                send(lSocket, cMailcontent, strlen(cMailcontent), 0);
 //Client: <CRLF>.<CRLF>
                 // send "<CRLF>.<CRLF>"
                 send(lSocket, SMTP_MAIL_END_STRING, 5, 0);
@@ -254,22 +254,22 @@ portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
                 if (strncmp(cTempBuffer, SMTP_OK_STRING, sizeof(cTempBuffer)) >= 0)
                 {
 //Client: QUIT<CRLFCRLF>
-                  // send QUIT 
-                  send(lSocket, SMTP_QUIT_STRING, 8, 0);  
+                  // send QUIT
+                  send(lSocket, SMTP_QUIT_STRING, 8, 0);
 //Server: 221 smtp.domain.com closing transmission
                   do
                   {
                     lRetval = recv(lSocket, cTempBuffer, sizeof(cTempBuffer), 0);
-                  }while (lRetval <= 0);                     
+                  }while (lRetval <= 0);
                   if (strncmp(cTempBuffer, SMTP_END_OF_TRANSMISSION_STRING, sizeof(cTempBuffer)) >= 0)
                   {
                     vParTestSetLED( 3 , pdTRUE );
                   }
                 }
               }
-            }             
+            }
           }
-        }  
+        }
         // close socket
         close(lSocket);
       }
@@ -309,7 +309,7 @@ static portBASE_TYPE prvpushb_ISR_NonNakedBehaviour( void )
 {
   if (gpio_get_pin_interrupt_flag(GPIO_PUSH_BUTTON_0))
   {
-    // set the flag    
+    // set the flag
     bSendMail = pdTRUE;
     // allow new interrupt : clear the IFR flag
     gpio_clear_pin_interrupt_flag(GPIO_PUSH_BUTTON_0);
@@ -321,5 +321,5 @@ static portBASE_TYPE prvpushb_ISR_NonNakedBehaviour( void )
 
 
 
-    
+
 #endif

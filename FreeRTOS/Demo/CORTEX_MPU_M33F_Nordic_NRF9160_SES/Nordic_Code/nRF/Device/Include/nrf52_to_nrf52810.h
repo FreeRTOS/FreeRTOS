@@ -41,10 +41,10 @@ POSSIBILITY OF SUCH DAMAGE.
  * It redefines the old nRF51 or nRF52832 names into the new ones as long as the functionality is still supported. If the
  * functionality is gone, there old names are not defined, so compilation will fail. Note that also includes macros
  * from the nrf52_namechange.h file. */
- 
+
 /* Differences between latest nRF52 headers and nRF52810 headers. */
 
-/* Interrupt service routines handlers. Note that handlers SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler and 
+/* Interrupt service routines handlers. Note that handlers SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler and
    SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQHandler are not redefined since functionality is not equivalent. */
 #ifndef COMP_LPCOMP_IRQHandler
     #define COMP_LPCOMP_IRQHandler      COMP_IRQHandler
@@ -62,7 +62,7 @@ POSSIBILITY OF SUCH DAMAGE.
     #define SWI5_EGU5_IRQHandler        SWI5_IRQHandler
 #endif
 
-/* Interrupt service routines index. Note that indexes SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn and 
+/* Interrupt service routines index. Note that indexes SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn and
    SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQn are not redefined since functionality is not equivalent. */
 #ifndef COMP_LPCOMP_IRQn
     #define COMP_LPCOMP_IRQn            COMP_IRQn
@@ -137,7 +137,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef I2S_CONFIG_CHANNELS_CHANNELS_LEFT
     #define I2S_CONFIG_CHANNELS_CHANNELS_LEFT   I2S_CONFIG_CHANNELS_CHANNELS_Left
-#endif 
+#endif
 #ifndef I2S_CONFIG_CHANNELS_CHANNELS_RIGHT
     #define I2S_CONFIG_CHANNELS_CHANNELS_RIGHT  I2S_CONFIG_CHANNELS_CHANNELS_Right
 #endif

@@ -784,8 +784,8 @@ HAL_StatusTypeDef HAL_PSSI_Receive(PSSI_HandleTypeDef *hpssi, uint8_t *pData, ui
     HAL_PSSI_DISABLE(hpssi);
     /* Configure transfer parameters */
     hpssi->Instance->CR |= PSSI_CR_OUTEN_INPUT |((hpssi->Init.ClockPolarity == HAL_PSSI_FALLING_EDGE)?0U:PSSI_CR_CKPOL);
-    
-    
+
+
     /* DMA Disable */
     hpssi->Instance->CR &= PSSI_CR_DMA_DISABLE;
 
@@ -942,12 +942,12 @@ HAL_StatusTypeDef HAL_PSSI_Transmit_DMA(PSSI_HandleTypeDef *hpssi, uint32_t *pDa
         if( hpssi->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
         {
           MODIFY_REG(hpssi->Instance->CR,PSSI_CR_DMAEN|PSSI_CR_OUTEN|PSSI_CR_CKPOL,PSSI_CR_DMA_ENABLE | PSSI_CR_OUTEN_OUTPUT |
-                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?0U:PSSI_CR_CKPOL)); 
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?0U:PSSI_CR_CKPOL));
         }
         else
         {
           MODIFY_REG(hpssi->Instance->CR,PSSI_CR_DMAEN|PSSI_CR_OUTEN|PSSI_CR_CKPOL,PSSI_CR_DMA_ENABLE | hpssi->Init.BusWidth | PSSI_CR_OUTEN_OUTPUT |
-                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?0U:PSSI_CR_CKPOL)); 
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?0U:PSSI_CR_CKPOL));
         }
 
         /* Set the PSSI DMA transfer complete callback */
@@ -1075,17 +1075,17 @@ HAL_StatusTypeDef HAL_PSSI_Receive_DMA(PSSI_HandleTypeDef *hpssi, uint32_t *pDat
     {
       if (hpssi->hdmarx != NULL)
       {
-        
+
         /* Configure BusWidth */
         if( hpssi->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
         {
           MODIFY_REG(hpssi->Instance->CR,PSSI_CR_DMAEN|PSSI_CR_OUTEN|PSSI_CR_CKPOL,PSSI_CR_DMA_ENABLE |
-                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?PSSI_CR_CKPOL:0U)); 
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?PSSI_CR_CKPOL:0U));
         }
         else
         {
           MODIFY_REG(hpssi->Instance->CR,PSSI_CR_DMAEN|PSSI_CR_OUTEN|PSSI_CR_CKPOL,PSSI_CR_DMA_ENABLE | hpssi->Init.BusWidth |
-                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?PSSI_CR_CKPOL:0U)); 
+                     ((hpssi->Init.ClockPolarity == HAL_PSSI_RISING_EDGE)?PSSI_CR_CKPOL:0U));
         }
 
         /* Set the PSSI DMA transfer complete callback */

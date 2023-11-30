@@ -35,7 +35,7 @@ void ATTR_INT ATTR_NEAR vCOM_ISR( void );
    used here to ensure correct association of the handler in the struct.
    This is why the order of handlers declared below does not follow
    the MCU order.  */
-const struct interrupt_vectors __attribute__((section(".vectors"))) vectors = 
+const struct interrupt_vectors __attribute__((section(".vectors"))) vectors =
 {
   pwm_shutdown_handler:	fatal_interrupt,
   ptpif_handler:		fatal_interrupt,
@@ -81,7 +81,7 @@ const struct interrupt_vectors __attribute__((section(".vectors"))) vectors =
   acca_input_handler:	fatal_interrupt,
   acca_overflow_handler: fatal_interrupt,
   timer_overflow_handler: fatal_interrupt,
-  
+
   /** Input capture / Output compare Timers */
   tc7_handler:			fatal_interrupt,
   tc6_handler:			fatal_interrupt,

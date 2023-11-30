@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -663,7 +663,7 @@ void Timer_A_disableCaptureCompareInterrupt(uint32_t timer,
                     == captureCompareRegister)
             || (TIMER_A_CAPTURECOMPARE_REGISTER_6
                     == captureCompareRegister));
-                    
+
     uint8_t idx = (captureCompareRegister>>1) - 1;
     BITBAND_PERI(TIMER_A_CMSIS(timer)->CCTL[idx],TIMER_A_CCTLN_CCIE_OFS) = 0;
 

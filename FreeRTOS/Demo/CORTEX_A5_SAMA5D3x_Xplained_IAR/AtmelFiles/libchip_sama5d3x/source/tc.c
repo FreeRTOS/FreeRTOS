@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup tc_module 
+/** \addtogroup tc_module
  * The TC driver provides the Interface to configure the Timer Counter (TC).
  *
  *  \section Usage
@@ -58,7 +58,7 @@
  *  -# Configure a Timer Counter in the desired mode using TC_Configure().
  *  -# Start or stop the timer clock using TC_Start() and TC_Stop().
  */
- 
+
 /**
  * \file
  *

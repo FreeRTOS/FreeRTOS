@@ -77,8 +77,8 @@ created. */
 #define crfPOSTING_BLOCK_TIME		0
 
 /* Added by MPi, this define is added in order to make the vParTestToggleLED()
-work. This basically differentiates the PDR09 from PDR00. 7-seg display LEDs connected 
-to PDR09 (SEG1) are used by the prvFlashCoRoutine() and PDR00 (SEG2) are used by tasks. */ 
+work. This basically differentiates the PDR09 from PDR00. 7-seg display LEDs connected
+to PDR09 (SEG1) are used by the prvFlashCoRoutine() and PDR00 (SEG2) are used by tasks. */
 #define PDR00_Offset	8
 
 /*
@@ -180,11 +180,11 @@ unsigned portBASE_TYPE uxLEDToFlash;
 	/* Co-routines MUST start with a call to crSTART. */
 	crSTART( xHandle );
 	( void ) uxIndex;
-	
+
 	for( ;; )
 	{
 		/* Block to wait for the number of the LED to flash. */
-		crQUEUE_RECEIVE( xHandle, xFlashQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );		
+		crQUEUE_RECEIVE( xHandle, xFlashQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );
 
 		if( xResult != pdPASS )
 		{
@@ -194,8 +194,8 @@ unsigned portBASE_TYPE uxLEDToFlash;
 		else
 		{
 			/* We received the number of an LED to flash - flash it! */
-			/* Added by MPi, PDR00_Offset is added in order to make the 
-			vParTestToggleLED() work. */ 
+			/* Added by MPi, PDR00_Offset is added in order to make the
+			vParTestToggleLED() work. */
 			vParTestToggleLED( uxLEDToFlash +  PDR00_Offset );
 		}
 	}

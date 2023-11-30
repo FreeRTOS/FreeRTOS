@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -34,33 +34,33 @@
 /*----------------------------------------------------------------------------
  *        Definition
  *----------------------------------------------------------------------------*/
-#define CP15_L4_BIT 15 // Determines if the T bit is set when load instructions 
-                       // change the PC: 
-                       // 0 = loads to PC set the T bit 
+#define CP15_L4_BIT 15 // Determines if the T bit is set when load instructions
+                       // change the PC:
+                       // 0 = loads to PC set the T bit
                        // 1 = loads to PC do not set T bit
 
-#define CP15_RR_BIT 14 // RR bit Replacement strategy for Icache and Dcache: 
-                       // 0 = Random replacement 
+#define CP15_RR_BIT 14 // RR bit Replacement strategy for Icache and Dcache:
+                       // 0 = Random replacement
                        // 1 = Round-robin replacement.
-                      
-#define CP15_V_BIT  13 // V bit Location of exception vectors: 
-                       // 0 = Normal exception vectors selected address range = 0x0000 0000 to 0x0000 001C 
+
+#define CP15_V_BIT  13 // V bit Location of exception vectors:
+                       // 0 = Normal exception vectors selected address range = 0x0000 0000 to 0x0000 001C
                        // 1 = High exception vect selected, address range = 0xFFFF 0000 to 0xFFFF 001C
-                       
-#define CP15_I_BIT  12 // I bit Icache enable/disable: 
-                       // 0 = Icache disabled 
+
+#define CP15_I_BIT  12 // I bit Icache enable/disable:
+                       // 0 = Icache disabled
                        // 1 = Icache enabled
-                       
+
 #define CP15_R_BIT   9 // R bit ROM protection
 
 #define CP15_S_BIT   8 // S bit System protection
-                  
-#define CP15_B_BIT   7 // B bit Endianness: 
-                       // 0 = Little-endian operation 
-                       // 1 = Big-endian operation.                  
-                     
-#define CP15_C_BIT   2 // C bit Dcache enable/disable: 
-                       // 0 = cache disabled 
+
+#define CP15_B_BIT   7 // B bit Endianness:
+                       // 0 = Little-endian operation
+                       // 1 = Big-endian operation.
+
+#define CP15_C_BIT   2 // C bit Dcache enable/disable:
+                       // 0 = cache disabled
                        // 1 = cache enabled
 
 #define CP15_A_BIT   1 // A bit Alignment fault enable/disable:
@@ -68,25 +68,25 @@
                        // 1 = Data address alignment fault checking enabled
 
 #define CP15_M_BIT   0 // M bit MMU enable/disable: 0 = disabled 1 = enabled.
-                       // 0 = disabled 
+                       // 0 = disabled
                        // 1 = enabled
 
 /** No access Any access generates a domain fault. */
-#define CP15_DOMAIN_NO_ACCESS      0x00  
+#define CP15_DOMAIN_NO_ACCESS      0x00
 /** Client Accesses are checked against the access permission bits in the section or page descriptor. */
-#define CP15_DOMAIN_CLIENT_ACCESS  0x01  
+#define CP15_DOMAIN_CLIENT_ACCESS  0x01
 /** Manager Accesses are not checked against the access permission bits so a permission fault cannot be generated. */
-#define CP15_DOMAIN_MANAGER_ACCESS 0x03  
+#define CP15_DOMAIN_MANAGER_ACCESS 0x03
 
 
 #define CP15_ICache             1
 #define CP15_DCache             0
-   
-#define CP15_PMCNTENSET_ENABLE  31   
+
+#define CP15_PMCNTENSET_ENABLE  31
 #define CP15_PMCR_DIVIDER       3
-#define CP15_PMCR_RESET         2   
+#define CP15_PMCR_RESET         2
 #define CP15_PMCR_ENABLE        0
-   
+
 
 /*------------------------------------------------------------------------------ */
 /*         Exported functions */

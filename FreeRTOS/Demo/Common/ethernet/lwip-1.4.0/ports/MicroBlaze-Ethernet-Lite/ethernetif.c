@@ -207,12 +207,12 @@ long x;
 	#endif
 
 	/* Initiate transfer. */
-	if( p->len == p->tot_len ) 
+	if( p->len == p->tot_len )
 	{
 		/* No pbuf chain, don't have to copy -> faster. */
 		pucBuffer = &( ( unsigned char * ) p->payload )[ ETH_PAD_SIZE ];
-	} 
-	else 
+	}
+	else
 	{
 		/* pbuf chain, copy into contiguous ucBuffer. */
 		if( p->tot_len >= sizeof( ucBuffer ) )
@@ -275,12 +275,12 @@ long x;
 			snmp_add_ifoutoctets( pxNetIf, usTotalLength );
 			pxHeader = ( struct eth_hdr * )p->payload;
 
-			if( ( pxHeader->dest.addr[ 0 ] & 1 ) != 0 ) 
+			if( ( pxHeader->dest.addr[ 0 ] & 1 ) != 0 )
 			{
 				/* broadcast or multicast packet*/
 				snmp_inc_ifoutnucastpkts( pxNetIf );
-			} 
-			else 
+			}
+			else
 			{
 				/* unicast packet */
 				snmp_inc_ifoutucastpkts( pxNetIf );
@@ -311,8 +311,8 @@ struct pbuf *p = NULL, *q;
 
 		/* We allocate a pbuf chain of pbufs from the pool. */
 		p = pbuf_alloc( PBUF_RAW, usDataLength, PBUF_POOL );
-  
-		if( p != NULL ) 
+
+		if( p != NULL )
 		{
 			#if ETH_PAD_SIZE
 				pbuf_header( p, -ETH_PAD_SIZE ); /* drop the padding word */
@@ -321,7 +321,7 @@ struct pbuf *p = NULL, *q;
 			/* We iterate over the pbuf chain until we have read the entire
 			* packet into the pbuf. */
 			usDataLength = 0U;
-			for( q = p; q != NULL; q = q->next ) 
+			for( q = p; q != NULL; q = q->next )
 			{
 				/* Read enough bytes to fill this pbuf in the chain. The
 				* available data in the pbuf is given by the q->len
@@ -343,7 +343,7 @@ struct pbuf *p = NULL, *q;
 		}
 	}
 
-	return p;  
+	return p;
 }
 
 /**
@@ -364,13 +364,13 @@ err_t xReturn = ERR_OK;
 
 	/* This is taken from lwIP example code and therefore does not conform
 	to the FreeRTOS coding standard. */
-	
+
 struct xEthernetIf *pxEthernetIf;
 
 	LWIP_ASSERT( "pxNetIf != NULL", ( pxNetIf != NULL ) );
-	
+
 	pxEthernetIf = mem_malloc( sizeof( struct xEthernetIf ) );
-	if( pxEthernetIf == NULL ) 
+	if( pxEthernetIf == NULL )
 	{
 		LWIP_DEBUGF(NETIF_DEBUG, ( "ethernetif_init: out of memory\n" ) );
 		xReturn = ERR_MEM;

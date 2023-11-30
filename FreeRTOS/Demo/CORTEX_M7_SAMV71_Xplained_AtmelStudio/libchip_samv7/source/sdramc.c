@@ -27,15 +27,15 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup sdram_module 
- * The SDRAMC driver provides the Interface to configure the SDRAM Controller 
+/** \addtogroup sdram_module
+ * The SDRAMC driver provides the Interface to configure the SDRAM Controller
  * (SDRAMC).
  *  \section Usage
  * <ul>
  *  <li> Configure SDRAM using SDRAMC_Configure().</li>
- 
+
  * </ul>
- * For more accurate information, please look at the SDRAMC section of the 
+ * For more accurate information, please look at the SDRAMC section of the
  * Datasheet.
  * Related files :\n
  * \ref sdramc.c\n
@@ -50,7 +50,7 @@
  *  Interface for configuring and using SDRAM Controller (SDRAMC).
  *
  */
- 
+
 /**
  * \file
  *
@@ -79,17 +79,17 @@ static uint32_t SDRAMC_compute_CR_value( SSdramc_Memory* pMemory )
 	dw |= pMemory->cfg.dwBanks ;  //NB, number of banks
 	dw |= pMemory->cfg.dwCAS ;  //CAS, CAS latency
 	dw |= pMemory->cfg.dwDataBusWidth ;  //DBW, data bus width
-	dw |= SDRAMC_CR_TWR( pMemory->cfg.dwWriteRecoveryDelay ) ;  
+	dw |= SDRAMC_CR_TWR( pMemory->cfg.dwWriteRecoveryDelay ) ;
 	//TWR, Write Recovery Delay
 	dw |= SDRAMC_CR_TRC_TRFC( pMemory->cfg.dwRowCycleDelay_RowRefreshCycle ) ;
 	//TRC_TRFC,Row Cycle Delay and Row Refresh Cycle
-	dw |= SDRAMC_CR_TRP( pMemory->cfg.dwRowPrechargeDelay ) ;  
+	dw |= SDRAMC_CR_TRP( pMemory->cfg.dwRowPrechargeDelay ) ;
 	//TRP, Row Precharge Delay
 	dw |= SDRAMC_CR_TRCD( pMemory->cfg.dwRowColumnDelay ) ;
 	//TRCD, Row to Column Delay
-	dw |= SDRAMC_CR_TRAS( pMemory->cfg.dwActivePrechargeDelay ) ;  
+	dw |= SDRAMC_CR_TRAS( pMemory->cfg.dwActivePrechargeDelay ) ;
 	//TRAS, Active to Precharge Delay
-	dw |= SDRAMC_CR_TXSR( pMemory->cfg.dwExitSelfRefreshActiveDelay ) ; 
+	dw |= SDRAMC_CR_TXSR( pMemory->cfg.dwExitSelfRefreshActiveDelay ) ;
 	//TXSR, Exit Self Refresh to Active Delay
 	return dw ;
 }

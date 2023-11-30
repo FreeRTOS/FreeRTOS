@@ -36,9 +36,9 @@ unsigned char __low_level_init( void );
 unsigned char __low_level_init( void )
 {
 unsigned char resetflag = RESF;
-unsigned portBASE_TYPE i = 0;         
+unsigned portBASE_TYPE i = 0;
 
-	portDISABLE_INTERRUPTS();         /* disable global interrupts */                      
+	portDISABLE_INTERRUPTS();         /* disable global interrupts */
 
 	PRCMD = 0x00;                     /* On-chip debug mode */
 	PCC  = 0x00;                      /* high speed mode fCPU */

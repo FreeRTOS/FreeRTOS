@@ -7,7 +7,7 @@
  *
  * These functions are generally called in the order (ip_input() ->) tcp_input() ->
  * tcp_process() -> tcp_receive() (-> application).
- * 
+ *
  */
 
 /*
@@ -171,9 +171,9 @@ tcp_input(struct pbuf *p, struct netif *inp)
 
 #if SO_REUSE
   pcb_temp = tcp_active_pcbs;
-  
+
  again_1:
-  
+
   /* Iterate through the TCP pcb list for a fully matching pcb */
   for(pcb = pcb_temp; pcb != NULL; pcb = pcb->next) {
 #else  /* SO_REUSE */
@@ -197,13 +197,13 @@ tcp_input(struct pbuf *p, struct netif *inp)
           LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_input: first PCB and SOF_REUSEPORT set.\n"));
           reuse = 1;
         }
-        
-        reuse_port = 1; 
+
+        reuse_port = 1;
         p->ref++;
-        
+
         /* We want to search on next socket after receiving */
         pcb_temp = pcb->next;
-        
+
         LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_input: reference counter on PBUF set to %i\n", p->ref));
       } else  {
         if(reuse) {
@@ -362,7 +362,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
     if(reuse_port) {
       LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_input: searching next PCB.\n"));
       reuse_port = 0;
-      
+
       /* We are searching connected sockets */
       goto again_1;
     }
@@ -741,7 +741,7 @@ tcp_receive(struct tcp_pcb *pcb)
         TCP_SEQ_LEQ(ackno, pcb->snd_max)) { */
       if(TCP_SEQ_BETWEEN(ackno, pcb->lastack+1, pcb->snd_max)){
       /* We come here when the ACK acknowledges new data. */
-      
+
       /* Reset the "IN Fast Retransmit" flag, since we are no longer
          in fast retransmit. Also reset the congestion window to the
          slow start threshold. */
@@ -913,7 +913,7 @@ tcp_receive(struct tcp_pcb *pcb)
          we do not want to discard the full contents of the pbuf up to
          the new starting point of the data since we have to keep the
          TCP header which is present in the first pbuf in the chain.
-         
+
          What is done is really quite a nasty hack: the first pbuf in
          the pbuf chain is pointed to by inseg.p. Since we need to be
          able to deallocate the whole pbuf, we cannot change this
@@ -923,11 +923,11 @@ tcp_receive(struct tcp_pcb *pcb)
          inseg.data pointer to point to the right place. This way, the
          ->p pointer will still point to the first pbuf, but the
          ->p->payload pointer will point to data in another pbuf.
-         
+
          After we are done with adjusting the pbuf pointers we must
          adjust the ->data pointer in the seg and the segment
          length.*/
-      
+
       off = pcb->rcv_nxt - seqno;
       p = inseg.p;
       if (inseg.p->len < off) {
@@ -955,7 +955,7 @@ tcp_receive(struct tcp_pcb *pcb)
       if(TCP_SEQ_LT(seqno, pcb->rcv_nxt)){
         /* the whole segment is < rcv_nxt */
         /* must be a duplicate of a packet that has already been correctly handled */
-        
+
         LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_receive: duplicate seqno %lu\n", seqno));
         tcp_ack_now(pcb);
       }
@@ -1120,7 +1120,7 @@ tcp_receive(struct tcp_pcb *pcb)
                   }
                   break;
                 }
-              } else 
+              } else
                 /*if (TCP_SEQ_LT(prev->tcphdr->seqno, seqno) &&
                   TCP_SEQ_LT(seqno, next->tcphdr->seqno)) {*/
                 if(TCP_SEQ_BETWEEN(seqno, prev->tcphdr->seqno+1, next->tcphdr->seqno-1)){

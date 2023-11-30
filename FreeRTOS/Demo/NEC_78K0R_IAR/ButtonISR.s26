@@ -39,9 +39,9 @@
 	EXTERN    vButtonISRHandler
 
     RSEG CODE:CODE
-	
+
 vButtonISRWrapper:
-	; Save the current task context.	
+	; Save the current task context.
 	portSAVE_CONTEXT
 
 	; Call the C portion of the ISR.

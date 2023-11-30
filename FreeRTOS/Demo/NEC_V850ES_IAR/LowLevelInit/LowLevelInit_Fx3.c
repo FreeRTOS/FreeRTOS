@@ -95,10 +95,10 @@ unsigned char psval = 0;
 	PCLM = 0x00;
 
 	/* disable dma0 - dma3 */
-	E00 = 0;	
+	E00 = 0;
 	E11 = 0;
 	E22 = 0;
-	E33 = 0;	
+	E33 = 0;
 
 	return pdTRUE;
 }

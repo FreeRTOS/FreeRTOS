@@ -17,17 +17,17 @@ void irq_vectors_init(void)
 
     g_irqvector[CORET_IRQn] = CORET_IRQHandler;
 }
- 
- 
+
+
 #define CONFIG_SYSTICK_HZ 100
 #define CONFIG_SYSTEM_FREQ 24000000
- 
-void  SystemInit(void) 
+
+void  SystemInit(void)
 {
 	irq_vectors_init();
 	drv_coret_config(CONFIG_SYSTEM_FREQ / CONFIG_SYSTICK_HZ, CORET_IRQn);    //10ms
     drv_nvic_enable_irq(CORET_IRQn);
-	
+
 	console_init();
     return;
 }

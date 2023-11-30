@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -160,16 +160,16 @@ extern void GMACD_Handler(sGmacd *pGmacd );
 
 extern void GMACD_Init(sGmacd *pGmacd,
                        Gmac *pHw,
-                       uint8_t bID, 
-                       uint8_t enableCAF, 
+                       uint8_t bID,
+                       uint8_t enableCAF,
                        uint8_t enableNBC );
 
 extern uint8_t GMACD_InitTransfer( sGmacd *pGmacd,
-                                   uint8_t *pRxBuffer, 
+                                   uint8_t *pRxBuffer,
                                    sGmacRxDescriptor *pRxD,
                                    uint16_t wRxSize,
-                                   uint8_t *pTxBuffer, 
-                                   sGmacTxDescriptor *pTxD, 
+                                   uint8_t *pTxBuffer,
+                                   sGmacTxDescriptor *pTxD,
                                    fGmacdTransferCallback *pTxCb,
                                    uint16_t wTxSize);
 
@@ -182,9 +182,9 @@ extern uint8_t GMACD_Send(sGmacd *pGmacd,
 
 extern  uint32_t GMACD_TxLoad(sGmacd *pGmacd);
 
-extern  uint8_t GMACD_Poll(sGmacd * pGmacd, 
-                          uint8_t *pFrame, 
-                          uint32_t frameSize, 
+extern  uint8_t GMACD_Poll(sGmacd * pGmacd,
+                          uint8_t *pFrame,
+                          uint32_t frameSize,
                           uint32_t *pRcvSize);
 
 extern void GMACD_SetRxCallback(sGmacd * pGmacd, fGmacdTransferCallback fRxCb);

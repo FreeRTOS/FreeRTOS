@@ -126,7 +126,7 @@ static unsigned long *pulRandomBytes = commsFIRST_PROGRAM_BYTES;
 	crSTART( xHandle );
 
 	for(;;)
-    {	
+    {
 		/* Was the previously transmitted string received correctly? */
 		if( uxCommsErrorStatus != pdPASS )
 		{
@@ -204,7 +204,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			blocked on the queue waiting for characters. */
 			cRxedChar = ( char ) HWREG( UART0_BASE + UART_O_DR );
 			xQueueSendFromISR( xCommsQueue, &cRxedChar, &xHigherPriorityTaskWoken );
-		}		
+		}
 	}
 
 	/* Was a Tx interrupt pending? */
@@ -220,7 +220,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			cNextChar++;
 		}
 	}
-	
+
 	/* If a task was woken by the character being received then we force
 	a context switch to occur in case the task is of higher priority than
 	the currently executing task (i.e. the task that this interrupt

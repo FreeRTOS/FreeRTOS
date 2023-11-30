@@ -62,7 +62,7 @@ uint32_t BOARD_SdramValidation(uint32_t baseAddr, uint32_t size)
 		} else {
 			ptr32[i] = 0xAA55AA55 ;
 		}
-		memory_barrier() 
+		memory_barrier()
 	}
 	for (i = 0; i <  size ; i++) {
 		if (i & 1) {
@@ -70,7 +70,7 @@ uint32_t BOARD_SdramValidation(uint32_t baseAddr, uint32_t size)
 				printf("-E- Expected:%x, read %x @ %x \n\r" ,
 					0xAA55AA55, (unsigned)ptr32[i], (unsigned)(baseAddr + i));
 				ret = 0;
-				
+
 			}
 		} else {
 			if (ptr32[i] != 0xAA55AA55 ) {
@@ -86,7 +86,7 @@ uint32_t BOARD_SdramValidation(uint32_t baseAddr, uint32_t size)
 	for (i = 0; i < size ; i ++) {
 		ptr8[i] = (uint8_t)( i & 0xFF) ;
 	}
-	
+
 	for (i = 0; i <  size ; i++) {
 		if (ptr8[i] != (uint8_t)(i & 0xFF))  {
 			printf("-E- Expected:%x, read %x @ %x \n\r" ,
@@ -95,13 +95,13 @@ uint32_t BOARD_SdramValidation(uint32_t baseAddr, uint32_t size)
 		}
 	}
 	if (!ret) return ret;
-	
+
 	printf(" Test for WORD accessing... \n\r");
 	/* Test for WORD accessing */
 	for (i = 0; i < size / 2 ; i ++) {
 		ptr16[i] = (uint16_t)( i & 0xFFFF) ;
 	}
-	
+
 	for (i = 0; i <  size / 2 ; i++) {
 		if (ptr16[i] != (uint16_t)(i & 0xFFFF))  {
 			printf("-E- Expected:%x, read %x @ %x \n\r" ,
@@ -114,9 +114,9 @@ uint32_t BOARD_SdramValidation(uint32_t baseAddr, uint32_t size)
 	/* Test for DWORD accessing */
 	for (i = 0; i < size / 4 ; i ++) {
 		ptr32[i] = (uint32_t)( i & 0xFFFFFFFF) ;
-		memory_barrier() 
+		memory_barrier()
 	}
-	
+
 	for (i = 0; i <  size / 4 ; i++) {
 		if (ptr32[i] != (uint32_t)(i & 0xFFFFFFFF))  {
 			printf("-E- Expected:%x, read %x @ %x \n\r" ,
@@ -144,11 +144,11 @@ void BOARD_ConfigureSdram( void )
 	PMC_EnablePeripheral(ID_SDRAMC);
 	MATRIX->CCFG_SMCNFCS = CCFG_SMCNFCS_SDRAMEN;
 
-	/* 1. SDRAM features must be set in the configuration register: 
-	asynchronous timings (TRC, TRAS, etc.), number of columns, rows, 
+	/* 1. SDRAM features must be set in the configuration register:
+	asynchronous timings (TRC, TRAS, etc.), number of columns, rows,
 	CAS latency, and the data bus width. */
-	SDRAMC->SDRAMC_CR = 
-		  SDRAMC_CR_NC_COL8      // 8 column bits 
+	SDRAMC->SDRAMC_CR =
+		  SDRAMC_CR_NC_COL8      // 8 column bits
 		| SDRAMC_CR_NR_ROW11     // 12 row bits (4K)
 		| SDRAMC_CR_CAS_LATENCY3 // CAS Latency 3
 		| SDRAMC_CR_NB_BANK2     // 2 banks
@@ -156,8 +156,8 @@ void BOARD_ConfigureSdram( void )
 		| SDRAMC_CR_TWR(4)
 		| SDRAMC_CR_TRC_TRFC(11) // 63ns   min
 		| SDRAMC_CR_TRP(5)       // Command period (PRE to ACT) 21 ns min
-		| SDRAMC_CR_TRCD(5)      // Active Command to read/Write Command delay time 21ns min 
-		| SDRAMC_CR_TRAS(8)      // Command period (ACT to PRE)  42ns min 
+		| SDRAMC_CR_TRCD(5)      // Active Command to read/Write Command delay time 21ns min
+		| SDRAMC_CR_TRAS(8)      // Command period (ACT to PRE)  42ns min
 		| SDRAMC_CR_TXSR(13U);   // Exit self-refresh to active time  70ns Min
 
 	/* 2. For mobile SDRAM, temperature-compensated self refresh (TCSR), drive
@@ -191,9 +191,9 @@ void BOARD_ConfigureSdram( void )
 	}
 	for (i = 0; i < 100000; i++);
 	/*8. A Mode Register set (MRS) cycle is issued to program the parameters of
-	the SDRAM devices, in particular CAS latency and burst length. The 
+	the SDRAM devices, in particular CAS latency and burst length. The
 	application must set Mode to 3 in the Mode Register and perform a write
-	access to the SDRAM. The write address must be chosen so that BA[1:0] 
+	access to the SDRAM. The write address must be chosen so that BA[1:0]
 	are set to 0. For example, with a 16-bit 128 MB SDRAM (12 rows, 9 columns,
 	4 banks) bank address, the SDRAM write access should be done at the address
 	0x70000000.*/
@@ -201,13 +201,13 @@ void BOARD_ConfigureSdram( void )
 	*pSdram = 0;
 
 	for (i = 0; i < 100000; i++);
-	/*9. For mobile SDRAM initialization, an Extended Mode Register set (EMRS) 
-	cycle is issued to program the SDRAM parameters (TCSR, PASR, DS). The 
-	application must set Mode to 5 in the Mode Register and perform a write 
+	/*9. For mobile SDRAM initialization, an Extended Mode Register set (EMRS)
+	cycle is issued to program the SDRAM parameters (TCSR, PASR, DS). The
+	application must set Mode to 5 in the Mode Register and perform a write
 	access to the SDRAM. The write address must be chosen so that BA[1] or BA[0]
 	are set to 1.
 	For example, with a 16-bit 128 MB SDRAM, (12 rows, 9 columns, 4 banks) bank
-	address the SDRAM write access should be done at the address 0x70800000 or 
+	address the SDRAM write access should be done at the address 0x70800000 or
 	0x70400000. */
 	//SDRAMC->SDRAMC_MR = SDRAMC_MR_MODE_EXT_LOAD_MODEREG;
 	// *((uint8_t *)(pSdram + SDRAM_BA0)) = 0;
@@ -218,7 +218,7 @@ void BOARD_ConfigureSdram( void )
 	*pSdram = 0;
 	for (i = 0; i < 100000; i++);
 	/* 11. Write the refresh rate into the count field in the SDRAMC Refresh
-	Timer register. (Refresh rate = delay between refresh cycles). 
+	Timer register. (Refresh rate = delay between refresh cycles).
 	The SDRAM device requires a refresh every 15.625 ¦Ìs or 7.81 ¦Ìs.
 	With a 100 MHz frequency, the Refresh Timer Counter Register must be set
 	with the value 1562(15.625 ¦Ìs x 100 MHz) or 781(7.81 ¦Ìs x 100 MHz). */

@@ -757,7 +757,7 @@ void vFullDemoTickHook( void )
     #if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
     {
         /* Writes a string to a string buffer four bytes at a time to demonstrate
-        a stream being sent from an interrupt to a task. */        
+        a stream being sent from an interrupt to a task. */
         vBasicStreamBufferSendFromISR();
     }
     #endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */

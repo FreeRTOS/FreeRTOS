@@ -96,7 +96,7 @@ void UART_Init(UART_TypeDef* UARTx, UART_InitTypeDef* UART_InitStruct)
   u32 IntegerDivider = 0;
   u32 FractionalDivider = 0;
   MRCC_ClocksTypeDef  MRCC_ClocksStatus;
-     
+
   /* Clear the WLEN bits */
   UARTx->LCR &= UART_WordLength_Mask;
   /* Set the WLEN bits according to UART_WordLength value */
@@ -123,15 +123,15 @@ void UART_Init(UART_TypeDef* UARTx, UART_InitTypeDef* UART_InitStruct)
   /* Get the APB frequency */
   MRCC_GetClocksStatus(&MRCC_ClocksStatus);
   APBClock = MRCC_ClocksStatus.PCLK_Frequency;
-  
+
   /* Determine the integer part */
   IntegerDivider = ((100) * (APBClock) / (16 * (UART_InitStruct->UART_BaudRate)));
-  UARTx->IBRD = IntegerDivider / 100; 
+  UARTx->IBRD = IntegerDivider / 100;
 
   /* Determine the fractional part */
   FractionalDivider = IntegerDivider - (100 * (UARTx->IBRD));
   UARTx->FBRD = ((((FractionalDivider * 64) + 50) / 100));
-  
+
   /* Choose the Hardware Flow Control */
   /* Clear RTSEn and CTSEn bits */
   UARTx->CR &=  UART_HardwareFlowControl_Mask;
@@ -150,13 +150,13 @@ void UART_Init(UART_TypeDef* UARTx, UART_InitTypeDef* UART_InitStruct)
   {
     /* Enable the FIFOs */
     UARTx->LCR |= UART_FIFO_Enable;
-    
+
     /* Clear TXIFLSEL and RXIFLSEL bits */
     UARTx->IFLS &=  UART_TxRxFIFOLevel_Mask;
-    
+
     /* Set RXIFLSEL bits according to UART_RxFIFOLevel value */
     UARTx->IFLS |= (UART_InitStruct->UART_RxFIFOLevel << 3);
-    
+
     /* Set TXIFLSEL bits according to UART_TxFIFOLevel value */
     UARTx->IFLS |= UART_InitStruct->UART_TxFIFOLevel;
   }
@@ -216,9 +216,9 @@ void UART_Cmd(UART_TypeDef* UARTx, FunctionalState NewState)
 * Function Name  : UART_ITConfig
 * Description    : Enables or disables the specified UART interrupts.
 * Input          : - UARTx: where x can be 0,1 or 2 to select the UART peripheral
-*                  - UART_IT: specifies the UART interrupts sources to be 
-*                    enabled or disabled. This parameter can be any combination 
-*                    of the following values:                   
+*                  - UART_IT: specifies the UART interrupts sources to be
+*                    enabled or disabled. This parameter can be any combination
+*                    of the following values:
 *                       - UART_IT_OverrunError: Overrun Error interrupt
 *                       - UART_IT_BreakError: Break Error interrupt
 *                       - UART_IT_ParityError: Parity Error interrupt
@@ -226,7 +226,7 @@ void UART_Cmd(UART_TypeDef* UARTx, FunctionalState NewState)
 *                       - UART_IT_ReceiveTimeOut: Receive Time Out interrupt
 *                       - UART_IT_Transmit: Transmit interrupt
 *                       - UART_IT_Receive: Receive interrupt
-*                       - UART_IT_CTS: CTS interrupt 
+*                       - UART_IT_CTS: CTS interrupt
 *                  - NewState: new state of the UARTx peripheral.
 *                  This parameter can be: ENABLE or DISABLE.
 * Output         : None
@@ -273,7 +273,7 @@ void UART_DMAConfig(u16 UART0_DMATransfer, u16 UART0_DMAOnError)
   {
     UART0->DMACR |= UART0_DMATransfer_Burst;
   }
-  
+
   if(UART0_DMAOnError == UART0_DMAOnError_Enable)
   {
     UART0->DMACR &= UART0_DMAOnError_Enable;
@@ -378,7 +378,7 @@ void UART_LINConfig(UART_TypeDef* UARTx, u16 UART_LINBreakLength)
 * Function Name  : UART_LINCmd
 * Description    : Enables or disables LIN master mode in UARTx.
 * Input          : - UARTx: where x can be 0,1 or 2 to select the UART peripheral
-*                  - NewState: new state of the UARTx’s LIN interface. 
+*                  - NewState: new state of the UARTx’s LIN interface.
 *                    This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
@@ -549,14 +549,14 @@ void UART_ClearFlag(UART_TypeDef* UARTx, u16 UART_FLAG)
 * Input          : - UARTx: where x can be 0,1or 2 to select the UART peripheral.
 *                  - UART_IT: specifies the interrupt source to check.
 *                    This parameter can be one of the following values:
-*                       - UART_IT_OverrunError: Overrun Error interrupt 
-*                       - UART_IT_BreakError: Break Error interrupt 
-*                       - UART_IT_ParityError: Parity Error interrupt 
-*                       - UART_IT_FrameError: Frame Error interrupt 
-*                       - UART_IT_ReceiveTimeOut: Receive Time Out interrupt 
-*                       - UART_IT_Transmit: Transmit interrupt 
-*                       - UART_IT_Receive: Receive interrupt 
-*                       - UART_IT_CTS: CTS interrupt 
+*                       - UART_IT_OverrunError: Overrun Error interrupt
+*                       - UART_IT_BreakError: Break Error interrupt
+*                       - UART_IT_ParityError: Parity Error interrupt
+*                       - UART_IT_FrameError: Frame Error interrupt
+*                       - UART_IT_ReceiveTimeOut: Receive Time Out interrupt
+*                       - UART_IT_Transmit: Transmit interrupt
+*                       - UART_IT_Receive: Receive interrupt
+*                       - UART_IT_CTS: CTS interrupt
 * Output         : None
 * Return         : The new state of UART_IT (SET or RESET).
 *******************************************************************************/

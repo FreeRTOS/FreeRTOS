@@ -96,10 +96,10 @@ static uint8_t s_bsp_swint_nested_int_status[BSP_SWINT_UNIT_MAX];
  * @retval BSP_SWINT_ERR_INVALID_UNIT Invalid unit specified.
  * @retval BSP_SWINT_ERR_ALREADY_OPEN Failed to lock hardware.
  * @details This function locks the hardware, resets the access control status, clears the interrupt request (IR),
- * initializes the interrupt priority level (IPR), enables nested-interrupt status, initializes the task buffer, and 
+ * initializes the interrupt priority level (IPR), enables nested-interrupt status, initializes the task buffer, and
  * enables interrupts (IEN).
  * @note This function is available only when use of software interrupts is enabled in a configuration macro.
- * This function is called automatically at BSP startup when the value of BSP_CFG_SWINT_UNITn_ENABLE in r_bsp_config.h 
+ * This function is called automatically at BSP startup when the value of BSP_CFG_SWINT_UNITn_ENABLE in r_bsp_config.h
  * is 1.
  */
 e_bsp_swint_err_t R_BSP_SoftwareInterruptOpen(e_bsp_swint_unit_t unit)
@@ -184,13 +184,13 @@ e_bsp_swint_err_t R_BSP_SoftwareInterruptOpen(e_bsp_swint_unit_t unit)
  * @retval BSP_SWINT_SUCCESS Success.
  * @retval BSP_SWINT_ERR_INVALID_UNIT Invalid unit specified.
  * @retval BSP_SWINT_ERR_ALREADY_OPEN Failed to lock hardware.
- * @details This function unlocks the hardware, disables interrupts (IEN), clears the interrupt request (IR), 
+ * @details This function unlocks the hardware, disables interrupts (IEN), clears the interrupt request (IR),
  * initializes the task buffer, and disables nested-interrupt status.
- * @note This function is available only when use of software interrupts is enabled in a configuration macro. Use this 
+ * @note This function is available only when use of software interrupts is enabled in a configuration macro. Use this
  * function after the R_BSP_SoftwareInterruptOpen function has run.\n
- * If the R_BSP_SoftwareInterruptSetTask function or software interrupt function (bsp_swint_execute_task) is acquiring 
- * acces control rights and an interrupt is generated and this function is called within the interrupt, the task 
- * buffer may not be controlled correctly. If this function is used in an interrupt, clear the all task by the 
+ * If the R_BSP_SoftwareInterruptSetTask function or software interrupt function (bsp_swint_execute_task) is acquiring
+ * acces control rights and an interrupt is generated and this function is called within the interrupt, the task
+ * buffer may not be controlled correctly. If this function is used in an interrupt, clear the all task by the
  * R_BSP_SoftwareInterruptControl function with the BSP_SWINT_CMD_CLEAR_ALL_TASK command before call this function.
  */
 e_bsp_swint_err_t R_BSP_SoftwareInterruptClose(e_bsp_swint_unit_t unit)
@@ -273,13 +273,13 @@ e_bsp_swint_err_t R_BSP_SoftwareInterruptClose(e_bsp_swint_unit_t unit)
  * @retval BSP_SWINT_ERR_INVALID_TASK Invalid task pointer specified.
  * @retval BSP_SWINT_ERR_FULL_BUFFER Task buffer full.
  * @retval BSP_SWINT_ERR_ACCESS_REJECTION Failed to obtain access control right.
- * @details This function sets the task specified by an argument in the software interrupt task buffer. After setting 
+ * @details This function sets the task specified by an argument in the software interrupt task buffer. After setting
  * the task, the software interrupt occurs. If the task buffer is full, the task is not set.
- * @note This function is available only when use of software interrupts is enabled in a configuration macro. Use this 
+ * @note This function is available only when use of software interrupts is enabled in a configuration macro. Use this
  * function after the R_BSP_SoftwareInterruptOpen function has run.\n
- * If the access control right cannot be obtained, provide a wait period and then call this function again. It is not 
- * possible to obtain the access control right during interrupt processing if the interrupt is generated in a state 
- * where other processing has the access control right. For this reason a deadlock will occur if polling is used in 
+ * If the access control right cannot be obtained, provide a wait period and then call this function again. It is not
+ * possible to obtain the access control right during interrupt processing if the interrupt is generated in a state
+ * where other processing has the access control right. For this reason a deadlock will occur if polling is used in
  * the interrupt processing to obtain the access control right.
  */
 e_bsp_swint_err_t R_BSP_SoftwareInterruptSetTask(e_bsp_swint_unit_t unit, st_bsp_swint_task_t set_task)
@@ -652,10 +652,10 @@ static e_bsp_swint_err_t bsp_swint_clear_task(e_bsp_swint_unit_t unit, void * co
         bsp_swint_release_access_control(unit, &access_control);
 
         /* Set Interrupt Request(IR)
-         * If a software interrupt is generated while this function has the access control right, the software 
-         * interrupt cannot obtain the access control right and interrupt processing ends with the task remaining 
-         * unexecuted. For this reason, after returning from a software interrupt the interrupt request is cleared 
-         * regardless of whether a task has been set in the task buffer. To avoid it, setting of the interrupt 
+         * If a software interrupt is generated while this function has the access control right, the software
+         * interrupt cannot obtain the access control right and interrupt processing ends with the task remaining
+         * unexecuted. For this reason, after returning from a software interrupt the interrupt request is cleared
+         * regardless of whether a task has been set in the task buffer. To avoid it, setting of the interrupt
          * request occurs in this timing.
          */
         R_BSP_SoftwareInterruptControl(unit, BSP_SWINT_CMD_SET_INTERRUPT_REQUEST, FIT_NO_PTR);
@@ -722,10 +722,10 @@ static e_bsp_swint_err_t bsp_swint_clear_all_task(e_bsp_swint_unit_t unit)
             bsp_swint_release_access_control(unit, &access_control);
 
             /* Set Interrupt Request(IR)
-             * If a software interrupt is generated while this function has the access control right, the software 
-             * interrupt cannot obtain the access control right and interrupt processing ends with the task remaining 
-             * unexecuted. For this reason, after returning from a software interrupt the interrupt request is cleared 
-             * regardless of whether a task has been set in the task buffer. To avoid it, setting of the interrupt 
+             * If a software interrupt is generated while this function has the access control right, the software
+             * interrupt cannot obtain the access control right and interrupt processing ends with the task remaining
+             * unexecuted. For this reason, after returning from a software interrupt the interrupt request is cleared
+             * regardless of whether a task has been set in the task buffer. To avoid it, setting of the interrupt
              * request occurs in this timing.
              */
             R_BSP_SoftwareInterruptControl(unit, BSP_SWINT_CMD_SET_INTERRUPT_REQUEST, FIT_NO_PTR);
@@ -770,7 +770,7 @@ static void bsp_swint_get_all_task_status(e_bsp_swint_unit_t unit, void * const 
  * @brief This function controls software interrupts.
  * @param[in] unit Software interrupt unit
  * @param[in] cmd Software interrupt control command
- * @param[in, out] p_args Pointer to arguments for software interrupt control commands. Set the argument type to match 
+ * @param[in, out] p_args Pointer to arguments for software interrupt control commands. Set the argument type to match
  * each software interrupt control command. For commands that do not require arguments, use the setting FIT_NO_PTR.
  * @retval BSP_SWINT_SUCCESS Success.
  * @retval BSP_SWINT_ERR_INVALID_UNIT Invalid unit specified.
@@ -779,23 +779,23 @@ static void bsp_swint_get_all_task_status(e_bsp_swint_unit_t unit, void * const 
  * @retval BSP_SWINT_ERR_INVALID_BUFFER_NUMBER Invalid task buffer number specified.
  * @retval BSP_SWINT_ERR_TASK_EXECUTING Attempt to manipulate a task that is running.
  * @retval BSP_SWINT_ERR_ACCESS_REJECTION Failed to obtain access control right.
- * @details This function performs software interrupt control in response to commands. Refer the application note for 
+ * @details This function performs software interrupt control in response to commands. Refer the application note for
  * the operation of each command.
- * @note This function is available only when use of software interrupts is enabled in a configuration macro. Use this 
+ * @note This function is available only when use of software interrupts is enabled in a configuration macro. Use this
  * function after the R_BSP_SoftwareInterruptOpen function has run.\n
  * Do not change the interrupt priority level (IPR) while a software interrupt is being processed.\n
- * When the BSP_SWINT_CMD_SET_INTERRUPT_PRIORITY command is run, interrupts are disabled temporarily in order to set 
+ * When the BSP_SWINT_CMD_SET_INTERRUPT_PRIORITY command is run, interrupts are disabled temporarily in order to set
  * the interrupt priority level (IPR).\n
- * If the access control right cannot be obtained, provide a wait period and then call this function again. It is not 
- * possible to obtain the access control right during interrupt processing if the interrupt is generated in a state 
- * where other processing has the access control right. For this reason a deadlock will occur if polling is used in 
+ * If the access control right cannot be obtained, provide a wait period and then call this function again. It is not
+ * possible to obtain the access control right during interrupt processing if the interrupt is generated in a state
+ * where other processing has the access control right. For this reason a deadlock will occur if polling is used in
  * the interrupt processing to obtain the access control right.\n
- * If a software interrupt is generated while this function has the access control right, the software interrupt 
- * cannot obtain the access control right and interrupt processing ends with the task remaining unexecuted. For this 
- * reason, after returning from a software interrupt the interrupt request is cleared regardless of whether a task has 
- * been set in the task buffer. To avoid this, setting of the interrupt request occurs at the end of the processing of 
- * the BSP_SWINT_CMD_CLEAR_TASK and BSP_SWINT_CMD_CLEAR_ALL_TASK commands. Nevertheless, since all task buffers are 
- * cleared when processing of the BSP_SWINT_CMD_CLEAR_ALL_TASK command completes successfully, the interrupt request 
+ * If a software interrupt is generated while this function has the access control right, the software interrupt
+ * cannot obtain the access control right and interrupt processing ends with the task remaining unexecuted. For this
+ * reason, after returning from a software interrupt the interrupt request is cleared regardless of whether a task has
+ * been set in the task buffer. To avoid this, setting of the interrupt request occurs at the end of the processing of
+ * the BSP_SWINT_CMD_CLEAR_TASK and BSP_SWINT_CMD_CLEAR_ALL_TASK commands. Nevertheless, since all task buffers are
+ * cleared when processing of the BSP_SWINT_CMD_CLEAR_ALL_TASK command completes successfully, the interrupt request
  * is not set.
  */
 e_bsp_swint_err_t R_BSP_SoftwareInterruptControl(e_bsp_swint_unit_t unit, e_bsp_swint_cmd_t const cmd, void * const p_args)

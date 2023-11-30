@@ -1,4 +1,4 @@
-MEMORY 
+MEMORY
 {
 	flash	: ORIGIN = 0, LENGTH = 120K
 	ram		: ORIGIN = 0x40000000, LENGTH = 64K
@@ -6,12 +6,12 @@ MEMORY
 
 __stack_end__ = 0x40000000 + 64K - 4;
 
-SECTIONS 
+SECTIONS
 {
 	. = 0;
 	startup : { *(.startup)} >ram
 
-	prog : 
+	prog :
 	{
 		*(.text)
 		*(.rodata)
@@ -22,7 +22,7 @@ SECTIONS
 
 	__end_of_text__ = .;
 
-	.data : 
+	.data :
 	{
 		__data_beg__ = .;
 		__data_beg_src__ = __end_of_text__;
@@ -30,7 +30,7 @@ SECTIONS
 		__data_end__ = .;
 	} >ram
 
-	.bss : 
+	.bss :
 	{
 		__bss_beg__ = .;
 		*(.bss)
@@ -41,7 +41,7 @@ SECTIONS
 	{
 		 KEEP (*(.eh_frame))
 	} > ram
-	
+
 	/* Align here to ensure that the .bss section occupies space up to
 	_end.  Align after .bss to ensure correct alignment even if the
 	.bss section disappears because there are no input sections.  */

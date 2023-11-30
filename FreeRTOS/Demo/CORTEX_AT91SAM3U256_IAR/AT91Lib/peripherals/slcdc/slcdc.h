@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -39,10 +39,10 @@
 /// -# Initializes the Segment LCD controller using SLCDC_Configure().
 /// -# Clears the SLCD display buffer using SLCDC_Clear().
 /// -# Enable & disable SLCD controller using SLCDC_Enable() and SLCDC_Disable().
-/// -# Enables & disable the SLCD low power mode using SLCDC_EnableLowPowerMode () 
-/// and SLCDC_DisableLowPowerMode().   
+/// -# Enables & disable the SLCD low power mode using SLCDC_EnableLowPowerMode ()
+/// and SLCDC_DisableLowPowerMode().
 /// -# Adjusts the frame frequency using SLCDC_SetFrameFreq().
-/// -# Sets the display mode (normal/force off/force on/blinking) using 
+/// -# Sets the display mode (normal/force off/force on/blinking) using
 /// SLCDC_SetDisplayMode().
 /// -# Adjusts the display blinking frequency using SLCDC_SetBlinkFreq().
 /// -# Enables & disable the selected SLCDC interrupt sources using

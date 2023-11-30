@@ -5,10 +5,10 @@ in lwIP development.
 
 2 How to contribute to lwIP
 
-Here is a short list of suggestions to anybody working with lwIP and 
+Here is a short list of suggestions to anybody working with lwIP and
 trying to contribute bug reports, fixes, enhancements, platform ports etc.
 First of all as you may already know lwIP is a volunteer project so feedback
-to fixes or questions might often come late. Hopefully the bug and patch tracking 
+to fixes or questions might often come late. Hopefully the bug and patch tracking
 features of Savannah help us not lose users' input.
 
 2.1 Source code style:
@@ -29,7 +29,7 @@ features of Savannah help us not lose users' input.
 2. Function documentation above functions in .c files, not .h files.
    (This forces you to synchronize documentation and implementation.)
 3. Use current documentation style as further reference.
- 
+
 2.3 Bug reports and patches:
 
 1. Make sure you are reporting bugs or send patches against the latest
@@ -52,11 +52,10 @@ features of Savannah help us not lose users' input.
 6. Patches should be specific to a single change or to related changes.Do not mix bugfixes with spelling and other
    trivial fixes unless the bugfix is trivial too.Do not reorganize code and rename identifiers in the same patch you
    change behaviour if not necessary.A patch is easier to read and understand if it's to the point and short than
-   if it's not to the point and long :) so the chances for it to be applied are greater. 
+   if it's not to the point and long :) so the chances for it to be applied are greater.
 
 2.4 Platform porters:
 
 1. If you have ported lwIP to a platform (an OS, a uC/processor or a combination of these) and
    you think it could benefit others[1] you might want discuss this on the mailing list. You
    can also ask for CVS access to submit and maintain your port in the contrib CVS module.
-   

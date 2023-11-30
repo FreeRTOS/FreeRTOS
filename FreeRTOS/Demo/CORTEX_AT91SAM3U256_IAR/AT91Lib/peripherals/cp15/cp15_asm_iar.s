@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -56,9 +56,9 @@
 
 //------------------------------------------------------------------------------
 /// Control Register c1
-/// Register c1 is the Control Register for the ARM926EJ-S processor. 
-/// This register specifies the configuration used to enable and disable the 
-/// caches and MMU. It is recommended that you access this register using a 
+/// Register c1 is the Control Register for the ARM926EJ-S processor.
+/// This register specifies the configuration used to enable and disable the
+/// caches and MMU. It is recommended that you access this register using a
 /// read-modify-write sequence.
 //------------------------------------------------------------------------------
 // CP15 Read Control Register
@@ -78,11 +78,11 @@ _writeControlRegister:
 /// to a low power state.
 /// This puts the processor into a low-power state and stops it executing more
 /// instructions until an interrupt, or debug request occurs, regardless of
-/// whether the interrupts are disabled by the masks in the CPSR. 
+/// whether the interrupts are disabled by the masks in the CPSR.
 /// When an interrupt does occur, the MCR instruction completes and the IRQ or
-/// FIQ handler is entered as normal. The return link in r14_irq or r14_fiq 
-/// contains the address of the MCR instruction plus 8, so that the normal 
-/// instruction used for interrupt return (SUBS PC,R14,#4) returns to the 
+/// FIQ handler is entered as normal. The return link in r14_irq or r14_fiq
+/// contains the address of the MCR instruction plus 8, so that the normal
+/// instruction used for interrupt return (SUBS PC,R14,#4) returns to the
 /// instruction following the MCR.
 /// Wait For Interrupt : MCR p15, 0, <Rd>, c7, c0, 4
 //------------------------------------------------------------------------------
@@ -93,12 +93,12 @@ _waitForInterrupt:
 
 //------------------------------------------------------------------------------
 /// CP15 Translation Table Base Register c2
-/// Register c2 is the Translation Table Base Register (TTBR), for the base 
+/// Register c2 is the Translation Table Base Register (TTBR), for the base
 /// address of the first-level translation table.
 /// Reading from c2 returns the pointer to the currently active first-level
-/// translation table in bits [31:14] and an Unpredictable value in bits [13:0]. 
-/// Writing to register c2 updates the pointer to the first-level translation 
-/// table from the value in bits [31:14] of the written value. Bits [13:0] 
+/// translation table in bits [31:14] and an Unpredictable value in bits [13:0].
+/// Writing to register c2 updates the pointer to the first-level translation
+/// table from the value in bits [31:14] of the written value. Bits [13:0]
 /// Should Be Zero.
 /// You can use the following instructions to access the TTBR:
 /// Read TTBR  : MRC p15, 0, <Rd>, c2, c0, 0
@@ -120,9 +120,9 @@ _writeDomain:
 //------------------------------------------------------------------------------
 /// TLB Lockdown Register c10
 /// The TLB Lockdown Register controls where hardware page table walks place the
-/// TLB entry, in the set associative region or the lockdown region of the TLB, 
-/// and if in the lockdown region, which entry is written. The lockdown region 
-/// of the TLB contains eight entries. See TLB structure for a description of 
+/// TLB entry, in the set associative region or the lockdown region of the TLB,
+/// and if in the lockdown region, which entry is written. The lockdown region
+/// of the TLB contains eight entries. See TLB structure for a description of
 /// the structure of the TLB.
 /// Read data TLB lockdown victim  : MRC p15,0,<Rd>,c10,c0,0
 /// Write data TLB lockdown victim : MCR p15,0,<Rd>,c10,c0,0

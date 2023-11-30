@@ -74,7 +74,7 @@ timers must still be above the tick interrupt priority. */
 #define tmrMEDIUM_PRIORITY		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 0 )
 #define tmrHIGHER_PRIORITY		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY - 1 )
 
-/* Hardware register locations and bit definitions to enable the btimer 
+/* Hardware register locations and bit definitions to enable the btimer
 interrupts. */
 #define tmrGIRQ23_ENABLE_SET	( * ( volatile uint32_t * ) 0x4000C130 )
 #define tmrGIRQ23_BIT_TIMER0	( 1UL << 0UL )

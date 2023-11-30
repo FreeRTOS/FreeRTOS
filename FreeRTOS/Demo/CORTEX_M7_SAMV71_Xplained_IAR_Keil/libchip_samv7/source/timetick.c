@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -58,7 +58,7 @@ static volatile uint32_t _dwTickCount = 0 ;
  */
 void SysTick_Handler( void )
 {
-    _dwTickCount ++;  
+    _dwTickCount ++;
 }
 
 /**

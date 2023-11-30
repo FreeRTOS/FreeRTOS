@@ -50,7 +50,7 @@ extern "C" {
   extern void cop_optional_reset (void);
   extern void timer_acknowledge (void);
   extern void timer_initialize_rate (unsigned char);
-  
+
 #ifdef mc6811
 //# include <asm-m68hc11/ports.h>
 #endif
@@ -64,6 +64,6 @@ extern "C" {
 #ifdef __cplusplus
 };
 #endif
-  
+
 #endif /* _SYS_PORTS_H */
 

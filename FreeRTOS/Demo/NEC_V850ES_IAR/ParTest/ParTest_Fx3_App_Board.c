@@ -60,7 +60,7 @@ unsigned portBASE_TYPE uxLEDMask;
 	if( uxLED < partstNUM_LEDs )
 	{
 		uxLEDMask = xLEDs[ uxLED ];
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( xValue )
@@ -84,7 +84,7 @@ unsigned portBASE_TYPE uxLEDMask;
 	if( uxLED < partstNUM_LEDs )
 	{
 		uxLEDMask = xLEDs[ uxLED ];
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( P3 & uxLEDMask )

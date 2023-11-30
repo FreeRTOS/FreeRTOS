@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -56,7 +56,7 @@
 /// - BOARD_USBDIV
 /// - BOARD_PRESCALER
 
-/// Main oscillator startup time (in number of slow clock ticks). 
+/// Main oscillator startup time (in number of slow clock ticks).
 #define BOARD_OSCOUNT           (AT91C_CKGR_OSCOUNT & (64 << 8))
 
 /// PLLA frequency range.

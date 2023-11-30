@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -334,7 +334,7 @@ static uint32_t LCDD_GetBitsPerPixel(uint32_t modeReg)
             return 3*8;
 
         /* CLUT mode */
- 
+
         case LCDC_HEOCFG1_CLUTMODE_CLUT_1BPP | LCDC_HEOCFG1_CLUTEN: return 1;
         case LCDC_HEOCFG1_CLUTMODE_CLUT_2BPP | LCDC_HEOCFG1_CLUTEN: return 2;
         case LCDC_HEOCFG1_CLUTMODE_CLUT_4BPP | LCDC_HEOCFG1_CLUTEN: return 4;
@@ -402,7 +402,7 @@ static uint32_t LCDD_CalcScaleFactor(uint32_t targetW, uint32_t imgW)
     uint32_t factor;
 
     factor = 2048 * (imgW + 1) / (targetW + 1);
-    
+
     //factor = 1024 * (imgW + 1) / (targetW + 1);
     //if (targetW > imgW * 2)
     //    factor -= 7;
@@ -503,7 +503,7 @@ void LCDD_Initialize( void )
     PIO_Configure(pPinsLCD, PIO_LISTSIZE(pPinsLCD));
 
     LCDD_Off();
-    
+
     /* Reset CLUT information */
     lcddBase.clut.bpp = 0;
     lcddOvr1.clut.bpp = 0;
@@ -526,7 +526,7 @@ void LCDD_Initialize( void )
     pPmc->PMC_SCER = (0x1u << 3);
 
     /* Timing Engine Configuration */
-    
+
     /* Disable interrupt */
     pHw->LCDC_LCDIDR = 0xFFFFFFFF;
 
@@ -536,7 +536,7 @@ void LCDD_Initialize( void )
     pHw->LCDC_BASECFG0 =  LCDC_BASECFG0_DLBO | LCDC_BASECFG0_BLEN_AHB_INCR16;
     pHw->LCDC_BASECFG1 =  LCDC_BASECFG1_RGBMODE_24BPP_RGB_888_PACKED;
 
-    /* Overlay 1, GA 0xFF */                   
+    /* Overlay 1, GA 0xFF */
     pHw->LCDC_OVR1CFG0 =  LCDC_OVR1CFG0_DLBO | LCDC_OVR1CFG0_BLEN_AHB_BLEN_INCR16
                        |  LCDC_OVR1CFG0_ROTDIS
                        ;
@@ -549,7 +549,7 @@ void LCDD_Initialize( void )
                        ;
     pHw->LCDC_OVR2CFG1 =  LCDC_OVR2CFG1_RGBMODE_24BPP_RGB_888_PACKED;
     pHw->LCDC_OVR2CFG9 =  LCDC_OVR2CFG9_GA(0xFF) | LCDC_OVR2CFG9_GAEN;
-    
+
     /* High End Overlay, GA 0xFF */
     pHw->LCDC_HEOCFG0  =  LCDC_HEOCFG0_DLBO | LCDC_HEOCFG0_BLEN_AHB_BLEN_INCR16
                        |  LCDC_HEOCFG0_ROTDIS
@@ -856,7 +856,7 @@ void *LCDD_ShowBMPRotated( uint8_t bLayer,
                            uint32_t imgW, uint32_t imgH,
                            int16_t wRotate)
 {
-  
+
     //Lcdc *pHw = LCDC;
     sLayer            *pLD   = pLayer(bLayer);
     //sCLUTInfo         *pClut = &pLD->clut;
@@ -1065,9 +1065,9 @@ void *LCDD_ShowBMPRotated( uint8_t bLayer,
     {
         /* 2. Write the channel descriptor (DSCR) structure in the system memory by
               writing DSCR.CHXADDR Frame base address, DSCR.CHXCTRL channel control
-              and DSCR.CHXNEXT next descriptor location.        
+              and DSCR.CHXNEXT next descriptor location.
            3. If more than one descriptor is expected, the DFETCH field of
-              DSCR.CHXCTRL is set to one to enable the descriptor fetch operation.      
+              DSCR.CHXCTRL is set to one to enable the descriptor fetch operation.
            4. Write the DSCR.CHXNEXT register with the address location of the
               descriptor structure and set DFETCH field of the DSCR.CHXCTRL register
               to one. */
@@ -1472,7 +1472,7 @@ void LCDD_Off(void)
     while (pHw->LCDC_HEOCHSR  & LCDC_HEOCHSR_CHSR);
     while (pHw->LCDC_HCRCHDR  & LCDC_HCRCHSR_CHSR);
 
-    
+
     /* Timing Engine Power Down Software Operation */
 
     /* Disable backlight */
@@ -1485,14 +1485,14 @@ void LCDD_Off(void)
     /* 2. Poll DISPSTS field of the LCDC_LCDSR register to verify that the DISP
           is no longer activated. */
     while (pHw->LCDC_LCDSR & LCDC_LCDSR_DISPSTS);
-    
+
     /* 3. Disable the hsync and vsync signals by writing one to SYNCDIS field of
           the LCDC_LCDDIS register. */
     pHw->LCDC_LCDDIS = LCDC_LCDDIS_SYNCDIS;
     /* 4. Poll LCDSTS field of the LCDC_LCDSR register to check that the
           synchronization is off. */
     while (pHw->LCDC_LCDSR & LCDC_LCDSR_LCDSTS);
-    
+
     /* 5. Disable the Pixel clock by writing one in the CLKDIS field of the
           LCDC_LCDDIS register. */
     pHw->LCDC_LCDDIS = LCDC_LCDDIS_CLKDIS;
@@ -1504,7 +1504,7 @@ void LCDD_Off(void)
     PMC_DisablePeripheral(ID_LCDC);
     /* LCD Clock Disable */
      pPmc->PMC_SCDR = (0x1u << 3);
-    
+
 }
 
 /**

@@ -437,11 +437,11 @@ void DRAW_DisplayTemp( u8 x, u8 y )
    {
    u32 Temp = 0;
    u8  TextBuffer[5] = { 0,0,0,0,0};
-   
+
    // Get Time
    Temp = UTIL_GetTemp() ;
 
-   if( Temp != OldTemp ) 
+   if( Temp != OldTemp )
       {
       // Display C (if modified).
       UTIL_uint2str( TextBuffer, Temp/10, 2, 1 );
@@ -462,7 +462,7 @@ void DRAW_DisplayTemp( u8 x, u8 y )
 *
 *******************************************************************************/
 /**
-*  Draw a line on the LCD screen. Optimized for horizontal/vertical lines, 
+*  Draw a line on the LCD screen. Optimized for horizontal/vertical lines,
 *  and use the Bresenham algorithm for other cases.
 *
 *  @param[in]  x1          The x-coordinate of the first line endpoint.
@@ -501,7 +501,7 @@ void DRAW_Line (s16 x1, s16 y1, s16 x2, s16 y2, u16 color )
       LCD_FillRect( x1, y1, x2-x1+1, 1, color );
       return;
       }
-   
+
    dx=x2-x1;      /* the horizontal distance of the line */
    dy=y2-y1;      /* the vertical distance of the line */
    dxabs=abs(dx);

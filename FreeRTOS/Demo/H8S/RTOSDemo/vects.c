@@ -18,7 +18,7 @@ void vPortYield( void );
  */
 void vTickISR( void );
 
-/* 
+/*
  * Serial port ISR functions.
  */
 void vCOM_1_Rx_ISR( void );

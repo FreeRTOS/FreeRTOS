@@ -8,19 +8,19 @@
  * @version  V1.0
  * @date     5. November 2015
  *
- * @note     Generated with SVDConv V2.87e 
+ * @note     Generated with SVDConv V2.87e
  *           from CMSIS SVD File 'MCHP_device_header.svd' Version 1.0,
  *
  * @par      ARM Limited (ARM) is supplying this software for use with Cortex-M
  *           processor based microcontroller, but can be equally used for other
  *           suitable processor architectures. This file can be freely distributed.
  *           Modifications to this file shall be clearly marked.
- *           
+ *
  *           THIS SOFTWARE IS PROVIDED "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED
  *           OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
  *           MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
  *           ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
- *           CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER. 
+ *           CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *
  *******************************************************************************************************/
 
@@ -270,10 +270,10 @@ typedef union
   */
 
 typedef struct {                                    /*!< (@ 0x40080100) PCR Structure                                          */
-  
+
   union {
     __IO uint32_t  SYS_SLP_CNTRL;                   /*!< (@ 0x40080100) System Sleep Control                                   */
-    
+
     struct {
       __IO uint32_t  SLEEP_MODE :  1;               /*!< [0..0] Selects the System Sleep mode                                  */
            uint32_t             :  1;
@@ -281,7 +281,7 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  SLEEP_ALL  :  1;               /*!< [3..3] Initiates the System Sleep mode                                */
     } SYS_SLP_CNTRL_b;                              /*!< [4] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  PROC_CLK_CNTRL;                  /*!< (@ 0x40080104) Processor Clock Control Register [7:0] Processor
                                                          Clock Divide Value (PROC_DIV)
@@ -292,32 +292,32 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
                                                           16: divide 48 MHz Ring Oscillator by 16.
                                                           48: divide 48 MHz Ring Oscillator by 48.
                                                           No other values are supported.                                       */
-    
+
     struct {
       __IO uint32_t  PROCESSOR_CLOCK_DIVIDE:  8;    /*!< [0..7] Selects the EC clock rate                                      */
     } PROC_CLK_CNTRL_b;                             /*!< [8] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  SLOW_CLK_CNTRL;                  /*!< (@ 0x40080108) Configures the EC_CLK clock domain                     */
-    
+
     struct {
       __IO uint32_t  SLOW_CLOCK_DIVIDE: 10;         /*!< [0..9] SLOW_CLOCK_DIVIDE. n=Divide by n; 0=Clock off                  */
     } SLOW_CLK_CNTRL_b;                             /*!< [10] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  OSC_ID;                          /*!< (@ 0x4008010C) Oscillator ID Register                                 */
-    
+
     struct {
       __IO uint32_t  TEST       :  8;               /*!< [0..7] Test bits                                                      */
       __IO uint32_t  PLL_LOCK   :  1;               /*!< [8..8] PLL Lock Status                                                */
     } OSC_ID_b;                                     /*!< [9] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  PCR_PWR_RST_STS;                 /*!< (@ 0x40080110) PCR Power Reset Status Register                        */
-    
+
     struct {
            uint32_t             :  2;
       __I  uint32_t  VCC_PWRGD_STATUS:  1;          /*!< [2..2] Indicates the status of VCC_PWRGD. 0 = PWRGD not asserted.
@@ -341,10 +341,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __I  uint32_t  ESPI_CLK_ACTIVE:  1;           /*!< [12..12] ESPI_CLK_ACTIVE                                              */
     } PCR_PWR_RST_STS_b;                            /*!< [13] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  PWR_RST_CNTRL;                   /*!< (@ 0x40080114) Power Reset Control Register                           */
-    
+
     struct {
       __IO uint32_t  PWR_INV    :  1;               /*!< [0..0] Used by FW to control internal RESET_VCC signal function
                                                          and external PWROK pin. This bit is read-only when VCC_PWRGD
@@ -354,10 +354,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
                                                          signal. 1=LRESET# pin; 0=eSPI PLTRST# VWire                           */
     } PWR_RST_CNTRL_b;                              /*!< [9] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  SYS_RST;                         /*!< (@ 0x40080118) System Reset Register                                  */
-    
+
     struct {
            uint32_t             :  8;
       __IO uint32_t  SOFT_SYS_RESET:  1;            /*!< [8..8] A write of a 1 forces an assertion of the RESET_SYS reset
@@ -365,20 +365,20 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
     } SYS_RST_b;                                    /*!< [9] BitSize                                                           */
   };
   __I  uint32_t  RESERVED[5];
-  
+
   union {
     __IO uint32_t  SLP_EN_0;                        /*!< (@ 0x40080130) Sleep Enable 0 Register                                */
-    
+
     struct {
       __IO uint32_t  JTAG_STAP_SLP_EN:  1;          /*!< [0..0] JTAG STAP Enable                                               */
       __IO uint32_t  EFUSE_SLP_EN:  1;              /*!< [1..1] eFuse Enable                                                   */
       __IO uint32_t  ISPI_SLP_EN:  1;               /*!< [2..2] ISPI Enable                                                    */
     } SLP_EN_0_b;                                   /*!< [3] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  SLP_EN_1;                        /*!< (@ 0x40080134) Sleep Enable 1 Register                                */
-    
+
     struct {
       __IO uint32_t  INT_SLP_EN :  1;               /*!< [0..0] Interrupt Sleep Enable                                         */
       __IO uint32_t  PECI_SLP_EN:  1;               /*!< [1..1] PECI Sleep Enable                                              */
@@ -408,10 +408,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  TIMER16_1_SLP_EN:  1;          /*!< [31..31] TIMER16_1 Sleep Enable (TIMER16_1_SLP_EN)                    */
     } SLP_EN_1_b;                                   /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  SLP_EN_2;                        /*!< (@ 0x40080138) Sleep Enable 2 Register                                */
-    
+
     struct {
       __IO uint32_t  LPC_SLP_EN :  1;               /*!< [0..0] LPC Sleep Enable (LPC_SLP_EN)                                  */
       __IO uint32_t  UART_0_SLP_EN:  1;             /*!< [1..1] UART 0 Sleep Enable                                            */
@@ -434,10 +434,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  PORT80_1_SLP_EN:  1;           /*!< [26..26] Port 80 1 Sleep Enable                                       */
     } SLP_EN_2_b;                                   /*!< [27] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  SLP_EN_3;                        /*!< (@ 0x4008013C) Sleep Enable 3 Register                                */
-    
+
     struct {
            uint32_t             :  3;
       __IO uint32_t  ADC_SLP_EN :  1;               /*!< [3..3] ADC Sleep Enable (ADC_SLP_EN)                                  */
@@ -472,10 +472,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  PWM9_SLP_EN:  1;               /*!< [31..31] PWM9 Sleep Enable (PWM9_SLP_EN)                              */
     } SLP_EN_3_b;                                   /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  SLP_EN_4;                        /*!< (@ 0x40080140) Sleep Enable 4 Register                                */
-    
+
     struct {
       __IO uint32_t  PWM10_SLP_EN:  1;              /*!< [0..0] PWM10 Sleep Enable (PWM10_SLP_EN)                              */
       __IO uint32_t  PWM11_SLP_EN:  1;              /*!< [1..1] PWM11 Sleep Enable (PWM11_SLP_EN)                              */
@@ -495,20 +495,20 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
     } SLP_EN_4_b;                                   /*!< [16] BitSize                                                          */
   };
   __I  uint32_t  RESERVED1[3];
-  
+
   union {
     __IO uint32_t  CLK_REQ_0;                       /*!< (@ 0x40080150) Clock Required 0 Register                              */
-    
+
     struct {
       __IO uint32_t  JTAG_STAP_CLK_REQ:  1;         /*!< [0..0] JTAG STAP Enable                                               */
       __IO uint32_t  EFUSE_CLK_REQ:  1;             /*!< [1..1] eFuse Enable                                                   */
       __IO uint32_t  ISPI_CLK_REQ:  1;              /*!< [2..2] ISPI Clock Required                                            */
     } CLK_REQ_0_b;                                  /*!< [3] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  CLK_REQ_1;                       /*!< (@ 0x40080154) Clock Required 1 Register                              */
-    
+
     struct {
       __IO uint32_t  INT_CLK_REQ:  1;               /*!< [0..0] Interrupt Clock Required                                       */
       __IO uint32_t  PECI_CLK_REQ:  1;              /*!< [1..1] PECI Clock Required                                            */
@@ -538,10 +538,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  TIMER16_1_CLK_REQ:  1;         /*!< [31..31] TIMER16_1 Clock Required (TIMER16_1_CLK_REQ)                 */
     } CLK_REQ_1_b;                                  /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  CLK_REQ_2;                       /*!< (@ 0x40080158) Clock Required 2 Register                              */
-    
+
     struct {
       __IO uint32_t  LPC_CLK_REQ:  1;               /*!< [0..0] LPC Clock Required (LPC_CLK_REQ)                               */
       __IO uint32_t  UART_0_CLK_REQ:  1;            /*!< [1..1] UART 0 Clock Required                                          */
@@ -564,10 +564,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  PORT80_1_CLK_REQ:  1;          /*!< [26..26] Port 80 1 Clock Required                                     */
     } CLK_REQ_2_b;                                  /*!< [27] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  CLK_REQ_3;                       /*!< (@ 0x4008015C) Clock Required 3 Register                              */
-    
+
     struct {
            uint32_t             :  3;
       __IO uint32_t  ADC_CLK_REQ:  1;               /*!< [3..3] ADC Clock Required (ADC_CLK_REQ)                               */
@@ -602,10 +602,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  PWM9_CLK_REQ:  1;              /*!< [31..31] PWM9 Clock Required (PWM9_CLK_REQ)                           */
     } CLK_REQ_3_b;                                  /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  CLK_REQ_4;                       /*!< (@ 0x40080160) Clock Required 4 Register                              */
-    
+
     struct {
       __IO uint32_t  PWM10_CLK_REQ:  1;             /*!< [0..0] PWM10 Clock Required (PWM10_CLK_REQ)                           */
       __IO uint32_t  PWM11_CLK_REQ:  1;             /*!< [1..1] PWM11 Clock Required (PWM11_CLK_REQ)                           */
@@ -625,20 +625,20 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
     } CLK_REQ_4_b;                                  /*!< [16] BitSize                                                          */
   };
   __I  uint32_t  RESERVED2[3];
-  
+
   union {
     __IO uint32_t  RST_EN_0;                        /*!< (@ 0x40080170) Reset Enable 0 Register                                */
-    
+
     struct {
       __IO uint32_t  JTAG_STAP_RST_EN:  1;          /*!< [0..0] JTAG STAP Reset Enable                                         */
       __IO uint32_t  EFUSE_RST_EN:  1;              /*!< [1..1] eFuse Reset Enable                                             */
       __IO uint32_t  ISPI_RST_EN:  1;               /*!< [2..2] ISPI Reset Enable                                              */
     } RST_EN_0_b;                                   /*!< [3] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  RST_EN_1;                        /*!< (@ 0x40080174) Reset Enable 1 Register                                */
-    
+
     struct {
       __IO uint32_t  INT_RST_EN :  1;               /*!< [0..0] Interrupt Reset Enable                                         */
       __IO uint32_t  PECI_RST_EN:  1;               /*!< [1..1] PECI Reset Enable                                              */
@@ -668,10 +668,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  TIMER16_1_RST_EN:  1;          /*!< [31..31] TIMER16_1 Reset Enable (TIMER16_1_RST_EN)                    */
     } RST_EN_1_b;                                   /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  RST_EN_2;                        /*!< (@ 0x40080178) Reset Enable 2 Register                                */
-    
+
     struct {
       __IO uint32_t  LPC_RST_EN :  1;               /*!< [0..0] LPC Reset Enable (LPC_RST_EN)                                  */
       __IO uint32_t  UART_0_RST_EN:  1;             /*!< [1..1] UART 0 Reset Enable                                            */
@@ -694,10 +694,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  PORT80_1_RST_EN:  1;           /*!< [26..26] Port 80 1 Reset Enable                                       */
     } RST_EN_2_b;                                   /*!< [27] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  RST_EN_3;                        /*!< (@ 0x4008017C) Reset Enable 3 Register                                */
-    
+
     struct {
            uint32_t             :  3;
       __IO uint32_t  ADC_RST_EN :  1;               /*!< [3..3] ADC Reset Enable (ADC_RST_EN)                                  */
@@ -732,10 +732,10 @@ typedef struct {                                    /*!< (@ 0x40080100) PCR Stru
       __IO uint32_t  PWM9_RST_EN:  1;               /*!< [31..31] PWM9 Reset Enable (PWM9_RST_EN)                              */
     } RST_EN_3_b;                                   /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  RST_EN_4;                        /*!< (@ 0x40080180) Reset Enable 4 Register                                */
-    
+
     struct {
       __IO uint32_t  PWM10_RST_EN:  1;              /*!< [0..0] PWM10 Reset Enable (PWM10_RST_EN)                              */
       __IO uint32_t  PWM11_RST_EN:  1;              /*!< [1..1] PWM11 Reset Enable (PWM11_RST_EN)                              */
@@ -866,10 +866,10 @@ typedef struct {                                    /*!< (@ 0x4000E000) INTS Str
   __I  uint32_t  GIRQ26_RESULT;                     /*!< (@ 0x4000E170) Read-only bitwise OR of Source and Enable              */
   __IO uint32_t  GIRQ26_EN_CLR;                     /*!< (@ 0x4000E174) Write to clear source enables                          */
   __I  uint32_t  RESERVED18[34];
-  
+
   union {
     __IO uint32_t  BLOCK_ENABLE_SET;                /*!< (@ 0x4000E200) Block Enable Set Register                              */
-    
+
     struct {
       __IO uint32_t  IRQ_VECTOR_ENABLE_SET: 31;     /*!< [0..30] Each GIRQx bit can be individually enabled to assert
                                                          an interrupt event.
@@ -881,10 +881,10 @@ typedef struct {                                    /*!< (@ 0x4000E000) INTS Str
                                                           0=No effect.                                                         */
     } BLOCK_ENABLE_SET_b;                           /*!< [31] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  BLOCK_ENABLE_CLEAR;              /*!< (@ 0x4000E204) Block Enable Clear Register.                           */
-    
+
     struct {
       __IO uint32_t  IRQ_VECTOR_ENABLE_CLEAR: 31;   /*!< [0..30] Each GIRQx bit can be individually disabled to inhibit
                                                          an interrupt event.
@@ -896,10 +896,10 @@ typedef struct {                                    /*!< (@ 0x4000E000) INTS Str
                                                           0=No effect.                                                         */
     } BLOCK_ENABLE_CLEAR_b;                         /*!< [31] BitSize                                                          */
   };
-  
+
   union {
     __I  uint32_t  BLOCK_IRQ_VECTOR;                /*!< (@ 0x4000E208) Block IRQ Vector Register                              */
-    
+
     struct {
       __I  uint32_t  IRQ_VECTOR : 25;               /*!< [0..24] Each bit in this field reports the status of the group
                                                          GIRQ interrupt assertion to the NVIC. If the GIRQx interrupt
@@ -928,11 +928,11 @@ typedef struct {                                    /*!< (@ 0x40000C00) TIMER0 S
                                                          counter. This is used by H/W when the counter is to be restarted
                                                          automatically; this will become the new value of the counter
                                                           upon restart.                                                        */
-  
+
   union {
     __IO uint32_t  STATUS;                          /*!< (@ 0x40000C08) This is the interrupt status that fires when
                                                          the timer reaches its limit                                           */
-    
+
     struct {
       __IO uint32_t  EVENT_INTERRUPT:  1;           /*!< [0..0] This is the interrupt status that fires when the timer
                                                          reaches its limit. This is the interrupt status that fires when
@@ -943,20 +943,20 @@ typedef struct {                                    /*!< (@ 0x40000C00) TIMER0 S
                                                                                                                                */
     } STATUS_b;                                     /*!< [1] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  INT_EN;                          /*!< (@ 0x40000C0C) This is the interrupt enable for the status EVENT_INTERRUPT
                                                          bit in the Timer Status Register                                      */
-    
+
     struct {
       __IO uint32_t  ENABLE     :  1;               /*!< [0..0] This is the interrupt enable for the status EVENT_INTERRUPT
                                                          bit in the Timer Status Register.                                     */
     } INT_EN_b;                                     /*!< [1] BitSize                                                           */
   };
-  
+
   union {
     __IO REG32_U  CONTROL;                         /*!< (@ 0x40000C10) Timer Control Register                                 */
-    
+
     struct {
       __IO uint32_t  ENABLE     :  1;               /*!< [0..0] This enables the block for operation. 1=This block will
                                                          function normally;
@@ -1044,10 +1044,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                          bit enables the ARM TRACE debug port (ETM/ITM). The Trace Debug
                                                           Interface pins are forced to the TRACE functions. 0 = ARM TRACE
                                                           port disabled, 1= ARM TRACE port enabled                             */
-  
+
   union {
     __IO uint32_t  DEBUG_Enable;                    /*!< (@ 0x4000FC20) Debug Enable Register                                  */
-    
+
     struct {
       __IO uint32_t  DEBUG_EN   :  1;               /*!< [0..0] DEBUG_EN (JTAG_EN) This bit enables the JTAG/SWD debug
                                                          port.
@@ -1082,10 +1082,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                           Note: This field is written by Boot ROM firmware to indicate
                                                           the number of times a WDT fired before loading a good EC code
                                                           image.                                                               */
-  
+
   union {
     __IO uint32_t  AES_HASH_BYTE_SWAP_CONTROL;      /*!< (@ 0x4000FC2C) AES HASH Byte Swap Control Register.                   */
-    
+
     struct {
       __I  uint32_t  INPUT_BYTE_SWAP_ENABLE:  1;    /*!< [0..0] Used to enable byte swap on a DWORD during AHB read from
                                                          AES / HASH block: 1=Enable; 0=Disable.                                */
@@ -1114,30 +1114,30 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
     } AES_HASH_BYTE_SWAP_CONTROL_b;                 /*!< [8] BitSize                                                           */
   };
   __I  uint32_t  RESERVED4[2];
-  
+
   union {
     __IO uint32_t  SYSTEM_SHUTDOWN_RESET;           /*!< (@ 0x4000FC38) System Shutdown Reset                                  */
-    
+
     struct {
       __O  uint32_t  SYS_SHDN_RST:  1;              /*!< [0..0] When this bit is asserted ('1'), the SYS_SHDN# output
                                                          is deasserted.                                                        */
     } SYSTEM_SHUTDOWN_RESET_b;                      /*!< [1] BitSize                                                           */
   };
   __I  uint32_t  RESERVED5;
-  
+
   union {
     __IO uint32_t  MISC_TRIM;                       /*!< (@ 0x4000FC40) Misc Trim                                              */
-    
+
     struct {
       __O  uint32_t  PECI_DISABLE:  1;              /*!< [0..0] When this bit is asserted ('1'), it disables the PECI
                                                          pads to reduce leakage.                                               */
     } MISC_TRIM_b;                                  /*!< [1] BitSize                                                           */
   };
   __I  uint32_t  RESERVED6[6];
-  
+
   union {
     __IO uint32_t  CRYPTO_SOFT_RESET;               /*!< (@ 0x4000FC5C) System Shutdown Reset                                  */
-    
+
     struct {
       __O  uint32_t  RNG_SOFT_RESET:  1;            /*!< [0..0] When this bit is asserted ('1'), the Random Number Generator
                                                          block is reset.                                                       */
@@ -1148,10 +1148,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
     } CRYPTO_SOFT_RESET_b;                          /*!< [3] BitSize                                                           */
   };
   __I  uint32_t  RESERVED7;
-  
+
   union {
     __IO uint32_t  GPIO_BANK_POWER;                 /*!< (@ 0x4000FC64) GPIO Bank Power Register                               */
-    
+
     struct {
       __O  uint32_t  VTR_LEVEL1 :  1;               /*!< [0..0] Voltage value on VTR1. This bit is set by hardware after
                                                          a VTR Power On Reset, but may be overridden by software.
@@ -1174,10 +1174,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
     } GPIO_BANK_POWER_b;                            /*!< [3] BitSize                                                           */
   };
   __I  uint32_t  RESERVED8[2];
-  
+
   union {
     __IO uint32_t  JTAG_MASTER_CFG;                 /*!< (@ 0x4000FC70) JTAG Master Configuration Register                     */
-    
+
     struct {
       __IO uint32_t  JTM_CLK    :  3;               /*!< [0..2] This field determines the JTAG Master clock rate, derived
                                                          from the 48MHz master clock.
@@ -1188,10 +1188,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                           0=The JTAG Port is configures as a Slave.                            */
     } JTAG_MASTER_CFG_b;                            /*!< [4] BitSize                                                           */
   };
-  
+
   union {
     __I  uint32_t  JTAG_MASTER_STS;                 /*!< (@ 0x4000FC74) JTAG Master Status Register                            */
-    
+
     struct {
       __I  uint32_t  JTM_DONE   :  1;               /*!< [0..0] This bit is set to '1b' when the JTAG Master Command
                                                          Register is written. It becomes '0b' when shifting has completed.
@@ -1202,10 +1202,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                           and the JTAG Master TDI Register.                                    */
     } JTAG_MASTER_STS_b;                            /*!< [1] BitSize                                                           */
   };
-  
+
   union {
     __IO uint32_t  JTAG_MASTER_TDO;                 /*!< (@ 0x4000FC78) JTAG Master TDO Register                               */
-    
+
     struct {
       __IO uint32_t  JTM_TDO    : 32;               /*!< [0..31] When the JTAG Master Command Register is written, from
                                                          1 to 32 bits are shifted into this register, starting with bit
@@ -1215,10 +1215,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                                                                                                */
     } JTAG_MASTER_TDO_b;                            /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  JTAG_MASTER_TDI;                 /*!< (@ 0x4000FC7C) JTAG Master TDI Register                               */
-    
+
     struct {
       __IO uint32_t  JTM_TDI    : 32;               /*!< [0..31] When the JTAG Master Command Register is written, from
                                                          1 to 32 bits are shifted out of this register, starting with
@@ -1228,10 +1228,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                                                                                                */
     } JTAG_MASTER_TDI_b;                            /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  JTAG_MASTER_TMS;                 /*!< (@ 0x4000FC80) JTAG Master TMS Register                               */
-    
+
     struct {
       __IO uint32_t  JTM_TMS    : 32;               /*!< [0..31] When the JTAG Master Command Register is written, from
                                                          1 to 32 bits are shifted out of this register, starting with
@@ -1241,10 +1241,10 @@ typedef struct {                                    /*!< (@ 0x4000FC00) EC_REG_B
                                                                                                                                */
     } JTAG_MASTER_TMS_b;                            /*!< [32] BitSize                                                          */
   };
-  
+
   union {
     __IO uint32_t  JTAG_MASTER_CMD;                 /*!< (@ 0x4000FC84) JTAG Master Command Register                           */
-    
+
     struct {
       __IO uint32_t  JTM_COUNT  :  5;               /*!< [0..4] If the JTAG Port is configured as a Master, writing this
                                                          register starts clocking and shifting on the JTAG port. The

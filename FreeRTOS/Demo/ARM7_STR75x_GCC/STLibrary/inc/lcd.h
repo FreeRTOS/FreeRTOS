@@ -87,7 +87,7 @@ void LCD_SendMasterData(u8 Data);
 u32 LCD_ReadMasterData(void);
 void LCD_SendSlaveData(u8 Data);
 u32 LCD_ReadSlaveData(void);
-void LCD_SetMasterPage(u8 Page); 	
+void LCD_SetMasterPage(u8 Page);
 void LCD_SetSlavePage(u8 Page);
 void LCD_SetMasterColumn(u8 Address);
 void LCD_SetSlaveColumn(u8 Address);

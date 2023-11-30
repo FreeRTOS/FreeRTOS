@@ -106,10 +106,10 @@ static void prvButtonISR( void )
 {
 	/* The button doesn't do anything other than providing a means for brining
 	the MCU out of sleep mode early. */
-	if( eic_line_interrupt_is_pending( EIC, GPIO_PUSH_BUTTON_EIC_LINE ) ) 
+	if( eic_line_interrupt_is_pending( EIC, GPIO_PUSH_BUTTON_EIC_LINE ) )
 	{
 		eic_line_clear_interrupt( EIC, GPIO_PUSH_BUTTON_EIC_LINE );
-	}		
+	}
 }
 /*-----------------------------------------------------------*/
 

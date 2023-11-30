@@ -3552,7 +3552,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetLPTIMClockSource(uint32_t Periph)
   *         @arg @ref LL_RCC_SAI4B_CLKSOURCE_PLL3P (*)
   *         @arg @ref LL_RCC_SAI4B_CLKSOURCE_I2S_CKIN (*)
   *         @arg @ref LL_RCC_SAI4B_CLKSOURCE_CLKP (*)
-  * 
+  *
   *  (*) value not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_RCC_GetSAIClockSource(uint32_t Periph)

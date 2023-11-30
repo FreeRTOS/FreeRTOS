@@ -50,9 +50,9 @@
 void RTC_ITConfig(u16 RTC_IT, FunctionalState NewState)
 {
   /* Check the parameters */
-  assert(IS_RTC_IT(RTC_IT));  
+  assert(IS_RTC_IT(RTC_IT));
   assert(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     RTC->CRH |= RTC_IT;
@@ -112,7 +112,7 @@ u32 RTC_GetCounter(void)
 * Return         : None
 *******************************************************************************/
 void RTC_SetCounter(u32 CounterValue)
-{ 
+{
   RTC_EnterConfigMode();
 
   /* Set RTC COUNTER MSB word */
@@ -151,7 +151,7 @@ void RTC_SetPrescaler(u32 PrescalerValue)
 {
   /* Check the parameters */
   assert(IS_RTC_PRESCALER(PrescalerValue));
-  
+
   RTC_EnterConfigMode();
 
   /* Set RTC PRESCALER MSB word */
@@ -170,7 +170,7 @@ void RTC_SetPrescaler(u32 PrescalerValue)
 * Return         : None
 *******************************************************************************/
 void RTC_SetAlarm(u32 AlarmValue)
-{  
+{
   RTC_EnterConfigMode();
 
   /* Set the ALARM MSB word */
@@ -251,10 +251,10 @@ void RTC_WaitForSynchro(void)
 FlagStatus RTC_GetFlagStatus(u16 RTC_FLAG)
 {
   FlagStatus bitstatus = RESET;
-  
+
   /* Check the parameters */
-  assert(IS_RTC_GET_FLAG(RTC_FLAG)); 
-  
+  assert(IS_RTC_GET_FLAG(RTC_FLAG));
+
   if ((RTC->CRL & RTC_FLAG) != (u16)RESET)
   {
     bitstatus = SET;
@@ -282,8 +282,8 @@ FlagStatus RTC_GetFlagStatus(u16 RTC_FLAG)
 void RTC_ClearFlag(u16 RTC_FLAG)
 {
   /* Check the parameters */
-  assert(IS_RTC_CLEAR_FLAG(RTC_FLAG)); 
-    
+  assert(IS_RTC_CLEAR_FLAG(RTC_FLAG));
+
   /* Clear the coressponding RTC flag */
   RTC->CRL &= (u16)~RTC_FLAG;
 }
@@ -304,8 +304,8 @@ ITStatus RTC_GetITStatus(u16 RTC_IT)
   ITStatus bitstatus = RESET;
 
   /* Check the parameters */
-  assert(IS_RTC_GET_IT(RTC_IT)); 
-  
+  assert(IS_RTC_GET_IT(RTC_IT));
+
   bitstatus = (ITStatus)((RTC->CRL & RTC_IT) != (u16)RESET);
 
   if (((RTC->CRH & RTC_IT) != (u16)RESET) && bitstatus)
@@ -333,8 +333,8 @@ ITStatus RTC_GetITStatus(u16 RTC_IT)
 void RTC_ClearITPendingBit(u16 RTC_IT)
 {
   /* Check the parameters */
-  assert(IS_RTC_IT(RTC_IT));  
-  
+  assert(IS_RTC_IT(RTC_IT));
+
   /* Clear the coressponding RTC pending bit */
   RTC->CRL &= (u16)~RTC_IT;
 }

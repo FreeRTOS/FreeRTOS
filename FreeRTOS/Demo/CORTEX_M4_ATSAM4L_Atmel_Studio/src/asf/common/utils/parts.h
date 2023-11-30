@@ -487,14 +487,14 @@
 #define MEGA_RFA1 ( \
 		AVR8_PART_IS_DEFINED(ATmega128RFA1) \
 		)
-		
+
 /** ATmegaxxRFR2 group */
 #define MEGA_RFR2 ( \
 		AVR8_PART_IS_DEFINED(ATmega64RFR2)  || \
 		AVR8_PART_IS_DEFINED(ATmega128RFR2) || \
 		AVR8_PART_IS_DEFINED(ATmega256RFR2) \
 		)
-	
+
 /** ATmegaxxRFxx group */
 #define MEGA_RF (MEGA_RFA1 || MEGA_RFR2)
 

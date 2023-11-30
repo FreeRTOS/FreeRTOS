@@ -24,10 +24,10 @@ void LCD_nibble_write(unsigned char data_or_ctrl, unsigned char value);
 void DisplayDelay(unsigned long int units);
 
 
-#define SET_BIT_HIGH	(1)         
-#define SET_BIT_LOW		(0)         
-#define SET_BYTE_HIGH	(0xFF)        
-#define SET_BYTE_LOW	(0x00)      
+#define SET_BIT_HIGH	(1)
+#define SET_BIT_LOW		(0)
+#define SET_BYTE_HIGH	(0xFF)
+#define SET_BYTE_LOW	(0x00)
 
 struct _LCD_Params {
 	unsigned char Line;
@@ -37,11 +37,11 @@ struct _LCD_Params {
 
 /* RS Register Select pin */
 #define RS_PIN			PORTJ.PODR.BIT.B1
-/* Display Enable pin */  
+/* Display Enable pin */
 #define EN_PIN			PORTJ.PODR.BIT.B3
 /* Data bus port */
 #define DATA_PORT		PORTH.PODR.BYTE
-/* Bit mask from entire port */   
+/* Bit mask from entire port */
 #define DATA_PORT_MASK	0x0F
 /* Number of bits data needs to shift */
 #define DATA_PORT_SHIFT	0
@@ -55,8 +55,8 @@ struct _LCD_Params {
 #define DELAY_TIMING	50
 /* number of lines on the LCD display */
 #define NUMB_CHARS_PER_LINE 8
-/* Maximum charactors per line of LCD display. */ 
-#define MAXIMUM_LINES	2   
+/* Maximum charactors per line of LCD display. */
+#define MAXIMUM_LINES	2
 
 #define LCD_LINE1 0
 #define LCD_LINE2 16
@@ -68,9 +68,9 @@ struct _LCD_Params {
 #define LCD_CLEAR		0x01
 /* move cursor to line 1 */
 #define LCD_HOME_L1		0x80
-/* move cursor to line 2 */	  
+/* move cursor to line 2 */
 #define LCD_HOME_L2		0xC0
-/* Cursor auto decrement after R/W */  
+/* Cursor auto decrement after R/W */
 #define CURSOR_MODE_DEC	0x04
 /* Cursor auto increment after R/W */
 #define CURSOR_MODE_INC	0x06

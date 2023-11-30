@@ -7,7 +7,7 @@
  *
  */
 /***************************************************************************//**
- * 
+ *
  * Legacy interrupt control functions for the Microchip driver library hardware
  * abstraction layer.
  *
@@ -21,14 +21,14 @@ extern "C" {
 #endif
 
 /*------------------------------------------------------------------------------
- * 
+ *
  */
 void HAL_enable_interrupts(void) {
     __enable_irq();
 }
 
 /*------------------------------------------------------------------------------
- * 
+ *
  */
 psr_t HAL_disable_interrupts(void) {
     psr_t psr;
@@ -38,7 +38,7 @@ psr_t HAL_disable_interrupts(void) {
 }
 
 /*------------------------------------------------------------------------------
- * 
+ *
  */
 void HAL_restore_interrupts(psr_t saved_psr) {
     write_csr(mstatus, saved_psr);

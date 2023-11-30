@@ -74,9 +74,9 @@
 
 /* lwIP includes */
 #include "lwip/sys.h"
-#include "lwip/api.h" 
+#include "lwip/api.h"
 #include "lwip/tcpip.h"
-#include "lwip/memp.h" 
+#include "lwip/memp.h"
 #include "lwip/stats.h"
 #include "netif/loopif.h"
 
@@ -158,13 +158,13 @@ static void prvlwIPInit( void )
 	memp_init();
 	pbuf_init();
 	netif_init();
-	
+
 	/* once TCP stack has been initalized, set hw and IP parameters, initialize MACB too */
 	tcpip_init( prvEthernetConfigureInterface, NULL );
 }
 
 /*!
- *  \brief set ethernet config 
+ *  \brief set ethernet config
  */
 static void prvEthernetConfigureInterface(void * param)
 {
@@ -179,31 +179,31 @@ char MacAddress[6];
    MacAddress[3] = ETHERNET_CONF_ETHADDR3;
    MacAddress[4] = ETHERNET_CONF_ETHADDR4;
    MacAddress[5] = ETHERNET_CONF_ETHADDR5;
-   
+
    /* pass the MAC address to MACB module */
    vMACBSetMACAddress( MacAddress );
-   
+
    /* set MAC hardware address length to be used by lwIP */
    MACB_if.hwaddr_len = 6;
-   
+
    /* set MAC hardware address to be used by lwIP */
    memcpy( MACB_if.hwaddr, MacAddress, MACB_if.hwaddr_len );
-   
+
    /* Default ip addr. */
    IP4_ADDR( &xIpAddr,ETHERNET_CONF_IPADDR0,ETHERNET_CONF_IPADDR1,ETHERNET_CONF_IPADDR2,ETHERNET_CONF_IPADDR3 );
-   
+
    /* Default Subnet mask. */
    IP4_ADDR( &xNetMask,ETHERNET_CONF_NET_MASK0,ETHERNET_CONF_NET_MASK1,ETHERNET_CONF_NET_MASK2,ETHERNET_CONF_NET_MASK3 );
-   
+
    /* Default Gw addr. */
    IP4_ADDR( &xGateway,ETHERNET_CONF_GATEWAY_ADDR0,ETHERNET_CONF_GATEWAY_ADDR1,ETHERNET_CONF_GATEWAY_ADDR2,ETHERNET_CONF_GATEWAY_ADDR3 );
-   
+
    /* add data to netif */
    netif_add( &MACB_if, &xIpAddr, &xNetMask, &xGateway, NULL, ethernetif_init, tcpip_input );
-   
+
    /* make it the default interface */
    netif_set_default( &MACB_if );
-   
+
    /* bring it up */
    netif_set_up( &MACB_if );
 }

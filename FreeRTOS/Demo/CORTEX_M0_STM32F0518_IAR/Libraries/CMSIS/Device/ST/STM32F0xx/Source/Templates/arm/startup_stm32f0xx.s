@@ -12,7 +12,7 @@
 ;*                        calls main()).
 ;*                      After Reset the CortexM0 processor is in Thread mode,
 ;*                      priority is Privileged, and the Stack is set to Main.
-;* <<< Use Configuration Wizard in Context Menu >>>   
+;* <<< Use Configuration Wizard in Context Menu >>>
 ;*******************************************************************************
 ; THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 ; WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
@@ -88,7 +88,7 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
                 DCD     DMA1_Channel1_IRQHandler       ; DMA1 Channel 1
                 DCD     DMA1_Channel2_3_IRQHandler     ; DMA1 Channel 2 and Channel 3
                 DCD     DMA1_Channel4_5_IRQHandler     ; DMA1 Channel 4 and Channel 5
-                DCD     ADC1_COMP_IRQHandler           ; ADC1, COMP1 and COMP2 
+                DCD     ADC1_COMP_IRQHandler           ; ADC1, COMP1 and COMP2
                 DCD     TIM1_BRK_UP_TRG_COM_IRQHandler ; TIM1 Break, Update, Trigger and Commutation
                 DCD     TIM1_CC_IRQHandler             ; TIM1 Capture Compare
                 DCD     TIM2_IRQHandler                ; TIM2
@@ -108,7 +108,7 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
                 DCD     0                              ; Reserved
                 DCD     CEC_IRQHandler                 ; CEC
                 DCD     0                              ; Reserved
-                
+
 __Vectors_End
 
 __Vectors_Size  EQU  __Vectors_End - __Vectors
@@ -119,7 +119,7 @@ __Vectors_Size  EQU  __Vectors_End - __Vectors
 Reset_Handler    PROC
                  EXPORT  Reset_Handler                 [WEAK]
         IMPORT  __main
-        IMPORT  SystemInit  
+        IMPORT  SystemInit
                  LDR     R0, =SystemInit
                  BLX     R0
                  LDR     R0, =__main
@@ -195,7 +195,7 @@ TS_IRQHandler
 DMA1_Channel1_IRQHandler
 DMA1_Channel2_3_IRQHandler
 DMA1_Channel4_5_IRQHandler
-ADC1_COMP_IRQHandler 
+ADC1_COMP_IRQHandler
 TIM1_BRK_UP_TRG_COM_IRQHandler
 TIM1_CC_IRQHandler
 TIM2_IRQHandler
@@ -211,7 +211,7 @@ SPI1_IRQHandler
 SPI2_IRQHandler
 USART1_IRQHandler
 USART2_IRQHandler
-CEC_IRQHandler   
+CEC_IRQHandler
 
                 B       .
 
@@ -222,17 +222,17 @@ CEC_IRQHandler
 ;*******************************************************************************
 ; User Stack and Heap initialization
 ;*******************************************************************************
-                 IF      :DEF:__MICROLIB           
-                
+                 IF      :DEF:__MICROLIB
+
                  EXPORT  __initial_sp
                  EXPORT  __heap_base
                  EXPORT  __heap_limit
-                
+
                  ELSE
-                
+
                  IMPORT  __use_two_region_memory
                  EXPORT  __user_initial_stackheap
-                 
+
 __user_initial_stackheap
 
                  LDR     R0, =  Heap_Mem

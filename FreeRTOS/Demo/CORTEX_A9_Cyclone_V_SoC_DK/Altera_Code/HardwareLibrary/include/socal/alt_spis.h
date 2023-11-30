@@ -41,95 +41,95 @@ extern "C"
 /*
  * Component : SPI Slave Module - ALT_SPIS
  * SPI Slave Module
- * 
+ *
  * Registers in the SPI Slave module
- * 
+ *
  */
 /*
  * Register : Control Register 0 - ctrlr0
- * 
+ *
  * This register controls the serial data transfer. It is impossible to write to
  * this register when the SPI Slave is enabled. The SPI Slave is enabled and
  * disabled by writing to the SPIENR register.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description          
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------
- *  [3:0]   | RW     | 0x7   | Data Frame Size      
- *  [5:4]   | RW     | 0x0   | Frame Format         
- *  [6]     | RW     | 0x0   | Serial Clock Phase   
+ *  [3:0]   | RW     | 0x7   | Data Frame Size
+ *  [5:4]   | RW     | 0x0   | Frame Format
+ *  [6]     | RW     | 0x0   | Serial Clock Phase
  *  [7]     | RW     | 0x0   | Serial Clock Polarity
- *  [9:8]   | RW     | 0x0   | Transfer Mode        
- *  [10]    | RW     | 0x0   | Slave Output Enable  
- *  [11]    | RW     | 0x0   | Shift Register Loop  
- *  [15:12] | RW     | 0x0   | Control Frame Size   
- *  [31:16] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [9:8]   | RW     | 0x0   | Transfer Mode
+ *  [10]    | RW     | 0x0   | Slave Output Enable
+ *  [11]    | RW     | 0x0   | Shift Register Loop
+ *  [15:12] | RW     | 0x0   | Control Frame Size
+ *  [31:16] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Data Frame Size - dfs
- * 
+ *
  * Selects the data frame length. When the data frame size is programmed to be less
  * than 16 bits, the receive data are automatically right-justified by the receive
  * logic, with the upper bits of the receiver FIFO zero-padded. You must right-
  * justify transmit data before writing into the transmit FIFO. The transmit logic
  * ignores the upper unused bits when transmitting the data.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:----------------------------
- *  ALT_SPIS_CTLR0_DFS_E_WIDTH4BIT  | 0x3   | 4-bit serial data transfer 
- *  ALT_SPIS_CTLR0_DFS_E_WIDTH5BIT  | 0x4   | 5-bit serial data transfer 
- *  ALT_SPIS_CTLR0_DFS_E_WIDTH6BIT  | 0x5   | 6-bit serial data transfer 
- *  ALT_SPIS_CTLR0_DFS_E_WIDTH7BIT  | 0x6   | 7-bit serial data transfer 
- *  ALT_SPIS_CTLR0_DFS_E_WIDTH8BIT  | 0x7   | 8-bit serial data transfer 
- *  ALT_SPIS_CTLR0_DFS_E_WIDTH9BIT  | 0x8   | 9-bit serial data transfer 
+ *  ALT_SPIS_CTLR0_DFS_E_WIDTH4BIT  | 0x3   | 4-bit serial data transfer
+ *  ALT_SPIS_CTLR0_DFS_E_WIDTH5BIT  | 0x4   | 5-bit serial data transfer
+ *  ALT_SPIS_CTLR0_DFS_E_WIDTH6BIT  | 0x5   | 6-bit serial data transfer
+ *  ALT_SPIS_CTLR0_DFS_E_WIDTH7BIT  | 0x6   | 7-bit serial data transfer
+ *  ALT_SPIS_CTLR0_DFS_E_WIDTH8BIT  | 0x7   | 8-bit serial data transfer
+ *  ALT_SPIS_CTLR0_DFS_E_WIDTH9BIT  | 0x8   | 9-bit serial data transfer
  *  ALT_SPIS_CTLR0_DFS_E_WIDTH10BIT | 0x9   | 10-bit serial data transfer
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 4-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH4BIT  0x3
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 5-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH5BIT  0x4
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 6-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH6BIT  0x5
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 7-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH7BIT  0x6
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 8-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH8BIT  0x7
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 9-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH9BIT  0x8
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_DFS
- * 
+ *
  * 10-bit serial data transfer
  */
 #define ALT_SPIS_CTLR0_DFS_E_WIDTH10BIT 0x9
@@ -153,35 +153,35 @@ extern "C"
 
 /*
  * Field : Frame Format - frf
- * 
+ *
  * Selects which serial protocol transfers the data.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description            
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:------------------------
- *  ALT_SPIS_CTLR0_FRF_E_MOTSPI | 0x0   | Motorola SPI           
- *  ALT_SPIS_CTLR0_FRF_E_TISSP  | 0x1   | Texas instruments  SSP 
+ *  ALT_SPIS_CTLR0_FRF_E_MOTSPI | 0x0   | Motorola SPI
+ *  ALT_SPIS_CTLR0_FRF_E_TISSP  | 0x1   | Texas instruments  SSP
  *  ALT_SPIS_CTLR0_FRF_E_NATMW  | 0x2   | National Semi Microwire
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_FRF
- * 
+ *
  * Motorola SPI
  */
 #define ALT_SPIS_CTLR0_FRF_E_MOTSPI 0x0
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_FRF
- * 
+ *
  * Texas instruments  SSP
  */
 #define ALT_SPIS_CTLR0_FRF_E_TISSP  0x1
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_FRF
- * 
+ *
  * National Semi Microwire
  */
 #define ALT_SPIS_CTLR0_FRF_E_NATMW  0x2
@@ -205,32 +205,32 @@ extern "C"
 
 /*
  * Field : Serial Clock Phase - scph
- * 
+ *
  * Valid when the frame format (FRF) is set to Motorola SPI. The serial clock phase
  * selects the relationship of the serial clock with the slave select signal. When
  * SCPH = 0, data are captured on the first edge of the serial clock. When SCPH =
  * 1, the serial clock starts toggling one cycle after the slave select line is
  * activated, and data are captured on the second edge of the serial clock.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                           
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:---------------------------------------
- *  ALT_SPIS_CTLR0_SCPH_E_INACTLOW  | 0x0   | Inactive state of serial clock is low 
+ *  ALT_SPIS_CTLR0_SCPH_E_INACTLOW  | 0x0   | Inactive state of serial clock is low
  *  ALT_SPIS_CTLR0_SCPH_E_INACTHIGH | 0x1   | Inactive state of serial clock is high
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SCPH
- * 
+ *
  * Inactive state of serial clock is low
  */
 #define ALT_SPIS_CTLR0_SCPH_E_INACTLOW  0x0
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SCPH
- * 
+ *
  * Inactive state of serial clock is high
  */
 #define ALT_SPIS_CTLR0_SCPH_E_INACTHIGH 0x1
@@ -254,30 +254,30 @@ extern "C"
 
 /*
  * Field : Serial Clock Polarity - scpol
- * 
+ *
  * Valid when the frame format (FRF) is set to Motorola SPI. Used to select the
  * polarity of the inactive serial clock, which is held inactive when the spi
  * master is not actively transferring data on the serial bus.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                                     
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:-------------------------------------------------
  *  ALT_SPIS_CTLR0_SCPOL_E_MIDBIT   | 0x0   | Serial clock toggles in middle of first data bit
- *  ALT_SPIS_CTLR0_SCPOL_E_STARTBIT | 0x1   | Serial clock toggles at start of first data bit 
- * 
+ *  ALT_SPIS_CTLR0_SCPOL_E_STARTBIT | 0x1   | Serial clock toggles at start of first data bit
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SCPOL
- * 
+ *
  * Serial clock toggles in middle of first data bit
  */
 #define ALT_SPIS_CTLR0_SCPOL_E_MIDBIT   0x0
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SCPOL
- * 
+ *
  * Serial clock toggles at start of first data bit
  */
 #define ALT_SPIS_CTLR0_SCPOL_E_STARTBIT 0x1
@@ -301,7 +301,7 @@ extern "C"
 
 /*
  * Field : Transfer Mode - tmod
- * 
+ *
  * Selects the mode of transfer for serial communication. This field does not
  * affect the transfer duplicity. Only indicates whether the receive or transmit
  * data are valid. In transmit-only mode, data received from the external device is
@@ -311,33 +311,33 @@ extern "C"
  * duration of the transfer. In transmit-and-receive mode, both transmit and
  * receive data are valid. The transfer continues until the transmit FIFO is empty.
  * Data received from the external device are stored into the receive FIFO memory
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description           
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:-----------------------
  *  ALT_SPIS_CTLR0_TMOD_E_TXRX   | 0x0   | Transmit & and Receive
- *  ALT_SPIS_CTLR0_TMOD_E_TXONLY | 0x1   | Transmit Only         
- *  ALT_SPIS_CTLR0_TMOD_E_RXONLY | 0x2   | Receive Only          
- * 
+ *  ALT_SPIS_CTLR0_TMOD_E_TXONLY | 0x1   | Transmit Only
+ *  ALT_SPIS_CTLR0_TMOD_E_RXONLY | 0x2   | Receive Only
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_TMOD
- * 
+ *
  * Transmit & and Receive
  */
 #define ALT_SPIS_CTLR0_TMOD_E_TXRX      0x0
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_TMOD
- * 
+ *
  * Transmit Only
  */
 #define ALT_SPIS_CTLR0_TMOD_E_TXONLY    0x1
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_TMOD
- * 
+ *
  * Receive Only
  */
 #define ALT_SPIS_CTLR0_TMOD_E_RXONLY    0x2
@@ -361,7 +361,7 @@ extern "C"
 
 /*
  * Field : Slave Output Enable - slv_oe
- * 
+ *
  * This bit enables or disables the setting of the spis0_ssi_oe_n output from the
  * SPI Slave. When SLV_OE = 1, the spis0_ssi_oe_n output can never be active. When
  * the spis0_ssi_oe_n output controls the tri-state buffer on the txd output from
@@ -371,26 +371,26 @@ extern "C"
  * with data on the master spis0_rxd line. This bit is enabled after reset and must
  * be disabled by software (when broadcast mode is used), if you do not want this
  * device to respond with data.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description          
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------
- *  ALT_SPIS_CTLR0_SLV_OE_E_END  | 0x0   | Slave txd is enabled 
+ *  ALT_SPIS_CTLR0_SLV_OE_E_END  | 0x0   | Slave txd is enabled
  *  ALT_SPIS_CTLR0_SLV_OE_E_DISD | 0x1   | Slave txd is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SLV_OE
- * 
+ *
  * Slave txd is enabled
  */
 #define ALT_SPIS_CTLR0_SLV_OE_E_END     0x0
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SLV_OE
- * 
+ *
  * Slave txd is disabled
  */
 #define ALT_SPIS_CTLR0_SLV_OE_E_DISD    0x1
@@ -414,29 +414,29 @@ extern "C"
 
 /*
  * Field : Shift Register Loop - srl
- * 
+ *
  * Used for testing purposes only. When internally active, connects the transmit
  * shift register output to the receive shift register input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description          
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------
  *  ALT_SPIS_CTLR0_SRL_E_NORMMOD | 0x0   | Normal Mode Operation
- *  ALT_SPIS_CTLR0_SRL_E_TESTMOD | 0x1   | Test Mode Operation  
- * 
+ *  ALT_SPIS_CTLR0_SRL_E_TESTMOD | 0x1   | Test Mode Operation
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SRL
- * 
+ *
  * Normal Mode Operation
  */
 #define ALT_SPIS_CTLR0_SRL_E_NORMMOD    0x0
 /*
  * Enumerated value for register field ALT_SPIS_CTLR0_SRL
- * 
+ *
  * Test Mode Operation
  */
 #define ALT_SPIS_CTLR0_SRL_E_TESTMOD    0x1
@@ -460,12 +460,12 @@ extern "C"
 
 /*
  * Field : Control Frame Size - cfs
- * 
+ *
  * Selects the length of the control word for the Microwire frame format. The
  * length (in bits) is the value of this field plus 1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_CTLR0_CFS register field. */
 #define ALT_SPIS_CTLR0_CFS_LSB        12
@@ -492,7 +492,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_CTLR0.
  */
 struct ALT_SPIS_CTLR0_s
@@ -519,43 +519,43 @@ typedef volatile struct ALT_SPIS_CTLR0_s  ALT_SPIS_CTLR0_t;
 
 /*
  * Register : Enable Register - spienr
- * 
+ *
  * Enables and disables all SPI operations.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [0]    | RW     | 0x0   | Enable     
+ *  [0]    | RW     | 0x0   | Enable
  *  [31:1] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Enable - spi_en
- * 
+ *
  * When disabled, all serial transfers are halted immediately. Transmit and receive
  * FIFO buffers are cleared when the device is disabled. It is impossible to
  * program some of the SPI Slave control registers when enabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                        
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:------------------------------------
  *  ALT_SPIS_SPIENR_SPI_EN_E_DISD | 0x0   | Disables serial transfer operations
- *  ALT_SPIS_SPIENR_SPI_EN_E_END  | 0x1   | Enables serial transfer operations 
- * 
+ *  ALT_SPIS_SPIENR_SPI_EN_E_END  | 0x1   | Enables serial transfer operations
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SPIENR_SPI_EN
- * 
+ *
  * Disables serial transfer operations
  */
 #define ALT_SPIS_SPIENR_SPI_EN_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_SPIS_SPIENR_SPI_EN
- * 
+ *
  * Enables serial transfer operations
  */
 #define ALT_SPIS_SPIENR_SPI_EN_E_END    0x1
@@ -585,7 +585,7 @@ typedef volatile struct ALT_SPIS_CTLR0_s  ALT_SPIS_CTLR0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_SPIENR.
  */
 struct ALT_SPIS_SPIENR_s
@@ -605,48 +605,48 @@ typedef volatile struct ALT_SPIS_SPIENR_s  ALT_SPIS_SPIENR_t;
 
 /*
  * Register : Microwire Control Register - mwcr
- * 
+ *
  * This register controls the direction of the data word for the half-duplex
  * Microwire serial protocol. It is impossible to write to this register when the
  * SPI Slave is enabled. The SPI Slave is enabled and disabled by writing to the
  * SPIENR register.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [0]    | RW     | 0x0   | Microwire Transfer Mode
- *  [1]    | RW     | 0x0   | Microwire Control      
- *  [31:2] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [1]    | RW     | 0x0   | Microwire Control
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Microwire Transfer Mode - mwmod
- * 
+ *
  * Defines whether the Microwire transfer is sequential or non-sequential. When
  * sequential mode is used, only one control word is needed to transmit or receive
  * a block of data words. When non-sequential mode is used, there must be a control
  * word for each data word that is transmitted or received.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description            
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:------------------------
  *  ALT_SPIS_MWCR_MWMOD_E_NONSEQ | 0x0   | non-sequential transfer
- *  ALT_SPIS_MWCR_MWMOD_E_SEQ    | 0x1   | sequential transfer    
- * 
+ *  ALT_SPIS_MWCR_MWMOD_E_SEQ    | 0x1   | sequential transfer
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_MWCR_MWMOD
- * 
+ *
  * non-sequential transfer
  */
 #define ALT_SPIS_MWCR_MWMOD_E_NONSEQ    0x0
 /*
  * Enumerated value for register field ALT_SPIS_MWCR_MWMOD
- * 
+ *
  * sequential transfer
  */
 #define ALT_SPIS_MWCR_MWMOD_E_SEQ       0x1
@@ -670,29 +670,29 @@ typedef volatile struct ALT_SPIS_SPIENR_s  ALT_SPIS_SPIENR_t;
 
 /*
  * Field : Microwire Control - mdd
- * 
+ *
  * Defines the direction of the data word when the Microwire serial protocol is
  * used.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description             
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-------------------------
- *  ALT_SPIS_MWCR_MDD_E_RXMOD | 0x0   | SPI Slave receives data 
+ *  ALT_SPIS_MWCR_MDD_E_RXMOD | 0x0   | SPI Slave receives data
  *  ALT_SPIS_MWCR_MDD_E_TXMOD | 0x1   | SPI Slave transmits data
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_MWCR_MDD
- * 
+ *
  * SPI Slave receives data
  */
 #define ALT_SPIS_MWCR_MDD_E_RXMOD   0x0
 /*
  * Enumerated value for register field ALT_SPIS_MWCR_MDD
- * 
+ *
  * SPI Slave transmits data
  */
 #define ALT_SPIS_MWCR_MDD_E_TXMOD   0x1
@@ -722,7 +722,7 @@ typedef volatile struct ALT_SPIS_SPIENR_s  ALT_SPIS_SPIENR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_MWCR.
  */
 struct ALT_SPIS_MWCR_s
@@ -743,28 +743,28 @@ typedef volatile struct ALT_SPIS_MWCR_s  ALT_SPIS_MWCR_t;
 
 /*
  * Register : Transmit FIFO Threshold Level Register - txftlr
- * 
+ *
  * This register controls the threshold value for the transmit FIFO memory. It is
  * impossible to write to this register when the SPI Slave is enabled. The SPI
  * Slave is enabled and disabled by writing to the SPIENR register.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [7:0]  | RW     | 0x0   | Transmit FIFO Threshold
- *  [31:8] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Threshold - tft
- * 
+ *
  * Controls the level of entries (or below) at which the transmit FIFO controller
  * triggers an interrupt. When the number of transmit FIFO entries is less than or
  * equal to this value, the transmit FIFO empty interrupt is triggered.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_TXFTLR_TFT register field. */
 #define ALT_SPIS_TXFTLR_TFT_LSB        0
@@ -791,7 +791,7 @@ typedef volatile struct ALT_SPIS_MWCR_s  ALT_SPIS_MWCR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_TXFTLR.
  */
 struct ALT_SPIS_TXFTLR_s
@@ -811,28 +811,28 @@ typedef volatile struct ALT_SPIS_TXFTLR_s  ALT_SPIS_TXFTLR_t;
 
 /*
  * Register : Receive FIFO Threshold Level Register - rxftlr
- * 
+ *
  * This register controls the threshold value for the receive FIFO memory. It is
  * impossible to write to this register when the SPI Slave is enabled. The SPI
  * Slave is enabled and disabled by writing to the SPIENR register.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
  *  [7:0]  | RW     | 0x0   | Receive FIFO Threshold
- *  [31:8] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Receive FIFO Threshold - rft
- * 
+ *
  * Controls the level of entries (or above) at which the receive FIFO controller
  * triggers an interrupt. When the number of receive FIFO entries is greater than
  * or equal to this value + 1, the receive FIFO full interrupt is triggered.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_RXFTLR_RFT register field. */
 #define ALT_SPIS_RXFTLR_RFT_LSB        0
@@ -859,7 +859,7 @@ typedef volatile struct ALT_SPIS_TXFTLR_s  ALT_SPIS_TXFTLR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_RXFTLR.
  */
 struct ALT_SPIS_RXFTLR_s
@@ -879,25 +879,25 @@ typedef volatile struct ALT_SPIS_RXFTLR_s  ALT_SPIS_RXFTLR_t;
 
 /*
  * Register : Transmit FIFO Level Register - txflr
- * 
+ *
  * This register contains the number of valid data entries in the transmit FIFO
  * memory. Ranges from 0 to 256.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
  *  [8:0]  | R      | 0x0   | Transmit FIFO Level
- *  [31:9] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:9] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Level - txtfl
- * 
+ *
  * Contains the number of valid data entries in the transmit FIFO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_TXFLR_TXTFL register field. */
 #define ALT_SPIS_TXFLR_TXTFL_LSB        0
@@ -924,7 +924,7 @@ typedef volatile struct ALT_SPIS_RXFTLR_s  ALT_SPIS_RXFTLR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_TXFLR.
  */
 struct ALT_SPIS_TXFLR_s
@@ -944,25 +944,25 @@ typedef volatile struct ALT_SPIS_TXFLR_s  ALT_SPIS_TXFLR_t;
 
 /*
  * Register : Receive FIFO Level Register - rxflr
- * 
+ *
  * This register contains the number of valid data entriesin the receive FIFO
  * memory. This register can be read at any time. Ranges from 0 to 256.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description       
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------
  *  [8:0]  | R      | 0x0   | Receive FIFO Level
- *  [31:9] | ???    | 0x0   | *UNDEFINED*       
- * 
+ *  [31:9] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Receive FIFO Level - rxtfl
- * 
+ *
  * Contains the number of valid data entries in the receive FIFO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_RXFLR_RXTFL register field. */
 #define ALT_SPIS_RXFLR_RXTFL_LSB        0
@@ -989,7 +989,7 @@ typedef volatile struct ALT_SPIS_TXFLR_s  ALT_SPIS_TXFLR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_RXFLR.
  */
 struct ALT_SPIS_RXFLR_s
@@ -1009,48 +1009,48 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
 
 /*
  * Register : Status Register - sr
- * 
+ *
  * Reports FIFO transfer status, and any transmission/reception errors that may
  * have occurred. The status register may be read at any time. None of the bits in
  * this register request an interrupt.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
- *  [0]    | R      | 0x0   | SPI Busy Flag         
+ *  [0]    | R      | 0x0   | SPI Busy Flag
  *  [1]    | R      | 0x1   | Transmit FIFO Not Full
- *  [2]    | R      | 0x1   | Transmit FIFO Empty   
+ *  [2]    | R      | 0x1   | Transmit FIFO Empty
  *  [3]    | R      | 0x0   | Receive FIFO Not Empty
- *  [4]    | R      | 0x0   | Receive FIFO Full     
- *  [5]    | R      | 0x0   | Transmission Error    
- *  [31:6] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [4]    | R      | 0x0   | Receive FIFO Full
+ *  [5]    | R      | 0x0   | Transmission Error
+ *  [31:6] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SPI Busy Flag - busy
- * 
+ *
  * Reports the status of a serial transfer
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description                             
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:-----------------------------------------
  *  ALT_SPIS_SR_BUSY_E_INACT | 0x0   | SPI Slave is inactive (idle or disabled)
- *  ALT_SPIS_SR_BUSY_E_ACT   | 0x1   | SPI Slave is actively transferring data 
- * 
+ *  ALT_SPIS_SR_BUSY_E_ACT   | 0x1   | SPI Slave is actively transferring data
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SR_BUSY
- * 
+ *
  * SPI Slave is inactive (idle or disabled)
  */
 #define ALT_SPIS_SR_BUSY_E_INACT    0x0
 /*
  * Enumerated value for register field ALT_SPIS_SR_BUSY
- * 
+ *
  * SPI Slave is actively transferring data
  */
 #define ALT_SPIS_SR_BUSY_E_ACT      0x1
@@ -1074,28 +1074,28 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
 
 /*
  * Field : Transmit FIFO Not Full - tfnf
- * 
+ *
  * Reports the status of the transmit FIFO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description              
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------
- *  ALT_SPIS_SR_TFNF_E_FULL    | 0x0   | Transmit FIFO is full    
+ *  ALT_SPIS_SR_TFNF_E_FULL    | 0x0   | Transmit FIFO is full
  *  ALT_SPIS_SR_TFNF_E_NOTFULL | 0x1   | Transmit FIFO is not full
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SR_TFNF
- * 
+ *
  * Transmit FIFO is full
  */
 #define ALT_SPIS_SR_TFNF_E_FULL     0x0
 /*
  * Enumerated value for register field ALT_SPIS_SR_TFNF
- * 
+ *
  * Transmit FIFO is not full
  */
 #define ALT_SPIS_SR_TFNF_E_NOTFULL  0x1
@@ -1119,29 +1119,29 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
 
 /*
  * Field : Transmit FIFO Empty - tfe
- * 
+ *
  * Reports the status of transmit FIFO empty. This bit field does not request an
  * interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description               
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:---------------------------
- *  ALT_SPIS_SR_TFE_E_EMPTY    | 0x1   | Transmit FIFO is empty    
+ *  ALT_SPIS_SR_TFE_E_EMPTY    | 0x1   | Transmit FIFO is empty
  *  ALT_SPIS_SR_TFE_E_NOTEMPTY | 0x0   | Transmit FIFO is not empty
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SR_TFE
- * 
+ *
  * Transmit FIFO is empty
  */
 #define ALT_SPIS_SR_TFE_E_EMPTY     0x1
 /*
  * Enumerated value for register field ALT_SPIS_SR_TFE
- * 
+ *
  * Transmit FIFO is not empty
  */
 #define ALT_SPIS_SR_TFE_E_NOTEMPTY  0x0
@@ -1165,28 +1165,28 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
 
 /*
  * Field : Receive FIFO Not Empty - rfne
- * 
+ *
  * Reports the status of receive FIFO empty.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description              
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:--------------------------
- *  ALT_SPIS_SR_RFNE_E_EMPTY    | 0x0   | Receive FIFO is empty    
+ *  ALT_SPIS_SR_RFNE_E_EMPTY    | 0x0   | Receive FIFO is empty
  *  ALT_SPIS_SR_RFNE_E_NOTEMPTY | 0x1   | Receive FIFO is not empty
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SR_RFNE
- * 
+ *
  * Receive FIFO is empty
  */
 #define ALT_SPIS_SR_RFNE_E_EMPTY    0x0
 /*
  * Enumerated value for register field ALT_SPIS_SR_RFNE
- * 
+ *
  * Receive FIFO is not empty
  */
 #define ALT_SPIS_SR_RFNE_E_NOTEMPTY 0x1
@@ -1210,28 +1210,28 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
 
 /*
  * Field : Receive FIFO Full - rff
- * 
+ *
  * Reports the status of receive FIFO Full
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description             
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-------------------------
  *  ALT_SPIS_SR_RFF_E_NOTFULL | 0x0   | Receive FIFO is not full
- *  ALT_SPIS_SR_RFF_E_FULL    | 0x1   | Receive FIFO is full    
- * 
+ *  ALT_SPIS_SR_RFF_E_FULL    | 0x1   | Receive FIFO is full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SR_RFF
- * 
+ *
  * Receive FIFO is not full
  */
 #define ALT_SPIS_SR_RFF_E_NOTFULL   0x0
 /*
  * Enumerated value for register field ALT_SPIS_SR_RFF
- * 
+ *
  * Receive FIFO is full
  */
 #define ALT_SPIS_SR_RFF_E_FULL      0x1
@@ -1255,29 +1255,29 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
 
 /*
  * Field : Transmission Error - txe
- * 
+ *
  * Data from the previous transmission is resent on the txd line. This bit is
  * cleared when read.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description       
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-------------------
- *  ALT_SPIS_SR_TXE_E_NOERROR | 0x0   | No Error          
+ *  ALT_SPIS_SR_TXE_E_NOERROR | 0x0   | No Error
  *  ALT_SPIS_SR_TXE_E_ERROR   | 0x1   | Transmission Error
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_SR_TXE
- * 
+ *
  * No Error
  */
 #define ALT_SPIS_SR_TXE_E_NOERROR   0x0
 /*
  * Enumerated value for register field ALT_SPIS_SR_TXE
- * 
+ *
  * Transmission Error
  */
 #define ALT_SPIS_SR_TXE_E_ERROR     0x1
@@ -1307,7 +1307,7 @@ typedef volatile struct ALT_SPIS_RXFLR_s  ALT_SPIS_RXFLR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_SR.
  */
 struct ALT_SPIS_SR_s
@@ -1332,45 +1332,45 @@ typedef volatile struct ALT_SPIS_SR_s  ALT_SPIS_SR_t;
 
 /*
  * Register : Interrupt Mask Register - imr
- * 
+ *
  * This register masks or enables all interrupts generated by the SPI Slave.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------------
- *  [0]    | RW     | 0x1   | Transmit FIFO Empty Interrupt Mask   
+ *  [0]    | RW     | 0x1   | Transmit FIFO Empty Interrupt Mask
  *  [1]    | RW     | 0x1   | Transmit FIFO Overflow Interrupt Mask
  *  [2]    | RW     | 0x1   | Receive FIFO Underflow Interrupt Mask
- *  [3]    | RW     | 0x1   | Receive FIFO Overflow Interrupt Mask 
- *  [4]    | RW     | 0x1   | Receive FIFO Full Interrupt Mask     
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                          
- * 
+ *  [3]    | RW     | 0x1   | Receive FIFO Overflow Interrupt Mask
+ *  [4]    | RW     | 0x1   | Receive FIFO Full Interrupt Mask
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Empty Interrupt Mask - txeim
- * 
+ *
  * Empty mask.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------------------------
  *  ALT_SPIS_IMR_TXEIM_E_MSKED | 0x0   | spi_txe_intr interrupt is masked (disabled)
- *  ALT_SPIS_IMR_TXEIM_E_END   | 0x1   | spi_txe_intr interrupt is enabled          
- * 
+ *  ALT_SPIS_IMR_TXEIM_E_END   | 0x1   | spi_txe_intr interrupt is enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_IMR_TXEIM
- * 
+ *
  * spi_txe_intr interrupt is masked (disabled)
  */
 #define ALT_SPIS_IMR_TXEIM_E_MSKED  0x0
 /*
  * Enumerated value for register field ALT_SPIS_IMR_TXEIM
- * 
+ *
  * spi_txe_intr interrupt is enabled
  */
 #define ALT_SPIS_IMR_TXEIM_E_END    0x1
@@ -1394,28 +1394,28 @@ typedef volatile struct ALT_SPIS_SR_s  ALT_SPIS_SR_t;
 
 /*
  * Field : Transmit FIFO Overflow Interrupt Mask - txoim
- * 
+ *
  * Overflow mask.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------------------------
  *  ALT_SPIS_IMR_TXOIM_E_MSKED | 0x0   | spi_txo_intr interrupt is masked (disabled)
- *  ALT_SPIS_IMR_TXOIM_E_END   | 0x1   | spi_txo_intr interrupt is enabled          
- * 
+ *  ALT_SPIS_IMR_TXOIM_E_END   | 0x1   | spi_txo_intr interrupt is enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_IMR_TXOIM
- * 
+ *
  * spi_txo_intr interrupt is masked (disabled)
  */
 #define ALT_SPIS_IMR_TXOIM_E_MSKED  0x0
 /*
  * Enumerated value for register field ALT_SPIS_IMR_TXOIM
- * 
+ *
  * spi_txo_intr interrupt is enabled
  */
 #define ALT_SPIS_IMR_TXOIM_E_END    0x1
@@ -1439,28 +1439,28 @@ typedef volatile struct ALT_SPIS_SR_s  ALT_SPIS_SR_t;
 
 /*
  * Field : Receive FIFO Underflow Interrupt Mask - rxuim
- * 
+ *
  * Underfow Mask
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------------------------
  *  ALT_SPIS_IMR_RXUIM_E_MSKED | 0x0   | spi_rxu_intr interrupt is masked (disabled)
- *  ALT_SPIS_IMR_RXUIM_E_END   | 0x1   | spi_rxu_intr interrupt is enabled          
- * 
+ *  ALT_SPIS_IMR_RXUIM_E_END   | 0x1   | spi_rxu_intr interrupt is enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_IMR_RXUIM
- * 
+ *
  * spi_rxu_intr interrupt is masked (disabled)
  */
 #define ALT_SPIS_IMR_RXUIM_E_MSKED  0x0
 /*
  * Enumerated value for register field ALT_SPIS_IMR_RXUIM
- * 
+ *
  * spi_rxu_intr interrupt is enabled
  */
 #define ALT_SPIS_IMR_RXUIM_E_END    0x1
@@ -1484,28 +1484,28 @@ typedef volatile struct ALT_SPIS_SR_s  ALT_SPIS_SR_t;
 
 /*
  * Field : Receive FIFO Overflow Interrupt Mask - rxoim
- * 
+ *
  * Overflow Mask.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------------------------
  *  ALT_SPIS_IMR_RXOIM_E_MSKED | 0x0   | spi_rxo_intr interrupt is masked (disabled)
- *  ALT_SPIS_IMR_RXOIM_E_END   | 0x1   | spi_rxo_intr interrupt is enabled          
- * 
+ *  ALT_SPIS_IMR_RXOIM_E_END   | 0x1   | spi_rxo_intr interrupt is enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_IMR_RXOIM
- * 
+ *
  * spi_rxo_intr interrupt is masked (disabled)
  */
 #define ALT_SPIS_IMR_RXOIM_E_MSKED  0x0
 /*
  * Enumerated value for register field ALT_SPIS_IMR_RXOIM
- * 
+ *
  * spi_rxo_intr interrupt is enabled
  */
 #define ALT_SPIS_IMR_RXOIM_E_END    0x1
@@ -1529,28 +1529,28 @@ typedef volatile struct ALT_SPIS_SR_s  ALT_SPIS_SR_t;
 
 /*
  * Field : Receive FIFO Full Interrupt Mask - rxfim
- * 
+ *
  * FIFO Full Mask.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------------------------
  *  ALT_SPIS_IMR_RXFIM_E_MSKED | 0x0   | spi_rxf_intr interrupt is masked (disabled)
- *  ALT_SPIS_IMR_RXFIM_E_END   | 0x1   | spi_rxf_intr interrupt is enabled          
- * 
+ *  ALT_SPIS_IMR_RXFIM_E_END   | 0x1   | spi_rxf_intr interrupt is enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_IMR_RXFIM
- * 
+ *
  * spi_rxf_intr interrupt is masked (disabled)
  */
 #define ALT_SPIS_IMR_RXFIM_E_MSKED  0x0
 /*
  * Enumerated value for register field ALT_SPIS_IMR_RXFIM
- * 
+ *
  * spi_rxf_intr interrupt is enabled
  */
 #define ALT_SPIS_IMR_RXFIM_E_END    0x1
@@ -1580,7 +1580,7 @@ typedef volatile struct ALT_SPIS_SR_s  ALT_SPIS_SR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_IMR.
  */
 struct ALT_SPIS_IMR_s
@@ -1604,47 +1604,47 @@ typedef volatile struct ALT_SPIS_IMR_s  ALT_SPIS_IMR_t;
 
 /*
  * Register : Interrupt Status Register - isr
- * 
+ *
  * This register reports the status of the SPI Slave interrupts after they have
  * been masked.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
- *  [0]    | R      | 0x0   | Transmit FIFO Empty Interrupt Status   
+ *  [0]    | R      | 0x0   | Transmit FIFO Empty Interrupt Status
  *  [1]    | R      | 0x0   | Transmit FIFO Overflow Interrupt Status
  *  [2]    | R      | 0x0   | Receive FIFO Underflow Interrupt Status
- *  [3]    | R      | 0x0   | Receive FIFO Overflow Interrupt Status 
- *  [4]    | R      | 0x0   | Receive FIFO Full Interrupt Status     
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [3]    | R      | 0x0   | Receive FIFO Overflow Interrupt Status
+ *  [4]    | R      | 0x0   | Receive FIFO Full Interrupt Status
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Empty Interrupt Status - txeis
- * 
+ *
  * Empty Status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                   
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_ISR_TXEIS_E_INACT | 0x0   | spi_txe_intr interrupt is not active after    
- * :                           |       | masking                                       
+ *  ALT_SPIS_ISR_TXEIS_E_INACT | 0x0   | spi_txe_intr interrupt is not active after
+ * :                           |       | masking
  *  ALT_SPIS_ISR_TXEIS_E_ACT   | 0x1   | spi_txe_intr interrupt is active after masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_ISR_TXEIS
- * 
+ *
  * spi_txe_intr interrupt is not active after masking
  */
 #define ALT_SPIS_ISR_TXEIS_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SPIS_ISR_TXEIS
- * 
+ *
  * spi_txe_intr interrupt is active after masking
  */
 #define ALT_SPIS_ISR_TXEIS_E_ACT    0x1
@@ -1668,29 +1668,29 @@ typedef volatile struct ALT_SPIS_IMR_s  ALT_SPIS_IMR_t;
 
 /*
  * Field : Transmit FIFO Overflow Interrupt Status - txois
- * 
+ *
  * Overflow Status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                   
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_ISR_TXOIS_E_INACT | 0x0   | spi_txo_intr interrupt is not active after    
- * :                           |       | masking                                       
+ *  ALT_SPIS_ISR_TXOIS_E_INACT | 0x0   | spi_txo_intr interrupt is not active after
+ * :                           |       | masking
  *  ALT_SPIS_ISR_TXOIS_E_ACT   | 0x1   | spi_txo_intr interrupt is active after masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_ISR_TXOIS
- * 
+ *
  * spi_txo_intr interrupt is not active after masking
  */
 #define ALT_SPIS_ISR_TXOIS_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SPIS_ISR_TXOIS
- * 
+ *
  * spi_txo_intr interrupt is active after masking
  */
 #define ALT_SPIS_ISR_TXOIS_E_ACT    0x1
@@ -1714,29 +1714,29 @@ typedef volatile struct ALT_SPIS_IMR_s  ALT_SPIS_IMR_t;
 
 /*
  * Field : Receive FIFO Underflow Interrupt Status - rxuis
- * 
+ *
  * Underflow Status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                   
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_ISR_RXUIS_E_INACT | 0x0   | spi_rxu_intr interrupt is not active after    
- * :                           |       | masking                                       
+ *  ALT_SPIS_ISR_RXUIS_E_INACT | 0x0   | spi_rxu_intr interrupt is not active after
+ * :                           |       | masking
  *  ALT_SPIS_ISR_RXUIS_E_ACT   | 0x1   | spi_rxu_intr interrupt is active after masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_ISR_RXUIS
- * 
+ *
  * spi_rxu_intr interrupt is not active after masking
  */
 #define ALT_SPIS_ISR_RXUIS_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SPIS_ISR_RXUIS
- * 
+ *
  * spi_rxu_intr interrupt is active after masking
  */
 #define ALT_SPIS_ISR_RXUIS_E_ACT    0x1
@@ -1760,29 +1760,29 @@ typedef volatile struct ALT_SPIS_IMR_s  ALT_SPIS_IMR_t;
 
 /*
  * Field : Receive FIFO Overflow Interrupt Status - rxois
- * 
+ *
  * Overflow Status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                   
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_ISR_RXOIS_E_INACT | 0x0   | spi_rxo_intr interrupt is not active after    
- * :                           |       | masking                                       
+ *  ALT_SPIS_ISR_RXOIS_E_INACT | 0x0   | spi_rxo_intr interrupt is not active after
+ * :                           |       | masking
  *  ALT_SPIS_ISR_RXOIS_E_ACT   | 0x1   | spi_rxo_intr interrupt is active after masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_ISR_RXOIS
- * 
+ *
  * spi_rxo_intr interrupt is not active after masking
  */
 #define ALT_SPIS_ISR_RXOIS_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SPIS_ISR_RXOIS
- * 
+ *
  * spi_rxo_intr interrupt is active after masking
  */
 #define ALT_SPIS_ISR_RXOIS_E_ACT    0x1
@@ -1806,29 +1806,29 @@ typedef volatile struct ALT_SPIS_IMR_s  ALT_SPIS_IMR_t;
 
 /*
  * Field : Receive FIFO Full Interrupt Status - rxfis
- * 
+ *
  * Full Status
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                 
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:---------------------------------------------
- *  ALT_SPIS_ISR_RXFIS_E_INACT | 0x0   | spi_rxf_intr interrupt is not active after  
- * :                           |       | masking                                     
+ *  ALT_SPIS_ISR_RXFIS_E_INACT | 0x0   | spi_rxf_intr interrupt is not active after
+ * :                           |       | masking
  *  ALT_SPIS_ISR_RXFIS_E_ACT   | 0x1   | spi_rxf_intr interrupt is full after masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_ISR_RXFIS
- * 
+ *
  * spi_rxf_intr interrupt is not active after masking
  */
 #define ALT_SPIS_ISR_RXFIS_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SPIS_ISR_RXFIS
- * 
+ *
  * spi_rxf_intr interrupt is full after masking
  */
 #define ALT_SPIS_ISR_RXFIS_E_ACT    0x1
@@ -1858,7 +1858,7 @@ typedef volatile struct ALT_SPIS_IMR_s  ALT_SPIS_IMR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_ISR.
  */
 struct ALT_SPIS_ISR_s
@@ -1882,46 +1882,46 @@ typedef volatile struct ALT_SPIS_ISR_s  ALT_SPIS_ISR_t;
 
 /*
  * Register : Raw Interrupt Status Register - risr
- * 
+ *
  * This register reports the status of the SPI Slave interrupts prior to masking.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------------------
- *  [0]    | R      | 0x0   | Transmit FIFO Empty Raw Interrupt Status   
+ *  [0]    | R      | 0x0   | Transmit FIFO Empty Raw Interrupt Status
  *  [1]    | R      | 0x0   | Transmit FIFO Overflow Raw Interrupt Status
  *  [2]    | R      | 0x0   | Receive FIFO Underflow Raw Interrupt Status
- *  [3]    | R      | 0x0   | Receive FIFO Overflow Raw Interrupt Status 
- *  [4]    | R      | 0x0   | Receive FIFO Full Raw Interrupt Status     
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                
- * 
+ *  [3]    | R      | 0x0   | Receive FIFO Overflow Raw Interrupt Status
+ *  [4]    | R      | 0x0   | Receive FIFO Full Raw Interrupt Status
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Empty Raw Interrupt Status - txeir
- * 
+ *
  * The interrupt is active or inactive prior to masking.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                   
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_RISR_TXEIR_E_INACT | 0x0   | spi_txe_intr interrupt is not active prior to 
- * :                            |       | masking                                       
+ *  ALT_SPIS_RISR_TXEIR_E_INACT | 0x0   | spi_txe_intr interrupt is not active prior to
+ * :                            |       | masking
  *  ALT_SPIS_RISR_TXEIR_E_ACT   | 0x1   | spi_txe_intr interrupt is active prior masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_RISR_TXEIR
- * 
+ *
  * spi_txe_intr interrupt is not active prior to masking
  */
 #define ALT_SPIS_RISR_TXEIR_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_SPIS_RISR_TXEIR
- * 
+ *
  * spi_txe_intr interrupt is active prior masking
  */
 #define ALT_SPIS_RISR_TXEIR_E_ACT   0x1
@@ -1945,29 +1945,29 @@ typedef volatile struct ALT_SPIS_ISR_s  ALT_SPIS_ISR_t;
 
 /*
  * Field : Transmit FIFO Overflow Raw Interrupt Status - txoir
- * 
+ *
  * The interrupt is active or inactive prior to masking.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                   
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_RISR_TXOIR_E_INACT | 0x0   | spi_txo_intr interrupt is not active prior to 
- * :                            |       | masking                                       
+ *  ALT_SPIS_RISR_TXOIR_E_INACT | 0x0   | spi_txo_intr interrupt is not active prior to
+ * :                            |       | masking
  *  ALT_SPIS_RISR_TXOIR_E_ACT   | 0x1   | spi_txo_intr interrupt is active prior masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_RISR_TXOIR
- * 
+ *
  * spi_txo_intr interrupt is not active prior to masking
  */
 #define ALT_SPIS_RISR_TXOIR_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_SPIS_RISR_TXOIR
- * 
+ *
  * spi_txo_intr interrupt is active prior masking
  */
 #define ALT_SPIS_RISR_TXOIR_E_ACT   0x1
@@ -1991,30 +1991,30 @@ typedef volatile struct ALT_SPIS_ISR_s  ALT_SPIS_ISR_t;
 
 /*
  * Field : Receive FIFO Underflow Raw Interrupt Status - rxuir
- * 
+ *
  * The interrupt is active or inactive prior to masking.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                  
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------------------------------
  *  ALT_SPIS_RISR_RXUIR_E_INACT | 0x0   | spi_rxu_intr interrupt is not active prior to
- * :                            |       | masking                                      
- *  ALT_SPIS_RISR_RXUIR_E_ACT   | 0x1   | spi_rxu_intr interrupt is active prior to    
- * :                            |       | masking                                      
- * 
+ * :                            |       | masking
+ *  ALT_SPIS_RISR_RXUIR_E_ACT   | 0x1   | spi_rxu_intr interrupt is active prior to
+ * :                            |       | masking
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_RISR_RXUIR
- * 
+ *
  * spi_rxu_intr interrupt is not active prior to masking
  */
 #define ALT_SPIS_RISR_RXUIR_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_SPIS_RISR_RXUIR
- * 
+ *
  * spi_rxu_intr interrupt is active prior to masking
  */
 #define ALT_SPIS_RISR_RXUIR_E_ACT   0x1
@@ -2038,29 +2038,29 @@ typedef volatile struct ALT_SPIS_ISR_s  ALT_SPIS_ISR_t;
 
 /*
  * Field : Receive FIFO Overflow Raw Interrupt Status - rxoir
- * 
+ *
  * The interrupt is active or inactive prior to masking.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                   
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------------------------------
- *  ALT_SPIS_RISR_RXOIR_E_INACT | 0x0   | spi_rxo_intr interrupt is not active prior to 
- * :                            |       | masking                                       
+ *  ALT_SPIS_RISR_RXOIR_E_INACT | 0x0   | spi_rxo_intr interrupt is not active prior to
+ * :                            |       | masking
  *  ALT_SPIS_RISR_RXOIR_E_ACT   | 0x1   | spi_rxo_intr interrupt is active prior masking
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_RISR_RXOIR
- * 
+ *
  * spi_rxo_intr interrupt is not active prior to masking
  */
 #define ALT_SPIS_RISR_RXOIR_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_SPIS_RISR_RXOIR
- * 
+ *
  * spi_rxo_intr interrupt is active prior masking
  */
 #define ALT_SPIS_RISR_RXOIR_E_ACT   0x1
@@ -2084,30 +2084,30 @@ typedef volatile struct ALT_SPIS_ISR_s  ALT_SPIS_ISR_t;
 
 /*
  * Field : Receive FIFO Full Raw Interrupt Status - rxfir
- * 
+ *
  * The interrupt is active or inactive prior to masking.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                  
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------------------------------
  *  ALT_SPIS_RISR_RXFIR_E_INACT | 0x0   | spi_rxf_intr interrupt is not active prior to
- * :                            |       | masking                                      
- *  ALT_SPIS_RISR_RXFIR_E_ACT   | 0x1   | spi_rxf_intr interrupt is active prior to    
- * :                            |       | masking                                      
- * 
+ * :                            |       | masking
+ *  ALT_SPIS_RISR_RXFIR_E_ACT   | 0x1   | spi_rxf_intr interrupt is active prior to
+ * :                            |       | masking
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_RISR_RXFIR
- * 
+ *
  * spi_rxf_intr interrupt is not active prior to masking
  */
 #define ALT_SPIS_RISR_RXFIR_E_INACT 0x0
 /*
  * Enumerated value for register field ALT_SPIS_RISR_RXFIR
- * 
+ *
  * spi_rxf_intr interrupt is active prior to masking
  */
 #define ALT_SPIS_RISR_RXFIR_E_ACT   0x1
@@ -2137,7 +2137,7 @@ typedef volatile struct ALT_SPIS_ISR_s  ALT_SPIS_ISR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_RISR.
  */
 struct ALT_SPIS_RISR_s
@@ -2161,23 +2161,23 @@ typedef volatile struct ALT_SPIS_RISR_s  ALT_SPIS_RISR_t;
 
 /*
  * Register : Transmit FIFO Overflow Interrupt Clear Register - txoicr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | R      | 0x0   | Clear Transmit FIFO Overflow Interrupt
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clear Transmit FIFO Overflow Interrupt - txoicr
- * 
+ *
  * This register reflects the status of the interrupt. A read from this register
  * clears the ssi_txo_intr interrupt; writing has no effect.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_TXOICR_TXOICR register field. */
 #define ALT_SPIS_TXOICR_TXOICR_LSB        0
@@ -2204,7 +2204,7 @@ typedef volatile struct ALT_SPIS_RISR_s  ALT_SPIS_RISR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_TXOICR.
  */
 struct ALT_SPIS_TXOICR_s
@@ -2224,23 +2224,23 @@ typedef volatile struct ALT_SPIS_TXOICR_s  ALT_SPIS_TXOICR_t;
 
 /*
  * Register : Receive FIFO Overflow Interrupt Clear Register - rxoicr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------------
  *  [0]    | R      | 0x0   | Clear Receive FIFO Overflow Interrupt
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                          
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clear Receive FIFO Overflow Interrupt - rxoicr
- * 
+ *
  * This register reflects the status of the interrupt. A read from this register
  * clears the ssi_rxo_intr interrupt; writing has no effect.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_RXOICR_RXOICR register field. */
 #define ALT_SPIS_RXOICR_RXOICR_LSB        0
@@ -2267,7 +2267,7 @@ typedef volatile struct ALT_SPIS_TXOICR_s  ALT_SPIS_TXOICR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_RXOICR.
  */
 struct ALT_SPIS_RXOICR_s
@@ -2287,23 +2287,23 @@ typedef volatile struct ALT_SPIS_RXOICR_s  ALT_SPIS_RXOICR_t;
 
 /*
  * Register : Receive FIFO Underflow Interrupt Clear Register - rxuicr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | R      | 0x0   | Clear Receive FIFO Underflow Interrupt
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clear Receive FIFO Underflow Interrupt - rxuicr
- * 
+ *
  * This register reflects the status of the interrupt. A read from this register
  * clears the ssi_rxu_intr interrupt; writing has no effect.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_RXUICR_RXUICR register field. */
 #define ALT_SPIS_RXUICR_RXUICR_LSB        0
@@ -2330,7 +2330,7 @@ typedef volatile struct ALT_SPIS_RXOICR_s  ALT_SPIS_RXOICR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_RXUICR.
  */
 struct ALT_SPIS_RXUICR_s
@@ -2350,24 +2350,24 @@ typedef volatile struct ALT_SPIS_RXUICR_s  ALT_SPIS_RXUICR_t;
 
 /*
  * Register : Interrupt Clear Register - icr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | R      | 0x0   | Clear Interrupts
- *  [31:1] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clear Interrupts - icr
- * 
+ *
  * This register is set if any of the interrupts below are active. A read clears
  * the ssi_txo_intr, ssi_rxu_intr, ssi_rxo_intr, and the ssi_mst_intr interrupts.
  * Writing to this register has no effect.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_ICR_ICR register field. */
 #define ALT_SPIS_ICR_ICR_LSB        0
@@ -2394,7 +2394,7 @@ typedef volatile struct ALT_SPIS_RXUICR_s  ALT_SPIS_RXUICR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_ICR.
  */
 struct ALT_SPIS_ICR_s
@@ -2414,42 +2414,42 @@ typedef volatile struct ALT_SPIS_ICR_s  ALT_SPIS_ICR_t;
 
 /*
  * Register : DMA Control Register - dmacr
- * 
+ *
  * The register is used to enable the DMA Controller interface operation.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
- *  [0]    | RW     | 0x0   | Receive DMA Enable 
+ *  [0]    | RW     | 0x0   | Receive DMA Enable
  *  [1]    | RW     | 0x0   | Transmit DMA Enable
- *  [31:2] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Receive DMA Enable - rdmae
- * 
+ *
  * This bit enables/disables the receive FIFO DMA channel
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description         
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:---------------------
  *  ALT_SPIS_DMACR_RDMAE_E_DISD | 0x0   | Receive DMA disabled
- *  ALT_SPIS_DMACR_RDMAE_E_END  | 0x1   | Receive DMA enabled 
- * 
+ *  ALT_SPIS_DMACR_RDMAE_E_END  | 0x1   | Receive DMA enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_DMACR_RDMAE
- * 
+ *
  * Receive DMA disabled
  */
 #define ALT_SPIS_DMACR_RDMAE_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_SPIS_DMACR_RDMAE
- * 
+ *
  * Receive DMA enabled
  */
 #define ALT_SPIS_DMACR_RDMAE_E_END  0x1
@@ -2473,28 +2473,28 @@ typedef volatile struct ALT_SPIS_ICR_s  ALT_SPIS_ICR_t;
 
 /*
  * Field : Transmit DMA Enable - tdmae
- * 
+ *
  * This bit enables/disables the transmit FIFO DMA channel.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description          
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------
  *  ALT_SPIS_DMACR_TDMAE_E_DISD | 0x0   | Transmit DMA disabled
- *  ALT_SPIS_DMACR_TDMAE_E_END  | 0x1   | Transmit DMA enabled 
- * 
+ *  ALT_SPIS_DMACR_TDMAE_E_END  | 0x1   | Transmit DMA enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SPIS_DMACR_TDMAE
- * 
+ *
  * Transmit DMA disabled
  */
 #define ALT_SPIS_DMACR_TDMAE_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_SPIS_DMACR_TDMAE
- * 
+ *
  * Transmit DMA enabled
  */
 #define ALT_SPIS_DMACR_TDMAE_E_END  0x1
@@ -2524,7 +2524,7 @@ typedef volatile struct ALT_SPIS_ICR_s  ALT_SPIS_ICR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_DMACR.
  */
 struct ALT_SPIS_DMACR_s
@@ -2545,27 +2545,27 @@ typedef volatile struct ALT_SPIS_DMACR_s  ALT_SPIS_DMACR_t;
 
 /*
  * Register : DMA Transmit Data Level Regoster - dmatdlr
- * 
+ *
  * Controls DMA Transmit FIFO Threshold
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
  *  [7:0]  | RW     | 0x0   | Transmit Data Level
- *  [31:8] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit Data Level - dmatdl
- * 
+ *
  * This bit field controls the level at which a DMA request is made by the transmit
  * logic. It is equal to the watermark level; that is, the dma_tx_req signal is
  * generated when the number of valid data entries in the transmit FIFO is equal to
  * or below this field value, and TDMAE = 1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_DMATDLR_DMATDL register field. */
 #define ALT_SPIS_DMATDLR_DMATDL_LSB        0
@@ -2592,7 +2592,7 @@ typedef volatile struct ALT_SPIS_DMACR_s  ALT_SPIS_DMACR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_DMATDLR.
  */
 struct ALT_SPIS_DMATDLR_s
@@ -2612,27 +2612,27 @@ typedef volatile struct ALT_SPIS_DMATDLR_s  ALT_SPIS_DMATDLR_t;
 
 /*
  * Register : DMA Receive Data Level Register - dmardlr
- * 
+ *
  * Controls DMA Receive FIFO Threshold
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description       
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------
  *  [7:0]  | RW     | 0x0   | Receive Data Level
- *  [31:8] | ???    | 0x0   | *UNDEFINED*       
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Receive Data Level - dmardl
- * 
+ *
  * This bit field controls the level at which a DMA request is made by the receive
  * logic. The watermark level = DMARDL+1; that is, dma_rx_req is generated when the
  * number of valid data entries in the receive FIFO is equal to or above this field
  * value + 1, and RDMAE=1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_DMARDLR_DMARDL register field. */
 #define ALT_SPIS_DMARDLR_DMARDL_LSB        0
@@ -2659,7 +2659,7 @@ typedef volatile struct ALT_SPIS_DMATDLR_s  ALT_SPIS_DMATDLR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_DMARDLR.
  */
 struct ALT_SPIS_DMARDLR_s
@@ -2679,23 +2679,23 @@ typedef volatile struct ALT_SPIS_DMARDLR_s  ALT_SPIS_DMARDLR_t;
 
 /*
  * Register : Identification Register - idr
- * 
+ *
  * This register stores a peripheral identification code
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset     | Description        
+ *
+ *  Bits   | Access | Reset     | Description
  * :-------|:-------|:----------|:--------------------
  *  [31:0] | R      | 0x5510005 | Identification Code
- * 
+ *
  */
 /*
  * Field : Identification Code - idr
- * 
+ *
  * This filed contains the peripherals identification code, 0x05510005.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_IDR_IDR register field. */
 #define ALT_SPIS_IDR_IDR_LSB        0
@@ -2722,7 +2722,7 @@ typedef volatile struct ALT_SPIS_DMARDLR_s  ALT_SPIS_DMARDLR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_IDR.
  */
 struct ALT_SPIS_IDR_s
@@ -2741,24 +2741,24 @@ typedef volatile struct ALT_SPIS_IDR_s  ALT_SPIS_IDR_t;
 
 /*
  * Register : Component Version Register - spi_version_id
- * 
+ *
  * This read-only register stores the specific SPI Slave component version.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description      
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:------------------
  *  [31:0] | RW     | 0x3332302a | Component Version
- * 
+ *
  */
 /*
  * Field : Component Version - spi_version_id
- * 
+ *
  * Contains the hex representation of the Synopsys component version. Consists of
  * ASCII value for each number in the version.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_SPI_VER_ID_SPI_VER_ID register field. */
 #define ALT_SPIS_SPI_VER_ID_SPI_VER_ID_LSB        0
@@ -2785,7 +2785,7 @@ typedef volatile struct ALT_SPIS_IDR_s  ALT_SPIS_IDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_SPI_VER_ID.
  */
 struct ALT_SPIS_SPI_VER_ID_s
@@ -2804,32 +2804,32 @@ typedef volatile struct ALT_SPIS_SPI_VER_ID_s  ALT_SPIS_SPI_VER_ID_t;
 
 /*
  * Register : Data Register - dr
- * 
+ *
  * The data register is a 16-bit read/write buffer for the transmit/receive FIFOs.
  * When the register is read, data in the receive FIFO buffer is accessed. When it
  * is written to, data are moved into the transmit FIFO buffer; a write can occur
  * only when SPI_EN = 1. FIFOs are reset when SPI_EN = 0.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------
- *  [15:0]  | RW     | 0x0   | Data       
+ *  [15:0]  | RW     | 0x0   | Data
  *  [31:16] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Data - dr
- * 
+ *
  * When writing to this register, you must right-justify the data. Read data are
  * automatically right-justified.
- * 
+ *
  * Read = Receive FIFO buffer
- * 
+ *
  * Write = Transmit FIFO buffer
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SPIS_DR_DR register field. */
 #define ALT_SPIS_DR_DR_LSB        0
@@ -2856,7 +2856,7 @@ typedef volatile struct ALT_SPIS_SPI_VER_ID_s  ALT_SPIS_SPI_VER_ID_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SPIS_DR.
  */
 struct ALT_SPIS_DR_s
@@ -2882,7 +2882,7 @@ typedef volatile struct ALT_SPIS_DR_s  ALT_SPIS_DR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SPIS.
  */
 struct ALT_SPIS_s

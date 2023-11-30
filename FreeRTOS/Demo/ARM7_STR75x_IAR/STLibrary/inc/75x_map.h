@@ -108,63 +108,63 @@ typedef struct
 /*------------------------ Controller Area Network ---------------------------*/
 typedef struct
 {
-  vu16 CRR;			
+  vu16 CRR;
   u16  EMPTY1;
-  vu16 CMR;			
+  vu16 CMR;
   u16  EMPTY2;
-  vu16 M1R;			
+  vu16 M1R;
   u16  EMPTY3;
-  vu16 M2R;			
+  vu16 M2R;
   u16  EMPTY4;
-  vu16 A1R;			
+  vu16 A1R;
   u16  EMPTY5;
-  vu16 A2R;			
+  vu16 A2R;
   u16  EMPTY6;
-  vu16 MCR;			
+  vu16 MCR;
   u16  EMPTY7;
-  vu16 DA1R;		
+  vu16 DA1R;
   u16  EMPTY8;
-  vu16 DA2R;		
+  vu16 DA2R;
   u16  EMPTY9;
-  vu16 DB1R;		
+  vu16 DB1R;
   u16  EMPTY10;
-  vu16 DB2R;		
+  vu16 DB2R;
   u16  EMPTY11[27];
 } CAN_MsgObj_TypeDef;
 
 typedef struct
 {
-  vu16 CR;			
+  vu16 CR;
   u16  EMPTY1;
-  vu16 SR;			
+  vu16 SR;
   u16  EMPTY2;
-  vu16 ERR;			
+  vu16 ERR;
   u16  EMPTY3;
-  vu16 BTR;			
+  vu16 BTR;
   u16  EMPTY4;
-  vu16 IDR;			
+  vu16 IDR;
   u16  EMPTY5;
-  vu16 TESTR;		
+  vu16 TESTR;
   u16  EMPTY6;
-  vu16 BRPR;		
+  vu16 BRPR;
   u16  EMPTY7[3];
   CAN_MsgObj_TypeDef sMsgObj[2];
   u16  EMPTY8[16];
-  vu16 TXR1R;		
+  vu16 TXR1R;
   u16  EMPTY9;
-  vu16 TXR2R;		
+  vu16 TXR2R;
   u16  EMPTY10[13];
-  vu16 ND1R;		
+  vu16 ND1R;
   u16  EMPTY11;
-  vu16 ND2R;		
+  vu16 ND2R;
   u16  EMPTY12[13];
-  vu16 IP1R;		
+  vu16 IP1R;
   u16  EMPTY13;
-  vu16 IP2R;		
+  vu16 IP2R;
   u16  EMPTY14[13];
-  vu16 MV1R;		
+  vu16 MV1R;
   u16  EMPTY15;
-  vu16 MV2R;		
+  vu16 MV2R;
   u16  EMPTY16;
 } CAN_TypeDef;
 
@@ -211,15 +211,15 @@ typedef struct
   u16  EMPTY5;
   vuc16 STATUS;
   u16  EMPTY6;
-  vu16 LAST;       
+  vu16 LAST;
   u16  EMPTY7;
 } DMA_TypeDef;
 
 /*----------------------- Enhanced Interrupt Controller ----------------------*/
 typedef struct
 {
-  vu32 ICR; 
-  vuc32 CICR;   
+  vu32 ICR;
+  vuc32 CICR;
   vu32 CIPR;
   u32  EMPTY1;
   vu32 FIER;
@@ -261,7 +261,7 @@ typedef struct
 /*--------------------------------- I2C interface ----------------------------*/
 typedef struct
 {
-  vu8 CR; 
+  vu8 CR;
   u8  EMPTY1[3];
   vu8 SR1;
   u8  EMPTY2[3];
@@ -584,7 +584,7 @@ typedef struct
 
   #ifdef _ADC
     EXT ADC_TypeDef           *ADC;
-  #endif /*_ADC */  
+  #endif /*_ADC */
 
   #ifdef _TB
     EXT TB_TypeDef            *TB;
@@ -685,7 +685,7 @@ typedef struct
   #ifdef _EIC
     EXT EIC_TypeDef           *EIC;
   #endif /*_EIC */
-  
+
 #endif  /* DEBUG */
 
 /* Exported constants --------------------------------------------------------*/

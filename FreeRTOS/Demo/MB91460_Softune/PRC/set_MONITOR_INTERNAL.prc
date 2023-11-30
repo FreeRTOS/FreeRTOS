@@ -24,11 +24,11 @@ SET REGISTER TBR = intVectorMonitorDebugger
 # Run to smd_tbr and save TBR of Application
 go ,Start91460\smd_tbr
 SET VARIABLE intVectorApllication  = %r0
-SET REGISTER TBR = intVectorApllication  
+SET REGISTER TBR = intVectorApllication
 
 # Copy required vector table entries of monitor debugger in vector table of application
 MOVE intVectorMonitorDebugger + 0x3C0..intVectorMonitorDebugger + 0x3FF, intVectorApllication + 0x3C0
-    
+
 
 # Prepare Entries for INT0
 IF %abortIRQ0 == 0x1
@@ -46,7 +46,7 @@ SET REGISTER R4 = 0x8
 
 
 # Set TBR to Vector table of application
-SET REGISTER TBR = intVectorApllication 
+SET REGISTER TBR = intVectorApllication
 
 # Run to smd_c and let the CS enabled
 go noClockStartup,Start91460\smd_cs

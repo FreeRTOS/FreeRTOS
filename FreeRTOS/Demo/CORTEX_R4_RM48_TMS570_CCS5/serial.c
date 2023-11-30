@@ -26,14 +26,14 @@
 
 /*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
-	
-	***NOTE*** 
+
+	***NOTE***
 	The implementation provided in this file is intended to demonstrate using
-	queues to pass data into and out of interrupts, and to demonstrate context 
-	switching from inside an interrupt service routine.  It is *not* intended to 
-	represent an efficient implementation.  Real implementations should not pass 
-	individual characters on queues, but instead use RAM buffers, DMA and/or 
-	FIFO features as appropriate.  Semaphores can be used to signal a task that 
+	queues to pass data into and out of interrupts, and to demonstrate context
+	switching from inside an interrupt service routine.  It is *not* intended to
+	represent an efficient implementation.  Real implementations should not pass
+	individual characters on queues, but instead use RAM buffers, DMA and/or
+	FIFO features as appropriate.  Semaphores can be used to signal a task that
 	data is	available to be processed.
 */
 
@@ -119,7 +119,7 @@ xComPortHandle xReturn = ( xComPortHandle ) 0;
 	/* Create the queues used to hold Rx/Tx characters. */
 	xRxedChars  = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	
+
 	/* If the queue/semaphore was created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
@@ -204,14 +204,14 @@ signed portBASE_TYPE xReturn;
 		/* First byte */
 
 		/* Wait until IDLE idle period is finished */
-		while ( (serialSCI_FLR_REG & serialSCI_IDLE_FLG) != 0 ) 
-		{ 
-			/* wait */ 
+		while ( (serialSCI_FLR_REG & serialSCI_IDLE_FLG) != 0 )
+		{
+			/* wait */
 		};
-		
+
 		/* Need to send first byte before interrupts flags are set. */
 		serialSCI_TD_REG = cOutChar;
-		
+
 		/* Enable the TX interrupt. */
 		serialSCI_SETINT_REG = serialSCI_TX_INT;
 
@@ -285,4 +285,4 @@ portBASE_TYPE xVectorValue = serialSCI_INTVEC0_REG;
 
 
 
-	
+

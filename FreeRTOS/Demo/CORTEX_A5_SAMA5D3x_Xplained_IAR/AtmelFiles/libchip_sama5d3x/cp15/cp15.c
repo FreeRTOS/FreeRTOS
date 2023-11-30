@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License  
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -45,8 +45,8 @@
 // 9   cache lockdown           cache lockdown
 // 9   TCM region               TCM region
 // 10  TLB lockdown             TLB lockdown
-// 11                                                      (Reserved) 
-// 12                                                      (Reserved) 
+// 11                                                      (Reserved)
+// 12                                                      (Reserved)
 // 13  FCSE PID                 FCSE PID
 // 13  Context ID               Context ID
 // 14                                                      (Reserved)
@@ -58,8 +58,8 @@
  *
  * \section CP15 function Usage
  *
- * Methods to manage the Coprocessor 15. Coprocessor 15, or System Control 
- * Coprocessor CP15, is used to configure and control all the items in the 
+ * Methods to manage the Coprocessor 15. Coprocessor 15, or System Control
+ * Coprocessor CP15, is used to configure and control all the items in the
  * list below:
  * <ul>
  * <li> ARM core
@@ -102,7 +102,7 @@ unsigned int CP15_IsIcacheEnabled(void)
 
     control = CP15_ReadControl();
     return ((control & (1 << CP15_I_BIT)) != 0);
-} 
+}
 
 
 /**
@@ -143,14 +143,14 @@ void CP15_DisableIcache(void)
     if ((control & (1 << CP15_I_BIT)) != 0) {
 
         control &= ~(1ul << CP15_I_BIT);
-        CP15_WriteControl(control);        
+        CP15_WriteControl(control);
         TRACE_INFO("I cache disabled.\n\r");
     }
     else {
 
         TRACE_INFO("I cache is already disabled.\n\r");
     }
-} 
+}
 
 /**
  * \brief  Check MMU
@@ -162,7 +162,7 @@ unsigned int CP15_IsMMUEnabled(void)
 
     control = CP15_ReadControl();
     return ((control & (1 << CP15_M_BIT)) != 0);
-} 
+}
 
 
 /**
@@ -178,7 +178,7 @@ void CP15_EnableMMU(void)
     if ((control & (1 << CP15_M_BIT)) == 0) {
 
         control |= (1 << CP15_M_BIT);
-        CP15_WriteControl(control);        
+        CP15_WriteControl(control);
         TRACE_INFO("MMU enabled.\n\r");
     }
     else {
@@ -202,7 +202,7 @@ void CP15_DisableMMU(void)
 
         control &= ~(1ul << CP15_M_BIT);
         control &= ~(1ul << CP15_C_BIT);
-        CP15_WriteControl(control);        
+        CP15_WriteControl(control);
         TRACE_INFO("MMU disabled.\n\r");
     }
     else {
@@ -222,7 +222,7 @@ unsigned int CP15_IsDcacheEnabled(void)
 
     control = CP15_ReadControl();
     return ((control & ((1 << CP15_C_BIT)||(1 << CP15_M_BIT))) != 0);
-} 
+}
 
 /**
  * \brief  Enable Data cache
@@ -241,7 +241,7 @@ void CP15_EnableDcache(void)
         if ((control & (1 << CP15_C_BIT)) == 0) {
 
             control |= (1 << CP15_C_BIT);
-            CP15_WriteControl(control);        
+            CP15_WriteControl(control);
             TRACE_INFO("D cache enabled.\n\r");
         }
         else {

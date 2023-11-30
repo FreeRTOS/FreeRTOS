@@ -77,7 +77,7 @@ unsigned char ucBit = ( unsigned char ) 1;
 	if( uxLED <= partstMAX_OUTPUT_LED )
 	{
 		ucBit <<= uxLED;
-	}	
+	}
 
 	vTaskSuspendAll();
 	{
@@ -118,7 +118,7 @@ unsigned char ucBit;
 
 			portOUTPUT_BYTE( partstPORT_F_ADDR, ( unsigned ) ucCurrentOutputValue );
 		}
-		xTaskResumeAll();			
+		xTaskResumeAll();
 	}
 }
 

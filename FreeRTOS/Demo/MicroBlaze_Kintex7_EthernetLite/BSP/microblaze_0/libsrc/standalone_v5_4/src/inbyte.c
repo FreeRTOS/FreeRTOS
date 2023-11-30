@@ -7,7 +7,7 @@ extern "C" {
 char inbyte(void);
 #ifdef __cplusplus
 }
-#endif 
+#endif
 
 char inbyte(void) {
 	 return XUartLite_RecvByte(STDIN_BASEADDRESS);

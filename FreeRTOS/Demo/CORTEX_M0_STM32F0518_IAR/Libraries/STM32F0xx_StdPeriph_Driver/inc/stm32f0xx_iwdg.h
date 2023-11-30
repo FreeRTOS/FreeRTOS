@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the IWDG 
+  * @brief   This file contains all the functions prototypes for the IWDG
   *          firmware library.
   ******************************************************************************
   * @attention
@@ -61,7 +61,7 @@
   * @}
   */
 
-/** @defgroup IWDG_prescaler 
+/** @defgroup IWDG_prescaler
   * @{
   */
 
@@ -83,7 +83,7 @@
   * @}
   */
 
-/** @defgroup IWDG_Flag 
+/** @defgroup IWDG_Flag
   * @{
   */
 

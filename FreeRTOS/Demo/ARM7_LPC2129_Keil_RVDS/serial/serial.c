@@ -25,8 +25,8 @@
  */
 
 
-/* 
-	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0. 
+/*
+	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
 
 	Note this driver is used to test the FreeRTOS port.  It is NOT intended to
 	be an example of an efficient implementation!
@@ -83,8 +83,8 @@
  */
 extern void vUART_ISREntry( void );
 
-/* 
- * The C function called from the asm wrapper. 
+/*
+ * The C function called from the asm wrapper.
  */
 void vUART_ISRHandler( void );
 
@@ -92,8 +92,8 @@ void vUART_ISRHandler( void );
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /* Communication flag between the interrupt service routine and serial API. */
 static volatile long lTHREEmpty;
@@ -112,10 +112,10 @@ xComPortHandle xReturn = serHANDLE;
 	/* Initialise the THRE empty flag. */
 	lTHREEmpty = pdTRUE;
 
-	if( 
-		( xRxedChars != serINVALID_QUEUE ) && 
-		( xCharsForTx != serINVALID_QUEUE ) && 
-		( ulWantedBaud != ( unsigned long ) 0 ) 
+	if(
+		( xRxedChars != serINVALID_QUEUE ) &&
+		( xCharsForTx != serINVALID_QUEUE ) &&
+		( ulWantedBaud != ( unsigned long ) 0 )
 	  )
 	{
 		portENTER_CRITICAL()
@@ -209,13 +209,13 @@ signed portBASE_TYPE xReturn;
 		/* Is there space to write directly to the UART? */
 		if( lTHREEmpty == ( long ) pdTRUE )
 		{
-			/* We wrote the character directly to the UART, so was 
+			/* We wrote the character directly to the UART, so was
 			successful. */
 			lTHREEmpty = pdFALSE;
 			U1THR = cOutChar;
 			xReturn = pdPASS;
 		}
-		else 
+		else
 		{
 			/* We cannot write directly to the UART, so queue the character.
 			Block for a maximum of xBlockTime if there is no space in the
@@ -223,8 +223,8 @@ signed portBASE_TYPE xReturn;
 			task has it's own critical section management. */
 			xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
 
-			/* Depending on queue sizing and task prioritisation:  While we 
-			were blocked waiting to post interrupts were not disabled.  It is 
+			/* Depending on queue sizing and task prioritisation:  While we
+			were blocked waiting to post interrupts were not disabled.  It is
 			possible that the serial ISR has emptied the Tx queue, in which
 			case we need to start the Tx off again. */
 			if( lTHREEmpty == ( long ) pdTRUE )
@@ -258,7 +258,7 @@ unsigned char ucInterrupt;
 			case serSOURCE_ERROR :	/* Not handling this, but clear the interrupt. */
 									cChar = U1LSR;
 									break;
-	
+
 			case serSOURCE_THRE	:	/* The THRE is empty.  If there is another
 									character in the Tx queue, send it now. */
 									if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
@@ -267,20 +267,20 @@ unsigned char ucInterrupt;
 									}
 									else
 									{
-										/* There are no further characters 
-										queued to send so we can indicate 
+										/* There are no further characters
+										queued to send so we can indicate
 										that the THRE is available. */
 										lTHREEmpty = pdTRUE;
 									}
 									break;
-	
+
 			case serSOURCE_RX_TIMEOUT :
-			case serSOURCE_RX	:	/* A character was received.  Place it in 
+			case serSOURCE_RX	:	/* A character was received.  Place it in
 									the queue of received characters. */
 									cChar = U1RBR;
 									xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 									break;
-	
+
 			default				:	/* There is nothing to do, leave the ISR. */
 									break;
 		}
@@ -302,4 +302,4 @@ unsigned char ucInterrupt;
 
 
 
-	
+

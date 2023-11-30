@@ -9,7 +9,7 @@ You can use it, modify it, distribute it freely but without any waranty.
 */
 .extern main
 
-	   
+
 
 /*; Depending on Your Application, Disable or Enable the following Defines*/
   /*; --------------------------------------------------------------------------
@@ -21,7 +21,7 @@ You can use it, modify it, distribute it freely but without any waranty.
   ;                      Memory remapping
 ; ----------------------------------------------------------------------------*/
 .set Remap_SRAM, 0   /* remap SRAM at address 0x00 if 1 */
- 
+
 /*  ; ----------------------------------------------------------------------------
   ;                      EIC initialization
   ; ----------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ You can use it, modify it, distribute it freely but without any waranty.
 
 SVC_Stack           =     _SVC_Stack_Init /*_estack*/           /*; 32 byte SVC stack at*/
                                               /*; top of memory */
-                                              
+
 IRQ_Stack           =     _IRQ_Stack_Init /*SVC_Stack - 32*/     /*; followed by IRQ stack */
 USR_Stack           =     _USR_Stack_Init /*IRQ_Stack-256*/    /*; followed by USR stack */
 FIQ_Stack           =     _FIQ_Stack_Init /*USR_Stack-256*/    /*; followed by FIQ stack*/
@@ -150,7 +150,7 @@ FIQ_Addr        : .long     FIQHandler
 /* execution goes there when an interrupt occurs and there is no associated ISR */
 .globl __wrongvector
 __wrongvector:
-	ldr     PC, __wrongvector_Addr	
+	ldr     PC, __wrongvector_Addr
 __wrongvector_Addr:
 	.long 0
 
@@ -225,7 +225,7 @@ TB_Addr            :.long	vPortTickISR
 	MRS		R0, SPSR
 	STMDB	LR!, {R0}
 
-	LDR		R0, =ulCriticalNesting 
+	LDR		R0, =ulCriticalNesting
 	LDR		R0, [R0]
 	STMDB	LR!, {R0}
 
@@ -244,7 +244,7 @@ TB_Addr            :.long	vPortTickISR
 	LDR		R0, [R1]
 	LDR		LR, [R0]
 
-	/* ; The critical nesting depth is the first item on the stack. 	
+	/* ; The critical nesting depth is the first item on the stack.
 	; Load it into the ulCriticalNesting variable. 	*/
 	LDR		R0, =ulCriticalNesting
 	LDMFD	LR!, {R1}
@@ -261,10 +261,10 @@ TB_Addr            :.long	vPortTickISR
 	/* ; Restore the return address. */
 	LDR		LR, [LR, #+60]
 
-	/* ; And return - correcting the offset in the LR to obtain the 	
+	/* ; And return - correcting the offset in the LR to obtain the
 	; correct address. 	*/
 	SUBS	PC, LR, #4
-	
+
 	.endm
 
 
@@ -325,11 +325,11 @@ UndefinedHandler:
 
 SWIHandler:
 		ADD	LR, LR, #4
-        portSAVE_CONTEXT        
+        portSAVE_CONTEXT
         LDR R0, =vTaskSwitchContext
         MOV LR, PC
         BX R0
-        portRESTORE_CONTEXT 
+        portRESTORE_CONTEXT
 
 
 /*;*******************************************************************************
@@ -354,7 +354,7 @@ ReturnAddress:
 	MOV    r3,#1
 	MOV    r3,r3,LSL r2
 	STR    r3,[r0, #IPR_off_addr]		/*; Clear the corresponding IPR bit. */
-	
+
 	portRESTORE_CONTEXT					/*; Restore the context of the selected task. */
 
 /*;*******************************************************************************
@@ -892,9 +892,9 @@ NextInst:
         LDR     r0, =0x1875623F          /*; Peripherals kept under reset (except GPIO)*/
      .else
         LDR     r0, =0x1975623F          /*; Peripherals kept under reset*/
-     .endif     
-           
-        STR     r0, [r1,#4]              
+     .endif
+
+        STR     r0, [r1,#4]
         MOV     r0, #0
         NOP                              /*; Wait*/
         NOP
@@ -923,8 +923,8 @@ NextInst:
         ldr     sp, =_estack
 
 /*; ------------------------------------------------------------------------------
-; Description  :  Enable SMI Bank0: enable GPIOs clock in MRCC_PCLKEN register, 
-;                 enable SMI alternate function in GPIO_REMAP register and enable 
+; Description  :  Enable SMI Bank0: enable GPIOs clock in MRCC_PCLKEN register,
+;                 enable SMI alternate function in GPIO_REMAP register and enable
 ;                 Bank0 in SMI_CR1 register.
 ; ------------------------------------------------------------------------------*/
   .if SMI_Bank0_EN
@@ -946,8 +946,8 @@ NextInst:
   .endif
 
 /*; ----------------------------------------------------------------------------
-; Description  :  Remapping SRAM at address 0x00 after the application has 
-;                 started executing. 
+; Description  :  Remapping SRAM at address 0x00 after the application has
+;                 started executing.
 ; ----------------------------------------------------------------------------*/
  .if  Remap_SRAM
         MOV     r0, #SRAM_mask

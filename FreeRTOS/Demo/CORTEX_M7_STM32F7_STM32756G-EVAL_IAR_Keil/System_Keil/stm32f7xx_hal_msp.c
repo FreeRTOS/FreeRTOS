@@ -5,15 +5,15 @@
   * @version V1.0.0
   * @date    22-May-2015
   * @brief   HAL MSP module.
-  *          This file template is located in the HAL folder and should be copied 
+  *          This file template is located in the HAL folder and should be copied
   *          to the user folder.
-  *         
+  *
   @verbatim
  ===============================================================================
                      ##### How to use this driver #####
  ===============================================================================
     [..]
-    This file is generated automatically by STM32CubeMX and eventually modified 
+    This file is generated automatically by STM32CubeMX and eventually modified
     by the user
 
   @endverbatim
@@ -45,7 +45,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
@@ -77,19 +77,19 @@
   */
 void HAL_MspInit(void)
 {
-  /* NOTE : This function is generated automatically by STM32CubeMX and eventually  
+  /* NOTE : This function is generated automatically by STM32CubeMX and eventually
             modified by the user
-   */ 
+   */
 }
 
 /**
   * @brief  DeInitializes the Global MSP.
-  * @param  None  
+  * @param  None
   * @retval None
   */
 void HAL_MspDeInit(void)
 {
-  /* NOTE : This function is generated automatically by STM32CubeMX and eventually  
+  /* NOTE : This function is generated automatically by STM32CubeMX and eventually
             modified by the user
    */
 }

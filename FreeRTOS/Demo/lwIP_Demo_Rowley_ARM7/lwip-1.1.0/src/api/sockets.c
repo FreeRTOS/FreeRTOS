@@ -980,11 +980,11 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
 
   /* Do length and type checks for the various options first, to keep it readable. */
   switch( level ) {
-   
+
 /* Level: SOL_SOCKET */
   case SOL_SOCKET:
       switch(optname) {
-         
+
       case SO_ACCEPTCONN:
       case SO_BROADCAST:
       /* UNIMPL case SO_DEBUG: */
@@ -1012,7 +1012,7 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
         err = ENOPROTOOPT;
       }  /* switch */
       break;
-                     
+
 /* Level: IPPROTO_IP */
   case IPPROTO_IP:
       switch(optname) {
@@ -1031,14 +1031,14 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
         err = ENOPROTOOPT;
       }  /* switch */
       break;
-         
+
 /* Level: IPPROTO_TCP */
   case IPPROTO_TCP:
       if( *optlen < sizeof(int) ) {
         err = EINVAL;
         break;
     }
-      
+
       /* If this is no TCP socket, ignore any options. */
       if ( sock->conn->type != NETCONN_TCP ) return 0;
 
@@ -1046,7 +1046,7 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
       case TCP_NODELAY:
       case TCP_KEEPALIVE:
         break;
-         
+
       default:
         LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_getsockopt(%d, IPPROTO_TCP, UNIMPL: optname=0x%x, ..)\n", s, optname));
         err = ENOPROTOOPT;
@@ -1059,18 +1059,18 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
       err = ENOPROTOOPT;
   }  /* switch */
 
-   
+
   if( 0 != err ) {
     sock_set_errno(sock, err);
     return -1;
   }
-   
+
 
 
   /* Now do the actual option processing */
 
   switch(level) {
-   
+
 /* Level: SOL_SOCKET */
   case SOL_SOCKET:
     switch( optname ) {
@@ -1239,7 +1239,7 @@ int lwip_setsockopt (int s, int level, int optname, const void *optval, socklen_
     }  /* switch */
     break;
 
-/* UNDEFINED LEVEL */      
+/* UNDEFINED LEVEL */
   default:
     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_setsockopt(%d, level=0x%x, UNIMPL: optname=0x%x, ..)\n", s, level, optname));
     err = ENOPROTOOPT;

@@ -40,7 +40,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* This file is given to prevent your SW from not compiling with the name changes between nRF52833 and nRF52820 devices.
  * It redefines the old nRF52833 names into the new ones as long as the functionality is still supported. If the
  * functionality is gone, there old names are not defined, so compilation will fail. */
- 
+
 /* Differences between latest nRF52833 headers and nRF52820 headers. */
 
 #endif /* NRF52833_TO_NRF52820_H */

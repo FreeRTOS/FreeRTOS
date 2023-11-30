@@ -61,7 +61,7 @@
 #define configMAX_API_CALL_INTERRUPT_PRIORITY	10
 
 /*
- * Interrupt entry code will switch the stack in use to a dedicated system 
+ * Interrupt entry code will switch the stack in use to a dedicated system
  * stack.
  *
  * configISR_STACK_SIZE defines the number of 32-bit values that can be stored

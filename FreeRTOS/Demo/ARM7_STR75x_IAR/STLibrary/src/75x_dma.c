@@ -1,7 +1,7 @@
 /******************** (C) COPYRIGHT 2006 STMicroelectronics ********************
 * File Name          : 75x_dma.c
 * Author             : MCD Application Team
-* Date First Issued  : 03/10/2006 
+* Date First Issued  : 03/10/2006
 * Description        : This file provides all the DMA software functions.
 ********************************************************************************
 * History:
@@ -10,9 +10,9 @@
 ********************************************************************************
 * THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
-* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, 
+* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,
 * INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE
-* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING 
+* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
@@ -58,7 +58,7 @@
 
 #define DMA_SRCSize_Mask   0xFFE7
 #define DMA_SRCBurst_Mask  0xFF9F
-#define DMA_DSTSize_Mask   0xFE7F     
+#define DMA_DSTSize_Mask   0xFE7F
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -117,7 +117,7 @@ void DMA_DeInit(DMA_Stream_TypeDef* DMA_Streamx)
       DMA->CLR |= DMA_Stream3_CLR_Mask;
       DMA->LAST &= DMA_Stream3_LAST_Mask;
       break;
-      
+
     default:
       break;
   }
@@ -146,63 +146,63 @@ void DMA_Init(DMA_Stream_TypeDef*  DMA_Streamx, DMA_InitTypeDef* DMA_InitStruct)
     /* Increment current source register */
     DMA_Streamx->CTRL |= DMA_SRC_INCR;
   }
-  else 
+  else
   {
     /* Current source register unchanged */
     DMA_Streamx->CTRL &= DMA_SRC_NOT_INCR;
   }
-  
+
   /* Configure the incrementation of the current destination Register */
   if(DMA_InitStruct->DMA_DST == DMA_DST_INCR)
   {
     /* Increment current source register */
     DMA_Streamx->CTRL |= DMA_DST_INCR;
   }
-  else 
+  else
   {
     /* Current source register unchanged */
     DMA_Streamx->CTRL &= DMA_DST_NOT_INCR;
   }
-  
+
   /* Clear source to DMA data width SOSIZE[1:0] bits */
   DMA_Streamx->CTRL &= DMA_SRCSize_Mask;
   /* Set the source to DMA data width */
   DMA_Streamx->CTRL |= DMA_InitStruct->DMA_SRCSize;
-  
+
   /* Clear the DMA peripheral burst size SOBURST[1:0] bits */
   DMA_Streamx->CTRL &= DMA_SRCBurst_Mask;
   /* Set the DMA peripheral burst size */
   DMA_Streamx->CTRL |= DMA_InitStruct->DMA_SRCBurst;
-  
+
   /* Clear destination to DMA dat width DESIZE[1:0] bits */
   DMA_Streamx->CTRL &= DMA_DSTSize_Mask;
   /* Set the destination to DMA data width */
   DMA_Streamx->CTRL |= DMA_InitStruct->DMA_DSTSize;
-  
+
   /* Configure the circular mode */
   if(DMA_InitStruct->DMA_Mode == DMA_Mode_Circular)
   {
     /* Set circular mode */
     DMA_Streamx->CTRL |= DMA_Mode_Circular;
   }
-  else 
+  else
   {
     /* Set normal mode */
     DMA_Streamx->CTRL &= DMA_Mode_Normal;
-  } 
-  
+  }
+
   /* Configure the direction transfer */
   if(DMA_InitStruct->DMA_DIR == DMA_DIR_PeriphDST)
   {
     /* Set peripheral as destination */
     DMA_Streamx->CTRL |= DMA_DIR_PeriphDST;
   }
-  else 
+  else
   {
     /* Set peripheral as source */
     DMA_Streamx->CTRL &= DMA_DIR_PeriphSRC;
-  } 
-  
+  }
+
   /* Configure the memory to memory transfer only for stream3 */
   if(DMA_Streamx == DMA_Stream3)
   {
@@ -211,11 +211,11 @@ void DMA_Init(DMA_Stream_TypeDef*  DMA_Streamx, DMA_InitTypeDef* DMA_InitStruct)
       /* Enable memory to memory transfer for stream3 */
       DMA_Streamx->CTRL |= DMA_M2M_Enable;
     }
-    else 
+    else
     {
       /* Disable memory to memory transfer for stream3 */
       DMA_Streamx->CTRL &= DMA_M2M_Disable;
-    } 	
+    }
   }
 
   /* Configure the source base address */
@@ -245,25 +245,25 @@ void DMA_StructInit(DMA_InitTypeDef* DMA_InitStruct)
 
   /* Initialize the DMA_DSTBaseAddr member */
   DMA_InitStruct ->DMA_DSTBaseAddr = 0;
-  
+
   /* Initialize the DMA_SRC member */
   DMA_InitStruct->DMA_SRC = DMA_SRC_NOT_INCR;
-  
+
   /* Initialize the DMA_DST member */
   DMA_InitStruct->DMA_DST = DMA_DST_NOT_INCR;
-  
+
   /* Initialize the DMA_SRCSize member */
   DMA_InitStruct->DMA_SRCSize = DMA_SRCSize_Byte;
-  
+
   /* Initialize the DMA_SRCBurst member */
   DMA_InitStruct->DMA_SRCBurst = DMA_SRCBurst_1Data;
-  
+
   /* Initialize the DMA_DSTSize member */
   DMA_InitStruct->DMA_DSTSize = DMA_DSTSize_Byte;
-  
+
   /* Initialize the DMA_Mode member */
   DMA_InitStruct->DMA_Mode = DMA_Mode_Normal;
-  
+
   /* Initialize the DMA_M2M member */
   DMA_InitStruct->DMA_M2M =  DMA_M2M_Disable;
 
@@ -340,7 +340,7 @@ void DMA_ITConfig(u16 DMA_IT, FunctionalState NewState)
 *                  to the specified DMA stream.
 *******************************************************************************/
 u32 DMA_GetCurrDSTAddr(DMA_Stream_TypeDef*  DMA_Streamx)
-{ 
+{
   u32 Tmp = 0;
 
   /* Get high current destination address */
@@ -393,17 +393,17 @@ u16 DMA_GetTerminalCounter(DMA_Stream_TypeDef*  DMA_Streamx)
 
 /*******************************************************************************
 * Function Name  : DMA_LastBufferSweepConfig
-* Description    : Activates or disactivates the last buffer sweep mode for the 
+* Description    : Activates or disactivates the last buffer sweep mode for the
 *                  DMA streamx configured in circular buffer mode.
 * Input          : - DMA_Streamx: where x can be 0, 1, 2 or 3 to select the DMA
 *                    Stream.
-*                  - NewState: new state of the Last buffer sweep DMA_Streamx.                 
+*                  - NewState: new state of the Last buffer sweep DMA_Streamx.
 *                    This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void DMA_LastBufferSweepConfig(DMA_Stream_TypeDef* DMA_Streamx, FunctionalState NewState)
-{  
+{
   switch(*(u32*)&DMA_Streamx)
   {
     case DMA_Stream0_BASE:
@@ -416,7 +416,7 @@ void DMA_LastBufferSweepConfig(DMA_Stream_TypeDef* DMA_Streamx, FunctionalState 
       {
         /* Disactivates the last circular buffer sweep mode for stream0 */
         DMA->LAST &= DMA_Last0_Disable_Mask;
-      }	
+      }
       break;
 
     case DMA_Stream1_BASE:
@@ -429,7 +429,7 @@ void DMA_LastBufferSweepConfig(DMA_Stream_TypeDef* DMA_Streamx, FunctionalState 
       {
         /* Disactivates the last circular buffer sweep mode for stream1 */
         DMA->LAST &= DMA_Last1_Disable_Mask;
-      }	
+      }
       break;
 
     case DMA_Stream2_BASE:
@@ -442,7 +442,7 @@ void DMA_LastBufferSweepConfig(DMA_Stream_TypeDef* DMA_Streamx, FunctionalState 
       {
         /* Disactivates the last circular buffer sweep mode for stream2 */
         DMA->LAST &= DMA_Last2_Disable_Mask;
-      }	
+      }
       break;
 
     case DMA_Stream3_BASE:
@@ -455,17 +455,17 @@ void DMA_LastBufferSweepConfig(DMA_Stream_TypeDef* DMA_Streamx, FunctionalState 
       {
         /* Disactivates the last circular buffer sweep mode for stream3 */
         DMA->LAST &= DMA_Last3_Disable_Mask;
-      }	
+      }
       break;
-    
+
     default:
-      break;      
+      break;
   }
 }
 
 /*******************************************************************************
 * Function Name  : DMA_LastBufferAddrConfig
-* Description    : Configures the circular buffer position where the last data 
+* Description    : Configures the circular buffer position where the last data
 *                  to be used by the specified DMA stream is located.
 * Input          : - DMA_Streamx: where x can be 0, 1, 2 or 3 to select the DMA
 *                    Stream.
@@ -485,7 +485,7 @@ void DMA_LastBufferAddrConfig(DMA_Stream_TypeDef*  DMA_Streamx, u16 DMA_LastBuff
 /*******************************************************************************
 * Function Name  : DMA_GetFlagStatus
 * Description    : Checks whether the specified DMA flag is set or not.
-* Input          : - DMA_FLAG: specifies the flag to check. This parameter can 
+* Input          : - DMA_FLAG: specifies the flag to check. This parameter can
 *                    be one of the following values:
 *                         - DMA_FLAG_SI0:  Stream0 transfer end flag.
 *                         - DMA_FLAG_SI1:  Stream1 transfer end flag.
@@ -520,7 +520,7 @@ FlagStatus DMA_GetFlagStatus(u16 DMA_FLAG)
 /*******************************************************************************
 * Function Name  : DMA_ClearFlag
 * Description    : Clears the DMA’s pending flags.
-* Input          : - DMA_FLAG: specifies the flag to clear. This parameter can 
+* Input          : - DMA_FLAG: specifies the flag to clear. This parameter can
 *                    be any combination of the following values:
 *                         - DMA_FLAG_SI0:  Stream0 transfer end flag.
 *                         - DMA_FLAG_SI1:  Stream1 transfer end flag.
@@ -535,23 +535,23 @@ FlagStatus DMA_GetFlagStatus(u16 DMA_FLAG)
 *******************************************************************************/
 void DMA_ClearFlag(u16 DMA_FLAG)
 {
-  /* Clear the selected DMA flags */ 
+  /* Clear the selected DMA flags */
   DMA->CLR = DMA_FLAG ;
 }
 
 /*******************************************************************************
 * Function Name  : DMA_GetITStatus
 * Description    : Checks whether the specified DMA interrupt has occured or not.
-* Input          : - DMA_IT: specifies the DMA interrupt source to check.  
+* Input          : - DMA_IT: specifies the DMA interrupt source to check.
 *                    This parameter can be one of the following values:
-*                         - DMA_IT_SI0: Stream0 transfer end interrupt 
-*                         - DMA_IT_SI1: Stream1 transfer end interrupt 
-*                         - DMA_IT_SI2: Stream2 transfer end interrupt 
-*                         - DMA_IT_SI3: Stream3 transfer end interrupt 
-*                         - DMA_IT_SE0: Stream0 transfer error interrupt 
-*                         - DMA_IT_SE1: Stream1 transfer error interrupt 
-*                         - DMA_IT_SE2: Stream2 transfer error interrupt 
-*                         - DMA_IT_SE3: Stream3 transfer error interrupt 
+*                         - DMA_IT_SI0: Stream0 transfer end interrupt
+*                         - DMA_IT_SI1: Stream1 transfer end interrupt
+*                         - DMA_IT_SI2: Stream2 transfer end interrupt
+*                         - DMA_IT_SI3: Stream3 transfer end interrupt
+*                         - DMA_IT_SE0: Stream0 transfer error interrupt
+*                         - DMA_IT_SE1: Stream1 transfer error interrupt
+*                         - DMA_IT_SE2: Stream2 transfer error interrupt
+*                         - DMA_IT_SE3: Stream3 transfer error interrupt
 * Output         : None
 * Return         : The new state of DMA_IT (SET or RESET).
 *******************************************************************************/
@@ -572,8 +572,8 @@ ITStatus DMA_GetITStatus(u16 DMA_IT)
 
 /*******************************************************************************
 * Function Name  : DMA_ClearITPendingBit
-* Description    : Clears the DMA’s interrupt pending bits. 
-* Input          : - DMA_IT: specifies the interrupt pending bit to clear.  
+* Description    : Clears the DMA’s interrupt pending bits.
+* Input          : - DMA_IT: specifies the interrupt pending bit to clear.
 *                    This parameter can be any combination of the following values:
 *                         - DMA_IT_SI0:  Stream0 transfer end interrupt.
 *                         - DMA_IT_SI1:  Stream1 transfer end interrupt.

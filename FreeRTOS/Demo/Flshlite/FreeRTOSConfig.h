@@ -37,7 +37,7 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
@@ -48,7 +48,7 @@
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES		( 10 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 128 ) /* This can be made smaller if required. */
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 32 * 1024 ) ) 
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 32 * 1024 ) )
 #define configMAX_TASK_NAME_LEN		( 16 )
 #define configUSE_TRACE_FACILITY	0
 #define configUSE_16_BIT_TICKS		1
@@ -72,7 +72,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 

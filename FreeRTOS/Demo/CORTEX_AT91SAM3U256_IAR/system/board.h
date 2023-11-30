@@ -696,9 +696,9 @@ typedef enum IRQn
  IROn_ADCC1               = AT91C_ID_ADCC1, // ADC controller1
  IROn_HDMA                = AT91C_ID_HDMA , // HDMA
  IROn_UDPHS               = AT91C_ID_UDPHS // USB Device High Speed
-} IRQn_Type;  
+} IRQn_Type;
 
-/// Dummy define SDRAM bus width 
+/// Dummy define SDRAM bus width
 #define BOARD_SDRAM_BUSWIDTH    32
 
 //------------------------------------------------------------------------------
@@ -718,7 +718,7 @@ typedef enum IRQn
 /// Nandflash controller peripheral pins definition.
 #define PINS_NANDFLASH          BOARD_NF_CE_PIN, BOARD_NF_RB_PIN, PIN_EBI_NANDOE, PIN_EBI_NANDWE,\
                                 PIN_EBI_NANDCLE, PIN_EBI_NANDALE, PIN_EBI_DATA_BUS
-                                
+
 /// Address for transferring command bytes to the nandflash.
 #define BOARD_NF_COMMAND_ADDR   0x60000000
 /// Address for transferring address bytes to the nandflash.

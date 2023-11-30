@@ -42,7 +42,7 @@
  *  -# Select the active channel using AFEC_EnableChannel().
  *  -# Start the conversion with AFEC_StartConversion().
  *  -# Wait the end of the conversion by polling status with AFEC_GetStatus().
- *  -# Finally, get the converted data using AFEC_GetConvertedData() or 
+ *  -# Finally, get the converted data using AFEC_GetConvertedData() or
  * AFEC_GetLastConvertedData().
  *
 */
@@ -61,47 +61,47 @@
 
 /* -------- AFEC_MR : (AFEC Offset: 0x04) AFEC Mode Register -------- */
 #define AFEC_MR_SETTLING_Pos 20
-#define AFEC_MR_SETTLING_Msk (0x3u << AFEC_MR_SETTLING_Pos) 
+#define AFEC_MR_SETTLING_Msk (0x3u << AFEC_MR_SETTLING_Pos)
 /**< \brief (AFEC_MR) Trigger Selection */
-#define   AFEC_MR_SETTLING_AST3 (0x0u << 20) 
+#define   AFEC_MR_SETTLING_AST3 (0x0u << 20)
 /**< \brief (AFEC_MR) ADC_SETTLING_AST3 3 periods of AFEClock */
-#define   AFEC_MR_SETTLING_AST5 (0x1u << 20) 
+#define   AFEC_MR_SETTLING_AST5 (0x1u << 20)
 /**< \brief (AFEC_MR) ADC_SETTLING_AST5 5 periods of AFEClock */
-#define   AFEC_MR_SETTLING_AST9 (0x2u << 20) 
+#define   AFEC_MR_SETTLING_AST9 (0x2u << 20)
 /**< \brief (AFEC_MR) ADC_SETTLING_AST9 9 periods of AFEClock*/
-#define   AFEC_MR_SETTLING_AST17 (0x3u << 20) 
+#define   AFEC_MR_SETTLING_AST17 (0x3u << 20)
 /**< \brief (AFEC_MR) ADC_SETTLING_AST17  17 periods of AFEClock*/
 
 /***************************** Single Trigger Mode ****************************/
 #define AFEC_EMR_STM_Pos 25
-#define AFEC_EMR_STM_Msk (0x1u << AFEC_EMR_STM_Pos) 
+#define AFEC_EMR_STM_Msk (0x1u << AFEC_EMR_STM_Pos)
 /**< \brief (AFEC_EMR) Single Trigger Mode */
-#define   AFEC_EMR_STM_MULTI_TRIG (0x0u << 25) 
-/**< \brief (AFEC_EMR) Single Trigger Mode: Multiple triggers are required to 
+#define   AFEC_EMR_STM_MULTI_TRIG (0x0u << 25)
+/**< \brief (AFEC_EMR) Single Trigger Mode: Multiple triggers are required to
 	get an averaged result. */
-#define   AFEC_EMR_STM_SINGLE_TRIG (0x1u << 25) 
+#define   AFEC_EMR_STM_SINGLE_TRIG (0x1u << 25)
 /**< \brief (AFEC_EMR) Single Trigger Mode: Only a Single Trigger is required
 	to get an averaged value. */
 
 /***************************** TAG of the AFEC_LDCR Register ******************/
 #define AFEC_EMR_TAG_Pos 24
-#define AFEC_EMR_TAG_Msk (0x1u << AFEC_EMR_TAG_Pos) 
+#define AFEC_EMR_TAG_Msk (0x1u << AFEC_EMR_TAG_Pos)
 /**< \brief (AFEC_EMR) TAG of the AFEC_LDCR Register */
-#define   AFEC_EMR_TAG_CHNB_ZERO (0x0u << 24) 
-/**< \brief (AFEC_EMR) TAG of the AFEC_LDCR Register: Sets CHNB to zero 
+#define   AFEC_EMR_TAG_CHNB_ZERO (0x0u << 24)
+/**< \brief (AFEC_EMR) TAG of the AFEC_LDCR Register: Sets CHNB to zero
 in AFEC_LDCR. */
-#define   AFEC_EMR_TAG_APPENDS (0x1u << 24) 
-/**< \brief (AFEC_EMR) TAG of the AFEC_LDCR Register: Appends the channel 
+#define   AFEC_EMR_TAG_APPENDS (0x1u << 24)
+/**< \brief (AFEC_EMR) TAG of the AFEC_LDCR Register: Appends the channel
 number to the conversion result in AFEC_LDCR register. */
 
 /***************************** Compare All Channels ******************/
 #define AFEC_EMR_CMPALL_Pos 9
-#define AFEC_EMR_CMPALL_Msk (0x1u << AFEC_EMR_TAG_Pos) 
+#define AFEC_EMR_CMPALL_Msk (0x1u << AFEC_EMR_TAG_Pos)
 /**< \brief (AFEC_EMR) Compare All Channels */
-#define   AFEC_EMR_CMPALL_ONE_CHANNEL_COMP (0x0u << 9) 
-/**< \brief (AFEC_EMR) Compare All Channels: Only channel indicated in 
+#define   AFEC_EMR_CMPALL_ONE_CHANNEL_COMP (0x0u << 9)
+/**< \brief (AFEC_EMR) Compare All Channels: Only channel indicated in
 CMPSEL field is compared. */
-#define   AFEC_EMR_CMPALL_ALL_CHANNELS_COMP  (0x1u << 9) 
+#define   AFEC_EMR_CMPALL_ALL_CHANNELS_COMP  (0x1u << 9)
 /**< \brief (AFEC_EMR) Compare All Channels: All channels are compared. */
 
 #define AFEC_ACR_PGA0_ON     (0x1u << 2)
@@ -160,7 +160,7 @@ CMPSEL field is compared. */
  *------------------------------------------------------------------------------*/
 extern void AFEC_Initialize( Afec* pAFEC, uint32_t dwId );
 extern uint32_t AFEC_SetClock( Afec* pAFEC, uint32_t dwPres, uint32_t dwMck );
-extern void AFEC_SetTiming( Afec* pAFEC, uint32_t dwStartup, uint32_t dwTracking, 
+extern void AFEC_SetTiming( Afec* pAFEC, uint32_t dwStartup, uint32_t dwTracking,
 	uint32_t dwSettling );
 extern void AFEC_SetTrigger( Afec* pAFEC, uint32_t dwTrgSel );
 extern void AFEC_SetAnalogChange( Afec* pAFE, uint8_t bEnDis );

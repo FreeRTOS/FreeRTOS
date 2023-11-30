@@ -411,7 +411,7 @@ void vRegTest2Implementation( void )
 		/* If this line is hit then there was an error in a core register value.
 		This loop ensures the loop counter variable stops incrementing. */
 		"b reg2_error_loop				\n"
-		
+
 	); /* __asm volatile */
 }
 /*-----------------------------------------------------------*/

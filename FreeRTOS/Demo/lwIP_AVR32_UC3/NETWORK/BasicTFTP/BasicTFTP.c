@@ -42,14 +42,14 @@
 
 /*
   Implements a simplistic TFTP server.
-  
+
   In order to put data on the TFTP server (not over 2048 bytes)
   tftp 192.168.0.2 PUT <src_filename>
   this will copy file from your hard drive to the RAM buffer of the application
 
   tftp 192.168.0.2 GET <dst_filename>
   this will copy file from the RAM buffer of the application to your hard drive
-  You can then check that src_filename and dst_filename are identical    
+  You can then check that src_filename and dst_filename are identical
 */
 
 #if (TFTP_USED == 1)
@@ -102,18 +102,18 @@ char data_in[SEGSIZE+sizeof(struct tftphdr)];
 /*------------------------------------------------------------*/
 static char * errmsg[] = {
   "Undefined error code",               // 0 nothing defined
-  "File not found",                     // 1 TFTP_ENOTFOUND 
-  "Access violation",                   // 2 TFTP_EACCESS   
-  "Disk full or allocation exceeded",   // 3 TFTP_ENOSPACE  
-  "Illegal TFTP operation",             // 4 TFTP_EBADOP    
-  "Unknown transfer ID",                // 5 TFTP_EBADID    
-  "File already exists",                // 6 TFTP_EEXISTS   
-  "No such user",                       // 7 TFTP_ENOUSER   
+  "File not found",                     // 1 TFTP_ENOTFOUND
+  "Access violation",                   // 2 TFTP_EACCESS
+  "Disk full or allocation exceeded",   // 3 TFTP_ENOSPACE
+  "Illegal TFTP operation",             // 4 TFTP_EBADOP
+  "Unknown transfer ID",                // 5 TFTP_EBADID
+  "File already exists",                // 6 TFTP_EEXISTS
+  "No such user",                       // 7 TFTP_ENOUSER
 };
 
 
 /* Send an error packet to the client */
-static void 
+static void
 tftpd_send_error(int s, struct tftphdr * reply, int err,
      struct sockaddr_in *from_addr, int from_len)
 {
@@ -123,7 +123,7 @@ tftpd_send_error(int s, struct tftphdr * reply, int err,
     if ( (0 > err) || (sizeof(errmsg)/sizeof(errmsg[0]) <= err) )
         err = 0; // Do not copy a random string from hyperspace
     strcpy(reply->th_msg, errmsg[err]);
-    sendto(s, reply, 4+strlen(reply->th_msg)+1, 0, 
+    sendto(s, reply, 4+strlen(reply->th_msg)+1, 0,
      (struct sockaddr *)from_addr, from_len);
     }
 }
@@ -141,7 +141,7 @@ int tftpd_close_data_file(int fd)
 
 int tftpd_open_data_file(int fd, int mode)
 {
-  lCurrentBlock = 0; 
+  lCurrentBlock = 0;
   return (5);
 }
 
@@ -242,7 +242,7 @@ tftpd_write_file(struct tftphdr *hdr,
             // Some data has arrived
             data_len = sizeof(data_in);
             client_len = sizeof(client_addr);
-            if ((data_len = recvfrom(s, data_in, data_len, 0, 
+            if ((data_len = recvfrom(s, data_in, data_len, 0,
                       (struct sockaddr *)&client_addr, &client_len)) < 0) {
                 // What happened?  No data here!
                 continue; // retry the send, using up one retry.
@@ -262,7 +262,7 @@ tftpd_write_file(struct tftphdr *hdr,
                 if (len < (data_len-4)) {
                     // File is "full"
                     tftpd_send_error(s,reply,TFTP_ENOSPACE,
-                                     from_addr, from_len);     
+                                     from_addr, from_len);
                     ok = pdFALSE;  // Give up
                     break; // out of the retries loop
                 }
@@ -368,7 +368,7 @@ tftpd_read_file(struct tftphdr *hdr,
             vParTestToggleLED( TFTP_LED );
             data_len = sizeof(data_in);
             client_len = sizeof(client_addr);
-            if ((data_len = recvfrom(s, data_in, data_len, 0, 
+            if ((data_len = recvfrom(s, data_in, data_len, 0,
                                      (struct sockaddr *)&client_addr,
                                      &client_len)) < 0) {
                 // What happened?  Maybe someone lied to us...
@@ -461,7 +461,7 @@ portTASK_FUNCTION( vBasicTFTPServer, pvParameters )
                 for(;;)
                 {
                   vParTestToggleLED( TFTP_LED );
-                  vTaskDelay(200);                    
+                  vTaskDelay(200);
                 }
              }
         }

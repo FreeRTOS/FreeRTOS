@@ -115,7 +115,7 @@ void tc_sync_trigger(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	p_tc->TC_BCR = TC_BCR_SYNC;
 }
 
@@ -136,7 +136,7 @@ void tc_set_block_mode(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	p_tc->TC_BMR = ul_blockmode;
 }
 
@@ -462,7 +462,7 @@ uint32_t tc_get_status(
 	Assert(p_tc);
 	Assert(ul_channel <
 			(sizeof(p_tc->TC_CHANNEL) / sizeof(p_tc->TC_CHANNEL[0])));
-			
+
 	tc_channel = p_tc->TC_CHANNEL + ul_channel;
 	return tc_channel->TC_SR;
 }
@@ -630,7 +630,7 @@ void tc_enable_qdec_interrupt(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	p_tc->TC_QIER = ul_sources;
 }
 
@@ -659,7 +659,7 @@ void tc_disable_qdec_interrupt(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	p_tc->TC_QIDR = ul_sources;
 }
 
@@ -677,7 +677,7 @@ uint32_t tc_get_qdec_interrupt_mask(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	return p_tc->TC_QIMR;
 }
 
@@ -695,7 +695,7 @@ uint32_t tc_get_qdec_interrupt_status(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	return p_tc->TC_QISR;
 }
 
@@ -717,7 +717,7 @@ void tc_set_writeprotect(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	if (ul_enable) {
 		p_tc->TC_WPMR = TC_WPMR_WPKEY_PASSWD | TC_WPMR_WPEN;
 	} else {
@@ -743,7 +743,7 @@ uint32_t tc_get_feature(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	return p_tc->TC_FEATURES;
 }
 
@@ -761,7 +761,7 @@ uint32_t tc_get_version(
 {
 	/* Validate inputs. */
 	Assert(p_tc);
-	
+
 	return p_tc->TC_VERSION;
 }
 

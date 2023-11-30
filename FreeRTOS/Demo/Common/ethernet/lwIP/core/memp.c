@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -84,7 +84,7 @@ static const u16_t memp_num[MEMP_MAX] = {
 #define MEMP_TYPE_SIZE(qty, type) \
   ((qty) * (MEMP_SIZE + MEM_ALIGN_SIZE(sizeof(type))))
 
-static u8_t memp_memory[MEM_ALIGNMENT - 1 + 
+static u8_t memp_memory[MEM_ALIGNMENT - 1 +
   MEMP_TYPE_SIZE(MEMP_NUM_PBUF, struct pbuf) +
   MEMP_TYPE_SIZE(MEMP_NUM_RAW_PCB, struct raw_pcb) +
   MEMP_TYPE_SIZE(MEMP_NUM_UDP_PCB, struct udp_pcb) +
@@ -159,19 +159,19 @@ memp_malloc(memp_t type)
 #if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_DECL_PROTECT(old_level);
 #endif
- 
+
   LWIP_ASSERT("memp_malloc: type < MEMP_MAX", type < MEMP_MAX);
 
 #if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_PROTECT(old_level);
-#else /* SYS_LIGHTWEIGHT_PROT */  
+#else /* SYS_LIGHTWEIGHT_PROT */
   sys_sem_wait(mutex);
-#endif /* SYS_LIGHTWEIGHT_PROT */  
+#endif /* SYS_LIGHTWEIGHT_PROT */
 
   memp = memp_tab[type];
-  
-  if (memp != NULL) {    
-    memp_tab[type] = memp->next;    
+
+  if (memp != NULL) {
+    memp_tab[type] = memp->next;
     memp->next = NULL;
 #if MEMP_STATS
     ++lwip_stats.memp[type].used;
@@ -194,7 +194,7 @@ memp_malloc(memp_t type)
   SYS_ARCH_UNPROTECT(old_level);
 #else /* SYS_LIGHTWEIGHT_PROT */
   sys_sem_signal(mutex);
-#endif /* SYS_LIGHTWEIGHT_PROT */  
+#endif /* SYS_LIGHTWEIGHT_PROT */
 
   return mem;
 }
@@ -205,7 +205,7 @@ memp_free(memp_t type, void *mem)
   struct memp *memp;
 #if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_DECL_PROTECT(old_level);
-#endif /* SYS_LIGHTWEIGHT_PROT */  
+#endif /* SYS_LIGHTWEIGHT_PROT */
 
   if (mem == NULL) {
     return;
@@ -215,24 +215,24 @@ memp_free(memp_t type, void *mem)
 
 #if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_PROTECT(old_level);
-#else /* SYS_LIGHTWEIGHT_PROT */  
+#else /* SYS_LIGHTWEIGHT_PROT */
   sys_sem_wait(mutex);
-#endif /* SYS_LIGHTWEIGHT_PROT */  
+#endif /* SYS_LIGHTWEIGHT_PROT */
 
 #if MEMP_STATS
-  lwip_stats.memp[type].used--; 
+  lwip_stats.memp[type].used--;
 #endif /* MEMP_STATS */
-  
-  memp->next = memp_tab[type]; 
+
+  memp->next = memp_tab[type];
   memp_tab[type] = memp;
 
 #if MEMP_SANITY_CHECK
   LWIP_ASSERT("memp sanity", memp_sanity());
-#endif  
+#endif
 
 #if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_UNPROTECT(old_level);
 #else /* SYS_LIGHTWEIGHT_PROT */
   sys_sem_signal(mutex);
-#endif /* SYS_LIGHTWEIGHT_PROT */  
+#endif /* SYS_LIGHTWEIGHT_PROT */
 }

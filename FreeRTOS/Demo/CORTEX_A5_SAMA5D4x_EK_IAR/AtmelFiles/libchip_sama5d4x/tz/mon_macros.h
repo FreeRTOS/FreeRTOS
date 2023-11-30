@@ -83,22 +83,22 @@
 
 
 #define INITIAL_NWD_STATE	0x1D3
-   
+
 
 
 #define Struct_size            0x54
-   
+
 /* Stacks configuration */
 #define STACK_SIZE		0x1FF
 #define MON_DATA_BASE_SIZE	0x100
 
 /* Stacks are descending */
-#if defined (ddram)   
+#if defined (ddram)
     #define MON_DATA_BASE       0x23FFFE00
     #define MON_DATA_END        0x24000000
-#elif defined (sram)   
+#elif defined (sram)
    #define MON_DATA_BASE        0x21FE00
-   #define MON_DATA_END         0x220000   
+   #define MON_DATA_END         0x220000
 #else
     #define MON_DATA_BASE       0x23FFFE00
     #define MON_DATA_END        0x24000000

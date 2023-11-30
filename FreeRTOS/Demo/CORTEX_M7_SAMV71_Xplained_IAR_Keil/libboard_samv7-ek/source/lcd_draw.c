@@ -70,7 +70,7 @@ static uint32_t LCD_SetColor( uint32_t dwRgb24Bits )
     }
 
     return 0;
-} 
+}
 
 /**
  * \brief Check Box coordinates. Return upper left and bottom right coordinates.

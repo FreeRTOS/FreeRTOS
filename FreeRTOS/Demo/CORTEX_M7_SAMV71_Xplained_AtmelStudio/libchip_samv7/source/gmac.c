@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -46,7 +46,7 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
- 
+
 /**
  * Return 1 if PHY is idle
  */
@@ -88,9 +88,9 @@ uint16_t GMAC_PHYData(Gmac *pGmac)
 }
 
 /**
- *  \brief Set MDC clock according to current board clock. Per 802.3, MDC should 
+ *  \brief Set MDC clock according to current board clock. Per 802.3, MDC should
  *  be less then 2.5MHz.
- *  \param pGmac Pointer to an Gmac instance. 
+ *  \param pGmac Pointer to an Gmac instance.
  *  \param mck Mdc clock
  *  \return 1 if successfully, 0 if MDC clock not found.
  */
@@ -167,7 +167,7 @@ void GMAC_EnableGMII( Gmac *pGmac )
  *  \brief Enable RGMII mode for GMAC, called once after auto negotiate
  *  \param pGmac Pointer to an Gmac instance.
  *  \param duplex: 1 full duplex 0 half duplex
- *  \param speed:   0 10M 1 100M 
+ *  \param speed:   0 10M 1 100M
  */
 void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
 {
@@ -186,7 +186,7 @@ void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
 	} else {
 		pGmac->GMAC_NCFGR |= GMAC_NCFGR_SPD;
 	}
-  
+
 	/* RGMII enable */
 	pGmac->GMAC_UR = 0;
 	pGmac->GMAC_NCFGR &= ~GMAC_NCFGR_GBE;
@@ -243,7 +243,7 @@ uint32_t GMAC_GetItMask(Gmac *pGmac, gmacQueList_t queueIdx)
  */
 uint32_t GMAC_GetTxStatus(Gmac *pGmac)
 {
-	return pGmac->GMAC_TSR; 
+	return pGmac->GMAC_TSR;
 }
 
 /**
@@ -288,7 +288,7 @@ void GMAC_TransmitEnable(Gmac *pGmac, uint8_t bEnaDis)
 	if (bEnaDis) pGmac->GMAC_NCR |=  GMAC_NCR_TXEN;
 	else         pGmac->GMAC_NCR &= ~GMAC_NCR_TXEN;
 }
- 
+
 
 /**
  * Set Rx Queue
@@ -561,8 +561,8 @@ void GMAC_WriteEthTypeReg (Gmac *pGmac, gmacQueList_t queueIdx,  uint16_t etherT
 void GMAC_WriteCompareReg(Gmac *pGmac, gmacQueList_t queueIdx, uint32_t c0Reg,
 						uint16_t c1Reg)
 {
-	pGmac->GMAC_ST2COMP[queueIdx].GMAC_ST2COM0 = c0Reg; 
-	pGmac->GMAC_ST2COMP[queueIdx].GMAC_ST2COM1 = (uint32_t)c1Reg; 
+	pGmac->GMAC_ST2COMP[queueIdx].GMAC_ST2COM0 = c0Reg;
+	pGmac->GMAC_ST2COMP[queueIdx].GMAC_ST2COM1 = (uint32_t)c1Reg;
 	memory_barrier();
 }
 
@@ -620,7 +620,7 @@ uint32_t GMAC_GetPtpEvtMsgRxdNanoSec( Gmac *pGmac )
 	return (pGmac->GMAC_EFRN & GMAC_EFRN_RUD_Msk);
 }
 
-void GMAC_SetTsuCompare(Gmac *pGmac, uint32_t seconds47, uint32_t seconds31, 
+void GMAC_SetTsuCompare(Gmac *pGmac, uint32_t seconds47, uint32_t seconds31,
 						uint32_t nanosec )
 {
 	pGmac->GMAC_SCH = seconds47;
@@ -648,7 +648,7 @@ void GMAC_SetTsuCompareSec47(Gmac *pGmac, uint16_t seconds47)
 
 uint32_t GMAC_GetRxEvtFrameSec(Gmac *pGmac)
 {
-	return pGmac->GMAC_EFRSL;	
+	return pGmac->GMAC_EFRSL;
 }
 
 uint32_t GMAC_GetRxEvtFrameNsec(Gmac *pGmac)

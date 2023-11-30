@@ -392,7 +392,7 @@ HAL_StatusTypeDef HAL_SAI_Init(SAI_HandleTypeDef *hsai)
   assert_param(IS_SAI_BLOCK_FIRST_BIT(hsai->Init.FirstBit));
   assert_param(IS_SAI_BLOCK_CLOCK_STROBING(hsai->Init.ClockStrobing));
   assert_param(IS_SAI_BLOCK_SYNCHRO(hsai->Init.Synchro));
-#if defined(SAI_VER_V2_X) 
+#if defined(SAI_VER_V2_X)
   /* SAI Peripheral version depends on STM32H7 device revision ID */
   if (HAL_GetREVID() >= REV_ID_B) /* STM32H7xx Rev.B and above */
   {

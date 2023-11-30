@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -375,7 +375,7 @@ bool CS_startHFXTWithTimeout(bool bypassMode, uint32_t timeout)
 
         BITBAND_PERI(CS->CLRIFG,CS_CLRIFG_CLR_HFXTIFG_OFS) = 1;
     }
-    
+
     /* Setting the drive strength */
     if (!bypassMode)
     {
@@ -390,7 +390,7 @@ bool CS_startHFXTWithTimeout(bool bypassMode, uint32_t timeout)
 
     /* Enabling the NMI state */
     SysCtl_enableNMISource(bNMIStatus);
-    
+
     if(boolTimeout && timeout == 0)
         return false;
 
@@ -455,7 +455,7 @@ bool CS_startLFXTWithTimeout(uint32_t xtDrive, uint32_t timeout)
 
     /* Enabling the NMI state */
     SysCtl_enableNMISource(bNMIStatus);
-    
+
     if(boolTimeout && timeout == 0)
         return false;
 
@@ -518,7 +518,7 @@ void CS_enableDCOExternalResistor(void)
     BITBAND_PERI(CS->KEY, CS_KEY_KEY_OFS) = 1;
 }
 
-void CS_setDCOExternalResistorCalibration(uint_fast8_t calData, 
+void CS_setDCOExternalResistorCalibration(uint_fast8_t calData,
                                             uint_fast8_t freqRange)
 {
     uint_fast8_t rselVal;
@@ -594,13 +594,13 @@ void CS_tuneDCOFrequency(int16_t tuneParameter)
     {
     	CS->CTL0 = ((CS->CTL0 & ~dcoTuneMask) | (tuneParameter
             		& dcoTuneMask) | dcoTuneSigned);
-    } 
+    }
     else
     {
 		CS->CTL0 = ((CS->CTL0 & ~dcoTuneMask) | (tuneParameter
 					& dcoTuneMask));
     }
-     
+
      BITBAND_PERI(CS->KEY, CS_KEY_KEY_OFS) = 1;
 }
 
@@ -641,7 +641,7 @@ uint32_t CS_getDCOFrequency(void)
             dcoTune = dcoTune | 0xF000;
         }
     }
-    
+
     if (dcoTune == 0)
         return (uint32_t) centeredFreq;
 
@@ -689,7 +689,7 @@ uint32_t CS_getDCOFrequency(void)
         retVal = (uint32_t) (centeredFreq)
             / (1 - ((dcoConst * dcoTune)
                             / (8 * (1 + dcoConst * (768 - calVal)))));
-    }    
+    }
     return retVal;
 }
 
@@ -733,7 +733,7 @@ void CS_setDCOFrequency(uint32_t dcoFrequency)
         ASSERT(false);
         return;
     }
-    
+
     /* Parsing the TLV and getting the maximum erase pulses */
     SysCtl_getTLVInfo(TLV_TAG_CS, 0, &tlvLength, (uint32_t**)&csInfo);
 

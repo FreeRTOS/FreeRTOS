@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -161,21 +161,21 @@ static void PIO_SetInput(
 
     // Enable pull-up(s) if necessary
     if (enablePullUp) {
-    
+
         pio->PIO_PPUER = mask;
     }
     else {
-    
+
         pio->PIO_PPUDR = mask;
     }
 
     // Enable filter(s) if necessary
     if (enableFilter) {
-    
+
         pio->PIO_IFER = mask;
     }
     else {
-    
+
         pio->PIO_IFDR = mask;
     }
 
@@ -207,21 +207,21 @@ static void PIO_SetOutput(
 
     // Enable pull-up(s) if necessary
     if (enablePullUp) {
-    
+
         pio->PIO_PPUER = mask;
     }
     else {
-    
+
         pio->PIO_PPUDR = mask;
     }
 
     // Enable multi-drive if necessary
     if (enableMultiDrive) {
-    
+
         pio->PIO_MDER = mask;
     }
     else {
-    
+
         pio->PIO_MDDR = mask;
     }
 
@@ -257,21 +257,21 @@ unsigned char PIO_Configure(const Pin *list, unsigned int size)
 {
     // Configure pins
     while (size > 0) {
-    
+
         switch (list->type) {
-    
+
             case PIO_PERIPH_A:
                 PIO_SetPeripheralA(list->pio,
                                    list->mask,
                                    (list->attribute & PIO_PULLUP) ? 1 : 0);
                 break;
-    
+
             case PIO_PERIPH_B:
                 PIO_SetPeripheralB(list->pio,
                                    list->mask,
                                    (list->attribute & PIO_PULLUP) ? 1 : 0);
                 break;
-    
+
             case PIO_INPUT:
                 AT91C_BASE_PMC->PMC_PCER = 1 << list->id;
                 PIO_SetInput(list->pio,
@@ -287,7 +287,7 @@ unsigned char PIO_Configure(const Pin *list, unsigned int size)
                         list->inFilter.clkDivider);
                 #endif
                 break;
-    
+
             case PIO_OUTPUT_0:
             case PIO_OUTPUT_1:
                 PIO_SetOutput(list->pio,
@@ -296,7 +296,7 @@ unsigned char PIO_Configure(const Pin *list, unsigned int size)
                               (list->attribute & PIO_OPENDRAIN) ? 1 : 0,
                               (list->attribute & PIO_PULLUP) ? 1 : 0);
                 break;
-    
+
             default: return 0;
         }
 

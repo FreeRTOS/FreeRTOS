@@ -29,7 +29,7 @@ $(PROCESSOR)/lib/libxil.a: $(PROCESSOR)/lib/libxil_init.a
 	@echo "Running Make libs in $(subst /make.libs,,$@)"
 	$(MAKE) -C $(subst /make.libs,,$@) -s libs  "SHELL=$(SHELL)" "COMPILER=aarch64-none-elf-gcc" "ARCHIVER=aarch64-none-elf-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-g -Wall -Wextra -DFREERTOS_BSP"
 
-%/make.clean: 
-	$(MAKE) -C $(subst /make.clean,,$@) -s clean 
+%/make.clean:
+	$(MAKE) -C $(subst /make.clean,,$@) -s clean
 clean:
 	rm -f ${PROCESSOR}/lib/libxil.a

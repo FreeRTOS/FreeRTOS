@@ -13,7 +13,7 @@
 ;
 ;
 ; desc:
-; 
+;
 ;  System initialisation routine - entry point for the application.
 ;  The stack pointer is initialised, then the hardware initialisation
 ;  routine called.  The static data areas are then initialised, before
@@ -22,7 +22,7 @@
 ;
 ;*********************************************************************
 
-#ifdef __H8300H__  
+#ifdef __H8300H__
 
 #ifdef __NORMAL_MODE__
 	.h8300hn
@@ -41,10 +41,10 @@
 #endif
 
 #endif /* __H8300S__ */
-	
+
 	.section .text
 	.global _start
-#if DEBUG	
+#if DEBUG
 	.extern _exit
 #endif
 
@@ -63,7 +63,7 @@ _start:
     mov.l   #_stack,er7
 	; call the hardware initialiser
 	jsr     @_hw_initialise
-#ifdef ROMSTART	
+#ifdef ROMSTART
 	; get the boundaries for the .data section initialisation
     mov.l   #_data,er0
     mov.l   #_edata,er1
@@ -82,7 +82,7 @@ start_1:
 	; zero out bss
     mov.l   #_bss,er0
     mov.l   #_ebss,er1
-    cmp.l   er0,er1         
+    cmp.l   er0,er1
 	beq     start_3
 	sub.b   r2l,r2l
 start_2:
@@ -91,17 +91,17 @@ start_2:
     cmp.l   er0,er1
 	bne     start_2
 start_3:
-#ifdef CPPAPP	
-	;Initialize global constructor	
+#ifdef CPPAPP
+	;Initialize global constructor
 	jsr	@___main
 #endif
-	
-	; call the mainline     
+
+	; call the mainline
 	jsr     @_main
 
-	
+
     mov.l   er0,er4
-    
+
     ;call to exit
 #if DEBUG
     jsr     @_exit
@@ -111,5 +111,5 @@ start_3:
 	bra 	exit
 #endif
 
-	
+
 

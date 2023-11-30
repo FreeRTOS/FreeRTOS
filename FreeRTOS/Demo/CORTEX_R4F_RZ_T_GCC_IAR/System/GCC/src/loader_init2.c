@@ -85,24 +85,24 @@ void loader_init2 (void);
 * Return Value : none
 ***********************************************************************************************************************/
 void loader_init2 (void)
-{ 
+{
     /* Check the reset source */
     reset_check();
-  
+
     /* Set CPU clock and LOCO clock */
     cpg_init();
-    
+
     /* Set ATCM access wait to 1-wait with optimisation */
     /* Caution: ATCM_WAIT_0 is permitted if CPUCLK = 150MHz or 300MHz.
                 ATCM_WAIT_1_OPT is permitted if CPUCLK = 450MHz or 600MHz.*/
     R_ATCM_WaitSet(ATCM_WAIT_1_OPT);
-     
+
     /* Initialise I1, D1 Cache and MPU setting */
     cache_init();
-    
+
     /* Set RZ/T1 to Low-vector (SCTLR.V = 0) */
-    set_low_vec();  
-                
+    set_low_vec();
+
     /* Jump to _main() */
     main();
 
@@ -123,7 +123,7 @@ static void reset_check(void)
 {
     volatile uint8_t result=0;
     volatile uint32_t dummy=0;
-    
+
     UNUSED_VARIABLE(result);
     UNUSED_VARIABLE(dummy);
 
@@ -138,15 +138,15 @@ static void reset_check(void)
 
         /* Disable writing to the RSTSR0 register */
         r_rst_write_disable();
-        
-        /* Please coding the User program */ 
-        
+
+        /* Please coding the User program */
+
     }
 
     /* Software reset 1 is generated */
     else if (RST_SOURCE_SWR1 == SYSTEM.RSTSR0.LONG)
     {
-        /* Clear reset status flag */ 
+        /* Clear reset status flag */
         /* Enable writing to the RSTSR0 register */
         r_rst_write_enable();
 
@@ -155,14 +155,14 @@ static void reset_check(void)
 
         /* Disable writing to the RSTSR0 register */
         r_rst_write_disable();
-        
-        /* Please coding the User program */  
-        
+
+        /* Please coding the User program */
+
     }
     else if (RST_SOURCE_RES == SYSTEM.RSTSR0.LONG) // RES# pin reset is generated
     {
-        /* Clear reset status flag */ 
-        
+        /* Clear reset status flag */
+
         /* Enable writing to the RSTSR0 register */
         r_rst_write_enable();
 
@@ -173,12 +173,12 @@ static void reset_check(void)
         r_rst_write_disable();
 
         /* Please add user code */
-        
+
     }
 
     /* Any reset is not generated */
     else
-    {        
+    {
         /* Please add user code */
     }
 
@@ -202,31 +202,31 @@ static void cpg_init(void)
 
     /* Enables writing to the registers related to CPG function */
     R_CPG_WriteEnable();
-    
+
     /* Enables LOCO clock operation */
     SYSTEM.LOCOCR.BIT.LCSTP = CPG_LOCO_ENABLE;
-    
+
     /* Set CPUCLK to 450MHz, and dummy read at three times */
     SYSTEM.PLL1CR.LONG = CPG_CPUCLK_450_MHz;
     dummy = SYSTEM.PLL1CR.LONG;
     dummy = SYSTEM.PLL1CR.LONG;
     dummy = SYSTEM.PLL1CR.LONG;
-     
+
     /* Enables PLL1 operation */
-    SYSTEM.PLL1CR2.LONG = CPG_PLL1_ON;    
-    
+    SYSTEM.PLL1CR2.LONG = CPG_PLL1_ON;
+
     /* Disables writing to the registers related to CPG function */
     R_CPG_WriteDisable();
-    
+
     /* Wait about 100us for PLL1 (and LOCO) stabilisation */
     R_CPG_PLLWait();
 
     /* Enables writing to the registers related to CPG function */
     R_CPG_WriteEnable();
-     
+
     /* Selects the PLL1 as clock source */
     SYSTEM.SCKCR2.LONG = CPG_SELECT_PLL1;
-    
+
     /* Disables writing to the registers related to CPG function */
     R_CPG_WriteDisable();
 

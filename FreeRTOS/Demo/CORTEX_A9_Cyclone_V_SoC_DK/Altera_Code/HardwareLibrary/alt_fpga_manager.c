@@ -8,20 +8,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -32,7 +32,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #include "alt_fpga_manager.h"
@@ -90,7 +90,7 @@ typedef enum FPGA_DATA_TYPE_e
 typedef struct FPGA_DATA_s
 {
     FPGA_DATA_TYPE_t type;
-    
+
     union
     {
         // For FPGA_DATA_FULL
@@ -99,7 +99,7 @@ typedef struct FPGA_DATA_s
             const void * buffer;
             size_t       length;
         } full;
-        
+
         // FPGA_DATA_ISTREAM
         struct
         {
@@ -878,7 +878,7 @@ static ALT_STATUS_CODE alt_fpga_internal_configure(FPGA_DATA_t * fpga_data)
 
     dprintf("FPGA: === Step 14 (4.2.1.2) ===\n");
     dprintf("FPGA: === Step 15 (4.2.1.2) ===\n");
-    
+
     status = dclk_set_and_wait_clear(0x5000, _ALT_FPGA_TMO_DCLK_CONST + 0x5000 * _ALT_FPGA_TMO_DCLK_MUL);
     if (status == ALT_E_TMO)
     {
@@ -929,7 +929,7 @@ static ALT_STATUS_CODE alt_fpga_internal_configure(FPGA_DATA_t * fpga_data)
     return data_status;
 }
 
-ALT_STATUS_CODE alt_fpga_configure(const void* cfg_buf, 
+ALT_STATUS_CODE alt_fpga_configure(const void* cfg_buf,
                                    size_t cfg_buf_len)
 {
     FPGA_DATA_t fpga_data;
@@ -944,7 +944,7 @@ ALT_STATUS_CODE alt_fpga_configure(const void* cfg_buf,
 }
 
 #if ALT_FPGA_ENABLE_DMA_SUPPORT
-ALT_STATUS_CODE alt_fpga_configure_dma(const void* cfg_buf, 
+ALT_STATUS_CODE alt_fpga_configure_dma(const void* cfg_buf,
                                        size_t cfg_buf_len,
                                        ALT_DMA_CHANNEL_t dma_channel)
 {

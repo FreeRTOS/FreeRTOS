@@ -54,7 +54,7 @@
 #define PWR_STOPEntry_WFE         ((u8)0x02)
 
 #define IS_PWR_STOP_ENTRY(ENTRY) ((ENTRY == PWR_STOPEntry_WFI) || (ENTRY == PWR_STOPEntry_WFE))
- 
+
 /* PWR Flag */
 #define PWR_FLAG_WU               ((u32)0x00000001)
 #define PWR_FLAG_SB               ((u32)0x00000002)

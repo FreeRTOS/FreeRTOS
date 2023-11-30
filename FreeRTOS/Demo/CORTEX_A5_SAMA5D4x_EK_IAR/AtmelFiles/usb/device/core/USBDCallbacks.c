@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  *    so they can be re-implemented elsewhere in the application in a
  *    transparent way.
  *
- * \addtogroup usbd_interface 
+ * \addtogroup usbd_interface
  *@{
  */
 

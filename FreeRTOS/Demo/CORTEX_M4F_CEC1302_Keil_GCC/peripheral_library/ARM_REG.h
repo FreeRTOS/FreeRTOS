@@ -41,9 +41,9 @@
 /** @file ARM_REG.h
 * \brief ARM Cortex-M3 registers header file
 * \author KBCEC Team
-* 
+*
 * This file contains ARM Cortex-M3 system control & status registers.
-******************************************************************************/   
+******************************************************************************/
 #ifndef ARM_REG_H_
 #define ARM_REG_H_
 

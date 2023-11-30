@@ -60,10 +60,10 @@ Private global variables and functions
 /**********************************************************************************************************************
  * Function Name: R_BSP_StartupOpen
  ******************************************************************************************************************//**
- * @brief Specifies settings to use the BSP and peripheral FIT modules. Call this function only when the BSP startup 
+ * @brief Specifies settings to use the BSP and peripheral FIT modules. Call this function only when the BSP startup
  * is disabled.
- * @details This function performs initialization for the interrupt callback, register protection, and the hardware 
- * and pins. These processing are needed for using the BSP and peripheral FIT modules. Thus, this function must be 
+ * @details This function performs initialization for the interrupt callback, register protection, and the hardware
+ * and pins. These processing are needed for using the BSP and peripheral FIT modules. Thus, this function must be
  * called in the beginning of the main function. Call this function only when the BSP startup is disabled.
  * @note The R_BSP_StartupOpen function performs a part of processing in the startup function.
  * See Section 5.18 in the application note for more information.

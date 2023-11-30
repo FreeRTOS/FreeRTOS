@@ -46,7 +46,7 @@ Dependencies:
 
 Notice: This softpack comes as an early delivery and all presented APIs are subject to change.
 
-## Contents 
+## Contents
 
 ### Directory Architecture
 
@@ -63,7 +63,7 @@ Notice: This softpack comes as an early delivery and all presented APIs are subj
   Driver source files
 
 - examples/
-  All examples 
+  All examples
 
 ### Examples
 

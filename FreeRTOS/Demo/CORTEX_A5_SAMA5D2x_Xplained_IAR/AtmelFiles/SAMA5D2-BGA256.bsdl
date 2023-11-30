@@ -4,8 +4,8 @@
 
 --   Created by Synopsys Version I-2013.12-SP3 (Apr 18, 2014)
 
---   Designer: 
---   Company:  
+--   Designer:
+--   Company:
 
 --   Date: Thu Feb  5 22:56:11 2015
 
@@ -13,14 +13,14 @@
 
 
  entity top is
-   
+
 -- This section identifies the default device package selected.
-   
+
    generic (PHYSICAL_PIN_MAP: string:= "BGA256");
-   
+
 -- This section declares all the ports in the design.
-   
-   port ( 
+
+   port (
           PD14          : in       bit;
           PD15          : in       bit;
           PD17          : in       bit;
@@ -209,18 +209,18 @@
           -- tst_psw_fuse  : linkage  bit;  -- NC Port
           PIOBU         : linkage  bit_vector (0 to 1)
    );
-   
+
    use STD_1149_1_1994.all;
-   
+
    attribute COMPONENT_CONFORMANCE of top: entity is "STD_1149_1_1993";
-   
+
    attribute PIN_MAP of top: entity is PHYSICAL_PIN_MAP;
-   
--- This section specifies the pin map for each port. This information is 
--- extracted from the port-to-pin map file that was read in using the 
+
+-- This section specifies the pin map for each port. This information is
+-- extracted from the port-to-pin map file that was read in using the
 -- "read_pin_map" command.
-   
-     constant BGA256: PIN_MAP_STRING := 
+
+     constant BGA256: PIN_MAP_STRING :=
         "PD14          : K6," &
         "PD15          : K4," &
         "PD17          : K2," &
@@ -367,39 +367,39 @@
         "XOUT          : V6," &
         "XOUT32        : R2," &
         "PIOBU         : (R6, R4)";
-   
+
 -- This section specifies the differential IO port groupings.
-   
-   attribute PORT_GROUPING of top: entity is 
+
+   attribute PORT_GROUPING of top: entity is
       "Differential_Voltage ( " &
           "(DDR_CLK,DDR_CLKN))";
 
--- This section specifies the TAP ports. For the TAP TCK port, the parameters in 
+-- This section specifies the TAP ports. For the TAP TCK port, the parameters in
 -- the brackets are:
 --        First Field : Maximum  TCK frequency.
 --        Second Field: Allowable states TCK may be stopped in.
-   
+
    attribute TAP_SCAN_CLOCK of PD14: signal is (10.0e6, BOTH);
    attribute TAP_SCAN_IN    of PD15: signal is true;
    attribute TAP_SCAN_MODE  of PD17: signal is true;
    attribute TAP_SCAN_OUT   of PD16: signal is true;
    attribute TAP_SCAN_RESET of PD18: signal is true;
-   
--- Specifies the compliance enable patterns for the design. It lists a set of 
--- design ports and the values that they should be set to, in order to enable 
+
+-- Specifies the compliance enable patterns for the design. It lists a set of
+-- design ports and the values that they should be set to, in order to enable
 -- compliance to IEEE Std 1149.1
-   
-   attribute COMPLIANCE_PATTERNS of top: entity is 
+
+   attribute COMPLIANCE_PATTERNS of top: entity is
         "(JTAGSEL, TST) (10)";
-   
+
 -- Specifies the number of bits in the instruction register.
-   
+
    attribute INSTRUCTION_LENGTH of top: entity is 4;
-   
--- Specifies the boundary-scan instructions implemented in the design and their 
+
+-- Specifies the boundary-scan instructions implemented in the design and their
 -- opcodes.
-   
-   attribute INSTRUCTION_OPCODE of top: entity is 
+
+   attribute INSTRUCTION_OPCODE of top: entity is
      "BYPASS  (1111, 0001, 0101, 0110, 1100, 0111, 1101, 1000, 1001, 1011, " &
      "1110)," &
      "EXTEST  (0000)," &
@@ -407,63 +407,63 @@
      "INTEST  (0010)," &
      "IDCODE  (0011)," &
      "RUNBIST (1010)";
-   
--- Specifies the bit pattern that is loaded into the instruction register when 
--- the TAP controller passes through the Capture-IR state. The standard mandates 
+
+-- Specifies the bit pattern that is loaded into the instruction register when
+-- the TAP controller passes through the Capture-IR state. The standard mandates
 -- that the two LSBs must be "01". The remaining bits are design specific.
-   
+
    attribute INSTRUCTION_CAPTURE of top: entity is "0001";
-   
--- Specifies the bit pattern that is loaded into the DEVICE_ID register during 
--- the IDCODE instruction when the TAP controller passes through the Capture-DR 
+
+-- Specifies the bit pattern that is loaded into the DEVICE_ID register during
+-- the IDCODE instruction when the TAP controller passes through the Capture-DR
 -- state.
-   
-   attribute IDCODE_REGISTER of top: entity is 
-     "0000" &                  
+
+   attribute IDCODE_REGISTER of top: entity is
+     "0000" &
  -- 4-bit version number
-     "0101101100111111" &      
+     "0101101100111111" &
  -- 16-bit part number
-     "00000011111" &           
+     "00000011111" &
  -- 11-bit identity of the manufacturer
-     "1";                      
+     "1";
  -- Required by IEEE Std 1149.1
-   
--- This section specifies the test data register placed between TDI and TDO for 
+
+-- This section specifies the test data register placed between TDI and TDO for
 -- each implemented instruction.
-   
-   attribute REGISTER_ACCESS of top: entity is 
+
+   attribute REGISTER_ACCESS of top: entity is
         "BYPASS    (BYPASS)," &
         "BOUNDARY  (EXTEST, SAMPLE, INTEST)," &
         "DEVICE_ID (IDCODE)," &
         "UTDR1[41] (RUNBIST)";
-   
+
 -- Specifies the length of the boundary scan register.
-   
+
    attribute BOUNDARY_LENGTH of top: entity is 374;
-   
--- The following list specifies the characteristics of each cell in the boundary 
--- scan register from TDI to TDO. The following is a description of the label 
+
+-- The following list specifies the characteristics of each cell in the boundary
+-- scan register from TDI to TDO. The following is a description of the label
 -- fields:
 --      num     : Is the cell number.
 --      cell    : Is the cell type as defined by the standard.
---      port    : Is the design port name. Control cells do not have a port 
+--      port    : Is the design port name. Control cells do not have a port
 --                name.
---      function: Is the function of the cell as defined by the standard. Is one 
+--      function: Is the function of the cell as defined by the standard. Is one
 --                of input, output2, output3, bidir, control or controlr.
---      safe    : Specifies the value that the BSR cell should be loaded with 
---                for safe operation when the software might otherwise choose a 
+--      safe    : Specifies the value that the BSR cell should be loaded with
+--                for safe operation when the software might otherwise choose a
 --                random value.
---      ccell   : The control cell number. Specifies the control cell that 
+--      ccell   : The control cell number. Specifies the control cell that
 --                drives the output enable for this port.
---      disval  : Specifies the value that is loaded into the control cell to 
+--      disval  : Specifies the value that is loaded into the control cell to
 --                disable the output enable for the corresponding port.
---      rslt    : Resulting state. Shows the state of the driver when it is 
+--      rslt    : Resulting state. Shows the state of the driver when it is
 --                disabled.
-   
-   attribute BOUNDARY_REGISTER of top: entity is 
---     
+
+   attribute BOUNDARY_REGISTER of top: entity is
+--
 --    num   cell   port         function      safe  [ccell  disval  rslt]
---     
+--
      "373  (BC_1,  *,           control,      1),                        " &
      "372  (BC_7,  PD13,        bidir,        X,    373,    1,      Z),  " &
      "371  (BC_1,  *,           control,      1),                        " &
@@ -838,5 +838,5 @@
      "2    (BC_7,  PD4,         bidir,        X,    3,      1,      Z),  " &
      "1    (BC_1,  *,           control,      1),                        " &
      "0    (BC_7,  PD3,         bidir,        X,    1,      1,      Z)   ";
- 
+
  end top;

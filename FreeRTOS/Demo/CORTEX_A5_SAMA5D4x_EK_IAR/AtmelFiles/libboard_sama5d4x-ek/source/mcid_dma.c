@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file
  *
  *  Implement for SD/MMC low level commands.
@@ -154,7 +154,7 @@ static uint32_t _MciDMAPrepare(sMcid *pMcid, uint8_t bRd)
     if (bRd){
         pMcid->dwDmaCh = XDMAD_AllocateChannel(pXdmad, pMcid->bID, XDMAD_TRANSFER_MEMORY);
     }
-    else { 
+    else {
         pMcid->dwDmaCh = XDMAD_AllocateChannel(pXdmad, XDMAD_TRANSFER_MEMORY, pMcid->bID);
     }
     if (pMcid->dwDmaCh == XDMAD_ALLOC_FAILED)
@@ -202,9 +202,9 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
         if (bRd){
             //printf("_MciDMA read %d,%d \n\r",pCmd->wBlockSize, pCmd->bCmd );
             for ( i = 0; i < pCmd->wNbBlocks; i++){
-                dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1 
+                dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1
                                         | (( i == pCmd->wNbBlocks - 1) ? 0: XDMA_UBC_NDE_FETCH_EN)
-                                        | XDMA_UBC_NDEN_UPDATED 
+                                        | XDMA_UBC_NDEN_UPDATED
                                         | pCmd->wBlockSize /4 ;
                 dmaLinkList[i].mbr_sa  = (uint32_t)&(pHw->HSMCI_FIFO[i]);
                 dmaLinkList[i].mbr_da = (uint32_t)&pCmd->pData[i * pCmd->wBlockSize];
@@ -213,18 +213,18 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
                 else
                     dmaLinkList[i].mbr_nda = (uint32_t)&dmaLinkList[ i + 1 ];
             }
-            xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN 
-                               | XDMAC_CC_MBSIZE_SINGLE 
-                               | XDMAC_CC_DSYNC_PER2MEM 
-                               | XDMAC_CC_CSIZE_CHK_1 
+            xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+                               | XDMAC_CC_MBSIZE_SINGLE
+                               | XDMAC_CC_DSYNC_PER2MEM
+                               | XDMAC_CC_CSIZE_CHK_1
                                | XDMAC_CC_DWIDTH_WORD
-                               | XDMAC_CC_SIF_AHB_IF1 
-                               | XDMAC_CC_DIF_AHB_IF0 
-                               | XDMAC_CC_SAM_FIXED_AM 
-                               | XDMAC_CC_DAM_INCREMENTED_AM 
+                               | XDMAC_CC_SIF_AHB_IF1
+                               | XDMAC_CC_DIF_AHB_IF0
+                               | XDMAC_CC_SAM_FIXED_AM
+                               | XDMAC_CC_DAM_INCREMENTED_AM
                                | XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber( 0, hsmciId, XDMAD_TRANSFER_RX ));
-            xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1 
-                     | XDMAC_CNDC_NDE_DSCR_FETCH_EN 
+            xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1
+                     | XDMAC_CNDC_NDE_DSCR_FETCH_EN
                      | XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
                      | XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ;
             if (XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh, &xdmadRxCfg, xdmaCndc, (uint32_t)&dmaLinkList[0])) {
@@ -237,27 +237,27 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
         } else {
             //printf("_MciDMA write %d,%d \n\r",pCmd->wBlockSize, pCmd->bCmd );
             for ( i = 0; i < pCmd->wNbBlocks; i++){
-                dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1 
+                dmaLinkList[i].mbr_ubc = XDMA_UBC_NVIEW_NDV1
                                        |(( i == pCmd->wNbBlocks - 1) ? 0: XDMA_UBC_NDE_FETCH_EN)
-                                       | XDMA_UBC_NDEN_UPDATED 
+                                       | XDMA_UBC_NDEN_UPDATED
                                        | pCmd->wBlockSize /4 ;
                 dmaLinkList[i].mbr_sa = (uint32_t)&pCmd->pData[i * pCmd->wBlockSize];
                 dmaLinkList[i].mbr_da = (uint32_t)&(pHw->HSMCI_FIFO[i]);
                 if ( i == pCmd->wNbBlocks - 1) dmaLinkList[i].mbr_nda = 0;
                 else dmaLinkList[i].mbr_nda = (uint32_t)&dmaLinkList[ i + 1 ];
             }
-            xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN 
-                               | XDMAC_CC_MBSIZE_SINGLE 
-                               | XDMAC_CC_DSYNC_MEM2PER 
-                               | XDMAC_CC_CSIZE_CHK_1 
+            xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+                               | XDMAC_CC_MBSIZE_SINGLE
+                               | XDMAC_CC_DSYNC_MEM2PER
+                               | XDMAC_CC_CSIZE_CHK_1
                                | XDMAC_CC_DWIDTH_WORD
-                               | XDMAC_CC_SIF_AHB_IF0 
-                               | XDMAC_CC_DIF_AHB_IF1 
-                               | XDMAC_CC_SAM_INCREMENTED_AM 
-                               | XDMAC_CC_DAM_FIXED_AM 
+                               | XDMAC_CC_SIF_AHB_IF0
+                               | XDMAC_CC_DIF_AHB_IF1
+                               | XDMAC_CC_SAM_INCREMENTED_AM
+                               | XDMAC_CC_DAM_FIXED_AM
                                | XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber( 0, hsmciId, XDMAD_TRANSFER_TX ));
-            xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1 
-                     | XDMAC_CNDC_NDE_DSCR_FETCH_EN 
+            xdmaCndc = XDMAC_CNDC_NDVIEW_NDV1
+                     | XDMAC_CNDC_NDE_DSCR_FETCH_EN
                      | XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
                      | XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED ;
             if(XDMAD_ConfigureTransfer( pXdmad, pMcid->dwDmaCh, &xdmadTxCfg, xdmaCndc, (uint32_t)&dmaLinkList[0])){
@@ -309,7 +309,7 @@ static uint32_t _MciDMA(sMcid *pMcid, uint32_t bFByte, uint8_t bRd)
         else
         {
             xdmadTxCfg.mbr_ubc = toWCOUNT(pMcid->dwXSize);
-            xdmadTxCfg.mbr_sa = (uint32_t)memAddress; 
+            xdmadTxCfg.mbr_sa = (uint32_t)memAddress;
             xdmadTxCfg.mbr_da = (uint32_t)&(pHw->HSMCI_TDR);
             xdmadTxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
                                XDMAC_CC_MEMSET_NORMAL_MODE |
@@ -366,8 +366,8 @@ static uint32_t MCI_SetSpeed( sMcid* pMci, uint32_t mciSpeed, uint32_t mck )
     if((mck % mciSpeed) == 0)
     {
         clkdiv = mck /mciSpeed;
-    } 
-    else 
+    }
+    else
     {
         clkdiv = ((mck + mciSpeed)/mciSpeed);
     }
@@ -676,7 +676,7 @@ uint32_t MCID_SendCmd(sMcid *pMcid, void *pCommand)
         pHw->HSMCI_ARGR = pCmd->dwArg;
         pHw->HSMCI_CMDR = cmdr;
     }
-    
+
     /* Ignore CRC error for R3 & R4 */
     if (pCmd->cmdOp.bmBits.xfrData == SDMMC_CMD_STOPXFR)
     {
@@ -685,7 +685,7 @@ uint32_t MCID_SendCmd(sMcid *pMcid, void *pCommand)
 
     /* Enable status flags */
     HSMCI_EnableIt(pHw, ier);
-    
+
     return SDMMC_OK;
 }
 static uint32_t dwMsk;
@@ -722,7 +722,7 @@ void MCID_Handler(sMcid *pMcid)
         {
             pCmd->bStatus = SDMMC_ERROR_NORESPONSE;
         }
-      
+
         if (pCmd->bCmd != 12) pMcid->bState = MCID_ERROR;
         //pMcid->bState = MCID_ERROR;
     }
@@ -730,12 +730,12 @@ void MCID_Handler(sMcid *pMcid)
 
     /* Check command complete */
     if (dwMaskedSr & HSMCI_SR_CMDRDY)
-    {   
+    {
         //printf("HSMCI_SR_CMDRDY \n\r");
         HSMCI_DisableIt(pHw, HSMCI_IDR_CMDRDY);
         dwMsk &= ~(uint32_t)HSMCI_IMR_CMDRDY;
     }
-   
+
     /* Check if not busy */
     if (dwMaskedSr & HSMCI_SR_NOTBUSY)
     {
@@ -745,29 +745,29 @@ void MCID_Handler(sMcid *pMcid)
     }
     /* Check if TX ready */
     if (dwMaskedSr & HSMCI_SR_TXRDY)
-    {    
+    {
        // printf("TXRDY ");
         dwMsk &= ~(uint32_t)HSMCI_IMR_TXRDY;
     }
      /* Check if FIFO empty (all data sent) */
     if (dwMaskedSr & HSMCI_SR_FIFOEMPTY)
     {
-       
+
         /* Disable FIFO empty */
         HSMCI_DisableIt(pHw, HSMCI_IDR_FIFOEMPTY);
         dwMsk &= ~(uint32_t)HSMCI_IMR_FIFOEMPTY;
          //printf("FIFOEMPTY %x \n\r",dwMsk);
     }
-    
+
     /* Check if DMA finished */
     if (dwMaskedSr & HSMCI_SR_XFRDONE)
     {
-        
+
         HSMCI_DisableIt(pHw, HSMCI_IDR_XFRDONE);
         dwMsk &= ~(uint32_t)HSMCI_IMR_XFRDONE;
         //printf("HSMCI_SR_XFRDONE %x \n\r",dwMsk);
     }
-   
+
     /* All none error mask done, complete the command */
     if (0 == dwMsk || pMcid->bState == MCID_ERROR)
     {
@@ -776,7 +776,7 @@ void MCID_Handler(sMcid *pMcid)
         {
             MCI_Reset(pMcid, 1);
         }
-        else 
+        else
         {
             pCmd->bStatus = SDMMC_SUCCESS;
 
@@ -848,7 +848,7 @@ void MCID_Reset(sMcid * pMcid)
                                                  | HSMCI_MR_PWSDIV_Msk));
     /* BLKR reset */
     HSMCI_ConfigureTransfer(pHw, 0, 0);
-    
+
     /* Cancel ... */
     MCI_Reset(pMcid, 1);
     //_PeripheralDisable(pMcid->bID);
@@ -935,7 +935,7 @@ uint32_t MCID_IOCtrl(sMcid *pMcid, uint32_t bCtl, uint32_t param)
 
         default:
             return SDMMC_ERROR_NOT_SUPPORT;
-        
+
     }
     return SDMMC_OK;
 }

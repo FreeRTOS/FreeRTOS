@@ -46,7 +46,7 @@
 /*                          FPGA System Register declaration                  */
 /******************************************************************************/
 
-typedef struct                  
+typedef struct
 {
   __IO uint32_t LED;             // Offset: 0x000 (R/W)  LED connections
                                  //                         [31:2] : Reserved
@@ -320,7 +320,7 @@ typedef struct
   __O   uint32_t  CONTROLS;     // Offset: 0x000 CONTROL Set Register     ( /W)
   __I   uint32_t  CONTROL;      // Offset: 0x000 CONTROL Status Register  (R/ )
   };
-  __O    uint32_t  CONTROLC;     // Offset: 0x004 CONTROL Clear Register    ( /W) 
+  __O    uint32_t  CONTROLC;     // Offset: 0x004 CONTROL Clear Register    ( /W)
 } MPS2_I2C_TypeDef;
 
 #define SDA                1 << 1
@@ -355,7 +355,7 @@ typedef struct
                               //     <4=> Undefined!
                               //     <5=> Undefined!
                               //     <6=> Undefined!
-                              //     <7=> Undefined! 
+                              //     <7=> Undefined!
                               //   <o.14..12> RX Buffer Water Level
                               //     <0=> Undefined!
                               //     <1=> / IRQ triggers when less than 1 space available
@@ -364,7 +364,7 @@ typedef struct
                               //     <4=> / IRQ triggers when less than 4 space available
                               //     <5=> Undefined!
                               //     <6=> Undefined!
-                              //     <7=> Undefined! 
+                              //     <7=> Undefined!
                               //   <o.16> FIFO reset
                               //     <0=> Normal operation
                               //     <1=> FIFO reset
@@ -392,7 +392,7 @@ typedef struct
                               //     <0=> RX buffer not full
                               //     <1=> RX buffer full
   union {
-   /*!< Offset: 0x008 Error Status Register (R/ ) */ 
+   /*!< Offset: 0x008 Error Status Register (R/ ) */
     __I    uint32_t  ERROR;  // <h> ERROR </h>
                               //   <o.0> TX error
                               //     <0=> Okay
@@ -400,7 +400,7 @@ typedef struct
                               //   <o.1> RX error
                               //     <0=> Okay
                               //     <1=> RX overrun/underrun
-   /*!< Offset: 0x008 Error Clear Register  ( /W) */   
+   /*!< Offset: 0x008 Error Clear Register  ( /W) */
     __O    uint32_t  ERRORCLR;  // <h> ERRORCLR </h>
                               //   <o.0> TX error
                               //     <0=> Okay
@@ -409,16 +409,16 @@ typedef struct
                               //     <0=> Okay
                               //     <1=> Clear RX error
     };
-   /*!< Offset: 0x00C Divide ratio Register (R/W) */ 
+   /*!< Offset: 0x00C Divide ratio Register (R/W) */
   __IO   uint32_t  DIVIDE;  // <h> Divide ratio for Left/Right clock </h>
-                              //   <o.9..0> TX error (default 0x80)                 
+                              //   <o.9..0> TX error (default 0x80)
    /*!< Offset: 0x010 Transmit Buffer       ( /W) */
   __O    uint32_t  TXBUF;  // <h> Transmit buffer </h>
-                              //   <o.15..0> Right channel                 
+                              //   <o.15..0> Right channel
                               //   <o.31..16> Left channel
    /*!< Offset: 0x014 Receive Buffer        (R/ ) */
   __I    uint32_t  RXBUF;  // <h> Receive buffer </h>
-                              //   <o.15..0> Right channel                 
+                              //   <o.15..0> Right channel
                               //   <o.31..16> Left channel
          uint32_t  RESERVED1[186];
   __IO uint32_t ITCR;         // <h> Integration Test Control Register </h>
@@ -596,9 +596,9 @@ __IO  uint32_t  E2P_DATA;              //   EEPROM Data (offset 0xB4)
 #define MPS2_SCC                ((MPS2_SCC_TypeDef      *) MPS2_SCC_BASE )
 #define MPS2_SSP0               ((MPS2_SSP_TypeDef      *) MPS2_SSP0_BASE )
 #define MPS2_SSP1               ((MPS2_SSP_TypeDef      *) MPS2_SSP1_BASE )
-#define MPS2_SSP2               ((MPS2_SSP_TypeDef      *) MPS2_SSP2_BASE )    
-#define MPS2_SSP3               ((MPS2_SSP_TypeDef      *) MPS2_SSP3_BASE )    
-#define MPS2_SSP4               ((MPS2_SSP_TypeDef      *) MPS2_SSP4_BASE )    
+#define MPS2_SSP2               ((MPS2_SSP_TypeDef      *) MPS2_SSP2_BASE )
+#define MPS2_SSP3               ((MPS2_SSP_TypeDef      *) MPS2_SSP3_BASE )
+#define MPS2_SSP4               ((MPS2_SSP_TypeDef      *) MPS2_SSP4_BASE )
 
 /******************************************************************************/
 /*                     General Function Definitions                           */

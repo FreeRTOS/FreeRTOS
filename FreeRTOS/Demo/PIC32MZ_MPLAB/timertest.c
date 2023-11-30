@@ -53,7 +53,7 @@ void vSetupTimerTest( unsigned short usFrequencyHz )
 	/* Remember the frequency so it can be used from the ISR. */
 	ulFrequencyHz = ( unsigned long ) usFrequencyHz;
 
-	/* T2 is used to generate interrupts above the kernel and max syscall 
+	/* T2 is used to generate interrupts above the kernel and max syscall
 	interrupt priority. */
 	T2CON = 0;
 	TMR2 = 0;

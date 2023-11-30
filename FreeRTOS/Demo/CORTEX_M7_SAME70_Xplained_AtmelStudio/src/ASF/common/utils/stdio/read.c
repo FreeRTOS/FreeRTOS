@@ -126,7 +126,7 @@ long __lseek(int handle, long val, int val2)
 _STD_END
 
 // GCC AVR32 and SAM implementation
-#elif (defined(__GNUC__) && !XMEGA && !MEGA) 
+#elif (defined(__GNUC__) && !XMEGA && !MEGA)
 
 int __attribute__((weak))
 _read (int file, char * ptr, int len); // Remove GCC compiler warning

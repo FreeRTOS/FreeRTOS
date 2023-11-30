@@ -32,14 +32,14 @@
  * Four co-routines are created - an 'I2C' co-routine and three 'flash'
  * co-routines.
  *
- * The I2C co-routine triggers an ADC conversion then blocks on a queue to 
+ * The I2C co-routine triggers an ADC conversion then blocks on a queue to
  * wait for the conversion result - which it receives on the queue directly
  * from the I2C interrupt service routine.  The conversion result is then
- * scalled to a delay period.  The I2C interrupt then wakes each of the 
+ * scalled to a delay period.  The I2C interrupt then wakes each of the
  * flash co-routines before itself delaying for the calculated period and
  * then repeating the whole process.
  *
- * When woken by the I2C co-routine the flash co-routines each block for 
+ * When woken by the I2C co-routine the flash co-routines each block for
  * a given period, illuminate an LED for a fixed period, then go back to
  * sleep to wait for the next cycle.  The uxIndex parameter of the flash
  * co-routines is used to ensure that each flashes a different LED, and that
@@ -79,7 +79,7 @@ activity. */
 #define mainNUM_LEDs	3
 
 /* The I2C co-routine has a higher priority than the flash co-routines.  This
-is not really necessary as when the I2C co-routine is active the other 
+is not really necessary as when the I2C co-routine is active the other
 co-routines are delaying. */
 #define mainI2c_CO_ROUTINE_PRIORITY 1
 
@@ -90,7 +90,7 @@ static volatile unsigned portBASE_TYPE uxState = mainI2C_IDLE;
 /* The delay period derived from the A2D value. */
 static volatile portBASE_TYPE uxDelay = 250;
 
-/* The queue used to communicate between the I2C interrupt and the I2C 
+/* The queue used to communicate between the I2C interrupt and the I2C
 co-routine. */
 static QueueHandle_t xADCQueue;
 
@@ -130,10 +130,10 @@ unsigned portBASE_TYPE uxCoRoutine;
 	/* Create the flash co-routines. */
 	for( uxCoRoutine = 0; uxCoRoutine < mainNUM_LEDs; uxCoRoutine++ )
 	{
-		xCoRoutineCreate( vFlashCoRoutine, tskIDLE_PRIORITY, uxCoRoutine );        
+		xCoRoutineCreate( vFlashCoRoutine, tskIDLE_PRIORITY, uxCoRoutine );
 	}
 
-	/* Start the scheduler.  From this point on the co-routines should 
+	/* Start the scheduler.  From this point on the co-routines should
 	execute. */
 	vTaskStartScheduler();
 
@@ -156,7 +156,7 @@ static void prvSetupHardware( void )
 
 	/* Initialize the I2C master. */
 	I2CMasterInit( I2C_MASTER_BASE, pdFALSE );
-	
+
 	/* Enable the I2C master interrupt. */
 	I2CMasterIntEnable( I2C_MASTER_BASE );
     IntEnable( INT_I2C );
@@ -177,13 +177,13 @@ static portBASE_TYPE xResult = 0, xMilliSecs, xLED;
 	{
 		/* Start the I2C off to read the ADC. */
 		uxState = mainI2C_READ_1;
-		I2CMasterSlaveAddrSet( I2C_MASTER_BASE, mainI2CAddress, pdTRUE );		
+		I2CMasterSlaveAddrSet( I2C_MASTER_BASE, mainI2CAddress, pdTRUE );
 		I2CMasterControl( I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_RECEIVE_START );
 
 		/* Wait to receive the conversion result. */
 		crQUEUE_RECEIVE( xHandle, xADCQueue, &xADCResult, portMAX_DELAY, &xResult );
 
-		/* Scale the result to give a useful range of values for a visual 
+		/* Scale the result to give a useful range of values for a visual
 		demo. */
 		xADCResult >>= 2;
 		xMilliSecs = xADCResult / portTICK_PERIOD_MS;
@@ -198,7 +198,7 @@ static portBASE_TYPE xResult = 0, xMilliSecs, xLED;
 			crQUEUE_SEND( xHandle, xDelayQueue, &xLED, 0, &xResult );
 		}
 
-		/* Wait for the full delay time then start again.  This delay is long 
+		/* Wait for the full delay time then start again.  This delay is long
 		enough to ensure the flash co-routines have done their thing and gone
 		back to sleep. */
 		crDELAY( xHandle, xMilliSecs );
@@ -245,24 +245,24 @@ static TickType_t xReading;
 	switch (uxState)
 	{
 		case mainI2C_IDLE:		break;
-	
+
 		case mainI2C_READ_1:	/* Read ADC result high byte. */
 								xReading = I2CMasterDataGet( I2C_MASTER_BASE );
 								xReading <<= 8;
-		
+
 								/* Continue the burst read. */
 								I2CMasterControl( I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_RECEIVE_CONT );
 								uxState = mainI2C_READ_2;
 								break;
-	
+
 		case mainI2C_READ_2:	/* Read ADC result low byte. */
-								xReading |= I2CMasterDataGet( I2C_MASTER_BASE );								
-			
+								xReading |= I2CMasterDataGet( I2C_MASTER_BASE );
+
 								/* Finish the burst read. */
 								I2CMasterControl( I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_RECEIVE_FINISH );
 								uxState = mainI2C_READ_DONE;
 								break;
-			
+
 		case mainI2C_READ_DONE:	/* Complete. */
 								I2CMasterDataGet( I2C_MASTER_BASE );
 								uxState = mainI2C_IDLE;

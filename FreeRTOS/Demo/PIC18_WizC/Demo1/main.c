@@ -31,11 +31,11 @@ Changes from V3.0.1
 */
 
 /*
- * Instead of the normal single demo application, the PIC18F demo is split 
- * into several smaller programs of which this is the first.  This enables the 
+ * Instead of the normal single demo application, the PIC18F demo is split
+ * into several smaller programs of which this is the first.  This enables the
  * demo's to be executed on the RAM limited PIC-devices.
  *
- * The Demo1 project is configured for a PIC18F4620 device.  Main.c starts 9 
+ * The Demo1 project is configured for a PIC18F4620 device.  Main.c starts 9
  * tasks (including the idle task).
 
  * This first demo is included to do a quick check on the FreeRTOS
@@ -52,7 +52,7 @@ Changes from V3.0.1
  * When testing on a real chip, changing the value to eg. 500 milliseconds
  * would be appropiate.
  */
- 
+
 /* Scheduler include files. */
 #include <FreeRTOS.h>
 #include <task.h>
@@ -151,7 +151,7 @@ void main( void )
 	 * Start the scheduler.
 	 */
 	vTaskStartScheduler( );
-	
+
 	while(1)	/* This point should never be reached. */
 	{
 	}
@@ -164,7 +164,7 @@ static portTASK_FUNCTION(vBlink, pvParameters)
 	unsigned char	*Tris		= ((SBLINK *)pvParameters)->tris;
 	unsigned char	Pin			= ((SBLINK *)pvParameters)->pin;
 	TickType_t	Interval	= ((SBLINK *)pvParameters)->interval;
-	
+
 	TickType_t	xLastWakeTime;
 
 	/*
@@ -172,7 +172,7 @@ static portTASK_FUNCTION(vBlink, pvParameters)
 	 */
 	*Tris &= ~(1<<Pin);	// Set the pin that is used by this task to ouput
 	*Port &= ~(1<<Pin);	// Drive the pin low
-	
+
 	/*
 	 * Initialise the xLastWakeTime variable with the current time.
 	 */

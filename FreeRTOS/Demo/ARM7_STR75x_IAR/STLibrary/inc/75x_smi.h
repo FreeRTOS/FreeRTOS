@@ -81,15 +81,15 @@ typedef struct
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void SMI_DeInit(void); 
-void SMI_Init(SMI_InitTypeDef* SMI_InitStruct); 
+void SMI_DeInit(void);
+void SMI_Init(SMI_InitTypeDef* SMI_InitStruct);
 void SMI_StructInit(SMI_InitTypeDef* SMI_InitStruct);
 void SMI_ModeConfig(u32 SMI_Mode);
-void SMI_TxRxLengthConfig(u32 SMI_TxLength, u32 SMI_RxLength); 
-void SMI_BankCmd(u32 SMI_Bank, FunctionalState NewState); 
-void SMI_ITConfig(u32 SMI_IT, FunctionalState NewState); 
-void SMI_SelectBank(u32 SMI_Bank); 
-void SMI_SendWENCmd(void); 
+void SMI_TxRxLengthConfig(u32 SMI_TxLength, u32 SMI_RxLength);
+void SMI_BankCmd(u32 SMI_Bank, FunctionalState NewState);
+void SMI_ITConfig(u32 SMI_IT, FunctionalState NewState);
+void SMI_SelectBank(u32 SMI_Bank);
+void SMI_SendWENCmd(void);
 void SMI_SendRSRCmd(void);
 void SMI_SendCmd(u32 Command);
 void SMI_FastReadConfig(u32 SMI_FastRead);

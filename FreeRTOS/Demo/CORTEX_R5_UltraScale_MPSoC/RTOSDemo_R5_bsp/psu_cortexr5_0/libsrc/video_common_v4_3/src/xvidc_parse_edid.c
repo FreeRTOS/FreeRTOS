@@ -112,10 +112,10 @@ xvidc_disp_edid1(const struct edid * const edid,
     xvidc_edid_monitor_descriptor_string monitor_model_name = {0};
     bool has_ascii_string = false;
     char manufacturer[4] = {0};
-#if XVIDC_EDID_VERBOSITY > 1	
+#if XVIDC_EDID_VERBOSITY > 1
     XV_VidC_DoubleRep min_doubleval;
     XV_VidC_DoubleRep max_doubleval;
-#endif	
+#endif
 
     u8 i;
 #if XVIDC_EDID_VERBOSITY > 0
@@ -205,7 +205,7 @@ xvidc_disp_edid1(const struct edid * const edid,
 #endif
         xil_printf("  EDID revision............ %u.%u\r\n",
                edid->version, edid->revision);
-#if XVIDC_EDID_VERBOSITY > 1			   
+#if XVIDC_EDID_VERBOSITY > 1
         xil_printf("  Input signal type........ %s\r\n",
           edid->video_input_definition.digital.digital ? "Digital" : "Analog");
 
@@ -215,7 +215,7 @@ xvidc_disp_edid1(const struct edid * const edid,
         } else {
             /* Missing Piece: To print analog flags */
         }
-#endif		
+#endif
 #if defined(DISPLAY_UNKNOWN)
         xil_printf("  Color bit depth.......... %s\r\n", NULL);
 #endif
@@ -248,23 +248,23 @@ xvidc_disp_edid1(const struct edid * const edid,
 #endif
         if (has_ascii_string) {
 			if (VerboseEn) {
-#if XVIDC_EDID_VERBOSITY > 1			
+#if XVIDC_EDID_VERBOSITY > 1
 				xil_printf("General purpose ASCII string\r\n");
 #endif
 			}
-			
+
             for (i = 0; i < ARRAY_SIZE(edid->detailed_timings); i++) {
                 if (!xvidc_edid_detailed_timing_is_monitor_descriptor(edid, i))
                     continue;
             }
-			
-			if (VerboseEn) {			
-#if XVIDC_EDID_VERBOSITY > 1			
+
+			if (VerboseEn) {
+#if XVIDC_EDID_VERBOSITY > 1
 				xil_printf("\r\n");
 #endif
 			}
         }
-#if XVIDC_EDID_VERBOSITY > 0	
+#if XVIDC_EDID_VERBOSITY > 0
     if (VerboseEn) {
         xil_printf("Color characteristics\r\n");
 
@@ -358,7 +358,7 @@ xvidc_disp_edid1(const struct edid * const edid,
 #if XVIDC_EDID_VERBOSITY > 0
         xil_printf("  Preferred timing......... %s\r\n",
                edid->feature_support.preferred_timing_mode ? "Yes" : "No");
-#endif			   
+#endif
         for (i = 0; i < ARRAY_SIZE(edid->detailed_timings); i++) {
             if (xvidc_edid_detailed_timing_is_monitor_descriptor(edid, i))
                 continue;
@@ -366,7 +366,7 @@ xvidc_disp_edid1(const struct edid * const edid,
             timing_params = XV_VidC_timing(&edid->detailed_timings[i].timing);
             EdidCtrlParam->PreferedTiming[i] =
             		XV_VidC_timing(&edid->detailed_timings[i].timing);
-#if XVIDC_EDID_VERBOSITY > 0					
+#if XVIDC_EDID_VERBOSITY > 0
 			if (edid->feature_support.preferred_timing_mode) {
 				xil_printf("  Native/preferred timing.. %ux%u%c at %uHz"
 											" (%u:%u)\r\n",
@@ -393,12 +393,12 @@ xvidc_disp_edid1(const struct edid * const edid,
 							   (timing_params.vtotal),
 							   timing_params.hsync_polarity ? '+' : '-',
 							   timing_params.vsync_polarity ? '+' : '-');
-			} else {			
+			} else {
 				xil_printf("  Native/preferred timing.. n/a\r\n");
 			}
-#endif			
+#endif
         }
-#if XVIDC_EDID_VERBOSITY > 0		
+#if XVIDC_EDID_VERBOSITY > 0
         xil_printf("\r\n");
 #endif
 #if XVIDC_EDID_VERBOSITY > 1
@@ -601,10 +601,10 @@ xvidc_disp_cea861_extended_data(
                   const struct xvidc_cea861_extended_data_block * const edb,
                   XV_VidC_EdidCntrlParam *EdidCtrlParam,
                   XV_VidC_Verbose VerboseEn) {
-					  
+
 	/* During Verbosity 0, VerboseEn won't be used */
 	/* To avoid compilation warnings */
-	VerboseEn = VerboseEn;	
+	VerboseEn = VerboseEn;
 
 #if XVIDC_EDID_VERBOSITY > 0
     if (VerboseEn) {
@@ -791,10 +791,10 @@ xvidc_disp_cea861_extended_data(
         default :
 #if XVIDC_EDID_VERBOSITY > 0
             if (VerboseEn) {
-#if XVIDC_EDID_VERBOSITY > 1				
+#if XVIDC_EDID_VERBOSITY > 1
                 xil_printf("  Not Supported: Ext Tag: %03x\r\n",
                                          edb->xvidc_cea861_extended_tag_codes);
-#endif										 
+#endif
                 xil_printf("\r\n");
             }
 #endif
@@ -855,11 +855,11 @@ xvidc_disp_cea861_vendor_data(
                   const struct xvidc_cea861_vendor_specific_data_block * vsdb,
                   XV_VidC_EdidCntrlParam *EdidCtrlParam,
                   XV_VidC_Verbose VerboseEn) {
-					  
+
 	/* During Verbosity 0, VerboseEn won't be used */
 	/* To avoid compilation warnings */
-	VerboseEn = VerboseEn;						  
-					  
+	VerboseEn = VerboseEn;
+
     const u8 oui[] = { vsdb->ieee_registration[2],
                             vsdb->ieee_registration[1],
                             vsdb->ieee_registration[0] };
@@ -888,10 +888,10 @@ xvidc_disp_cea861_vendor_data(
         if (hdmi->header.length >= HDMI_VSDB_EXTENSION_FLAGS_OFFSET) {
 #if XVIDC_EDID_VERBOSITY > 0
             if (VerboseEn) {
-#if XVIDC_EDID_VERBOSITY > 1			
+#if XVIDC_EDID_VERBOSITY > 1
                 xil_printf("  Supports AI (ACP, ISRC).. %s\r\n",
                        hdmi->audio_info_frame ? "Yes" : "No");
-#endif					   
+#endif
                 xil_printf("  Supports 48bpp........... %s\r\n",
                        hdmi->colour_depth_48_bit ? "Yes" : "No");
                 xil_printf("  Supports 36bpp........... %s\r\n",
@@ -900,10 +900,10 @@ xvidc_disp_cea861_vendor_data(
                        hdmi->colour_depth_30_bit ? "Yes" : "No");
                 xil_printf("  Supp. YUV444 Deep Color.. %s\r\n",
                        hdmi->yuv_444_supported ? "Yes" : "No");
-#if XVIDC_EDID_VERBOSITY > 1					   
+#if XVIDC_EDID_VERBOSITY > 1
                 xil_printf("  Supports dual-link DVI... %s\r\n",
                        hdmi->dvi_dual_link ? "Yes" : "No");
-#endif					   
+#endif
             }
 #endif
             EdidCtrlParam->Is30bppSupp = hdmi->colour_depth_30_bit;
@@ -984,14 +984,14 @@ xvidc_disp_cea861_vendor_data(
             if (hdmi->header.length >= HDMI_VSDB_EXTENSION_FLAGS_OFFSET) {
 #if XVIDC_EDID_VERBOSITY > 0
                 if (VerboseEn) {
-#if XVIDC_EDID_VERBOSITY > 1					
+#if XVIDC_EDID_VERBOSITY > 1
                     xil_printf("  RRC Capable Support...... %s\r\n",
                             hdmi->rr_capable ? "Yes" : "No");
                     xil_printf("  SCDC Present............. %s\r\n",
                             hdmi->scdc_present ? "Yes" : "No");
                     xil_printf("  HDMI1.4 Scramble Support. %s\r\n",
                             hdmi->lte_340mcsc_scramble ? "Yes" : "No");
-#endif							
+#endif
                     xil_printf("  YUV 420 Deep.C. Support..\r\n");
                     xil_printf("    Supports 48bpp......... %s\r\n",
                            hdmi->dc_48bit_yuv420 ? "Yes" : "No");

@@ -4,10 +4,10 @@
 #warning "************ PLATFORM CONFIG ************"
 
 /* this is used to check the build platform */
-#if (PLATFORM == NXP_VALIDATION_BOARD) 
-	#warning "*** Building for NXP VALIDATION BOARD ***"	
+#if (PLATFORM == NXP_VALIDATION_BOARD)
+	#warning "*** Building for NXP VALIDATION BOARD ***"
 #elif (PLATFORM == HITEX_A2_BOARD)
-	#warning "Building for HITEX LPC4350EVA-2 platform"	
+	#warning "Building for HITEX LPC4350EVA-2 platform"
 #else
 	#error "Platform not supported, check platform_config.h"
 #endif
@@ -52,25 +52,25 @@
 		#warning "*** M4 mailbox parameter: YES ***"
 	#elif (USE_MAILBOX_PARAMETER == NO)
 		#warning "*** M4 mailbox parameter: NO ***"
-	#else 
+	#else
 		#error "*** Specify if M4 mailbox parameter is required (YES/NO) ***"
 	#endif
-	
+
 	#if (USE_MAILBOX_CALLBACK == YES)
 		#warning "*** M4 mailbox callback: YES ***"
 	#elif (USE_MAILBOX_CALLBACK == NO)
 		#warning "*** M4 mailbox callback: NO ***"
-	#else 
+	#else
 		#error "*** Specify if M4 mailbox callback is required (YES/NO) ***"
 	#endif
 
 #elif (USE_M4_MAILBOX == NO)
 	#warning "*** M4 mailbox: NO ***"
-#else 
+#else
 	#error "*** Specify if M4 mailbox is required (YES/NO) ***"
 #endif
 
-#if (INITIALIZE_M0_IMAGE == YES) 
+#if (INITIALIZE_M0_IMAGE == YES)
 	#warning "*** M4 should download the M0 image: YES ***"
 #elif (INITIALIZE_M0_IMAGE == NO)
 	#warning "*** M4 should download the M0 image: NO ***"
@@ -96,35 +96,35 @@
 #elif (USE_EXT_DYNAMIC_MEM == NO)
 	#warning "*** Building for external dynamic memory support: NO ***"
 #endif
-	
+
 #endif	/* CORE_M4 */
 
 /* configuration checks for M0 */
 #ifdef CORE_M0
 
 #if (USE_M0_MAILBOX == YES)
-	
+
 	#warning "*** M0 mailbox: YES ***"
 
 	#if (USE_MAILBOX_PARAMETER == YES)
 		#warning "*** M0 mailbox parameter: YES ***"
 	#elif (USE_MAILBOX_PARAMETER == NO)
 		#warning "*** M0 mailbox parameter: NO ***"
-	#else 
+	#else
 		#error "*** Specify if M0 mailbox parameter is required (YES/NO) ***"
 	#endif
-	
+
 	#if (USE_MAILBOX_CALLBACK == YES)
 		#warning "*** M0 mailbox callback: YES ***"
 	#elif (USE_MAILBOX_CALLBACK == NO)
 		#warning "*** M0 mailbox callback: NO ***"
-	#else 
+	#else
 		#error "*** Specify if M0 mailbox callback is required (YES/NO) ***"
 	#endif
 
 #elif (USE_M0_MAILBOX == NO)
 	#warning "*** M0 mailbox: NO ***"
-#else 
+#else
 	#error "*** Specify if M0 mailbox is required (YES/NO) ***"
 #endif
 

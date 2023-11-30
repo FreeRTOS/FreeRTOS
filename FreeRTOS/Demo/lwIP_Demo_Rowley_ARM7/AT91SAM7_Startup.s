@@ -4,8 +4,8 @@
   Copyright (c) 2004 Rowley Associates Limited.
 
   This file may be distributed under the terms of the License Agreement
-  provided with this software. 
- 
+  provided with this software.
+
   THIS FILE IS PROVIDED AS IS WITH NO WARRANTY OF ANY KIND, INCLUDING THE
   WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  *****************************************************************************/
@@ -59,7 +59,7 @@
   .section .vectors, "ax"
   .code 32
   .align 0
-  
+
 /*****************************************************************************
   Exception Vectors
  *****************************************************************************/
@@ -111,7 +111,7 @@ reset_handler:
   /* Enable the main oscillator */
   ldr r0, =(6 << CKGR_MOR_OSCOUNT_BIT_OFFSET) | CKGR_MOR_MOSCEN
   str r0, [r10, #CKGR_MOR_OFFSET]
-  
+
 1:/* Wait for main oscillator to stabilize */
   ldr r0, [r10, #PMC_SR_OFFSET]
   tst r0, #PMC_SR_MOSCS
@@ -120,7 +120,7 @@ reset_handler:
   /* Set up the PLL */
   ldr r0, =(5 << CKGR_PLLR_DIV_BIT_OFFSET) | (28 << CKGR_PLLR_PLLCOUNT_BIT_OFFSET) | (25 << CKGR_PLLR_MUL_BIT_OFFSET)
   str r0, [r10, #CKGR_PLLR_OFFSET]
-  
+
 1:/* Wait for PLL to lock */
   ldr r0, [r10, #PMC_SR_OFFSET]
   tst r0, #PMC_SR_LOCK
@@ -129,7 +129,7 @@ reset_handler:
   /* Select PLL as clock source */
   ldr r0, =(PMC_MCKR_CSS_PLL_CLOCK | PMC_MCKR_PRES_CLK_2)
   str r0, [r10, #PMC_MCKR_OFFSET]
-  
+
 #ifdef __FLASH_BUILD
   /* Copy exception vectors into Internal SRAM */
   mov r8, #0x00200000
@@ -154,19 +154,19 @@ reset_handler:
  ******************************************************************************/
 undef_handler:
   b undef_handler
-  
+
 swi_handler:
   b swi_handler
-  
+
 pabort_handler:
   b pabort_handler
-  
+
 dabort_handler:
   b dabort_handler
-  
+
 irq_handler:
   b irq_handler
-  
+
 fiq_handler:
   b fiq_handler
 

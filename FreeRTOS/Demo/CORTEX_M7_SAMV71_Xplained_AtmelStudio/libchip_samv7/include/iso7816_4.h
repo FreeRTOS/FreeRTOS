@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -69,10 +69,10 @@
 /*------------------------------------------------------------------------------
  *         Exported functions
  *----------------------------------------------------------------------------*/
- 
-extern void ISO7816_Init( 
-	Usart *pUsart, 
-	uint32_t usartId , 
+
+extern void ISO7816_Init(
+	Usart *pUsart,
+	uint32_t usartId ,
 	const Pin pPinIso7816RstMC );
 
 extern void ISO7816_IccPowerOff( void );
@@ -90,12 +90,12 @@ extern void ISO7816_StopClock( void );
 
 extern void ISO7816_toAPDU( void );
 
-extern void ISO7816_Datablock_ATR( 
-	uint8_t* pAtr, 
+extern void ISO7816_Datablock_ATR(
+	uint8_t* pAtr,
 	uint8_t* pLength );
 
-extern void ISO7816_SetDataRateandClockFrequency( 
-	uint32_t dwClockFrequency, 
+extern void ISO7816_SetDataRateandClockFrequency(
+	uint32_t dwClockFrequency,
 	uint32_t dwDataRate );
 
 extern uint8_t ISO7816_StatusReset( void );

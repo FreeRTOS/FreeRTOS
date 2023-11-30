@@ -36,11 +36,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #define NRF_H
 
 /* MDK version */
-#define MDK_MAJOR_VERSION   8 
-#define MDK_MINOR_VERSION   44 
-#define MDK_MICRO_VERSION   1 
+#define MDK_MAJOR_VERSION   8
+#define MDK_MINOR_VERSION   44
+#define MDK_MICRO_VERSION   1
 
-   
+
 /* Define coprocessor domains */
 #if defined (NRF5340_XXAA_APPLICATION) || defined (NRF5340_XXAA_NETWORK)
     #ifndef NRF5340_XXAA
@@ -114,7 +114,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 /* Define NRF91_SERIES for common use in nRF91 series devices. */
 #if defined (NRF9160_XXAA)
-    #ifndef NRF91_SERIES    
+    #ifndef NRF91_SERIES
         #define NRF91_SERIES
     #endif
 #endif

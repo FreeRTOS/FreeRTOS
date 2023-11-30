@@ -1,4 +1,4 @@
-MEMORY 
+MEMORY
 {
 	flash	: ORIGIN = 0x00100000, LENGTH = 256K
 	ram		: ORIGIN = 0x00200000, LENGTH = 64K
@@ -6,12 +6,12 @@ MEMORY
 
 __stack_end__ = 0x00200000 + 64K - 4;
 
-SECTIONS 
+SECTIONS
 {
 	. = 0;
 	startup : { *(.startup)} >flash
 
-	prog : 
+	prog :
 	{
 		*(.text)
 		*(.rodata)
@@ -22,7 +22,7 @@ SECTIONS
 
 	__end_of_text__ = .;
 
-	.data : 
+	.data :
 	{
 		__data_beg__ = .;
 		__data_beg_src__ = __end_of_text__;
@@ -30,7 +30,7 @@ SECTIONS
 		__data_end__ = .;
 	} >ram AT>flash
 
-	.bss : 
+	.bss :
 	{
 		__bss_beg__ = .;
 		*(.bss)

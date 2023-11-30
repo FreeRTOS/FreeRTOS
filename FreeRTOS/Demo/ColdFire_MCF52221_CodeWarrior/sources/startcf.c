@@ -104,7 +104,7 @@ static void __copy_rom_sections_to_ram(void)
 	 */
 	for (info = _S_romp; info->Source != 0L || info->Target != 0L || info->Size != 0; ++info)
     __copy_rom_section( (char *)info->Target,(char *)info->Source, info->Size);
-							
+
 }
 
 /*
@@ -188,18 +188,18 @@ asm void _startup(void)
 {
 	/* disable interrupts */
     move.w        #0x2700,sr
-    
-	/* Pre-init SP, in case memory for stack is not valid it should be setup using 
-	   MEMORY_INIT before __initialize_hardware is called 
+
+	/* Pre-init SP, in case memory for stack is not valid it should be setup using
+	   MEMORY_INIT before __initialize_hardware is called
 	*/
-	lea __SP_AFTER_RESET,a7; 
+	lea __SP_AFTER_RESET,a7;
 
     /* initialize memory */
     MEMORY_INIT
 
 	/* initialize any hardware specific issues */
-    jsr           __initialize_hardware   
-  
+    jsr           __initialize_hardware
+
 	/* setup the stack pointer */
     lea           _SP_INIT,a7
 
@@ -259,7 +259,7 @@ __skip_sbss__:
 
     lea           _S_romp, a0
     move.l        a0, d0
-    beq           __skip_rom_copy__            
+    beq           __skip_rom_copy__
     jsr           __copy_rom_sections_to_ram
 
 #else
@@ -271,18 +271,18 @@ __skip_sbss__:
 
     lea           __DATA_RAM, a0
     lea           __DATA_ROM, a1
-    
+
     cmpa          a0,a1
     beq           __skip_rom_copy__
-              
+
     move.l        #__DATA_END, d0
     sub.l         a0, d0
-                  
+
     jsr           __copy_rom_section
 
 #endif
 __skip_rom_copy__:
-	
+
 	/* call C++ static initializers (__sinit__(void)) */
 	jsr			  __call_static_initializers
 
@@ -293,9 +293,9 @@ __skip_rom_copy__:
 	clr.l		  -(sp)				/* clearing a long is ok since it's caller cleanup */
 	jsr			  main
 	addq.l		#8, sp
-	
+
 	unlk		  a6
-	
+
 	/* now call exit(0) to terminate the application */
 	clr.l		  -(sp)
 	jsr			  exit

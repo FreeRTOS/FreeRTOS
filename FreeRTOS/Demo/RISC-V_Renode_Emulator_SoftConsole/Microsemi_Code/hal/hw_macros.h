@@ -1,18 +1,18 @@
 /*******************************************************************************
  * (c) Copyright 2007-2018 Microsemi SoC Products Group. All rights reserved.
- * 
+ *
  *  Hardware registers access macros.
- * 
- *  THE MACROS DEFINED IN THIS FILE ARE DEPRECATED. DO NOT USED FOR NEW 
+ *
+ *  THE MACROS DEFINED IN THIS FILE ARE DEPRECATED. DO NOT USED FOR NEW
  *  DEVELOPMENT.
  *
  * These macros are used to access peripheral's registers. They allow access to
  * 8, 16 and 32 bit wide registers. All accesses to peripheral registers should
- * be done through these macros in order to ease porting across different 
+ * be done through these macros in order to ease porting across different
  * processors/bus architectures.
- * 
+ *
  * Some of these macros also allow to access a specific register field.
- * 
+ *
  * SVN $Revision: 9661 $
  * SVN $Date: 2018-01-15 16:13:33 +0530 (Mon, 15 Jan 2018) $
  */
@@ -72,7 +72,7 @@
 #define HW_get_uint8_reg(BASE_ADDR, REG_OFFSET) (*((uint8_t volatile *)(BASE_ADDR + REG_OFFSET##_REG_OFFSET)))
 
 #define HW_set_uint8_reg(BASE_ADDR, REG_OFFSET, VALUE) (*((uint8_t volatile *)(BASE_ADDR + REG_OFFSET##_REG_OFFSET)) = (VALUE))
- 
+
 #define HW_set_uint8_reg_field(BASE_ADDR, FIELD, VALUE) \
             (*((uint8_t volatile *)(BASE_ADDR + FIELD##_OFFSET)) =  \
                 ( \
@@ -92,6 +92,6 @@
 #define HW_get_uint8(BASE_ADDR) (*((uint8_t volatile *)(BASE_ADDR)))
 
 #define HW_set_uint8(BASE_ADDR, VALUE) (*((uint8_t volatile *)(BASE_ADDR)) = (VALUE))
- 
+
 #endif  /* __HW_REGISTER_MACROS_H */
 

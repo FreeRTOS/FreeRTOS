@@ -41,7 +41,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ********************************************************************/
- 
+
 #include <xc.h>
 #ifdef __LIBBUILD__
    .file 1 "general-exception.S"
@@ -89,7 +89,7 @@ _general_exception_context:
 
    la      k0,_general_exception_handler
    nop
-   
+
    # Pass Cause and Status to the handler function
    mfc0 a0, _CP0_CAUSE
    mfc0 a1, _CP0_STATUS

@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -216,7 +216,7 @@ uint8_t TWID_Read(
 
         /* Start read*/
         TWI_StartRead(pTwi, address, iaddress, isize);
-        if (num != 1) 
+        if (num != 1)
         {
                 status = TWI_GetStatus(pTwi);
 

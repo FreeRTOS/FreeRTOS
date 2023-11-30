@@ -80,7 +80,7 @@ typedef struct
   vu16 DR9;
   u16  RESERVED9;
   vu16 DR10;
-  u16  RESERVED10; 
+  u16  RESERVED10;
   vu16 RTCCR;
   u16  RESERVED11;
   vu16 CR;
@@ -126,7 +126,7 @@ typedef struct
   vu16 DR29;
   u16  RESERVED32;
   vu16 DR30;
-  u16  RESERVED33; 
+  u16  RESERVED33;
   vu16 DR31;
   u16  RESERVED34;
   vu16 DR32;
@@ -150,7 +150,7 @@ typedef struct
   vu16 DR41;
   u16  RESERVED44;
   vu16 DR42;
-  u16  RESERVED45;    
+  u16  RESERVED45;
 } BKP_TypeDef;
 
 /*------------------------ Controller Area Network ---------------------------*/
@@ -235,7 +235,7 @@ typedef struct
 typedef struct
 {
   vu32 IDCODE;
-  vu32 CR;	
+  vu32 CR;
 }DBGMCU_TypeDef;
 
 /*------------------------ DMA Controller ------------------------------------*/
@@ -293,8 +293,8 @@ typedef struct
 /*------------------------ Flexible Static Memory Controller -----------------*/
 typedef struct
 {
-  vu32 BTCR[8];   
-} FSMC_Bank1_TypeDef; 
+  vu32 BTCR[8];
+} FSMC_Bank1_TypeDef;
 
 typedef struct
 {
@@ -307,9 +307,9 @@ typedef struct
   vu32 SR2;
   vu32 PMEM2;
   vu32 PATT2;
-  u32  RESERVED0;   
-  vu32 ECCR2; 
-} FSMC_Bank2_TypeDef;  
+  u32  RESERVED0;
+  vu32 ECCR2;
+} FSMC_Bank2_TypeDef;
 
 typedef struct
 {
@@ -317,9 +317,9 @@ typedef struct
   vu32 SR3;
   vu32 PMEM3;
   vu32 PATT3;
-  u32  RESERVED0;   
-  vu32 ECCR3; 
-} FSMC_Bank3_TypeDef; 
+  u32  RESERVED0;
+  vu32 ECCR3;
+} FSMC_Bank3_TypeDef;
 
 typedef struct
 {
@@ -327,8 +327,8 @@ typedef struct
   vu32 SR4;
   vu32 PMEM4;
   vu32 PATT4;
-  vu32 PIO4; 
-} FSMC_Bank4_TypeDef; 
+  vu32 PIO4;
+} FSMC_Bank4_TypeDef;
 
 /*------------------------ General Purpose and Alternate Function IO ---------*/
 typedef struct
@@ -507,7 +507,7 @@ typedef struct
   vu16 I2SCFGR;
   u16  RESERVED7;
   vu16 I2SPR;
-  u16  RESERVED8;  
+  u16  RESERVED8;
 } SPI_TypeDef;
 
 /*------------------------ SystemTick ----------------------------------------*/
@@ -911,7 +911,7 @@ typedef struct
 
 #ifdef _FLASH
   #define FLASH               ((FLASH_TypeDef *) FLASH_R_BASE)
-  #define OB                  ((OB_TypeDef *) OB_BASE) 
+  #define OB                  ((OB_TypeDef *) OB_BASE)
 #endif /*_FLASH */
 
 #ifdef _FSMC
@@ -932,7 +932,7 @@ typedef struct
 
 #ifdef _NVIC
   #define NVIC                ((NVIC_TypeDef *) NVIC_BASE)
-  #define SCB                 ((SCB_TypeDef *) SCB_BASE)  
+  #define SCB                 ((SCB_TypeDef *) SCB_BASE)
 #endif /*_NVIC */
 
 /*------------------------ Debug Mode ----------------------------------------*/
@@ -1152,7 +1152,7 @@ typedef struct
 
 #ifdef _FLASH
   EXT FLASH_TypeDef            *FLASH;
-  EXT OB_TypeDef               *OB;  
+  EXT OB_TypeDef               *OB;
 #endif /*_FLASH */
 
 #ifdef _FSMC

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -53,7 +53,7 @@
  * This section list the CDC Spec. Release Numbers.
  * - \ref CDCGenericDescriptor_CDC1_10
  */
- 
+
 /** Identify CDC specification version 1.10. */
 #define CDCGenericDescriptor_CDC1_10                            0x0110
 /**     @}*/
@@ -128,7 +128,7 @@
  * - \ref CDCDataInterfaceDescriptor_SUBCLASS
  * - \ref CDCDataInterfaceDescriptor_NOPROTOCOL
  */
- 
+
 /** Interface class code for a data class interface. */
 #define CDCDataInterfaceDescriptor_CLASS        0x0A
 /** Interface subclass code for a data class interface. */
@@ -160,7 +160,7 @@
  * - \ref CDCAbstractControlManagementDescriptor_SENDBREAK
  * - \ref CDCAbstractControlManagementDescriptor_NETWORKCONNECTION
  */
- 
+
 /** Device supports the request combination of SetCommFeature, ClearCommFeature
     and GetCommFeature. */
 #define CDCAbstractControlManagementDescriptor_COMMFEATURE          (1 << 0)

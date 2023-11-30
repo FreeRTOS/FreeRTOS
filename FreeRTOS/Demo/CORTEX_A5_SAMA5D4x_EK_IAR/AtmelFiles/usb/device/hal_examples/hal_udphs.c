@@ -468,7 +468,7 @@ static uint8_t UDPHS_MblWriteFifo(uint8_t bEndpoint)
  */
 static uint8_t UDPHS_MblReadFifo(uint8_t bEndpoint, uint16_t wPacketSize)
 {
-   
+
     return 0;
 }
 */
@@ -730,7 +730,7 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
         else
         {
             TRACE_DEBUG_WP("Stup ");
-            
+
             /* Copy setup */
             UDPHS_ReadRequest(pReq);
             /* Acknowledge setup packet */
@@ -757,7 +757,7 @@ static inline void UDPHS_DmaSingle(uint8_t bEndpoint, Transfer *pXfr, uint32_t d
     pUdp->UDPHS_DMA[bEndpoint].UDPHS_DMASTATUS;
     /* Interrupt enable */
     pUdp->UDPHS_IEN |= (1 << SHIFT_DMA << bEndpoint);
-    
+
     TRACE_DEBUG_WP("Dma[B%d:T%d] ", pXfr->buffered, pXfr->transferred);
     /* DMA Configure */
     pUdp->UDPHS_DMA[bEndpoint].UDPHS_DMACONTROL = 0;
@@ -856,7 +856,7 @@ static void UDPHS_DmaHandler(uint8_t bEndpoint)
     {
         UDPHS_EndOfTransfer(bEndpoint, bRc);
     }
-    
+
 }
 #endif
 /**
@@ -1083,7 +1083,7 @@ static inline uint8_t UDPHS_Read(uint8_t  bEndpoint,
     /* Enable IT */
     pUdp->UDPHS_IEN |= ( UDPHS_IEN_EPT_0 << bEndpoint );
     pHwEp->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_RX_BK_RDY;
-    
+
     return USBD_STATUS_SUCCESS;
 }
 #if 0
@@ -1192,7 +1192,7 @@ void USBD_IrqHandler(void)
         else if (status & UDPHS_INTSTA_UPSTR_RES)
         {
             TRACE_DEBUG_WP("ExtRes ");
-            
+
             /* Acknowledge interrupt */
             pUdp->UDPHS_CLRINT = UDPHS_CLRINT_UPSTR_RES;
         }
@@ -1269,7 +1269,7 @@ void USBD_HAL_ResetEPs(uint32_t bmEPs, uint8_t bStatus, uint8_t bKeepCfg)
             pHwEp->UDPHS_EPTSETSTA = UDPHS_EPTSETSTA_KILL_BANK;
             pHwEp->UDPHS_EPTSETSTA = UDPHS_EPTSETSTA_KILL_BANK;
             #endif
-            
+
             /* Reset transfer information */
             pEndpoint = &(endpoints[ep]);
             /* Reset endpoint state */
@@ -1462,9 +1462,9 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
         pUdp->UDPHS_IEN |= (UDPHS_IEN_EPT_0 << bEndpoint);
     }
 
-    pEpt->UDPHS_EPTCFG =    bSizeEpt 
-                        | ( bEndpointDir << 3) 
-                        | ( bType << 4) 
+    pEpt->UDPHS_EPTCFG =    bSizeEpt
+                        | ( bEndpointDir << 3)
+                        | ( bType << 4)
                         | ((pEndpoint->bank) << 6)
                         | ( bNbTrans << 8)
                         ;
@@ -1483,7 +1483,7 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
 
     if (bType == USBEndpointDescriptor_CONTROL)
     {
-        pEpt->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_RX_BK_RDY 
+        pEpt->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_RX_BK_RDY
                               | UDPHS_EPTCTLENB_RX_SETUP
                               | UDPHS_EPTCTLENB_EPT_ENABL;
     }
@@ -1628,7 +1628,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
 {
     Udphs    *pUdp  = UDPHS;
     UdphsEpt *pHwEp = &pUdp->UDPHS_EPT[bEndpoint];
-   
+
     Endpoint *pEp  = &(endpoints[bEndpoint]);
     Transfer *pXfr = (Transfer*)&(pEp->transfer);
 
@@ -1764,7 +1764,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
         return USBD_STATUS_SUCCESS;
     }
 #endif
-    
+
     /* Enable IT */
     pUdp->UDPHS_IEN |= ( UDPHS_IEN_EPT_0 << bEndpoint );
     pHwEp->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_TX_PK_RDY;

@@ -33,7 +33,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F7xx_HAL_PCD_EX_H
@@ -45,7 +45,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
-   
+
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
@@ -54,7 +54,7 @@
   * @{
   */
 /* Exported types ------------------------------------------------------------*/
-typedef enum  
+typedef enum
 {
   PCD_LPM_L0_ACTIVE = 0x00, /* on */
   PCD_LPM_L1_ACTIVE = 0x01, /* LPM L1 sleep */
@@ -77,15 +77,15 @@ void HAL_PCDEx_LPM_Callback(PCD_HandleTypeDef *hpcd, PCD_LPM_MsgTypeDef msg);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

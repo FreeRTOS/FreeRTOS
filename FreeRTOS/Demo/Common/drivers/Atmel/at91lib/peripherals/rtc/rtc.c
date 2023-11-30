@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -157,7 +157,7 @@ void RTC_GetTime(
 			*pHour += 12;
 		}
 	}
-	
+
 	// Minute
 	if (pMinute) {
 

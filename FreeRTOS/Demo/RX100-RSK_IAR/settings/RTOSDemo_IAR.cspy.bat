@@ -16,9 +16,9 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\bin\rxproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\bin\rxemue20.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\bin\rxbat.dll" --backend -B "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\config\debugger\ior5f51115.ddf" "--endian" "l" "--double" "32" "--core" "RX100" "--int" "32" "-d" "emue20" "--drv_mode" "debugging" "--drv_communication" "USB" 
+"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\bin\rxproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\bin\rxemue20.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\bin\rxbat.dll" --backend -B "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\rx\config\debugger\ior5f51115.ddf" "--endian" "l" "--double" "32" "--core" "RX100" "--int" "32" "-d" "emue20" "--drv_mode" "debugging" "--drv_communication" "USB"
 
 

@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 /*lint ++flb "Enter library region */
 
-/* This file is given to prevent your SW from not compiling with the updates made to nrf52.h and 
+/* This file is given to prevent your SW from not compiling with the updates made to nrf52.h and
  * nrf52_bitfields.h. The macros defined in this file were available previously. Do not use these
  * macros on purpose. Use the ones defined in nrf52.h and nrf52_bitfields.h instead.
  */

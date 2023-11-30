@@ -34,7 +34,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 #define NUM_GPIO_PORTS (MEC14xx_NUM_GPIO_BANKS)
 #define MAX_NUM_GPIO (NUM_GPIO_PORTS * 32)
@@ -52,7 +52,7 @@
 
 
 //
-// Control 
+// Control
 //
 #define GPIO_CTRL_RSVD_MASK     (0xFEFEC000UL)
 //
@@ -75,12 +75,12 @@
 #define GPIO_INTDET_BITPOS      (4)
 #define GPIO_INTDET_BLEN        (4)
 #define GPIO_INTDET_MASK        (0x0FUL << (GPIO_INTDET_BITPOS))
-#define GPIO_INTDET_LVL_LOW     (0x00UL << (GPIO_INTDET_BITPOS)) 
-#define GPIO_INTDET_LVL_HI      (0x01UL << (GPIO_INTDET_BITPOS)) 
-#define GPIO_INTDET_DISABLE     (0x04UL << (GPIO_INTDET_BITPOS)) 
-#define GPIO_INTDET_RISE_EDG    (0x0DUL << (GPIO_INTDET_BITPOS)) 
-#define GPIO_INTDET_FALL_EDG    (0x0EUL << (GPIO_INTDET_BITPOS)) 
-#define GPIO_INTDET_BOTH_EDG    (0x0FUL << (GPIO_INTDET_BITPOS)) 
+#define GPIO_INTDET_LVL_LOW     (0x00UL << (GPIO_INTDET_BITPOS))
+#define GPIO_INTDET_LVL_HI      (0x01UL << (GPIO_INTDET_BITPOS))
+#define GPIO_INTDET_DISABLE     (0x04UL << (GPIO_INTDET_BITPOS))
+#define GPIO_INTDET_RISE_EDG    (0x0DUL << (GPIO_INTDET_BITPOS))
+#define GPIO_INTDET_FALL_EDG    (0x0EUL << (GPIO_INTDET_BITPOS))
+#define GPIO_INTDET_BOTH_EDG    (0x0FUL << (GPIO_INTDET_BITPOS))
 //
 #define GPIO_BUFFTYPE_BITPOS    (8)
 #define GPIO_BUFFTYPE_BLEN      (1)
@@ -106,10 +106,10 @@
 #define GPIO_MUX_BITPOS         (12)
 #define GPIO_MUX_BLEN           (2)
 #define GPIO_MUX_MASK           (0x0FUL << (GPIO_MUX_BITPOS))
-#define GPIO_MUX_GPIO           (0x00UL << (GPIO_MUX_BITPOS)) 
-#define GPIO_MUX_FUNC1          (0x01UL << (GPIO_MUX_BITPOS)) 
-#define GPIO_MUX_FUNC2          (0x02UL << (GPIO_MUX_BITPOS)) 
-#define GPIO_MUX_FUNC3          (0x03UL << (GPIO_MUX_BITPOS)) 
+#define GPIO_MUX_GPIO           (0x00UL << (GPIO_MUX_BITPOS))
+#define GPIO_MUX_FUNC1          (0x01UL << (GPIO_MUX_BITPOS))
+#define GPIO_MUX_FUNC2          (0x02UL << (GPIO_MUX_BITPOS))
+#define GPIO_MUX_FUNC3          (0x03UL << (GPIO_MUX_BITPOS))
 //
 #define GPIO_OUTPUT_BITPOS      (16)
 #define GPIO_OUTPUT_BLEN        (1)
@@ -130,8 +130,8 @@
 
 //
 // Drive Strength
-// For GPIO pins that implement drive strength each pin 
-// has a 32-bit register containing bit fields  for 
+// For GPIO pins that implement drive strength each pin
+// has a 32-bit register containing bit fields  for
 // slew rate and buffer current strength
 //
 #define GPIO_DRV_STR_OFFSET     (0x0500ul)

@@ -59,7 +59,7 @@ void LCDD_On( void)
 		ILI9488_SpiOn();
 	} else {
 		ILI9488_EbiOn();
-	} 
+	}
 }
 
 /**

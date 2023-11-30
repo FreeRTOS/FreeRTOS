@@ -24,7 +24,7 @@
  *
  */
 
-/* Layout of pins connected to GPIO on Xilinx FPGA evaluation board 
+/* Layout of pins connected to GPIO on Xilinx FPGA evaluation board
 */
 
 #include <machine/sfradr.h>
@@ -36,7 +36,7 @@ typedef struct DemoBoardGpioPins
 {
 	/* Leds on board */
 	unsigned leds:8;
-	
+
 	/* 7 segment display */
 	unsigned digit:7;
 

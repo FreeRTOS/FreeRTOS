@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -85,7 +85,7 @@
 #define MPU_ENABLE                      ( 0x1 )
 #define MPU_BGENABLE                    ( 0x1 << 2 )
 
-#define PROTECT_PIO_SUBREGION           ( 0x1 << 4 ) 
+#define PROTECT_PIO_SUBREGION           ( 0x1 << 4 )
 
 #define MPU_REGION_BUFFERABLE               ( 0x01 << MPU_RASR_B_Pos )
 #define MPU_REGION_CACHEABLE                ( 0x01 << MPU_RASR_C_Pos )
@@ -107,7 +107,7 @@
 #define MPU_TEX_WRITE_THROUGH               ( 0x06 << MPU_RASR_TEX_Pos )
 #define MPU_TEX_WRITE_BACK_NOALLOCATE       ( 0x07 << MPU_RASR_TEX_Pos )
 
-/* Default memory map 
+/* Default memory map
 Address range          Memory region          Memory type      Shareability   Cache policy
 0x00000000- 0x1FFFFFFF Code                   Normal           Non-shareablea WTb
 0x20000000- 0x3FFFFFFF SRAM                   Normal           Non-shareablea WBWAb

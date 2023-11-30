@@ -138,7 +138,7 @@ struct pcap_file_header {
 
 /*
  * Macros for the value returned by pcap_datalink_ext().
- * 
+ *
  * If LT_FCS_LENGTH_PRESENT(x) is true, the LT_FCS_LENGTH(x) macro
  * gives the FCS length of packets in the capture.
  */

@@ -64,7 +64,7 @@ void vParTestInitialise( void )
 {
 	/* This is performed from main() as the io bits are shared with other setup
 	functions.  Ensure the outputs are off to start. */
-	ulLEDReg = partstALL_OUTPUTS_OFF;  
+	ulLEDReg = partstALL_OUTPUTS_OFF;
 
 	/* Enable clock to PIO... */
 	AT91C_BASE_PS->PS_PCER = AT91C_PS_PIO;

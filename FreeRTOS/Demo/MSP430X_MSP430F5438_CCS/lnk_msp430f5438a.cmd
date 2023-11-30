@@ -191,7 +191,7 @@ SECTIONS
     .int60   : {} > INT60
     .int61   : {} > INT61
     .int62   : {} > INT62
-    .reset   : {} > RESET              /* MSP430 RESET VECTOR               */ 
+    .reset   : {} > RESET              /* MSP430 RESET VECTOR               */
 }
 
 /****************************************************************************/

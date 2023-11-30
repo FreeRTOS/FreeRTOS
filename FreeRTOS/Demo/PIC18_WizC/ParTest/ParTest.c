@@ -24,7 +24,7 @@
  *
  */
 
-/* 
+/*
 Changes from V3.0.0
 
 Changes from V3.0.1
@@ -66,13 +66,13 @@ void vParTestInitialise( void )
 	/* Enable the driver. */
 	ADCON1		= partstENABLE_GENERAL_IO;
 	bTRE2		= partstBIT_AS_OUTPUT;
-	bRE2		= partstSET_OUTPUT;	
+	bRE2		= partstSET_OUTPUT;
 }
 /*-----------------------------------------------------------*/
 
 void vParTestSetLED( unsigned char ucLED, char cValue )
 {
-	/* We are only using the top nibble, so LED 0 corresponds to bit 4. */	
+	/* We are only using the top nibble, so LED 0 corresponds to bit 4. */
 	vTaskSuspendAll();
 	{
 		switch( ucLED )
@@ -95,7 +95,7 @@ void vParTestSetLED( unsigned char ucLED, char cValue )
 
 void vParTestToggleLED( unsigned char ucLED )
 {
-	/* We are only using the top nibble, so LED 0 corresponds to bit 4. */	
+	/* We are only using the top nibble, so LED 0 corresponds to bit 4. */
 	vTaskSuspendAll();
 	{
 		switch( ucLED )

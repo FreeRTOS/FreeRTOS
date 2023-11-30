@@ -44,7 +44,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f7xx_hal_def.h"  
+#include "stm32f7xx_hal_def.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -55,7 +55,7 @@
   */
 
 /* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/    
+/* Exported constants --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup SAIEx_Exported_Functions SAI Extended Exported Functions
   * @{
@@ -66,11 +66,11 @@
   */
 
 /* Extended features functions ************************************************/
-void SAI_BlockSynchroConfig(SAI_HandleTypeDef *hsai);    
+void SAI_BlockSynchroConfig(SAI_HandleTypeDef *hsai);
 uint32_t SAI_GetInputClock(SAI_HandleTypeDef *hsai);
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
@@ -83,12 +83,12 @@ uint32_t SAI_GetInputClock(SAI_HandleTypeDef *hsai);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
   */
-  
+
 #ifdef __cplusplus
 }
 #endif

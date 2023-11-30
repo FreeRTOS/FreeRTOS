@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  * Interface for Real Time Clock calibration (RTC) .
  *
  */
- 
+
 /** RTC crystal **/
 
 

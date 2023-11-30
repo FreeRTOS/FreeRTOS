@@ -220,7 +220,7 @@ netif_set_ipaddr(struct netif *netif, struct ip_addr *ipaddr)
    *  "gratuitous ARP"; this is an ARP packet sent by a node in order
    *  to spontaneously cause other nodes to update an entry in their
    *  ARP cache. From RFC 3220 "IP Mobility Support for IPv4" section 4.6.
-   */ 
+   */
   etharp_query(netif, ipaddr, NULL);
 #endif
   LWIP_DEBUGF(NETIF_DEBUG | DBG_TRACE | DBG_STATE | 3, ("netif: IP address of interface %c%c set to %"U16_F".%"U16_F".%"U16_F".%"U16_F"\n",
@@ -279,12 +279,12 @@ netif_set_default(struct netif *netif)
 /**
  * Bring an interface up, available for processing
  * traffic.
- * 
+ *
  * @note: Enabling DHCP on a down interface will make it come
  * up once configured.
- * 
+ *
  * @see dhcp_start()
- */ 
+ */
 void netif_set_up(struct netif *netif)
 {
   netif->flags |= NETIF_FLAG_UP;
@@ -295,7 +295,7 @@ void netif_set_up(struct netif *netif)
 
 /**
  * Ask if an interface is up
- */ 
+ */
 u8_t netif_is_up(struct netif *netif)
 {
   return (netif->flags & NETIF_FLAG_UP)?1:0;
@@ -306,9 +306,9 @@ u8_t netif_is_up(struct netif *netif)
  *
  * @note: Enabling DHCP on a down interface will make it come
  * up once configured.
- * 
+ *
  * @see dhcp_start()
- */ 
+ */
 void netif_set_down(struct netif *netif)
 {
   netif->flags &= ~NETIF_FLAG_UP;

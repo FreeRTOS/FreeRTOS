@@ -41,8 +41,8 @@ extern "C"
 /*
  * Component : QSPI Flash Module Data (AHB Slave) - ALT_QSPIDATA
  * QSPI Flash Module Data (AHB Slave)
- * 
- * 
+ *
+ *
  */
 
 #ifdef __cplusplus

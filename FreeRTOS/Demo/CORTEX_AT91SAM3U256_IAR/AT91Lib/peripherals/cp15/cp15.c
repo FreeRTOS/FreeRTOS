@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -51,28 +51,28 @@
 //         Defines
 //-----------------------------------------------------------------------------
 /*
-#define CP15_RR_BIT 14 // RR bit Replacement strategy for ICache and DCache: 
-                       // 0 = Random replacement 
+#define CP15_RR_BIT 14 // RR bit Replacement strategy for ICache and DCache:
+                       // 0 = Random replacement
                        // 1 = Round-robin replacement.
-                      
-#define CP15_V_BIT  13 // V bit Location of exception vectors: 
-                       // 0 = Normal exception vectors selected address range = 0x0000 0000 to 0x0000 001C 
+
+#define CP15_V_BIT  13 // V bit Location of exception vectors:
+                       // 0 = Normal exception vectors selected address range = 0x0000 0000 to 0x0000 001C
                        // 1 = High exception vect selected, address range = 0xFFFF 0000 to 0xFFFF 001C
-*/                       
-#define CP15_I_BIT  12 // I bit ICache enable/disable: 
-                       // 0 = ICache disabled 
+*/
+#define CP15_I_BIT  12 // I bit ICache enable/disable:
+                       // 0 = ICache disabled
                        // 1 = ICache enabled
-/*                       
+/*
 #define CP15_R_BIT   9 // R bit ROM protection
 
 #define CP15_S_BIT   8 // S bit System protection
-                  
-#define CP15_B_BIT   7 // B bit Endianness: 
-                       // 0 = Little-endian operation 
-                       // 1 = Big-endian operation.                  
-*/                     
-#define CP15_C_BIT   2 // C bit DCache enable/disable: 
-                       // 0 = Cache disabled 
+
+#define CP15_B_BIT   7 // B bit Endianness:
+                       // 0 = Little-endian operation
+                       // 1 = Big-endian operation.
+*/
+#define CP15_C_BIT   2 // C bit DCache enable/disable:
+                       // 0 = Cache disabled
                        // 1 = Cache enabled
 /*
 #define CP15_A_BIT   1 // A bit Alignment fault enable/disable:
@@ -80,7 +80,7 @@
                        // 1 = Data address alignment fault checking enabled
 */
 #define CP15_M_BIT   0 // M bit MMU enable/disable: 0 = disabled 1 = enabled.
-                       // 0 = disabled 
+                       // 0 = disabled
                        // 1 = enabled
 
 
@@ -98,7 +98,7 @@ unsigned int CP15_Is_I_CacheEnabled(void)
 
     control = _readControlRegister();
     return ((control & (1 << CP15_I_BIT)) != 0);
-} 
+}
 
 //------------------------------------------------------------------------------
 /// Enable Instruction Cache
@@ -113,7 +113,7 @@ void CP15_Enable_I_Cache(void)
     if ((control & (1 << CP15_I_BIT)) == 0) {
 
         control |= (1 << CP15_I_BIT);
-        _writeControlRegister(control);        
+        _writeControlRegister(control);
         TRACE_INFO("I cache enabled.\n\r");
     }
 #if !defined(OP_BOOTSTRAP_on)
@@ -137,14 +137,14 @@ void CP15_Disable_I_Cache(void)
     if ((control & (1 << CP15_I_BIT)) != 0) {
 
         control &= ~(1 << CP15_I_BIT);
-        _writeControlRegister(control);        
+        _writeControlRegister(control);
         TRACE_INFO("I cache disabled.\n\r");
     }
     else {
 
         TRACE_INFO("I cache is already disabled.\n\r");
     }
-} 
+}
 
 //------------------------------------------------------------------------------
 /// Check MMU
@@ -156,7 +156,7 @@ unsigned int CP15_Is_MMUEnabled(void)
 
     control = _readControlRegister();
     return ((control & (1 << CP15_M_BIT)) != 0);
-} 
+}
 
 //------------------------------------------------------------------------------
 /// Enable MMU
@@ -171,7 +171,7 @@ void CP15_EnableMMU(void)
     if ((control & (1 << CP15_M_BIT)) == 0) {
 
         control |= (1 << CP15_M_BIT);
-        _writeControlRegister(control);        
+        _writeControlRegister(control);
         TRACE_INFO("MMU enabled.\n\r");
     }
     else {
@@ -194,7 +194,7 @@ void CP15_DisableMMU(void)
 
         control &= ~(1 << CP15_M_BIT);
         control &= ~(1 << CP15_C_BIT);
-        _writeControlRegister(control);        
+        _writeControlRegister(control);
         TRACE_INFO("MMU disabled.\n\r");
     }
     else {
@@ -213,7 +213,7 @@ unsigned int CP15_Is_DCacheEnabled(void)
 
     control = _readControlRegister();
     return ((control & ((1 << CP15_C_BIT)||(1 << CP15_M_BIT))) != 0);
-} 
+}
 
 //------------------------------------------------------------------------------
 /// Enable Data Cache
@@ -232,7 +232,7 @@ void CP15_Enable_D_Cache(void)
         if ((control & (1 << CP15_C_BIT)) == 0) {
 
             control |= (1 << CP15_C_BIT);
-            _writeControlRegister(control);        
+            _writeControlRegister(control);
             TRACE_INFO("D cache enabled.\n\r");
         }
         else {
@@ -255,7 +255,7 @@ void CP15_Disable_D_Cache(void)
     if ((control & (1 << CP15_C_BIT)) != 0) {
 
         control &= ~(1 << CP15_C_BIT);
-        _writeControlRegister(control);        
+        _writeControlRegister(control);
         TRACE_INFO("D cache disabled.\n\r");
     }
     else {

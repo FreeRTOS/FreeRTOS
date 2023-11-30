@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -42,7 +42,7 @@
  * -# Configure all the necessary chip selects with \ref SPI_ConfigureNPCS().
  * -# Enable the SPI by calling \ref SPI_Enable().
  * -# Send/receive data using \ref SPI_Write() and \ref SPI_Read(). Note that \ref SPI_Read()
- *    must be called after \ref SPI_Write() to retrieve the last value read. 
+ *    must be called after \ref SPI_Write() to retrieve the last value read.
  * -# Disable the SPI by calling \ref SPI_Disable().
  *
  * For more accurate information, please look at the SPI section of the
@@ -127,7 +127,7 @@ extern void SPI_DisableIt( Spi* spi, uint32_t dwSources )
 extern void SPI_Configure( Spi* spi, uint32_t dwId, uint32_t dwConfiguration )
 {
     PMC_EnablePeripheral( dwId ) ;
-    
+
     spi->SPI_CR = SPI_CR_SPIDIS ;
 
     /* Execute a software reset of the SPI twice */
@@ -154,7 +154,7 @@ extern void SPI_ChipSelect( Spi* spi, uint8_t cS)
  * \param spi  Pointer to an Spi instance.
  * \param configuration  Value of the SPI mode register.
  */
-extern void SPI_SetMode( Spi* spi, 
+extern void SPI_SetMode( Spi* spi,
                          uint32_t dwConfiguration )
 {
     spi->SPI_MR = dwConfiguration ;
@@ -190,7 +190,7 @@ void SPI_ConfigureNPCS( Spi* spi, uint32_t dwNpcs, uint32_t dwConfiguration )
  * \param spi   Pointer to an Spi instance.
  * \param dwNpcs  Chip select to configure (0, 1, 2 or 3).
  * \param bReleaseOnLast CS controlled by last transfer.
- *                       SPI_ReleaseCS() is used to deactive CS. 
+ *                       SPI_ReleaseCS() is used to deactive CS.
  */
 void SPI_ConfigureCSMode( Spi* spi, uint32_t dwNpcs, uint32_t bReleaseOnLast )
 {

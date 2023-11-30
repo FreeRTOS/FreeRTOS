@@ -39,9 +39,9 @@
              To enable SYSCFG APB clock use:
              RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
              Following functions uses SYSCFG registers:
-             (++) SYSCFG_DeInit()  
+             (++) SYSCFG_DeInit()
              (++) SYSCFG_MemoryRemapConfig()
-             (++) SYSCFG_GetBootMode()  
+             (++) SYSCFG_GetBootMode()
              (++) SYSCFG_USBPuCmd()
              (++) SYSCFG_EXTILineConfig()
 @endverbatim
@@ -57,8 +57,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -74,7 +74,7 @@
   * @{
   */
 
-/** @defgroup SYSCFG 
+/** @defgroup SYSCFG
   * @brief SYSCFG driver modules
   * @{
   */
@@ -137,9 +137,9 @@ void SYSCFG_RIDeInit(void)
   * @brief  Changes the mapping of the specified memory.
   * @param  SYSCFG_Memory: selects the memory remapping.
   *   This parameter can be one of the following values:
-  *     @arg SYSCFG_MemoryRemap_Flash: Main Flash memory mapped at 0x00000000  
+  *     @arg SYSCFG_MemoryRemap_Flash: Main Flash memory mapped at 0x00000000
   *     @arg SYSCFG_MemoryRemap_SystemFlash: System Flash memory mapped at 0x00000000
-  *     @arg SYSCFG_MemoryRemap_FSMC: FSMC memory mapped at 0x00000000  
+  *     @arg SYSCFG_MemoryRemap_FSMC: FSMC memory mapped at 0x00000000
   *     @arg SYSCFG_MemoryRemap_SRAM: Embedded SRAM mapped at 0x00000000
   * @retval None
   */
@@ -153,7 +153,7 @@ void SYSCFG_MemoryRemapConfig(uint8_t SYSCFG_MemoryRemap)
 /**
   * @brief  Returns the boot mode as configured by user.
   * @param  None.
-  * @retval The boot mode as configured by user. The returned value can be one 
+  * @retval The boot mode as configured by user. The returned value can be one
   *         of the following values:
   *              - 0x00000000: Boot is configured in Main Flash memory
   *              - 0x00000100: Boot is configured in System Flash memory
@@ -167,7 +167,7 @@ uint32_t SYSCFG_GetBootMode(void)
 
 /**
   * @brief  Control the internal pull-up on USB DP line.
-  * @param  NewState: New state of the internal pull-up on USB DP line. 
+  * @param  NewState: New state of the internal pull-up on USB DP line.
   *   This parameter can be ENABLE: Connect internal pull-up on USB DP line.
   *                      or DISABLE: Disconnect internal pull-up on USB DP line.
   * @retval None
@@ -191,7 +191,7 @@ void SYSCFG_USBPuCmd(FunctionalState NewState)
 
 /**
   * @brief  Selects the GPIO pin used as EXTI Line.
-  * @param  EXTI_PortSourceGPIOx : selects the GPIO port to be used as source 
+  * @param  EXTI_PortSourceGPIOx : selects the GPIO port to be used as source
   *                                for EXTI lines where x can be (A, B, C, D, E, F, G or H).
   * @param  EXTI_PinSourcex: specifies the EXTI line to be configured.
   *         This parameter can be EXTI_PinSourcex where x can be (0..15).
@@ -204,7 +204,7 @@ void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex
   /* Check the parameters */
   assert_param(IS_EXTI_PORT_SOURCE(EXTI_PortSourceGPIOx));
   assert_param(IS_EXTI_PIN_SOURCE(EXTI_PinSourcex));
-  
+
   tmp = ((uint32_t)0x0F) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03));
   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] &= ~tmp;
   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] |= (((uint32_t)EXTI_PortSourceGPIOx) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03)));
@@ -217,7 +217,7 @@ void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex
 /** @defgroup SYSCFG_Group2 RI Initialization and Configuration functions
  *  @brief   RI Initialization and Configuration functions
  *
-@verbatim   
+@verbatim
  ===============================================================================
         ##### RI Initialization and Configuration functions #####
  ===============================================================================
@@ -274,7 +274,7 @@ void SYSCFG_RITIMSelect(uint32_t TIM_Select)
   *       SYSCFG_RITIMSelect(TIM_Select_TIM2)
   *       SYSCFG_RITIMInputCaptureConfig(RI_InputCapture_IC1, RI_InputCaptureRouting_1)
   *       allows routing of Input capture IC1 of TIM2 to PA4.
-  *       For details about correspondence between RI_InputCaptureRouting_x 
+  *       For details about correspondence between RI_InputCaptureRouting_x
   *       and I/O pins refer to the parameters' description in the header file
   *       or refer to the product reference manual.
   * @note Input capture selection bits are not reset by this function.
@@ -338,20 +338,20 @@ void SYSCFG_RITIMInputCaptureConfig(uint32_t RI_InputCapture, uint32_t RI_InputC
 }
 
 /**
-  * @brief  Configures the Pull-up and Pull-down Resistors 
-  * @param  RI_Resistor selects the resistor to connect. 
+  * @brief  Configures the Pull-up and Pull-down Resistors
+  * @param  RI_Resistor selects the resistor to connect.
   *   This parameter can be  one of the following values:
   *     @arg RI_Resistor_10KPU: 10K pull-up resistor.
   *     @arg RI_Resistor_400KPU: 400K pull-up resistor.
   *     @arg RI_Resistor_10KPD: 10K pull-down resistor.
   *     @arg RI_Resistor_400KPD: 400K pull-down resistor.
-  * @param  NewState: New state of the analog switch associated to the selected 
+  * @param  NewState: New state of the analog switch associated to the selected
   *         resistor.
   *   This parameter can be:
   *      ENABLE so the selected resistor is connected
   *      or DISABLE so the selected resistor is disconnected.
   * @note To avoid extra power consumption, only one resistor should be enabled
-  *       at a time.  
+  *       at a time.
   * @retval None
   */
 void SYSCFG_RIResistorConfig(uint32_t RI_Resistor, FunctionalState NewState)
@@ -359,7 +359,7 @@ void SYSCFG_RIResistorConfig(uint32_t RI_Resistor, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_RI_RESISTOR(RI_Resistor));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the resistor */
@@ -381,7 +381,7 @@ void SYSCFG_RIResistorConfig(uint32_t RI_Resistor, FunctionalState NewState)
   *     @arg RI_Channel_13: Channel 13 is selected.
   * @param  RI_ChannelSpeed: The speed of the selected ADC channel
   *   This parameter can be:
-  *      RI_ChannelSpeed_Fast: The selected channel is a fast ADC channel 
+  *      RI_ChannelSpeed_Fast: The selected channel is a fast ADC channel
   *      or RI_ChannelSpeed_Slow: The selected channel is a slow ADC channel.
   * @retval None
   */
@@ -426,9 +426,9 @@ void SYSCFG_RIChannelSpeedConfig(uint32_t RI_Channel, uint32_t RI_ChannelSpeed)
   * @param RI_IOSwitch_GR6_3
   * @param RI_IOSwitch_GR6_4
   * @param RI_IOSwitch_GR5_4
-  
-  * @param  NewState: New state of the analog switch. 
-  *   This parameter can be 
+
+  * @param  NewState: New state of the analog switch.
+  *   This parameter can be
   *     ENABLE so the Input Output switch is closed
   *     or DISABLE so the Input Output switch is open.
   * @retval None
@@ -436,17 +436,17 @@ void SYSCFG_RIChannelSpeedConfig(uint32_t RI_Channel, uint32_t RI_ChannelSpeed)
 void SYSCFG_RIIOSwitchConfig(uint32_t RI_IOSwitch, FunctionalState NewState)
 {
   uint32_t ioswitchmask = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_RI_IOSWITCH(RI_IOSwitch));
-  
+
   /* Read Analog switch register index */
   ioswitchmask = RI_IOSwitch >> 31;
-  
+
   /* Get Bits[30:0] of the IO switch */
   RI_IOSwitch  &= 0x7FFFFFFF;
-  
-  
+
+
   if (NewState != DISABLE)
   {
     if (ioswitchmask != 0)
@@ -478,13 +478,13 @@ void SYSCFG_RIIOSwitchConfig(uint32_t RI_IOSwitch, FunctionalState NewState)
 /**
   * @brief  Enable or disable the switch control mode.
   * @param  NewState: New state of the switch control mode. This parameter can
-  *         be ENABLE: ADC analog switches closed if the corresponding 
+  *         be ENABLE: ADC analog switches closed if the corresponding
   *                    I/O switch is also closed.
   *                    When using COMP1, switch control mode must be enabled.
   *         or DISABLE: ADC analog switches open or controlled by the ADC interface.
-  *                    When using the ADC for acquisition, switch control mode 
+  *                    When using the ADC for acquisition, switch control mode
   *                    must be disabled.
-  * @note COMP1 comparator and ADC cannot be used at the same time since 
+  * @note COMP1 comparator and ADC cannot be used at the same time since
   *       they share the ADC switch matrix.
   * @retval None
   */
@@ -492,7 +492,7 @@ void SYSCFG_RISwitchControlModeCmd(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the Switch control mode */
@@ -507,9 +507,9 @@ void SYSCFG_RISwitchControlModeCmd(FunctionalState NewState)
 
 /**
   * @brief  Enable or disable Hysteresis of the input schmitt triger of Ports A..E
-  *         When the I/Os are programmed in input mode by standard I/O port 
+  *         When the I/Os are programmed in input mode by standard I/O port
   *         registers, the Schmitt trigger and the hysteresis are enabled by default.
-  *         When hysteresis is disabled, it is possible to read the 
+  *         When hysteresis is disabled, it is possible to read the
   *         corresponding port with a trigger level of VDDIO/2.
   * @param  RI_Port: selects the GPIO Port.
   *   This parameter can be one of the following values:
@@ -535,9 +535,9 @@ void SYSCFG_RIHysteresisConfig(uint8_t RI_Port, uint16_t RI_Pin,
   assert_param(IS_RI_PORT(RI_Port));
   assert_param(IS_RI_PIN(RI_Pin));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if(RI_Port == RI_PortA)
-  {  
+  {
     if (NewState != DISABLE)
     {
       /* Hysteresis on */
@@ -549,10 +549,10 @@ void SYSCFG_RIHysteresisConfig(uint8_t RI_Port, uint16_t RI_Pin,
       RI->HYSCR1 |= (uint32_t) RI_Pin;
     }
   }
-  
+
   else if(RI_Port == RI_PortB)
   {
-  
+
     if (NewState != DISABLE)
     {
       /* Hysteresis on */
@@ -563,11 +563,11 @@ void SYSCFG_RIHysteresisConfig(uint8_t RI_Port, uint16_t RI_Pin,
       /* Hysteresis off */
       RI->HYSCR1 |= (uint32_t) ((uint32_t)(RI_Pin) << 16);
     }
-  }  
- 
+  }
+
   else if(RI_Port == RI_PortC)
   {
-  
+
     if (NewState != DISABLE)
     {
       /* Hysteresis on */
@@ -578,7 +578,7 @@ void SYSCFG_RIHysteresisConfig(uint8_t RI_Port, uint16_t RI_Pin,
       /* Hysteresis off */
       RI->HYSCR2 |= (uint32_t) (RI_Pin );
     }
-  } 
+  }
   else if(RI_Port == RI_PortD)
   {
     if (NewState != DISABLE)
@@ -640,11 +640,11 @@ void SYSCFG_RIHysteresisConfig(uint8_t RI_Port, uint16_t RI_Pin,
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

@@ -8,9 +8,9 @@
  * Copyright (C) 2009-2010 ARM Limited. All rights reserved.
  *
  * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * ARM Limited (ARM) is supplying this software for use with Cortex-M
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -60,7 +60,7 @@ __ASM uint32_t __REV16(uint32_t value)
   rev16 r0, r0
   bx lr
 }
-#endif /* __ARMCC_VERSION  */ 
+#endif /* __ARMCC_VERSION  */
 
 
 /** \brief  Reverse byte order in signed short value
@@ -76,7 +76,7 @@ __ASM int32_t __REVSH(int32_t value)
   revsh r0, r0
   bx lr
 }
-#endif /* __ARMCC_VERSION  */ 
+#endif /* __ARMCC_VERSION  */
 
 
 /** \brief  Remove the exclusive lock
@@ -89,7 +89,7 @@ __ASM void __CLREX(void)
 {
   clrex
 }
-#endif /* __ARMCC_VERSION  */ 
+#endif /* __ARMCC_VERSION  */
 
 
 #elif (defined (__ICCARM__)) /*---------------- ICC Compiler ---------------------*/
@@ -117,7 +117,7 @@ __ASM uint32_t __get_CONTROL(void)
   mrs r0, control
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Set Control Register
@@ -132,7 +132,7 @@ __ASM void __set_CONTROL(uint32_t control)
   msr control, r0
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Get ISPR Register
@@ -147,7 +147,7 @@ __ASM uint32_t __get_IPSR(void)
   mrs r0, ipsr
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Get APSR Register
@@ -162,7 +162,7 @@ __ASM uint32_t __get_APSR(void)
   mrs r0, apsr
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Get xPSR Register
@@ -177,7 +177,7 @@ __ASM uint32_t __get_xPSR(void)
   mrs r0, xpsr
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Get Process Stack Pointer
@@ -192,7 +192,7 @@ __ASM uint32_t __get_PSP(void)
   mrs r0, psp
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Set Process Stack Pointer
@@ -207,7 +207,7 @@ __ASM void __set_PSP(uint32_t topOfProcStack)
   msr psp, r0
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Get Main Stack Pointer
@@ -222,7 +222,7 @@ __ASM uint32_t __get_MSP(void)
   mrs r0, msp
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Set Main Stack Pointer
@@ -237,7 +237,7 @@ __ASM void __set_MSP(uint32_t mainStackPointer)
   msr msp, r0
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Get Priority Mask
@@ -252,7 +252,7 @@ __ASM uint32_t __get_PRIMASK(void)
   mrs r0, primask
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
+#endif /*  __ARMCC_VERSION  */
 
 
 /** \brief  Set Priority Mask
@@ -267,8 +267,8 @@ __ASM void __set_PRIMASK(uint32_t priMask)
   msr primask, r0
   bx lr
 }
-#endif /*  __ARMCC_VERSION  */ 
- 
+#endif /*  __ARMCC_VERSION  */
+
 
 #elif (defined (__ICCARM__)) /*---------------- ICC Compiler ---------------------*/
 /* obsolete */

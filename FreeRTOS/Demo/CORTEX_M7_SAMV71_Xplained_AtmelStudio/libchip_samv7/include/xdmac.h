@@ -1,10 +1,10 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -33,22 +33,22 @@
  *
  * \section Usage
  * <ul>
- * <li> Enable or disable the a DMAC controller with DMAC_Enable() and or 
+ * <li> Enable or disable the a DMAC controller with DMAC_Enable() and or
  * DMAC_Disable().</li>
- * <li> Enable or disable %Dma interrupt using DMAC_EnableIt()or 
+ * <li> Enable or disable %Dma interrupt using DMAC_EnableIt()or
  * DMAC_DisableIt().</li>
- * <li> Get %Dma interrupt status by DMAC_GetStatus() and 
+ * <li> Get %Dma interrupt status by DMAC_GetStatus() and
  * DMAC_GetInterruptMask().</li>
- * <li> Enable or disable specified %Dma channel with DMAC_EnableChannel() or 
+ * <li> Enable or disable specified %Dma channel with DMAC_EnableChannel() or
  * DMAC_DisableChannel().</li>
  * <li> Get %Dma channel status by DMAC_GetChannelStatus().</li>
- * <li> ControlA and ControlB register is set by DMAC_SetControlA() and 
+ * <li> ControlA and ControlB register is set by DMAC_SetControlA() and
  * DMAC_SetControlB().</li>
- * <li> Configure source and/or destination start address with 
+ * <li> Configure source and/or destination start address with
  * DMAC_SetSourceAddr() and/or DMAC_SetDestinationAddr().</li>
  * <li> Set %Dma descriptor address using DMAC_SetDescriptorAddr().</li>
  * <li> Set source transfer buffer size with DMAC_SetBufferSize().</li>
- * <li> Configure source and/or destination Picture-In-Picuture mode with 
+ * <li> Configure source and/or destination Picture-In-Picuture mode with
  * DMAC_SetSourcePip() and/or DMAC_SetDestPip().</li>
  * </ul>
  *
@@ -139,32 +139,32 @@ extern void XDMAC_ResumeReadWriteChannel( Xdmac *pXdmac, uint8_t channel );
 extern void XDMAC_SoftwareTransferReq(Xdmac *pXdmac, uint8_t channel);
 extern uint32_t XDMAC_GetSoftwareTransferStatus(Xdmac *pXdmac);
 extern void XDMAC_SoftwareFlushReq(Xdmac *pXdmac, uint8_t channel);
-extern void XDMAC_EnableChannelIt (Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_EnableChannelIt (Xdmac *pXdmac, uint8_t channel,
 			uint8_t dwInteruptMask );
-extern void XDMAC_DisableChannelIt (Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_DisableChannelIt (Xdmac *pXdmac, uint8_t channel,
 			uint8_t dwInteruptMask );
 extern uint32_t XDMAC_GetChannelItMask (Xdmac *pXdmac, uint8_t channel);
 extern uint32_t XDMAC_GetChannelIsr (Xdmac *pXdmac, uint8_t channel);
 extern uint32_t XDMAC_GetMaskChannelIsr (Xdmac *pXdmac, uint8_t channel);
 extern void XDMAC_SetSourceAddr(Xdmac *pXdmac, uint8_t channel, uint32_t addr);
-extern void XDMAC_SetDestinationAddr(Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_SetDestinationAddr(Xdmac *pXdmac, uint8_t channel,
 			uint32_t addr);
-extern void XDMAC_SetDescriptorAddr(Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_SetDescriptorAddr(Xdmac *pXdmac, uint8_t channel,
 			uint32_t addr, uint8_t ndaif);
 extern void XDMAC_SetDescriptorControl(Xdmac *pXdmac, uint8_t channel,
 			uint8_t config);
-extern void XDMAC_SetMicroblockControl(Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_SetMicroblockControl(Xdmac *pXdmac, uint8_t channel,
 			uint32_t ublen);
 extern void XDMAC_SetBlockControl(Xdmac *pXdmac, uint8_t channel,
 			uint16_t blen);
-extern void XDMAC_SetChannelConfig(Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_SetChannelConfig(Xdmac *pXdmac, uint8_t channel,
 			uint32_t config);
 extern uint32_t XDMAC_GetChannelConfig(Xdmac *pXdmac, uint8_t channel);
 extern void XDMAC_SetDataStride_MemPattern(Xdmac *pXdmac, uint8_t channel,
 			uint32_t dds_msp);
-extern void XDMAC_SetSourceMicroBlockStride(Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_SetSourceMicroBlockStride(Xdmac *pXdmac, uint8_t channel,
 			uint32_t subs);
-extern void XDMAC_SetDestinationMicroBlockStride(Xdmac *pXdmac, uint8_t channel, 
+extern void XDMAC_SetDestinationMicroBlockStride(Xdmac *pXdmac, uint8_t channel,
 			uint32_t dubs);
 extern uint32_t XDMAC_GetChDestinationAddr(Xdmac *pXdmac, uint8_t channel);
 #ifdef __cplusplus

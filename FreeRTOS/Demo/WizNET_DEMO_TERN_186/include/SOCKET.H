@@ -192,7 +192,7 @@
 #define TERN_TDMA_THRES    10000      // Use DMA for transmits if data > thres bytes.
 #define TERN_RDMA_THRES    10000      // Use DMA for receives if data > thres bytes.
                                       // High thres value effectively disables DMA
-                                      
+
 void far interrupt in4_isr_i2chip(void);
 
 //void ISR_ESTABLISHED(SOCKET s);

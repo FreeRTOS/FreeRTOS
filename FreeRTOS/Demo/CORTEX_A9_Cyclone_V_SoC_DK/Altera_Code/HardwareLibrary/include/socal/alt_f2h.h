@@ -41,37 +41,37 @@ extern "C"
 /*
  * Component : FPGA2HPS AXI Bridge Module - ALT_F2H
  * FPGA2HPS AXI Bridge Module
- * 
+ *
  * Registers in the FPGA2HPS AXI Bridge Module.
- * 
+ *
  */
 /*
  * Register Group : ID Register Group - ALT_F2H_IDGRP
  * ID Register Group
- * 
+ *
  * Contains registers that identify the ARM NIC-301 IP Core.
- * 
+ *
  */
 /*
  * Register : Peripheral ID4 Register - periph_id_4
- * 
+ *
  * JEP106 continuation code
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------
  *  [7:0]  | R      | 0x4   | Peripheral ID4
- *  [31:8] | ???    | 0x0   | *UNDEFINED*   
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Peripheral ID4 - periph_id_4
- * 
+ *
  * JEP106 continuation code
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_PERIPH_ID_4_PERIPH_ID_4 register field. */
 #define ALT_F2H_ID_PERIPH_ID_4_PERIPH_ID_4_LSB        0
@@ -98,7 +98,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_PERIPH_ID_4.
  */
 struct ALT_F2H_ID_PERIPH_ID_4_s
@@ -116,24 +116,24 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_4_s  ALT_F2H_ID_PERIPH_ID_4_t;
 
 /*
  * Register : Peripheral ID0 Register - periph_id_0
- * 
+ *
  * Peripheral ID0
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------
  *  [7:0]  | R      | 0x1   | Part Number [7:0]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Part Number [7:0] - pn7to0
- * 
+ *
  * Part Number [7:0]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_PERIPH_ID_0_PN7TO0 register field. */
 #define ALT_F2H_ID_PERIPH_ID_0_PN7TO0_LSB        0
@@ -160,7 +160,7 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_4_s  ALT_F2H_ID_PERIPH_ID_4_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_PERIPH_ID_0.
  */
 struct ALT_F2H_ID_PERIPH_ID_0_s
@@ -178,24 +178,24 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_0_s  ALT_F2H_ID_PERIPH_ID_0_t;
 
 /*
  * Register : Peripheral ID1 Register - periph_id_1
- * 
+ *
  * Peripheral ID1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [7:0]  | R      | 0xb3  | JEP106[3:0], Part Number [11:8]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : JEP106[3:0], Part Number [11:8] - jep3to0_pn11to8
- * 
+ *
  * JEP106[3:0], Part Number [11:8]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_PERIPH_ID_1_JEP3TO0_PN11TO8 register field. */
 #define ALT_F2H_ID_PERIPH_ID_1_JEP3TO0_PN11TO8_LSB        0
@@ -222,7 +222,7 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_0_s  ALT_F2H_ID_PERIPH_ID_0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_PERIPH_ID_1.
  */
 struct ALT_F2H_ID_PERIPH_ID_1_s
@@ -240,24 +240,24 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_1_s  ALT_F2H_ID_PERIPH_ID_1_t;
 
 /*
  * Register : Peripheral ID2 Register - periph_id_2
- * 
+ *
  * Peripheral ID2
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [7:0]  | R      | 0x6b  | Revision, JEP106 code flag, JEP106[6:4]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Revision, JEP106 code flag, JEP106[6:4] - rev_jepcode_jep6to4
- * 
+ *
  * Revision, JEP106 code flag, JEP106[6:4]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_PERIPH_ID_2_REV_JEPCODE_JEP6TO4 register field. */
 #define ALT_F2H_ID_PERIPH_ID_2_REV_JEPCODE_JEP6TO4_LSB        0
@@ -284,7 +284,7 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_1_s  ALT_F2H_ID_PERIPH_ID_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_PERIPH_ID_2.
  */
 struct ALT_F2H_ID_PERIPH_ID_2_s
@@ -302,25 +302,25 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_2_s  ALT_F2H_ID_PERIPH_ID_2_t;
 
 /*
  * Register : Peripheral ID3 Register - periph_id_3
- * 
+ *
  * Peripheral ID3
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [3:0]  | R      | 0x0   | Customer Model Number
- *  [7:4]  | R      | 0x0   | Revision             
- *  [31:8] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [7:4]  | R      | 0x0   | Revision
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Customer Model Number - cust_mod_num
- * 
+ *
  * Customer Model Number
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_PERIPH_ID_3_CUST_MOD_NUM register field. */
 #define ALT_F2H_ID_PERIPH_ID_3_CUST_MOD_NUM_LSB        0
@@ -341,11 +341,11 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_2_s  ALT_F2H_ID_PERIPH_ID_2_t;
 
 /*
  * Field : Revision - rev_and
- * 
+ *
  * Revision
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_PERIPH_ID_3_REV_AND register field. */
 #define ALT_F2H_ID_PERIPH_ID_3_REV_AND_LSB        4
@@ -372,7 +372,7 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_2_s  ALT_F2H_ID_PERIPH_ID_2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_PERIPH_ID_3.
  */
 struct ALT_F2H_ID_PERIPH_ID_3_s
@@ -391,24 +391,24 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_3_s  ALT_F2H_ID_PERIPH_ID_3_t;
 
 /*
  * Register : Component ID0 Register - comp_id_0
- * 
+ *
  * Component ID0
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0xd   | Preamble   
+ *  [7:0]  | R      | 0xd   | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_COMP_ID_0_PREAMBLE register field. */
 #define ALT_F2H_ID_COMP_ID_0_PREAMBLE_LSB        0
@@ -435,7 +435,7 @@ typedef volatile struct ALT_F2H_ID_PERIPH_ID_3_s  ALT_F2H_ID_PERIPH_ID_3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_COMP_ID_0.
  */
 struct ALT_F2H_ID_COMP_ID_0_s
@@ -453,24 +453,24 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_0_s  ALT_F2H_ID_COMP_ID_0_t;
 
 /*
  * Register : Component ID1 Register - comp_id_1
- * 
+ *
  * Component ID1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------------
  *  [7:0]  | R      | 0xf0  | Generic IP component class, Preamble
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                         
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Generic IP component class, Preamble - genipcompcls_preamble
- * 
+ *
  * Generic IP component class, Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_COMP_ID_1_GENIPCOMPCLS_PREAMBLE register field. */
 #define ALT_F2H_ID_COMP_ID_1_GENIPCOMPCLS_PREAMBLE_LSB        0
@@ -497,7 +497,7 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_0_s  ALT_F2H_ID_COMP_ID_0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_COMP_ID_1.
  */
 struct ALT_F2H_ID_COMP_ID_1_s
@@ -515,24 +515,24 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_1_s  ALT_F2H_ID_COMP_ID_1_t;
 
 /*
  * Register : Component ID2 Register - comp_id_2
- * 
+ *
  * Component ID2
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0x5   | Preamble   
+ *  [7:0]  | R      | 0x5   | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_COMP_ID_2_PREAMBLE register field. */
 #define ALT_F2H_ID_COMP_ID_2_PREAMBLE_LSB        0
@@ -559,7 +559,7 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_1_s  ALT_F2H_ID_COMP_ID_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_COMP_ID_2.
  */
 struct ALT_F2H_ID_COMP_ID_2_s
@@ -577,24 +577,24 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_2_s  ALT_F2H_ID_COMP_ID_2_t;
 
 /*
  * Register : Component ID3 Register - comp_id_3
- * 
+ *
  * Component ID3
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0xb1  | Preamble   
+ *  [7:0]  | R      | 0xb1  | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_F2H_ID_COMP_ID_3_PREAMBLE register field. */
 #define ALT_F2H_ID_COMP_ID_3_PREAMBLE_LSB        0
@@ -621,7 +621,7 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_2_s  ALT_F2H_ID_COMP_ID_2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_ID_COMP_ID_3.
  */
 struct ALT_F2H_ID_COMP_ID_3_s
@@ -645,7 +645,7 @@ typedef volatile struct ALT_F2H_ID_COMP_ID_3_s  ALT_F2H_ID_COMP_ID_3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_F2H_IDGRP.
  */
 struct ALT_F2H_IDGRP_s
@@ -689,59 +689,59 @@ typedef volatile struct ALT_F2H_IDGRP_raw_s  ALT_F2H_IDGRP_raw_t;
 /*
  * Register Group : Slave Register Group - ALT_F2H_SLVGRP
  * Slave Register Group
- * 
+ *
  * Registers associated with slave interfaces.
- * 
+ *
  */
 /*
  * Register Group : 32-bit Slave - ALT_F2H_SLV_B32
  * 32-bit Slave
- * 
+ *
  * Registers associated with the 32-bit AXI slave interface.
- * 
+ *
  * These registers are only active when the FPGA2HPS AXI Bridge is configured with
  * a 32-bit FPGA AXI slave interface.
- * 
+ *
  */
 /*
  * Register : Functionality Modification 2 Register - fn_mod2
- * 
+ *
  * Controls bypass merge of upsizing/downsizing.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [0]    | RW     | 0x0   | Bypass Merge
- *  [31:1] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Bypass Merge - bypass_merge
- * 
+ *
  * Controls bypass merge of upsizing/downsizing.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                                     
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------------------------------------
- *  ALT_F2H_FN_MOD2_BYPASS_MERGE_E_ALTER   | 0x0   | The network can alter transactions.             
+ *  ALT_F2H_FN_MOD2_BYPASS_MERGE_E_ALTER   | 0x0   | The network can alter transactions.
  *  ALT_F2H_FN_MOD2_BYPASS_MERGE_E_NOALTER | 0x1   | The network does not alter any transactions that
- * :                                       |       | could pass through the upsizer legally without  
- * :                                       |       | alteration.                                     
- * 
+ * :                                       |       | could pass through the upsizer legally without
+ * :                                       |       | alteration.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_F2H_FN_MOD2_BYPASS_MERGE
- * 
+ *
  * The network can alter transactions.
  */
 #define ALT_F2H_FN_MOD2_BYPASS_MERGE_E_ALTER    0x0
 /*
  * Enumerated value for register field ALT_F2H_FN_MOD2_BYPASS_MERGE
- * 
+ *
  * The network does not alter any transactions that could pass through the upsizer
  * legally without alteration.
  */
@@ -772,7 +772,7 @@ typedef volatile struct ALT_F2H_IDGRP_raw_s  ALT_F2H_IDGRP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_FN_MOD2.
  */
 struct ALT_F2H_FN_MOD2_s
@@ -792,41 +792,41 @@ typedef volatile struct ALT_F2H_FN_MOD2_s  ALT_F2H_FN_MOD2_t;
 
 /*
  * Register : Issuing Functionality Modification Register - fn_mod
- * 
+ *
  * Sets the block issuing capability to multiple or single outstanding
  * transactions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------
  *  [0]    | RW     | 0x0   | ALT_F2H_FN_MOD_RD
  *  [1]    | RW     | 0x0   | ALT_F2H_FN_MOD_WR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : rd
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                               
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-------------------------------------------
- *  ALT_F2H_FN_MOD_RD_E_MULT   | 0x0   | Multiple outstanding read transactions    
+ *  ALT_F2H_FN_MOD_RD_E_MULT   | 0x0   | Multiple outstanding read transactions
  *  ALT_F2H_FN_MOD_RD_E_SINGLE | 0x1   | Only a single outstanding read transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_F2H_FN_MOD_RD
- * 
+ *
  * Multiple outstanding read transactions
  */
 #define ALT_F2H_FN_MOD_RD_E_MULT    0x0
 /*
  * Enumerated value for register field ALT_F2H_FN_MOD_RD
- * 
+ *
  * Only a single outstanding read transaction
  */
 #define ALT_F2H_FN_MOD_RD_E_SINGLE  0x1
@@ -850,26 +850,26 @@ typedef volatile struct ALT_F2H_FN_MOD2_s  ALT_F2H_FN_MOD2_t;
 
 /*
  * Field : wr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------------------------------------
- *  ALT_F2H_FN_MOD_WR_E_MULT   | 0x0   | Multiple outstanding write transactions    
+ *  ALT_F2H_FN_MOD_WR_E_MULT   | 0x0   | Multiple outstanding write transactions
  *  ALT_F2H_FN_MOD_WR_E_SINGLE | 0x1   | Only a single outstanding write transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_F2H_FN_MOD_WR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_F2H_FN_MOD_WR_E_MULT    0x0
 /*
  * Enumerated value for register field ALT_F2H_FN_MOD_WR
- * 
+ *
  * Only a single outstanding write transaction
  */
 #define ALT_F2H_FN_MOD_WR_E_SINGLE  0x1
@@ -899,7 +899,7 @@ typedef volatile struct ALT_F2H_FN_MOD2_s  ALT_F2H_FN_MOD2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_F2H_FN_MOD.
  */
 struct ALT_F2H_FN_MOD_s
@@ -926,7 +926,7 @@ typedef volatile struct ALT_F2H_FN_MOD_s  ALT_F2H_FN_MOD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_F2H_SLV_B32.
  */
 struct ALT_F2H_SLV_B32_s
@@ -956,12 +956,12 @@ typedef volatile struct ALT_F2H_SLV_B32_raw_s  ALT_F2H_SLV_B32_raw_t;
 /*
  * Register Group : 128-bit Slave - ALT_F2H_SLV_B128
  * 128-bit Slave
- * 
+ *
  * Registers associated with the 128-bit AXI slave interface.
- * 
+ *
  * These registers are only active when the FPGA2HPS AXI Bridge is configured with
  * a 128-bit FPGA AXI slave interface.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -971,7 +971,7 @@ typedef volatile struct ALT_F2H_SLV_B32_raw_s  ALT_F2H_SLV_B32_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_F2H_SLV_B128.
  */
 struct ALT_F2H_SLV_B128_s
@@ -1006,7 +1006,7 @@ typedef volatile struct ALT_F2H_SLV_B128_raw_s  ALT_F2H_SLV_B128_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_F2H_SLVGRP.
  */
 struct ALT_F2H_SLVGRP_s
@@ -1039,7 +1039,7 @@ typedef volatile struct ALT_F2H_SLVGRP_raw_s  ALT_F2H_SLVGRP_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_F2H.
  */
 struct ALT_F2H_s

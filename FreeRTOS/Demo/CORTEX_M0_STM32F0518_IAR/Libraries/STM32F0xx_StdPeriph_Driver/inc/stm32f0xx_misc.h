@@ -44,15 +44,15 @@
 
 /* Exported types ------------------------------------------------------------*/
 
-/** 
-  * @brief  NVIC Init Structure definition  
+/**
+  * @brief  NVIC Init Structure definition
   */
 
 typedef struct
 {
   uint8_t NVIC_IRQChannel;             /*!< Specifies the IRQ channel to be enabled or disabled.
-                                            This parameter can be a value of @ref IRQn_Type 
-                                            (For the complete STM32 Devices IRQ Channels list, 
+                                            This parameter can be a value of @ref IRQn_Type
+                                            (For the complete STM32 Devices IRQ Channels list,
                                             please refer to stm32f0xx.h file) */
 
   uint8_t NVIC_IRQChannelPriority;     /*!< Specifies the priority level for the IRQ channel specified
@@ -60,13 +60,13 @@ typedef struct
                                             between 0 and 3.  */
 
   FunctionalState NVIC_IRQChannelCmd;  /*!< Specifies whether the IRQ channel defined in NVIC_IRQChannel
-                                            will be enabled or disabled. 
-                                            This parameter can be set either to ENABLE or DISABLE */   
+                                            will be enabled or disabled.
+                                            This parameter can be set either to ENABLE or DISABLE */
 } NVIC_InitTypeDef;
 
-/**  
+/**
   *
-@verbatim   
+@verbatim
 
 @endverbatim
 */
@@ -77,7 +77,7 @@ typedef struct
   * @{
   */
 
-/** @defgroup System_Low_Power 
+/** @defgroup System_Low_Power
   * @{
   */
 
@@ -91,7 +91,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup Preemption_Priority_Group 
+/** @defgroup Preemption_Priority_Group
   * @{
   */
 #define IS_NVIC_PRIORITY(PRIORITY)  ((PRIORITY) < 0x04)
@@ -100,7 +100,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup SysTick_clock_source 
+/** @defgroup SysTick_clock_source
   * @{
   */
 
@@ -117,7 +117,7 @@ typedef struct
   */
 
 /* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */ 
+/* Exported functions ------------------------------------------------------- */
 
 void NVIC_Init(NVIC_InitTypeDef* NVIC_InitStruct);
 void NVIC_SystemLPConfig(uint8_t LowPowerMode, FunctionalState NewState);

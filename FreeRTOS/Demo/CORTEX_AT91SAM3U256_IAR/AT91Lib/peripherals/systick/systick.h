@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,9 +31,9 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// Methods and definitions for configuring System Tick in Cortex-M3.
-/// 
+///
 /// !Usage
 ///
 /// -# Configure the System Tick with SysTick_Configure

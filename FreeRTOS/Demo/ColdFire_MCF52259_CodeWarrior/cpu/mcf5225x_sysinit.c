@@ -1,7 +1,7 @@
 /*
  * File:		sysinit.c
  * Purpose:		Reset configuration of the M52259EVB
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -25,47 +25,47 @@ mcf5225x_init(void)
 	register uint8 *dp, *sp;
 
 
-    /* 
-     * Allow interrupts from ABORT, SW1, SW2 (IRQ[1,5,7]) 
+    /*
+     * Allow interrupts from ABORT, SW1, SW2 (IRQ[1,5,7])
      * and USB (IRQ[2,6])
      */
-     
-  	
+
+
     /* Enable IRQ signals on the port */
     MCF_GPIO_PNQPAR = 0
-        | MCF_GPIO_PNQPAR_IRQ1_IRQ1   
+        | MCF_GPIO_PNQPAR_IRQ1_IRQ1
         | MCF_GPIO_PNQPAR_IRQ5_IRQ5
         | MCF_GPIO_PNQPAR_IRQ7_IRQ7;
-    
+
     /* Set EPORT to look for falling edges */
     MCF_EPORT_EPPAR = 0
-        | MCF_EPORT_EPPAR_EPPA1_FALLING  
-        | MCF_EPORT_EPPAR_EPPA2_FALLING  
+        | MCF_EPORT_EPPAR_EPPA1_FALLING
+        | MCF_EPORT_EPPAR_EPPA2_FALLING
         | MCF_EPORT_EPPAR_EPPA5_FALLING
-        | MCF_EPORT_EPPAR_EPPA6_FALLING  
+        | MCF_EPORT_EPPAR_EPPA6_FALLING
         | MCF_EPORT_EPPAR_EPPA7_FALLING;
-        
+
     /* Clear any currently triggered events on the EPORT  */
     MCF_EPORT_EPIER = 0
         | MCF_EPORT_EPIER_EPIE1
-        | MCF_EPORT_EPIER_EPIE2 
+        | MCF_EPORT_EPIER_EPIE2
         | MCF_EPORT_EPIER_EPIE5
-        | MCF_EPORT_EPIER_EPIE6 
+        | MCF_EPORT_EPIER_EPIE6
         | MCF_EPORT_EPIER_EPIE7;
-       
+
     /* Enable interrupts in the interrupt controller */
     MCF_INTC0_IMRL &= ~(0
-        | MCF_INTC_IMRL_INT_MASK1 
-        | MCF_INTC_IMRL_INT_MASK2 
-        | MCF_INTC_IMRL_INT_MASK5 
-        | MCF_INTC_IMRL_INT_MASK6 
-        | MCF_INTC_IMRL_INT_MASK7 
+        | MCF_INTC_IMRL_INT_MASK1
+        | MCF_INTC_IMRL_INT_MASK2
+        | MCF_INTC_IMRL_INT_MASK5
+        | MCF_INTC_IMRL_INT_MASK6
+        | MCF_INTC_IMRL_INT_MASK7
         | MCF_INTC_IMRL_MASKALL);
 
-  
+
 	/* Enable debug */
 	MCF_GPIO_PDDPAR = 0x0F;
-	
+
 	/* Set real time clock freq */
 
 	MCF_CLOCK_RTCCR = 48000000;
@@ -75,7 +75,7 @@ mcf5225x_init(void)
 	{
 		for (n = 0; n < 256; n++)
 			__VECTOR_RAM[n] = VECTOR_TABLE[n];
-			
+
 		mcf5xxx_wr_vbr((uint32)__VECTOR_RAM);
 	}
 
@@ -123,22 +123,22 @@ mcf5225x_pll_init(void)
 	/*Required if booting with internal relaxation oscillator & pll off, clkmod[1:0]=00 & xtal=1 */
 #ifndef OMIT_OCLR_CONFIGURATION
 	MCF_CLOCK_OCLR = 0xC0;   //turn on crystal
-	MCF_CLOCK_CCLR = 0x00;    //switch to crystal 
+	MCF_CLOCK_CCLR = 0x00;    //switch to crystal
     MCF_CLOCK_OCHR = 0x00; //turn off relaxation osc
 #endif
 
 	/* The PLL pre divider - 48MHz / 6 = 8MHz */
 	MCF_CLOCK_CCHR =0x05;
-	 
-	 
-	/* The PLL pre-divider affects this!!! 
+
+
+	/* The PLL pre-divider affects this!!!
 	 * Multiply 48Mhz reference crystal /CCHR by 10 to acheive system clock of 80Mhz
 	 */
 
 	MCF_CLOCK_SYNCR &= ~(MCF_CLOCK_SYNCR_PLLEN);
 
     MCF_CLOCK_SYNCR |= MCF_CLOCK_SYNCR_CLKSRC | MCF_CLOCK_SYNCR_PLLMODE;
-	
+
 	//80
 	MCF_CLOCK_SYNCR |= MCF_CLOCK_SYNCR_MFD(3) | MCF_CLOCK_SYNCR_RFD(0);
 	//64
@@ -149,10 +149,10 @@ mcf5225x_pll_init(void)
 	//MCF_CLOCK_SYNCR = MCF_CLOCK_SYNCR_MFD(2) | MCF_CLOCK_SYNCR_RFD(3);
 	//1
 	//MCF_CLOCK_SYNCR = MCF_CLOCK_SYNCR_MFD(2) | MCF_CLOCK_SYNCR_RFD(6);
-	
+
 	MCF_CLOCK_SYNCR |= MCF_CLOCK_SYNCR_PLLEN;
 
-	
+
 	while (!(MCF_CLOCK_SYNSR & MCF_CLOCK_SYNSR_LOCK))
 	{
 	}
@@ -175,10 +175,10 @@ mcf5225x_gpio_init(void)
 	/*
 	 * Initialize Port TA to enable Axcel control
 	 */
-	MCF_GPIO_PTAPAR = 0x00; 
+	MCF_GPIO_PTAPAR = 0x00;
 	MCF_GPIO_DDRTA  = 0x0F;
 	MCF_GPIO_PORTTA = 0x04;
-	
+
 }
 /********************************************************************/
 void

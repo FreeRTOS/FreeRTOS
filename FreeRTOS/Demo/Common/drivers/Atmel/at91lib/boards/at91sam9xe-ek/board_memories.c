@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -75,18 +75,18 @@ void BOARD_ConfigureSdram(void)
 	volatile unsigned int i;
 	static const Pin pinsSdram = PINS_SDRAM;
 	volatile unsigned int *pSdram = (unsigned int *) AT91C_EBI_SDRAM;
-	
+
 	// Enable corresponding PIOs
     PIO_Configure(&pinsSdram, 1);
-    
+
 	// Enable EBI chip select for the SDRAM
 	WRITE(AT91C_BASE_MATRIX, MATRIX_EBI, AT91C_MATRIX_CS1A_SDRAMC);
-	
+
 
 	// CFG Control Register
 	WRITE(AT91C_BASE_SDRAMC, SDRAMC_CR, AT91C_SDRAMC_NC_9
-                        				| AT91C_SDRAMC_NR_13 
-                        				| AT91C_SDRAMC_CAS_2 
+                        				| AT91C_SDRAMC_NR_13
+                        				| AT91C_SDRAMC_CAS_2
                         				| AT91C_SDRAMC_NB_4_BANKS
                         				| AT91C_SDRAMC_DBW_32_BITS
                         				| AT91C_SDRAMC_TWR_2
@@ -147,18 +147,18 @@ void BOARD_ConfigureSdram48MHz(void)
     volatile unsigned int i;
     static const Pin pinsSdram = PINS_SDRAM;
     volatile unsigned int *pSdram = (unsigned int *) AT91C_EBI_SDRAM;
-    
+
     // Enable corresponding PIOs
     PIO_Configure(&pinsSdram, 1);
-    
+
     // Enable EBI chip select for the SDRAM
     WRITE(AT91C_BASE_MATRIX, MATRIX_EBI, AT91C_MATRIX_CS1A_SDRAMC);
-    
+
 
     // CFG Control Register
     WRITE(AT91C_BASE_SDRAMC, SDRAMC_CR, AT91C_SDRAMC_NC_9
-                                        | AT91C_SDRAMC_NR_13 
-                                        | AT91C_SDRAMC_CAS_2 
+                                        | AT91C_SDRAMC_NR_13
+                                        | AT91C_SDRAMC_CAS_2
                                         | AT91C_SDRAMC_NB_4_BANKS
                                         | AT91C_SDRAMC_DBW_32_BITS
                                         | AT91C_SDRAMC_TWR_1
@@ -231,7 +231,7 @@ void BOARD_ConfigureNandFlash(unsigned char busWidth)
         AT91C_BASE_SMC->SMC_CTRL3 |= AT91C_SMC_DBW_WIDTH_EIGTH_BITS;
     }
     else if (busWidth == 16) {
- 
+
         AT91C_BASE_SMC->SMC_CTRL3 |= AT91C_SMC_DBW_WIDTH_SIXTEEN_BITS;
     }
 }
@@ -253,20 +253,20 @@ void BOARD_ConfigureNandFlash48MHz(unsigned char busWidth)
                                  | AT91C_SMC_WRITEMODE
                                  | AT91C_SMC_NWAITM_NWAIT_DISABLE
                                  | ((0x1 << 16) & AT91C_SMC_TDF));
-    
+
     if (busWidth == 8) {
 
         AT91C_BASE_SMC->SMC_CTRL3 |= AT91C_SMC_DBW_WIDTH_EIGTH_BITS;
     }
     else if (busWidth == 16) {
- 
+
         AT91C_BASE_SMC->SMC_CTRL3 |= AT91C_SMC_DBW_WIDTH_SIXTEEN_BITS;
     }
 }
 
 //------------------------------------------------------------------------------
 /// Configures the EBI for NorFlash access at 48MHz.
-/// \Param busWidth Bus width 
+/// \Param busWidth Bus width
 //------------------------------------------------------------------------------
 void BOARD_ConfigureNorFlash48MHz(unsigned char busWidth)
 {
@@ -278,17 +278,17 @@ void BOARD_ConfigureNorFlash48MHz(unsigned char busWidth)
                                   | AT91C_SMC_WRITEMODE
                                   | AT91C_SMC_NWAITM_NWAIT_DISABLE
                                   | ((0x1 << 16) & AT91C_SMC_TDF));
-                           
+
     if (busWidth == 8) {
 
         AT91C_BASE_SMC->SMC_CTRL0 |= AT91C_SMC_DBW_WIDTH_EIGTH_BITS;
     }
     else if (busWidth == 16) {
- 
+
         AT91C_BASE_SMC->SMC_CTRL0 |= AT91C_SMC_DBW_WIDTH_SIXTEEN_BITS;
     }
     else if (busWidth == 32) {
- 
+
         AT91C_BASE_SMC->SMC_CTRL0 |= AT91C_SMC_DBW_WIDTH_THIRTY_TWO_BITS;
     }
 }

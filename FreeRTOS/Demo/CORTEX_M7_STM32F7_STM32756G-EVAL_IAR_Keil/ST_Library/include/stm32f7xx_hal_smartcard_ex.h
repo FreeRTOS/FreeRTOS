@@ -52,15 +52,15 @@
 
 /** @addtogroup SMARTCARDEx
   * @{
-  */ 
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
-   
+
 /** @brief  Reports the SMARTCARD clock source.
   * @param  __HANDLE__: specifies the USART Handle
-  * @param  __CLOCKSOURCE__ : output variable   
+  * @param  __CLOCKSOURCE__ : output variable
   * @retval the USART clocking source, written in __CLOCKSOURCE__.
   */
 #define SMARTCARD_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__) \
@@ -160,12 +160,12 @@ HAL_StatusTypeDef HAL_SMARTCARDEx_DisableReceiverTimeOut(SMARTCARD_HandleTypeDef
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
   */
-  
+
 #ifdef __cplusplus
 }
 #endif

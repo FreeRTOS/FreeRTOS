@@ -27,7 +27,7 @@
 /*
 Changes from V1.2.3
 
-	+ The function xPortInitMinimal() has been renamed to 
+	+ The function xPortInitMinimal() has been renamed to
 	  xSerialPortInitMinimal() and the function xPortInit() has been renamed
 	  to xSerialPortInit().
 
@@ -66,8 +66,8 @@ Changes from V2.6.0
 #define serUCSRC_SELECT					( ( unsigned char ) 0x80 )
 #define serEIGHT_DATA_BITS				( ( unsigned char ) 0x06 )
 
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 #define vInterruptOn()										\
 {															\
@@ -76,7 +76,7 @@ static QueueHandle_t xCharsForTx;
 	ucByte = UCSRB;											\
 	ucByte |= serTX_INT_ENABLE;								\
 	UCSRB = ucByte;											\
-}																				
+}
 /*-----------------------------------------------------------*/
 
 #define vInterruptOff()										\
@@ -104,12 +104,12 @@ unsigned char ucByte;
 		data sheet. */
 		ulBaudRateCounter = ( configCPU_CLOCK_HZ / ( serBAUD_DIV_CONSTANT * ulWantedBaud ) ) - ( unsigned long ) 1;
 
-		/* Set the baud rate. */	
-		ucByte = ( unsigned char ) ( ulBaudRateCounter & ( unsigned long ) 0xff );	
+		/* Set the baud rate. */
+		ucByte = ( unsigned char ) ( ulBaudRateCounter & ( unsigned long ) 0xff );
 		UBRRL = ucByte;
 
 		ulBaudRateCounter >>= ( unsigned long ) 8;
-		ucByte = ( unsigned char ) ( ulBaudRateCounter & ( unsigned long ) 0xff );	
+		ucByte = ( unsigned char ) ( ulBaudRateCounter & ( unsigned long ) 0xff );
 		UBRRH = ucByte;
 
 		/* Enable the Rx interrupt.  The Tx interrupt will get enabled
@@ -120,7 +120,7 @@ unsigned char ucByte;
 		UCSRC = ( serUCSRC_SELECT | serEIGHT_DATA_BITS );
 	}
 	portEXIT_CRITICAL();
-	
+
 	/* Unlike other ports, this serial code does not allow for more than one
 	com port.  We therefore don't return a pointer to a port structure and can
 	instead just return NULL. */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -86,7 +86,7 @@ static unsigned short FindClockConfiguration(
 //------------------------------------------------------------------------------
 /// Configures PWM a channel with the given parameters.
 /// The PWM controller must have been clocked in the PMC prior to calling this
-/// function. 
+/// function.
 /// Beware: this function disables the channel. It waits until disable is effective.
 /// \param channel  Channel number.
 /// \param prescaler  Channel prescaler.

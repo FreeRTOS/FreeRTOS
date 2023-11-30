@@ -29,18 +29,18 @@
                                     ((*(u32*)&(PERIPH)) == GPIOE_BASE) || \
                                     ((*(u32*)&(PERIPH)) == GPIOF_BASE) || \
                                     ((*(u32*)&(PERIPH)) == GPIOG_BASE))
-                                     
+
 /* Output Maximum frequency selection ----------------------------------------*/
 typedef enum
-{ 
+{
   GPIO_Speed_10MHz = 1,
-  GPIO_Speed_2MHz, 
+  GPIO_Speed_2MHz,
   GPIO_Speed_50MHz
 }GPIOSpeed_TypeDef;
 
 #define IS_GPIO_SPEED(SPEED) (((SPEED) == GPIO_Speed_10MHz) || ((SPEED) == GPIO_Speed_2MHz) || \
                               ((SPEED) == GPIO_Speed_50MHz))
-                                         
+
 /* Configuration Mode enumeration --------------------------------------------*/
 typedef enum
 { GPIO_Mode_AIN = 0x0,
@@ -57,7 +57,7 @@ typedef enum
                             ((MODE) == GPIO_Mode_IPD) || ((MODE) == GPIO_Mode_IPU) || \
                             ((MODE) == GPIO_Mode_Out_OD) || ((MODE) == GPIO_Mode_Out_PP) || \
                             ((MODE) == GPIO_Mode_AF_OD) || ((MODE) == GPIO_Mode_AF_PP))
-                              
+
 /* GPIO Init structure definition */
 typedef struct
 {
@@ -111,7 +111,7 @@ typedef enum
                               ((PIN) == GPIO_Pin_13) || \
                               ((PIN) == GPIO_Pin_14) || \
                               ((PIN) == GPIO_Pin_15))
-                            
+
 /* GPIO Remap define ---------------------------------------------------------*/
 #define GPIO_Remap_SPI1            ((u32)0x00000001)  /* SPI1 Alternate Function mapping */
 #define GPIO_Remap_I2C1            ((u32)0x00000002)  /* I2C1 Alternate Function mapping */
@@ -153,7 +153,7 @@ typedef enum
                               ((REMAP) == GPIO_Remap_ADC2_ETRGINJ) ||((REMAP) == GPIO_Remap_ADC2_ETRGREG) || \
                               ((REMAP) == GPIO_Remap_SWJ_NoJTRST) || ((REMAP) == GPIO_Remap_SWJ_JTAGDisable)|| \
                               ((REMAP) == GPIO_Remap_SWJ_Disable))
-                              
+
 /* GPIO Port Sources ---------------------------------------------------------*/
 #define GPIO_PortSourceGPIOA       ((u8)0x00)
 #define GPIO_PortSourceGPIOB       ((u8)0x01)
@@ -168,7 +168,7 @@ typedef enum
                                                   ((PORTSOURCE) == GPIO_PortSourceGPIOC) || \
                                                   ((PORTSOURCE) == GPIO_PortSourceGPIOD) || \
                                                   ((PORTSOURCE) == GPIO_PortSourceGPIOE))
-                                         
+
 #define IS_GPIO_EXTI_PORT_SOURCE(PORTSOURCE) (((PORTSOURCE) == GPIO_PortSourceGPIOA) || \
                                               ((PORTSOURCE) == GPIO_PortSourceGPIOB) || \
                                               ((PORTSOURCE) == GPIO_PortSourceGPIOC) || \
@@ -176,7 +176,7 @@ typedef enum
                                               ((PORTSOURCE) == GPIO_PortSourceGPIOE) || \
                                               ((PORTSOURCE) == GPIO_PortSourceGPIOF) || \
                                               ((PORTSOURCE) == GPIO_PortSourceGPIOG))
-                                       
+
 /* GPIO Pin sources ----------------------------------------------------------*/
 #define GPIO_PinSource0            ((u8)0x00)
 #define GPIO_PinSource1            ((u8)0x01)
@@ -211,7 +211,7 @@ typedef enum
                                        ((PINSOURCE) == GPIO_PinSource13) || \
                                        ((PINSOURCE) == GPIO_PinSource14) || \
                                        ((PINSOURCE) == GPIO_PinSource15))
-                          
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void GPIO_DeInit(GPIO_TypeDef* GPIOx);

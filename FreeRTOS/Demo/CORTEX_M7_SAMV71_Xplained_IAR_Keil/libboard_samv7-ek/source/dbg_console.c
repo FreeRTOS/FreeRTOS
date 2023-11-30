@@ -90,7 +90,7 @@ static uint8_t _ucIsConsoleInitialized=0 ;
  */
 extern void DBG_Configure( uint32_t baudrate, uint32_t masterClock)
 {
-    
+
     const Pin pPins[] = CONSOLE_PINS ;
     Uart *pUart = CONSOLE_UART ;
 
@@ -101,13 +101,13 @@ extern void DBG_Configure( uint32_t baudrate, uint32_t masterClock)
     PMC_EnablePeripheral(CONSOLE_ID);
 
     mode =  UART_MR_CHMODE_NORMAL | UART_MR_PAR_NO;
-        
+
 
     // Reset & disable receiver and transmitter, disable interrupts
     pUart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX | UART_CR_RSTSTA;
     pUart->UART_IDR = 0xFFFFFFFF;
-    
-   
+
+
     pUart->UART_BRGR = (masterClock / baudrate) / 16 ;
 
     // Configure mode register
@@ -140,10 +140,10 @@ extern void DBG_PutChar( uint8_t c )
 
     // Wait for the transmitter to be ready
     while ((pUart->UART_SR & UART_SR_TXEMPTY) == 0);
-    
+
     // Send character
     pUart->UART_THR = c;
-    
+
     // Wait for the transfer to complete
     while ((pUart->UART_SR & UART_SR_TXEMPTY) == 0);
 
@@ -433,12 +433,12 @@ extern WEAK signed int putchar( signed int c )
 
 extern WEAK int puts(const char *ptr )
 {
-  
+
     for ( ; *ptr != 0 ; ptr++ )
     {
         DBG_PutChar( *ptr ) ;
     }
-    
+
     return 0;
 
 }

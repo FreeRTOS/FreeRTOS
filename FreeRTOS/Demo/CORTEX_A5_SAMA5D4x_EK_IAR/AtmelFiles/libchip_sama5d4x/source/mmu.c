@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -26,10 +26,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
-/** 
+/**
  * \addtogroup mmu MMU Initialization
  *
  * \section Usage
@@ -38,7 +38,7 @@
  * translation table entries. TLBs avoid the requirement for every memory access to perform a translation table
  * lookup. The ARM architecture does not specify the exact form of the TLB structures for any design. In a
  * similar way to the requirements for caches, the architecture only defines certain principles for TLBs:
- * 
+ *
  * The MMU supports memory accesses based on memory sections or pages:
  * Supersections Consist of 16MB blocks of memory. Support for Supersections is optional.
  * -# Sections Consist of 1MB blocks of memory.
@@ -54,7 +54,7 @@
  * \ref mmu.c\n
  * \ref mmu.h \n
  */
- 
+
 /*------------------------------------------------------------------------------ */
 /*         Headers                                                               */
 /*------------------------------------------------------------------------------ */
@@ -219,15 +219,15 @@ void MMU_Initialize(uint32_t *pTB)
     /* periph address 0x2400_0000 */
     for(addr = 0x240; addr < 0x400; addr++)
         pTB[addr] = (addr << 20)|   // Physical Address
-                      ( 1 << 19)|   // (NS)  Non-secure access is allowed        
+                      ( 1 << 19)|   // (NS)  Non-secure access is allowed
                       ( 3 << 10)|   // Access in supervisor mode (AP)
                       ( 0xF <<  5)| // Domain 0xF
                       ( 1 <<  4)|   // (XN)
                       ( 0 <<  3)|   // C bit : cachable => No
                       ( 0 <<  2)|   // B bit : write-back => No
                       ( 2 <<  0);   // Set as 1 Mbyte section
-    
-    
+
+
     /* section DDRCS/AES */
     /* periph address 0x4000_0000 */
     for(addr = 0x400; addr < 0x600; addr++)

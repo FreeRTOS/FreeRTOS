@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -116,7 +116,7 @@ extern void TWI3_IrqHandler(void);
 extern void CATB_IrqHandler(void);
 extern void SFR_IrqHandler(void);
 extern void AIC1_IrqHandler(void);
-extern void SAIC1_IrqHandler(void); 
+extern void SAIC1_IrqHandler(void);
 extern void L2CC_IrqHandler(void);
 extern void LowLevelInit( void ) ;
 

@@ -41,38 +41,38 @@ extern "C"
 /*
  * Component : ACP ID Mapper Registers - ALT_ACPIDMAP
  * ACP ID Mapper Registers
- * 
+ *
  * Registers in the ACP ID Mapper module
- * 
+ *
  */
 /*
  * Register : Read AXI Master Mapping Register for Fixed Virtual ID 2 - vid2rd
- * 
+ *
  * The Read AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                 
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*                 
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
  *  [8:4]   | RW     | 0x1   | ARUSER value to SCU for ID=2
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*                 
- *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder     
- *  [15:14] | ???    | 0x0   | *UNDEFINED*                 
- *  [27:16] | RW     | 0x4   | Remap Master ID = DAP ID    
- *  [30:28] | ???    | 0x0   | *UNDEFINED*                 
- *  [31]    | RW     | 0x1   | Force Mapping for ID=2      
- * 
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
+ *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x4   | Remap Master ID = DAP ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x1   | Force Mapping for ID=2
+ *
  */
 /*
  * Field : ARUSER value to SCU for ID=2 - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_USER register field. */
 #define ALT_ACPIDMAP_VID2RD_USER_LSB        4
@@ -93,11 +93,11 @@ extern "C"
 
 /*
  * Field : ARADDR 1GB Page Decoder - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_PAGE register field. */
 #define ALT_ACPIDMAP_VID2RD_PAGE_LSB        12
@@ -118,12 +118,12 @@ extern "C"
 
 /*
  * Field : Remap Master ID = DAP ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_MID register field. */
 #define ALT_ACPIDMAP_VID2RD_MID_LSB        16
@@ -144,12 +144,12 @@ extern "C"
 
 /*
  * Field : Force Mapping for ID=2 - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_FORCE register field. */
 #define ALT_ACPIDMAP_VID2RD_FORCE_LSB        31
@@ -176,7 +176,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID2RD.
  */
 struct ALT_ACPIDMAP_VID2RD_s
@@ -200,32 +200,32 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_s  ALT_ACPIDMAP_VID2RD_t;
 
 /*
  * Register : Write AXI Master Mapping Register for Fixed Virtual ID 2 - vid2wr
- * 
+ *
  * The Write AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                 
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*                 
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
  *  [8:4]   | RW     | 0x1   | AWUSER value to SCU for ID=2
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*                 
- *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder     
- *  [15:14] | ???    | 0x0   | *UNDEFINED*                 
- *  [27:16] | RW     | 0x4   | Remap Master ID = DAP ID    
- *  [30:28] | ???    | 0x0   | *UNDEFINED*                 
- *  [31]    | RW     | 0x1   | Force Mapping for ID=2      
- * 
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
+ *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x4   | Remap Master ID = DAP ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x1   | Force Mapping for ID=2
+ *
  */
 /*
  * Field : AWUSER value to SCU for ID=2 - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_USER register field. */
 #define ALT_ACPIDMAP_VID2WR_USER_LSB        4
@@ -246,11 +246,11 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_s  ALT_ACPIDMAP_VID2RD_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_PAGE register field. */
 #define ALT_ACPIDMAP_VID2WR_PAGE_LSB        12
@@ -271,12 +271,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_s  ALT_ACPIDMAP_VID2RD_t;
 
 /*
  * Field : Remap Master ID = DAP ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_MID register field. */
 #define ALT_ACPIDMAP_VID2WR_MID_LSB        16
@@ -297,12 +297,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_s  ALT_ACPIDMAP_VID2RD_t;
 
 /*
  * Field : Force Mapping for ID=2 - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_FORCE register field. */
 #define ALT_ACPIDMAP_VID2WR_FORCE_LSB        31
@@ -329,7 +329,7 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_s  ALT_ACPIDMAP_VID2RD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID2WR.
  */
 struct ALT_ACPIDMAP_VID2WR_s
@@ -353,32 +353,32 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_s  ALT_ACPIDMAP_VID2WR_t;
 
 /*
  * Register : Read AXI Master Mapping Register for Fixed Virtual ID 3 - vid3rd
- * 
+ *
  * The Read AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | ARUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | ARUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : ARUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_USER register field. */
 #define ALT_ACPIDMAP_VID3RD_USER_LSB        4
@@ -399,11 +399,11 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_s  ALT_ACPIDMAP_VID2WR_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_PAGE register field. */
 #define ALT_ACPIDMAP_VID3RD_PAGE_LSB        12
@@ -424,12 +424,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_s  ALT_ACPIDMAP_VID2WR_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_MID register field. */
 #define ALT_ACPIDMAP_VID3RD_MID_LSB        16
@@ -450,12 +450,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_s  ALT_ACPIDMAP_VID2WR_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_FORCE register field. */
 #define ALT_ACPIDMAP_VID3RD_FORCE_LSB        31
@@ -482,7 +482,7 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_s  ALT_ACPIDMAP_VID2WR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID3RD.
  */
 struct ALT_ACPIDMAP_VID3RD_s
@@ -506,32 +506,32 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_s  ALT_ACPIDMAP_VID3RD_t;
 
 /*
  * Register : Write AXI Master Mapping Register for Fixed Virtual ID 3 - vid3wr
- * 
+ *
  * The Write AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | AWUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | AWUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : AWUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_USER register field. */
 #define ALT_ACPIDMAP_VID3WR_USER_LSB        4
@@ -552,11 +552,11 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_s  ALT_ACPIDMAP_VID3RD_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_PAGE register field. */
 #define ALT_ACPIDMAP_VID3WR_PAGE_LSB        12
@@ -577,12 +577,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_s  ALT_ACPIDMAP_VID3RD_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_MID register field. */
 #define ALT_ACPIDMAP_VID3WR_MID_LSB        16
@@ -603,12 +603,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_s  ALT_ACPIDMAP_VID3RD_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_FORCE register field. */
 #define ALT_ACPIDMAP_VID3WR_FORCE_LSB        31
@@ -635,7 +635,7 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_s  ALT_ACPIDMAP_VID3RD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID3WR.
  */
 struct ALT_ACPIDMAP_VID3WR_s
@@ -659,32 +659,32 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_s  ALT_ACPIDMAP_VID3WR_t;
 
 /*
  * Register : Read AXI Master Mapping Register for Fixed Virtual ID 4 - vid4rd
- * 
+ *
  * The Read AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | ARUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | ARUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : ARUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_USER register field. */
 #define ALT_ACPIDMAP_VID4RD_USER_LSB        4
@@ -705,11 +705,11 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_s  ALT_ACPIDMAP_VID3WR_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_PAGE register field. */
 #define ALT_ACPIDMAP_VID4RD_PAGE_LSB        12
@@ -730,12 +730,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_s  ALT_ACPIDMAP_VID3WR_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_MID register field. */
 #define ALT_ACPIDMAP_VID4RD_MID_LSB        16
@@ -756,12 +756,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_s  ALT_ACPIDMAP_VID3WR_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_FORCE register field. */
 #define ALT_ACPIDMAP_VID4RD_FORCE_LSB        31
@@ -788,7 +788,7 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_s  ALT_ACPIDMAP_VID3WR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID4RD.
  */
 struct ALT_ACPIDMAP_VID4RD_s
@@ -812,32 +812,32 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_s  ALT_ACPIDMAP_VID4RD_t;
 
 /*
  * Register : Write AXI Master Mapping Register for Fixed Virtual ID 4 - vid4wr
- * 
+ *
  * The Write AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | AWUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | AWUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : AWUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_USER register field. */
 #define ALT_ACPIDMAP_VID4WR_USER_LSB        4
@@ -858,11 +858,11 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_s  ALT_ACPIDMAP_VID4RD_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_PAGE register field. */
 #define ALT_ACPIDMAP_VID4WR_PAGE_LSB        12
@@ -883,12 +883,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_s  ALT_ACPIDMAP_VID4RD_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_MID register field. */
 #define ALT_ACPIDMAP_VID4WR_MID_LSB        16
@@ -909,12 +909,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_s  ALT_ACPIDMAP_VID4RD_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_FORCE register field. */
 #define ALT_ACPIDMAP_VID4WR_FORCE_LSB        31
@@ -941,7 +941,7 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_s  ALT_ACPIDMAP_VID4RD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID4WR.
  */
 struct ALT_ACPIDMAP_VID4WR_s
@@ -965,32 +965,32 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_s  ALT_ACPIDMAP_VID4WR_t;
 
 /*
  * Register : Read AXI Master Mapping Register for Fixed Virtual ID 5 - vid5rd
- * 
+ *
  * The Read AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | ARUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | ARUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : ARUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_USER register field. */
 #define ALT_ACPIDMAP_VID5RD_USER_LSB        4
@@ -1011,11 +1011,11 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_s  ALT_ACPIDMAP_VID4WR_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_PAGE register field. */
 #define ALT_ACPIDMAP_VID5RD_PAGE_LSB        12
@@ -1036,12 +1036,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_s  ALT_ACPIDMAP_VID4WR_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_MID register field. */
 #define ALT_ACPIDMAP_VID5RD_MID_LSB        16
@@ -1062,12 +1062,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_s  ALT_ACPIDMAP_VID4WR_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_FORCE register field. */
 #define ALT_ACPIDMAP_VID5RD_FORCE_LSB        31
@@ -1094,7 +1094,7 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_s  ALT_ACPIDMAP_VID4WR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID5RD.
  */
 struct ALT_ACPIDMAP_VID5RD_s
@@ -1118,32 +1118,32 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_s  ALT_ACPIDMAP_VID5RD_t;
 
 /*
  * Register : Write AXI Master Mapping Register for Fixed Virtual ID 5 - vid5wr
- * 
+ *
  * The Write AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | AWUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | AWUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : AWUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_USER register field. */
 #define ALT_ACPIDMAP_VID5WR_USER_LSB        4
@@ -1164,11 +1164,11 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_s  ALT_ACPIDMAP_VID5RD_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_PAGE register field. */
 #define ALT_ACPIDMAP_VID5WR_PAGE_LSB        12
@@ -1189,12 +1189,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_s  ALT_ACPIDMAP_VID5RD_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_MID register field. */
 #define ALT_ACPIDMAP_VID5WR_MID_LSB        16
@@ -1215,12 +1215,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_s  ALT_ACPIDMAP_VID5RD_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_FORCE register field. */
 #define ALT_ACPIDMAP_VID5WR_FORCE_LSB        31
@@ -1247,7 +1247,7 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_s  ALT_ACPIDMAP_VID5RD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID5WR.
  */
 struct ALT_ACPIDMAP_VID5WR_s
@@ -1271,32 +1271,32 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_s  ALT_ACPIDMAP_VID5WR_t;
 
 /*
  * Register : Read AXI Master Mapping Register for Fixed Virtual ID 6 - vid6rd
- * 
+ *
  * The Read AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | ARUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | ARUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : ARUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_USER register field. */
 #define ALT_ACPIDMAP_VID6RD_USER_LSB        4
@@ -1317,11 +1317,11 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_s  ALT_ACPIDMAP_VID5WR_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_PAGE register field. */
 #define ALT_ACPIDMAP_VID6RD_PAGE_LSB        12
@@ -1342,12 +1342,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_s  ALT_ACPIDMAP_VID5WR_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_MID register field. */
 #define ALT_ACPIDMAP_VID6RD_MID_LSB        16
@@ -1368,12 +1368,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_s  ALT_ACPIDMAP_VID5WR_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_FORCE register field. */
 #define ALT_ACPIDMAP_VID6RD_FORCE_LSB        31
@@ -1400,7 +1400,7 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_s  ALT_ACPIDMAP_VID5WR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID6RD.
  */
 struct ALT_ACPIDMAP_VID6RD_s
@@ -1424,32 +1424,32 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_s  ALT_ACPIDMAP_VID6RD_t;
 
 /*
  * Register : Write AXI Master Mapping Register for Fixed Virtual ID 6 - vid6wr
- * 
+ *
  * The Write AXI Master Mapping Register contains the USER, ADDR page, and ID
  * signals mapping values for particular transaction with 12-bit ID which locks the
  * fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | AWUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | AWUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder
- *  [15:14] | ???    | 0x0   | *UNDEFINED*            
- *  [27:16] | RW     | 0x0   | Remap Master ID        
- *  [30:28] | ???    | 0x0   | *UNDEFINED*            
- *  [31]    | RW     | 0x0   | Force Mapping          
- * 
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Remap Master ID
+ *  [30:28] | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Force Mapping
+ *
  */
 /*
  * Field : AWUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_USER register field. */
 #define ALT_ACPIDMAP_VID6WR_USER_LSB        4
@@ -1470,11 +1470,11 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_s  ALT_ACPIDMAP_VID6RD_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_PAGE register field. */
 #define ALT_ACPIDMAP_VID6WR_PAGE_LSB        12
@@ -1495,12 +1495,12 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_s  ALT_ACPIDMAP_VID6RD_t;
 
 /*
  * Field : Remap Master ID - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_MID register field. */
 #define ALT_ACPIDMAP_VID6WR_MID_LSB        16
@@ -1521,12 +1521,12 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_s  ALT_ACPIDMAP_VID6RD_t;
 
 /*
  * Field : Force Mapping - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_FORCE register field. */
 #define ALT_ACPIDMAP_VID6WR_FORCE_LSB        31
@@ -1553,7 +1553,7 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_s  ALT_ACPIDMAP_VID6RD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID6WR.
  */
 struct ALT_ACPIDMAP_VID6WR_s
@@ -1577,29 +1577,29 @@ typedef volatile struct ALT_ACPIDMAP_VID6WR_s  ALT_ACPIDMAP_VID6WR_t;
 
 /*
  * Register : Read AXI Master Mapping Register for Dynamic Virtual ID Remap - dynrd
- * 
+ *
  * The Read AXI Master Mapping Register contains the USER, and ADDR page signals
  * mapping values for transaction that dynamically remapped to one of the available
  * 3-bit virtual IDs.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | ARUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | ARUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | ARADDR 1GB Page Decoder
- *  [31:14] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:14] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : ARUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNRD_USER register field. */
 #define ALT_ACPIDMAP_DYNRD_USER_LSB        4
@@ -1620,11 +1620,11 @@ typedef volatile struct ALT_ACPIDMAP_VID6WR_s  ALT_ACPIDMAP_VID6WR_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNRD_PAGE register field. */
 #define ALT_ACPIDMAP_DYNRD_PAGE_LSB        12
@@ -1651,7 +1651,7 @@ typedef volatile struct ALT_ACPIDMAP_VID6WR_s  ALT_ACPIDMAP_VID6WR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_DYNRD.
  */
 struct ALT_ACPIDMAP_DYNRD_s
@@ -1672,29 +1672,29 @@ typedef volatile struct ALT_ACPIDMAP_DYNRD_s  ALT_ACPIDMAP_DYNRD_t;
 
 /*
  * Register : Write AXI Master Mapping Register for Dynamic Virtual ID Remap - dynwr
- * 
+ *
  * The Write AXI Master Mapping Register contains the USER, and ADDR page signals
  * mapping values for transaction that dynamically remapped to one of the available
  * 3-bit virtual IDs.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [3:0]   | ???    | 0x0   | *UNDEFINED*            
- *  [8:4]   | RW     | 0x0   | AWUSER value to SCU    
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*            
+ *  [3:0]   | ???    | 0x0   | *UNDEFINED*
+ *  [8:4]   | RW     | 0x0   | AWUSER value to SCU
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
  *  [13:12] | RW     | 0x0   | AWADDR 1GB Page Decoder
- *  [31:14] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:14] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : AWUSER value to SCU - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNWR_USER register field. */
 #define ALT_ACPIDMAP_DYNWR_USER_LSB        4
@@ -1715,11 +1715,11 @@ typedef volatile struct ALT_ACPIDMAP_DYNRD_s  ALT_ACPIDMAP_DYNRD_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNWR_PAGE register field. */
 #define ALT_ACPIDMAP_DYNWR_PAGE_LSB        12
@@ -1746,7 +1746,7 @@ typedef volatile struct ALT_ACPIDMAP_DYNRD_s  ALT_ACPIDMAP_DYNRD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_DYNWR.
  */
 struct ALT_ACPIDMAP_DYNWR_s
@@ -1767,32 +1767,32 @@ typedef volatile struct ALT_ACPIDMAP_DYNWR_s  ALT_ACPIDMAP_DYNWR_t;
 
 /*
  * Register : Read AXI Master Mapping Status Register for Fixed Virtual ID 2 - vid2rd_s
- * 
+ *
  * The Read AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                          
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:--------------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                          
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
  *  [8:4]   | R      | 0x1     | ARUSER value to SCU for ID=2 (Status)
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                          
- *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)     
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                          
- *  [27:16] | R      | 0x4     | Remap Master ID = DAP ID (Status)    
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                          
- *  [31]    | R      | 0x1     | Force Mapping for ID=2 (Status)      
- * 
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
+ *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | 0x4     | Remap Master ID = DAP ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | 0x1     | Force Mapping for ID=2 (Status)
+ *
  */
 /*
  * Field : ARUSER value to SCU for ID=2 (Status) - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_S_USER register field. */
 #define ALT_ACPIDMAP_VID2RD_S_USER_LSB        4
@@ -1813,11 +1813,11 @@ typedef volatile struct ALT_ACPIDMAP_DYNWR_s  ALT_ACPIDMAP_DYNWR_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID2RD_S_PAGE_LSB        12
@@ -1838,12 +1838,12 @@ typedef volatile struct ALT_ACPIDMAP_DYNWR_s  ALT_ACPIDMAP_DYNWR_t;
 
 /*
  * Field : Remap Master ID = DAP ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_S_MID register field. */
 #define ALT_ACPIDMAP_VID2RD_S_MID_LSB        16
@@ -1864,12 +1864,12 @@ typedef volatile struct ALT_ACPIDMAP_DYNWR_s  ALT_ACPIDMAP_DYNWR_t;
 
 /*
  * Field : Force Mapping for ID=2 (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2RD_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID2RD_S_FORCE_LSB        31
@@ -1896,7 +1896,7 @@ typedef volatile struct ALT_ACPIDMAP_DYNWR_s  ALT_ACPIDMAP_DYNWR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID2RD_S.
  */
 struct ALT_ACPIDMAP_VID2RD_S_s
@@ -1920,32 +1920,32 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_S_s  ALT_ACPIDMAP_VID2RD_S_t;
 
 /*
  * Register : Write AXI Master Mapping Status Register for Fixed Virtual ID 2 - vid2wr_s
- * 
+ *
  * The Write AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                          
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:--------------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                          
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
  *  [8:4]   | R      | 0x1     | AWUSER value to SCU for ID=2 (Status)
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                          
- *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)     
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                          
- *  [27:16] | R      | 0x4     | Remap Master ID = DAP ID (Status)    
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                          
- *  [31]    | R      | 0x1     | Force Mapping for ID=2 (Status)      
- * 
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
+ *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | 0x4     | Remap Master ID = DAP ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | 0x1     | Force Mapping for ID=2 (Status)
+ *
  */
 /*
  * Field : AWUSER value to SCU for ID=2 (Status) - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_S_USER register field. */
 #define ALT_ACPIDMAP_VID2WR_S_USER_LSB        4
@@ -1966,11 +1966,11 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_S_s  ALT_ACPIDMAP_VID2RD_S_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID2WR_S_PAGE_LSB        12
@@ -1991,12 +1991,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_S_s  ALT_ACPIDMAP_VID2RD_S_t;
 
 /*
  * Field : Remap Master ID = DAP ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_S_MID register field. */
 #define ALT_ACPIDMAP_VID2WR_S_MID_LSB        16
@@ -2017,12 +2017,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_S_s  ALT_ACPIDMAP_VID2RD_S_t;
 
 /*
  * Field : Force Mapping for ID=2 (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID2WR_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID2WR_S_FORCE_LSB        31
@@ -2049,7 +2049,7 @@ typedef volatile struct ALT_ACPIDMAP_VID2RD_S_s  ALT_ACPIDMAP_VID2RD_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID2WR_S.
  */
 struct ALT_ACPIDMAP_VID2WR_S_s
@@ -2073,32 +2073,32 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_S_s  ALT_ACPIDMAP_VID2WR_S_t;
 
 /*
  * Register : Read AXI Master Mapping Status Register for Fixed Virtual ID 3 - vid3rd_s
- * 
+ *
  * The Read AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : ARUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_S_USER register field. */
 #define ALT_ACPIDMAP_VID3RD_S_USER_LSB        4
@@ -2119,11 +2119,11 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_S_s  ALT_ACPIDMAP_VID2WR_S_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID3RD_S_PAGE_LSB        12
@@ -2144,12 +2144,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_S_s  ALT_ACPIDMAP_VID2WR_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_S_MID register field. */
 #define ALT_ACPIDMAP_VID3RD_S_MID_LSB        16
@@ -2170,12 +2170,12 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_S_s  ALT_ACPIDMAP_VID2WR_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3RD_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID3RD_S_FORCE_LSB        31
@@ -2202,7 +2202,7 @@ typedef volatile struct ALT_ACPIDMAP_VID2WR_S_s  ALT_ACPIDMAP_VID2WR_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID3RD_S.
  */
 struct ALT_ACPIDMAP_VID3RD_S_s
@@ -2226,32 +2226,32 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_S_s  ALT_ACPIDMAP_VID3RD_S_t;
 
 /*
  * Register : Write AXI Master Mapping Status Register for Fixed Virtual ID 3 - vid3wr_s
- * 
+ *
  * The Write AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : AWUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_S_USER register field. */
 #define ALT_ACPIDMAP_VID3WR_S_USER_LSB        4
@@ -2272,11 +2272,11 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_S_s  ALT_ACPIDMAP_VID3RD_S_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID3WR_S_PAGE_LSB        12
@@ -2297,12 +2297,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_S_s  ALT_ACPIDMAP_VID3RD_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_S_MID register field. */
 #define ALT_ACPIDMAP_VID3WR_S_MID_LSB        16
@@ -2323,12 +2323,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_S_s  ALT_ACPIDMAP_VID3RD_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID3WR_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID3WR_S_FORCE_LSB        31
@@ -2355,7 +2355,7 @@ typedef volatile struct ALT_ACPIDMAP_VID3RD_S_s  ALT_ACPIDMAP_VID3RD_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID3WR_S.
  */
 struct ALT_ACPIDMAP_VID3WR_S_s
@@ -2379,32 +2379,32 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_S_s  ALT_ACPIDMAP_VID3WR_S_t;
 
 /*
  * Register : Read AXI Master Mapping Status Register for Fixed Virtual ID 4 - vid4rd_s
- * 
+ *
  * The Read AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : ARUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_S_USER register field. */
 #define ALT_ACPIDMAP_VID4RD_S_USER_LSB        4
@@ -2425,11 +2425,11 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_S_s  ALT_ACPIDMAP_VID3WR_S_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID4RD_S_PAGE_LSB        12
@@ -2450,12 +2450,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_S_s  ALT_ACPIDMAP_VID3WR_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_S_MID register field. */
 #define ALT_ACPIDMAP_VID4RD_S_MID_LSB        16
@@ -2476,12 +2476,12 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_S_s  ALT_ACPIDMAP_VID3WR_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4RD_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID4RD_S_FORCE_LSB        31
@@ -2508,7 +2508,7 @@ typedef volatile struct ALT_ACPIDMAP_VID3WR_S_s  ALT_ACPIDMAP_VID3WR_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID4RD_S.
  */
 struct ALT_ACPIDMAP_VID4RD_S_s
@@ -2532,32 +2532,32 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_S_s  ALT_ACPIDMAP_VID4RD_S_t;
 
 /*
  * Register : Write AXI Master Mapping Status Register for Fixed Virtual ID 4 - vid4wr_s
- * 
+ *
  * The Write AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : AWUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_S_USER register field. */
 #define ALT_ACPIDMAP_VID4WR_S_USER_LSB        4
@@ -2578,11 +2578,11 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_S_s  ALT_ACPIDMAP_VID4RD_S_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID4WR_S_PAGE_LSB        12
@@ -2603,12 +2603,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_S_s  ALT_ACPIDMAP_VID4RD_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_S_MID register field. */
 #define ALT_ACPIDMAP_VID4WR_S_MID_LSB        16
@@ -2629,12 +2629,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_S_s  ALT_ACPIDMAP_VID4RD_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID4WR_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID4WR_S_FORCE_LSB        31
@@ -2661,7 +2661,7 @@ typedef volatile struct ALT_ACPIDMAP_VID4RD_S_s  ALT_ACPIDMAP_VID4RD_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID4WR_S.
  */
 struct ALT_ACPIDMAP_VID4WR_S_s
@@ -2685,32 +2685,32 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_S_s  ALT_ACPIDMAP_VID4WR_S_t;
 
 /*
  * Register : Read AXI Master Mapping Status Register for Fixed Virtual ID 5 - vid5rd_s
- * 
+ *
  * The Read AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : ARUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_S_USER register field. */
 #define ALT_ACPIDMAP_VID5RD_S_USER_LSB        4
@@ -2731,11 +2731,11 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_S_s  ALT_ACPIDMAP_VID4WR_S_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID5RD_S_PAGE_LSB        12
@@ -2756,12 +2756,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_S_s  ALT_ACPIDMAP_VID4WR_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_S_MID register field. */
 #define ALT_ACPIDMAP_VID5RD_S_MID_LSB        16
@@ -2782,12 +2782,12 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_S_s  ALT_ACPIDMAP_VID4WR_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5RD_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID5RD_S_FORCE_LSB        31
@@ -2814,7 +2814,7 @@ typedef volatile struct ALT_ACPIDMAP_VID4WR_S_s  ALT_ACPIDMAP_VID4WR_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID5RD_S.
  */
 struct ALT_ACPIDMAP_VID5RD_S_s
@@ -2838,32 +2838,32 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_S_s  ALT_ACPIDMAP_VID5RD_S_t;
 
 /*
  * Register : Write AXI Master Mapping Status Register for Fixed Virtual ID 5 - vid5wr_s
- * 
+ *
  * The Write AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : AWUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_S_USER register field. */
 #define ALT_ACPIDMAP_VID5WR_S_USER_LSB        4
@@ -2884,11 +2884,11 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_S_s  ALT_ACPIDMAP_VID5RD_S_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID5WR_S_PAGE_LSB        12
@@ -2909,12 +2909,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_S_s  ALT_ACPIDMAP_VID5RD_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_S_MID register field. */
 #define ALT_ACPIDMAP_VID5WR_S_MID_LSB        16
@@ -2935,12 +2935,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_S_s  ALT_ACPIDMAP_VID5RD_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID5WR_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID5WR_S_FORCE_LSB        31
@@ -2967,7 +2967,7 @@ typedef volatile struct ALT_ACPIDMAP_VID5RD_S_s  ALT_ACPIDMAP_VID5RD_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID5WR_S.
  */
 struct ALT_ACPIDMAP_VID5WR_S_s
@@ -2991,32 +2991,32 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_S_s  ALT_ACPIDMAP_VID5WR_S_t;
 
 /*
  * Register : Read AXI Master Mapping Status Register for Fixed Virtual ID 6 - vid6rd_s
- * 
+ *
  * The Read AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : ARUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_S_USER register field. */
 #define ALT_ACPIDMAP_VID6RD_S_USER_LSB        4
@@ -3037,11 +3037,11 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_S_s  ALT_ACPIDMAP_VID5WR_S_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID6RD_S_PAGE_LSB        12
@@ -3062,12 +3062,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_S_s  ALT_ACPIDMAP_VID5WR_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_S_MID register field. */
 #define ALT_ACPIDMAP_VID6RD_S_MID_LSB        16
@@ -3088,12 +3088,12 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_S_s  ALT_ACPIDMAP_VID5WR_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6RD_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID6RD_S_FORCE_LSB        31
@@ -3120,7 +3120,7 @@ typedef volatile struct ALT_ACPIDMAP_VID5WR_S_s  ALT_ACPIDMAP_VID5WR_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID6RD_S.
  */
 struct ALT_ACPIDMAP_VID6RD_S_s
@@ -3144,32 +3144,32 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_S_s  ALT_ACPIDMAP_VID6RD_S_t;
 
 /*
  * Register : Write AXI Master Mapping Status Register for Fixed Virtual ID 6 - vid6wr_s
- * 
+ *
  * The Write AXI Master Mapping Status Register contains the configured USER, ADDR
  * page, and ID signals mapping values for particular transaction with 12-bit ID
  * which locks the fixed 3-bit virtual ID.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)
- *  [15:14] | ???    | 0x0     | *UNDEFINED*                     
- *  [27:16] | R      | Unknown | Remap Master ID (Status)        
- *  [30:28] | ???    | 0x0     | *UNDEFINED*                     
- *  [31]    | R      | Unknown | Force Mapping (Status)          
- * 
+ *  [15:14] | ???    | 0x0     | *UNDEFINED*
+ *  [27:16] | R      | Unknown | Remap Master ID (Status)
+ *  [30:28] | ???    | 0x0     | *UNDEFINED*
+ *  [31]    | R      | Unknown | Force Mapping (Status)
+ *
  */
 /*
  * Field : AWUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_S_USER register field. */
 #define ALT_ACPIDMAP_VID6WR_S_USER_LSB        4
@@ -3190,11 +3190,11 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_S_s  ALT_ACPIDMAP_VID6RD_S_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_S_PAGE register field. */
 #define ALT_ACPIDMAP_VID6WR_S_PAGE_LSB        12
@@ -3215,12 +3215,12 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_S_s  ALT_ACPIDMAP_VID6RD_S_t;
 
 /*
  * Field : Remap Master ID (Status) - mid
- * 
+ *
  * The 12-bit ID of the master to remap to 3-bit virtual ID N, where N is the 3-bit
  * ID to use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_S_MID register field. */
 #define ALT_ACPIDMAP_VID6WR_S_MID_LSB        16
@@ -3241,12 +3241,12 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_S_s  ALT_ACPIDMAP_VID6RD_S_t;
 
 /*
  * Field : Force Mapping (Status) - force
- * 
+ *
  * Set to 1 to force the mapping between the 12-bit ID and 3-bit virtual ID N. Set
  * to 0 to allow the 3-bit ID N to be dynamically allocated.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_VID6WR_S_FORCE register field. */
 #define ALT_ACPIDMAP_VID6WR_S_FORCE_LSB        31
@@ -3273,7 +3273,7 @@ typedef volatile struct ALT_ACPIDMAP_VID6RD_S_s  ALT_ACPIDMAP_VID6RD_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_VID6WR_S.
  */
 struct ALT_ACPIDMAP_VID6WR_S_s
@@ -3297,29 +3297,29 @@ typedef volatile struct ALT_ACPIDMAP_VID6WR_S_s  ALT_ACPIDMAP_VID6WR_S_t;
 
 /*
  * Register : Read AXI Master Mapping Status Register for Dynamic Virtual ID Remap - dynrd_s
- * 
+ *
  * The Read AXI Master Mapping Status Register contains the configured USER, and
  * ADDR page signals mapping values for transaction that dynamically remapped to
  * one of the available 3-bit virtual IDs.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | ARUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | ARADDR 1GB Page Decoder (Status)
- *  [31:14] | ???    | 0x0     | *UNDEFINED*                     
- * 
+ *  [31:14] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : ARUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as ARUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNRD_S_USER register field. */
 #define ALT_ACPIDMAP_DYNRD_S_USER_LSB        4
@@ -3340,11 +3340,11 @@ typedef volatile struct ALT_ACPIDMAP_VID6WR_S_s  ALT_ACPIDMAP_VID6WR_S_t;
 
 /*
  * Field : ARADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * ARADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNRD_S_PAGE register field. */
 #define ALT_ACPIDMAP_DYNRD_S_PAGE_LSB        12
@@ -3371,7 +3371,7 @@ typedef volatile struct ALT_ACPIDMAP_VID6WR_S_s  ALT_ACPIDMAP_VID6WR_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_DYNRD_S.
  */
 struct ALT_ACPIDMAP_DYNRD_S_s
@@ -3392,29 +3392,29 @@ typedef volatile struct ALT_ACPIDMAP_DYNRD_S_s  ALT_ACPIDMAP_DYNRD_S_t;
 
 /*
  * Register : Write AXI Master Mapping Status Register for Dynamic Virtual ID Remap - dynwr_s
- * 
+ *
  * The Write AXI Master Mapping Status Register contains the configured USER, and
  * ADDR page signals mapping values for transaction that dynamically remapped to
  * one of the available 3-bit virtual IDs.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                     
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------------
- *  [3:0]   | ???    | 0x0     | *UNDEFINED*                     
- *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)    
- *  [11:9]  | ???    | 0x0     | *UNDEFINED*                     
+ *  [3:0]   | ???    | 0x0     | *UNDEFINED*
+ *  [8:4]   | R      | Unknown | AWUSER value to SCU (Status)
+ *  [11:9]  | ???    | 0x0     | *UNDEFINED*
  *  [13:12] | R      | Unknown | AWADDR 1GB Page Decoder (Status)
- *  [31:14] | ???    | 0x0     | *UNDEFINED*                     
- * 
+ *  [31:14] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : AWUSER value to SCU (Status) - user
- * 
+ *
  * This value is propagated to SCU as AWUSERS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNWR_S_USER register field. */
 #define ALT_ACPIDMAP_DYNWR_S_USER_LSB        4
@@ -3435,11 +3435,11 @@ typedef volatile struct ALT_ACPIDMAP_DYNRD_S_s  ALT_ACPIDMAP_DYNRD_S_t;
 
 /*
  * Field : AWADDR 1GB Page Decoder (Status) - page
- * 
+ *
  * AWADDR remap to 1st, 2nd, 3rd, or 4th 1GB memory region.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_ACPIDMAP_DYNWR_S_PAGE register field. */
 #define ALT_ACPIDMAP_DYNWR_S_PAGE_LSB        12
@@ -3466,7 +3466,7 @@ typedef volatile struct ALT_ACPIDMAP_DYNRD_S_s  ALT_ACPIDMAP_DYNRD_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_ACPIDMAP_DYNWR_S.
  */
 struct ALT_ACPIDMAP_DYNWR_S_s
@@ -3493,7 +3493,7 @@ typedef volatile struct ALT_ACPIDMAP_DYNWR_S_s  ALT_ACPIDMAP_DYNWR_S_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_ACPIDMAP.
  */
 struct ALT_ACPIDMAP_s

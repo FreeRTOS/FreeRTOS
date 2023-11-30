@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -52,17 +52,17 @@ void DBGU_Configure(
     unsigned int mode,
     unsigned int baudrate,
     unsigned int mck)
-{   
+{
     // Reset & disable receiver and transmitter, disable interrupts
     AT91C_BASE_DBGU->DBGU_CR = AT91C_US_RSTRX | AT91C_US_RSTTX;
     AT91C_BASE_DBGU->DBGU_IDR = 0xFFFFFFFF;
-    
+
     // Configure baud rate
     AT91C_BASE_DBGU->DBGU_BRGR = mck / (baudrate * 16);
-    
+
     // Configure mode register
     AT91C_BASE_DBGU->DBGU_MR = mode;
-    
+
     // Disable DMA channel
     AT91C_BASE_DBGU->DBGU_PTCR = AT91C_PDC_RXTDIS | AT91C_PDC_TXTDIS;
 
@@ -79,10 +79,10 @@ void DBGU_PutChar(unsigned char c)
 {
     // Wait for the transmitter to be ready
     while ((AT91C_BASE_DBGU->DBGU_CSR & AT91C_US_TXEMPTY) == 0);
-    
+
     // Send character
     AT91C_BASE_DBGU->DBGU_THR = c;
-    
+
     // Wait for the transfer to complete
     while ((AT91C_BASE_DBGU->DBGU_CSR & AT91C_US_TXEMPTY) == 0);
 }
@@ -121,7 +121,7 @@ unsigned char DBGU_GetChar(void)
 signed int fputc(signed int c, FILE *pStream)
 {
     if ((pStream == stdout) || (pStream == stderr)) {
-    
+
         DBGU_PutChar(c);
         return c;
     }

@@ -388,7 +388,7 @@ void CLOCK_SetFLASHAccessCyclesForFreq(uint32_t iFreq)
 /* Set EXT OSC Clk */
 /**
  * brief   Initialize the external osc clock to given frequency.
- * Crystal oscillator with an operating frequency of 12 MHz to 32 MHz. 
+ * Crystal oscillator with an operating frequency of 12 MHz to 32 MHz.
  * Option for external clock input (bypass mode) for clock frequencies of up to 25 MHz.
  * param   iFreq   : Desired frequency (must be equal to exact rate in Hz)
  * return  returns success or fail status.

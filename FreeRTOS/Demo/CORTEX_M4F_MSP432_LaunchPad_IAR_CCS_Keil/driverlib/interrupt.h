@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -215,7 +215,7 @@ extern bool Interrupt_disableMaster(void);
 //! See the discussion of compile-time versus run-time interrupt handler
 //! registration in the introduction to this chapter.
 //!
-//! \note This function is only used if the customer wants to specify the 
+//! \note This function is only used if the customer wants to specify the
 //!  interrupt handler at run time. In most cases, this is done through means
 //!  of the user setting the ISR function pointer in the startup file. Refer
 //!  Refer to the Module Operation section for more details.

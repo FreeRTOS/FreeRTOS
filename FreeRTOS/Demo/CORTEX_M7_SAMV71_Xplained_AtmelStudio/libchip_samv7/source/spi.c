@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -41,9 +41,9 @@
  *    peripheral clock. The mode register is loaded with the given value.
  * -# Configure all the necessary chip selects with \ref SPI_ConfigureNPCS().
  * -# Enable the SPI by calling \ref SPI_Enable().
- * -# Send/receive data using \ref SPI_Write() and \ref SPI_Read(). Note that 
+ * -# Send/receive data using \ref SPI_Write() and \ref SPI_Read(). Note that
  * \ref SPI_Read()
- *    must be called after \ref SPI_Write() to retrieve the last value read. 
+ *    must be called after \ref SPI_Write() to retrieve the last value read.
  * -# Disable the SPI by calling \ref SPI_Disable().
  *
  * For more accurate information, please look at the SPI section of the
@@ -118,7 +118,7 @@ extern void SPI_DisableIt( Spi* spi, uint32_t dwSources )
 }
 
 /**
- * \brief Configures a SPI peripheral as specified. The configuration can be 
+ * \brief Configures a SPI peripheral as specified. The configuration can be
  * computed using several macros (see \ref spi_configuration_macros).
  *
  * \param spi  Pointer to an SPI instance.
@@ -155,7 +155,7 @@ extern void SPI_ChipSelect( Spi* spi, uint8_t cS)
  * \param spi  Pointer to an SPI instance.
  * \param configuration  Value of the SPI mode register.
  */
-extern void SPI_SetMode( Spi* spi, 
+extern void SPI_SetMode( Spi* spi,
 		uint32_t dwConfiguration )
 {
 	spi->SPI_MR = dwConfiguration ;
@@ -173,8 +173,8 @@ extern void SPI_ReleaseCS( Spi* spi )
 
 
 /**
- * \brief Configures a chip select of a SPI peripheral. The chip select 
- * configuration is computed using several macros 
+ * \brief Configures a chip select of a SPI peripheral. The chip select
+ * configuration is computed using several macros
  * (see \ref spi_configuration_macros).
  *
  * \param spi   Pointer to an SPI instance.
@@ -192,7 +192,7 @@ void SPI_ConfigureNPCS( Spi* spi, uint32_t dwNpcs, uint32_t dwConfiguration )
  * \param spi   Pointer to an SPI instance.
  * \param dwNpcs  Chip select to configure (0, 1, 2 or 3).
  * \param bReleaseOnLast CS controlled by last transfer.
- *                       SPI_ReleaseCS() is used to release CS. 
+ *                       SPI_ReleaseCS() is used to release CS.
  */
 void SPI_ConfigureCSMode( Spi* spi, uint32_t dwNpcs, uint32_t bReleaseOnLast )
 {
@@ -216,7 +216,7 @@ extern uint32_t SPI_GetStatus( Spi* spi )
 }
 
 /**
- * \brief Reads and returns the last word of data received by a SPI peripheral. 
+ * \brief Reads and returns the last word of data received by a SPI peripheral.
  * This method must be called after a successful SPI_Write call.
  *
  * \param spi  Pointer to an Spi instance.
@@ -231,7 +231,7 @@ extern uint32_t SPI_Read( Spi* spi )
 }
 
 /**
- * \brief Sends data through a SPI peripheral. If the SPI is configured to use a 
+ * \brief Sends data through a SPI peripheral. If the SPI is configured to use a
  * fixed  peripheral select, the npcs value is meaningless. Otherwise,
  * it identifies the component which shall be addressed.
  *
@@ -269,7 +269,7 @@ extern void SPI_WriteLast( Spi* spi, uint32_t dwNpcs, uint16_t wData )
  *
  * \param spi  Pointer to an SPI instance.
  *
- * \return Returns 1 if there is no pending write operation on the SPI; 
+ * \return Returns 1 if there is no pending write operation on the SPI;
  * otherwise returns 0.
  */
 extern uint32_t SPI_IsFinished( Spi* spi )

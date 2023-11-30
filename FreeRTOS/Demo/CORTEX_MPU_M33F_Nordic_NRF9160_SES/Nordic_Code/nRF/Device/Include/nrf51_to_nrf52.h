@@ -105,10 +105,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef SWI3_IRQn
     #define SWI3_IRQn               SWI3_EGU3_IRQn
-#endif    
+#endif
 #ifndef SWI4_IRQn
     #define SWI4_IRQn               SWI4_EGU4_IRQn
-#endif    
+#endif
 #ifndef SWI5_IRQn
     #define SWI5_IRQn               SWI5_EGU5_IRQn
 #endif
@@ -168,7 +168,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef PSELCSN
     #define PSELCSN       PSEL.CSN
-#endif    
+#endif
 
 /* The registers RXDPTR, MAXRX, AMOUNTRX were restructured into a struct */
 #ifndef RXDPTR
@@ -394,7 +394,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef MPU_PROTENSET1_PROTREG54_Pos
     #define MPU_PROTENSET1_PROTREG54_Pos        BPROT_CONFIG1_REGION54_Pos
-#endif 
+#endif
 #ifndef MPU_PROTENSET1_PROTREG54_Msk
     #define MPU_PROTENSET1_PROTREG54_Msk        BPROT_CONFIG1_REGION54_Msk
 #endif
@@ -1027,7 +1027,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef MPU_PROTENSET0_PROTREG15_Enabled
     #define MPU_PROTENSET0_PROTREG15_Enabled    BPROT_CONFIG0_REGION15_Enabled
-#endif 
+#endif
 #ifndef MPU_PROTENSET0_PROTREG15_Set
     #define MPU_PROTENSET0_PROTREG15_Set        BPROT_CONFIG0_REGION15_Enabled
 #endif
@@ -1279,7 +1279,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* The register ERASEPROTECTEDPAGE changed name to ERASEPCR0 in the documentation. */
 #ifndef ERASEPROTECTEDPAGE
     #define ERASEPROTECTEDPAGE      ERASEPCR0
-#endif    
+#endif
 
 
 /* IRQ */
@@ -1446,7 +1446,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef CH6_TEP
     #define CH6_TEP          CH[6].TEP
-#endif 
+#endif
 #ifndef CH7_EEP
     #define CH7_EEP          CH[7].EEP
 #endif
@@ -1492,7 +1492,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef CH14_EEP
     #define CH14_EEP         CH[14].EEP
 #endif
-#ifndef CH14_TEP 
+#ifndef CH14_TEP
     #define CH14_TEP         CH[14].TEP
 #endif
 #ifndef CH15_EEP
@@ -1519,7 +1519,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* All bitfield macros for the CHGx registers therefore changed name. */
 #ifndef PPI_CHG0_CH15_Pos
     #define PPI_CHG0_CH15_Pos       PPI_CHG_CH15_Pos
-#endif 
+#endif
 #ifndef PPI_CHG0_CH15_Msk
     #define PPI_CHG0_CH15_Msk       PPI_CHG_CH15_Msk
 #endif
@@ -1819,13 +1819,13 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef PPI_CHG1_CH8_Pos
     #define PPI_CHG1_CH8_Pos        PPI_CHG_CH8_Pos
 #endif
-#ifndef PPI_CHG1_CH8_Msk 
+#ifndef PPI_CHG1_CH8_Msk
     #define PPI_CHG1_CH8_Msk        PPI_CHG_CH8_Msk
 #endif
 #ifndef PPI_CHG1_CH8_Excluded
     #define PPI_CHG1_CH8_Excluded   PPI_CHG_CH8_Excluded
 #endif
-#ifndef PPI_CHG1_CH8_Included 
+#ifndef PPI_CHG1_CH8_Included
     #define PPI_CHG1_CH8_Included   PPI_CHG_CH8_Included
 #endif
 
@@ -2110,7 +2110,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #ifndef PPI_CHG2_CH2_Excluded
     #define PPI_CHG2_CH2_Excluded   PPI_CHG_CH2_Excluded
-#endif 
+#endif
 #ifndef PPI_CHG2_CH2_Included
     #define PPI_CHG2_CH2_Included   PPI_CHG_CH2_Included
 #endif

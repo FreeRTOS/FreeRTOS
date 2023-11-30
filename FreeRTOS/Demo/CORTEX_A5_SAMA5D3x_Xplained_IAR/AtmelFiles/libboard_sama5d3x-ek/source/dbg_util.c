@@ -80,7 +80,7 @@ static uint16_t _GetCRC(uint8_t bByte, uint16_t wCrc)
         if (newBit) wCrc ^= (0x1021);
     }
     return wCrc;
-    
+
 }
 
 /*-------------------------------

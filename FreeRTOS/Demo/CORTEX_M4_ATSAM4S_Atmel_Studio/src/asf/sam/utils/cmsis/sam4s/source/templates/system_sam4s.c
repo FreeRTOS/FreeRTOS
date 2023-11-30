@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called 
+ * \brief Provides the low-level initialization functions that called
  * on chip startup.
  *
  * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
@@ -75,19 +75,19 @@ void SystemInit(void)
 
 	/* Initialize main oscillator */
 	if (!(PMC->CKGR_MOR & CKGR_MOR_MOSCSEL)) {
-		PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT | 
+		PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT |
 			                     CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN;
 		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS)) {
 		}
 	}
 
 	/* Switch to 3-20MHz Xtal oscillator */
-	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT | 
+	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT |
 	                           CKGR_MOR_MOSCRCEN | CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;
 
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS)) {
 	}
-		PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) | 
+		PMC->PMC_MCKR = (PMC->PMC_MCKR & ~(uint32_t)PMC_MCKR_CSS_Msk) |
 			                    PMC_MCKR_CSS_MAIN_CLK;
 		while (!(PMC->PMC_SR & PMC_SR_MCKRDY)) {
 	}
@@ -162,14 +162,14 @@ void SystemCoreClockUpdate(void)
 			}
 		}
 		if ((uint32_t) (PMC->PMC_MCKR & (uint32_t) PMC_MCKR_CSS_Msk) == PMC_MCKR_CSS_PLLA_CLK) {
-			SystemCoreClock *= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_MULA_Msk) >> 
+			SystemCoreClock *= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_MULA_Msk) >>
 				                          CKGR_PLLAR_MULA_Pos) + 1U);
-			SystemCoreClock /= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_DIVA_Msk) >> 
+			SystemCoreClock /= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_DIVA_Msk) >>
 				                          CKGR_PLLAR_DIVA_Pos));
 		} else {
-			SystemCoreClock *= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_MULB_Msk) >> 
+			SystemCoreClock *= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_MULB_Msk) >>
 				                           CKGR_PLLBR_MULB_Pos) + 1U);
-			SystemCoreClock /= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_DIVB_Msk) >> 
+			SystemCoreClock /= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_DIVB_Msk) >>
 				                               CKGR_PLLBR_DIVB_Pos));
 		}
 		break;
@@ -184,7 +184,7 @@ void SystemCoreClockUpdate(void)
 	}
 }
 
-/** 
+/**
  * Initialize flash.
  */
 void system_init_flash(uint32_t ul_clk)

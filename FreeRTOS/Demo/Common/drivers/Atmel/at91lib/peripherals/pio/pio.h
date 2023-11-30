@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -44,11 +44,11 @@
 //------------------------------------------------------------------------------
 /// \unit
 /// !Purpose
-/// 
+///
 /// Simple & portable usage of PIO pins.
-/// 
+///
 /// !Usage
-/// 
+///
 /// -# Define a constant pin description array such as the following one:
 ///    \code
 ///       const Pin at91board_dbgu[] = {
@@ -78,7 +78,7 @@
 /// -# Set and get the value of a pin using the PIO_Set, PIO_Clear and
 ///    PIO_Get methods.
 //------------------------------------------------------------------------------
- 
+
 #ifndef PIO_H
 #define PIO_H
 
@@ -92,14 +92,14 @@
 //         Definitions
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-/// \page "Pin types" 
+/// \page "Pin types"
 /// This page lists the available types for a Pin instance (in its type field).
 /// !Types
-/// - PIO_PERIPH_A 
-/// - PIO_PERIPH_B 
-/// - PIO_INPUT 
-/// - PIO_OUTPUT_0 
-/// - PIO_OUTPUT_1 
+/// - PIO_PERIPH_A
+/// - PIO_PERIPH_B
+/// - PIO_INPUT
+/// - PIO_OUTPUT_0
+/// - PIO_OUTPUT_1
 
 /// The pin is controlled by the associated signal of peripheral A.
 #define PIO_PERIPH_A                0
@@ -143,7 +143,7 @@
 /// Describes the type and attribute of one PIO pin or a group of similar pins.
 typedef struct {
     /// Bitmask indicating which pin(s) to configure.
-    unsigned int mask; 
+    unsigned int mask;
     /// Pointer to the PIO controller which has the pin(s).
     AT91S_PIO    *pio;
     /// Peripheral ID of the PIO controller which has the pin(s).

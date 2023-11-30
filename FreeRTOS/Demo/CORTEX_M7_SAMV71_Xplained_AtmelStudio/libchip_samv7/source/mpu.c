@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -29,31 +29,31 @@
 
 /** \file */
 
-/** 
+/**
  * \addtogroup mmu MMU Initialization
  *
  * \section Usage
  *
- * Translation Look-aside Buffers (TLBs) are an implementation technique that 
- * caches translations or translation table entries. TLBs avoid the requirement 
- * for every memory access to perform a translation table lookup. 
- * The ARM architecture does not specify the exact form of the TLB structures 
- * for any design. In a similar way to the requirements for caches, the 
+ * Translation Look-aside Buffers (TLBs) are an implementation technique that
+ * caches translations or translation table entries. TLBs avoid the requirement
+ * for every memory access to perform a translation table lookup.
+ * The ARM architecture does not specify the exact form of the TLB structures
+ * for any design. In a similar way to the requirements for caches, the
  * architecture only defines certain principles for TLBs:
- * 
+ *
  * The MMU supports memory accesses based on memory sections or pages:
- * Super-sections Consist of 16MB blocks of memory. Support for Super sections 
+ * Super-sections Consist of 16MB blocks of memory. Support for Super sections
  * is optional.
  * -# Sections Consist of 1MB blocks of memory.
  * -# Large pages Consist of 64KB blocks of memory.
  * -# Small pages Consist of 4KB blocks of memory.
  *
- * Access to a memory region is controlled by the access permission bits and 
+ * Access to a memory region is controlled by the access permission bits and
  * the domain field in the TLB entry.
  * Memory region attributes
- * Each TLB entry has an associated set of memory region attributes. These 
+ * Each TLB entry has an associated set of memory region attributes. These
  * control accesses to the caches,
- * how the write buffer is used, and if the memory region is Shareable and 
+ * how the write buffer is used, and if the memory region is Shareable and
  * therefore must be kept coherent.
  *
  * Related files:\n
@@ -102,7 +102,7 @@ extern void MPU_DisableRegion( void )
  * \brief Setup a memory region.
  *
  * \param dwRegionBaseAddr  Memory region base address.
- * \param dwRegionAttr  Memory region attributes.  
+ * \param dwRegionAttr  Memory region attributes.
  */
 void MPU_SetRegion( uint32_t dwRegionBaseAddr, uint32_t dwRegionAttr )
 {
@@ -140,7 +140,7 @@ uint32_t MPU_CalMPURegionSize( uint32_t dwActualSizeInBytes )
 void MPU_UpdateRegions( uint32_t dwRegionNum, uint32_t dwRegionBaseAddr,
 		uint32_t dwRegionAttr)
 {
-	
+
 	/* Disable interrupt */
 	__disable_irq();
 
@@ -157,7 +157,7 @@ void MPU_UpdateRegions( uint32_t dwRegionNum, uint32_t dwRegionBaseAddr,
 	/* Update region attribute */
 	MPU_SetRegion( dwRegionBaseAddr, dwRegionAttr);
 
-	/* Clean up data and instruction buffer to make the new region taking 
+	/* Clean up data and instruction buffer to make the new region taking
 	   effect at once */
 	__DSB();
 	__ISB();

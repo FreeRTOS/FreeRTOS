@@ -77,7 +77,7 @@ extern uint8_t TWID_Read(
     uint8_t *pData,
     uint32_t num,
     Async *pAsync);
-    
+
 extern uint8_t TWID_DmaRead(
     Twid *pTwid,
     uint8_t address,

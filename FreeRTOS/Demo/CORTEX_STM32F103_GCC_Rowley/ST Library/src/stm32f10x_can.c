@@ -100,7 +100,7 @@ void CAN_DeInit(void)
 * Input          : CAN_InitStruct: pointer to a CAN_InitTypeDef structure that
                    contains the configuration information for the CAN peripheral.
 * Output         : None.
-* Return         : Constant indicates initialization succeed which will be 
+* Return         : Constant indicates initialization succeed which will be
 *                  CANINITFAILED or CANINITOK.
 *******************************************************************************/
 u8 CAN_Init(CAN_InitTypeDef* CAN_InitStruct)
@@ -205,7 +205,7 @@ u8 CAN_Init(CAN_InitTypeDef* CAN_InitStruct)
     for(WaitAck = 0x400; WaitAck > 0x0; WaitAck--)
     {
     }
-    
+
     /* ...and check acknowledged */
     if ((CAN->MSR & CAN_MSR_INAK) == CAN_MSR_INAK)
     {
@@ -237,7 +237,7 @@ void CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct)
   assert_param(IS_CAN_FILTER_FIFO(CAN_FilterInitStruct->CAN_FilterFIFOAssignment));
   assert_param(IS_FUNCTIONAL_STATE(CAN_FilterInitStruct->CAN_FilterActivation));
 
-  FilterNumber_BitPos = 
+  FilterNumber_BitPos =
   (u16)((u16)0x0001 << ((u16)CAN_FilterInitStruct->CAN_FilterNumber));
 
   /* Initialisation mode for the filter */
@@ -254,13 +254,13 @@ void CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct)
 
     /* First 16-bit identifier and First 16-bit mask */
     /* Or First 16-bit identifier and Second 16-bit identifier */
-    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR1 = 
+    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR1 =
     ((u32)((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterMaskIdLow) << 16) |
         ((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterIdLow);
 
     /* Second 16-bit identifier and Second 16-bit mask */
     /* Or Third 16-bit identifier and Fourth 16-bit identifier */
-    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR2 = 
+    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR2 =
     ((u32)((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterMaskIdHigh) << 16) |
         ((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterIdHigh);
   }
@@ -270,12 +270,12 @@ void CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct)
     CAN->FS1R |= FilterNumber_BitPos;
 
     /* 32-bit identifier or First 32-bit identifier */
-    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR1 = 
+    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR1 =
     ((u32)((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterIdHigh) << 16) |
         ((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterIdLow);
 
     /* 32-bit mask or Second 32-bit identifier */
-    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR2 = 
+    CAN->sFilterRegister[CAN_FilterInitStruct->CAN_FilterNumber].FR2 =
     ((u32)((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterMaskIdHigh) << 16) |
         ((u32)0x0000FFFF & CAN_FilterInitStruct->CAN_FilterMaskIdLow);
 
@@ -304,7 +304,7 @@ void CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct)
     /* FIFO 1 assignation for the filter */
     CAN->FFA1R |= (u32)FilterNumber_BitPos;
   }
-  
+
   /* Filter activation */
   if (CAN_FilterInitStruct->CAN_FilterActivation == ENABLE)
   {
@@ -440,7 +440,7 @@ u8 CAN_Transmit(CanTxMsg* TxMessage)
     {
       TxMessage->StdId &= (u32)0x000007FF;
       TxMessage->StdId = TxMessage->StdId << 21;
-      
+
       CAN->sTxMailBox[TransmitMailbox].TIR |= (TxMessage->StdId | TxMessage->IDE |
                                                TxMessage->RTR);
     }
@@ -449,21 +449,21 @@ u8 CAN_Transmit(CanTxMsg* TxMessage)
       TxMessage->ExtId &= (u32)0x1FFFFFFF;
       TxMessage->ExtId <<= 3;
 
-      CAN->sTxMailBox[TransmitMailbox].TIR |= (TxMessage->ExtId | TxMessage->IDE | 
+      CAN->sTxMailBox[TransmitMailbox].TIR |= (TxMessage->ExtId | TxMessage->IDE |
                                                TxMessage->RTR);
     }
-    
+
     /* Set up the DLC */
     TxMessage->DLC &= (u8)0x0000000F;
     CAN->sTxMailBox[TransmitMailbox].TDTR &= (u32)0xFFFFFFF0;
     CAN->sTxMailBox[TransmitMailbox].TDTR |= TxMessage->DLC;
 
     /* Set up the data field */
-    CAN->sTxMailBox[TransmitMailbox].TDLR = (((u32)TxMessage->Data[3] << 24) | 
+    CAN->sTxMailBox[TransmitMailbox].TDLR = (((u32)TxMessage->Data[3] << 24) |
                                              ((u32)TxMessage->Data[2] << 16) |
-                                             ((u32)TxMessage->Data[1] << 8) | 
+                                             ((u32)TxMessage->Data[1] << 8) |
                                              ((u32)TxMessage->Data[0]));
-    CAN->sTxMailBox[TransmitMailbox].TDHR = (((u32)TxMessage->Data[7] << 24) | 
+    CAN->sTxMailBox[TransmitMailbox].TDHR = (((u32)TxMessage->Data[7] << 24) |
                                              ((u32)TxMessage->Data[6] << 16) |
                                              ((u32)TxMessage->Data[5] << 8) |
                                              ((u32)TxMessage->Data[4]));
@@ -632,7 +632,7 @@ void CAN_Receive(u8 FIFONumber, CanRxMsg* RxMessage)
   {
     RxMessage->ExtId = (u32)0x1FFFFFFF & (CAN->sFIFOMailBox[FIFONumber].RIR >> 3);
   }
-  
+
   RxMessage->RTR = (u8)0x02 & CAN->sFIFOMailBox[FIFONumber].RIR;
 
   /* Get the DLC */
@@ -758,12 +758,12 @@ void CAN_ClearFlag(u32 CAN_FLAG)
 
 /*******************************************************************************
 * Function Name  : CAN_GetITStatus
-* Description    : Checks whether the specified CAN interrupt has occurred or 
+* Description    : Checks whether the specified CAN interrupt has occurred or
 *                  not.
 * Input          : CAN_IT: specifies the CAN interrupt source to check.
 *                  This parameter can be: CAN_IT_RQCP0, CAN_IT_RQCP1, CAN_IT_RQCP2,
 *                                         CAN_IT_FF0, CAN_IT_FOV0, CAN_IT_FF1,
-*                                         CAN_IT_FOV1, CAN_IT_EWG, CAN_IT_EPV, 
+*                                         CAN_IT_FOV1, CAN_IT_EWG, CAN_IT_EPV,
 *                                         CAN_IT_BOF, CAN_IT_WKU or CAN_IT_SLK.
 * Output         : None.
 * Return         : The new state of CAN_IT (SET or RESET).

@@ -26,8 +26,8 @@
 
 /******************************************************************************
  * NOTE 1:  This project provides two demo applications.  A simple blinky
- * style project, and a more comprehensive test and demo application.  The 
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select 
+ * style project, and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
  * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
  * in main.c.  This file implements the simply blinky style version.
  *

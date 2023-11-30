@@ -16,25 +16,25 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-@echo off 
+@echo off
 
-if not "%~1" == "" goto debugFile 
+if not "%~1" == "" goto debugFile
 
-@echo on 
+@echo on
 
-"C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.general.xcl" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.driver.xcl" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.general.xcl" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.driver.xcl"
 
-@echo off 
-goto end 
+@echo off
+goto end
 
-:debugFile 
+:debugFile
 
-@echo on 
+@echo on
 
-"C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.driver.xcl" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM7.driver.xcl"
 
-@echo off 
+@echo off
 :end

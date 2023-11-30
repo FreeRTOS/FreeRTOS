@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -112,7 +112,7 @@ uint8_t QT1070_GetDetection_Status(Twid *pTwid)
 }
 
 /**
- * \brief  Get qt1070 Key status. 
+ * \brief  Get qt1070 Key status.
  *
  * \param pTwid   Pointer to twi driver structure.
  * \return Key status.
@@ -155,7 +155,7 @@ uint16_t QT1070_GetKey_Reference(Twid *pTwid, uint8_t key)
 }
 
 /**
- * \brief  Set the threshold value for the given Key. 
+ * \brief  Set the threshold value for the given Key.
  *
  * \param pTwid   Pointer to twi driver structure.
  * \param key     Key index.
@@ -163,16 +163,16 @@ uint16_t QT1070_GetKey_Reference(Twid *pTwid, uint8_t key)
  */
 void QT1070_SetThreshold(Twid *pTwid, uint8_t key, uint8_t threshold)
 {
-    // Do not use a setting of 0 as this causes a key to go into detection 
+    // Do not use a setting of 0 as this causes a key to go into detection
     // when its signal is equal to its reference.
-    if ( threshold ) 
+    if ( threshold )
     {
         QT1070_WriteReg(pTwid, QT1070_REG_NTHR_KEY0 + key, threshold);
     }
 }
 
 /**
- * \brief  Set Averaging factor and adjacent key suppression for the given Key. 
+ * \brief  Set Averaging factor and adjacent key suppression for the given Key.
  *
  * \param pTwid   Pointer to twi driver structure.
  * \param key     Key index.
@@ -181,7 +181,7 @@ void QT1070_SetThreshold(Twid *pTwid, uint8_t key, uint8_t threshold)
  */
 void QT1070_SetAveAks(Twid *pTwid, uint8_t key, uint8_t Ave, uint8_t Aks)
 {
-    QT1070_WriteReg(pTwid, QT1070_REG_AVEAKS_KEY0 + key, (Ave << 3) | Aks ); 
+    QT1070_WriteReg(pTwid, QT1070_REG_AVEAKS_KEY0 + key, (Ave << 3) | Aks );
 }
 
 /**
@@ -196,9 +196,9 @@ void QT1070_SetAveAks(Twid *pTwid, uint8_t key, uint8_t Ave, uint8_t Aks)
 
 void QT1070_SetDetectionIntegrator(Twid *pTwid, uint8_t key, uint8_t di)
 {
-    QT1070_WriteReg(pTwid, QT1070_REG_DI_KEY0 + key, di); 
+    QT1070_WriteReg(pTwid, QT1070_REG_DI_KEY0 + key, di);
 }
- 
+
 /**
  * \brief Start a calibration cycle, the CALIBTATE flag in the detection status
  * register is set when the calibration begins and clears when the calibration
@@ -209,7 +209,7 @@ void QT1070_SetDetectionIntegrator(Twid *pTwid, uint8_t key, uint8_t di)
 
 void QT1070_StartCalibrate(Twid *pTwid)
 {
-    QT1070_WriteReg(pTwid, QT1070_REG_CALIRATE , 1); 
+    QT1070_WriteReg(pTwid, QT1070_REG_CALIRATE , 1);
 }
 
 /**
@@ -220,5 +220,5 @@ void QT1070_StartCalibrate(Twid *pTwid)
 
 void QT1070_StartReset(Twid *pTwid)
 {
-    QT1070_WriteReg(pTwid, QT1070_REG_RESET , 1); 
+    QT1070_WriteReg(pTwid, QT1070_REG_RESET , 1);
 }

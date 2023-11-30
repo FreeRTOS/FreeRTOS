@@ -33,19 +33,19 @@
  * \n
  *
  * The Advanced Encryption Standard (AES) specifies a FIPS-approved cryptographic algorithm
- * that can be used to protect electronic data. The AES algorithm is a symmetric block 
+ * that can be used to protect electronic data. The AES algorithm is a symmetric block
  * cipher that can encrypt (encipher) and decrypt (decipher) information.
- * Encryption converts data to an unintelligible form called ciphertext. 
- * Decrypting the ciphertext converts the data back into its original form, 
- * called plaintext. The CIPHER bit in the AES Mode Register (AES_MR) allows selection 
- * between the encryption and the decryption processes. The AES is capable of using cryptographic 
- * keys of 128/192/256 bits to encrypt and decrypt data in blocks of 128 bits. 
- * This 128-bit/192-bit/256-bit key is defined in the Key Registers (AES_KEYWRx) and set by 
+ * Encryption converts data to an unintelligible form called ciphertext.
+ * Decrypting the ciphertext converts the data back into its original form,
+ * called plaintext. The CIPHER bit in the AES Mode Register (AES_MR) allows selection
+ * between the encryption and the decryption processes. The AES is capable of using cryptographic
+ * keys of 128/192/256 bits to encrypt and decrypt data in blocks of 128 bits.
+ * This 128-bit/192-bit/256-bit key is defined in the Key Registers (AES_KEYWRx) and set by
  * AES_WriteKey(). The input to the encryption processes of the CBC, CFB, and OFB modes includes,
- * in addition to the plaintext, a 128-bit data block called the initialization vector (IV), 
- * which must be set with AES_SetVector(). 
- * The initialization vector is used in an initial step in the encryption of a message and 
- * in the corresponding decryption of the message. The Initialization Vector Registers are 
+ * in addition to the plaintext, a 128-bit data block called the initialization vector (IV),
+ * which must be set with AES_SetVector().
+ * The initialization vector is used in an initial step in the encryption of a message and
+ * in the corresponding decryption of the message. The Initialization Vector Registers are
  * also used by the CTR mode to set the counter value.
  *
   * To Enable a AES encryption and decryption,the user has to follow these few steps:
@@ -117,7 +117,7 @@ void AES_Recount(void)
  */
 void AES_Configure(uint32_t mode)
 {
-    AES->AES_MR = mode; 
+    AES->AES_MR = mode;
 }
 
 /**
@@ -187,7 +187,7 @@ void AES_SetInput(uint32_t *data)
 void AES_GetOutput(uint32_t *data)
 {
     uint8_t i;
-    for (i = 0; i< 4; i++) 
+    for (i = 0; i< 4; i++)
         data[i] = AES->AES_ODATAR[i];
 }
 
@@ -215,7 +215,7 @@ void AES_SetAadLen(uint32_t len)
 }
 
 /**
- * \brief Set Length in bytes of the Length in bytes of the 
+ * \brief Set Length in bytes of the Length in bytes of the
  * plaintext/ciphertext (C) data that is to be processed..
  * \param len Length.
  */
@@ -225,28 +225,28 @@ void AES_SetDataLen(uint32_t len)
 }
 
 /**
- * \brief Set The four 32-bit Hash Word registers expose the intermediate GHASH value. 
- * May be read to save the current GHASH value so processing can later be resumed, 
+ * \brief Set The four 32-bit Hash Word registers expose the intermediate GHASH value.
+ * May be read to save the current GHASH value so processing can later be resumed,
  * presumably on a later message fragment. modes of operation as an additional initial input.
  * \param hash point to the word of the hash.
  */
 void AES_SetGcmHash(uint32_t * hash)
 {
     uint8_t i;
-    for (i = 0; i< 4; i++) 
+    for (i = 0; i< 4; i++)
         AES->AES_GHASHR[i] = hash[i];
 }
 
 
 /**
- * \brief Get The four 32-bit Tag which contain the final 128-bit GCM Authentication tag 
+ * \brief Get The four 32-bit Tag which contain the final 128-bit GCM Authentication tag
  * ¡°T¡± when GCM processing is complete.
  * \param tag point to the word of the tag.
  */
 void AES_GetGcmTag(uint32_t * tag)
 {
     uint8_t i;
-    for (i = 0; i< 4; i++) 
+    for (i = 0; i< 4; i++)
         tag[i] = AES->AES_TAGR[i] ;
 }
 
@@ -267,7 +267,7 @@ void AES_GetGcmCounter(uint32_t * counter)
 void AES_GetGcmH(uint32_t *h)
 {
     uint8_t i;
-    for (i = 0; i< 4; i++) 
+    for (i = 0; i< 4; i++)
         h[i] = AES->AES_GCMHR[i];
 }
 

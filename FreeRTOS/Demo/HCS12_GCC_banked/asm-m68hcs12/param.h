@@ -1,6 +1,6 @@
 /* param.h - Board specific parameters
    Copyright (C) 2000 Free Software Foundation, Inc.
-   Written by Stephane Carrez (stcarrez@worldnet.fr)	
+   Written by Stephane Carrez (stcarrez@worldnet.fr)
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -35,7 +35,7 @@ Boston, MA 02111-1307, USA.  */
 /*@{*/
 
 /** CPU Clock frequency.
- 
+
    Define the frequency of the oscillator plugged on the processor.
    The value is in hertz. */
 #ifndef M6811_CPU_CLOCK
@@ -43,7 +43,7 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 /** CPU E clock.
-    
+
    The E clock frequency.  This frequency is used as the
    basis for timer computation.  The value is in hertz.  */
 #ifndef M6811_CPU_E_CLOCK
@@ -63,7 +63,7 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 /** SIO default baud rate.
-    
+
    Defines the default baud rate of the SIO.  This value
    is used to configure the BAUD register.
   */
@@ -72,7 +72,7 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 /** Use the COP.
-    
+
    Define this if you are using the COP timer.
    This activate the COP reset while polling and writing on
    the serial line.  */

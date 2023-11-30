@@ -27,8 +27,8 @@
 
 #if GIRQ24_DISAGG != 0
 
-/* 
- * FreeRTOS Handler for MIPS M14K Software Interrupt 0 
+/*
+ * FreeRTOS Handler for MIPS M14K Software Interrupt 0
  * implemented in the porting layer.
  */
     .extern vPortYieldISR

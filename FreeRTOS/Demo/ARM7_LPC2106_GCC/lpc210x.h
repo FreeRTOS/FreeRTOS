@@ -3,14 +3,14 @@
 /*******************************************************************************
 lpc210x.h - Register defs for Philips LPC210X: LPC2104, LPC2105 and LPC2106
 
-           
-THE SOFTWARE IS DELIVERED "AS IS" WITHOUT WARRANTY OR CONDITION OF ANY KIND, 
-EITHER EXPRESS, IMPLIED OR STATUTORY. THIS INCLUDES WITHOUT LIMITATION ANY 
-WARRANTY OR CONDITION WITH RESPECT TO MERCHANTABILITY OR FITNESS FOR ANY 
-PARTICULAR PURPOSE, OR AGAINST THE INFRINGEMENTS OF INTELLECTUAL PROPERTY RIGHTS 
+
+THE SOFTWARE IS DELIVERED "AS IS" WITHOUT WARRANTY OR CONDITION OF ANY KIND,
+EITHER EXPRESS, IMPLIED OR STATUTORY. THIS INCLUDES WITHOUT LIMITATION ANY
+WARRANTY OR CONDITION WITH RESPECT TO MERCHANTABILITY OR FITNESS FOR ANY
+PARTICULAR PURPOSE, OR AGAINST THE INFRINGEMENTS OF INTELLECTUAL PROPERTY RIGHTS
 OF OTHERS.
-           
-This file may be freely used for commercial and non-commercial applications, 
+
+This file may be freely used for commercial and non-commercial applications,
 including being redistributed with any tools.
 
 If you find a problem with the file, please report it so that it can be fixed.
@@ -253,7 +253,7 @@ Edited by Richard Barry.
 /* ---- RTC: Miscellaneous Register Group ------------------ */
 #define RTC_ILR         (*(REG32 (0xE0024000)))
 #define RTC_CTC         (*(REG32 (0xE0024004)))
-#define RTC_CCR         (*(REG32 (0xE0024008)))  
+#define RTC_CCR         (*(REG32 (0xE0024008)))
 #define RTC_CIIR        (*(REG32 (0xE002400C)))
 #define RTC_AMR         (*(REG32 (0xE0024010)))
 #define RTC_CTIME0      (*(REG32 (0xE0024014)))

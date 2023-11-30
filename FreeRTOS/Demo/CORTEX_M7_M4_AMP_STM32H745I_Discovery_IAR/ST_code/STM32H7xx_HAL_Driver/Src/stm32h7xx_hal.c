@@ -131,7 +131,7 @@ HAL_StatusTypeDef HAL_Init(void)
   /* Update the SystemCoreClock global variable */
   SystemCoreClock = HAL_RCC_GetSysClockFreq() >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_D1CPRE)>> RCC_D1CFGR_D1CPRE_Pos]) & 0x1FU);
 
-  /* Update the SystemD2Clock global variable */  
+  /* Update the SystemD2Clock global variable */
   SystemD2Clock = (SystemCoreClock >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_HPRE)>> RCC_D1CFGR_HPRE_Pos]) & 0x1FU));
 
   /* Use systick as time base source and configure 1ms tick (default clock after Reset is HSI) */

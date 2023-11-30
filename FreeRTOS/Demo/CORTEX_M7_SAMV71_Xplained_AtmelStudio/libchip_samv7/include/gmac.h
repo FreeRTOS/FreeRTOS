@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -102,7 +102,7 @@
 #define NUM_GMAC_QUEUES 3
 /// Board GMAC base address
 
-          
+
 #define GMAC_DUPLEX_HALF 0
 #define GMAC_DUPLEX_FULL 1
 
@@ -110,7 +110,7 @@
 #define GMAC_SPEED_10M      0
 #define GMAC_SPEED_100M     1
 #define GMAC_SPEED_1000M    2
-   
+
 /*------------------------------------------------------------------------------
          Definitions
 ------------------------------------------------------------------------------
@@ -149,7 +149,7 @@
  *----------------------------------------------------------------------------*/
 /** \addtogroup gmac_structs
         @{*/
-   
+
 /* This is the list of GMAC queue */
 typedef enum  {
   GMAC_QUE_0 = 0,

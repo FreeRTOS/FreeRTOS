@@ -61,16 +61,16 @@ and off to generate '*' characters. */
 #define mainON_BOARD_LED_BIT	( ( unsigned char ) 0x01 )
 
 /* The LCD segments used to generate the '*' characters for LED's 0 to 5. */
-unsigned char * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa4, 
-																( unsigned char * )0xa2, 
-																( unsigned char * )0xa0, 
+unsigned char * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa4,
+																( unsigned char * )0xa2,
+																( unsigned char * )0xa0,
 																( unsigned char * )0x9e,
 																( unsigned char * )0x9c,
 																( unsigned char * )0x9a };
 
-unsigned char * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa3, 
-																( unsigned char * )0xa1, 
-																( unsigned char * )0x9f, 
+unsigned char * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa3,
+																( unsigned char * )0xa1,
+																( unsigned char * )0x9f,
 																( unsigned char * )0x9d,
 																( unsigned char * )0x9b,
 																( unsigned char * )0x99 };
@@ -98,28 +98,28 @@ void vParTestInitialise( void )
 	P3SEL = 0x00;
 	P4SEL = 0xFC;
 	P5SEL = 0xFF;
-	
+
 	/* Initialise all segments to off. */
-	LCDM1 = partstSEGMENTS_OFF;	
-	LCDM2 = partstSEGMENTS_OFF;	
-	LCDM3 = partstSEGMENTS_OFF;	
-	LCDM4 = partstSEGMENTS_OFF;	
-	LCDM5 = partstSEGMENTS_OFF;	
-	LCDM6 = partstSEGMENTS_OFF;	
-	LCDM7 = partstSEGMENTS_OFF;	
-	LCDM8 = partstSEGMENTS_OFF;	
-	LCDM9 = partstSEGMENTS_OFF;	
-	LCDM10 = partstSEGMENTS_OFF;	
-	LCDM11 = partstSEGMENTS_OFF;	
-	LCDM12 = partstSEGMENTS_OFF;	
-	LCDM13 = partstSEGMENTS_OFF;	
-	LCDM14 = partstSEGMENTS_OFF;	
-	LCDM15 = partstSEGMENTS_OFF;	
-	LCDM16 = partstSEGMENTS_OFF;	
-	LCDM17 = partstSEGMENTS_OFF;	
-	LCDM18 = partstSEGMENTS_OFF;	
-	LCDM19 = partstSEGMENTS_OFF;	
-	LCDM20 = partstSEGMENTS_OFF;	
+	LCDM1 = partstSEGMENTS_OFF;
+	LCDM2 = partstSEGMENTS_OFF;
+	LCDM3 = partstSEGMENTS_OFF;
+	LCDM4 = partstSEGMENTS_OFF;
+	LCDM5 = partstSEGMENTS_OFF;
+	LCDM6 = partstSEGMENTS_OFF;
+	LCDM7 = partstSEGMENTS_OFF;
+	LCDM8 = partstSEGMENTS_OFF;
+	LCDM9 = partstSEGMENTS_OFF;
+	LCDM10 = partstSEGMENTS_OFF;
+	LCDM11 = partstSEGMENTS_OFF;
+	LCDM12 = partstSEGMENTS_OFF;
+	LCDM13 = partstSEGMENTS_OFF;
+	LCDM14 = partstSEGMENTS_OFF;
+	LCDM15 = partstSEGMENTS_OFF;
+	LCDM16 = partstSEGMENTS_OFF;
+	LCDM17 = partstSEGMENTS_OFF;
+	LCDM18 = partstSEGMENTS_OFF;
+	LCDM19 = partstSEGMENTS_OFF;
+	LCDM20 = partstSEGMENTS_OFF;
 
 	/* Setup LCD control. */
 	LCDCTL = (LCDSG0_7|LCD4MUX|LCDON);
@@ -179,7 +179,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 			/* The request related to the genuine on board LED. */
 			prvToggleOnBoardLED();
 		}
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -188,7 +188,7 @@ static void prvToggleOnBoardLED( void )
 static unsigned short sState = pdFALSE;
 
 	/* Toggle the state of the single genuine on board LED. */
-	if( sState )	
+	if( sState )
 	{
 		P1OUT |= mainON_BOARD_LED_BIT;
 	}

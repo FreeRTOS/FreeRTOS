@@ -53,7 +53,7 @@ typedef struct
   uint32_t PLL2N;       /*!< PLL2N: Multiplication factor for PLL2 VCO output clock.
                              This parameter must be a number between Min_Data = 4 and Max_Data = 512
                              or between Min_Data = 8 and Max_Data = 420(*)
-                             (*) : For stm32h7a3xx and stm32h7b3xx family lines.                       */   
+                             (*) : For stm32h7a3xx and stm32h7b3xx family lines.                       */
 
   uint32_t PLL2P;       /*!< PLL2P: Division factor for system clock.
                              This parameter must be a number between Min_Data = 2 and Max_Data = 128
@@ -85,7 +85,7 @@ typedef struct
   uint32_t PLL3N;       /*!< PLL3N: Multiplication factor for PLL3 VCO output clock.
                              This parameter must be a number between Min_Data = 4 and Max_Data = 512
                              or between Min_Data = 8 and Max_Data = 420(*)
-                             (*) : For stm32h7a3xx and stm32h7b3xx family lines.                       */  
+                             (*) : For stm32h7a3xx and stm32h7b3xx family lines.                       */
 
   uint32_t PLL3P;       /*!< PLL3P: Division factor for system clock.
                              This parameter must be a number between Min_Data = 2 and Max_Data = 128

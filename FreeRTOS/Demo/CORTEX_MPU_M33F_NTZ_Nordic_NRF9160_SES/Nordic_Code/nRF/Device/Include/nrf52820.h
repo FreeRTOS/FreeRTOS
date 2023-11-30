@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE
@@ -1796,7 +1796,7 @@ typedef struct {                                /*!< (@ 0x4001E000) NVMC Structu
   __IM  uint32_t  READYNEXT;                    /*!< (@ 0x00000408) Ready flag                                                 */
   __IM  uint32_t  RESERVED2[62];
   __IOM uint32_t  CONFIG;                       /*!< (@ 0x00000504) Configuration register                                     */
-  
+
   union {
     __OM  uint32_t ERASEPAGE;                   /*!< (@ 0x00000508) Register for erasing a page in code area                   */
     __OM  uint32_t ERASEPCR1;                   /*!< (@ 0x00000508) Deprecated register - Register for erasing a

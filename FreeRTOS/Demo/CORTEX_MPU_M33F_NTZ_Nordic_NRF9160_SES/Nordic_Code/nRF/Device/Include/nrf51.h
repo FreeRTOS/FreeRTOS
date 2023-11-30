@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2010 - 2021, Nordic Semiconductor ASA All rights reserved.
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE
@@ -1054,7 +1054,7 @@ typedef struct {                                /*!< (@ 0x4001E000) NVMC Structu
   __IM  uint32_t  READY;                        /*!< (@ 0x00000400) Ready flag.                                                */
   __IM  uint32_t  RESERVED1[64];
   __IOM uint32_t  CONFIG;                       /*!< (@ 0x00000504) Configuration register.                                    */
-  
+
   union {
     __IOM uint32_t ERASEPAGE;                   /*!< (@ 0x00000508) Register for erasing a non-protected non-volatile
                                                                     memory page.                                               */
@@ -1111,7 +1111,7 @@ typedef struct {                                /*!< (@ 0x10000000) FICR Structu
   __IM  uint32_t  PPFC;                         /*!< (@ 0x0000002C) Pre-programmed factory code present.                       */
   __IM  uint32_t  RESERVED2;
   __IM  uint32_t  NUMRAMBLOCK;                  /*!< (@ 0x00000034) Number of individualy controllable RAM blocks.             */
-  
+
   union {
     __IM  uint32_t SIZERAMBLOCKS;               /*!< (@ 0x00000038) Size of RAM blocks in bytes.                               */
     __IM  uint32_t SIZERAMBLOCK[4];             /*!< (@ 0x00000038) Deprecated array of size of RAM block in bytes.
@@ -1151,7 +1151,7 @@ typedef struct {                                /*!< (@ 0x10001000) UICR Structu
   __IOM uint32_t  XTALFREQ;                     /*!< (@ 0x00000008) Reset value for CLOCK XTALFREQ register.                   */
   __IM  uint32_t  RESERVED;
   __IM  uint32_t  FWID;                         /*!< (@ 0x00000010) Firmware ID.                                               */
-  
+
   union {
     __IOM uint32_t BOOTLOADERADDR;              /*!< (@ 0x00000014) Bootloader start address.                                  */
     __IOM uint32_t NRFFW[15];                   /*!< (@ 0x00000014) Reserved for Nordic firmware design.                       */

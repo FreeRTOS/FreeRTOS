@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -194,7 +194,7 @@ extern void I2C_initMaster(uint32_t moduleInstance,
 //!  EUSCI_B0 can be used. "A" modules such as EUSCI_A0 do not support the
 //!  I2C mode.
 //!
-//! \param slaveAddress 7-bit or 10-bit slave address 
+//! \param slaveAddress 7-bit or 10-bit slave address
 //! \param slaveAddressOffset Own address Offset referred to- 'x' value of
 //!     UCBxI2COAx. Valid values are:
 //!                  - \b EUSCI_B_I2C_OWN_ADDRESS_OFFSET0,

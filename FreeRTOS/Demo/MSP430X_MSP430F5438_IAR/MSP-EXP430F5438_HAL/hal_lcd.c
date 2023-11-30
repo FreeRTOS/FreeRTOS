@@ -62,12 +62,12 @@ void halLcdSendCommand(unsigned char Data[])
 
     if (i == 2)                             //Pull CS up after 3 bytes
     {
-      while (UCB2STAT & UCBUSY);    	
+      while (UCB2STAT & UCBUSY);
       LCD_CS_RST_OUT |= LCD_CS_PIN;         //CS = 1 --> Stop Transfer
-      LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer	
+      LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer
     }
   }
-  while (UCB2STAT & UCBUSY);    	
+  while (UCB2STAT & UCBUSY);
   LCD_CS_RST_OUT |= LCD_CS_PIN;             //CS = 1 --> Stop Transfer
 }
 
@@ -205,7 +205,7 @@ void halLcdSetBackLight(unsigned char BackLightLevel)
       TA0CTL |= MC0;
   }
   else
-  {   	
+  {
     TA0CCTL3 = 0;
     TA0CTL &= ~MC0;
   }
@@ -345,7 +345,7 @@ void halLcdActive(void)
 /**********************************************************************//**
  * @brief  Sets the pointer location in the LCD.
  *
- * - LcdAddress      = Address  					
+ * - LcdAddress      = Address
  * - LcdTableAddress = Correct Address Row + Column
  *                   = (Address / 0x20)* 17 + Column
  *
@@ -513,9 +513,9 @@ void halLcdClearScreen(void)
       while (!(UCB2IFG & UCTXIFG));           // Wait for TXIFG
       UCB2TXBUF = Draw_Block_Value_Macro[k];     // Load data
     }
-    while (UCB2STAT & UCBUSY);    	
+    while (UCB2STAT & UCBUSY);
     LCD_CS_RST_OUT |= LCD_CS_PIN;         //CS = 1 --> Stop Transfer
-    LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer	
+    LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer
     while (!(UCB2IFG & UCTXIFG));           // Wait for TXIFG
     UCB2TXBUF = Draw_Block_Value_Macro[3];     // Load data
 
@@ -533,7 +533,7 @@ void halLcdClearScreen(void)
       UCB2TXBUF = 0x00;                   // Load data
     while (!(UCB2IFG & UCTXIFG));       // Wait for TXIFG
       UCB2TXBUF = 0x00;                   // Load data
-    while (UCB2STAT & UCBUSY);    	
+    while (UCB2STAT & UCBUSY);
     LCD_CS_RST_OUT |= LCD_CS_PIN;             //CS = 1 --> Stop Transfer
 
     Current_Location += 0x20;
@@ -594,15 +594,15 @@ void halLcdDrawCurrentLine(const unsigned int *value, int Columns)
       while (!(UCB2IFG & UCTXIFG));           // Wait for TXIFG
       UCB2TXBUF = Draw_Block_Value_Macro[i];     // Load data
   }
-  while (UCB2STAT & UCBUSY);    	
+  while (UCB2STAT & UCBUSY);
   LCD_CS_RST_OUT |= LCD_CS_PIN;         //CS = 1 --> Stop Transfer
-  LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer	
+  LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer
   while (!(UCB2IFG & UCTXIFG));           // Wait for TXIFG
   UCB2TXBUF = Draw_Block_Value_Macro[3];     // Load data
 
   //send the image
   for ( i = 0; i < Columns; i++ )
-  {	
+  {
     // Make sure we are not writing outside LCD_MEM[]
     if (LcdTableAddress >= sizeof(LCD_MEM)) {
     	break;
@@ -614,7 +614,7 @@ void halLcdDrawCurrentLine(const unsigned int *value, int Columns)
     UCB2TXBUF = (*value++) & 0xFF;                   // Load data
   }
 
-  while (UCB2STAT & UCBUSY);    	
+  while (UCB2STAT & UCBUSY);
   LCD_CS_RST_OUT |= LCD_CS_PIN;             //CS = 1 --> Stop Transfer
 }
 
@@ -646,9 +646,9 @@ void halLcdClearImage(int Columns, int Rows, int x, int y)
       while (!(UCB2IFG & UCTXIFG));           // Wait for TXIFG
       UCB2TXBUF = Draw_Block_Value_Macro[k];     // Load data
     }
-    while (UCB2STAT & UCBUSY);    	
+    while (UCB2STAT & UCBUSY);
     LCD_CS_RST_OUT |= LCD_CS_PIN;         //CS = 1 --> Stop Transfer
-    LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer	
+    LCD_CS_RST_OUT &= ~LCD_CS_PIN;        //CS = 0 --> Start Transfer
     while (!(UCB2IFG & UCTXIFG));           // Wait for TXIFG
     UCB2TXBUF = Draw_Block_Value_Macro[3];     // Load data
 
@@ -661,7 +661,7 @@ void halLcdClearImage(int Columns, int Rows, int x, int y)
       while (!(UCB2IFG & UCTXIFG));       // Wait for TXIFG
       UCB2TXBUF = 0x00;                   // Load data
     }
-    while (UCB2STAT & UCBUSY);    	
+    while (UCB2STAT & UCBUSY);
     LCD_CS_RST_OUT |= LCD_CS_PIN;             //CS = 1 --> Stop Transfer
 
     Current_Location += 0x20;

@@ -39,7 +39,7 @@
 #define DBGMCU_TIM6_STOP             ((u32)0x00040000)
 #define DBGMCU_TIM7_STOP             ((u32)0x00080000)
 #define DBGMCU_TIM8_STOP             ((u32)0x00100000)
-                                           
+
 #define IS_DBGMCU_PERIPH(PERIPH) ((((PERIPH) & 0xFFE000F8) == 0x00) && ((PERIPH) != 0x00))
 
 /* Exported macro ------------------------------------------------------------*/

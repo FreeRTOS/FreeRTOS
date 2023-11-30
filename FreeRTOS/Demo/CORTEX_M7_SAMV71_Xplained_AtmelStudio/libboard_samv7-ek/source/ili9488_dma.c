@@ -101,7 +101,7 @@ static void _ILI9488_ConfigureSmc( void )
 
 /**
  * \brief ILI9488_SPI xDMA Rx callback
- */ 
+ */
 static void _ILI9488_Rx_CB(void)
 {
     if(!ili9488DmaCtl.Cds)
@@ -110,7 +110,7 @@ static void _ILI9488_Rx_CB(void)
 
 /**
  * \brief ILI9488_SPI xDMA Tx callback
- */ 
+ */
 static void _ILI9488_Tx_CB(void)
 {
     volatile uint32_t i;
@@ -180,7 +180,7 @@ static uint8_t _ILI9488DmaConfigChannels(void)
     {
         if ( ili9488Dma.ili9488DmaRxChannel == XDMAD_ALLOC_FAILED )
         {
-            return ILI9488_ERROR_DMA_ALLOCATE_CHANNEL; 
+            return ILI9488_ERROR_DMA_ALLOCATE_CHANNEL;
         }
     }
 
@@ -197,7 +197,7 @@ static uint8_t _ILI9488DmaConfigChannels(void)
     /* Check if DMA IRQ is enable; if not Enable it */
     if(!(NVIC_GetActive(XDMAC_IRQn)))
     {
-      /* Enable interrupt  */ 
+      /* Enable interrupt  */
       NVIC_EnableIRQ(XDMAC_IRQn);
     }
     return 0;
@@ -217,13 +217,13 @@ static uint8_t _ILI9488DmaConfigureRxTx(void)
 #if !defined(BOARD_LCD_SMC)
     txAddress = (uint32_t)&ILI9488_SPI->SPI_TDR;
     rxAddress = (uint32_t)&ILI9488_SPI->SPI_RDR;
-    ili9488Dma.xdmadExtTxCfg.mbr_cfg = 
-          XDMAC_CC_TYPE_PER_TRAN 
-        | XDMAC_CC_DSYNC_MEM2PER 
-        | XDMAC_CC_DWIDTH_BYTE 
+    ili9488Dma.xdmadExtTxCfg.mbr_cfg =
+          XDMAC_CC_TYPE_PER_TRAN
+        | XDMAC_CC_DSYNC_MEM2PER
+        | XDMAC_CC_DWIDTH_BYTE
         | XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(ili9488Dma.spiId, XDMAD_TRANSFER_TX ));
 
-    ili9488Dma.xdmadExtRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN | XDMAC_CC_DSYNC_PER2MEM | 
+    ili9488Dma.xdmadExtRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN | XDMAC_CC_DSYNC_PER2MEM |
             XDMAC_CC_PERID(XDMAIF_Get_ChannelNumber(ili9488Dma.spiId, XDMAD_TRANSFER_RX ));
 #else
     txAddress = rxAddress =(uint32_t)ILI9488_BASE_ADDRESS;
@@ -236,13 +236,13 @@ static uint8_t _ILI9488DmaConfigureRxTx(void)
     ili9488Dma.xdmadTxCfg.mbr_da = txAddress;
     ili9488Dma.xdmadTxCfg.mbr_ubc =  XDMA_UBC_NVIEW_NDV0 |  XDMA_UBC_NDE_FETCH_DIS| XDMA_UBC_NSEN_UPDATED ;
 
-    ili9488Dma.xdmadTxCfg.mbr_cfg = 
-          XDMAC_CC_TYPE_MEM_TRAN 
-        | XDMAC_CC_MBSIZE_SINGLE 
-        | XDMAC_CC_CSIZE_CHK_1 
-        | XDMAC_CC_SIF_AHB_IF0 
-        | XDMAC_CC_DIF_AHB_IF1 
-        | XDMAC_CC_SAM_INCREMENTED_AM 
+    ili9488Dma.xdmadTxCfg.mbr_cfg =
+          XDMAC_CC_TYPE_MEM_TRAN
+        | XDMAC_CC_MBSIZE_SINGLE
+        | XDMAC_CC_CSIZE_CHK_1
+        | XDMAC_CC_SIF_AHB_IF0
+        | XDMAC_CC_DIF_AHB_IF1
+        | XDMAC_CC_SAM_INCREMENTED_AM
         | XDMAC_CC_DAM_FIXED_AM;
 
     ili9488Dma.xdmadTxCfg.mbr_cfg |= ili9488Dma.xdmadExtTxCfg.mbr_cfg;
@@ -256,14 +256,14 @@ static uint8_t _ILI9488DmaConfigureRxTx(void)
     ili9488Dma.xdmadRxCfg.mbr_da = 0;
     ili9488Dma.xdmadRxCfg.mbr_sa = rxAddress;
 
-    ili9488Dma.xdmadRxCfg.mbr_cfg = 
-          XDMAC_CC_TYPE_MEM_TRAN 
-        | XDMAC_CC_MBSIZE_SINGLE 
-        | XDMAC_CC_CSIZE_CHK_1 
+    ili9488Dma.xdmadRxCfg.mbr_cfg =
+          XDMAC_CC_TYPE_MEM_TRAN
+        | XDMAC_CC_MBSIZE_SINGLE
+        | XDMAC_CC_CSIZE_CHK_1
         | XDMAC_CC_DWIDTH_WORD
-        | XDMAC_CC_SIF_AHB_IF1 
-        | XDMAC_CC_DIF_AHB_IF0 
-        | XDMAC_CC_SAM_FIXED_AM 
+        | XDMAC_CC_SIF_AHB_IF1
+        | XDMAC_CC_DIF_AHB_IF0
+        | XDMAC_CC_SAM_FIXED_AM
         | XDMAC_CC_DAM_INCREMENTED_AM;
 
     ili9488Dma.xdmadRxCfg.mbr_cfg |= ili9488Dma.xdmadExtRxCfg.mbr_cfg;
@@ -272,7 +272,7 @@ static uint8_t _ILI9488DmaConfigureRxTx(void)
     ili9488Dma.xdmadRxCfg.mbr_dus =0;
 
     /* Put all interrupts on for non LLI list setup of DMA */
-    ili9488Dma.xdmaInt =  (XDMAC_CIE_BIE 
+    ili9488Dma.xdmaInt =  (XDMAC_CIE_BIE
                           | XDMAC_CIE_RBIE
                           | XDMAC_CIE_WBIE
                           | XDMAC_CIE_ROIE);
@@ -412,7 +412,7 @@ uint32_t ILI9488ReadReg(uint16_t cmd,uint32_t size)
     uint32_t value = 0;
     uint32_t *ptr;
     uint32_t shift_cnt = size-1;
-   
+
     if (size > 4) return ILI9488_ERROR_DMA_SIZE;
 
     ILI9488_SendCmd(cmd);
@@ -441,7 +441,7 @@ uint32_t ILI9488ReadReg(uint16_t cmd,uint32_t size)
 uint32_t ILI9488ReadExtReg(uint16_t cmd,uint32_t size)
 {
     uint32_t value=0;
- 
+
 #if !defined(BOARD_LCD_SMC)
     uint32_t shift_cnt = size-1;
     uint16_t nSpiCnt = 0x81;

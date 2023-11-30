@@ -47,9 +47,9 @@
  */
 void SystemInit (void)
 {
-    
+
     PCR->PROC_CLOCK_CNTRL = (PCR_CLOCK_DIVIDER);
-    
+
 }
 /*---------------------------------------------------------------------------*/
 
@@ -66,9 +66,9 @@ uint32_t sys_code_sram_base(void)
 uint8_t sys_valid_sram_addr(void * const p)
 {
     uint32_t base;
-    
+
     base = sys_code_sram_base();
-        
+
     if ((uint32_t)p >= base) {
         if ((uint32_t)p < (MEC14XX_DCODE_VSRAM_LIMIT)) {
             return 1u;
@@ -119,14 +119,14 @@ uint32_t cpu_microsecond_count(void)
 
 /*
  * Assumes M14K CPU is running at clock divide by 1 (48MHz)
- * 1us = 48 counts. 
- * NOTE: We need to find out from DE what the pipeline rate is. 
- * M14K counter ticks at pipeline rate. 
+ * 1us = 48 counts.
+ * NOTE: We need to find out from DE what the pipeline rate is.
+ * M14K counter ticks at pipeline rate.
  */
 uint32_t cpu_microsecond_interval(uint32_t start_count)
 {
     uint32_t curr_count;
-    
+
     curr_count = _CP0_GET_COUNT();
     if (curr_count >= start_count) {
         return ((curr_count - start_count) >> 4)/ 3ul;

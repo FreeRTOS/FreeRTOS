@@ -30,7 +30,7 @@
 	.extern ulRegTest1Counter
 	.extern ulRegTest2Counter
 	.extern vPortYield
-	
+
 	.global vRegTest1
 	.global vRegTest2
 

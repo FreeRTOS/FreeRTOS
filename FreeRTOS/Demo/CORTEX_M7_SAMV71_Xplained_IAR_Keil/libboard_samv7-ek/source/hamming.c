@@ -235,7 +235,7 @@ static uint8_t Verify256( uint8_t* pucData, const uint8_t* pucOriginalCode )
         // Get byte and bit indexes
         uint8_t byte ;
         uint8_t bit ;
-        
+
         byte = correctionCode[0] & 0x80;
         byte |= (correctionCode[0] << 1) & 0x40;
         byte |= (correctionCode[0] << 2) & 0x20;

@@ -23,8 +23,8 @@
 
 /* The queues used to communicate between the task code and the interrupt
 service routines. */
-static QueueHandle_t xRxedChars; 
-static QueueHandle_t xCharsForTx; 
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /* Interrupt identification bits. */
 #define serOVERRUN_INTERRUPT		( '\x08' )
@@ -39,8 +39,8 @@ static QueueHandle_t xCharsForTx;
  */
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-	/* Hardware setup is performed by the Processor Expert generated code.  
-	This function just creates the queues used to communicate between the 
+	/* Hardware setup is performed by the Processor Expert generated code.
+	This function just creates the queues used to communicate between the
 	interrupt code and the task code - then sets the required baud rate. */
 
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
@@ -86,16 +86,16 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
-{	
+{
 	/* Not supported. */
 	//( void ) xPort;
 }
 /*-----------------------------------------------------------*/
 
 
-/* 
+/*
  * Interrupt service routine for the serial port.  Must be in non-banked
- * memory. 
+ * memory.
  */
 
 void ATTR_INT ATTR_NEAR vCOM_ISR( void );
@@ -107,7 +107,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	ucStatus = SCISR1;
-	
+
 	if( ucStatus & serOVERRUN_INTERRUPT )
 	{
 		/* The interrupt was caused by an overrun.  Clear the error by reading
@@ -125,9 +125,9 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		whether or not this wakes a task. */
 		xQueueSendFromISR( xRxedChars, ( void * ) &ucByte, &xHigherPriorityTaskWoken );
 	}
-	
+
 	if( ( ucStatus & serTX_INTERRUPT ) && ( SCICR2 & 0x80 ) )
-	{	
+	{
 		/* The interrupt was caused by a character being transmitted. */
 		if( xQueueReceiveFromISR( xCharsForTx, ( void * ) &ucByte, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{

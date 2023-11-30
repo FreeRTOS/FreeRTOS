@@ -37,11 +37,11 @@
 /*----------------------------------------------------------------------------
  *        Local functions
  *----------------------------------------------------------------------------*/
- 
+
 /**
  * \brief Workaround for ISI CFG2 register read.
- * \note The ISI_CFG2[31:27] can be written correctly, because the input writing 
- * data are assigned directly to the internal control bits as specified, 
+ * \note The ISI_CFG2[31:27] can be written correctly, because the input writing
+ * data are assigned directly to the internal control bits as specified,
  * the mismatch only happens in reading operation.
  * [31:28] are shift right 1 bit, so [31:27] can be read from [30:27].
  */
@@ -225,9 +225,9 @@ void ISI_RgbPixelMapping(uint32_t wRgbPixelMapping)
 {
 	ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() & (~ISI_CFG2_RGB_CFG_Msk);
 	if (wRgbPixelMapping != ISI_CFG2_RGB_CFG_DEFAULT)
-		ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() | wRgbPixelMapping 
-			| ISI_CFG2_RGB_MODE; 
-	else 
+		ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() | wRgbPixelMapping
+			| ISI_CFG2_RGB_MODE;
+	else
 		ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround();
 }
 
@@ -240,7 +240,7 @@ void ISI_RgbSwapMode(uint32_t swapMode)
 	ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() & (~ISI_CFG2_RGB_SWAP);
 	if(swapMode) ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() | ISI_CFG2_RGB_SWAP;
 }
- 
+
 /**
  * \brief Defines YCrCb swap format.
  * \param wYuvSwapMode YUV Swap format
@@ -259,7 +259,7 @@ void ISI_setGrayScaleMode(uint32_t wPixelFormat)
 {
 	ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() | ISI_CFG2_GRAYSCALE ;
 	if(wPixelFormat) ISI->ISI_CFG2 = _ISI_GetCFG2_Workaround() | ISI_CFG2_GS_MODE;
-	
+
 }
 
 /**
@@ -293,7 +293,7 @@ void ISI_calcScalerFactor(void)
 	uint32_t hLcdSize, hSensorSize;
 	uint32_t hRatio;
 	hLcdSize = ((ISI->ISI_PSIZE & ISI_PSIZE_PREV_HSIZE_Msk) >> ISI_PSIZE_PREV_HSIZE_Pos) +1 ;
-	hSensorSize = ((_ISI_GetCFG2_Workaround() & ISI_CFG2_IM_HSIZE_Msk ) 
+	hSensorSize = ((_ISI_GetCFG2_Workaround() & ISI_CFG2_IM_HSIZE_Msk )
 			>> ISI_CFG2_IM_HSIZE_Pos) + 1;
 	hRatio = 1600 * hSensorSize / hLcdSize;
 	ISI->ISI_PDECF = (hRatio/100);
@@ -305,7 +305,7 @@ void ISI_calcScalerFactor(void)
  * \param dmaCtrl  DMA Preview Control.
  * \param frameBufferStartAddr  DMA Preview Base Address.
  */
-void ISI_setDmaInPreviewPath(uint32_t baseFrameBufDesc, 
+void ISI_setDmaInPreviewPath(uint32_t baseFrameBufDesc,
 		uint32_t dmaCtrl, uint32_t frameBufferStartAddr)
 {
 	ISI->ISI_DMA_P_DSCR = baseFrameBufDesc;
@@ -319,14 +319,14 @@ void ISI_setDmaInPreviewPath(uint32_t baseFrameBufDesc,
  * \param dmaCtrl  DMA Preview Control.
  * \param frameBufferStartAddr  DMA Preview Base Address.
  */
-void ISI_setDmaInCodecPath(uint32_t baseFrameBufDesc, 
+void ISI_setDmaInCodecPath(uint32_t baseFrameBufDesc,
 		uint32_t dmaCtrl, uint32_t frameBufferStartAddr)
 {
 	ISI->ISI_DMA_C_DSCR = baseFrameBufDesc;
 	ISI->ISI_DMA_C_CTRL = dmaCtrl;
 	ISI->ISI_DMA_C_ADDR = frameBufferStartAddr;
 }
- 
+
 /**
  * \brief ISI set matrix for YUV to RGB color space for preview path.
  * \param yuv2rgb structure of YUV to RBG parameters.
@@ -337,7 +337,7 @@ void ISI_SetMatrix4Yuv2Rgb (ISI_Y2R* yuv2rgb)
 					 | ISI_Y2R_SET0_C1(yuv2rgb->C1)
 					 | ISI_Y2R_SET0_C2(yuv2rgb->C2)
 					 | ISI_Y2R_SET0_C3(yuv2rgb->C3);
-					 
+
    ISI->ISI_Y2R_SET1 = ISI_Y2R_SET1_C4(yuv2rgb->C4)
 					 | ((yuv2rgb->Yoff == 1)? ISI_Y2R_SET1_Yoff: 0)
 					 | ((yuv2rgb->Croff == 1)? ISI_Y2R_SET1_Croff: 0)
@@ -350,17 +350,17 @@ void ISI_SetMatrix4Yuv2Rgb (ISI_Y2R* yuv2rgb)
  */
 void ISI_SetMatrix4Rgb2Yuv (ISI_R2Y* rgb2yuv)
 {
-	ISI->ISI_R2Y_SET0 = ISI_R2Y_SET0_C0(rgb2yuv->C0) 
+	ISI->ISI_R2Y_SET0 = ISI_R2Y_SET0_C0(rgb2yuv->C0)
 					  | ISI_R2Y_SET0_C1(rgb2yuv->C1)
 					  | ISI_R2Y_SET0_C2(rgb2yuv->C2)
 					  | ((rgb2yuv->Roff == 1)? ISI_R2Y_SET0_Roff: 0);
-				 
-	ISI->ISI_R2Y_SET1 = ISI_R2Y_SET1_C3(rgb2yuv->C3) 
+
+	ISI->ISI_R2Y_SET1 = ISI_R2Y_SET1_C3(rgb2yuv->C3)
 					  | ISI_R2Y_SET1_C4(rgb2yuv->C4)
 					  | ISI_R2Y_SET1_C5(rgb2yuv->C5)
 					  | ((rgb2yuv->Goff == 1)? ISI_R2Y_SET1_Goff: 0);
-				 
-	ISI->ISI_R2Y_SET2 = ISI_R2Y_SET2_C6(rgb2yuv->C6) 
+
+	ISI->ISI_R2Y_SET2 = ISI_R2Y_SET2_C6(rgb2yuv->C6)
 					  | ISI_R2Y_SET2_C7(rgb2yuv->C7)
 					  | ISI_R2Y_SET2_C8(rgb2yuv->C8)
 					  | ((rgb2yuv->Boff == 1)? ISI_R2Y_SET2_Boff: 0);

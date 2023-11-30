@@ -92,7 +92,7 @@ int main()
 {
 	/* Perform any hardware setup necessary to run the demo. */
 	prvSetupHardware();
-	
+
 	/* First create the 'standard demo' tasks.  These exist just to to
 	demonstrate API functions being used and test the kernel port.  More
 	information is provided on the FreeRTOS.org WEB site. */
@@ -107,19 +107,19 @@ int main()
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	
+
 	/* Create the check task - this is the task that checks all the other tasks
 	are executing as expected and without reporting any errors. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
-	
+
 	/* The death demo tasks must be started last as the sanity checks performed
 	require knowledge of the number of other tasks in the system. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	
+
 	/* Start the scheduler.  From this point on the execution will be under
 	the control of the kernel. */
 	vTaskStartScheduler();
-	
+
 	/* Will only get here if there was insufficient heap available for the
 	idle task to be created. */
 	for( ;; );
@@ -137,12 +137,12 @@ static volatile unsigned long ulErrorCode = 0UL;
 	/* Initialise xNextWakeTime prior to its first use.  From this point on
 	the value of the variable is handled automatically by the kernel. */
 	xNextWakeTime = xTaskGetTickCount();
-	
+
 	for( ;; )
 	{
 		/* Delay until it is time for this task to execute again. */
 		vTaskDelayUntil( &xNextWakeTime, xPeriod );
-		
+
 		/* Check all the other tasks in the system - latch any reported errors
 		into the ulErrorCode variable. */
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
@@ -199,12 +199,12 @@ static volatile unsigned long ulErrorCode = 0UL;
 		{
 			ulErrorCode |= 0x400UL;
 		}
-		
+
 		if( xAreComTestTasksStillRunning() != pdTRUE )
 		{
 			ulErrorCode |= 0x800UL;
 		}
-		
+
 		/* Reduce the block period and in so doing increase the frequency at
 		which this task executes if any errors have been latched.  The increased
 		frequency causes the LED toggle rate to increase and so gives some
@@ -213,7 +213,7 @@ static volatile unsigned long ulErrorCode = 0UL;
 		{
 			xPeriod = mainERROR_PERIOD;
 		}
-		
+
 		/* Finally toggle the LED. */
 		vParTestToggleLED( LED_POWER );
 	}
@@ -226,7 +226,7 @@ const Pin xPins[] = { PIN_USART0_RXD, PIN_USART0_TXD };
 
 	/* Setup the LED outputs. */
 	vParTestInitialise();
-	
+
 	/* Setup the pins for the UART. */
-	PIO_Configure( xPins, PIO_LISTSIZE( xPins ) );	
+	PIO_Configure( xPins, PIO_LISTSIZE( xPins ) );
 }

@@ -1,21 +1,21 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only 
-* intended for use with Renesas products. No other uses are authorized. This 
-* software is owned by Renesas Electronics Corporation and is protected under 
+* This software is supplied by Renesas Electronics Corporation and is only
+* intended for use with Renesas products. No other uses are authorized. This
+* software is owned by Renesas Electronics Corporation and is protected under
 * all applicable laws, including copyright laws.
-* THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING 
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT 
-* LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
+* THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT
+* LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
 * AND NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.
-* TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS 
-* ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
-* FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR 
-* ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE 
+* TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS
+* ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE
+* FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR
+* ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE
 * BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software 
-* and to discontinue the availability of this software.  By using this software, 
-* you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software
+* and to discontinue the availability of this software.  By using this software,
+* you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -61,7 +61,7 @@ Global variables and functions
 void R_CGC_Create(void)
 {
     /* Set main clock control registers */
-    SYSTEM.MOFCR.BYTE = _00_CGC_MAINOSC_RESONATOR | _00_CGC_MAINOSC_UNDER24M;	
+    SYSTEM.MOFCR.BYTE = _00_CGC_MAINOSC_RESONATOR | _00_CGC_MAINOSC_UNDER24M;
     SYSTEM.MOSCWTCR.BYTE = _52_CGC_MOSCWTCR_VALUE;
 
     /* Set main clock operation */
@@ -71,8 +71,8 @@ void R_CGC_Create(void)
     while (1U != SYSTEM.OSCOVFSR.BIT.MOOVF);
 
     /* Set system clock */
-    SYSTEM.SCKCR.LONG = _00000001_CGC_PCLKD_DIV_2 | _00000010_CGC_PCLKC_DIV_2 | _00000100_CGC_PCLKB_DIV_2 | 
-                        _00001000_CGC_PCLKA_DIV_2 | _00010000_CGC_BCLK_DIV_2 | _01000000_CGC_ICLK_DIV_2 | 
+    SYSTEM.SCKCR.LONG = _00000001_CGC_PCLKD_DIV_2 | _00000010_CGC_PCLKC_DIV_2 | _00000100_CGC_PCLKB_DIV_2 |
+                        _00001000_CGC_PCLKA_DIV_2 | _00010000_CGC_BCLK_DIV_2 | _01000000_CGC_ICLK_DIV_2 |
                         _10000000_CGC_FCLK_DIV_2;
 
     /* Set PLL circuit */

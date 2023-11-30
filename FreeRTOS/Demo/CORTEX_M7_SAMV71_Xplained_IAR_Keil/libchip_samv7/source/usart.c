@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -66,28 +66,28 @@ void USART_Configure(Usart *pUsart,
                             uint32_t baudrate,
                             uint32_t masterClock)
 {
-  
+
    unsigned int CD, FP, BaudError, OVER, ActualBaudRate;
-  
+
     /* Reset and disable receiver & transmitter*/
     pUsart->US_CR = US_CR_RSTRX | US_CR_RSTTX
                   | US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTSTA;
-    
+
     pUsart->US_IDR = 0xFFFFFFFF;
-    
-    /* Configure baudrate*/  
+
+    /* Configure baudrate*/
     BaudError = 10;
     OVER = 0;
-    
+
     // Configure baud rate
     while (BaudError > 5)
     {
-      
+
       CD = (masterClock / (baudrate * 8*(2-OVER)));
-      FP = ((masterClock / (baudrate * (2-OVER)) ) - CD * 8);     
+      FP = ((masterClock / (baudrate * (2-OVER)) ) - CD * 8);
       ActualBaudRate = (masterClock/(CD*8 + FP))/(2-OVER);
       BaudError = (100-((baudrate*100/ActualBaudRate)));
-        
+
       if (BaudError > 5)
       {
         OVER++;
@@ -97,15 +97,15 @@ void USART_Configure(Usart *pUsart,
         }
       }
     }
-    
+
     pUsart->US_BRGR = ( US_BRGR_CD(CD) | US_BRGR_FP(FP));
-    
+
     /* Configure mode*/
     pUsart->US_MR = (mode |  (OVER << 19) );
 
     // Enable receiver and transmitter
     pUsart->US_CR = US_CR_RXEN | US_CR_TXEN;
-    
+
 
     /* Disable buffering for printf(). */
 #if ( defined (__GNUC__) && !defined (__SAMBA__) )
@@ -162,11 +162,11 @@ void USART_SetReceiverEnabled(Usart *usart, uint8_t enabled)
 void USART_SetRTSEnabled( Usart *usart, uint8_t enabled)
 {
     if (enabled) {
-    
+
         usart->US_CR = US_CR_RTSEN;
     }
     else {
-        
+
         usart->US_CR = US_CR_RTSDIS;
     }
 }

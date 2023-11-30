@@ -10,32 +10,32 @@
 /*-----------------------------------------------------------
 Keil Software CHM Style Sheet
 -----------------------------------------------------------*/
-body         { color: #000000; background-color: #FFFFFF; font-size: 75%; font-family: 
+body         { color: #000000; background-color: #FFFFFF; font-size: 75%; font-family:
                Verdana, Arial, 'Sans Serif' }
 a:link       { color: #0000FF; text-decoration: underline }
 a:visited    { color: #0000FF; text-decoration: underline }
 a:active     { color: #FF0000; text-decoration: underline }
 a:hover      { color: #FF0000; text-decoration: underline }
-h1           { font-family: Verdana; font-size: 18pt; color: #000080; font-weight: bold; 
+h1           { font-family: Verdana; font-size: 18pt; color: #000080; font-weight: bold;
                text-align: Center; margin-right: 3 }
-h2           { font-family: Verdana; font-size: 14pt; color: #000080; font-weight: bold; 
-               background-color: #CCCCCC; margin-top: 24; margin-bottom: 3; 
+h2           { font-family: Verdana; font-size: 14pt; color: #000080; font-weight: bold;
+               background-color: #CCCCCC; margin-top: 24; margin-bottom: 3;
                padding: 6 }
-h3           { font-family: Verdana; font-size: 10pt; font-weight: bold; background-color: 
+h3           { font-family: Verdana; font-size: 10pt; font-weight: bold; background-color:
                #CCCCCC; margin-top: 24; margin-bottom: 3; padding: 6 }
-pre          { font-family: Courier New; font-size: 10pt; background-color: #CCFFCC; 
+pre          { font-family: Courier New; font-size: 10pt; background-color: #CCFFCC;
                margin-left: 24; margin-right: 24 }
 ul           { list-style-type: square; margin-top: 6pt; margin-bottom: 0 }
 ol           { margin-top: 6pt; margin-bottom: 0 }
 li           { clear: both; margin-bottom: 6pt }
 table        { font-size: 100%; border-width: 0; padding: 0 }
-th           { color: #FFFFFF; background-color: #000080; text-align: left; vertical-align: 
+th           { color: #FFFFFF; background-color: #000080; text-align: left; vertical-align:
                bottom; padding-right: 6pt }
 tr           { text-align: left; vertical-align: top }
 td           { text-align: left; vertical-align: top; padding-right: 6pt }
 .ToolT       { font-size: 8pt; color: #808080 }
 .TinyT       { font-size: 8pt; text-align: Center }
-code         { color: #000000; background-color: #E0E0E0; font-family: 'Courier New', Courier; 
+code         { color: #000000; background-color: #E0E0E0; font-family: 'Courier New', Courier;
                line-height: 120%; font-style: normal }
 /*-----------------------------------------------------------
 Notes
@@ -52,18 +52,18 @@ Where List Tags
 -----------------------------------------------------------*/
 p.wh         { font-weight: bold; clear: both; margin-top: 6pt; margin-bottom: 3pt }
 table.wh     { width: 100% }
-td.whItem    { white-space: nowrap; font-style: italic; padding-right: 6pt; padding-bottom: 
+td.whItem    { white-space: nowrap; font-style: italic; padding-right: 6pt; padding-bottom:
                6pt }
 td.whDesc    { padding-bottom: 6pt }
 /*-----------------------------------------------------------
 Keil Table Tags
 -----------------------------------------------------------*/
 table.kt     { border: 1pt solid #000000 }
-th.kt        { white-space: nowrap; border-bottom: 1pt solid #000000; padding-left: 6pt; 
+th.kt        { white-space: nowrap; border-bottom: 1pt solid #000000; padding-left: 6pt;
                padding-right: 6pt; padding-top: 4pt; padding-bottom: 4pt }
 tr.kt        {  }
-td.kt        { color: #000000; background-color: #E0E0E0; border-top: 1pt solid #A0A0A0; 
-               padding-left: 6pt; padding-right: 6pt; padding-top: 2pt; 
+td.kt        { color: #000000; background-color: #E0E0E0; border-top: 1pt solid #A0A0A0;
+               padding-left: 6pt; padding-right: 6pt; padding-top: 2pt;
                padding-bottom: 2pt }
 /*-----------------------------------------------------------
 -----------------------------------------------------------*/
@@ -80,9 +80,9 @@ td.kt        { color: #000000; background-color: #E0E0E0; border-top: 1pt solid 
 
 <h2>Cortex-M3 ITM Debug Access</h2>
 <p>
-  The Cortex-M3 incorporates the Instrumented Trace Macrocell (ITM) that provides together with 
-  the Serial Viewer Output trace capabilities for the microcontroller system. The ITM has 
-  32 communication channels which are able to transmit 32 / 16 / 8 bit values; two ITM 
+  The Cortex-M3 incorporates the Instrumented Trace Macrocell (ITM) that provides together with
+  the Serial Viewer Output trace capabilities for the microcontroller system. The ITM has
+  32 communication channels which are able to transmit 32 / 16 / 8 bit values; two ITM
   communication channels are used by CMSIS to output the following information:
 </p>
 <ul>
@@ -100,7 +100,7 @@ td.kt        { color: #000000; background-color: #E0E0E0; border-top: 1pt solid 
 
 <h3>ITM_SendChar</h3>
 <p>
-  <strong>ITM_SendChar</strong> is used to transmit a character over ITM channel 0 from 
+  <strong>ITM_SendChar</strong> is used to transmit a character over ITM channel 0 from
   the microcontroller system to the debug system. <br>
   Only a 8 bit value is transmitted.
 </p>
@@ -110,11 +110,11 @@ static __INLINE uint32_t ITM_SendChar (uint32_t ch)
   /* check if debugger connected and ITM channel enabled for tracing */
   if ((CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA)  &amp;&amp;
       (ITM-&gt;TCR & ITM_TCR_ITMENA)                  &amp;&amp;
-      (ITM-&gt;TER & (1UL &lt;&lt; 0))  ) 
+      (ITM-&gt;TER & (1UL &lt;&lt; 0))  )
   {
     while (ITM-&gt;PORT[0].u32 == 0);
     ITM-&gt;PORT[0].u8 = (uint8_t)ch;
-  }  
+  }
   return (ch);
 }</pre>
 
@@ -151,8 +151,8 @@ static __INLINE int ITM_ReceiveChar (void) {
     ch = ITM_RxBuffer;
     ITM_RxBuffer = ITM_RXBUFFER_EMPTY;       /* ready for next character */
   }
-  
-  return (ch); 
+
+  return (ch);
 }
 </pre>
 
@@ -173,7 +173,7 @@ static __INLINE int ITM_CheckChar (void) {
 
 <h2>ITM Debug Support in uVision</h2>
 <p>
-  uVision uses in a debug session the <strong>Debug (printf) Viewer</strong> window to 
+  uVision uses in a debug session the <strong>Debug (printf) Viewer</strong> window to
   display the debug data.
 </p>
 <p>Direction microcontroller system -&gt; uVision:</p>

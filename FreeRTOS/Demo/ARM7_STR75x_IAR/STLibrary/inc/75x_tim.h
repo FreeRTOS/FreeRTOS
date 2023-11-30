@@ -2,7 +2,7 @@
 * File Name          : 75x_tim.h
 * Author             : MCD Application Team
 * Date First Issued  : 03/10/2006
-* Description        : This file contains all the functions prototypes for the 
+* Description        : This file contains all the functions prototypes for the
 *                      TIM software library.
 ********************************************************************************
 * History:

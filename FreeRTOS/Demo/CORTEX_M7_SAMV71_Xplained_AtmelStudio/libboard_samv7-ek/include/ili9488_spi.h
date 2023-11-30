@@ -62,7 +62,7 @@ extern void ILI9488_SpiSetWindow(
 extern void ILI9488_SpiSetFullWindow(void);
 extern void ILI9488_SpiOn(void );
 extern void ILI9488_SpiOff(void );
-extern void ILI9488_SpiSetDisplayLandscape( 
+extern void ILI9488_SpiSetDisplayLandscape(
 				uint8_t dwRGB, uint8_t LandscaprMode );
 
 #endif /* #ifndef ILI9488_SPI */

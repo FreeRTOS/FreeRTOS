@@ -39,12 +39,12 @@
 /*
  * Timer instance  |  Value
  * ----------------|---------
- *     TCB0        |    0  
- *     TCB1        |    1  
- *     TCB2        |    2  
- *     TCB3        |    3  
+ *     TCB0        |    0
+ *     TCB1        |    1
+ *     TCB2        |    2
+ *     TCB3        |    3
  *     TCB4        |    4
- *     RTC         |    5  
+ *     RTC         |    5
  */
 
 #define configUSE_TIMER_INSTANCE 0

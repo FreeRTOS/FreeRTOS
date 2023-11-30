@@ -74,7 +74,7 @@
 static void printchar(char **str, int c)
 {
 	extern int putchar(int c);
-	
+
 	if (str) {
 		**str = c;
 		++(*str);
@@ -232,7 +232,7 @@ static int print(char **out, const char *format, va_list args )
 int printk(const char *format, ...)
 {
         va_list args;
-        
+
         va_start( args, format );
         return print( 0, format, args );
 }
@@ -240,7 +240,7 @@ int printk(const char *format, ...)
 int sprintf(char *out, const char *format, ...)
 {
         va_list args;
-        
+
         va_start( args, format );
         return print( &out, format, args );
 }

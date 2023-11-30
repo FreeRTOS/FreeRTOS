@@ -49,7 +49,7 @@
 
 /*
  * Disaggregated girq08v
- * Program address of this version of girq23v into JTVIC GIRQ08 
+ * Program address of this version of girq23v into JTVIC GIRQ08
  * Aggregator Control register with bit[0] = 1.
  */
     .insn

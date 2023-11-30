@@ -11,7 +11,7 @@
 //  Freescale MCF52259
 //
 // Reference:
-//  
+//
 
 
 // All reserved ranges read back 0xBABA...
@@ -26,6 +26,6 @@ usederivative "MCF52259"
 range      0x00000000 0x0007FFFF 4 Read				// 512 KByte Internal Flash Memory
 reserved   0x00080000 0x1FFFFFFF
 range      0x20000000 0x2000FFFF 4 ReadWrite                	// 64 Kbytes Internal SRAM
-reserved   0x20010000 0x3FFFFFFF 
+reserved   0x20010000 0x3FFFFFFF
 //         $IPSBAR_BASE 		$IPSBAR_BASE + 0x1FFFFF // Memory Mapped Registers
 reserved   $IPSBAR_BASE + 0x200000 	0xFFFFFFFF

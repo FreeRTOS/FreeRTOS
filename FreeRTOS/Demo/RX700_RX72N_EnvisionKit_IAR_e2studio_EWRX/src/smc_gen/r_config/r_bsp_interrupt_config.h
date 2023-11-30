@@ -1,16 +1,16 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -104,10 +104,10 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_B_VECT_CAN1_TXF1                               182
 #define BSP_MAPPED_INT_CFG_B_VECT_CAN1_RXM1                               183
 #define BSP_MAPPED_INT_CFG_B_VECT_CAN1_TXM1                               184
-#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_RXF2                               
-#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_TXF2                               
-#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_RXM2                               
-#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_TXM2                               
+#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_RXF2
+#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_TXF2
+#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_RXM2
+#define BSP_MAPPED_INT_CFG_B_VECT_CAN2_TXM2
 #define BSP_MAPPED_INT_CFG_B_VECT_USB0_USBI0                              185
 #define BSP_MAPPED_INT_CFG_B_VECT_S12ADC0_S12ADI0                         186
 #define BSP_MAPPED_INT_CFG_B_VECT_S12ADC0_S12GBADI0                       187
@@ -178,42 +178,42 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_A_VECT_MTU8_TGIC8                              248
 #define BSP_MAPPED_INT_CFG_A_VECT_MTU8_TGID8                              249
 #define BSP_MAPPED_INT_CFG_A_VECT_MTU8_TCIV8                              250
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIA0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIB0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIC0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCID0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GDTE0                             
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIE0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIF0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIV0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIU0                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIA1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIB1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIC1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCID1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GDTE1                             
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIE1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIF1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIV1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIU1                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIA2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIB2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIC2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCID2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GDTE2                             
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIE2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIF2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIV2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIU2                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIA3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIB3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIC3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCID3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GDTE3                             
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIE3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIF3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIV3                            
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIU3                            
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIA0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIB0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIC0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCID0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GDTE0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIE0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIF0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIV0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIU0
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIA1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIB1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIC1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCID1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GDTE1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIE1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIF1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIV1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIU1
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIA2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIB2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIC2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCID2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GDTE2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIE2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIF2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIV2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIU2
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIA3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIB3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIC3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCID3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GDTE3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIE3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIF3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIV3
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIU3
 #define BSP_MAPPED_INT_CFG_A_VECT_EPTPC_IPLS                              251
 #define BSP_MAPPED_INT_CFG_A_VECT_PMGI0_PMGI0I                            252
 #define BSP_MAPPED_INT_CFG_A_VECT_PMGI1_PMGI1I                            253

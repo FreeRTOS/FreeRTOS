@@ -12,9 +12,9 @@ MAKE = make
 CFLAGS += $(INCLUDE_DIRS) -DportasmHANDLE_INTERRUPT=handle_trap -fmessage-length=0 \
           -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
           -Wno-unused-parameter -nostartfiles -g3 -Os
-          
+
 ifeq ($(PICOLIBC),1)
-CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF 
+CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
 else
 CFLAGS += --specs=nano.specs -fno-builtin-printf
 endif

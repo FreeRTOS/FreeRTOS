@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    07/02/2010
-  * @brief   This file contains all the functions prototypes for the GPIO 
+  * @brief   This file contains all the functions prototypes for the GPIO
   *          firmware library.
   ******************************************************************************
   * @copy
@@ -17,7 +17,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L1xx_GPIO_H
@@ -40,7 +40,7 @@
 
 /** @defgroup GPIO_Exported_Types
   * @{
-  */ 
+  */
 #define IS_GPIO_ALL_PERIPH(PERIPH) (((PERIPH) == GPIOA) || \
                                     ((PERIPH) == GPIOB) || \
                                     ((PERIPH) == GPIOC) || \
@@ -48,11 +48,11 @@
                                     ((PERIPH) == GPIOE) || \
                                     ((PERIPH) == GPIOH))
 
-/** @defgroup Configuration_Mode_enumeration 
+/** @defgroup Configuration_Mode_enumeration
   * @{
-  */ 
+  */
 typedef enum
-{ 
+{
   GPIO_Mode_IN   = 0x00, /*!< GPIO Input Mode */
   GPIO_Mode_OUT  = 0x01, /*!< GPIO Output Mode */
   GPIO_Mode_AF   = 0x02, /*!< GPIO Alternate function Mode */
@@ -66,7 +66,7 @@ typedef enum
 
 /** @defgroup Output_type_enumeration
   * @{
-  */ 
+  */
 typedef enum
 { GPIO_OType_PP = 0x00,
   GPIO_OType_OD = 0x01
@@ -77,11 +77,11 @@ typedef enum
   * @}
   */
 
-/** @defgroup Output_Maximum_frequency_enumeration 
+/** @defgroup Output_Maximum_frequency_enumeration
   * @{
-  */ 
+  */
 typedef enum
-{ 
+{
   GPIO_Speed_400KHz = 0x00, /*!< Very Low Speed */
   GPIO_Speed_2MHz   = 0x01, /*!< Low Speed */
   GPIO_Speed_10MHz  = 0x02, /*!< Medium Speed */
@@ -93,9 +93,9 @@ typedef enum
   * @}
   */
 
-/** @defgroup Configuration_Pull-Up_Pull-Down_enumeration 
+/** @defgroup Configuration_Pull-Up_Pull-Down_enumeration
   * @{
-  */ 
+  */
 typedef enum
 { GPIO_PuPd_NOPULL = 0x00,
   GPIO_PuPd_UP     = 0x01,
@@ -120,9 +120,9 @@ typedef enum
   * @}
   */
 
-/** 
+/**
   * @brief  GPIO Init structure definition
-  */ 
+  */
 typedef struct
 {
   uint32_t GPIO_Pin;              /*!< Specifies the GPIO pins to be configured.
@@ -147,12 +147,12 @@ typedef struct
 /** @defgroup GPIO_Exported_Constants
   * @{
   */
-  
+
 /**
   * @}
   */
 
-/** @defgroup GPIO_pins_define 
+/** @defgroup GPIO_pins_define
   * @{
   */
 #define GPIO_Pin_0                 ((uint16_t)0x0001)  /*!< Pin 0 selected */
@@ -194,9 +194,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup GPIO_Pin_sources 
+/** @defgroup GPIO_Pin_sources
   * @{
-  */ 
+  */
 #define GPIO_PinSource0            ((uint8_t)0x00)
 #define GPIO_PinSource1            ((uint8_t)0x01)
 #define GPIO_PinSource2            ((uint8_t)0x02)
@@ -234,13 +234,13 @@ typedef struct
   * @}
   */
 
-/** @defgroup GPIO_Alternat_function_selection_define 
+/** @defgroup GPIO_Alternat_function_selection_define
   * @{
   */
 
-/** 
-  * @brief  AF 0 selection  
-  */ 
+/**
+  * @brief  AF 0 selection
+  */
 #define GPIO_AF_RTC_50Hz      ((uint8_t)0x00)  /*!< RTC 50/60 Hz Alternate Function mapping */
 #define GPIO_AF_MCO           ((uint8_t)0x00)  /*!< MCO Alternate Function mapping */
 #define GPIO_AF_RTC_AF1       ((uint8_t)0x00)  /*!< RTC_AF1 Alternate Function mapping */
@@ -248,53 +248,53 @@ typedef struct
 #define GPIO_AF_SWJ           ((uint8_t)0x00)  /*!< SWJ (SW and JTAG) Alternate Function mapping */
 #define GPIO_AF_TRACE         ((uint8_t)0x00)  /*!< TRACE Alternate Function mapping */
 
-/** 
-  * @brief  AF 1 selection  
-  */ 
+/**
+  * @brief  AF 1 selection
+  */
 #define GPIO_AF_TIM2          ((uint8_t)0x01)  /*!< TIM2 Alternate Function mapping */
-/** 
-  * @brief  AF 2 selection  
-  */ 
+/**
+  * @brief  AF 2 selection
+  */
 #define GPIO_AF_TIM3          ((uint8_t)0x02)  /*!< TIM3 Alternate Function mapping */
 #define GPIO_AF_TIM4          ((uint8_t)0x02)  /*!< TIM4 Alternate Function mapping */
-/** 
-  * @brief  AF 3 selection  
-  */ 
+/**
+  * @brief  AF 3 selection
+  */
 #define GPIO_AF_TIM9           ((uint8_t)0x03)  /*!< TIM9 Alternate Function mapping */
 #define GPIO_AF_TIM10          ((uint8_t)0x03)  /*!< TIM10 Alternate Function mapping */
 #define GPIO_AF_TIM11          ((uint8_t)0x03)  /*!< TIM11 Alternate Function mapping */
-/** 
-  * @brief  AF 4 selection  
-  */ 
+/**
+  * @brief  AF 4 selection
+  */
 #define GPIO_AF_I2C1          ((uint8_t)0x04)  /*!< I2C1 Alternate Function mapping */
 #define GPIO_AF_I2C2          ((uint8_t)0x04)  /*!< I2C2 Alternate Function mapping */
-/** 
-  * @brief  AF 5 selection  
-  */ 
+/**
+  * @brief  AF 5 selection
+  */
 #define GPIO_AF_SPI1          ((uint8_t)0x05)  /*!< SPI1 Alternate Function mapping */
 #define GPIO_AF_SPI2          ((uint8_t)0x05)  /*!< SPI2 Alternate Function mapping */
-/** 
-  * @brief  AF 7 selection  
-  */ 
+/**
+  * @brief  AF 7 selection
+  */
 #define GPIO_AF_USART1        ((uint8_t)0x07)  /*!< USART1 Alternate Function mapping */
 #define GPIO_AF_USART2        ((uint8_t)0x07)  /*!< USART2 Alternate Function mapping */
 #define GPIO_AF_USART3        ((uint8_t)0x07)  /*!< USART3 Alternate Function mapping */
-/** 
-  * @brief  AF 10 selection  
-  */ 
+/**
+  * @brief  AF 10 selection
+  */
 #define GPIO_AF_USB           ((uint8_t)0xA)  /*!< USB Full speed device  Alternate Function mapping */
-/** 
-  * @brief  AF 11 selection  
-  */ 
+/**
+  * @brief  AF 11 selection
+  */
 #define GPIO_AF_LCD           ((uint8_t)0x0B)  /*!< LCD Alternate Function mapping */
-/** 
-  * @brief  AF 14 selection  
-  */ 
+/**
+  * @brief  AF 14 selection
+  */
 #define GPIO_AF_RI            ((uint8_t)0x0E)  /*!< RI Alternate Function mapping */
 
-/** 
-  * @brief  AF 15 selection  
-  */ 
+/**
+  * @brief  AF 15 selection
+  */
 #define GPIO_AF_EVENTOUT      ((uint8_t)0x0F)  /*!< EVENTOUT Alternate Function mapping */
 
 #define IS_GPIO_AF(AF)   (((AF) == GPIO_AF_RTC_50Hz) || ((AF) == GPIO_AF_MCO) || \
@@ -314,16 +314,16 @@ typedef struct
   * @}
   */
 
-/** @defgroup GPIO_Legacy 
+/** @defgroup GPIO_Legacy
   * @{
   */
-    
+
 #define GPIO_Mode_AIN GPIO_Mode_AN
 
 /**
   * @}
   */
-  
+
 /** @defgroup GPIO_Exported_Macros
   * @{
   */

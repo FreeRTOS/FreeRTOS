@@ -33,10 +33,10 @@
  * \n
  *
  * The True Random Number Generator (TRNG) passes the American NIST Special Publication
- * 800-22 and Diehard Random Tests Suites. As soon as the TRNG is enabled (TRNG_Enable()), 
- * the generator provides one 32-bit value every 84 clock cycles. 
+ * 800-22 and Diehard Random Tests Suites. As soon as the TRNG is enabled (TRNG_Enable()),
+ * the generator provides one 32-bit value every 84 clock cycles.
  * Interrupt trng_int can be enabled through TRNG_EnableIt()(respectively disabled in TRNG_IDR).
- * This interrupt is set when a new random value is available and is cleared when the status 
+ * This interrupt is set when a new random value is available and is cleared when the status
  * register is read (TRNG_SR register). The flag DATRDY of the status register (TRNG_ISR) is set
  * when the random data is ready to be read out on the 32-bit output data through TRNG_GetRandData().
  *

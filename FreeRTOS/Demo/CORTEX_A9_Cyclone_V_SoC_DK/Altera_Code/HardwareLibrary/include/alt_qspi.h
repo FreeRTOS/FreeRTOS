@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,24 +25,24 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 /******************************************************************************
-* 
+*
 * !!!! Customer Be Aware, Exception!!!
 *
 * 1. Qspi Direct Access Mode is not working!
 *
-*    This is because the qspi flash memory installed on our DevKit board, Micro 
-*    part N25Q00xx, 8 Gb, is not completely compatible with our embedded Synopsis 
+*    This is because the qspi flash memory installed on our DevKit board, Micro
+*    part N25Q00xx, 8 Gb, is not completely compatible with our embedded Synopsis
 *    QSPI controller IP. Therefore there is no viable direct access code offered
 *    in the lib.  All the memory rea/write functionality is offered with indirect
-*    access only.   
+*    access only.
 *
-*    Should you install a different flash memory part in your custom board, and 
+*    Should you install a different flash memory part in your custom board, and
 *    wondering wether direct access mode works, please contact with us.
-* 
+*
 ******************************************************************************/
 
 /*! \file
@@ -117,7 +117,7 @@ ALT_STATUS_CODE alt_qspi_uninit(void);
  * Disable the QSPI Controller.
  *
  * Disable the QSPI once the current transfer of the data word (FF_W) is
- * complete. All output enables are inactive and all pins are set to input 
+ * complete. All output enables are inactive and all pins are set to input
  * mode.
  *
  * \retval      ALT_E_SUCCESS   Indicates successful completion.
@@ -357,13 +357,13 @@ bool alt_qspi_is_idle(void);
  * data to the flash device. An outline of the operational flow for these
  * operations can be found in:
  * //depot/soc/hhp_sw/baremetal_fw/drivers/qspi/qspi.c
- * 
+ *
  * The general flow for an indirect block read is to call
  * qspi_configure_mode_indirect_read_start() to initiate the read transfer from
  * the flash device into the SRAM buffer and follow with a call to either
  * qpsi_write_sram_fifo_poll() or qspi_read_sram_fifo_irq() to copy the data
  * from SRAM into the user's buffer.
- * 
+ *
  * The general flow for an indirect block write is to call
  * qspi_configure_mode_indirect_write_start() to initiate the write transfer
  * from the SRAM buffer to the flash device and follow with a call to either
@@ -460,8 +460,8 @@ ALT_STATUS_CODE alt_qspi_write(uint32_t dest, const void * src, size_t size);
  */
 typedef enum ALT_QSPI_MODE_e
 {
-  ALT_QSPI_MODE_SINGLE = 0,     /*!< Use Standard Single SPI (SIO-SPI) mode (bits 
-                                 *   always transferred into the device on DQ0 
+  ALT_QSPI_MODE_SINGLE = 0,     /*!< Use Standard Single SPI (SIO-SPI) mode (bits
+                                 *   always transferred into the device on DQ0
                                  *   only). Supported by all SPI flash devices.
                                  */
   ALT_QSPI_MODE_DUAL   = 1,     /*!< Use Dual SPI (DIO-SPI) SPI mode where bits are
@@ -538,13 +538,13 @@ typedef struct ALT_QSPI_DEV_SIZE_CONFIG_s
   uint32_t      lower_wrprot_block; /*!< The block number that defines the lower
                                      *   block in the range of blocks that is
                                      *   protected from writing. This field
-                                     *   is ignored it write protection is 
+                                     *   is ignored it write protection is
                                      *   disabled.
                                      */
   uint32_t      upper_wrprot_block; /*!< The block number that defines the upper
                                      *   block in the range of blocks that is
                                      *   protected from writing. This field
-                                     *   is ignored it write protection is 
+                                     *   is ignored it write protection is
                                      *   disabled.
                                      */
   bool          wrprot_enable;      /*!< The write region enable value. A value
@@ -1055,8 +1055,8 @@ ALT_STATUS_CODE alt_qspi_ahb_address_remap_disable(void);
 /*!
  * Enable AHB address remapping.
  *
- * Enables remapping of incoming AHB addresses so they are modified to 
- * \<address\> + \e N, where \e N is the configured remap address value. 
+ * Enables remapping of incoming AHB addresses so they are modified to
+ * \<address\> + \e N, where \e N is the configured remap address value.
  *
  * See: alt_qspi_ahb_remap_address_set().
  *
@@ -1146,7 +1146,7 @@ ALT_STATUS_CODE alt_qspi_indirect_read_cancel(void);
  * Returns the SRAM fill level for the indirect read partition in units of SRAM
  * words (4 bytes).
  *
- * \returns     The SRAM fill level for the indirect read partition in units of 
+ * \returns     The SRAM fill level for the indirect read partition in units of
  *              SRAM words (4 bytes).
  */
 uint32_t alt_qspi_indirect_read_fill_level(void);
@@ -1258,7 +1258,7 @@ ALT_STATUS_CODE alt_qspi_indirect_write_cancel(void);
  * Returns the SRAM fill level for the indirect write partition in units of SRAM
  * words (4 bytes).
  *
- * \returns     The SRAM fill level for the indirect write partition in units of 
+ * \returns     The SRAM fill level for the indirect write partition in units of
  *              SRAM words (4 bytes).
  */
 uint32_t alt_qspi_indirect_write_fill_level(void);
@@ -1504,7 +1504,7 @@ ALT_STATUS_CODE alt_qspi_dma_config_get(uint32_t * single_type_sz,
  * This function configures the QSPI DMA peripheral interface single and burst
  * type transfer sizes.  The DMA configruation should be setup while the
  * controller is idle. Because all transfers are required to be word aligned,
- * the smallest DMA request is 4 bytes. 
+ * the smallest DMA request is 4 bytes.
  *
  * This API requires that the QSPI controller be idle, as determined by
  * alt_qspi_is_idle().

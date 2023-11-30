@@ -24,7 +24,7 @@
  *
  */
 
-/* 
+/*
 Changes from V2.0.0
 
 	+ Use scheduler suspends in place of critical sections.
@@ -68,7 +68,7 @@ unsigned char ucBit = ( unsigned char ) 1;
 
 	if( uxLED <= partstMAX_OUTPUT_LED )
 	{
-		ucBit <<= uxLED;	
+		ucBit <<= uxLED;
 
 		vTaskSuspendAll();
 		{
@@ -110,7 +110,7 @@ unsigned char ucBit;
 
 			PORTB = ucCurrentOutputValue;
 		}
-		xTaskResumeAll();			
+		xTaskResumeAll();
 	}
 }
 

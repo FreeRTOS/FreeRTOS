@@ -22,12 +22,12 @@
  *  @{
  */
 /** @file pwm_c_wrapper.cpp
- \brief the pwm component C wrapper   
+ \brief the pwm component C wrapper
  This program is designed to allow the other C programs to be able to use this component
 
  There are entry points for all C wrapper API implementation
 
-<b>Platform:</b> This is ARC-based component 
+<b>Platform:</b> This is ARC-based component
 
 <b>Toolset:</b> Metaware IDE(8.5.1)
 <b>Reference:</b> smsc_reusable_fw_requirement.doc */
@@ -88,20 +88,20 @@
 #if TOOLSET == TOOLMDK
 #define _KEIL_ARM_  1   /* Make 1 for Keil MDK Compiler     */
 #define _KEIL_  0       /* Make 1 for Keil Compiler     */
-#define _PC_    0   
+#define _PC_    0
 #define _ARC_CORE_	0
 #endif
 
 #if TOOLSET == TOOLKEIL
 #define _KEIL_ARM_  0
 #define _KEIL_  1   /* Make 1 for Keil Compiler     */
-#define _PC_    0   
+#define _PC_    0
 #define _ARC_CORE_	0
 #endif
 
 #if TOOLSET == TOOLPC
 #define _KEIL_ARM_  0
-#define _KEIL_  0   
+#define _KEIL_  0
 #define _PC_    1 	/* Make 1 for PC Environment    */
 #define _ARC_CORE_	0
 #endif
@@ -173,7 +173,7 @@ typedef union _BITS_8
 #define EXTERNMMCRTYPE(name,dtype) extern volatile dtype xdata name
 #define SFR(name,address)       sfr name = address
 #define SFRBIT(name,address)    sbit name = address
-#define EXTERNSFR(name) 
+#define EXTERNSFR(name)
 #define BITADDRESSTYPE(name)    bit name
 #define XDATA                   xdata
 #define CODE                    code
@@ -184,14 +184,14 @@ typedef union _BITS_8
 #define CLR_GLOBAL_INTR_ENABLE()	(sfrIE_EAbit = FALSE;)
 #define NULLPTR						(char *)(0)
 #define	PLATFORM_TRIM_OSC()			// TODO
-#define PNOP() 
+#define PNOP()
 #define DISABLE_INTERRUPTS() sfrIE_EAbit=0
 #define ENABLE_INTERRUPTS() sfrIE_EAbit=1
 #define SAVE_DIS_INTERRUPTS(x) { x=sfrIE_EAbit; sfrIE_EAbit=0; }
 #define RESTORE_INTERRUPTS(x) { sfrIE_EAbit=x; }
 #define ATOMIC_CPU_SLEEP()
 #define NUM_IRQ_VECTORS     12  // DW-8051
-#define IRQ_VECTOR_SIZE     8 
+#define IRQ_VECTOR_SIZE     8
 #define USE_INLINE_PATCHER  1
 #define IRQ_VECTABLE_IN_RAM 0
 #define PLAT_ROM_IRQ_VECTOR_BASE 0x03  // ROM start
@@ -217,7 +217,7 @@ uint32_t soft_norm(uint32_t val);
 #define EXTERNSFR(name)         extern	volatile unsigned char name
 #define BITADDRESSTYPE(name)    volatile unsigned char name
 #define XDATA
-#define CODE                
+#define CODE
 #define DATA
 #define IDATA
 #define INTERRUPT(x)
@@ -225,11 +225,11 @@ uint32_t soft_norm(uint32_t val);
 #define CLR_GLOBAL_INTR_ENABLE()	(sfrIE_EAbit = FALSE;)
 #define NULLPTR						(char *)(0)
 #define	PLATFORM_TRIM_OSC()			// TODO
-#define PNOP() 
-#define DISABLE_INTERRUPTS() 
+#define PNOP()
+#define DISABLE_INTERRUPTS()
 #define ENABLE_INTERRUPTS()
-#define SAVE_DIS_INTERRUPTS(x) 
-#define RESTORE_INTERRUPTS(x) 
+#define SAVE_DIS_INTERRUPTS(x)
+#define RESTORE_INTERRUPTS(x)
 #define ATOMIC_CPU_SLEEP()
 #define NUM_IRQ_VECTORS     24
 #define IRQ_VECTOR_SIZE     8
@@ -249,16 +249,16 @@ uint32_t soft_norm(uint32_t val);
 // ARC MMCR's are 32-bit registers
 #define MMCR(name,address)      volatile unsigned char name
 #define MMCRARRAY(name,length,address)  volatile unsigned char name[length]
-#define MMCRTYPE(name,dtype,address) volatile dtype name 
+#define MMCRTYPE(name,dtype,address) volatile dtype name
 #define EXTERNMMCR(name)        extern volatile unsigned char name
 #define EXTERNMMCRARRAY(name)   extern volatile unsigned char name[]
 #define EXTERNMMCRTYPE(name,dtype) extern volatile dtype name
-#define SFR(name,address)   volatile unsigned char name        
-#define SFRBIT(name,address) volatile unsigned char name 
-#define EXTERNSFR(name) extern volatile unsigned char name 
-#define BITADDRESSTYPE(name) 
+#define SFR(name,address)   volatile unsigned char name
+#define SFRBIT(name,address) volatile unsigned char name
+#define EXTERNSFR(name) extern volatile unsigned char name
+#define BITADDRESSTYPE(name)
 #define XDATA
-#define CODE     
+#define CODE
 #define DATA
 #define IDATA
 #define INTERRUPT(x)
@@ -298,16 +298,16 @@ uint32_t soft_norm(uint32_t val);
 // ARM MMCR's are 32-bit registers
 #define MMCR(name,address)      volatile unsigned char name
 #define MMCRARRAY(name,length,address)  volatile unsigned char name[length]
-#define MMCRTYPE(name,dtype,address) volatile dtype name 
+#define MMCRTYPE(name,dtype,address) volatile dtype name
 #define EXTERNMMCR(name)        extern volatile unsigned char name
 #define EXTERNMMCRARRAY(name)   extern volatile unsigned char name[]
 #define EXTERNMMCRTYPE(name,dtype) extern volatile dtype name
-#define SFR(name,address)   volatile unsigned char name        
-#define SFRBIT(name,address) volatile unsigned char name 
-#define EXTERNSFR(name) extern volatile unsigned char name 
-#define BITADDRESSTYPE(name) 
+#define SFR(name,address)   volatile unsigned char name
+#define SFRBIT(name,address) volatile unsigned char name
+#define EXTERNSFR(name) extern volatile unsigned char name
+#define BITADDRESSTYPE(name)
 #define XDATA
-#define CODE     
+#define CODE
 #define DATA
 #define IDATA
 #define INTERRUPT(x)

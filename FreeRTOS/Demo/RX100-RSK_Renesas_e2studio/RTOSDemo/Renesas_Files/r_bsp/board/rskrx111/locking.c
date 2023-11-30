@@ -1,20 +1,20 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
-* Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.    
+* Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name	   : locking.c
@@ -49,7 +49,7 @@ Typedef definitions
 /***********************************************************************************************************************
 Exported global variables (to be accessed by other files)
 ***********************************************************************************************************************/
- 
+
 /***********************************************************************************************************************
 Private global variables and functions
 ***********************************************************************************************************************/
@@ -70,21 +70,21 @@ bool R_BSP_Lock(bsp_lock_t * plock)
 
     /* Variable used in trying to acquire lock. Using the xchg instruction makes this atomic */
     int32_t is_locked = true;
-    
-    /* This example uses the RX MCU's atomic xchg() instruction. plock->lock is the lock we are trying to reserve. 
-       The way this works is that 'is_locked' gets the value of the plock->lock and plock->lock gets the value of 
-       'is_locked' which we just set to 'true'. Basically this is an atomic 'swap' command. If the lock had not yet been 
-       reserved then its value would be 'false' and after the xchg() instruction finished 'is_locked' would have 
-       'false'. If it had already been reserved then 'is_locked' would have 'true' after the xchg() instruction. Since 
-       plock->lock was already 'true' and we just set it back to 'true' everything is ok. To see if we reserved the lock 
+
+    /* This example uses the RX MCU's atomic xchg() instruction. plock->lock is the lock we are trying to reserve.
+       The way this works is that 'is_locked' gets the value of the plock->lock and plock->lock gets the value of
+       'is_locked' which we just set to 'true'. Basically this is an atomic 'swap' command. If the lock had not yet been
+       reserved then its value would be 'false' and after the xchg() instruction finished 'is_locked' would have
+       'false'. If it had already been reserved then 'is_locked' would have 'true' after the xchg() instruction. Since
+       plock->lock was already 'true' and we just set it back to 'true' everything is ok. To see if we reserved the lock
        we just need to check the value of 'is_locked' after this instruction finishes. */
 
     /* Try to acquire semaphore to obtain lock */
     xchg(&is_locked, &plock->lock);
-    
+
     /* Check to see if semaphore was successfully taken */
     if (is_locked == false)
-    {        
+    {
         /* Lock obtained, return success. */
         ret = true;
     }
@@ -93,7 +93,7 @@ bool R_BSP_Lock(bsp_lock_t * plock)
         /* Lock was not obtained, another task already has it. */
     }
 
-    return ret;   
+    return ret;
 } /* End of function R_BSP_Lock() */
 
 

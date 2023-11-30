@@ -90,7 +90,7 @@ static void prvOpenSelectedNetworkInterface( pcap_if_t *pxAllNetworkInterfaces )
 
 /*
  * Interrupts cannot truely be simulated using WinPCap.  In reality this task
- * just polls the interface. 
+ * just polls the interface.
  */
 static void prvInterruptSimulator( void *pvParameters );
 
@@ -123,7 +123,7 @@ static struct netif *pxlwIPNetIf = NULL;
 static void prvLowLevelInit( struct netif *pxNetIf )
 {
 pcap_if_t *pxAllNetworkInterfaces;
-  
+
 	/* set MAC hardware address length */
 	pxNetIf->hwaddr_len = ETHARP_HWADDR_LEN;
 
@@ -138,12 +138,12 @@ pcap_if_t *pxAllNetworkInterfaces;
 	/* device capabilities */
 	/* don't set pxNetIf_FLAG_ETHARP if this device is not an ethernet one */
 	pxNetIf->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
- 
-	/* Query the computer the simulation is being executed on to find the 
+
+	/* Query the computer the simulation is being executed on to find the
 	network interfaces it has installed. */
 	pxAllNetworkInterfaces = prvPrintAvailableNetworkInterfaces();
-	
-	/* Open the network interface.  The number of the interface to be opened is 
+
+	/* Open the network interface.  The number of the interface to be opened is
 	set by the configNETWORK_INTERFACE_TO_USE constant in FreeRTOSConfig.h.
 	Calling this function will set the pxOpenedInterfaceHandle variable.  If,
 	after calling this function, pxOpenedInterfaceHandle is equal to NULL, then
@@ -153,7 +153,7 @@ pcap_if_t *pxAllNetworkInterfaces;
 		prvOpenSelectedNetworkInterface( pxAllNetworkInterfaces );
 	}
 
-	/* Remember which interface was opened as it is used in the interrupt 
+	/* Remember which interface was opened as it is used in the interrupt
 	simulator task. */
 	pxlwIPNetIf = pxNetIf;
 }
@@ -195,15 +195,15 @@ err_t xReturn = ERR_OK;
 	#endif
 
 	/* Initiate transfer. */
-	if( p->len == p->tot_len ) 
+	if( p->len == p->tot_len )
 	{
 		/* No pbuf chain, don't have to copy -> faster. */
 		pucBuffer = &( ( unsigned char * ) p->payload )[ ETH_PAD_SIZE ];
-	} 
-	else 
+	}
+	else
 	{
 		/* pbuf chain, copy into contiguous ucBuffer. */
-		if( p->tot_len >= sizeof( ucBuffer ) ) 
+		if( p->tot_len >= sizeof( ucBuffer ) )
 		{
 			LINK_STATS_INC( link.lenerr );
 			LINK_STATS_INC( link.drop );
@@ -214,19 +214,19 @@ err_t xReturn = ERR_OK;
 		{
 			pucChar = ucBuffer;
 
-			for( q = p; q != NULL; q = q->next ) 
+			for( q = p; q != NULL; q = q->next )
 			{
 				/* Send the data from the pbuf to the interface, one pbuf at a
 				time. The size of the data in each pbuf is kept in the ->len
 				variable. */
 				/* send data from(q->payload, q->len); */
 				LWIP_DEBUGF( NETIF_DEBUG, ("NETIF: send pucChar %p q->payload %p q->len %i q->next %p\n", pucChar, q->payload, ( int ) q->len, ( void* ) q->next ) );
-				if( q == p ) 
+				if( q == p )
 				{
 					memcpy( pucChar, &( ( char * ) q->payload )[ ETH_PAD_SIZE ], q->len - ETH_PAD_SIZE );
 					pucChar += q->len - ETH_PAD_SIZE;
-				} 
-				else 
+				}
+				else
 				{
 					memcpy( pucChar, q->payload, q->len );
 					pucChar += q->len;
@@ -238,7 +238,7 @@ err_t xReturn = ERR_OK;
 	if( xReturn == ERR_OK )
 	{
 		/* signal that packet should be sent */
-		if( pcap_sendpacket( pxOpenedInterfaceHandle, pucBuffer, usTotalLength ) < 0 ) 
+		if( pcap_sendpacket( pxOpenedInterfaceHandle, pucBuffer, usTotalLength ) < 0 )
 		{
 			LINK_STATS_INC( link.memerr );
 			LINK_STATS_INC( link.drop );
@@ -251,19 +251,19 @@ err_t xReturn = ERR_OK;
 			snmp_add_ifoutoctets( pxNetIf, usTotalLength );
 			pxHeader = ( struct eth_hdr * )p->payload;
 
-			if( ( pxHeader->dest.addr[ 0 ] & 1 ) != 0 ) 
+			if( ( pxHeader->dest.addr[ 0 ] & 1 ) != 0 )
 			{
 				/* broadcast or multicast packet*/
 				snmp_inc_ifoutnucastpkts( pxNetIf );
-			} 
-			else 
+			}
+			else
 			{
 				/* unicast packet */
 				snmp_inc_ifoutucastpkts( pxNetIf );
 			}
 		}
 	}
-	
+
 	return xReturn;
 }
 
@@ -287,8 +287,8 @@ struct pbuf *p = NULL, *q;
 
 		/* We allocate a pbuf chain of pbufs from the pool. */
 		p = pbuf_alloc( PBUF_RAW, lDataLength, PBUF_POOL );
-  
-		if( p != NULL ) 
+
+		if( p != NULL )
 		{
 			#if ETH_PAD_SIZE
 				pbuf_header( p, -ETH_PAD_SIZE ); /* drop the padding word */
@@ -297,7 +297,7 @@ struct pbuf *p = NULL, *q;
 			/* We iterate over the pbuf chain until we have read the entire
 			* packet into the pbuf. */
 			lDataLength = 0;
-			for( q = p; q != NULL; q = q->next ) 
+			for( q = p; q != NULL; q = q->next )
 			{
 				/* Read enough bytes to fill this pbuf in the chain. The
 				* available data in the pbuf is given by the q->len
@@ -319,7 +319,7 @@ struct pbuf *p = NULL, *q;
 		}
 	}
 
-	return p;  
+	return p;
 }
 
 /**
@@ -335,7 +335,7 @@ static void prvEthernetInput( const unsigned char * const pucInputData, long lIn
 {
 	/* This is taken from lwIP example code and therefore does not conform
 	to the FreeRTOS coding standard. */
-	
+
 struct eth_hdr *pxHeader;
 struct pbuf *p;
 
@@ -343,19 +343,19 @@ struct pbuf *p;
 	p = prvLowLevelInput( pucInputData, lInputLength );
 
 	/* no packet could be read, silently ignore this */
-	if( p != NULL ) 
+	if( p != NULL )
 	{
 		/* points to packet payload, which starts with an Ethernet header */
 		pxHeader = p->payload;
 
-		switch( htons( pxHeader->type ) ) 
+		switch( htons( pxHeader->type ) )
 		{
 			/* IP or ARP packet? */
 			case ETHTYPE_IP:
 			case ETHTYPE_ARP:
 								/* full packet send to tcpip_thread to process */
 								if( pxlwIPNetIf->input( p, pxlwIPNetIf ) != ERR_OK )
-								{ 
+								{
 									LWIP_DEBUGF(NETIF_DEBUG, ( "ethernetif_input: IP input error\n" ) );
 									pbuf_free(p);
 									p = NULL;
@@ -388,13 +388,13 @@ err_t xReturn = ERR_OK;
 
 	/* This is taken from lwIP example code and therefore does not conform
 	to the FreeRTOS coding standard. */
-	
+
 struct xEthernetIf *pxEthernetIf;
 
 	LWIP_ASSERT( "pxNetIf != NULL", ( pxNetIf != NULL ) );
-	
+
 	pxEthernetIf = mem_malloc( sizeof( struct xEthernetIf ) );
-	if( pxEthernetIf == NULL ) 
+	if( pxEthernetIf == NULL )
 	{
 		LWIP_DEBUGF(NETIF_DEBUG, ( "ethernetif_init: out of memory\n" ) );
 		xReturn = ERR_MEM;
@@ -423,14 +423,14 @@ struct xEthernetIf *pxEthernetIf;
 		pxNetIf->linkoutput = prvLowLevelOutput;
 
 		pxEthernetIf->ethaddr = ( struct eth_addr * ) &( pxNetIf->hwaddr[ 0 ] );
-  
+
 		/* initialize the hardware */
 		prvLowLevelInit( pxNetIf );
 
 		/* Was an interface opened? */
 		if( pxOpenedInterfaceHandle == NULL )
 		{
-			/* Probably an invalid adapter number was defined in 
+			/* Probably an invalid adapter number was defined in
 			FreeRTOSConfig.h. */
 			xReturn = ERR_VAL;
 			configASSERT( pxOpenedInterfaceHandle );
@@ -442,7 +442,7 @@ struct xEthernetIf *pxEthernetIf;
 /*-----------------------------------------------------------*/
 
 static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
-{	
+{
 pcap_if_t * pxAllNetworkInterfaces = NULL, *xInterface;
 long lInterfaceNumber = 1;
 
@@ -459,7 +459,7 @@ long lInterfaceNumber = 1;
 		for( xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next )
 		{
 			printf( "%d. %s", lInterfaceNumber, xInterface->name );
-			
+
 			if( xInterface->description != NULL )
 			{
 				printf( " (%s)\r\n", xInterface->description );
@@ -468,7 +468,7 @@ long lInterfaceNumber = 1;
 			{
 				printf( " (No description available)\r\n") ;
 			}
-			
+
 			lInterfaceNumber++;
 		}
 	}
@@ -483,11 +483,11 @@ long lInterfaceNumber = 1;
 
 	printf( "\r\nThe interface that will be opened is set by configNETWORK_INTERFACE_TO_USE which should be defined in FreeRTOSConfig.h\r\n" );
 	printf( "Attempting to open interface number %d.\r\n", configNETWORK_INTERFACE_TO_USE );
-	
+
 	if( ( configNETWORK_INTERFACE_TO_USE < 1L ) || ( configNETWORK_INTERFACE_TO_USE > lInterfaceNumber ) )
 	{
 		printf("\r\nconfigNETWORK_INTERFACE_TO_USE is not in the valid range.\r\n" );
-		
+
 		if( pxAllNetworkInterfaces != NULL )
 		{
 			/* Free the device list, as no devices are going to be opened. */
@@ -515,8 +515,8 @@ long x;
 	/* Open the selected interface. */
 	pxOpenedInterfaceHandle = pcap_open(	xInterface->name,		  	/* The name of the selected interface. */
 											netifMAX_MTU, 				/* The size of the packet to capture. */
-											PCAP_OPENFLAG_PROMISCUOUS,	/* Open in promiscious mode as the MAC and 
-																		IP address is going to be "simulated", and 
+											PCAP_OPENFLAG_PROMISCUOUS,	/* Open in promiscious mode as the MAC and
+																		IP address is going to be "simulated", and
 																		not be the real MAC and IP address.  This allows
 																		trafic to the simulated IP address to be routed
 																		to uIP, and trafic to the real IP address to be
@@ -525,16 +525,16 @@ long x;
 																		until data is available. */
 											NULL,			 			/* No authentication is required as this is
 																		not a remote capture session. */
-											cErrorBuffer			
+											cErrorBuffer
 									   );
-									   
+
 	if ( pxOpenedInterfaceHandle == NULL )
 	{
 		printf( "\r\n%s is not supported by WinPcap and cannot be opened\r\n", xInterface->name );
 	}
 	else
 	{
-		/* Configure the capture filter to allow blocking reads, and to filter 
+		/* Configure the capture filter to allow blocking reads, and to filter
 		out packets that are not of interest to this demo. */
 		prvConfigureCaptureBehaviour();
 	}
@@ -567,7 +567,7 @@ long lResult;
 		}
 		else
 		{
-			/* There is no real way of simulating an interrupt.  
+			/* There is no real way of simulating an interrupt.
 			Make sure other tasks can run. */
 			vTaskDelay( 5 );
 		}
@@ -599,7 +599,7 @@ unsigned long ulNetMask;
 		printf( "\r\nThe packet filter string is invalid\r\n" );
 	}
 	else
-	{	
+	{
 		if( pcap_setfilter( pxOpenedInterfaceHandle, &xFilterCode ) < 0 )
 		{
 			printf( "\r\nAn error occurred setting the packet filter.\r\n" );

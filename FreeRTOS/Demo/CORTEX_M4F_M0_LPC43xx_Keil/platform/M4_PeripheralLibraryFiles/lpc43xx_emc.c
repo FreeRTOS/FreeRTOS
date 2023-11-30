@@ -83,39 +83,39 @@ void MemoryPinInit(void)
     scu_pinmux(0xE, 11,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);  /* PE_11: D30 (function 0) errata */
     scu_pinmux(0xE, 12,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);  /* PE_12: D31 (function 0) errata */
 #endif
-  
+
   /* ADDRESS LINES A0..A11 > A0..A11 */
 	scu_pinmux(0x2,  9,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_9 - EXTBUS_A0 — External memory address line 0 */
-	scu_pinmux(0x2, 10,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_10 - EXTBUS_A1 — External memory address line 1 */	
-	scu_pinmux(0x2, 11,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_11 - EXTBUS_A2 — External memory address line 2 */	
+	scu_pinmux(0x2, 10,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_10 - EXTBUS_A1 — External memory address line 1 */
+	scu_pinmux(0x2, 11,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_11 - EXTBUS_A2 — External memory address line 2 */
 	scu_pinmux(0x2, 12,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_12 - EXTBUS_A3 — External memory address line 3 */
-	scu_pinmux(0x2, 13,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_13 - EXTBUS_A4 — External memory address line 4 */	
+	scu_pinmux(0x2, 13,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_13 - EXTBUS_A4 — External memory address line 4 */
 	scu_pinmux(0x1,  0,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P1_0 - EXTBUS_A5 — External memory address line 5 */
-	scu_pinmux(0x1,  1,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P1_1 - EXTBUS_A6 — External memory address line 6 */	
-	scu_pinmux(0x1,  2,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P1_2 - EXTBUS_A7 — External memory address line 7 */	
+	scu_pinmux(0x1,  1,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P1_1 - EXTBUS_A6 — External memory address line 6 */
+	scu_pinmux(0x1,  2,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P1_2 - EXTBUS_A7 — External memory address line 7 */
 	scu_pinmux(0x2,  8,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_8 - EXTBUS_A8 — External memory address line 8 */
-	scu_pinmux(0x2,  7,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_7 - EXTBUS_A9 — External memory address line 9 */	
+	scu_pinmux(0x2,  7,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P2_7 - EXTBUS_A9 — External memory address line 9 */
 	scu_pinmux(0x2,  6,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P2_6 - EXTBUS_A10 — External memory address line 10 */
 	scu_pinmux(0x2,  2,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P2_2 - EXTBUS_A11 — External memory address line 11 */
 	scu_pinmux(0x2,  1,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P2_1 - EXTBUS_A12 — External memory address line 12 */
-	scu_pinmux(0x2,  0,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P2_0 - EXTBUS_A13 — External memory address line 13 */	
+	scu_pinmux(0x2,  0,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* P2_0 - EXTBUS_A13 — External memory address line 13 */
 	scu_pinmux(0x6,  8,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC1);	/* P6_8 - EXTBUS_A14 — External memory address line 14 */
-	scu_pinmux(0x6,  7,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC1);	/* P6_7 - EXTBUS_A15 — External memory address line 15 */	
+	scu_pinmux(0x6,  7,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC1);	/* P6_7 - EXTBUS_A15 — External memory address line 15 */
 	scu_pinmux(0xD, 16,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* PD_16 - EXTBUS_A16 — External memory address line 16 */
-	scu_pinmux(0xD, 15,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* PD_15 - EXTBUS_A17 — External memory address line 17 */	
+	scu_pinmux(0xD, 15,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* PD_15 - EXTBUS_A17 — External memory address line 17 */
 	scu_pinmux(0xE,  0,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PE_0 - EXTBUS_A18 — External memory address line 18 */
 	scu_pinmux(0xE,  1,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PE_1 - EXTBUS_A19 — External memory address line 19 */
 	scu_pinmux(0xE,  2,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PE_2 - EXTBUS_A20 — External memory address line 20 */
 	scu_pinmux(0xE,  3,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PE_3 - EXTBUS_A21 — External memory address line 21 */
-	scu_pinmux(0xE,  4,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PE_4 - EXTBUS_A22 — External memory address line 22 */	
+	scu_pinmux(0xE,  4,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PE_4 - EXTBUS_A22 — External memory address line 22 */
 	scu_pinmux(0xA,  4,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* PA_4 - EXTBUS_A23 — External memory address line 23 */
 
   /* BYTE ENABLES */
 	scu_pinmux(0x1,  4,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);	/* P1_4 - EXTBUS_BLS0 — LOW active Byte Lane select signal 0 */
-	scu_pinmux(0x6,  6,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC1);	/* P6_6 - EXTBUS_BLS1 — LOW active Byte Lane select signal 1 */	
+	scu_pinmux(0x6,  6,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC1);	/* P6_6 - EXTBUS_BLS1 — LOW active Byte Lane select signal 1 */
 	scu_pinmux(0xD, 13,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* PD_13 - EXTBUS_BLS2 — LOW active Byte Lane select signal 2 */
-	scu_pinmux(0xD, 10,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* PD_10 - EXTBUS_BLS3 — LOW active Byte Lane select signal 3 */		
-    
+	scu_pinmux(0xD, 10,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC2);	/* PD_10 - EXTBUS_BLS3 — LOW active Byte Lane select signal 3 */
+
     scu_pinmux(0x6,  9,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);  /* P6_9: EXTBUS_DYCS0  (function 0) > CS# errata */
     scu_pinmux(0x1,  6,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);  /* P1_6: WE (function 0) errata */
     scu_pinmux(0x6,  4,  (MD_PLN | MD_EZI | MD_ZI | MD_EHS), FUNC3);  /* P6_4: CAS  (function 0) > CAS# errata */
@@ -172,13 +172,13 @@ void vEMC_InitSRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, 
    // adjust the CCU delaye for EMI (default to zero)
     //LPC_SCU->EMCCLKDELAY = (CLK0_DELAY | (CLKE0_DELAY << 16));
 	// Move all clock delays together
-	LPC_SCU->EMCDELAYCLK = ((CLK0_DELAY) 
+	LPC_SCU->EMCDELAYCLK = ((CLK0_DELAY)
 						 |  (CLK0_DELAY << 4)
 						 |  (CLK0_DELAY << 8)
 						 |  (CLK0_DELAY << 12));
 
    /* Initialize EMC to interface with SDRAM */
-	LPC_EMC->CONTROL 			= 0x00000001;   /* Enable the external memory controller */	
+	LPC_EMC->CONTROL 			= 0x00000001;   /* Enable the external memory controller */
 	LPC_EMC->CONFIG 			= 0;
 
 	LPC_EMC->DYNAMICCONFIG0 	= ((u32Width << 7) | (u32Size << 9) | (1UL << 12) | (u32DataBus << 14));
@@ -186,39 +186,39 @@ void vEMC_InitSRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, 
 
     LPC_EMC->DYNAMICRASCAS0 	= (3 << 0) | (3 << 8);      // aem
     LPC_EMC->DYNAMICRASCAS2 	= (3 << 0) | (3 << 8);  // aem
-	
+
 	LPC_EMC->DYNAMICREADCONFIG	= EMC_COMMAND_DELAYED_STRATEGY;
-	
+
 	LPC_EMC->DYNAMICRP 			= 1;    // calculated from xls sheet
 	LPC_EMC->DYNAMICRAS 		= 3;
-	LPC_EMC->DYNAMICSREX 		= 5;   
+	LPC_EMC->DYNAMICSREX 		= 5;
 	LPC_EMC->DYNAMICAPR 		= 0;
 	LPC_EMC->DYNAMICDAL 		= 4;
 	LPC_EMC->DYNAMICWR 			= 1;
-	LPC_EMC->DYNAMICRC 			= 5;   
-	LPC_EMC->DYNAMICRFC 		= 5;   
-	LPC_EMC->DYNAMICXSR 		= 5;   
+	LPC_EMC->DYNAMICRC 			= 5;
+	LPC_EMC->DYNAMICRFC 		= 5;
+	LPC_EMC->DYNAMICXSR 		= 5;
 	LPC_EMC->DYNAMICRRD 		= 1;
 	LPC_EMC->DYNAMICMRD 		= 1;
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_NOP);
 	emc_WaitMinUS(100);
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_PRECHARGE_ALL);
 
 	LPC_EMC->DYNAMICREFRESH 	= 2;
 	emc_WaitMinUS(100);
-	
+
     LPC_EMC->DYNAMICREFRESH 	= 50;
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_MODE);
 
-	if(u32DataBus == 0) 
+	if(u32DataBus == 0)
 	{
 		/* burst size 8 */
         *((volatile uint32_t *)(u32BaseAddr | ((3 | (3 << 4)) << (u32ColAddrBits + 1))));
 	}
-	else 
+	else
 	{
 		/* burst size 4 */
 		*((volatile uint32_t *)(u32BaseAddr | ((2UL | (2UL << 4)) << (u32ColAddrBits + 2))));

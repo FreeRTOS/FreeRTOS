@@ -5,20 +5,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -29,7 +29,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_INT_H__
@@ -478,7 +478,7 @@ ALT_STATUS_CODE alt_int_dist_priority_get(ALT_INT_INTERRUPT_t int_id,
  * \retval      ALT_E_BAD_ARG   The given interrupt identifier and / or
  *                              priority value is invalid.
  */
-ALT_STATUS_CODE alt_int_dist_priority_set(ALT_INT_INTERRUPT_t int_id, 
+ALT_STATUS_CODE alt_int_dist_priority_set(ALT_INT_INTERRUPT_t int_id,
                                           uint32_t priority);
 
 
@@ -582,7 +582,7 @@ ALT_STATUS_CODE alt_int_dist_trigger_set(ALT_INT_INTERRUPT_t int_id,
  *  * interrupting only the processor that initiates the SGI
  *  * interrupting all processors other than the one that initiates the SGI
  *  * interrupting the processor initiating the SGI
- * 
+ *
  * SGIs from different processors use the same interrupt IDs. Therefore, any
  * target processor can receive SGIs with the same interrupt ID from different
  * processors. On the CPU interface of the target processor, the pending
@@ -591,7 +591,7 @@ ALT_STATUS_CODE alt_int_dist_trigger_set(ALT_INT_INTERRUPT_t int_id,
  * Reading the Interrupt Controller CPU Interrupt Acknowledge Register
  * (ICCIAR) for an SGI returns both the interrupt ID and the CPU ID of the
  * processor that generated the interrupt, uniquely identifying the interrupt.
- * In a multiprocessor implementation, the interrupt priority of each SGI 
+ * In a multiprocessor implementation, the interrupt priority of each SGI
  * interrupt ID is defined independently for each CPU interface. This means
  * that, for each CPU interface, all SGIs with a particular interrupt ID that
  * are pending on that interface have the same priority and must be handled
@@ -920,7 +920,7 @@ uint32_t alt_int_cpu_binary_point_get_ns(void);
 
 /*!
  * Sets the non-secure binary point value for the current CPU using the secure
- * interface. 
+ * interface.
  *
  * The binary point is point at which the priority value fields split into two
  * parts, the group priority field and the subpriority field. The group

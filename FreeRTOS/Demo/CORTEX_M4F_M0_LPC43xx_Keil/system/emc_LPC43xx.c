@@ -59,11 +59,11 @@ void EMC_Init( void )
     EMC_Config_Static();
 
 //    #if (USE_EXT_DYNAMIC_MEM == NO)
-//      LPC_EMC->CONTROL = 0x00000001;   // Enable the external memory controller	
-//	  LPC_EMC->CONFIG = 0;	
+//      LPC_EMC->CONTROL = 0x00000001;   // Enable the external memory controller
+//	  LPC_EMC->CONFIG = 0;
 //	  // Buffers for the static memories are enabled as well. If there is SDRAM as well,
 //	  // then this is done after the initialisation for the dynamic memory interface.
-//      LPC_EMC->STATICCONFIG0 = 0x00080081; 	
+//      LPC_EMC->STATICCONFIG0 = 0x00080081;
 //    #endif
 
 #endif
@@ -75,11 +75,11 @@ void EMC_Init( void )
 
 #elif (USE_EXT_DYNAMIC_MEM == NO)
 
-    LPC_EMC->CONTROL = 0x00000001;   // Enable the external memory controller	
-	LPC_EMC->CONFIG = 0;	
+    LPC_EMC->CONTROL = 0x00000001;   // Enable the external memory controller
+	LPC_EMC->CONFIG = 0;
 
 #endif
-	  
+
 	// Buffers for the static memories can now be enabled as well. In a system with static and dynamic memory
 	// this should only been done after the SDRAM initialisation --> here
 	LPC_EMC->STATICCONFIG0 = 0x00080081;
@@ -94,11 +94,11 @@ void EMC_Init( void )
 ****************************************************************************************/
 void EMC_Config_Pinmux(void)
 {
-	
+
   // Disable the external memory controller before changing pin control configuration
   LPC_EMC->CONTROL = 0x00000000;
 
-// EMC_OUT	   (PUP_CLEAR | SLEWRATE_FAST | FILTER_DISABLE) 
+// EMC_OUT	   (PUP_CLEAR | SLEWRATE_FAST | FILTER_DISABLE)
 // EMC_IO	   (PUP_CLEAR | SLEWRATE_FAST | INBUF_ENABLE | FILTER_DISABLE)
 
   // Data line configuration
@@ -201,7 +201,7 @@ void EMC_Config_Static(void)
 
   #if (PLATFORM == HITEX_A2_BOARD)
 
-    LPC_EMC->STATICWAITRD0 = 7;             // CS0: WAITRD = 7 
+    LPC_EMC->STATICWAITRD0 = 7;             // CS0: WAITRD = 7
 
     // The Hitex board has external SRAM on CS2
     // @120MHz there should be 7 waitstates for the 55ns SRAM, it should work with 6
@@ -211,7 +211,7 @@ void EMC_Config_Static(void)
 
   #elif	(PLATFORM == NXP_VALIDATION_BOARD)
 
-  	LPC_EMC->STATICWAITRD0 = check 9;             // CS0: WAITRD = 8 
+  	LPC_EMC->STATICWAITRD0 = check 9;             // CS0: WAITRD = 8
 	// to be added
 
     LPC_EMC->STATICCONFIG0 = check 0x00000081;     // CS2: 16 bit = WE
@@ -219,7 +219,7 @@ void EMC_Config_Static(void)
     LPC_EMC->STATICWAITRD2 = check 7;              // CS2: WAITRD = 6
 
   #endif
-	
+
 }
 
 
@@ -306,20 +306,20 @@ void initEmiDelays(void)
 void EMC_Init_SRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, uint32_t u32DataBus, uint32_t u32ColAddrBits)
 {
 
-	// calculate a 1 usec delay base 	
+	// calculate a 1 usec delay base
 	delayBase1us = M4Frequency / DELAY_1usFreq;
 
 	// eventually adjust the CCU delays for EMI (default to zero)
 	initEmiDelays();
 
 	// Initialize EMC to interface with SDRAM. The EMC needs to run for this.
-	LPC_EMC->CONTROL                = 0x00000001;   // (Re-)enable the external memory controller	
+	LPC_EMC->CONTROL                = 0x00000001;   // (Re-)enable the external memory controller
 	LPC_EMC->CONFIG                 = 0;
 
 #if (PLATFORM == HITEX_A2_BOARD)
 
 	LPC_EMC->DYNAMICCONFIG0 	= ((u32Width << 7) | (u32Size << 9) | (u32DataBus << 14)); // Selects the configuration information for dynamic memory chip select 0.
-	LPC_EMC->DYNAMICRASCAS0 	= (2UL << 0) | (2UL << 8); // Selects the RAS and CAS latencies for dynamic memory chip select 0.	
+	LPC_EMC->DYNAMICRASCAS0 	= (2UL << 0) | (2UL << 8); // Selects the RAS and CAS latencies for dynamic memory chip select 0.
 	LPC_EMC->DYNAMICREADCONFIG	= EMC_COMMAND_DELAYED_STRATEGY;	 // Configures the dynamic memory read strategy.
 	LPC_EMC->DYNAMICRP 		= 1; // Selects the precharge command period
 	LPC_EMC->DYNAMICRAS 		= 3; // Selects the active to precharge command period
@@ -332,19 +332,19 @@ void EMC_Init_SRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, 
 	LPC_EMC->DYNAMICXSR 		= 5; // Selects the exit self-refresh to active command time
 	LPC_EMC->DYNAMICRRD 		= 0; // Selects the active bank A to active bank B latency
 	LPC_EMC->DYNAMICMRD 		= 0; // Selects the load mode register to active command time
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_NOP);
 	vDelay(100);
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_PRECHARGE_ALL);
 
 	LPC_EMC->DYNAMICREFRESH 	= 2; // Configures dynamic memory refresh operation
 	vDelay(100);
-	
+
 	LPC_EMC->DYNAMICREFRESH 	= 83; // Configures dynamic memory refresh operation
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_MODE);
-	
+
 	// Write configuration data to SDRAM device
 	if(u32DataBus == 0)   // 16-bit data bus, the EMC enforces a burst size 8
 	{
@@ -357,11 +357,11 @@ void EMC_Init_SRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, 
 #endif   // HITEX_BOARD
 
 
-#if (PLATFORM == NXP_VALIDATION_BOARD)	
+#if (PLATFORM == NXP_VALIDATION_BOARD)
 
 	LPC_EMC->DYNAMICCONFIG0 	= ((u32Width << 7) | (u32Size << 9) | (u32DataBus << 14));
-	LPC_EMC->DYNAMICRASCAS0 	= (2UL << 0) | (2UL << 8);	
-	LPC_EMC->DYNAMICREADCONFIG	= EMC_COMMAND_DELAYED_STRATEGY;	
+	LPC_EMC->DYNAMICRASCAS0 	= (2UL << 0) | (2UL << 8);
+	LPC_EMC->DYNAMICREADCONFIG	= EMC_COMMAND_DELAYED_STRATEGY;
 	LPC_EMC->DYNAMICRP 		= 1;    // calculated from xls sheet
 	LPC_EMC->DYNAMICRAS 		= 2;
 	LPC_EMC->DYNAMICSREX 		= 5;
@@ -373,19 +373,19 @@ void EMC_Init_SRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, 
 	LPC_EMC->DYNAMICXSR 		= 5;
 	LPC_EMC->DYNAMICRRD 		= 0;
 	LPC_EMC->DYNAMICMRD 		= 0;
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_NOP);
 	vDelay(100);
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_PRECHARGE_ALL);
 
 	LPC_EMC->DYNAMICREFRESH 	= 2;
 	vDelay(100);
-	
+
 	LPC_EMC->DYNAMICREFRESH 	= 83;
-	
+
 	LPC_EMC->DYNAMICCONTROL 	= EMC_CE_ENABLE | EMC_CS_ENABLE | EMC_INIT(EMC_MODE);
-	
+
 	// Write configuration data to SDRAM device
 	if(u32DataBus == 0)   // burst size 8
 	{
@@ -415,7 +415,7 @@ void EMC_Init_SRDRAM(uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size, 
 static void vDelay(uint32_t u32Delay)
 {
 	volatile uint32_t i;
-	
+
 	for(i = 0; i < (u32Delay * delayBase1us); i++);
 }
 

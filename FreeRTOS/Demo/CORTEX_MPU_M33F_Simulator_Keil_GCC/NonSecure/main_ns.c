@@ -121,7 +121,7 @@ static void prvCreateTasks( void )
 
 	/* Create tasks for the TZ Demo. */
 	vStartTZDemo();
-	
+
 	/* Create tasks for reg tests. */
 	vStartRegTests();
 

@@ -38,8 +38,8 @@
 #if GIRQ09_DISAGG == 0
 
 /*
- * Aggregated mode handler, must handle all enabled 
- * GIRQ08 sources. 
+ * Aggregated mode handler, must handle all enabled
+ * GIRQ08 sources.
 */
 void __attribute__((weak, interrupt, nomips16, section(".girqs")))
 girq09_isr( void )

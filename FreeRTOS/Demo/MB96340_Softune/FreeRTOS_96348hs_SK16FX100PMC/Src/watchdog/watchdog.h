@@ -11,8 +11,8 @@
   - This file contains the defines and function declaration for hardware watchdog.
 -------------------------------------------------------------------------*/
 
-/* 
- * Clear watchdog defines 
+/*
+ * Clear watchdog defines
  */
 #define WTC_NONE	0			/* Don't initialize and clear watchdog */
 #define WTC_IN_TASK 1			/* Clear Watchdog in dedicated task */
@@ -23,7 +23,7 @@
 
 /*------------------------------------------------------------------------*/
 
-/* 
+/*
  * Watchdog period defines
  */
 #define WTC_PER_2_9		0		/* The watchdog period is 2^9/CLKWT */
@@ -45,18 +45,18 @@
 
 /*------------------------------------------------------------------------*/
 
-/* 
+/*
  * Watchdog Clock source defines
  */
 #define WTC_CLKRC0	0			/* The watchdog clock is CLKRC */
-#define WTC_CLKRC1	1			/* The watchdog clock is CLKRC, 
+#define WTC_CLKRC1	1			/* The watchdog clock is CLKRC,
 							   changing RC clock while watchdog opeation causes reset */
 #define WTC_CLKMC	2			/* The watchdog clock is CLKMC */
 #define WTC_CLKSC	3			/* The watchdog clock is CLKSC */
 
 /*------------------------------------------------------------------------*/
 
-/* 
+/*
  * Watchdog Reset at transition to Stop mode defines
  */
 #define WTC_RSTP_0	0			/* No watchdog reset at transition to Stop mode */
@@ -64,17 +64,17 @@
 
 /*------------------------------------------------------------------------*/
 
-/* 
- * After every WTC_CLR_PER ticks the watchdog would be cleared in the prvWatchdogTask(). 
- * This period needs to be chosed in accordance with the current CLKWT and the above 
+/*
+ * After every WTC_CLR_PER ticks the watchdog would be cleared in the prvWatchdogTask().
+ * This period needs to be chosed in accordance with the current CLKWT and the above
  * setting WTC_PER_2_XX.
  */
 #define WTC_CLR_PER 100			/* The watchdog clear period in RTOS ticks */
 
 /*------------------------------------------------------------------------*/
 
-/* 
- * Kick_watchdog Macro to clear watchdog 
+/*
+ * Kick_watchdog Macro to clear watchdog
  */
 #define Kick_Watchdog() \
 	{					\
@@ -83,8 +83,8 @@
 
 /*------------------------------------------------------------------------*/
 
-/* 
- * Watchdog function declarations 
+/*
+ * Watchdog function declarations
  */
 void	InitWatchdog( void );
 void	vStartWatchdogTask( unsigned portBASE_TYPE uxPriority );

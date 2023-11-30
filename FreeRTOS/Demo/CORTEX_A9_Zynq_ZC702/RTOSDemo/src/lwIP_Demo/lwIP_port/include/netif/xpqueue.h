@@ -20,7 +20,7 @@
 #define __LWIP_PBUF_QUEUE_H_
 
 #ifdef __cplusplus
-extern "C" { 
+extern "C" {
 #endif
 
 #define PQ_QUEUE_SIZE 4096

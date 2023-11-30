@@ -1,16 +1,16 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -345,7 +345,7 @@ static void operating_frequency_set (void)
     SYSTEM.BCKCR.BIT.BCLKDIV = 1;
 
     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-       This is done to ensure that the register has been written before the next register access. The RX has a 
+       This is done to ensure that the register has been written before the next register access. The RX has a
        pipeline architecture so the next instruction could be executed before the previous write had finished.
     */
     if(1 ==  SYSTEM.BCKCR.BIT.BCLKDIV)
@@ -432,8 +432,8 @@ static void operating_frequency_set (void)
     #error "Error! Invalid setting for BSP_CFG_PCKD_DIV in r_bsp_config.h"
 #endif
 
-    /* To change the ICLK frequency from less than 70 MHz to 70 MHz or higher such that the ratio of the frequency 
-       after the change to that before the change is greater than four, start by setting the frequency to one quarter 
+    /* To change the ICLK frequency from less than 70 MHz to 70 MHz or higher such that the ratio of the frequency
+       after the change to that before the change is greater than four, start by setting the frequency to one quarter
        of the intended frequency, wait for 3 us, and then change it to the intended frequency.
        (Refer User's Manual: 9.10.7 Notes on Changing the ICLK Frequency.) */
     /* Confirm whether to change ICLK frequency from less than 70 MHz to 70 MHz or higher. */
@@ -441,7 +441,7 @@ static void operating_frequency_set (void)
     {
         /* The clock source after reset is LOCO. The frequency of LOCO is 240 kHz.
            When the target clock frequency is 70 MHz or higher, it always exceeds 4 times the current clock frequency.
-           Therefore, this process does not check whether the target clock frequency exceeds 4 times the current 
+           Therefore, this process does not check whether the target clock frequency exceeds 4 times the current
            clock frequency. */
 
         /* Backup of tmp_clock */
@@ -462,7 +462,7 @@ static void operating_frequency_set (void)
     SYSTEM.SCKCR.LONG = tmp_clock;
 
     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-       This is done to ensure that the register has been written before the next register access. The RX has a 
+       This is done to ensure that the register has been written before the next register access. The RX has a
        pipeline architecture so the next instruction could be executed before the previous write had finished.
     */
     if(tmp_clock ==  SYSTEM.SCKCR.LONG)
@@ -490,7 +490,7 @@ static void operating_frequency_set (void)
     SYSTEM.SCKCR2.WORD = (uint16_t)tmp_clock;
 
     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-       This is done to ensure that the register has been written before the next register access. The RX has a 
+       This is done to ensure that the register has been written before the next register access. The RX has a
        pipeline architecture so the next instruction could be executed before the previous write had finished.
     */
     if((uint16_t)tmp_clock ==  SYSTEM.SCKCR2.WORD)
@@ -505,7 +505,7 @@ static void operating_frequency_set (void)
     SYSTEM.SCKCR3.WORD = (uint16_t)tmp_clock;
 
     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-       This is done to ensure that the register has been written before the next register access. The RX has a 
+       This is done to ensure that the register has been written before the next register access. The RX has a
        pipeline architecture so the next instruction could be executed before the previous write had finished.
     */
     if((uint16_t)tmp_clock ==  SYSTEM.SCKCR3.WORD)
@@ -523,7 +523,7 @@ static void operating_frequency_set (void)
         SYSTEM.SCKCR.LONG = tmp_restore_clock;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
          */
         if(tmp_restore_clock == SYSTEM.SCKCR.LONG)
@@ -600,7 +600,7 @@ static void clock_source_select (void)
         SYSTEM.HOCOCR.BYTE = 0x00;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
          */
         if(0x00 ==  SYSTEM.HOCOCR.BYTE)
@@ -672,7 +672,7 @@ static void clock_source_select (void)
     SYSTEM.MOSCCR.BYTE = 0x00;
 
     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-       This is done to ensure that the register has been written before the next register access. The RX has a 
+       This is done to ensure that the register has been written before the next register access. The RX has a
        pipeline architecture so the next instruction could be executed before the previous write had finished.
      */
     if(0x00 ==  SYSTEM.MOSCCR.BYTE)
@@ -739,7 +739,7 @@ static void clock_source_select (void)
         SYSTEM.SOSCCR.BYTE = 0x01;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
          */
         if (0x01 != SYSTEM.SOSCCR.BYTE)
@@ -749,7 +749,7 @@ static void clock_source_select (void)
 
         /* WAIT_LOOP */
         while (0 != SYSTEM.OSCOVFSR.BIT.SOOVF)
-        {        
+        {
             /* The delay period needed is to make sure that the sub-clock has stopped. */
             R_BSP_NOP();
         }
@@ -790,7 +790,7 @@ static void clock_source_select (void)
         SYSTEM.SOSCCR.BYTE = 0x00;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
          */
         if (0x00 != SYSTEM.SOSCCR.BYTE)
@@ -840,7 +840,7 @@ static void clock_source_select (void)
         /* RCR2 - RTC Control Register 2
         b7  CNTMD - Count Mode Select - The calendar count mode.
         b6  HR24  - Hours Mode - The RTC operates in 24-hour mode.
-        b5  AADJP - Automatic Adjustment Period Select - The RADJ.ADJ[5:0] setting value is adjusted from 
+        b5  AADJP - Automatic Adjustment Period Select - The RADJ.ADJ[5:0] setting value is adjusted from
                                                            the count value of the prescaler every 10 seconds.
         b4  AADJE - Automatic Adjustment Enable - Automatic adjustment is enabled.
         b3  RTCOE - RTCOUT Output Enable - RTCOUT output enabled.
@@ -898,7 +898,7 @@ static void clock_source_select (void)
         SYSTEM.SOSCCR.BYTE = 0x01;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
          */
         if (0x01 != SYSTEM.SOSCCR.BYTE)
@@ -925,7 +925,7 @@ static void clock_source_select (void)
         SYSTEM.SOSCCR.BYTE = 0x00;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
          */
         if (0x00 != SYSTEM.SOSCCR.BYTE)
@@ -1037,7 +1037,7 @@ static void clock_source_select (void)
         SYSTEM.MEMWAIT.BYTE = 0x01;
 
         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in User's manual.
-           This is done to ensure that the register has been written before the next register access. The RX has a 
+           This is done to ensure that the register has been written before the next register access. The RX has a
            pipeline architecture so the next instruction could be executed before the previous write had finished.
         */
         if(0x01 == SYSTEM.MEMWAIT.BYTE)

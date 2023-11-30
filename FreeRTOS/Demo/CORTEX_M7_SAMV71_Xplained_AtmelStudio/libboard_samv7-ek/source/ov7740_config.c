@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -39,8 +39,8 @@
 extern "C" {
 #endif
 
-#define FRAMERATE   30   
- 
+#define FRAMERATE   30
+
 /**
  * \defgroup ov7740_CMOS_image_sensor_registers_group
  *
@@ -49,12 +49,12 @@ extern "C" {
  * There are seven different configuration:
  *       -  OV7740_VGA_YUV422[]
  *       -  OV7740_QVGA_YUV422[]
- *       -  OV7740_QQVGA_YUV422[]   
+ *       -  OV7740_QQVGA_YUV422[]
  *       -  OV7740_QVGA_RGB888[]
  *       -  OV7740_QQVGA_RGB888[]
  *       -  OV7740_TEST_PATTERN[]
 
- * These values have been obtained from OV7740 datasheet and OmniVision 
+ * These values have been obtained from OV7740 datasheet and OmniVision
  * Developer Kit.
  * @{
  */
@@ -70,7 +70,7 @@ extern "C" {
  *  - pixel data in YUV422 format (Y1, U, Y2, V)
  */
 const struct ov_reg OV7740_VGA_YUV422[] = {
-	
+
 	{0x12, 0x80},
 	/* flag for soft reset delay */
 	{0x55 ,PLL_DIV_DEFAULT},
@@ -84,7 +84,7 @@ const struct ov_reg OV7740_VGA_YUV422[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz(MCK_132)/8  */
 	/**************************************************************/
-   
+
 	{OV7740_CLK, FRAME_RATE_30},
 	/**************************************************************/
 
@@ -96,9 +96,9 @@ const struct ov_reg OV7740_VGA_YUV422[] = {
 	{0x18 ,0xa0},
 	{0x19 ,0x03},
 	{0x1a ,0xf0},
-	{0x1b ,0x89}, 
+	{0x1b ,0x89},
 	{0x22 ,0x03},
-	{0x29 ,0x18}, 
+	{0x29 ,0x18},
 	{0x2b ,0xf8},
 	{0x2c ,0x01},
 	{0x31 ,0xa0},
@@ -108,14 +108,14 @@ const struct ov_reg OV7740_VGA_YUV422[] = {
 	{0x36 ,0x3f},
 
 	{0x04 ,0x60},
-	{0x27 ,0x80}, 
+	{0x27 ,0x80},
 	{0x3d ,0x0f},
 	{0x3e ,0x80},
 	{0x3f ,0x40},
 	{0x40 ,0x7f},
 	{0x41 ,0x6a},
 	{0x42 ,0x29},
-	{0x44 ,0x22}, 
+	{0x44 ,0x22},
 	{0x45 ,0x41},
 	{0x47 ,0x02},
 	{0x49 ,0x64},
@@ -218,7 +218,7 @@ const struct ov_reg OV7740_VGA_YUV422[] = {
 
  */
 const struct ov_reg OV7740_QVGA_YUV422[] = {
-	
+
 	{0x12, 0x80},
 	/* flag for soft reset delay */
 	{0x55 ,PLL_DIV_7_MCK_132},
@@ -232,7 +232,7 @@ const struct ov_reg OV7740_QVGA_YUV422[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz  (MCK=132/8)  */
 	/**************************************************************/
-	{OV7740_CLK, FRAME_RATE_30}, 
+	{OV7740_CLK, FRAME_RATE_30},
 	/**************************************************************/
 
 	{0x12 ,0x00},
@@ -389,9 +389,9 @@ const struct ov_reg OV7740_QQVGA_YUV422[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz  (MCK=132/8)  */
 	/**************************************************************/
-	
+
 	{OV7740_CLK, FRAME_RATE_30},
-	
+
 	{0x12, 0x00},
 	{0xd5, 0x10},
 	{OV7740_REG0C,  OV7740_REG0C_MAX_EXPOSURE(2)},
@@ -554,9 +554,9 @@ const struct ov_reg OV7740_QVGA_RGB888[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz  (MCK=132/8)  */
 	/**************************************************************/
-	
-	{OV7740_CLK, FRAME_RATE_30}, 
-	
+
+	{OV7740_CLK, FRAME_RATE_30},
+
 	{0x12, 0x00},
 	{0xd5, 0x10},
 	{OV7740_REG0C, OV7740_REG0C_MAX_EXPOSURE(2)},
@@ -718,9 +718,9 @@ const struct ov_reg OV7740_QQVGA_RGB888[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz  (MCK=132/8)  */
 	/**************************************************************/
-	
+
 	{OV7740_CLK, FRAME_RATE_30},
-	
+
 	{0x12, 0x00},
 	{0xd5, 0x10},
 	{OV7740_REG0C, (OV7740_REG0C_FLIP_ENABLE | OV7740_REG0C_MAX_EXPOSURE(2))},
@@ -877,7 +877,7 @@ const struct ov_reg OV7740_CIF_YUV422[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz  (MCK=132/8)  */
 	/**************************************************************/
-	
+
 	{OV7740_CLK, FRAME_RATE_30},
 	{0x12, 0x00},
 	{0xd5, 0x10},
@@ -1045,7 +1045,7 @@ const struct ov_reg OV7740_TEST_PATTERN[] = {
 	/**************************************************************/
 	/*  7p5fps 11 0x0A ;sysclk=6MHz at XCLK=16.5MHz  (MCK=132/8)  */
 	/**************************************************************/
-	
+
 	{OV7740_CLK, FRAME_RATE_30},
 
 	{0x12, 0x00},

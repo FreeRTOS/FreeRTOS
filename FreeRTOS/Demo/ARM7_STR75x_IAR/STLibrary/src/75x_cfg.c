@@ -44,15 +44,15 @@
 void CFG_BootSpaceConfig(u32 CFG_BootSpace)
 {
   u32 Temp = 0;
-  
-  /* Clear SW_BOOT[1:0] bits */ 
+
+  /* Clear SW_BOOT[1:0] bits */
   Temp = CFG->GLCONF & CFG_SWBOOT_Mask;
-  
-  /* Set SW_BOOT[1:0] bits according to CFG_BootSpace parameter value */ 
+
+  /* Set SW_BOOT[1:0] bits according to CFG_BootSpace parameter value */
   Temp |= CFG_BootSpace;
-  
-  /* Store the new value */ 
-  CFG->GLCONF = Temp;   
+
+  /* Store the new value */
+  CFG->GLCONF = Temp;
 }
 
 /*******************************************************************************

@@ -19,16 +19,16 @@
 #define BUTTON_DOWN       BIT5
 #define BUTTON_UP         BIT4
 #define BUTTON_RIGHT      BIT2
-#define BUTTON_LEFT       BIT1 
-#define BUTTON_S1         BIT6 
-#define BUTTON_S2         BIT7 
+#define BUTTON_LEFT       BIT1
+#define BUTTON_S1         BIT6
+#define BUTTON_S2         BIT7
 #define BUTTON_ALL        0xFE
 
 extern volatile unsigned char buttonsPressed;
 
 /*-------------------------------------------------------------
- *                  Function Prototypes 
- * ------------------------------------------------------------*/ 
+ *                  Function Prototypes
+ * ------------------------------------------------------------*/
 extern void halButtonsInit(unsigned char buttonsMask);
 extern unsigned char halButtonsPressed(void);
 extern void halButtonsInterruptEnable(unsigned char buttonIntEnableMask);

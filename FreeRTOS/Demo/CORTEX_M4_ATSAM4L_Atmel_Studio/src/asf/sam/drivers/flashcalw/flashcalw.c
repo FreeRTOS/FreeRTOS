@@ -186,7 +186,7 @@ void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
 #ifdef CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
 	UNUSED(ps_value);
 	UNUSED(is_fwu_enabled);
-	
+
 	if (cpu_f_hz > FLASH_FREQ_PS2_FWS_0_MAX_FREQ) { /* > 24MHz */
 		/* Set a wait-state. */
 		flashcalw_set_wait_state(1);

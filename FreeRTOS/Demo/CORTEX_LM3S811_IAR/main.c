@@ -190,12 +190,12 @@ const char *pcFailMessage = "FAIL";
 		{
 			xErrorOccurred = pdTRUE;
 		}
-	
+
 		if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;
 		}
-	
+
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;

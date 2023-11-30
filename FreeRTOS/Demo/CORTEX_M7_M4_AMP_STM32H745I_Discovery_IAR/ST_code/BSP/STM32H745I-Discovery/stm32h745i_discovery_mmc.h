@@ -16,7 +16,7 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32H745I_DISCOVERY_MMC_H
@@ -24,7 +24,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
@@ -32,41 +32,41 @@
 
 /** @addtogroup BSP
   * @{
-  */ 
+  */
 
 /** @addtogroup STM32H745I_DISCOVERY
   * @{
   */
-    
+
 /** @addtogroup STM32H745I_DISCOVERY_MMC
   * @{
-  */    
+  */
 
 /** @defgroup STM32H745I_DISCOVERY_MMC_Exported_Types Exported Types
   * @{
   */
 
-/** 
-  * @brief SD Card information structure 
+/**
+  * @brief SD Card information structure
   */
 #define BSP_MMC_CardInfo HAL_MMC_CardInfoTypeDef
 /**
   * @}
   */
-  
+
 /** @defgroup STM32H745I_DISCOVERY_MMC_Exported_Constants Exported Constants
   * @{
-  */    
-/** 
-  * @brief  SD status structure definition  
-  */     
+  */
+/**
+  * @brief  SD status structure definition
+  */
 #define MMC_OK                        ((uint8_t)0x00)
 #define MMC_ERROR                     ((uint8_t)0x01)
 #define MMC_ERROR_MMC_NOT_PRESENT     ((uint8_t)0x02)
 
-/** 
-  * @brief  MMC transfer state definition  
-  */     
+/**
+  * @brief  MMC transfer state definition
+  */
 #define MMC_TRANSFER_OK                ((uint8_t)0x00)
 #define MMC_TRANSFER_BUSY              ((uint8_t)0x01)
 
@@ -75,15 +75,15 @@
 #define MMC_NOT_PRESENT           ((uint8_t)0x00)
 
 #define MMC_DATATIMEOUT           ((uint32_t)0xFFFFFFFFU)
-    
+
 /**
   * @}
   */
-  
-   
+
+
 /** @addtogroup STM32H745I_DISCOVERY_MMC_Exported_Functions
   * @{
-  */   
+  */
 uint8_t BSP_MMC_Init(void);
 uint8_t BSP_MMC_DeInit(void);
 uint8_t BSP_MMC_ITConfig(void);
@@ -109,19 +109,19 @@ void    BSP_MMC_ReadCpltCallback(void);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 #ifdef __cplusplus
 }

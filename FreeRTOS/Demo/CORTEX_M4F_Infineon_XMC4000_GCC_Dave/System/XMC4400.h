@@ -8,7 +8,7 @@
  * @version  V1.1.0 (Reference Manual v1.1)
  * @date     13. December 2012
  *
- * @note     Generated with SVDConv V2.78b 
+ * @note     Generated with SVDConv V2.78b
  *           from CMSIS SVD File 'XMC4400_Processed_SVD.xml' Version 1.1.0 (Reference Manual v1.1),
  *******************************************************************************************************/
 
@@ -116,9 +116,9 @@ typedef enum {
   POSIF1_0_IRQn                 =  70,              /*!<  70  POSIF1_0                                                         */
   POSIF1_1_IRQn                 =  71,              /*!<  71  POSIF1_1                                                         */
   HRPWM_0_IRQn                  =  72,              /*!<  72  HRPWM_0                                                          */
-  HRPWM_1_IRQn                  =  73,              /*!<  73  HRPWM_1                                                          */ 
+  HRPWM_1_IRQn                  =  73,              /*!<  73  HRPWM_1                                                          */
   HRPWM_2_IRQn                  =  74,              /*!<  72  HRPWM_2                                                          */
-  HRPWM_3_IRQn                  =  75,              /*!<  73  HRPWM_3                                                          */ 
+  HRPWM_3_IRQn                  =  75,              /*!<  73  HRPWM_3                                                          */
   CAN0_0_IRQn                   =  76,              /*!<  76  CAN0_0                                                           */
   CAN0_1_IRQn                   =  77,              /*!<  77  CAN0_1                                                           */
   CAN0_2_IRQn                   =  78,              /*!<  78  CAN0_2                                                           */
@@ -1239,28 +1239,28 @@ typedef struct {                                    /*!< (@ 0x50040000) USB Stru
   __IO uint32_t  GAHBCFG;                           /*!< (@ 0x50040008) AHB Configuration Register                             */
   __IO uint32_t  GUSBCFG;                           /*!< (@ 0x5004000C) USB Configuration Register                             */
   __IO uint32_t  GRSTCTL;                           /*!< (@ 0x50040010) Reset Register                                         */
-  
+
   union {
     __IO uint32_t  GINTSTS_DEVICEMODE;              /*!< (@ 0x50040014) Interrupt Register [DEVICEMODE]                        */
     __IO uint32_t  GINTSTS_HOSTMODE;                /*!< (@ 0x50040014) Interrupt Register [HOSTMODE]                          */
   };
-  
+
   union {
     __IO uint32_t  GINTMSK_DEVICEMODE;              /*!< (@ 0x50040018) Interrupt Mask Register [DEVICEMODE]                   */
     __IO uint32_t  GINTMSK_HOSTMODE;                /*!< (@ 0x50040018) Interrupt Mask Register [HOSTMODE]                     */
   };
-  
+
   union {
     __I  uint32_t  GRXSTSR_DEVICEMODE;              /*!< (@ 0x5004001C) Receive Status Debug Read Register [DEVICEMODE]        */
     __I  uint32_t  GRXSTSR_HOSTMODE;                /*!< (@ 0x5004001C) Receive Status Debug Read Register [HOSTMODE]          */
   };
-  
+
   union {
     __I  uint32_t  GRXSTSP_HOSTMODE;                /*!< (@ 0x50040020) Receive Status Read and Pop Register [HOSTMODE]        */
     __I  uint32_t  GRXSTSP_DEVICEMODE;              /*!< (@ 0x50040020) Receive Status Read and Pop Register [DEVICEMODE]      */
   };
   __IO uint32_t  GRXFSIZ;                           /*!< (@ 0x50040024) Receive FIFO Size Register                             */
-  
+
   union {
     __IO uint32_t  GNPTXFSIZ_DEVICEMODE;            /*!< (@ 0x50040028) Non-Periodic Transmit FIFO Size Register [DEVICEMODE]  */
     __IO uint32_t  GNPTXFSIZ_HOSTMODE;              /*!< (@ 0x50040028) Non-Periodic Transmit FIFO Size Register [HOSTMODE]    */
@@ -1349,7 +1349,7 @@ typedef struct {                                    /*!< (@ 0x50040900) USB0_EP0
   */
 
 typedef struct {                                    /*!< (@ 0x50040920) USB_EP Structure                                       */
-  
+
   union {
     __IO uint32_t  DIEPCTL_INTBULK;                 /*!< (@ 0x50040920) Device Endpoint Control Register [INTBULK]             */
     __IO uint32_t  DIEPCTL_ISOCONT;                 /*!< (@ 0x50040920) Device Endpoint Control Register [ISOCONT]             */
@@ -1362,7 +1362,7 @@ typedef struct {                                    /*!< (@ 0x50040920) USB_EP S
   __I  uint32_t  DTXFSTS;                           /*!< (@ 0x50040938) Device IN Endpoint Transmit FIFO Status Register       */
   __I  uint32_t  DIEPDMAB;                          /*!< (@ 0x5004093C) Device Endpoint DMA Buffer Address Register            */
   __I  uint32_t  RESERVED2[120];
-  
+
   union {
     __IO uint32_t  DOEPCTL_INTBULK;                 /*!< (@ 0x50040B20) Device Endpoint Control Register [INTBULK]             */
     __IO uint32_t  DOEPCTL_ISOCONT;                 /*!< (@ 0x50040B20) Device Endpoint Control Register [ISOCONT]             */
@@ -1370,7 +1370,7 @@ typedef struct {                                    /*!< (@ 0x50040920) USB_EP S
   __I  uint32_t  RESERVED3;
   __IO uint32_t  DOEPINT;                           /*!< (@ 0x50040B28) Device Endpoint Interrupt Register                     */
   __I  uint32_t  RESERVED4;
-  
+
   union {
     __IO uint32_t  DOEPTSIZ_CONTROL;                /*!< (@ 0x50040B30) Device Endpoint Transfer Size Register [CONT]          */
     __IO uint32_t  DOEPTSIZ_ISO;                    /*!< (@ 0x50040B30) Device Endpoint Transfer Size Register [ISO]           */
@@ -1395,12 +1395,12 @@ typedef struct {                                    /*!< (@ 0x50040500) USB_CH S
   __I  uint32_t  RESERVED0;
   __IO uint32_t  HCINT;                             /*!< (@ 0x50040508) Host Channel Interrupt Register                        */
   __IO uint32_t  HCINTMSK;                          /*!< (@ 0x5004050C) Host Channel Interrupt Mask Register                   */
-  
+
   union {
     __IO uint32_t  HCTSIZ_SCATGATHER;               /*!< (@ 0x50040510) Host Channel Transfer Size Register [SCATGATHER]       */
     __IO uint32_t  HCTSIZ_BUFFERMODE;               /*!< (@ 0x50040510) Host Channel Transfer Size Register [BUFFERMODE]       */
   };
-  
+
   union {
     __IO uint32_t  HCDMA_SCATGATHER;                /*!< (@ 0x50040514) Host Channel DMA Address Register [SCATGATHER]         */
     __IO uint32_t  HCDMA_BUFFERMODE;                /*!< (@ 0x50040514) Host Channel DMA Address Register [BUFFERMODE]         */
@@ -1449,7 +1449,7 @@ typedef struct {                                    /*!< (@ 0x40030000) USIC_CH 
   __IO uint32_t  DX5CR;                             /*!< (@ 0x40030030) Input Control Register 5                               */
   __IO uint32_t  SCTR;                              /*!< (@ 0x40030034) Shift Control Register                                 */
   __IO uint32_t  TCSR;                              /*!< (@ 0x40030038) Transmit Control/Status Register                       */
-  
+
   union {
     __IO uint32_t  PCR_IICMode;                     /*!< (@ 0x4003003C) Protocol Control Register [IIC Mode]                   */
     __IO uint32_t  PCR_IISMode;                     /*!< (@ 0x4003003C) Protocol Control Register [IIS Mode]                   */
@@ -1459,7 +1459,7 @@ typedef struct {                                    /*!< (@ 0x40030000) USIC_CH 
   };
   __IO uint32_t  CCR;                               /*!< (@ 0x40030040) Channel Control Register                               */
   __IO uint32_t  CMTR;                              /*!< (@ 0x40030044) Capture Mode Timer Register                            */
-  
+
   union {
     __IO uint32_t  PSR_IICMode;                     /*!< (@ 0x40030048) Protocol Status Register [IIC Mode]                    */
     __IO uint32_t  PSR_IISMode;                     /*!< (@ 0x40030048) Protocol Status Register [IIS Mode]                    */
@@ -1556,7 +1556,7 @@ typedef struct {                                    /*!< (@ 0x48015000) CAN_MO S
   __IO uint32_t  MODATAL;                           /*!< (@ 0x48015010) Message Object Data Register Low                       */
   __IO uint32_t  MODATAH;                           /*!< (@ 0x48015014) Message Object Data Register High                      */
   __IO uint32_t  MOAR;                              /*!< (@ 0x48015018) Message Object Arbitration Register                    */
-  
+
   union {
     __I  uint32_t  MOSTAT;                          /*!< (@ 0x4801501C) Message Object Status Register                         */
     __O  uint32_t  MOCTR;                           /*!< (@ 0x4801501C) Message Object Control Register                        */
@@ -1638,7 +1638,7 @@ typedef struct {                                    /*!< (@ 0x40004400) VADC_G S
   __IO uint32_t  QMR0;                              /*!< (@ 0x40004504) Queue 0 Mode Register                                  */
   __I  uint32_t  QSR0;                              /*!< (@ 0x40004508) Queue 0 Status Register                                */
   __I  uint32_t  Q0R0;                              /*!< (@ 0x4000450C) Queue 0 Register 0                                     */
-  
+
   union {
     __I  uint32_t  QBUR0;                           /*!< (@ 0x40004510) Queue 0 Backup Register                                */
     __O  uint32_t  QINR0;                           /*!< (@ 0x40004510) Queue 0 Input Register                                 */

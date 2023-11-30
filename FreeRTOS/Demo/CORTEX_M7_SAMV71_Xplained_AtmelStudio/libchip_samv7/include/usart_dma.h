@@ -83,7 +83,7 @@ typedef struct
     /** Callback arguments. */
     void *pArgument;
     /** flag to indicate the current transfer progress */
-    volatile uint8_t dmaProgress;   
+    volatile uint8_t dmaProgress;
     /* DMA LLI structure */
     LinkedListDescriporView1    *pLLIview;
      /* DMA transfer type */
@@ -96,12 +96,12 @@ typedef struct
 
 /** Constant structure associated with USART port. This structure prevents
     client applications to have access in the same time. */
-typedef struct 
+typedef struct
 {
     /** USART Id as defined in the product datasheet */
     uint8_t usartId ;
     /** Pointer to USART Hardware registers */
-    Usart* pUsartHw ;    
+    Usart* pUsartHw ;
     /** Current Usart Rx channel */
     UsartChannel *pRxChannel ;
     /** Current Usart Tx channel */

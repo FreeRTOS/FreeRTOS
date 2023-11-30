@@ -161,7 +161,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /**
  * @brief Role alias name for accessing the credential provider.
- * 
+ *
  * @note This is the name of the role alias created in AWS IoT
  * while setting up AWS resources before running the demo.
  * Refer to the demo setup instructions in the README.md file

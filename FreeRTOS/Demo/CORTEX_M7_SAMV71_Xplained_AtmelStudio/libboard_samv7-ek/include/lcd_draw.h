@@ -76,7 +76,7 @@ extern void LCDD_SetUpdateWindowSize(rect rc);
 extern void LCDD_UpdateWindow(void);
 
 extern void LCDD_UpdatePartialWindow( uint8_t* pbuf, uint32_t size);
-	
+
 extern void LCDD_DrawRectangleWithFill(
 				uint16_t* pbuf,
 				uint32_t dwX,
@@ -85,21 +85,21 @@ extern void LCDD_DrawRectangleWithFill(
 				uint32_t dwHeight,
 				uint32_t dwColor);
 
-extern uint32_t LCDD_DrawCircle( 
+extern uint32_t LCDD_DrawCircle(
 				uint16_t* pbuf,
 				uint32_t x,
-				uint32_t y, 
+				uint32_t y,
 				uint32_t r,
 				uint32_t color);
 
-extern uint32_t LCD_DrawFilledCircle( 
+extern uint32_t LCD_DrawFilledCircle(
 				uint16_t* pbuf,
 				uint32_t dwX,
 				uint32_t dwY,
 				uint32_t dwRadius,
 				uint32_t color);
 
-extern void LCDD_DrawString( 
+extern void LCDD_DrawString(
 				uint16_t* pbuf,
 				uint32_t x,
 				uint32_t y,
@@ -122,7 +122,7 @@ extern void LCDD_BitBlt(
 				uint32_t src_y,
 				uint32_t src_w,
 				uint32_t src_h);
-			
+
 extern void LCDD_BitBltAlphaBlend(uint16_t* pbuf,
 								uint32_t dst_x,
 								uint32_t dst_y,
@@ -175,12 +175,12 @@ extern void LCDD_DrawRectangle(
 extern void LCDD_SetCavasBuffer(
 				void* pBuffer,
 				uint32_t wBufferSize);
-			
+
 extern void LCDD_DrawStraightLine(
 				uint16_t* pbuf,
-				uint32_t dwX1, 
-				uint32_t dwY1, 
-				uint32_t dwX2, 
-				uint32_t dwY2 , 
+				uint32_t dwX1,
+				uint32_t dwY1,
+				uint32_t dwX2,
+				uint32_t dwY2 ,
 				uint32_t color );
 #endif /* #ifndef DRAW_H */

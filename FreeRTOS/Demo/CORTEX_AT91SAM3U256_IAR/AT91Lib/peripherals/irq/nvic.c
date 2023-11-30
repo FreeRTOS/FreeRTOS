@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -50,7 +50,7 @@
 /// and the function address will be set in "ExceptionTable". The parameter priority
 /// will include the preemptionPriority and the subPriority, where the subPriority
 /// defined in the B[7:0] of the parameter "priority", and the preemptionPriority defined
-/// in the B[15:8] of the parameter "priority". 
+/// in the B[15:8] of the parameter "priority".
 /// The interrupt is disabled before configuration, so it is useless
 /// to do it before calling this function. When NVIC_ConfigureIT returns, the
 /// interrupt will always be disabled and cleared; it must be enabled by a

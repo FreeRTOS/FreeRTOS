@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -56,7 +56,7 @@ typedef struct _WavHeader
     /* SampleRate * NumChannels * BitsPerSample/8*/
     unsigned int   byteRate;
     /* NumChannels * BitsPerSample/8*/
-    unsigned short blockAlign; 
+    unsigned short blockAlign;
     /* 8 bits = 8, 16 bits = 16, etc.*/
     unsigned short bitsPerSample;
     /* Contains the letters "data".*/

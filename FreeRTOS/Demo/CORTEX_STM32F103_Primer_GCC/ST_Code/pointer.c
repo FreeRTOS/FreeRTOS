@@ -25,7 +25,7 @@
 #define POINTER_DEFAULT_COLOR       RGB_BLUE
 
 // defines for pointer move
-#define ANGLEPAUSE                  500 
+#define ANGLEPAUSE                  500
 #define DEFAULT_ANGLESTART          25
 #define MIN_ANGLE_FOR_SHIFT_UP      (ANGLEPAUSE+CurrentAngleStart)
 #define MIN_ANGLE_FOR_SHIFT_DOWN    (ANGLEPAUSE-CurrentAngleStart)
@@ -106,7 +106,7 @@ static int POINTER_Move( void )
          else if( outx < MIN_ANGLE_FOR_SHIFT_LEFT )
             {
             POINTER_Info.shift_PosX  = ( outx - MIN_ANGLE_FOR_SHIFT_LEFT );
-            }               
+            }
 
          if( outy < -MIN_ANGLE_FOR_SHIFT_UP )
             {
@@ -119,7 +119,7 @@ static int POINTER_Move( void )
          break;
 
       // West
-      case V9 :   
+      case V9 :
          MEMS_Info.RELATIVE_X = -( outy );
          MEMS_Info.RELATIVE_Y = outx;
 
@@ -143,7 +143,7 @@ static int POINTER_Move( void )
          break;
 
       // South
-      case V6 :   
+      case V6 :
          MEMS_Info.RELATIVE_X = -( outx );
          MEMS_Info.RELATIVE_Y = -( outy );
 
@@ -167,7 +167,7 @@ static int POINTER_Move( void )
          break;
 
       // East
-      case V3 :   
+      case V3 :
          MEMS_Info.RELATIVE_X = outy;
          MEMS_Info.RELATIVE_Y = -( outx );
 

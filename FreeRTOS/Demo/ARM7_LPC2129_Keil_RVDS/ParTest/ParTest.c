@@ -60,9 +60,9 @@ unsigned long ulLED = partstFIRST_IO;
 		}
 		else
 		{
-			IOCLR1 = ulLED;			
+			IOCLR1 = ulLED;
 		}
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -84,8 +84,8 @@ unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 		}
 		else
 		{
-			IOSET1 = ulLED;			
+			IOSET1 = ulLED;
 		}
-	}	
+	}
 }
 

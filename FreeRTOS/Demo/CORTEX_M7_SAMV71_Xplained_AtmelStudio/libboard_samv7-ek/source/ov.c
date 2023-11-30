@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -26,8 +26,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
- 
+
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -53,9 +53,9 @@ const capture_size ov_sizes[] = {
 /*----------------------------------------------------------------------------
  *        Global Functions
  *----------------------------------------------------------------------------*/
- 
+
 /**
- * \brief  Configure the OV for a specified image size, pixel format, 
+ * \brief  Configure the OV for a specified image size, pixel format,
  * and frame period.
  */
 void ov_configure(Twid *pTwid, uint8_t ovType, uint32_t width, uint32_t heigth)
@@ -166,8 +166,8 @@ void ov_configure(Twid *pTwid, uint8_t ovType, uint32_t width, uint32_t heigth)
 		 case 640: //VGA
 			 TRACE_INFO(" VGA 640 x 480\n\r");
 			 reg_conf = ov2643_yuv_vga;
-			 break; 
-		 default:  
+			 break;
+		 default:
 			 TRACE_DEBUG("ov2643_configure problem\n\r");
 			 break;
 		 }
@@ -186,7 +186,7 @@ void ov_configure(Twid *pTwid, uint8_t ovType, uint32_t width, uint32_t heigth)
 			 TRACE_INFO(" SXGA 1280 x 720\n\r");
 			 reg_conf = ov5640_yuv_sxga;
 			 break;
-		 default:  
+		 default:
 			 TRACE_DEBUG("ov5640_configure problem\n\r");
 			 break;
 		 }
@@ -195,12 +195,12 @@ void ov_configure(Twid *pTwid, uint8_t ovType, uint32_t width, uint32_t heigth)
 	}
 	if ((ovType == OV_5640) || (ovType == OV_9740))
 		ov_write_regs16(pTwid, reg_conf);
-	else 
+	else
 		ov_write_regs8(pTwid, reg_conf);
 }
 
 /**
- * \brief  Configure the OV 5640 afc firmware. 
+ * \brief  Configure the OV 5640 afc firmware.
  */
 void ov_5640Afc_Firmware(Twid *pTwid)
 {

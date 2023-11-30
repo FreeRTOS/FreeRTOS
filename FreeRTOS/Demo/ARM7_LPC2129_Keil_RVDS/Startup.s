@@ -1,7 +1,7 @@
 ;/*****************************************************************************/
 ;/* STARTUP.S: Startup file for Philips LPC2000                               */
 ;/*****************************************************************************/
-;/* <<< Use Configuration Wizard in Context Menu >>>                          */ 
+;/* <<< Use Configuration Wizard in Context Menu >>>                          */
 ;/*****************************************************************************/
 ;/* This file is part of the uVision/ARM development tools.                   */
 ;/* Copyright (c) 2005-2007 Keil Software. All rights reserved.               */
@@ -12,12 +12,12 @@
 
 
 ;/*
-; *  The STARTUP.S code is executed after CPU Reset. This file may be 
-; *  translated with the following SET symbols. In uVision these SET 
+; *  The STARTUP.S code is executed after CPU Reset. This file may be
+; *  translated with the following SET symbols. In uVision these SET
 ; *  symbols are entered under Options - ASM - Define.
 ; *
-; *  REMAP: when set the startup code initializes the register MEMMAP 
-; *  which overwrites the settings of the CPU configuration pins. The 
+; *  REMAP: when set the startup code initializes the register MEMMAP
+; *  which overwrites the settings of the CPU configuration pins. The
 ; *  startup and interrupt vectors are remapped from:
 ; *     0x00000000  default setting (not remapped)
 ; *     0x80000000  when EXTMEM_MODE is used
@@ -217,12 +217,12 @@ BCFG3_Val   EQU         0x0000FBEF
 
 ; External Memory Pins definitions
 PINSEL2         EQU     0xE002C014      ; PINSEL2 Address
-PINSEL2_Val     EQU     0x0E6149E4      ; CS0..3, OE, WE, BLS0..3, 
+PINSEL2_Val     EQU     0x0E6149E4      ; CS0..3, OE, WE, BLS0..3,
                                         ; D0..31, A2..23, JTAG Pins
 
 
                 PRESERVE8
-                
+
 
 ; Area Definition and Entry Point
 ;  Startup Code must be linked first at Address at which it expects to run.
@@ -237,12 +237,12 @@ PINSEL2_Val     EQU     0x0E6149E4      ; CS0..3, OE, WE, BLS0..3,
 ;  Dummy Handlers are implemented as infinite loops which can be modified.
 				IMPORT	vPortYieldProcessor
 
-Vectors         LDR     PC, Reset_Addr         
+Vectors         LDR     PC, Reset_Addr
                 LDR     PC, Undef_Addr
                 LDR     PC, SWI_Addr
                 LDR     PC, PAbt_Addr
                 LDR     PC, DAbt_Addr
-                NOP                            ; Reserved Vector 
+                NOP                            ; Reserved Vector
 ;               LDR     PC, IRQ_Addr
                 LDR     PC, [PC, #-0x0FF0]     ; Vector from VicVectAddr
                 LDR     PC, FIQ_Addr
@@ -252,7 +252,7 @@ Undef_Addr      DCD     Undef_Handler
 SWI_Addr        DCD     vPortYieldProcessor
 PAbt_Addr       DCD     PAbt_Handler
 DAbt_Addr       DCD     DAbt_Handler
-                DCD     0                      ; Reserved Address 
+                DCD     0                      ; Reserved Address
 IRQ_Addr        DCD     IRQ_Handler
 FIQ_Addr        DCD     FIQ_Handler
 
@@ -267,7 +267,7 @@ FIQ_Handler     B       FIQ_Handler
 ; Reset Handler
 
                 EXPORT  Reset_Handler
-Reset_Handler   
+Reset_Handler
 
 
 ; Setup External Memory Pins
@@ -321,7 +321,7 @@ Reset_Handler
 
 ;  Configure and Enable PLL
                 MOV     R3, #PLLCFG_Val
-                STR     R3, [R0, #PLLCFG_OFS] 
+                STR     R3, [R0, #PLLCFG_OFS]
                 MOV     R3, #PLLCON_PLLE
                 STR     R3, [R0, #PLLCON_OFS]
                 STR     R1, [R0, #PLLFEED_OFS]
@@ -344,9 +344,9 @@ PLL_Loop        LDR     R3, [R0, #PLLSTAT_OFS]
                 IF      MAM_SETUP <> 0
                 LDR     R0, =MAM_BASE
                 MOV     R1, #MAMTIM_Val
-                STR     R1, [R0, #MAMTIM_OFS] 
+                STR     R1, [R0, #MAMTIM_OFS]
                 MOV     R1, #MAMCR_Val
-                STR     R1, [R0, #MAMCR_OFS] 
+                STR     R1, [R0, #MAMCR_OFS]
                 ENDIF   ; MAM_SETUP
 
 

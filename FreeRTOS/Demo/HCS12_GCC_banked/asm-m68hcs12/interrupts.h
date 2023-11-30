@@ -1,6 +1,6 @@
 /* Interrupt Vectors
    Copyright (C) 2000 Free Software Foundation, Inc.
-   Written by Stephane Carrez (stcarrez@worldnet.fr)	
+   Written by Stephane Carrez (stcarrez@worldnet.fr)
    Modified; Jefferson Smith, Robotronics; for HC12/9S12
 
 This file is free software; you can redistribute it and/or modify it

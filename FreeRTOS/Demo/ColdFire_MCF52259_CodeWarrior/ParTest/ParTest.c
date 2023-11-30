@@ -49,7 +49,7 @@ void vParTestInitialise( void )
         | MCF_GPIO_PTCPAR_DTIN2_GPIO
         | MCF_GPIO_PTCPAR_DTIN1_GPIO
         | MCF_GPIO_PTCPAR_DTIN0_GPIO;
-    
+
     /* Enable signals as digital outputs */
     MCF_GPIO_DDRTC = 0
         | MCF_GPIO_DDRTC_DDRTC3
@@ -68,7 +68,7 @@ unsigned portBASE_TYPE uxLEDMask;
 	if( uxLED < partstNUM_LEDs )
 	{
 		uxLEDMask = 1UL << uxLED;
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( xValue )
@@ -92,7 +92,7 @@ unsigned portBASE_TYPE uxLEDMask;
 	if( uxLED < partstNUM_LEDs )
 	{
 		uxLEDMask = 1UL << uxLED;
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( MCF_GPIO_PORTTC & uxLEDMask )

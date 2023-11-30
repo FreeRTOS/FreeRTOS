@@ -5,12 +5,12 @@ function decode_stack(sp)
 
   sp += 4; /* skip stored ulCriticalNesting */
 
-  a[16] = Debug.evaluate("*(unsigned long*)" + sp); 
+  a[16] = Debug.evaluate("*(unsigned long*)" + sp);
 
   for (i = 0; i <= 15; i++)
   {
     sp += 4;
-    a[i] = Debug.evaluate("*(unsigned long*)" + sp); 
+    a[i] = Debug.evaluate("*(unsigned long*)" + sp);
   }
 
   return a;
@@ -61,7 +61,7 @@ function add_list(list, state)
   }
 }
 
-function update() 
+function update()
 {
   var i, list, lists, max_priority;
 

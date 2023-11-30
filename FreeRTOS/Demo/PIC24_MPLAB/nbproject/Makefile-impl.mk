@@ -31,7 +31,7 @@ DEFAULTCONF=default
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=default 
+ALLCONFS=default
 
 
 # build

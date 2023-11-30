@@ -64,7 +64,7 @@
 #include "include/twi.h"
 #include "include/twid.h"
 #include "include/usart.h"
-#include "include/pit.h" 
+#include "include/pit.h"
 #include "include/dmac.h"
 #include "include/udphs.h"
 #include "include/emac.h"

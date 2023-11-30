@@ -53,7 +53,7 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
- 
+
 extern void BOARD_RemapRom( void );
 extern void BOARD_RemapRam( void );
 extern void BOARD_ConfigureVddMemSel(uint8_t VddMemSel) ;

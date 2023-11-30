@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -30,9 +30,9 @@
 /**
  *  \file
  *  \section Purpose
- * 
+ *
  *  Utility for BMP
- * 
+ *
  */
 
 #ifndef BMP_H

@@ -94,7 +94,7 @@ g23b3b:
 
     .align 2
 g23b4a:
-    J       girq23_b4 
+    J       girq23_b4
 g23b4b:
     NOP
 

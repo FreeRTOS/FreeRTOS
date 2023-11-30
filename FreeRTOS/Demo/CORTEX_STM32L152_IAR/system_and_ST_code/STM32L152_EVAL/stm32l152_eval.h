@@ -17,8 +17,8 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
-  
+  */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L152_EVAL_H
 #define __STM32L152_EVAL_H
@@ -41,21 +41,21 @@
 /** @addtogroup STM32L152_EVAL
   * @{
   */
-      
+
 /** @addtogroup STM32L152_EVAL_LOW_LEVEL
   * @{
-  */ 
+  */
 
 /** @defgroup STM32L152_EVAL_LOW_LEVEL_Exported_Types
   * @{
   */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup STM32L152_EVAL_LOW_LEVEL_Exported_Constants
   * @{
-  */ 
+  */
 
 /** @addtogroup STM32L152_EVAL_LOW_LEVEL_LED
   * @{
@@ -64,28 +64,28 @@
 
 #define LED1_PIN                         GPIO_Pin_0
 #define LED1_GPIO_PORT                   GPIOD
-#define LED1_GPIO_CLK                    RCC_AHBPeriph_GPIOD  
-  
+#define LED1_GPIO_CLK                    RCC_AHBPeriph_GPIOD
+
 #define LED2_PIN                         GPIO_Pin_1
 #define LED2_GPIO_PORT                   GPIOD
-#define LED2_GPIO_CLK                    RCC_AHBPeriph_GPIOD  
-  
+#define LED2_GPIO_CLK                    RCC_AHBPeriph_GPIOD
+
 #define LED3_PIN                         GPIO_Pin_4
 #define LED3_GPIO_PORT                   GPIOD
-#define LED3_GPIO_CLK                    RCC_AHBPeriph_GPIOD  
-  
+#define LED3_GPIO_CLK                    RCC_AHBPeriph_GPIOD
+
 #define LED4_PIN                         GPIO_Pin_5
 #define LED4_GPIO_PORT                   GPIOD
 #define LED4_GPIO_CLK                    RCC_AHBPeriph_GPIOD
 
 /**
   * @}
-  */ 
-  
+  */
+
 /** @addtogroup STM32L152_EVAL_LOW_LEVEL_BUTTON
   * @{
-  */  
-#define BUTTONn                          8 
+  */
+#define BUTTONn                          8
 
 /**
  * @brief Wakeup push-button
@@ -96,7 +96,7 @@
 #define WAKEUP_BUTTON_EXTI_LINE          EXTI_Line13
 #define WAKEUP_BUTTON_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOC
 #define WAKEUP_BUTTON_EXTI_PIN_SOURCE    EXTI_PinSource13
-#define WAKEUP_BUTTON_EXTI_IRQn          EXTI15_10_IRQn 
+#define WAKEUP_BUTTON_EXTI_IRQn          EXTI15_10_IRQn
 
 /**
  * @brief Tamper push-button
@@ -107,7 +107,7 @@
 #define TAMPER_BUTTON_EXTI_LINE          EXTI_Line13
 #define TAMPER_BUTTON_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOC
 #define TAMPER_BUTTON_EXTI_PIN_SOURCE    EXTI_PinSource13
-#define TAMPER_BUTTON_EXTI_IRQn          EXTI15_10_IRQn 
+#define TAMPER_BUTTON_EXTI_IRQn          EXTI15_10_IRQn
 
 /**
  * @brief Key push-button
@@ -140,7 +140,7 @@
 #define LEFT_BUTTON_EXTI_LINE            EXTI_Line12
 #define LEFT_BUTTON_EXTI_PORT_SOURCE     EXTI_PortSourceGPIOE
 #define LEFT_BUTTON_EXTI_PIN_SOURCE      EXTI_PinSource12
-#define LEFT_BUTTON_EXTI_IRQn            EXTI15_10_IRQn  
+#define LEFT_BUTTON_EXTI_IRQn            EXTI15_10_IRQn
 
 /**
  * @brief Joystick Up push-button
@@ -151,18 +151,18 @@
 #define UP_BUTTON_EXTI_LINE              EXTI_Line9
 #define UP_BUTTON_EXTI_PORT_SOURCE       EXTI_PortSourceGPIOE
 #define UP_BUTTON_EXTI_PIN_SOURCE        EXTI_PinSource9
-#define UP_BUTTON_EXTI_IRQn              EXTI9_5_IRQn  
+#define UP_BUTTON_EXTI_IRQn              EXTI9_5_IRQn
 
 /**
  * @brief Joystick Down push-button
- */  
+ */
 #define DOWN_BUTTON_PIN                  GPIO_Pin_10
 #define DOWN_BUTTON_GPIO_PORT            GPIOE
 #define DOWN_BUTTON_GPIO_CLK             RCC_AHBPeriph_GPIOE
 #define DOWN_BUTTON_EXTI_LINE            EXTI_Line10
 #define DOWN_BUTTON_EXTI_PORT_SOURCE     EXTI_PortSourceGPIOE
 #define DOWN_BUTTON_EXTI_PIN_SOURCE      EXTI_PinSource10
-#define DOWN_BUTTON_EXTI_IRQn            EXTI15_10_IRQn  
+#define DOWN_BUTTON_EXTI_IRQn            EXTI15_10_IRQn
 
 /**
  * @brief Joystick Sel push-button
@@ -173,11 +173,11 @@
 #define SEL_BUTTON_EXTI_LINE             EXTI_Line8
 #define SEL_BUTTON_EXTI_PORT_SOURCE      EXTI_PortSourceGPIOE
 #define SEL_BUTTON_EXTI_PIN_SOURCE       EXTI_PinSource8
-#define SEL_BUTTON_EXTI_IRQn             EXTI9_5_IRQn 
+#define SEL_BUTTON_EXTI_IRQn             EXTI9_5_IRQn
 
 /**
   * @}
-  */ 
+  */
 
 /** @addtogroup STM32L152_EVAL_LOW_LEVEL_COM
   * @{
@@ -186,7 +186,7 @@
 
 /**
  * @brief Definition for COM port1, connected to USART2
- */ 
+ */
 #define EVAL_COM1                        USART2
 #define EVAL_COM1_CLK                    RCC_APB1Periph_USART2
 #define EVAL_COM1_TX_PIN                 GPIO_Pin_5
@@ -203,7 +203,7 @@
 
 /**
  * @brief Definition for COM port2, connected to USART3
- */ 
+ */
 #define EVAL_COM2                        USART3
 #define EVAL_COM2_CLK                    RCC_APB1Periph_USART3
 
@@ -222,14 +222,14 @@
 
 /**
   * @}
-  */ 
+  */
 
 /** @addtogroup STM32L152_EVAL_LOW_LEVEL_SD_FLASH
   * @{
-  */ 
+  */
 /**
   * @brief  SD Card SPI Interface
-  */  
+  */
 #define SD_SPI                           SPI2
 #define SD_SPI_CLK                       RCC_APB1Periph_SPI2
 #define SD_SPI_SCK_PIN                   GPIO_Pin_13                 /* PB.13 */
@@ -255,14 +255,14 @@
 #define SD_DETECT_GPIO_CLK               RCC_AHBPeriph_GPIOE
 /**
   * @}
-  */ 
-  
+  */
+
 /** @addtogroup STM32L152_EVAL_LOW_LEVEL_TSENSOR_I2C
   * @{
   */
 /**
   * @brief  LM75 Temperature Sensor I2C Interface pins
-  */  
+  */
 #define LM75_I2C                         I2C1
 #define LM75_I2C_CLK                     RCC_APB1Periph_I2C1
 #define LM75_I2C_SCL_PIN                 GPIO_Pin_6                  /* PB.06 */
@@ -282,17 +282,17 @@
 #define LM75_I2C_SMBUSALERT_AF           GPIO_AF_I2C1
 /**
   * @}
-  */  
+  */
 /**
   * @}
-  */ 
-  
+  */
+
 /** @defgroup STM32L152_EVAL_LOW_LEVEL_Exported_Macros
   * @{
-  */  
+  */
 /**
   * @}
-  */ 
+  */
 
 
 /** @defgroup STM32L152_EVAL_LOW_LEVEL_Exported_Functions
@@ -304,15 +304,15 @@ void STM_EVAL_LEDOff(Led_TypeDef Led);
 void STM_EVAL_LEDToggle(Led_TypeDef Led);
 void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode);
 uint32_t STM_EVAL_PBGetState(Button_TypeDef Button);
-void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct); 
+void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
 void SD_LowLevel_DeInit(void);
-void SD_LowLevel_Init(void); 
+void SD_LowLevel_Init(void);
 void LM75_LowLevel_DeInit(void);
-void LM75_LowLevel_Init(void);  
+void LM75_LowLevel_Init(void);
 /**
   * @}
   */
-  
+
 #ifdef __cplusplus
 }
 #endif
@@ -320,11 +320,7 @@ void LM75_LowLevel_Init(void);
 #endif /* __STM32L152_EVAL_H */
 /**
   * @}
-  */ 
-
-/**
-  * @}
-  */ 
+  */
 
 /**
   * @}
@@ -332,6 +328,10 @@ void LM75_LowLevel_Init(void);
 
 /**
   * @}
-  */  
+  */
+
+/**
+  * @}
+  */
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

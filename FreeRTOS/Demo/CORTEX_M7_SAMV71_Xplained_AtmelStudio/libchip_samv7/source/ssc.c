@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -42,8 +42,8 @@
  * -# Enable the PIOs or the transmitter and/or the received.
  * -# Enable the transmitter and/or the receiver using SSC_EnableTransmitter()
  *    and SSC_EnableReceiver()
- * -# Send data through the transmitter using SSC_Write() 
- * -# Receive data from the receiver using SSC_Read() 
+ * -# Send data through the transmitter using SSC_Write()
+ * -# Receive data from the receiver using SSC_Read()
  * -# Disable the transmitter and/or the receiver using SSC_DisableTransmitter()
  *    and SSC_DisableReceiver()
  *
@@ -76,7 +76,7 @@
  *----------------------------------------------------------------------------*/
 
 /**
- * \brief Configures a SSC peripheral.If the divided clock is not used, the 
+ * \brief Configures a SSC peripheral.If the divided clock is not used, the
  *  master clock frequency can be set to 0.
  * \note The emitter and transmitter are disabled by this function.
  * \param ssc  Pointer to an SSC instance.
@@ -105,7 +105,7 @@ void SSC_Configure(Ssc *ssc, uint32_t bitRate, uint32_t masterClock)
 
 /**
  * \brief Configures the transmitter of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  * \param tcmr Transmit Clock Mode Register value.
  * \param tfmr Transmit Frame Mode Register value.
  */
@@ -117,7 +117,7 @@ void SSC_ConfigureTransmitter(Ssc *ssc,uint32_t tcmr, uint32_t tfmr)
 
 /**
  * \brief Configures the receiver of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  * \param rcmr Receive Clock Mode Register value.
  * \param rfmr Receive Frame Mode Register value.
  */
@@ -129,7 +129,7 @@ void SSC_ConfigureReceiver(Ssc *ssc, uint32_t rcmr, uint32_t rfmr)
 
 /**
  * \brief Enables the transmitter of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  */
 void SSC_EnableTransmitter(Ssc *ssc)
 {
@@ -138,7 +138,7 @@ void SSC_EnableTransmitter(Ssc *ssc)
 
 /**
  * \brief Disables the transmitter of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  */
 void SSC_DisableTransmitter(Ssc *ssc)
 {
@@ -147,7 +147,7 @@ void SSC_DisableTransmitter(Ssc *ssc)
 
 /**
  * \brief Enables the receiver of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  */
 void SSC_EnableReceiver(Ssc *ssc)
 {
@@ -156,7 +156,7 @@ void SSC_EnableReceiver(Ssc *ssc)
 
 /**
  * \brief Disables the receiver of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  */
 void SSC_DisableReceiver(Ssc *ssc)
 {
@@ -165,7 +165,7 @@ void SSC_DisableReceiver(Ssc *ssc)
 
 /**
  * \brief Enables one or more interrupt sources of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  * \param sources Bitwise OR of selected interrupt sources.
  */
 void SSC_EnableInterrupts(Ssc *ssc, uint32_t sources)
@@ -175,7 +175,7 @@ void SSC_EnableInterrupts(Ssc *ssc, uint32_t sources)
 
 /**
  * \brief Disables one or more interrupt sources of a SSC peripheral.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  * \param sources Bitwise OR of selected interrupt sources.
  */
 void SSC_DisableInterrupts(Ssc *ssc, uint32_t sources)
@@ -186,7 +186,7 @@ void SSC_DisableInterrupts(Ssc *ssc, uint32_t sources)
 /**
  * \brief Sends one data frame through a SSC peripheral. If another frame is currently
  * being sent, this function waits for the previous transfer to complete.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  * \param frame Data frame to send.
  */
 void SSC_Write(Ssc *ssc, uint32_t frame)
@@ -197,7 +197,7 @@ void SSC_Write(Ssc *ssc, uint32_t frame)
 
 /**
  * \brief Waits until one frame is received on a SSC peripheral, and returns it.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  */
 uint32_t SSC_Read(Ssc *ssc)
 {
@@ -207,7 +207,7 @@ uint32_t SSC_Read(Ssc *ssc)
 
 /**
  * \brief Return 1 if one frame is received, 0 otherwise.
- * \param ssc  Pointer to an SSC instance. 
+ * \param ssc  Pointer to an SSC instance.
  */
 uint8_t SSC_IsRxReady(Ssc *ssc)
 {

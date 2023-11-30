@@ -57,7 +57,7 @@ void EXTIT_Init(EXTIT_InitTypeDef* EXTIT_InitStruct)
   {
     /* Enable the selected external interrupts */
     EXTIT->MR |= EXTIT_InitStruct->EXTIT_ITLine;
-    
+
     /* Select the trigger for the selected external interrupts */
     if(EXTIT_InitStruct->EXTIT_ITTrigger == EXTIT_ITTrigger_Falling)
     {
@@ -109,7 +109,7 @@ void EXTIT_GenerateSWInterrupt(u16 EXTIT_ITLine)
 /*******************************************************************************
 * Function Name  : EXTIT_GetFlagStatus
 * Description    : Checks whether the specified EXTIT line flag is set or not.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines flag to check.  
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines flag to check.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
@@ -130,7 +130,7 @@ FlagStatus EXTIT_GetFlagStatus(u16 EXTIT_ITLine)
 /*******************************************************************************
 * Function Name  : EXTIT_ClearFlag
 * Description    : Clears the EXTIT’s line pending flags.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines flags to clear. 
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines flags to clear.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
@@ -144,7 +144,7 @@ void EXTIT_ClearFlag(u16 EXTIT_ITLine)
 /*******************************************************************************
 * Function Name  : EXTIT_GetITStatus
 * Description    : Checks whether the specified EXTIT line is asserted or not.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines to check. 
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines to check.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None
@@ -165,7 +165,7 @@ ITStatus EXTIT_GetITStatus(u16 EXTIT_ITLine)
 /*******************************************************************************
 * Function Name  : EXTIT_ClearITPendingBit
 * Description    : Clears the EXTIT’s line pending bits.
-* Input          : - EXTIT_ITLine: specifies the EXTIT lines to clear. 
+* Input          : - EXTIT_ITLine: specifies the EXTIT lines to clear.
 *                    This parameter can be:
 *                     - EXTIT_ITLinex: External interrupt line x where x(0..15)
 * Output         : None

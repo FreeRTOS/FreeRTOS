@@ -3,7 +3,7 @@ PLEASE REFER TO THE APPLICATION NOTE FOR THIS MIDDLEWARE FOR MORE INFORMATION
 Switches
 ========
 
-Document Number 
+Document Number
 ---------------
 N/A
 
@@ -13,11 +13,11 @@ v1.40
 
 Overview
 --------
-Configures port pins for switches and calls user defined function on switch press. Switch presses can be detected using 
-IRQ interrupts or by polling. The benefit of using interrupts is that no extra processing is used for polling and the 
-use of a system timer tick is not a requirement. The downside of using interrupts is that callback functions are called 
-from within an interrupt so if your ISR is long then it can degrade the real-time response of your system. The benefit 
-of polling is that functions are called at the application level and debouncing is supported. The downside to polling is 
+Configures port pins for switches and calls user defined function on switch press. Switch presses can be detected using
+IRQ interrupts or by polling. The benefit of using interrupts is that no extra processing is used for polling and the
+use of a system timer tick is not a requirement. The downside of using interrupts is that callback functions are called
+from within an interrupt so if your ISR is long then it can degrade the real-time response of your system. The benefit
+of polling is that functions are called at the application level and debouncing is supported. The downside to polling is
 that your system must call the R_SWITCHES_Update() on a regular basis which requires extra processing.
 
 Features
@@ -62,10 +62,10 @@ Required Packages
 How to add to your project
 --------------------------
 * Add src\r_switches.c to your project.
-* Add an include path to the 'r_switches' directory. 
+* Add an include path to the 'r_switches' directory.
 * Add an include path to the 'r_switches\src' directory.
 * Configure middleware through r_switches_config.h.
-* Add a #include for r_switches_if.h to files that need to use this package. 
+* Add a #include for r_switches_if.h to files that need to use this package.
 
 Toolchain(s) Used
 -----------------
@@ -80,4 +80,4 @@ r_switches
 |
 \---src
         r_switches.c
-                
+

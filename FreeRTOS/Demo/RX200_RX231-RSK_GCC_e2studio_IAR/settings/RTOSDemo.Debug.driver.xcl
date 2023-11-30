@@ -1,36 +1,36 @@
- -B 
+ -B
 
-"-p" 
+"-p"
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.2\rx\config\debugger\ior5f52318.ddf" 
+"C:\DevTools\IAR Systems\Embedded Workbench 7.2\rx\config\debugger\ior5f52318.ddf"
 
-"--endian" 
+"--endian"
 
-"l" 
+"l"
 
-"--double" 
+"--double"
 
-"32" 
+"32"
 
-"--core" 
+"--core"
 
-"rxv2" 
+"rxv2"
 
-"--int" 
+"--int"
 
-"32" 
+"32"
 
-"-d" 
+"-d"
 
-"emue20" 
+"emue20"
 
-"--drv_mode" 
+"--drv_mode"
 
-"debugging" 
+"debugging"
 
-"--drv_communication" 
+"--drv_communication"
 
-"USB" 
+"USB"
 
 
 

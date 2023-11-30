@@ -7,20 +7,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -31,7 +31,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #include "alt_interrupt.h"
@@ -622,7 +622,7 @@ ALT_STATUS_CODE alt_int_dist_priority_get(ALT_INT_INTERRUPT_t int_id,
     }
 }
 
-ALT_STATUS_CODE alt_int_dist_priority_set(ALT_INT_INTERRUPT_t int_id, 
+ALT_STATUS_CODE alt_int_dist_priority_set(ALT_INT_INTERRUPT_t int_id,
                                           uint32_t priority)
 {
     // See GIC 1.0, section 4.3.10.
@@ -668,7 +668,7 @@ ALT_STATUS_CODE alt_int_dist_target_get(ALT_INT_INTERRUPT_t int_id,
         uint32_t regoffset = int_id;
 
         uint8_t icdiptr = alt_read_byte(alt_int_base_dist + 0x800 + regoffset * sizeof(uint8_t));
-        
+
         *target = icdiptr;
         return ALT_E_SUCCESS;
     }
@@ -903,7 +903,7 @@ ALT_STATUS_CODE alt_int_cpu_init()
 #endif
 
 #endif // #if ALT_INT_PROVISION_VECTOR_SUPPORT
-    
+
     // Setup the priority mask and binary point defaults.
     // This will allow all interrupts to have sufficient priority to be
     // forwarded to the CPUs.

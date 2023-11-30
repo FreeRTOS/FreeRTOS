@@ -152,7 +152,7 @@ strtoul (char *str, char **ptr, int base)
 				}
 			}
 			break;
-    
+
 		case '-':
 			neg = 1;
           str++;
@@ -205,7 +205,7 @@ strtoul (char *str, char **ptr, int base)
 
 	if (ptr != NULL)
 			*ptr = str;
-		
+
 		return rvalue;
 	}
 
@@ -214,7 +214,7 @@ int
 atoi (const char *str)
 {
    char *s = (char *)str;
-   
+
    return ((int)strtoul(s, NULL, 10));
 }
 
@@ -362,7 +362,7 @@ strstr(const char *s1, const char *s2)
    int  len1 = strlen(s1);
    int  len2 = strlen(s2);
 
-   while (len1 >= len2) 
+   while (len1 >= len2)
    {
       if (strncmp(sp, s2, len2) == 0)
       {

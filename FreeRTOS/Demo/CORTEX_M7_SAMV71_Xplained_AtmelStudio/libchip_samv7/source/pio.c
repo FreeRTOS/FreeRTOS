@@ -72,7 +72,7 @@ static void PIO_SetPeripheralA(
 
 /**
  * \brief Configures one or more pin(s) of a PIO controller as being controlled
- * by peripheral B. Optionally, the corresponding internal pull-up(s) can be 
+ * by peripheral B. Optionally, the corresponding internal pull-up(s) can be
  * enabled.
  *
  * \param pio  Pointer to a PIO controller.
@@ -105,8 +105,8 @@ static void PIO_SetPeripheralB(
 }
 
 /**
- * \brief Configures one or more pin(s) of a PIO controller as being controlled 
- * by peripheral C. Optionally, the corresponding internal pull-up(s) can be 
+ * \brief Configures one or more pin(s) of a PIO controller as being controlled
+ * by peripheral C. Optionally, the corresponding internal pull-up(s) can be
  * enabled.
  *
  * \param pio  Pointer to a PIO controller.
@@ -139,8 +139,8 @@ static void PIO_SetPeripheralC(
 }
 
 /**
- * \brief Configures one or more pin(s) of a PIO controller as being controlled 
- * by peripheral D. Optionally, the corresponding internal pull-up(s) can be 
+ * \brief Configures one or more pin(s) of a PIO controller as being controlled
+ * by peripheral D. Optionally, the corresponding internal pull-up(s) can be
  * enabled.
  *
  * \param pio  Pointer to a PIO controller.
@@ -266,10 +266,10 @@ static void PIO_SetOutput(
  *----------------------------------------------------------------------------*/
 
 /**
- * \brief Configures a list of Pin instances, each of which can either hold a 
- * single pin or a group of pins, depending on the mask value; all pins are 
+ * \brief Configures a list of Pin instances, each of which can either hold a
+ * single pin or a group of pins, depending on the mask value; all pins are
  * configured by this function. The size of the array must also be provided and
- *  is easily computed using PIO_LISTSIZE whenever its length is not known in 
+ *  is easily computed using PIO_LISTSIZE whenever its length is not known in
  * advance.
  *
  * \param list  Pointer to a list of Pin instances.
@@ -332,7 +332,7 @@ uint8_t PIO_Configure( const Pin *list, uint32_t size )
 }
 
 /**
- * \brief Sets a high output level on all the PIOs defined in the given Pin 
+ * \brief Sets a high output level on all the PIOs defined in the given Pin
  * instance.
  * This has no immediate effects on PIOs that are not output, but the PIO
  * controller will memorize the value they are changed to outputs.
@@ -345,7 +345,7 @@ void PIO_Set(const Pin *pin)
 }
 
 /**
- * \brief Sets a low output level on all the PIOs defined in the given Pin 
+ * \brief Sets a low output level on all the PIOs defined in the given Pin
  * instance.
  * This has no immediate effects on PIOs that are not output, but the PIO
  * controller will memorize the value they are changed to outputs.
@@ -386,7 +386,7 @@ unsigned char PIO_Get( const Pin *pin )
 }
 
 /**
- * \brief Returns 1 if one or more PIO of the given Pin are configured to output 
+ * \brief Returns 1 if one or more PIO of the given Pin are configured to output
  * a high level (even if they are not output).
  * To get the actual value of the pin, use PIO_Get() instead.
  *
@@ -415,7 +415,7 @@ void PIO_SetDebounceFilter( const Pin *pin, uint32_t cuttoff )
 	Pio *pio = pin->pio;
 
 	pio->PIO_IFSCER = pin->mask; /* set Denouncing, 0 bit field no effect */
-	pio->PIO_SCDR = ((32678/(2*(cuttoff))) - 1) & 0x3FFF; 
+	pio->PIO_SCDR = ((32678/(2*(cuttoff))) - 1) & 0x3FFF;
 	/* the lowest 14 bits work */
 }
 

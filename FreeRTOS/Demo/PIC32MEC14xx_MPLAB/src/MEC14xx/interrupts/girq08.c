@@ -37,8 +37,8 @@
 #if GIRQ08_DISAGG == 0
 
 /*
- * Aggregated mode handler, must handle all enabled 
- * GIRQ08 sources. 
+ * Aggregated mode handler, must handle all enabled
+ * GIRQ08 sources.
 */
 void __attribute__((weak, interrupt, nomips16, section(".girqs")))
 girq08_isr( void )
@@ -49,8 +49,8 @@ girq08_isr( void )
 #else
 
 /*
- * Disaggregated GIRQ08 subhandlers, one for each 
- * source.  Called by assembly language wrapper. 
+ * Disaggregated GIRQ08 subhandlers, one for each
+ * source.  Called by assembly language wrapper.
 */
 
 

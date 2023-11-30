@@ -3,7 +3,7 @@
 * TERN, Inc.
 * (c) Copyright 2005, http://www.tern.com
 *
-* MODIFIED BY RICHARD BARRY TO ADD SEMAPHORE FOR COMMUNICATION BETWEEN THE 
+* MODIFIED BY RICHARD BARRY TO ADD SEMAPHORE FOR COMMUNICATION BETWEEN THE
 * WIZnet ISR AND THE HTTP TASK.
 *
 * - Derived based on development version provided by Wiznet.
@@ -27,7 +27,7 @@
 File Include Section
 ###############################################################################
 */
-#include "i2chip_hw.h" 
+#include "i2chip_hw.h"
 #include "socket.h"
 #include "types.h"
 #include <string.h>
@@ -912,7 +912,7 @@ int send(SOCKET s, u_char far * buf, u_int len)
 {
 int ptr, size;
 u_char huge* huge_buf = (u_char huge*)buf;
-u_char far*  local_buf = (u_char far*)huge_buf;    
+u_char far*  local_buf = (u_char far*)huge_buf;
 
 if (len <= 0)
   return (0);

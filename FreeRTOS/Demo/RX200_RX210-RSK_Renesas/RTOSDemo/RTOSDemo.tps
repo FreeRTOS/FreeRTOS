@@ -1,35 +1,35 @@
 [HIMDBVersion]
 2.0
 [DATABASE_VERSION]
-"1.1" 
+"1.1"
 [SESSIONS_]
-"DefaultSession" 
-"SessionRX200_E1_E20_SYSTEM" 
+"DefaultSession"
+"SessionRX200_E1_E20_SYSTEM"
 [CONFIGURATIONS]
-"Blinky" 
-"Debug" 
-"Debug_with_optimisation" 
+"Blinky"
+"Debug"
+"Debug_with_optimisation"
 [CURRENT_CONFIGURATION]
-"Debug" 
+"Debug"
 [CURRENT_SESSION]
-"SessionRX200_E1_E20_SYSTEM" 
+"SessionRX200_E1_E20_SYSTEM"
 [GENERAL_DATA_PROJECT]
-"FDT_UserBootAreaFiles" "" 
+"FDT_UserBootAreaFiles" ""
 [GENERAL_DATA_CONFIGURATION_Blinky]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE"
 [SESSIONS_Blinky]
-"DefaultSession" 
-"SessionRX200_E1_E20_SYSTEM" 
+"DefaultSession"
+"SessionRX200_E1_E20_SYSTEM"
 [GENERAL_DATA_CONFIGURATION_Debug]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE"
 [SESSIONS_Debug]
-"DefaultSession" 
-"SessionRX200_E1_E20_SYSTEM" 
+"DefaultSession"
+"SessionRX200_E1_E20_SYSTEM"
 [GENERAL_DATA_CONFIGURATION_Debug_with_optimisation]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE"
 [SESSIONS_Debug_with_optimisation]
-"DefaultSession" 
-"SessionRX200_E1_E20_SYSTEM" 
+"DefaultSession"
+"SessionRX200_E1_E20_SYSTEM"
 [GENERAL_DATA_CONFIGURATION_SESSION_Debug_with_optimisation_SessionRX200_E1_E20_SYSTEM]
 [GENERAL_DATA_SESSION_SessionRX200_E1_E20_SYSTEM]
 [GENERAL_DATA_SESSION_DefaultSession]

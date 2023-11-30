@@ -31,7 +31,7 @@
 /// \page "mci"
 ///
 /// !Purpose
-///  
+///
 /// mci-interface driver
 ///
 /// !Usage

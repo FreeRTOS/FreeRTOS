@@ -69,7 +69,7 @@ bitflags
 #define IRQEN 0x40
 #define DLY 0x20
 
-/*	BKP Module  
+/*	BKP Module
  */
 #define  BKPCT0    PORTIO_8(IO_BASE + 0x28)   /* Breakpoint Control 0 */
 #define  BKPCT1    PORTIO_8(IO_BASE + 0x29)   /* Breakpoint Control 1 */
@@ -78,13 +78,13 @@ bitflags
 #define  BKP1X     PORTIO_8(IO_BASE + 0x2d)   /* Breakpoint 1 address upper */
 #define  BKP1      PORTIO_16(IO_BASE + 0x2e)   /* Breakpoint 1 address */
 
-/*	MEBI Module  
+/*	MEBI Module
  */
 #define  PPAGE     PORTIO_8(IO_BASE + 0x30)   /* program page register */
 #define  PORTK     PORTIO_8(IO_BASE + 0x32)   /* port K data register */
 #define  DDRK      PORTIO_8(IO_BASE + 0x33)   /* port K data direction */
 
-/*	CRG Module  
+/*	CRG Module
  */
 #define  SYNR      PORTIO_8(IO_BASE + 0x34)   /* synthesizer register */
 #define  REFDV     PORTIO_8(IO_BASE + 0x35)   /* reference divider register */
@@ -159,7 +159,7 @@ bitflags
 #define  TC2H      PORTIO_16(IO_BASE + 0x7c)   /* timer input capture hold 2 */
 #define  TC3H      PORTIO_16(IO_BASE + 0x7e)   /* timer input capture hold 3 */
 
-/*	ATD0 Module  
+/*	ATD0 Module
  */
 #define  ATD0_BASE (IO_BASE + 0x80)
 #define  ATD0CTL0  PORTIO_8(IO_BASE + 0x80)   /* A/D0 control register 0 */
@@ -201,7 +201,7 @@ bitflags
 #define ETORF 0x20
 #define FIFOR 0x10
 
-/*	PWM Module  
+/*	PWM Module
  */
 #define  PWME      PORTIO_8(IO_BASE + 0xa0)   /* PWM Enable */
 #define  PWMPOL    PORTIO_8(IO_BASE + 0xa1)   /* PWM Clock Polarity */
@@ -254,7 +254,7 @@ bitflags
 #define  _SCIDRH   0x6   /* SCI data register high */
 #define  _SCIDRL   0x7   /* SCI data register low */
 
-/*	SCI0 Module  
+/*	SCI0 Module
    jeffs: Use symbols like SCI0_BASE to reference which SCI block
  */
 #define  SCI0_BASE (IO_BASE + 0xc8)
@@ -268,7 +268,7 @@ bitflags
 #define  SCI0DRH   PORTIO_8(IO_BASE + 0xce)   /* SCI 0 data register high */
 #define  SCI0DRL   PORTIO_8(IO_BASE + 0xcf)   /* SCI 0 data register low */
 
-/*	SCI1 Module  
+/*	SCI1 Module
  */
 #define  SCI1_BASE (IO_BASE + 0xd0)
 #define  SCI1BD    PORTIO_16(IO_BASE + 0xd0)   /* SCI 1 16bit baud rate */
@@ -287,15 +287,15 @@ bitflags
 #define IDLE 0x10
 
 /*	SPI register offsets
- */	
+ */
 #define  _SPICR1   PORTIO_8(IO_BASE + 0x0)   /* SPI control register 1 */
 #define  _SPICR2   PORTIO_8(IO_BASE + 0x1)   /* SPI control register 2 */
 #define  _SPIBR    PORTIO_8(IO_BASE + 0x2)   /* SPI baud rate register */
 #define  _SPISR    PORTIO_8(IO_BASE + 0x3)   /* SPI status register */
 #define  _SPIDR    PORTIO_8(IO_BASE + 0x5)   /* SPI data register */
 
-/*	SPI0 Module  
- */	
+/*	SPI0 Module
+ */
 #define  SPI0_BASE (IO_BASE + 0xd8)
 #define  SPI0CR1   PORTIO_8(IO_BASE + 0xd8)   /* SPI 0 control register 1 */
 #define  SPI0CR2   PORTIO_8(IO_BASE + 0xd9)   /* SPI 0 control register 2 */
@@ -318,7 +318,7 @@ bitflags
 #define SPTEF 0x20
 #define MODF  0x10
 
-/*	I2C Module  
+/*	I2C Module
  */
 #define  IBAD      PORTIO_8(IO_BASE + 0xe0)   /* I2C address register */
 #define  IBFD      PORTIO_8(IO_BASE + 0xe1)   /* I2C freqency divider reg */
@@ -335,7 +335,7 @@ bitflags
 #define IBIF 0x02
 #define RXAK 0x01
 
-/*	BDLC Module  
+/*	BDLC Module
  */
 #define  DLCBCR1   PORTIO_8(IO_BASE + 0xe8)   /* BDLC control register 1 */
 #define  DLCBSVR   PORTIO_8(IO_BASE + 0xe9)   /* BDLC state vector register */
@@ -346,8 +346,8 @@ bitflags
 #define  DLCSCR    PORTIO_8(IO_BASE + 0xee)   /* BDLC control register */
 #define  DLCBSTAT  PORTIO_8(IO_BASE + 0xef)   /* BDLC status register */
 
-/*	SPI1 Module  
- */	
+/*	SPI1 Module
+ */
 #define  SPI1_BASE (IO_BASE + 0xf0)
 #define  SPI1CR1   PORTIO_8(IO_BASE + 0xf0)   /* SPI 1 control register 1 */
 #define  SPI1CR2   PORTIO_8(IO_BASE + 0xf1)   /* SPI 1 control register 2 */
@@ -355,7 +355,7 @@ bitflags
 #define  SPI1SR    PORTIO_8(IO_BASE + 0xf3)   /* SPI 1 status register */
 #define  SPI1DR    PORTIO_8(IO_BASE + 0xf5)   /* SPI 1 data register */
 
-/*	SPI2 Module  
+/*	SPI2 Module
  */
 #define  SPI2_BASE (IO_BASE + 0xf8)
 #define  SPI2CR1   PORTIO_8(IO_BASE + 0xf8)   /* SPI 2 control register 1 */
@@ -381,7 +381,7 @@ bitflags
 #define  ESTAT        PORTIO_8(IO_BASE + 0x115)	/* eeprom status register */
 #define  ECMD         PORTIO_8(IO_BASE + 0x116)	/* eeprom command register */
 
-/*	ATD1 Module  
+/*	ATD1 Module
  */
 #define ATD1_BASE    (IO_BASE + 0x120)
 #define ATD1CTL0     PORTIO_8(IO_BASE + 0x120)	/* A/D1 control register 0 */
@@ -413,7 +413,7 @@ bitflags
 #define  ATD1DR7      PORTIO_16(IO_BASE + 0x13e)	/* A/D1 result 7 */
 #define  ATD1DR7H     PORTIO_8(IO_BASE + 0x13e)		/* A/D1 result 7 */
 
-/*	CAN0 Module  
+/*	CAN0 Module
  */
 #define  CAN0_BASE    (IO_BASE + 0x140)
 #define  CAN0CTL0     PORTIO_8(IO_BASE + 0x140)	/* CAN0 control register 0 */
@@ -449,7 +449,7 @@ bitflags
 #define  CAN0RXFG     PORTIO_8(IO_BASE + 0x160)	/* CAN0 receive buffer */
 #define  CAN0TXFG     PORTIO_8(IO_BASE + 0x170)	/* CAN0 transmit buffer */
 
-/*	CAN1 Module  
+/*	CAN1 Module
  */
 #define  CAN1_BASE    (IO_BASE + 0x180)
 #define  CAN1CTL0     PORTIO_8(IO_BASE + 0x180)	/* CAN1 control register 0 */
@@ -485,7 +485,7 @@ bitflags
 #define  CAN1RXFG     PORTIO_8(IO_BASE + 0x1a0)	/* CAN1 receive buffer */
 #define  CAN1TXFG     PORTIO_8(IO_BASE + 0x1b0)	/* CAN1 transmit buffer */
 
-/*	CAN2 Module  
+/*	CAN2 Module
  */
 #define  CAN2_BASE    (IO_BASE + 0x1c0)
 #define  CAN2CTL0     PORTIO_8(IO_BASE + 0x1c0)	/* CAN2 control register 0 */
@@ -521,7 +521,7 @@ bitflags
 #define  CAN2RXFG     PORTIO_8(IO_BASE + 0x1e0)	/* CAN2 receive buffer */
 #define  CAN2TXFG     PORTIO_8(IO_BASE + 0x1f0)	/* CAN2 transmit buffer */
 
-/*	CAN3 Module  
+/*	CAN3 Module
  */
 #define  CAN3_BASE    (IO_BASE + 0x200)
 #define  CAN3CTL0     PORTIO_8(IO_BASE + 0x200)	/* CAN3 control register 0 */
@@ -625,7 +625,7 @@ bitflags
 */
 
 
-/*	CAN4 Module  
+/*	CAN4 Module
  */
 #define  CAN4_BASE    (IO_BASE + 0x280)
 #define  CAN4CTL0     PORTIO_8(IO_BASE + 0x280)	/* CAN4 control register 0 */

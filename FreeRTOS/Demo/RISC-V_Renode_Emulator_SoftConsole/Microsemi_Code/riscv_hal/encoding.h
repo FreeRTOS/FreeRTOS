@@ -539,7 +539,7 @@ static inline int test_and_change_bit(int nr, volatile unsigned long *addr)
  * @nr: the bit to set
  * @addr: the address to start counting from
  *
- * This function is atomic and may not be reordered. 
+ * This function is atomic and may not be reordered.
  */
 
 static inline void set_bit(int nr, volatile unsigned long *addr)
@@ -555,7 +555,7 @@ static inline void set_bit(int nr, volatile unsigned long *addr)
  * @nr: Bit to clear
  * @addr: Address to start counting from
  *
- * clear_bit() is atomic and may not be reordered.  
+ * clear_bit() is atomic and may not be reordered.
  */
 static inline void clear_bit(int nr, volatile unsigned long *addr)
 {

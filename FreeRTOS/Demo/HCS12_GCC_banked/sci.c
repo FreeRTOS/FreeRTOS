@@ -1,4 +1,4 @@
-/** 
+/**
  * sci.c controls SCI for GCC/HCS12 version of FreeRTOS Demo
  * Parts taken from the CodeWarrior Demo in order to work similar.
  *

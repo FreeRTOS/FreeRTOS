@@ -40,21 +40,21 @@
 void NVIC_DeInit(void)
 {
   u32 index = 0;
-  
+
   NVIC->Disable[0] = 0xFFFFFFFF;
   NVIC->Disable[1] = 0x000007FF;
   NVIC->Clear[0] = 0xFFFFFFFF;
   NVIC->Clear[1] = 0x000007FF;
-  
+
   for(index = 0; index < 0x0B; index++)
   {
      NVIC->Priority[index] = 0x00000000;
-  } 
+  }
 }
 
 /*******************************************************************************
 * Function Name  : NVIC_SCBDeInit
-* Description    : Deinitializes the SCB peripheral registers to their default 
+* Description    : Deinitializes the SCB peripheral registers to their default
 *                  reset values.
 * Input          : None
 * Output         : None
@@ -63,7 +63,7 @@ void NVIC_DeInit(void)
 void NVIC_SCBDeInit(void)
 {
   u32 index = 0x00;
-  
+
   SCB->IRQControlState = 0x0A000000;
   SCB->ExceptionTableOffset = 0x00000000;
   SCB->AIRC = AIRC_VECTKEY_MASK;
@@ -102,7 +102,7 @@ void NVIC_PriorityGroupConfig(u32 NVIC_PriorityGroup)
 {
   /* Check the parameters */
   assert(IS_NVIC_PRIORITY_GROUP(NVIC_PriorityGroup));
-  
+
   /* Set the PRIGROUP[10:8] bits according to NVIC_PriorityGroup value */
   SCB->AIRC = AIRC_VECTKEY_MASK | NVIC_PriorityGroup;
 }
@@ -125,30 +125,30 @@ void NVIC_Init(NVIC_InitTypeDef* NVIC_InitStruct)
   /* Check the parameters */
   assert(IS_FUNCTIONAL_STATE(NVIC_InitStruct->NVIC_IRQChannelCmd));
   assert(IS_NVIC_IRQ_CHANNEL(NVIC_InitStruct->NVIC_IRQChannel));
-  assert(IS_NVIC_PREEMPTION_PRIORITY(NVIC_InitStruct->NVIC_IRQChannelPreemptionPriority));  
+  assert(IS_NVIC_PREEMPTION_PRIORITY(NVIC_InitStruct->NVIC_IRQChannelPreemptionPriority));
   assert(IS_NVIC_SUB_PRIORITY(NVIC_InitStruct->NVIC_IRQChannelSubPriority));
-    
+
   if (NVIC_InitStruct->NVIC_IRQChannelCmd != DISABLE)
   {
-    /* Compute the Corresponding IRQ Priority --------------------------------*/    
+    /* Compute the Corresponding IRQ Priority --------------------------------*/
     tmppriority = (0x700 - (SCB->AIRC & (u32)0x700))>> 0x08;
     tmppre = (0x4 - tmppriority);
     tmpsub = tmpsub >> tmppriority;
-    
+
     tmppriority = (u32)NVIC_InitStruct->NVIC_IRQChannelPreemptionPriority << tmppre;
     tmppriority |=  NVIC_InitStruct->NVIC_IRQChannelSubPriority & tmpsub;
 
     tmppriority = tmppriority << 0x04;
     tmppriority = ((u32)tmppriority) << ((NVIC_InitStruct->NVIC_IRQChannel & (u8)0x03) * 0x08);
-    
+
     tmpreg = NVIC->Priority[(NVIC_InitStruct->NVIC_IRQChannel >> 0x02)];
     tmpmask = (u32)0xFF << ((NVIC_InitStruct->NVIC_IRQChannel & (u8)0x03) * 0x08);
     tmpreg &= ~tmpmask;
-    tmppriority &= tmpmask;  
+    tmppriority &= tmpmask;
     tmpreg |= tmppriority;
 
     NVIC->Priority[(NVIC_InitStruct->NVIC_IRQChannel >> 0x02)] = tmpreg;
-    
+
     /* Enable the Selected IRQ Channels --------------------------------------*/
     NVIC->Enable[(NVIC_InitStruct->NVIC_IRQChannel >> 0x05)] =
       (u32)0x01 << (NVIC_InitStruct->NVIC_IRQChannel & (u8)0x1F);
@@ -228,7 +228,7 @@ void NVIC_RESETFAULTMASK(void)
 
 /*******************************************************************************
 * Function Name  : NVIC_BASEPRICONFIG
-* Description    : The execution priority can be changed from 15 (lowest 
+* Description    : The execution priority can be changed from 15 (lowest
                    configurable priority) to 1.
 * Input          : None
 * Output         : None
@@ -238,7 +238,7 @@ void NVIC_BASEPRICONFIG(u32 NewPriority)
 {
   /* Check the parameters */
   assert(IS_NVIC_BASE_PRI(NewPriority));
-  
+
   __BASEPRICONFIG(NewPriority << 0x04);
 }
 
@@ -278,10 +278,10 @@ ITStatus NVIC_GetIRQChannelPendingBitStatus(u8 NVIC_IRQChannel)
 {
   ITStatus pendingirqstatus = RESET;
   u32 tmp = 0x00;
-  
+
   /* Check the parameters */
   assert(IS_NVIC_IRQ_CHANNEL(NVIC_IRQChannel));
-  
+
   tmp = ((u32)0x01 << (NVIC_IRQChannel & (u32)0x1F));
 
   if (((NVIC->Set[(NVIC_IRQChannel >> 0x05)]) & tmp) == tmp)
@@ -306,7 +306,7 @@ void NVIC_SetIRQChannelPendingBit(u8 NVIC_IRQChannel)
 {
   /* Check the parameters */
   assert(IS_NVIC_IRQ_CHANNEL(NVIC_IRQChannel));
-  
+
   *(u32*)0xE000EF00 = (u32)NVIC_IRQChannel;
 }
 
@@ -321,7 +321,7 @@ void NVIC_ClearIRQChannelPendingBit(u8 NVIC_IRQChannel)
 {
   /* Check the parameters */
   assert(IS_NVIC_IRQ_CHANNEL(NVIC_IRQChannel));
-  
+
   NVIC->Clear[(NVIC_IRQChannel >> 0x05)] = (u32)0x01 << (NVIC_IRQChannel & (u32)0x1F);
 }
 
@@ -353,7 +353,7 @@ ITStatus NVIC_GetIRQChannelActiveBitStatus(u8 NVIC_IRQChannel)
 
   /* Check the parameters */
   assert(IS_NVIC_IRQ_CHANNEL(NVIC_IRQChannel));
-  
+
   tmp = ((u32)0x01 << (NVIC_IRQChannel & (u32)0x1F));
 
   if (((NVIC->Active[(NVIC_IRQChannel >> 0x05)]) & tmp) == tmp )
@@ -393,11 +393,11 @@ u32 NVIC_GetCPUID(void)
 * Return         : None
 *******************************************************************************/
 void NVIC_SetVectorTable(u32 NVIC_VectTab, u32 Offset)
-{ 
+{
   /* Check the parameters */
   assert(IS_NVIC_VECTTAB(NVIC_VectTab));
-  assert(IS_NVIC_OFFSET(Offset));  
-   
+  assert(IS_NVIC_OFFSET(Offset));
+
   SCB->ExceptionTableOffset = (((u32)Offset << 0x07) & (u32)0x1FFFFF80);
 
   SCB->ExceptionTableOffset |= NVIC_VectTab;
@@ -445,8 +445,8 @@ void NVIC_SystemLPConfig(u8 LowPowerMode, FunctionalState NewState)
 {
   /* Check the parameters */
   assert(IS_NVIC_LP(LowPowerMode));
-  assert(IS_FUNCTIONAL_STATE(NewState));  
-  
+  assert(IS_FUNCTIONAL_STATE(NewState));
+
   if (NewState != DISABLE)
   {
     SCB->SysCtrl |= LowPowerMode;
@@ -477,8 +477,8 @@ void NVIC_SystemHandlerConfig(u32 SystemHandler, FunctionalState NewState)
 
   /* Check the parameters */
   assert(IS_CONFIG_SYSTEM_HANDLER(SystemHandler));
-  assert(IS_FUNCTIONAL_STATE(NewState)); 
-  
+  assert(IS_FUNCTIONAL_STATE(NewState));
+
   tmpreg =  (u32)0x01 << (SystemHandler & (u32)0x1F);
 
   if (NewState != DISABLE)
@@ -519,23 +519,23 @@ void NVIC_SystemHandlerPriorityConfig(u32 SystemHandler, u8 SystemHandlerPreempt
 
   /* Check the parameters */
   assert(IS_PRIORITY_SYSTEM_HANDLER(SystemHandler));
-  assert(IS_NVIC_PREEMPTION_PRIORITY(SystemHandlerPreemptionPriority));  
+  assert(IS_NVIC_PREEMPTION_PRIORITY(SystemHandlerPreemptionPriority));
   assert(IS_NVIC_SUB_PRIORITY(SystemHandlerSubPriority));
-    
+
   tmppriority = (0x700 - (SCB->AIRC & (u32)0x700))>> 0x08;
   tmp1 = (0x4 - tmppriority);
   tmp2 = tmp2 >> tmppriority;
-    
+
   tmppriority = (u32)SystemHandlerPreemptionPriority << tmp1;
   tmppriority |=  SystemHandlerSubPriority & tmp2;
 
   tmppriority = tmppriority << 0x04;
   tmp1 = SystemHandler & (u32)0xC0;
-  tmp1 = tmp1 >> 0x06; 
+  tmp1 = tmp1 >> 0x06;
   tmp2 = (SystemHandler >> 0x08) & (u32)0x03;
   tmppriority = tmppriority << (tmp2 * 0x08);
   handlermask = (u32)0xFF << (tmp2 * 0x08);
-  
+
   SCB->SystemPriority[tmp1] &= ~handlermask;
   SCB->SystemPriority[tmp1] |= tmppriority;
 }
@@ -560,7 +560,7 @@ ITStatus NVIC_GetSystemHandlerPendingBitStatus(u32 SystemHandler)
 
   /* Check the parameters */
   assert(IS_GET_PENDING_SYSTEM_HANDLER(SystemHandler));
-  
+
   tmppos = (SystemHandler >> 0x0A);
   tmppos &= (u32)0x0F;
 
@@ -597,7 +597,7 @@ void NVIC_SetSystemHandlerPendingBit(u32 SystemHandler)
 
   /* Check the parameters */
   assert(IS_SET_PENDING_SYSTEM_HANDLER(SystemHandler));
-  
+
   /* Get the System Handler pending bit position */
   tmp = SystemHandler & (u32)0x1F;
   /* Set the corresponding System Handler pending bit */
@@ -621,7 +621,7 @@ void NVIC_ClearSystemHandlerPendingBit(u32 SystemHandler)
 
   /* Check the parameters */
   assert(IS_CLEAR_SYSTEM_HANDLER(SystemHandler));
-  
+
   /* Get the System Handler pending bit position */
   tmp = SystemHandler & (u32)0x1F;
   /* Clear the corresponding System Handler pending bit */
@@ -653,7 +653,7 @@ ITStatus NVIC_GetSystemHandlerActiveBitStatus(u32 SystemHandler)
 
   /* Check the parameters */
   assert(IS_GET_ACTIVE_SYSTEM_HANDLER(SystemHandler));
-  
+
   tmppos = (SystemHandler >> 0x0E) & (u32)0x0F;
 
   tmppos = (u32)0x01 << tmppos;
@@ -692,7 +692,7 @@ u32 NVIC_GetFaultHandlerSources(u32 SystemHandler)
 
   /* Check the parameters */
   assert(IS_FAULT_SOURCE_SYSTEM_HANDLER(SystemHandler));
-  
+
   tmpreg = (SystemHandler >> 0x12) & (u32)0x03;
   tmppos = (SystemHandler >> 0x14) & (u32)0x03;
 
@@ -738,7 +738,7 @@ u32 NVIC_GetFaultAddress(u32 SystemHandler)
 
   /* Check the parameters */
   assert(IS_FAULT_ADDRESS_SYSTEM_HANDLER(SystemHandler));
-  
+
   tmp = (SystemHandler >> 0x16) & (u32)0x01;
 
   if (tmp == 0x00)

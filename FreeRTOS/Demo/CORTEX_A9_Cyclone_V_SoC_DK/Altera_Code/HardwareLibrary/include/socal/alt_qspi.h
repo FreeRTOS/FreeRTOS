@@ -41,61 +41,61 @@ extern "C"
 /*
  * Component : QSPI Flash Controller Module Registers - ALT_QSPI
  * QSPI Flash Controller Module Registers
- * 
+ *
  * Registers in the QSPI Flash Controller module accessible via its APB slave
- * 
+ *
  */
 /*
  * Register : QSPI Configuration Register - cfg
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                               
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------------------------
- *  [0]     | RW     | 0x0   | QSPI Enable                               
- *  [1]     | RW     | 0x0   | Clock Polarity                            
- *  [2]     | RW     | 0x0   | Select Clock Phase                        
- *  [6:3]   | ???    | 0x0   | *UNDEFINED*                               
- *  [7]     | RW     | 0x0   | Enable Direct Access Controller           
- *  [8]     | RW     | 0x0   | Legacy IP Mode Enable                     
- *  [9]     | RW     | 0x0   | Peripheral select decode                  
- *  [13:10] | RW     | 0x0   | Peripheral Chip Select Lines              
- *  [14]    | RW     | 0x0   | Write Protect Flash Pin                   
- *  [15]    | RW     | 0x0   | Enable DMA Peripheral Interface           
- *  [16]    | RW     | 0x0   | Enable AHB Address Re-mapping             
- *  [17]    | RW     | 0x0   | Enter XIP Mode on next READ               
- *  [18]    | RW     | 0x0   | Enter XIP Mode Immediately                
- *  [22:19] | RW     | 0xf   | Master Mode Baud Rate Divisor             
- *  [30:23] | ???    | 0x0   | *UNDEFINED*                               
+ *  [0]     | RW     | 0x0   | QSPI Enable
+ *  [1]     | RW     | 0x0   | Clock Polarity
+ *  [2]     | RW     | 0x0   | Select Clock Phase
+ *  [6:3]   | ???    | 0x0   | *UNDEFINED*
+ *  [7]     | RW     | 0x0   | Enable Direct Access Controller
+ *  [8]     | RW     | 0x0   | Legacy IP Mode Enable
+ *  [9]     | RW     | 0x0   | Peripheral select decode
+ *  [13:10] | RW     | 0x0   | Peripheral Chip Select Lines
+ *  [14]    | RW     | 0x0   | Write Protect Flash Pin
+ *  [15]    | RW     | 0x0   | Enable DMA Peripheral Interface
+ *  [16]    | RW     | 0x0   | Enable AHB Address Re-mapping
+ *  [17]    | RW     | 0x0   | Enter XIP Mode on next READ
+ *  [18]    | RW     | 0x0   | Enter XIP Mode Immediately
+ *  [22:19] | RW     | 0xf   | Master Mode Baud Rate Divisor
+ *  [30:23] | ???    | 0x0   | *UNDEFINED*
  *  [31]    | R      | 0x0   | Serial interface and QSPI pipeline is IDLE
- * 
+ *
  */
 /*
  * Field : QSPI Enable - en
- * 
+ *
  * If this bit is disabled, the QSPI will finish the current transfer of the data
  * word (FF_W) and stop sending. When Enabled, and qspi_n_mo_en = 0, all output
  * enables are inactive and all pins are set to input mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                  | Value | Description     
+ *
+ *  Enum                  | Value | Description
  * :----------------------|:------|:-----------------
  *  ALT_QSPI_CFG_EN_E_DIS | 0x0   | Disable the QSPI
- *  ALT_QSPI_CFG_EN_E_EN  | 0x1   | Enable the QSPI 
- * 
+ *  ALT_QSPI_CFG_EN_E_EN  | 0x1   | Enable the QSPI
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_EN
- * 
+ *
  * Disable the QSPI
  */
 #define ALT_QSPI_CFG_EN_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_QSPI_CFG_EN
- * 
+ *
  * Enable the QSPI
  */
 #define ALT_QSPI_CFG_EN_E_EN    0x1
@@ -119,28 +119,28 @@ extern "C"
 
 /*
  * Field : Clock Polarity - selclkpol
- * 
+ *
  * Controls spiclk modes of operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------------
- *  ALT_QSPI_CFG_SELCLKPOL_E_LOW  | 0x1   | SPI clock is quiescent low 
+ *  ALT_QSPI_CFG_SELCLKPOL_E_LOW  | 0x1   | SPI clock is quiescent low
  *  ALT_QSPI_CFG_SELCLKPOL_E_HIGH | 0x0   | SPI clock is quiescent high
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_SELCLKPOL
- * 
+ *
  * SPI clock is quiescent low
  */
 #define ALT_QSPI_CFG_SELCLKPOL_E_LOW    0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_SELCLKPOL
- * 
+ *
  * SPI clock is quiescent high
  */
 #define ALT_QSPI_CFG_SELCLKPOL_E_HIGH   0x0
@@ -164,29 +164,29 @@ extern "C"
 
 /*
  * Field : Select Clock Phase - selclkphase
- * 
+ *
  * Selects whether the clock is in an active or inactive phase outside the SPI
  * word.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description               
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:---------------------------
  *  ALT_QSPI_CFG_SELCLKPHASE_E_ACT   | 0x0   | SPI clock is quiescent low
- *  ALT_QSPI_CFG_SELCLKPHASE_E_INACT | 0x1   | Clock Inactive            
- * 
+ *  ALT_QSPI_CFG_SELCLKPHASE_E_INACT | 0x1   | Clock Inactive
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_SELCLKPHASE
- * 
+ *
  * SPI clock is quiescent low
  */
 #define ALT_QSPI_CFG_SELCLKPHASE_E_ACT      0x0
 /*
  * Enumerated value for register field ALT_QSPI_CFG_SELCLKPHASE
- * 
+ *
  * Clock Inactive
  */
 #define ALT_QSPI_CFG_SELCLKPHASE_E_INACT    0x1
@@ -210,31 +210,31 @@ extern "C"
 
 /*
  * Field : Enable Direct Access Controller - endiracc
- * 
+ *
  * If disabled, the Direct Access Controller becomes inactive once the current
  * transfer of the data word (FF_W) is complete. When the Direct Access Controller
  * and Indirect Access Controller are both disabled, all AHB requests are completed
  * with an error response.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description               
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:---------------------------
  *  ALT_QSPI_CFG_ENDIRACC_E_DIS | 0x0   | Disable Direct Access Ctrl
- *  ALT_QSPI_CFG_ENDIRACC_E_EN  | 0x1   | Enable Direct Access Ctrl 
- * 
+ *  ALT_QSPI_CFG_ENDIRACC_E_EN  | 0x1   | Enable Direct Access Ctrl
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENDIRACC
- * 
+ *
  * Disable Direct Access Ctrl
  */
 #define ALT_QSPI_CFG_ENDIRACC_E_DIS 0x0
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENDIRACC
- * 
+ *
  * Enable Direct Access Ctrl
  */
 #define ALT_QSPI_CFG_ENDIRACC_E_EN  0x1
@@ -258,33 +258,33 @@ extern "C"
 
 /*
  * Field : Legacy IP Mode Enable - enlegacyip
- * 
+ *
  * This bit can select the Direct Access Controller/Indirect Access Controller or
  * legacy mode.If legacy mode is selected, any write to the controller via the AHB
  * interface is serialized and sent to the FLASH device. Any valid AHB read will
  * pop the internal RX-FIFO, retrieving data that was forwarded by the external
  * FLASH device on the SPI lines, byte transfers of 4, 2 or 1 are permitted and
  * controlled via the HSIZE input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                          
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:--------------------------------------
- *  ALT_QSPI_CFG_ENLEGACYIP_E_LEGMOD | 0x1   | Legacy Mode                          
+ *  ALT_QSPI_CFG_ENLEGACYIP_E_LEGMOD | 0x1   | Legacy Mode
  *  ALT_QSPI_CFG_ENLEGACYIP_E_DIMOD  | 0x0   | Use Direct/Indirect Access Controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENLEGACYIP
- * 
+ *
  * Legacy Mode
  */
 #define ALT_QSPI_CFG_ENLEGACYIP_E_LEGMOD    0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENLEGACYIP
- * 
+ *
  * Use Direct/Indirect Access Controller
  */
 #define ALT_QSPI_CFG_ENLEGACYIP_E_DIMOD     0x0
@@ -308,29 +308,29 @@ extern "C"
 
 /*
  * Field : Peripheral select decode - perseldec
- * 
+ *
  * Select between '1 of 4 selects' or 'external 4-to-16 decode'. The
  * qspi_n_ss_out[3:0] output signals are controlled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                      
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------
- *  ALT_QSPI_CFG_PERSELDEC_E_SEL4TO16 | 0x1   | Select external 4-to-16 decode   
+ *  ALT_QSPI_CFG_PERSELDEC_E_SEL4TO16 | 0x1   | Select external 4-to-16 decode
  *  ALT_QSPI_CFG_PERSELDEC_E_SEL1OF4  | 0x0   | Selects 1 of 4 qspi_n_ss_out[3:0]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_PERSELDEC
- * 
+ *
  * Select external 4-to-16 decode
  */
 #define ALT_QSPI_CFG_PERSELDEC_E_SEL4TO16   0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_PERSELDEC
- * 
+ *
  * Selects 1 of 4 qspi_n_ss_out[3:0]
  */
 #define ALT_QSPI_CFG_PERSELDEC_E_SEL1OF4    0x0
@@ -354,14 +354,14 @@ extern "C"
 
 /*
  * Field : Peripheral Chip Select Lines - percslines
- * 
+ *
  * Peripheral chip select line output decode type. As per perseldec, if perseldec =
  * 0, the decode is select 1 of 4 decoding on signals, qspi_n_ss_out[3:0], The
  * asserted decode line goes to 0. If perseldec = 1, the signals qspi_n_ss_out[3:0]
  * require an external 4 to 16 decoder.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_CFG_PERCSLINES register field. */
 #define ALT_QSPI_CFG_PERCSLINES_LSB        10
@@ -382,30 +382,30 @@ extern "C"
 
 /*
  * Field : Write Protect Flash Pin - wp
- * 
+ *
  * This bit controls the write protect pin of the flash devices. The signal
  * qspi_mo2_wpn needs to be resynchronized to the generated memory clock as
  * necessary.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description          
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------
- *  ALT_QSPI_CFG_WP_E_WRPROTON   | 0x1   | Enable Write Protect 
+ *  ALT_QSPI_CFG_WP_E_WRPROTON   | 0x1   | Enable Write Protect
  *  ALT_QSPI_CFG_WP_E_WRTPROTOFF | 0x0   | Disable Write Protect
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_WP
- * 
+ *
  * Enable Write Protect
  */
 #define ALT_QSPI_CFG_WP_E_WRPROTON      0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_WP
- * 
+ *
  * Disable Write Protect
  */
 #define ALT_QSPI_CFG_WP_E_WRTPROTOFF    0x0
@@ -429,29 +429,29 @@ extern "C"
 
 /*
  * Field : Enable DMA Peripheral Interface - endma
- * 
+ *
  * Allows DMA handshaking mode. When enabled the QSPI will trigger DMA transfer
  * requests via the DMA peripheral interface.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description     
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:-----------------
- *  ALT_QSPI_CFG_ENDMA_E_EN  | 0x1   | Enable DMA Mode 
+ *  ALT_QSPI_CFG_ENDMA_E_EN  | 0x1   | Enable DMA Mode
  *  ALT_QSPI_CFG_ENDMA_E_DIS | 0x0   | Disable DMA Mode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENDMA
- * 
+ *
  * Enable DMA Mode
  */
 #define ALT_QSPI_CFG_ENDMA_E_EN     0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENDMA
- * 
+ *
  * Disable DMA Mode
  */
 #define ALT_QSPI_CFG_ENDMA_E_DIS    0x0
@@ -475,30 +475,30 @@ extern "C"
 
 /*
  * Field : Enable AHB Address Re-mapping - enahbremap
- * 
+ *
  * (Direct Access Mode Only) When enabled, the incoming AHB address will be adapted
  * and sent to the FLASH device as (address + N), where N is the value stored in
  * the remap address register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description           
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------
- *  ALT_QSPI_CFG_ENAHBREMAP_E_EN  | 0x1   | Enable AHB Re-mapping 
+ *  ALT_QSPI_CFG_ENAHBREMAP_E_EN  | 0x1   | Enable AHB Re-mapping
  *  ALT_QSPI_CFG_ENAHBREMAP_E_DIS | 0x0   | Disable AHB Re-mapping
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENAHBREMAP
- * 
+ *
  * Enable AHB Re-mapping
  */
 #define ALT_QSPI_CFG_ENAHBREMAP_E_EN    0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENAHBREMAP
- * 
+ *
  * Disable AHB Re-mapping
  */
 #define ALT_QSPI_CFG_ENAHBREMAP_E_DIS   0x0
@@ -522,7 +522,7 @@ extern "C"
 
 /*
  * Field : Enter XIP Mode on next READ - enterxipnextrd
- * 
+ *
  * If XIP is enabled, then setting to disabled will cause the controller to exit
  * XIP mode on the next READ instruction. If XIP is disabled, then setting to
  * enabled will inform the controller that the device is ready to enter XIP on the
@@ -534,26 +534,26 @@ extern "C"
  * next READ instruction is executed. Software should therefore ensure that at
  * least one READ instruction is requested after resetting this bit before it can
  * be sure XIP mode in the device is exited.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                            
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------------------
  *  ALT_QSPI_CFG_ENTERXIPNEXTRD_E_EN  | 0x1   | Enter XIP Mode on next READ instruction
- *  ALT_QSPI_CFG_ENTERXIPNEXTRD_E_DIS | 0x0   | Exit XIP Mode on next READ instruction 
- * 
+ *  ALT_QSPI_CFG_ENTERXIPNEXTRD_E_DIS | 0x0   | Exit XIP Mode on next READ instruction
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENTERXIPNEXTRD
- * 
+ *
  * Enter XIP Mode on next READ instruction
  */
 #define ALT_QSPI_CFG_ENTERXIPNEXTRD_E_EN    0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENTERXIPNEXTRD
- * 
+ *
  * Exit XIP Mode on next READ instruction
  */
 #define ALT_QSPI_CFG_ENTERXIPNEXTRD_E_DIS   0x0
@@ -577,7 +577,7 @@ extern "C"
 
 /*
  * Field : Enter XIP Mode Immediately - enterxipimm
- * 
+ *
  * If XIP is enabled, then setting to disabled will cause the controller to exit
  * XIP mode on the next READ instruction. If XIP is disabled, then setting enable
  * will operate the device in XIP mode immediately. Use this register when the
@@ -589,26 +589,26 @@ extern "C"
  * next READ instruction is executed. Software therefore should ensure that at
  * least one READ instruction is requested after resetting this bit in order to be
  * sure that XIP mode is exited.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                           
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:---------------------------------------
- *  ALT_QSPI_CFG_ENTERXIPIMM_E_EN  | 0x1   | Enter XIP Mode immediately            
+ *  ALT_QSPI_CFG_ENTERXIPIMM_E_EN  | 0x1   | Enter XIP Mode immediately
  *  ALT_QSPI_CFG_ENTERXIPIMM_E_DIS | 0x0   | Exit XIP Mode on next READ instruction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENTERXIPIMM
- * 
+ *
  * Enter XIP Mode immediately
  */
 #define ALT_QSPI_CFG_ENTERXIPIMM_E_EN   0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_ENTERXIPIMM
- * 
+ *
  * Exit XIP Mode on next READ instruction
  */
 #define ALT_QSPI_CFG_ENTERXIPIMM_E_DIS  0x0
@@ -632,17 +632,17 @@ extern "C"
 
 /*
  * Field : Master Mode Baud Rate Divisor - bauddiv
- * 
+ *
  * SPI baud rate = ref_clk / (2 * baud_rate_divisor)
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description     
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------
- *  ALT_QSPI_CFG_BAUDDIV_E_BAUD2  | 0x0   | Baud Rate Div/2 
- *  ALT_QSPI_CFG_BAUDDIV_E_BAUD4  | 0x1   | Baud Rate Div/4 
- *  ALT_QSPI_CFG_BAUDDIV_E_BAUD6  | 0x2   | Baud Rate Div/6 
- *  ALT_QSPI_CFG_BAUDDIV_E_BAUD8  | 0x3   | Baud Rate Div/8 
+ *  ALT_QSPI_CFG_BAUDDIV_E_BAUD2  | 0x0   | Baud Rate Div/2
+ *  ALT_QSPI_CFG_BAUDDIV_E_BAUD4  | 0x1   | Baud Rate Div/4
+ *  ALT_QSPI_CFG_BAUDDIV_E_BAUD6  | 0x2   | Baud Rate Div/6
+ *  ALT_QSPI_CFG_BAUDDIV_E_BAUD8  | 0x3   | Baud Rate Div/8
  *  ALT_QSPI_CFG_BAUDDIV_E_BAUD10 | 0x4   | Baud Rate Div/10
  *  ALT_QSPI_CFG_BAUDDIV_E_BAUD12 | 0x5   | Baud Rate Div/12
  *  ALT_QSPI_CFG_BAUDDIV_E_BAUD14 | 0x6   | Baud Rate Div/14
@@ -655,103 +655,103 @@ extern "C"
  *  ALT_QSPI_CFG_BAUDDIV_E_BAUD28 | 0xd   | Baud Rate Div/28
  *  ALT_QSPI_CFG_BAUDDIV_E_BAUD30 | 0xe   | Baud Rate Div/30
  *  ALT_QSPI_CFG_BAUDDIV_E_BAUD32 | 0xf   | Baud Rate Div/32
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/2
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD2    0x0
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/4
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD4    0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/6
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD6    0x2
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/8
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD8    0x3
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/10
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD10   0x4
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/12
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD12   0x5
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/14
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD14   0x6
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/16
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD16   0x7
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/18
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD18   0x8
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/20
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD20   0x9
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/22
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD22   0xa
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/24
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD24   0xb
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/26
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD26   0xc
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/28
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD28   0xd
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/30
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD30   0xe
 /*
  * Enumerated value for register field ALT_QSPI_CFG_BAUDDIV
- * 
+ *
  * Baud Rate Div/32
  */
 #define ALT_QSPI_CFG_BAUDDIV_E_BAUD32   0xf
@@ -775,29 +775,29 @@ extern "C"
 
 /*
  * Field : Serial interface and QSPI pipeline is IDLE - idle
- * 
+ *
  * This is a STATUS read-only bit. Note this is a retimed signal, so there will be
  * some inherent delay on the generation of this status signal.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description  
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------
- *  ALT_QSPI_CFG_IDLE_E_SET    | 0x1   | Idle Mode    
+ *  ALT_QSPI_CFG_IDLE_E_SET    | 0x1   | Idle Mode
  *  ALT_QSPI_CFG_IDLE_E_NOTSET | 0x0   | Non-Idle Mode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_CFG_IDLE
- * 
+ *
  * Idle Mode
  */
 #define ALT_QSPI_CFG_IDLE_E_SET     0x1
 /*
  * Enumerated value for register field ALT_QSPI_CFG_IDLE
- * 
+ *
  * Non-Idle Mode
  */
 #define ALT_QSPI_CFG_IDLE_E_NOTSET  0x0
@@ -827,7 +827,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_CFG.
  */
 struct ALT_QSPI_CFG_s
@@ -859,48 +859,48 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 
 /*
  * Register : Device Read Instruction Register - devrd
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------------
  *  [7:0]   | RW     | 0x3   | Read Opcode in non-XIP mode
- *  [9:8]   | RW     | 0x0   | Instruction Transfer Width 
- *  [11:10] | ???    | 0x0   | *UNDEFINED*                
- *  [13:12] | RW     | 0x0   | Address Transfer Width     
- *  [15:14] | ???    | 0x0   | *UNDEFINED*                
- *  [17:16] | RW     | 0x0   | Data Transfer Width        
- *  [19:18] | ???    | 0x0   | *UNDEFINED*                
- *  [20]    | RW     | 0x0   | Mode Bit Enable            
- *  [23:21] | ???    | 0x0   | *UNDEFINED*                
- *  [28:24] | RW     | 0x0   | Dummy Read Clock Cycles    
- *  [31:29] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [9:8]   | RW     | 0x0   | Instruction Transfer Width
+ *  [11:10] | ???    | 0x0   | *UNDEFINED*
+ *  [13:12] | RW     | 0x0   | Address Transfer Width
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [17:16] | RW     | 0x0   | Data Transfer Width
+ *  [19:18] | ???    | 0x0   | *UNDEFINED*
+ *  [20]    | RW     | 0x0   | Mode Bit Enable
+ *  [23:21] | ???    | 0x0   | *UNDEFINED*
+ *  [28:24] | RW     | 0x0   | Dummy Read Clock Cycles
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Read Opcode in non-XIP mode - rdopcode
- * 
+ *
  * Read Opcode to use when not in XIP mode
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------
  *  ALT_QSPI_DEVRD_RDOPCODE_E_RD     | 0x3   | Read Opcode in Non-XIP mode
- *  ALT_QSPI_DEVRD_RDOPCODE_E_FASTRD | 0xb   | Fast Read in Non-XIP mode  
- * 
+ *  ALT_QSPI_DEVRD_RDOPCODE_E_FASTRD | 0xb   | Fast Read in Non-XIP mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_RDOPCODE
- * 
+ *
  * Read Opcode in Non-XIP mode
  */
 #define ALT_QSPI_DEVRD_RDOPCODE_E_RD        0x3
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_RDOPCODE
- * 
+ *
  * Fast Read in Non-XIP mode
  */
 #define ALT_QSPI_DEVRD_RDOPCODE_E_FASTRD    0xb
@@ -924,42 +924,42 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 
 /*
  * Field : Instruction Transfer Width - instwidth
- * 
+ *
  * Sets instruction transfer width (1, 2, or 4 bits). Applies to all instructions
  * sent to SPI flash device (not just read instructions).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                     
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------------------------------------
  *  ALT_QSPI_DEVRD_INSTWIDTH_E_SINGLE | 0x0   | Instruction transferred on DQ0. Supported by all
- * :                                  |       | SPI flash devices.                              
- *  ALT_QSPI_DEVRD_INSTWIDTH_E_DUAL   | 0x1   | Instruction transferred on DQ0 and DQ1.         
- * :                                  |       | Supported by all SPI flash devices that support 
- * :                                  |       | the Dual SP (DIO-SPI) Protocol.                 
- *  ALT_QSPI_DEVRD_INSTWIDTH_E_QUAD   | 0x2   | Instruction transferred on DQ0, DQ1, DQ2, and   
- * :                                  |       | DQ3. Supported by all SPI flash devices that    
- * :                                  |       | support the Quad SP (QIO-SPI) Protocol.         
- * 
+ * :                                  |       | SPI flash devices.
+ *  ALT_QSPI_DEVRD_INSTWIDTH_E_DUAL   | 0x1   | Instruction transferred on DQ0 and DQ1.
+ * :                                  |       | Supported by all SPI flash devices that support
+ * :                                  |       | the Dual SP (DIO-SPI) Protocol.
+ *  ALT_QSPI_DEVRD_INSTWIDTH_E_QUAD   | 0x2   | Instruction transferred on DQ0, DQ1, DQ2, and
+ * :                                  |       | DQ3. Supported by all SPI flash devices that
+ * :                                  |       | support the Quad SP (QIO-SPI) Protocol.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_INSTWIDTH
- * 
+ *
  * Instruction transferred on DQ0. Supported by all SPI flash devices.
  */
 #define ALT_QSPI_DEVRD_INSTWIDTH_E_SINGLE   0x0
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_INSTWIDTH
- * 
+ *
  * Instruction transferred on DQ0 and DQ1. Supported by all SPI flash devices that
  * support the Dual SP (DIO-SPI) Protocol.
  */
 #define ALT_QSPI_DEVRD_INSTWIDTH_E_DUAL     0x1
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_INSTWIDTH
- * 
+ *
  * Instruction transferred on DQ0, DQ1, DQ2, and DQ3. Supported by all SPI flash
  * devices that support the Quad SP (QIO-SPI) Protocol.
  */
@@ -984,38 +984,38 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 
 /*
  * Field : Address Transfer Width - addrwidth
- * 
+ *
  * Sets read address transfer width (1, 2, or 4 bits).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                     
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------------------------------------
- *  ALT_QSPI_DEVRD_ADDRWIDTH_E_SINGLE | 0x0   | Read address transferred on DQ0. Supported by   
- * :                                  |       | all SPI flash devices                           
- *  ALT_QSPI_DEVRD_ADDRWIDTH_E_DUAL   | 0x1   | Read address transferred on DQ0 and DQ1.        
+ *  ALT_QSPI_DEVRD_ADDRWIDTH_E_SINGLE | 0x0   | Read address transferred on DQ0. Supported by
+ * :                                  |       | all SPI flash devices
+ *  ALT_QSPI_DEVRD_ADDRWIDTH_E_DUAL   | 0x1   | Read address transferred on DQ0 and DQ1.
  * :                                  |       | Supported by some SPI flash devices that support
- * :                                  |       | the Extended SPI Protocol and by all SPI flash  
- * :                                  |       | devices that support the Dual SP (DIO-SPI)      
- * :                                  |       | Protocol.                                       
- *  ALT_QSPI_DEVRD_ADDRWIDTH_E_QUAD   | 0x2   | Read address transferred on DQ0, DQ1, DQ2, and  
- * :                                  |       | DQ3. Supported by some SPI flash devices that   
+ * :                                  |       | the Extended SPI Protocol and by all SPI flash
+ * :                                  |       | devices that support the Dual SP (DIO-SPI)
+ * :                                  |       | Protocol.
+ *  ALT_QSPI_DEVRD_ADDRWIDTH_E_QUAD   | 0x2   | Read address transferred on DQ0, DQ1, DQ2, and
+ * :                                  |       | DQ3. Supported by some SPI flash devices that
  * :                                  |       | support the Extended SPI Protocol and by all SPI
  * :                                  |       | flash devices that support the Quad SP (QIO-SPI)
- * :                                  |       | Protocol.                                       
- * 
+ * :                                  |       | Protocol.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_ADDRWIDTH
- * 
+ *
  * Read address transferred on DQ0. Supported by all SPI flash devices
  */
 #define ALT_QSPI_DEVRD_ADDRWIDTH_E_SINGLE   0x0
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_ADDRWIDTH
- * 
+ *
  * Read address transferred on DQ0 and DQ1. Supported by some SPI flash devices
  * that support the Extended SPI Protocol and by all SPI flash devices that support
  * the Dual SP (DIO-SPI) Protocol.
@@ -1023,7 +1023,7 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 #define ALT_QSPI_DEVRD_ADDRWIDTH_E_DUAL     0x1
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_ADDRWIDTH
- * 
+ *
  * Read address transferred on DQ0, DQ1, DQ2, and DQ3. Supported by some SPI flash
  * devices that support the Extended SPI Protocol and by all SPI flash devices that
  * support the Quad SP (QIO-SPI) Protocol.
@@ -1049,38 +1049,38 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 
 /*
  * Field : Data Transfer Width - datawidth
- * 
+ *
  * Sets read data transfer width (1, 2, or 4 bits).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                     
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------------------------------------
- *  ALT_QSPI_DEVRD_DATAWIDTH_E_SINGLE | 0x0   | Read data transferred on DQ0. Supported by all  
- * :                                  |       | SPI flash devices                               
- *  ALT_QSPI_DEVRD_DATAWIDTH_E_DUAL   | 0x1   | Read data transferred on DQ0 and DQ1. Supported 
- * :                                  |       | by some SPI flash devices that support the      
- * :                                  |       | Extended SPI Protocol and by all SPI flash      
- * :                                  |       | devices that support the Dual SP (DIO-SPI)      
- * :                                  |       | Protocol.                                       
+ *  ALT_QSPI_DEVRD_DATAWIDTH_E_SINGLE | 0x0   | Read data transferred on DQ0. Supported by all
+ * :                                  |       | SPI flash devices
+ *  ALT_QSPI_DEVRD_DATAWIDTH_E_DUAL   | 0x1   | Read data transferred on DQ0 and DQ1. Supported
+ * :                                  |       | by some SPI flash devices that support the
+ * :                                  |       | Extended SPI Protocol and by all SPI flash
+ * :                                  |       | devices that support the Dual SP (DIO-SPI)
+ * :                                  |       | Protocol.
  *  ALT_QSPI_DEVRD_DATAWIDTH_E_QUAD   | 0x2   | Read data transferred on DQ0, DQ1, DQ2, and DQ3.
  * :                                  |       | Supported by some SPI flash devices that support
- * :                                  |       | the Extended SPI Protocol and by all SPI flash  
- * :                                  |       | devices that support the Quad SP (QIO-SPI)      
- * :                                  |       | Protocol.                                       
- * 
+ * :                                  |       | the Extended SPI Protocol and by all SPI flash
+ * :                                  |       | devices that support the Quad SP (QIO-SPI)
+ * :                                  |       | Protocol.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_DATAWIDTH
- * 
+ *
  * Read data transferred on DQ0. Supported by all SPI flash devices
  */
 #define ALT_QSPI_DEVRD_DATAWIDTH_E_SINGLE   0x0
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_DATAWIDTH
- * 
+ *
  * Read data transferred on DQ0 and DQ1. Supported by some SPI flash devices that
  * support the Extended SPI Protocol and by all SPI flash devices that support the
  * Dual SP (DIO-SPI) Protocol.
@@ -1088,7 +1088,7 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 #define ALT_QSPI_DEVRD_DATAWIDTH_E_DUAL     0x1
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_DATAWIDTH
- * 
+ *
  * Read data transferred on DQ0, DQ1, DQ2, and DQ3. Supported by some SPI flash
  * devices that support the Extended SPI Protocol and by all SPI flash devices that
  * support the Quad SP (QIO-SPI) Protocol.
@@ -1114,29 +1114,29 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 
 /*
  * Field : Mode Bit Enable - enmodebits
- * 
+ *
  * If this bit is set, the mode bits as defined in the Mode Bit Configuration
  * register are sent following the address bytes.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                   
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------------
- *  ALT_QSPI_DEVRD_ENMODBITS_E_NOORDER | 0x0   | No Order                      
+ *  ALT_QSPI_DEVRD_ENMODBITS_E_NOORDER | 0x0   | No Order
  *  ALT_QSPI_DEVRD_ENMODBITS_E_ORDER   | 0x1   | Mode Bits follow address bytes
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_ENMODBITS
- * 
+ *
  * No Order
  */
 #define ALT_QSPI_DEVRD_ENMODBITS_E_NOORDER  0x0
 /*
  * Enumerated value for register field ALT_QSPI_DEVRD_ENMODBITS
- * 
+ *
  * Mode Bits follow address bytes
  */
 #define ALT_QSPI_DEVRD_ENMODBITS_E_ORDER    0x1
@@ -1160,11 +1160,11 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
 
 /*
  * Field : Dummy Read Clock Cycles - dummyrdclks
- * 
+ *
  * Number of dummy clock cycles required by device for read instruction.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DEVRD_DUMMYRDCLKS register field. */
 #define ALT_QSPI_DEVRD_DUMMYRDCLKS_LSB        24
@@ -1191,7 +1191,7 @@ typedef volatile struct ALT_QSPI_CFG_s  ALT_QSPI_CFG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_DEVRD.
  */
 struct ALT_QSPI_DEVRD_s
@@ -1218,28 +1218,28 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
 
 /*
  * Register : Device Write Instruction Register - devwr
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description             
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------
- *  [7:0]   | RW     | 0x2   | Write Opcode            
- *  [11:8]  | ???    | 0x0   | *UNDEFINED*             
- *  [13:12] | RW     | 0x0   | Address Transfer Width  
- *  [15:14] | ???    | 0x0   | *UNDEFINED*             
- *  [17:16] | RW     | 0x0   | Data Transfer Width     
- *  [23:18] | ???    | 0x0   | *UNDEFINED*             
+ *  [7:0]   | RW     | 0x2   | Write Opcode
+ *  [11:8]  | ???    | 0x0   | *UNDEFINED*
+ *  [13:12] | RW     | 0x0   | Address Transfer Width
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [17:16] | RW     | 0x0   | Data Transfer Width
+ *  [23:18] | ???    | 0x0   | *UNDEFINED*
  *  [28:24] | RW     | 0x0   | Dummy Write Clock Cycles
- *  [31:29] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Write Opcode - wropcode
- * 
+ *
  * Write Opcode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DEVWR_WROPCODE register field. */
 #define ALT_QSPI_DEVWR_WROPCODE_LSB        0
@@ -1260,38 +1260,38 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
 
 /*
  * Field : Address Transfer Width - addrwidth
- * 
+ *
  * Sets write address transfer width (1, 2, or 4 bits).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                     
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------------------------------------
- *  ALT_QSPI_DEVWR_ADDRWIDTH_E_SINGLE | 0x0   | Write address transferred on DQ0. Supported by  
- * :                                  |       | all SPI flash devices                           
- *  ALT_QSPI_DEVWR_ADDRWIDTH_E_DUAL   | 0x1   | Read address transferred on DQ0 and DQ1.        
+ *  ALT_QSPI_DEVWR_ADDRWIDTH_E_SINGLE | 0x0   | Write address transferred on DQ0. Supported by
+ * :                                  |       | all SPI flash devices
+ *  ALT_QSPI_DEVWR_ADDRWIDTH_E_DUAL   | 0x1   | Read address transferred on DQ0 and DQ1.
  * :                                  |       | Supported by some SPI flash devices that support
- * :                                  |       | the Extended SPI Protocol and by all SPI flash  
- * :                                  |       | devices that support the Dual SP (DIO-SPI)      
- * :                                  |       | Protocol.                                       
- *  ALT_QSPI_DEVWR_ADDRWIDTH_E_QUAD   | 0x2   | Read address transferred on DQ0, DQ1, DQ2, and  
- * :                                  |       | DQ3. Supported by some SPI flash devices that   
+ * :                                  |       | the Extended SPI Protocol and by all SPI flash
+ * :                                  |       | devices that support the Dual SP (DIO-SPI)
+ * :                                  |       | Protocol.
+ *  ALT_QSPI_DEVWR_ADDRWIDTH_E_QUAD   | 0x2   | Read address transferred on DQ0, DQ1, DQ2, and
+ * :                                  |       | DQ3. Supported by some SPI flash devices that
  * :                                  |       | support the Extended SPI Protocol and by all SPI
  * :                                  |       | flash devices that support the Quad SP (QIO-SPI)
- * :                                  |       | Protocol.                                       
- * 
+ * :                                  |       | Protocol.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVWR_ADDRWIDTH
- * 
+ *
  * Write address transferred on DQ0. Supported by all SPI flash devices
  */
 #define ALT_QSPI_DEVWR_ADDRWIDTH_E_SINGLE   0x0
 /*
  * Enumerated value for register field ALT_QSPI_DEVWR_ADDRWIDTH
- * 
+ *
  * Read address transferred on DQ0 and DQ1. Supported by some SPI flash devices
  * that support the Extended SPI Protocol and by all SPI flash devices that support
  * the Dual SP (DIO-SPI) Protocol.
@@ -1299,7 +1299,7 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
 #define ALT_QSPI_DEVWR_ADDRWIDTH_E_DUAL     0x1
 /*
  * Enumerated value for register field ALT_QSPI_DEVWR_ADDRWIDTH
- * 
+ *
  * Read address transferred on DQ0, DQ1, DQ2, and DQ3. Supported by some SPI flash
  * devices that support the Extended SPI Protocol and by all SPI flash devices that
  * support the Quad SP (QIO-SPI) Protocol.
@@ -1325,38 +1325,38 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
 
 /*
  * Field : Data Transfer Width - datawidth
- * 
+ *
  * Sets write data transfer width (1, 2, or 4 bits).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                     
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------------------------------------
- *  ALT_QSPI_DEVWR_DATAWIDTH_E_SINGLE | 0x0   | Write data transferred on DQ0. Supported by all 
- * :                                  |       | SPI flash devices                               
- *  ALT_QSPI_DEVWR_DATAWIDTH_E_DUAL   | 0x1   | Read data transferred on DQ0 and DQ1. Supported 
- * :                                  |       | by some SPI flash devices that support the      
- * :                                  |       | Extended SPI Protocol and by all SPI flash      
- * :                                  |       | devices that support the Dual SP (DIO-SPI)      
- * :                                  |       | Protocol.                                       
+ *  ALT_QSPI_DEVWR_DATAWIDTH_E_SINGLE | 0x0   | Write data transferred on DQ0. Supported by all
+ * :                                  |       | SPI flash devices
+ *  ALT_QSPI_DEVWR_DATAWIDTH_E_DUAL   | 0x1   | Read data transferred on DQ0 and DQ1. Supported
+ * :                                  |       | by some SPI flash devices that support the
+ * :                                  |       | Extended SPI Protocol and by all SPI flash
+ * :                                  |       | devices that support the Dual SP (DIO-SPI)
+ * :                                  |       | Protocol.
  *  ALT_QSPI_DEVWR_DATAWIDTH_E_QUAD   | 0x2   | Read data transferred on DQ0, DQ1, DQ2, and DQ3.
  * :                                  |       | Supported by some SPI flash devices that support
- * :                                  |       | the Extended SPI Protocol and by all SPI flash  
- * :                                  |       | devices that support the Quad SP (QIO-SPI)      
- * :                                  |       | Protocol.                                       
- * 
+ * :                                  |       | the Extended SPI Protocol and by all SPI flash
+ * :                                  |       | devices that support the Quad SP (QIO-SPI)
+ * :                                  |       | Protocol.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_DEVWR_DATAWIDTH
- * 
+ *
  * Write data transferred on DQ0. Supported by all SPI flash devices
  */
 #define ALT_QSPI_DEVWR_DATAWIDTH_E_SINGLE   0x0
 /*
  * Enumerated value for register field ALT_QSPI_DEVWR_DATAWIDTH
- * 
+ *
  * Read data transferred on DQ0 and DQ1. Supported by some SPI flash devices that
  * support the Extended SPI Protocol and by all SPI flash devices that support the
  * Dual SP (DIO-SPI) Protocol.
@@ -1364,7 +1364,7 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
 #define ALT_QSPI_DEVWR_DATAWIDTH_E_DUAL     0x1
 /*
  * Enumerated value for register field ALT_QSPI_DEVWR_DATAWIDTH
- * 
+ *
  * Read data transferred on DQ0, DQ1, DQ2, and DQ3. Supported by some SPI flash
  * devices that support the Extended SPI Protocol and by all SPI flash devices that
  * support the Quad SP (QIO-SPI) Protocol.
@@ -1390,11 +1390,11 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
 
 /*
  * Field : Dummy Write Clock Cycles - dummywrclks
- * 
+ *
  * Number of dummy clock cycles required by device for write instruction.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DEVWR_DUMMYWRCLKS register field. */
 #define ALT_QSPI_DEVWR_DUMMYWRCLKS_LSB        24
@@ -1421,7 +1421,7 @@ typedef volatile struct ALT_QSPI_DEVRD_s  ALT_QSPI_DEVRD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_DEVWR.
  */
 struct ALT_QSPI_DEVWR_s
@@ -1445,28 +1445,28 @@ typedef volatile struct ALT_QSPI_DEVWR_s  ALT_QSPI_DEVWR_t;
 
 /*
  * Register : QSPI Device Delay Register - delay
- * 
+ *
  * This register is used to introduce relative delays into the generation of the
  * master output signals. All timings are defined in cycles of the qspi_clk.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                             
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------------------
- *  [7:0]   | RW     | 0x0   | Clock Delay with qspi_n_ss_out          
- *  [15:8]  | RW     | 0x0   | Clock Delay for Last Transaction Bit    
+ *  [7:0]   | RW     | 0x0   | Clock Delay with qspi_n_ss_out
+ *  [15:8]  | RW     | 0x0   | Clock Delay for Last Transaction Bit
  *  [23:16] | RW     | 0x0   | Clock Delay for Chip Select Deactivation
- *  [31:24] | RW     | 0x0   | Clock Delay for Chip Select Deassert    
- * 
+ *  [31:24] | RW     | 0x0   | Clock Delay for Chip Select Deassert
+ *
  */
 /*
  * Field : Clock Delay with qspi_n_ss_out - init
- * 
+ *
  * Delay in master reference clocks between setting qspi_n_ss_out low and first bit
  * transfer.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DELAY_INIT register field. */
 #define ALT_QSPI_DELAY_INIT_LSB        0
@@ -1487,14 +1487,14 @@ typedef volatile struct ALT_QSPI_DEVWR_s  ALT_QSPI_DEVWR_t;
 
 /*
  * Field : Clock Delay for Last Transaction Bit - after
- * 
+ *
  * Delay in master reference clocks between last bit of current transaction and
  * deasserting the device chip select (qspi_n_ss_out). By default, the chip select
  * will be deasserted on the cycle following the completion of the current
  * transaction.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DELAY_AFTER register field. */
 #define ALT_QSPI_DELAY_AFTER_LSB        8
@@ -1515,13 +1515,13 @@ typedef volatile struct ALT_QSPI_DEVWR_s  ALT_QSPI_DEVWR_t;
 
 /*
  * Field : Clock Delay for Chip Select Deactivation - btwn
- * 
+ *
  * Delay in master reference clocks between one chip select being de-activated and
  * the activation of another. This is used to ensure a quiet period between the
  * selection of two different slaves and requires the transmit FIFO to be empty.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DELAY_BTWN register field. */
 #define ALT_QSPI_DELAY_BTWN_LSB        16
@@ -1542,14 +1542,14 @@ typedef volatile struct ALT_QSPI_DEVWR_s  ALT_QSPI_DEVWR_t;
 
 /*
  * Field : Clock Delay for Chip Select Deassert - nss
- * 
+ *
  * Delay in master reference clocks for the length that the master mode chip select
  * outputs are de-asserted between transactions. The minimum delay is always
  * qspi_sck_out period to ensure the chip select is never re-asserted within an
  * qspi_sck_out period.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DELAY_NSS register field. */
 #define ALT_QSPI_DELAY_NSS_LSB        24
@@ -1576,7 +1576,7 @@ typedef volatile struct ALT_QSPI_DEVWR_s  ALT_QSPI_DEVWR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_DELAY.
  */
 struct ALT_QSPI_DELAY_s
@@ -1596,40 +1596,40 @@ typedef volatile struct ALT_QSPI_DELAY_s  ALT_QSPI_DELAY_t;
 
 /*
  * Register : Read Data Capture Register - rddatacap
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [0]    | RW     | 0x1   | Bypass     
- *  [4:1]  | RW     | 0x0   | Read Delay 
+ *  [0]    | RW     | 0x1   | Bypass
+ *  [4:1]  | RW     | 0x0   | Read Delay
  *  [31:5] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Bypass - byp
- * 
+ *
  * Controls bypass of the adapted loopback clock circuit
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:------------------------------
- *  ALT_QSPI_RDDATACAP_BYP_E_NOBYPASS | 0x0   | No Bypass                    
+ *  ALT_QSPI_RDDATACAP_BYP_E_NOBYPASS | 0x0   | No Bypass
  *  ALT_QSPI_RDDATACAP_BYP_E_BYPASS   | 0x1   | Bypass loopback clock circuit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_RDDATACAP_BYP
- * 
+ *
  * No Bypass
  */
 #define ALT_QSPI_RDDATACAP_BYP_E_NOBYPASS   0x0
 /*
  * Enumerated value for register field ALT_QSPI_RDDATACAP_BYP
- * 
+ *
  * Bypass loopback clock circuit
  */
 #define ALT_QSPI_RDDATACAP_BYP_E_BYPASS     0x1
@@ -1653,11 +1653,11 @@ typedef volatile struct ALT_QSPI_DELAY_s  ALT_QSPI_DELAY_t;
 
 /*
  * Field : Read Delay - delay
- * 
+ *
  * Delay the read data capturing logic by the programmed number of qspi_clk cycles
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_RDDATACAP_DELAY register field. */
 #define ALT_QSPI_RDDATACAP_DELAY_LSB        1
@@ -1684,7 +1684,7 @@ typedef volatile struct ALT_QSPI_DELAY_s  ALT_QSPI_DELAY_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_RDDATACAP.
  */
 struct ALT_QSPI_RDDATACAP_s
@@ -1703,24 +1703,24 @@ typedef volatile struct ALT_QSPI_RDDATACAP_s  ALT_QSPI_RDDATACAP_t;
 
 /*
  * Register : Device Size Register - devsz
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                    
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------------
- *  [3:0]   | RW     | 0x2   | Number of address Bytes        
+ *  [3:0]   | RW     | 0x2   | Number of address Bytes
  *  [15:4]  | RW     | 0x100 | Number of Bytes per Device Page
- *  [20:16] | RW     | 0x10  | Number of Bytes per Block      
- *  [31:21] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [20:16] | RW     | 0x10  | Number of Bytes per Block
+ *  [31:21] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Number of address Bytes - numaddrbytes
- * 
+ *
  * Number of address bytes. A value of 0 indicates 1 byte.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DEVSZ_NUMADDRBYTES register field. */
 #define ALT_QSPI_DEVSZ_NUMADDRBYTES_LSB        0
@@ -1741,12 +1741,12 @@ typedef volatile struct ALT_QSPI_RDDATACAP_s  ALT_QSPI_RDDATACAP_t;
 
 /*
  * Field : Number of Bytes per Device Page - bytesperdevicepage
- * 
+ *
  * Number of bytes per device page. This is required by the controller for
  * performing FLASH writes up to and across page boundaries.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DEVSZ_BYTESPERDEVICEPAGE register field. */
 #define ALT_QSPI_DEVSZ_BYTESPERDEVICEPAGE_LSB        4
@@ -1767,13 +1767,13 @@ typedef volatile struct ALT_QSPI_RDDATACAP_s  ALT_QSPI_RDDATACAP_t;
 
 /*
  * Field : Number of Bytes per Block - bytespersubsector
- * 
+ *
  * Number of bytes per Block. This is required by the controller for performing the
  * write protection logic. The number of bytes per block must be a power of 2
  * number.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DEVSZ_BYTESPERSUBSECTOR register field. */
 #define ALT_QSPI_DEVSZ_BYTESPERSUBSECTOR_LSB        16
@@ -1800,7 +1800,7 @@ typedef volatile struct ALT_QSPI_RDDATACAP_s  ALT_QSPI_RDDATACAP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_DEVSZ.
  */
 struct ALT_QSPI_DEVSZ_s
@@ -1820,24 +1820,24 @@ typedef volatile struct ALT_QSPI_DEVSZ_s  ALT_QSPI_DEVSZ_t;
 
 /*
  * Register : SRAM Partition Register - srampart
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [6:0]  | RW     | 0x40  | Indirect Read Partition Size
- *  [31:7] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:7] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Indirect Read Partition Size - addr
- * 
+ *
  * Defines the size of the indirect read partition in the SRAM, in units of SRAM
  * locations. By default, half of the SRAM is reserved for indirect read operations
  * and half for indirect write operations.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_SRAMPART_ADDR register field. */
 #define ALT_QSPI_SRAMPART_ADDR_LSB        0
@@ -1864,7 +1864,7 @@ typedef volatile struct ALT_QSPI_DEVSZ_s  ALT_QSPI_DEVSZ_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_SRAMPART.
  */
 struct ALT_QSPI_SRAMPART_s
@@ -1882,24 +1882,24 @@ typedef volatile struct ALT_QSPI_SRAMPART_s  ALT_QSPI_SRAMPART_t;
 
 /*
  * Register : Indirect AHB Address Trigger Register - indaddrtrig
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [31:0] | RW     | 0x0   | Trigger Address
- * 
+ *
  */
 /*
  * Field : Trigger Address - addr
- * 
+ *
  * This is the base address that will be used by the AHB controller. When the
  * incoming AHB read access address matches a range of addresses from this trigger
  * address to the trigger address + 15, then the AHB request will be completed by
  * fetching data from the Indirect Controllers SRAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDADDRTRIG_ADDR register field. */
 #define ALT_QSPI_INDADDRTRIG_ADDR_LSB        0
@@ -1926,7 +1926,7 @@ typedef volatile struct ALT_QSPI_SRAMPART_s  ALT_QSPI_SRAMPART_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDADDRTRIG.
  */
 struct ALT_QSPI_INDADDRTRIG_s
@@ -1943,27 +1943,27 @@ typedef volatile struct ALT_QSPI_INDADDRTRIG_s  ALT_QSPI_INDADDRTRIG_t;
 
 /*
  * Register : DMA Peripheral Register - dmaper
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description           
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------
  *  [3:0]   | RW     | 0x0   | Number of Single Bytes
- *  [7:4]   | ???    | 0x0   | *UNDEFINED*           
- *  [11:8]  | RW     | 0x0   | Number of Burst Bytes 
- *  [31:12] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [7:4]   | ???    | 0x0   | *UNDEFINED*
+ *  [11:8]  | RW     | 0x0   | Number of Burst Bytes
+ *  [31:12] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Number of Single Bytes - numsglreqbytes
- * 
+ *
  * Number of bytes in a single type request on the DMA peripheral request. A
  * programmed value of 0 represents a single byte. This should be setup before
  * starting the indirect read or write operation. The actual number of bytes used
  * is 2**(value in this register) which will simplify implementation.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DMAPER_NUMSGLREQBYTES register field. */
 #define ALT_QSPI_DMAPER_NUMSGLREQBYTES_LSB        0
@@ -1984,14 +1984,14 @@ typedef volatile struct ALT_QSPI_INDADDRTRIG_s  ALT_QSPI_INDADDRTRIG_t;
 
 /*
  * Field : Number of Burst Bytes - numburstreqbytes
- * 
+ *
  * Number of bytes in a burst type request on the DMA peripheral request. A
  * programmed value of 0 represents a single byte. This should be setup before
  * starting the indirect read or write operation. The actual number of bytes used
  * is 2**(value in this register) which will simplify implementation.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_DMAPER_NUMBURSTREQBYTES register field. */
 #define ALT_QSPI_DMAPER_NUMBURSTREQBYTES_LSB        8
@@ -2018,7 +2018,7 @@ typedef volatile struct ALT_QSPI_INDADDRTRIG_s  ALT_QSPI_INDADDRTRIG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_DMAPER.
  */
 struct ALT_QSPI_DMAPER_s
@@ -2038,25 +2038,25 @@ typedef volatile struct ALT_QSPI_DMAPER_s  ALT_QSPI_DMAPER_t;
 
 /*
  * Register : Remap Address Register - remapaddr
- * 
+ *
  * This register is used to remap an incoming AHB address to a different address
  * used by the FLASH device.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------
  *  [31:0] | RW     | 0x0   | Remap Address Offset
- * 
+ *
  */
 /*
  * Field : Remap Address Offset - value
- * 
+ *
  * This offset is added to the incoming AHB address to determine the address used
  * by the FLASH device.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_REMAPADDR_VALUE register field. */
 #define ALT_QSPI_REMAPADDR_VALUE_LSB        0
@@ -2083,7 +2083,7 @@ typedef volatile struct ALT_QSPI_DMAPER_s  ALT_QSPI_DMAPER_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_REMAPADDR.
  */
 struct ALT_QSPI_REMAPADDR_s
@@ -2100,23 +2100,23 @@ typedef volatile struct ALT_QSPI_REMAPADDR_s  ALT_QSPI_REMAPADDR_t;
 
 /*
  * Register : Mode Bit Register - modebit
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | RW     | 0x0   | Mode       
+ *  [7:0]  | RW     | 0x0   | Mode
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Mode - mode
- * 
+ *
  * These are the 8 mode bits that are sent to the device following the address
  * bytes if mode bit transmission has been enabled.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_MODBIT_MOD register field. */
 #define ALT_QSPI_MODBIT_MOD_LSB        0
@@ -2143,7 +2143,7 @@ typedef volatile struct ALT_QSPI_REMAPADDR_s  ALT_QSPI_REMAPADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_MODBIT.
  */
 struct ALT_QSPI_MODBIT_s
@@ -2161,20 +2161,20 @@ typedef volatile struct ALT_QSPI_MODBIT_s  ALT_QSPI_MODBIT_t;
 
 /*
  * Register : SRAM Fill Register - sramfill
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                                                       
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------------------------------------------------
- *  [15:0]  | R      | 0x0   | SRAM Fill Level (Indirect Read Partition). In units of SRAM WORDS 
+ *  [15:0]  | R      | 0x0   | SRAM Fill Level (Indirect Read Partition). In units of SRAM WORDS
  *  [31:16] | R      | 0x0   | SRAM Fill Level (Indirect Write Partition). In units of SRAM WORDS
- * 
+ *
  */
 /*
  * Field : SRAM Fill Level (Indirect Read Partition). In units of SRAM WORDS - indrdpart
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_SRAMFILL_INDRDPART register field. */
 #define ALT_QSPI_SRAMFILL_INDRDPART_LSB        0
@@ -2195,9 +2195,9 @@ typedef volatile struct ALT_QSPI_MODBIT_s  ALT_QSPI_MODBIT_t;
 
 /*
  * Field : SRAM Fill Level (Indirect Write Partition). In units of SRAM WORDS - indwrpart
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_SRAMFILL_INDWRPART register field. */
 #define ALT_QSPI_SRAMFILL_INDWRPART_LSB        16
@@ -2224,7 +2224,7 @@ typedef volatile struct ALT_QSPI_MODBIT_s  ALT_QSPI_MODBIT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_SRAMFILL.
  */
 struct ALT_QSPI_SRAMFILL_s
@@ -2242,22 +2242,22 @@ typedef volatile struct ALT_QSPI_SRAMFILL_s  ALT_QSPI_SRAMFILL_t;
 
 /*
  * Register : TX Threshold Register - txthresh
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [3:0]  | RW     | 0x1   | Level      
+ *  [3:0]  | RW     | 0x1   | Level
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Level - level
- * 
+ *
  * Defines the level at which the transmit FIFO not full interrupt is generated
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_TXTHRESH_LEVEL register field. */
 #define ALT_QSPI_TXTHRESH_LEVEL_LSB        0
@@ -2284,7 +2284,7 @@ typedef volatile struct ALT_QSPI_SRAMFILL_s  ALT_QSPI_SRAMFILL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_TXTHRESH.
  */
 struct ALT_QSPI_TXTHRESH_s
@@ -2302,24 +2302,24 @@ typedef volatile struct ALT_QSPI_TXTHRESH_s  ALT_QSPI_TXTHRESH_t;
 
 /*
  * Register : RX Threshold Register - rxthresh
- * 
+ *
  * Device Instruction Register
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [3:0]  | RW     | 0x1   | Level      
+ *  [3:0]  | RW     | 0x1   | Level
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Level - level
- * 
+ *
  * Defines the level at which the receive FIFO not empty interrupt is generated
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_RXTHRESH_LEVEL register field. */
 #define ALT_QSPI_RXTHRESH_LEVEL_LSB        0
@@ -2346,7 +2346,7 @@ typedef volatile struct ALT_QSPI_TXTHRESH_s  ALT_QSPI_TXTHRESH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_RXTHRESH.
  */
 struct ALT_QSPI_RXTHRESH_s
@@ -2364,60 +2364,60 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Register : Interrupt Status Register - irqstat
- * 
+ *
  * The status fields in this register are set when the described event occurs and
  * the interrupt is enabled in the mask register. When any of these bit fields are
  * set, the interrupt output is asserted high. The fields are each cleared by
  * writing a 1 to the field. Note that bit fields 7 thru 11 are only valid when
  * legacy SPI mode is active.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                        
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------------------
- *  [0]     | ???    | 0x0   | *UNDEFINED*                        
- *  [1]     | RW     | 0x0   | Underflow Detected                 
- *  [2]     | RW     | 0x0   | Indirect Operation Complete        
- *  [3]     | RW     | 0x0   | Indirect Read Reject               
- *  [4]     | RW     | 0x0   | Protected Area Write Attempt       
- *  [5]     | RW     | 0x0   | Illegal AHB Access Detected        
- *  [6]     | RW     | 0x0   | Transfer Watermark Reached         
- *  [7]     | RW     | 0x0   | Receive Overflow                   
+ *  [0]     | ???    | 0x0   | *UNDEFINED*
+ *  [1]     | RW     | 0x0   | Underflow Detected
+ *  [2]     | RW     | 0x0   | Indirect Operation Complete
+ *  [3]     | RW     | 0x0   | Indirect Read Reject
+ *  [4]     | RW     | 0x0   | Protected Area Write Attempt
+ *  [5]     | RW     | 0x0   | Illegal AHB Access Detected
+ *  [6]     | RW     | 0x0   | Transfer Watermark Reached
+ *  [7]     | RW     | 0x0   | Receive Overflow
  *  [8]     | RW     | 0x1   | Transmit FIFO Compared to Threshold
- *  [9]     | RW     | 0x0   | Transmit FIFO Full                 
- *  [10]    | RW     | 0x0   | Receive FIFO Compared to Threshold 
- *  [11]    | RW     | 0x0   | Receive FIFO Full                  
- *  [12]    | RW     | 0x0   | Indirect Read Partition overflow   
- *  [31:13] | ???    | 0x0   | *UNDEFINED*                        
- * 
+ *  [9]     | RW     | 0x0   | Transmit FIFO Full
+ *  [10]    | RW     | 0x0   | Receive FIFO Compared to Threshold
+ *  [11]    | RW     | 0x0   | Receive FIFO Full
+ *  [12]    | RW     | 0x0   | Indirect Read Partition overflow
+ *  [31:13] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Underflow Detected - underflowdet
- * 
+ *
  * An underflow is detected when an attempt to transfer data is made when the
  * transmit FIFO is empty. This may occur when the AHB write data is being supplied
  * too slowly to keep up with the requested write operation. This bit is reset only
  * by a system reset and cleared only when the register is read.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description 
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:-------------
- *  ALT_QSPI_IRQSTAT_UNDERFLOWDET_E_UNDERFLOW   | 0x1   | Underflow   
+ *  ALT_QSPI_IRQSTAT_UNDERFLOWDET_E_UNDERFLOW   | 0x1   | Underflow
  *  ALT_QSPI_IRQSTAT_UNDERFLOWDET_E_NOUNDERFLOW | 0x0   | No Underflow
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_UNDERFLOWDET
- * 
+ *
  * Underflow
  */
 #define ALT_QSPI_IRQSTAT_UNDERFLOWDET_E_UNDERFLOW   0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_UNDERFLOWDET
- * 
+ *
  * No Underflow
  */
 #define ALT_QSPI_IRQSTAT_UNDERFLOWDET_E_NOUNDERFLOW 0x0
@@ -2441,28 +2441,28 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Indirect Operation Complete - indopdone
- * 
+ *
  * Controller has completed last triggered indirect operation
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                 
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQSTAT_INDOPDONE_E_INDIRECTOP   | 0x1   | Completed Indirect Operation
- *  ALT_QSPI_IRQSTAT_INDOPDONE_E_NOINDIRECTOP | 0x0   | No Indirect Operation       
- * 
+ *  ALT_QSPI_IRQSTAT_INDOPDONE_E_NOINDIRECTOP | 0x0   | No Indirect Operation
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDOPDONE
- * 
+ *
  * Completed Indirect Operation
  */
 #define ALT_QSPI_IRQSTAT_INDOPDONE_E_INDIRECTOP     0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDOPDONE
- * 
+ *
  * No Indirect Operation
  */
 #define ALT_QSPI_IRQSTAT_INDOPDONE_E_NOINDIRECTOP   0x0
@@ -2486,29 +2486,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Indirect Read Reject - indrdreject
- * 
+ *
  * Indirect operation was requested but could not be accepted. Two indirect
  * operations already in storage.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                 
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQSTAT_INDRDREJECT_E_INDIRECTREQ   | 0x1   | Indirect Operation Requested
- *  ALT_QSPI_IRQSTAT_INDRDREJECT_E_NOINDIRECTREQ | 0x0   | No Indirect Operation       
- * 
+ *  ALT_QSPI_IRQSTAT_INDRDREJECT_E_NOINDIRECTREQ | 0x0   | No Indirect Operation
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDRDREJECT
- * 
+ *
  * Indirect Operation Requested
  */
 #define ALT_QSPI_IRQSTAT_INDRDREJECT_E_INDIRECTREQ      0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDRDREJECT
- * 
+ *
  * No Indirect Operation
  */
 #define ALT_QSPI_IRQSTAT_INDRDREJECT_E_NOINDIRECTREQ    0x0
@@ -2532,28 +2532,28 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Protected Area Write Attempt - protwrattempt
- * 
+ *
  * Write to protected area was attempted and rejected.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                    
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:--------------------------------
  *  ALT_QSPI_IRQSTAT_PROTWRATTEMPT_E_WRPROT   | 0x1   | Write Attempt to protected area
- *  ALT_QSPI_IRQSTAT_PROTWRATTEMPT_E_NOWRPROT | 0x0   | No Write Attempt               
- * 
+ *  ALT_QSPI_IRQSTAT_PROTWRATTEMPT_E_NOWRPROT | 0x0   | No Write Attempt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_PROTWRATTEMPT
- * 
+ *
  * Write Attempt to protected area
  */
 #define ALT_QSPI_IRQSTAT_PROTWRATTEMPT_E_WRPROT     0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_PROTWRATTEMPT
- * 
+ *
  * No Write Attempt
  */
 #define ALT_QSPI_IRQSTAT_PROTWRATTEMPT_E_NOWRPROT   0x0
@@ -2577,29 +2577,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Illegal AHB Access Detected - illegalacc
- * 
+ *
  * Illegal AHB access has been detected. AHB wrapping bursts and the use of
  * SPLIT/RETRY accesses will cause this error interrupt to trigger.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description           
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-----------------------
- *  ALT_QSPI_IRQSTAT_ILLEGALACC_E_ILLEGALAHB   | 0x1   | Illegal AHB attempt   
+ *  ALT_QSPI_IRQSTAT_ILLEGALACC_E_ILLEGALAHB   | 0x1   | Illegal AHB attempt
  *  ALT_QSPI_IRQSTAT_ILLEGALACC_E_NOILLEGALAHB | 0x0   | No Illegal AHB attempt
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_ILLEGALACC
- * 
+ *
  * Illegal AHB attempt
  */
 #define ALT_QSPI_IRQSTAT_ILLEGALACC_E_ILLEGALAHB    0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_ILLEGALACC
- * 
+ *
  * No Illegal AHB attempt
  */
 #define ALT_QSPI_IRQSTAT_ILLEGALACC_E_NOILLEGALAHB  0x0
@@ -2623,28 +2623,28 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Transfer Watermark Reached - indxfrlvl
- * 
+ *
  * Indirect Transfer Watermark Level Reached
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description           
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-----------------------
- *  ALT_QSPI_IRQSTAT_INDXFRLVL_E_WATERLEVL  | 0x1   | Water level reached   
+ *  ALT_QSPI_IRQSTAT_INDXFRLVL_E_WATERLEVL  | 0x1   | Water level reached
  *  ALT_QSPI_IRQSTAT_INDXFRLVL_E_NOWATERLVL | 0x0   | No water level reached
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDXFRLVL
- * 
+ *
  * Water level reached
  */
 #define ALT_QSPI_IRQSTAT_INDXFRLVL_E_WATERLEVL  0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDXFRLVL
- * 
+ *
  * No water level reached
  */
 #define ALT_QSPI_IRQSTAT_INDXFRLVL_E_NOWATERLVL 0x0
@@ -2668,32 +2668,32 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Receive Overflow - rxover
- * 
+ *
  * This should only occur in Legacy SPI mode. Set if an attempt is made to push the
  * RX FIFO when it is full. This bit is reset only by a system reset and cleared
  * only when this register is read. If a new push to the RX FIFO occurs coincident
  * with a register read this flag will remain set. 0 : no overflow has been
  * detected. 1 : an overflow has occurred.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description        
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:--------------------
- *  ALT_QSPI_IRQSTAT_RXOVER_E_RCVOVER   | 0x1   | Receive Overflow   
+ *  ALT_QSPI_IRQSTAT_RXOVER_E_RCVOVER   | 0x1   | Receive Overflow
  *  ALT_QSPI_IRQSTAT_RXOVER_E_NORCVOVER | 0x0   | No Receive Overflow
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_RXOVER
- * 
+ *
  * Receive Overflow
  */
 #define ALT_QSPI_IRQSTAT_RXOVER_E_RCVOVER   0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_RXOVER
- * 
+ *
  * No Receive Overflow
  */
 #define ALT_QSPI_IRQSTAT_RXOVER_E_NORCVOVER 0x0
@@ -2717,29 +2717,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Transmit FIFO Compared to Threshold - txthreshcmp
- * 
+ *
  * Indicates the number of entries in the transmit FIFO with respect to the
  * threshold specified in the TXTHRESH register. Only relevant in SPI legacy mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                 
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-----------------------------
- *  ALT_QSPI_IRQSTAT_TXTHRESHCMP_E_GT | 0x0   | FIFO has > TXTHRESH entries 
+ *  ALT_QSPI_IRQSTAT_TXTHRESHCMP_E_GT | 0x0   | FIFO has > TXTHRESH entries
  *  ALT_QSPI_IRQSTAT_TXTHRESHCMP_E_LE | 0x1   | FIFO has <= TXTHRESH entries
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_TXTHRESHCMP
- * 
+ *
  * FIFO has > TXTHRESH entries
  */
 #define ALT_QSPI_IRQSTAT_TXTHRESHCMP_E_GT   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_TXTHRESHCMP
- * 
+ *
  * FIFO has <= TXTHRESH entries
  */
 #define ALT_QSPI_IRQSTAT_TXTHRESHCMP_E_LE   0x1
@@ -2763,29 +2763,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Transmit FIFO Full - txfull
- * 
+ *
  * Indicates that the transmit FIFO is full or not. Only relevant in SPI legacy
  * mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description           
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-----------------------
  *  ALT_QSPI_IRQSTAT_TXFULL_E_NOTFULL | 0x0   | Transmit FIFO Not Full
- *  ALT_QSPI_IRQSTAT_TXFULL_E_FULL    | 0x1   | Transmit FIFO Full    
- * 
+ *  ALT_QSPI_IRQSTAT_TXFULL_E_FULL    | 0x1   | Transmit FIFO Full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_TXFULL
- * 
+ *
  * Transmit FIFO Not Full
  */
 #define ALT_QSPI_IRQSTAT_TXFULL_E_NOTFULL   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_TXFULL
- * 
+ *
  * Transmit FIFO Full
  */
 #define ALT_QSPI_IRQSTAT_TXFULL_E_FULL      0x1
@@ -2809,29 +2809,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Receive FIFO Compared to Threshold - rxthreshcmp
- * 
+ *
  * Indicates the number of entries in the receive FIFO with respect to the
  * threshold specified in the RXTHRESH register. Only relevant in SPI legacy mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                 
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQSTAT_RXTHRESHCMP_E_LE | 0x0   | FIFO has <= RXTHRESH entries
- *  ALT_QSPI_IRQSTAT_RXTHRESHCMP_E_GT | 0x1   | FIFO has > RXTHRESH entries 
- * 
+ *  ALT_QSPI_IRQSTAT_RXTHRESHCMP_E_GT | 0x1   | FIFO has > RXTHRESH entries
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_RXTHRESHCMP
- * 
+ *
  * FIFO has <= RXTHRESH entries
  */
 #define ALT_QSPI_IRQSTAT_RXTHRESHCMP_E_LE   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_RXTHRESHCMP
- * 
+ *
  * FIFO has > RXTHRESH entries
  */
 #define ALT_QSPI_IRQSTAT_RXTHRESHCMP_E_GT   0x1
@@ -2855,29 +2855,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Receive FIFO Full - rxfull
- * 
+ *
  * Indicates that the receive FIFO is full or not. Only relevant in SPI legacy
  * mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description          
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------
  *  ALT_QSPI_IRQSTAT_RXFULL_E_NOTFULL | 0x0   | Receive FIFO Not Full
- *  ALT_QSPI_IRQSTAT_RXFULL_E_FULL    | 0x1   | Receive FIFO Full    
- * 
+ *  ALT_QSPI_IRQSTAT_RXFULL_E_FULL    | 0x1   | Receive FIFO Full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_RXFULL
- * 
+ *
  * Receive FIFO Not Full
  */
 #define ALT_QSPI_IRQSTAT_RXFULL_E_NOTFULL   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_RXFULL
- * 
+ *
  * Receive FIFO Full
  */
 #define ALT_QSPI_IRQSTAT_RXFULL_E_FULL      0x1
@@ -2901,29 +2901,29 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
 
 /*
  * Field : Indirect Read Partition overflow - indsramfull
- * 
+ *
  * Indirect Read Partition of SRAM is full and unable to immediately complete
  * indirect operation
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description     
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:-----------------
- *  ALT_QSPI_IRQSTAT_INDSRAMFULL_E_RDPARTFULL    | 0x1   | SRAM is full    
+ *  ALT_QSPI_IRQSTAT_INDSRAMFULL_E_RDPARTFULL    | 0x1   | SRAM is full
  *  ALT_QSPI_IRQSTAT_INDSRAMFULL_E_RDPARTNOTFULL | 0x0   | SRAM is not full
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDSRAMFULL
- * 
+ *
  * SRAM is full
  */
 #define ALT_QSPI_IRQSTAT_INDSRAMFULL_E_RDPARTFULL       0x1
 /*
  * Enumerated value for register field ALT_QSPI_IRQSTAT_INDSRAMFULL
- * 
+ *
  * SRAM is not full
  */
 #define ALT_QSPI_IRQSTAT_INDSRAMFULL_E_RDPARTNOTFULL    0x0
@@ -2953,7 +2953,7 @@ typedef volatile struct ALT_QSPI_RXTHRESH_s  ALT_QSPI_RXTHRESH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_IRQSTAT.
  */
 struct ALT_QSPI_IRQSTAT_s
@@ -2983,53 +2983,53 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Register : Interrupt Mask - irqmask
- * 
+ *
  * If disabled, the interrupt for the corresponding interrupt status register bit
  * is disabled. If enabled, the interrupt for the corresponding interrupt status
  * register bit is enabled.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                          
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------------------
- *  [0]     | ???    | 0x0   | *UNDEFINED*                          
- *  [1]     | RW     | 0x0   | Underflow Detected Mask              
- *  [2]     | RW     | 0x0   | Mask                                 
- *  [3]     | RW     | 0x0   | Indirect Read Reject Mask            
- *  [4]     | RW     | 0x0   | Protected Area Write Attempt Mask    
- *  [5]     | RW     | 0x0   | Illegal Access Detected Mask         
- *  [6]     | RW     | 0x0   | Transfer Watermark Breach Mask       
- *  [7]     | RW     | 0x0   | Receive Overflow Mask                
- *  [8]     | RW     | 0x0   | Transmit FIFO Threshold Compare Mask 
- *  [9]     | RW     | 0x0   | Transmit FIFO Full Mask              
- *  [10]    | RW     | 0x0   | Receive FIFO Threshold Compare Mask  
- *  [11]    | RW     | 0x0   | Receive FIFO full Mask               
+ *  [0]     | ???    | 0x0   | *UNDEFINED*
+ *  [1]     | RW     | 0x0   | Underflow Detected Mask
+ *  [2]     | RW     | 0x0   | Mask
+ *  [3]     | RW     | 0x0   | Indirect Read Reject Mask
+ *  [4]     | RW     | 0x0   | Protected Area Write Attempt Mask
+ *  [5]     | RW     | 0x0   | Illegal Access Detected Mask
+ *  [6]     | RW     | 0x0   | Transfer Watermark Breach Mask
+ *  [7]     | RW     | 0x0   | Receive Overflow Mask
+ *  [8]     | RW     | 0x0   | Transmit FIFO Threshold Compare Mask
+ *  [9]     | RW     | 0x0   | Transmit FIFO Full Mask
+ *  [10]    | RW     | 0x0   | Receive FIFO Threshold Compare Mask
+ *  [11]    | RW     | 0x0   | Receive FIFO full Mask
  *  [12]    | RW     | 0x0   | Indirect Read Partition overflow mask
- *  [31:13] | ???    | 0x0   | *UNDEFINED*                          
- * 
+ *  [31:13] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Underflow Detected Mask - underflowdet
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                 
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_UNDERFLOWDET_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_UNDERFLOWDET_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_UNDERFLOWDET_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_UNDERFLOWDET
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_UNDERFLOWDET_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_UNDERFLOWDET
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_UNDERFLOWDET_E_END  0x1
@@ -3053,26 +3053,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Mask - indopdone
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                 
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_INDOPDONE_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_INDOPDONE_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_INDOPDONE_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDOPDONE
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_INDOPDONE_E_DISD    0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDOPDONE
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_INDOPDONE_E_END     0x1
@@ -3096,26 +3096,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Indirect Read Reject Mask - indrdreject
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_INDRDREJECT_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_INDRDREJECT_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_INDRDREJECT_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDRDREJECT
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_INDRDREJECT_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDRDREJECT
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_INDRDREJECT_E_END   0x1
@@ -3139,26 +3139,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Protected Area Write Attempt Mask - protwrattempt
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                 
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_PROTWRATTEMPT_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_PROTWRATTEMPT_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_PROTWRATTEMPT_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_PROTWRATTEMPT
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_PROTWRATTEMPT_E_DISD    0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_PROTWRATTEMPT
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_PROTWRATTEMPT_E_END     0x1
@@ -3182,26 +3182,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Illegal Access Detected Mask - illegalacc
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                 
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_ILLEGALACC_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_ILLEGALACC_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_ILLEGALACC_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_ILLEGALACC
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_ILLEGALACC_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_ILLEGALACC
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_ILLEGALACC_E_END    0x1
@@ -3225,26 +3225,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Transfer Watermark Breach Mask - indxfrlvl
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                 
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_INDXFRLVL_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_INDXFRLVL_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_INDXFRLVL_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDXFRLVL
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_INDXFRLVL_E_DISD    0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDXFRLVL
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_INDXFRLVL_E_END     0x1
@@ -3268,26 +3268,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Receive Overflow Mask - rxover
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_RXOVER_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_RXOVER_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_RXOVER_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_RXOVER
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_RXOVER_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_RXOVER
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_RXOVER_E_END    0x1
@@ -3311,26 +3311,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Transmit FIFO Threshold Compare Mask - txthreshcmp
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_TXTHRESHCMP_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_TXTHRESHCMP_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_TXTHRESHCMP_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_TXTHRESHCMP
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_TXTHRESHCMP_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_TXTHRESHCMP
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_TXTHRESHCMP_E_END   0x1
@@ -3354,26 +3354,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Transmit FIFO Full Mask - txfull
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_TXFULL_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_TXFULL_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_TXFULL_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_TXFULL
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_TXFULL_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_TXFULL
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_TXFULL_E_END    0x1
@@ -3397,26 +3397,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Receive FIFO Threshold Compare Mask - rxthreshcmp
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_RXTHRESHCMP_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_RXTHRESHCMP_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_RXTHRESHCMP_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_RXTHRESHCMP
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_RXTHRESHCMP_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_RXTHRESHCMP
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_RXTHRESHCMP_E_END   0x1
@@ -3440,26 +3440,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Receive FIFO full Mask - rxfull
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_RXFULL_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_RXFULL_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_RXFULL_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_RXFULL
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_RXFULL_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_RXFULL
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_RXFULL_E_END    0x1
@@ -3483,26 +3483,26 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
 
 /*
  * Field : Indirect Read Partition overflow mask - indsramfull
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_IRQMSK_INDSRAMFULL_E_DISD | 0x0   | Disable Interrupt by Masking
- *  ALT_QSPI_IRQMSK_INDSRAMFULL_E_END  | 0x1   | Enable Interrupt            
- * 
+ *  ALT_QSPI_IRQMSK_INDSRAMFULL_E_END  | 0x1   | Enable Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDSRAMFULL
- * 
+ *
  * Disable Interrupt by Masking
  */
 #define ALT_QSPI_IRQMSK_INDSRAMFULL_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_QSPI_IRQMSK_INDSRAMFULL
- * 
+ *
  * Enable Interrupt
  */
 #define ALT_QSPI_IRQMSK_INDSRAMFULL_E_END   0x1
@@ -3532,7 +3532,7 @@ typedef volatile struct ALT_QSPI_IRQSTAT_s  ALT_QSPI_IRQSTAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_IRQMSK.
  */
 struct ALT_QSPI_IRQMSK_s
@@ -3562,23 +3562,23 @@ typedef volatile struct ALT_QSPI_IRQMSK_s  ALT_QSPI_IRQMSK_t;
 
 /*
  * Register : Lower Write Protection Register - lowwrprot
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [31:0] | RW     | 0x0   | Block Number
- * 
+ *
  */
 /*
  * Field : Block Number - subsector
- * 
+ *
  * The block number that defines the lower block in the range of blocks that is to
  * be locked from writing. The definition of a block in terms of number of bytes is
  * programmable via the Device Size Configuration register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_LOWWRPROT_SUBSECTOR register field. */
 #define ALT_QSPI_LOWWRPROT_SUBSECTOR_LSB        0
@@ -3605,7 +3605,7 @@ typedef volatile struct ALT_QSPI_IRQMSK_s  ALT_QSPI_IRQMSK_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_LOWWRPROT.
  */
 struct ALT_QSPI_LOWWRPROT_s
@@ -3622,23 +3622,23 @@ typedef volatile struct ALT_QSPI_LOWWRPROT_s  ALT_QSPI_LOWWRPROT_t;
 
 /*
  * Register : Upper Write Protection Register - uppwrprot
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [31:0] | RW     | 0x0   | Block Number
- * 
+ *
  */
 /*
  * Field : Block Number - subsector
- * 
+ *
  * The block number that defines the upper block in the range of blocks that is to
  * be locked from writing. The definition of a block in terms of number of bytes is
  * programmable via the Device Size Configuration register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_UPPWRPROT_SUBSECTOR register field. */
 #define ALT_QSPI_UPPWRPROT_SUBSECTOR_LSB        0
@@ -3665,7 +3665,7 @@ typedef volatile struct ALT_QSPI_LOWWRPROT_s  ALT_QSPI_LOWWRPROT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_UPPWRPROT.
  */
 struct ALT_QSPI_UPPWRPROT_s
@@ -3682,44 +3682,44 @@ typedef volatile struct ALT_QSPI_UPPWRPROT_s  ALT_QSPI_UPPWRPROT_t;
 
 /*
  * Register : Write Protection Register - wrprot
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [0]    | RW     | 0x0   | Write Protection Inversion Bit
- *  [1]    | RW     | 0x0   | Write Protection Enable Bit   
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [1]    | RW     | 0x0   | Write Protection Enable Bit
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Write Protection Inversion Bit - inv
- * 
+ *
  * When enabled, the protection region defined in the lower and upper write
  * protection registers is inverted meaning it is the region that the system is
  * permitted to write to. When disabled, the protection region defined in the lower
  * and upper write protection registers is the region that the system is not
  * permitted to write to.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description             
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-------------------------
- *  ALT_QSPI_WRPROT_INV_E_EN  | 0x1   | Write Region allowed    
+ *  ALT_QSPI_WRPROT_INV_E_EN  | 0x1   | Write Region allowed
  *  ALT_QSPI_WRPROT_INV_E_DIS | 0x0   | Write Region not allowed
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_WRPROT_INV
- * 
+ *
  * Write Region allowed
  */
 #define ALT_QSPI_WRPROT_INV_E_EN    0x1
 /*
  * Enumerated value for register field ALT_QSPI_WRPROT_INV
- * 
+ *
  * Write Region not allowed
  */
 #define ALT_QSPI_WRPROT_INV_E_DIS   0x0
@@ -3743,31 +3743,31 @@ typedef volatile struct ALT_QSPI_UPPWRPROT_s  ALT_QSPI_UPPWRPROT_t;
 
 /*
  * Field : Write Protection Enable Bit - en
- * 
+ *
  * When enabled, any AHB write access with an address within the protection region
  * defined in the lower and upper write protection registers is rejected. An AHB
  * error response is generated and an interrupt source triggered. When disabled,
  * the protection region is disabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description               
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:---------------------------
- *  ALT_QSPI_WRPROT_EN_E_EN  | 0x1   | AHB Write Access rejected 
+ *  ALT_QSPI_WRPROT_EN_E_EN  | 0x1   | AHB Write Access rejected
  *  ALT_QSPI_WRPROT_EN_E_DIS | 0x0   | Protection Region Disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_WRPROT_EN
- * 
+ *
  * AHB Write Access rejected
  */
 #define ALT_QSPI_WRPROT_EN_E_EN     0x1
 /*
  * Enumerated value for register field ALT_QSPI_WRPROT_EN
- * 
+ *
  * Protection Region Disabled
  */
 #define ALT_QSPI_WRPROT_EN_E_DIS    0x0
@@ -3797,7 +3797,7 @@ typedef volatile struct ALT_QSPI_UPPWRPROT_s  ALT_QSPI_UPPWRPROT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_WRPROT.
  */
 struct ALT_QSPI_WRPROT_s
@@ -3816,47 +3816,47 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Register : Indirect Read Transfer Register - indrd
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                    
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:--------------------------------
- *  [0]    | RW     | 0x0     | Start Indirect Read            
- *  [1]    | RW     | 0x0     | Cancel Indirect Read           
- *  [2]    | R      | Unknown | Indirect Read Status           
- *  [3]    | RW     | Unknown | SRAM Full                      
+ *  [0]    | RW     | 0x0     | Start Indirect Read
+ *  [1]    | RW     | 0x0     | Cancel Indirect Read
+ *  [2]    | R      | Unknown | Indirect Read Status
+ *  [3]    | RW     | Unknown | SRAM Full
  *  [4]    | R      | Unknown | Queued Indirect Read Operations
- *  [5]    | RW     | Unknown | Indirect Completion Status     
- *  [7:6]  | R      | Unknown | Completed Indirect Operations  
- *  [31:8] | ???    | 0x0     | *UNDEFINED*                    
- * 
+ *  [5]    | RW     | Unknown | Indirect Completion Status
+ *  [7:6]  | R      | Unknown | Completed Indirect Operations
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Start Indirect Read - start
- * 
+ *
  * When this bit is enabled, it will trigger an indirect read operation. The
  * assumption is that the indirect start address and the indirect number of bytes
  * register is setup before triggering the indirect read operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description          
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------
  *  ALT_QSPI_INDRD_START_E_END  | 0x1   | Trigger Indirect Read
- *  ALT_QSPI_INDRD_START_E_DISD | 0x0   | No Indirect Read     
- * 
+ *  ALT_QSPI_INDRD_START_E_DISD | 0x0   | No Indirect Read
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_START
- * 
+ *
  * Trigger Indirect Read
  */
 #define ALT_QSPI_INDRD_START_E_END  0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_START
- * 
+ *
  * No Indirect Read
  */
 #define ALT_QSPI_INDRD_START_E_DISD 0x0
@@ -3880,28 +3880,28 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Field : Cancel Indirect Read - cancel
- * 
+ *
  * This bit will cancel all ongoing indirect read operations.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:----------------------------
- *  ALT_QSPI_INDRD_CANCEL_E_CANCEL   | 0x1   | Cancel Indirect Read       
+ *  ALT_QSPI_INDRD_CANCEL_E_CANCEL   | 0x1   | Cancel Indirect Read
  *  ALT_QSPI_INDRD_CANCEL_E_NOACTION | 0x0   | Do Not Cancel Indirect Read
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_CANCEL
- * 
+ *
  * Cancel Indirect Read
  */
 #define ALT_QSPI_INDRD_CANCEL_E_CANCEL      0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_CANCEL
- * 
+ *
  * Do Not Cancel Indirect Read
  */
 #define ALT_QSPI_INDRD_CANCEL_E_NOACTION    0x0
@@ -3925,28 +3925,28 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Field : Indirect Read Status - rd_status
- * 
+ *
  * Indirect read operation in progress (status)
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                  
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:------------------------------
- *  ALT_QSPI_INDRD_RD_STAT_E_RDOP     | 0x1   | Read Operation in progress   
+ *  ALT_QSPI_INDRD_RD_STAT_E_RDOP     | 0x1   | Read Operation in progress
  *  ALT_QSPI_INDRD_RD_STAT_E_NOACTION | 0x0   | No read operation in progress
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_RD_STAT
- * 
+ *
  * Read Operation in progress
  */
 #define ALT_QSPI_INDRD_RD_STAT_E_RDOP       0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_RD_STAT
- * 
+ *
  * No read operation in progress
  */
 #define ALT_QSPI_INDRD_RD_STAT_E_NOACTION   0x0
@@ -3970,29 +3970,29 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Field : SRAM Full - sram_full
- * 
+ *
  * SRAM full and unable to immediately complete an indirect operation. Write a 1 to
  * this field to clear it. ; indirect operation (status)
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                       
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-----------------------------------
  *  ALT_QSPI_INDRD_SRAM_FULL_E_SRAMFULL | 0x1   | Sram Full- Cant complete operation
- *  ALT_QSPI_INDRD_SRAM_FULL_E_NOACTION | 0x0   | SRram Not Full                    
- * 
+ *  ALT_QSPI_INDRD_SRAM_FULL_E_NOACTION | 0x0   | SRram Not Full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_SRAM_FULL
- * 
+ *
  * Sram Full- Cant complete operation
  */
 #define ALT_QSPI_INDRD_SRAM_FULL_E_SRAMFULL 0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_SRAM_FULL
- * 
+ *
  * SRram Not Full
  */
 #define ALT_QSPI_INDRD_SRAM_FULL_E_NOACTION 0x0
@@ -4016,28 +4016,28 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Field : Queued Indirect Read Operations - rd_queued
- * 
+ *
  * Two indirect read operations have been queued
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description         
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:---------------------
  *  ALT_QSPI_INDRD_RD_QUEUED_E_QUINDIRECTRD | 0x1   | Queued Indirect Read
- *  ALT_QSPI_INDRD_RD_QUEUED_E_NOACTION     | 0x0   | No Queued Read      
- * 
+ *  ALT_QSPI_INDRD_RD_QUEUED_E_NOACTION     | 0x0   | No Queued Read
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_RD_QUEUED
- * 
+ *
  * Queued Indirect Read
  */
 #define ALT_QSPI_INDRD_RD_QUEUED_E_QUINDIRECTRD 0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_RD_QUEUED
- * 
+ *
  * No Queued Read
  */
 #define ALT_QSPI_INDRD_RD_QUEUED_E_NOACTION     0x0
@@ -4061,29 +4061,29 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Field : Indirect Completion Status - ind_ops_done_status
- * 
+ *
  * This field is set to 1 when an indirect operation has completed. Write a 1 to
  * this field to clear it.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description                   
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:-------------------------------
  *  ALT_QSPI_INDRD_IND_OPS_DONE_STAT_E_INDCOMP  | 0x1   | Indirect Op Complete operation
- *  ALT_QSPI_INDRD_IND_OPS_DONE_STAT_E_NOACTION | 0x0   | Indirect Op Not Complete      
- * 
+ *  ALT_QSPI_INDRD_IND_OPS_DONE_STAT_E_NOACTION | 0x0   | Indirect Op Not Complete
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_IND_OPS_DONE_STAT
- * 
+ *
  * Indirect Op Complete operation
  */
 #define ALT_QSPI_INDRD_IND_OPS_DONE_STAT_E_INDCOMP  0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDRD_IND_OPS_DONE_STAT
- * 
+ *
  * Indirect Op Not Complete
  */
 #define ALT_QSPI_INDRD_IND_OPS_DONE_STAT_E_NOACTION 0x0
@@ -4107,12 +4107,12 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
 
 /*
  * Field : Completed Indirect Operations - num_ind_ops_done
- * 
+ *
  * This field contains the number of indirect operations which have been completed.
  * This is used in conjunction with the indirect completion status field (bit 5).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDRD_NUM_IND_OPS_DONE register field. */
 #define ALT_QSPI_INDRD_NUM_IND_OPS_DONE_LSB        6
@@ -4139,7 +4139,7 @@ typedef volatile struct ALT_QSPI_WRPROT_s  ALT_QSPI_WRPROT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDRD.
  */
 struct ALT_QSPI_INDRD_s
@@ -4163,24 +4163,24 @@ typedef volatile struct ALT_QSPI_INDRD_s  ALT_QSPI_INDRD_t;
 
 /*
  * Register : Indirect Read Transfer Watermark Register - indrdwater
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [31:0] | RW     | 0x0   | Watermark Value
- * 
+ *
  */
 /*
  * Field : Watermark Value - level
- * 
+ *
  * This represents the minimum fill level of the SRAM before a DMA peripheral
  * access is permitted. When the SRAM fill level passes the watermark, an interrupt
  * is also generated. This field can be disabled by writing a value of all zeroes.
  * The units of this register are BYTES
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDRDWATER_LEVEL register field. */
 #define ALT_QSPI_INDRDWATER_LEVEL_LSB        0
@@ -4207,7 +4207,7 @@ typedef volatile struct ALT_QSPI_INDRD_s  ALT_QSPI_INDRD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDRDWATER.
  */
 struct ALT_QSPI_INDRDWATER_s
@@ -4224,22 +4224,22 @@ typedef volatile struct ALT_QSPI_INDRDWATER_s  ALT_QSPI_INDRDWATER_t;
 
 /*
  * Register : Indirect Read Transfer Start Address Register - indrdstaddr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [31:0] | RW     | 0x0   | Start Address of Indirect Access
- * 
+ *
  */
 /*
  * Field : Start Address of Indirect Access - addr
- * 
+ *
  * This is the start address from which the indirect access will commence its READ
  * operation.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDRDSTADDR_ADDR register field. */
 #define ALT_QSPI_INDRDSTADDR_ADDR_LSB        0
@@ -4266,7 +4266,7 @@ typedef volatile struct ALT_QSPI_INDRDWATER_s  ALT_QSPI_INDRDWATER_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDRDSTADDR.
  */
 struct ALT_QSPI_INDRDSTADDR_s
@@ -4283,22 +4283,22 @@ typedef volatile struct ALT_QSPI_INDRDSTADDR_s  ALT_QSPI_INDRDSTADDR_t;
 
 /*
  * Register : Indirect Read Transfer Number Bytes Register - indrdcnt
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------
  *  [31:0] | RW     | 0x0   | Indirect Count
- * 
+ *
  */
 /*
  * Field : Indirect Count - value
- * 
+ *
  * This is the number of bytes that the indirect access will consume. This can be
  * bigger than the configured size of SRAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDRDCNT_VALUE register field. */
 #define ALT_QSPI_INDRDCNT_VALUE_LSB        0
@@ -4325,7 +4325,7 @@ typedef volatile struct ALT_QSPI_INDRDSTADDR_s  ALT_QSPI_INDRDSTADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDRDCNT.
  */
 struct ALT_QSPI_INDRDCNT_s
@@ -4342,47 +4342,47 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Register : Indirect Write Transfer Register - indwr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                     
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:---------------------------------
- *  [0]    | RW     | 0x0     | Start Indirect Write            
- *  [1]    | RW     | 0x0     | Cancel Indirect Write           
- *  [2]    | R      | Unknown | Indirect Write Status           
- *  [3]    | R      | 0x0     | Reserved                        
+ *  [0]    | RW     | 0x0     | Start Indirect Write
+ *  [1]    | RW     | 0x0     | Cancel Indirect Write
+ *  [2]    | R      | Unknown | Indirect Write Status
+ *  [3]    | R      | 0x0     | Reserved
  *  [4]    | R      | Unknown | Queued Indirect Write Operations
- *  [5]    | RW     | Unknown | Indirect Completion Status      
- *  [7:6]  | R      | Unknown | Completed Indirect Operations   
- *  [31:8] | ???    | 0x0     | *UNDEFINED*                     
- * 
+ *  [5]    | RW     | Unknown | Indirect Completion Status
+ *  [7:6]  | R      | Unknown | Completed Indirect Operations
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Start Indirect Write - start
- * 
+ *
  * Writing a 1 to this bit will trigger an indirect write operation. The assumption
  * is that the indirect start address and the indirect number of bytes register is
  * setup before triggering the indirect write operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                     
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:---------------------------------
  *  ALT_QSPI_INDWR_START_E_END  | 0x1   | Trigger indirect write operation
- *  ALT_QSPI_INDWR_START_E_DISD | 0x0   | No Action                       
- * 
+ *  ALT_QSPI_INDWR_START_E_DISD | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_START
- * 
+ *
  * Trigger indirect write operation
  */
 #define ALT_QSPI_INDWR_START_E_END  0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_START
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_INDWR_START_E_DISD 0x0
@@ -4406,28 +4406,28 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Field : Cancel Indirect Write - cancel
- * 
+ *
  * Writing a 1 to this bit will cancel all ongoing indirect write operations.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                    
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:--------------------------------
  *  ALT_QSPI_INDWR_CANCEL_E_CANCEINDWR | 0x1   | Cancel Indirect write operation
- *  ALT_QSPI_INDWR_CANCEL_E_NOACTION   | 0x0   | No Action                      
- * 
+ *  ALT_QSPI_INDWR_CANCEL_E_NOACTION   | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_CANCEL
- * 
+ *
  * Cancel Indirect write operation
  */
 #define ALT_QSPI_INDWR_CANCEL_E_CANCEINDWR  0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_CANCEL
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_INDWR_CANCEL_E_NOACTION    0x0
@@ -4451,28 +4451,28 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Field : Indirect Write Status - rdstat
- * 
+ *
  * Indirect write operation in progress (status)
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description             
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------------
  *  ALT_QSPI_INDWR_RDSTAT_E_INDWRSTAT | 0x1   | Indirect write operation
- *  ALT_QSPI_INDWR_RDSTAT_E_NOACTION  | 0x0   | No Action               
- * 
+ *  ALT_QSPI_INDWR_RDSTAT_E_NOACTION  | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_RDSTAT
- * 
+ *
  * Indirect write operation
  */
 #define ALT_QSPI_INDWR_RDSTAT_E_INDWRSTAT   0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_RDSTAT
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_INDWR_RDSTAT_E_NOACTION    0x0
@@ -4496,9 +4496,9 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Field : Reserved - sramfull
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDWR_SRAMFULL register field. */
 #define ALT_QSPI_INDWR_SRAMFULL_LSB        3
@@ -4519,28 +4519,28 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Field : Queued Indirect Write Operations - rdqueued
- * 
+ *
  * Two indirect write operations have been queued
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_INDWR_RDQUEUED_E_INDWROP  | 0x1   | Two Indirect write operation
- *  ALT_QSPI_INDWR_RDQUEUED_E_NOACTION | 0x0   | No Action                   
- * 
+ *  ALT_QSPI_INDWR_RDQUEUED_E_NOACTION | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_RDQUEUED
- * 
+ *
  * Two Indirect write operation
  */
 #define ALT_QSPI_INDWR_RDQUEUED_E_INDWROP   0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_RDQUEUED
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_INDWR_RDQUEUED_E_NOACTION  0x0
@@ -4564,29 +4564,29 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Field : Indirect Completion Status - inddone
- * 
+ *
  * This field is set to 1 when an indirect operation has completed. Write a 1 to
  * this field to clear it.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------
  *  ALT_QSPI_INDWR_INDDONE_E_INDCOMPST | 0x1   | Indirect operation completed
- *  ALT_QSPI_INDWR_INDDONE_E_NOACTION  | 0x0   | No Action                   
- * 
+ *  ALT_QSPI_INDWR_INDDONE_E_NOACTION  | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_INDDONE
- * 
+ *
  * Indirect operation completed
  */
 #define ALT_QSPI_INDWR_INDDONE_E_INDCOMPST  0x1
 /*
  * Enumerated value for register field ALT_QSPI_INDWR_INDDONE
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_INDWR_INDDONE_E_NOACTION   0x0
@@ -4610,12 +4610,12 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
 
 /*
  * Field : Completed Indirect Operations - indcnt
- * 
+ *
  * This field contains the count of indirect operations which have been completed.
  * This is used in conjunction with the indirect completion status field (bit 5).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDWR_INDCNT register field. */
 #define ALT_QSPI_INDWR_INDCNT_LSB        6
@@ -4642,7 +4642,7 @@ typedef volatile struct ALT_QSPI_INDRDCNT_s  ALT_QSPI_INDRDCNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDWR.
  */
 struct ALT_QSPI_INDWR_s
@@ -4666,24 +4666,24 @@ typedef volatile struct ALT_QSPI_INDWR_s  ALT_QSPI_INDWR_t;
 
 /*
  * Register : Indirect Write Transfer Watermark Register - indwrwater
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description    
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:----------------
  *  [31:0] | RW     | 0xffffffff | Watermark Value
- * 
+ *
  */
 /*
  * Field : Watermark Value - level
- * 
+ *
  * This represents the maximum fill level of the SRAM before a DMA peripheral
  * access is permitted. When the SRAM fill level falls below the watermark, an
  * interrupt is also generated. This field can be disabled by writing a value of
  * all ones. The units of this register are bytes.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDWRWATER_LEVEL register field. */
 #define ALT_QSPI_INDWRWATER_LEVEL_LSB        0
@@ -4710,7 +4710,7 @@ typedef volatile struct ALT_QSPI_INDWR_s  ALT_QSPI_INDWR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDWRWATER.
  */
 struct ALT_QSPI_INDWRWATER_s
@@ -4727,22 +4727,22 @@ typedef volatile struct ALT_QSPI_INDWRWATER_s  ALT_QSPI_INDWRWATER_t;
 
 /*
  * Register : Indirect Write Transfer Start Address Register - indwrstaddr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
  *  [31:0] | RW     | 0x0   | Start of Indirect Access
- * 
+ *
  */
 /*
  * Field : Start of Indirect Access - addr
- * 
+ *
  * This is the start address from which the indirect access will commence its write
  * operation.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDWRSTADDR_ADDR register field. */
 #define ALT_QSPI_INDWRSTADDR_ADDR_LSB        0
@@ -4769,7 +4769,7 @@ typedef volatile struct ALT_QSPI_INDWRWATER_s  ALT_QSPI_INDWRWATER_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDWRSTADDR.
  */
 struct ALT_QSPI_INDWRSTADDR_s
@@ -4786,22 +4786,22 @@ typedef volatile struct ALT_QSPI_INDWRSTADDR_s  ALT_QSPI_INDWRSTADDR_t;
 
 /*
  * Register : Indirect Write Transfer Count Register - indwrcnt
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
  *  [31:0] | RW     | 0x0   | Indirect Number of Bytes
- * 
+ *
  */
 /*
  * Field : Indirect Number of Bytes - value
- * 
+ *
  * This is the number of bytes that the indirect access will consume. This can be
  * bigger than the configured size of SRAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_INDWRCNT_VALUE register field. */
 #define ALT_QSPI_INDWRCNT_VALUE_LSB        0
@@ -4828,7 +4828,7 @@ typedef volatile struct ALT_QSPI_INDWRSTADDR_s  ALT_QSPI_INDWRSTADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_INDWRCNT.
  */
 struct ALT_QSPI_INDWRCNT_s
@@ -4845,49 +4845,49 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Register : Flash Command Register - flashcmd
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description               
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------
- *  [0]     | RW     | 0x0   | Execute Command           
- *  [1]     | R      | 0x0   | Command Execution Status  
- *  [6:2]   | ???    | 0x0   | *UNDEFINED*               
- *  [11:7]  | RW     | 0x0   | Number of Dummy Bytes     
+ *  [0]     | RW     | 0x0   | Execute Command
+ *  [1]     | R      | 0x0   | Command Execution Status
+ *  [6:2]   | ???    | 0x0   | *UNDEFINED*
+ *  [11:7]  | RW     | 0x0   | Number of Dummy Bytes
  *  [14:12] | RW     | 0x0   | Number of Write Data Bytes
- *  [15]    | RW     | 0x0   | Write Data Enable         
- *  [17:16] | RW     | 0x0   | Number of Address Bytes   
- *  [18]    | RW     | 0x0   | Mode Bit Enable           
- *  [19]    | RW     | 0x0   | Command Address Enable    
- *  [22:20] | RW     | 0x0   | Number of Read Data Bytes 
- *  [23]    | RW     | 0x0   | Read Data Enable          
- *  [31:24] | RW     | 0x0   | Command Opcode            
- * 
+ *  [15]    | RW     | 0x0   | Write Data Enable
+ *  [17:16] | RW     | 0x0   | Number of Address Bytes
+ *  [18]    | RW     | 0x0   | Mode Bit Enable
+ *  [19]    | RW     | 0x0   | Command Address Enable
+ *  [22:20] | RW     | 0x0   | Number of Read Data Bytes
+ *  [23]    | RW     | 0x0   | Read Data Enable
+ *  [31:24] | RW     | 0x0   | Command Opcode
+ *
  */
 /*
  * Field : Execute Command - execcmd
- * 
+ *
  * Execute the command.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description    
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------
  *  ALT_QSPI_FLSHCMD_EXECCMD_E_EXECUTE  | 0x1   | Execute Command
- *  ALT_QSPI_FLSHCMD_EXECCMD_E_NOACTION | 0x0   | No Action      
- * 
+ *  ALT_QSPI_FLSHCMD_EXECCMD_E_NOACTION | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_EXECCMD
- * 
+ *
  * Execute Command
  */
 #define ALT_QSPI_FLSHCMD_EXECCMD_E_EXECUTE  0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_EXECCMD
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_FLSHCMD_EXECCMD_E_NOACTION 0x0
@@ -4911,28 +4911,28 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Command Execution Status - cmdexecstat
- * 
+ *
  * Command execution in progress.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description             
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-------------------------
  *  ALT_QSPI_FLSHCMD_CMDEXECSTAT_E_EXECUTESTAT | 0x1   | Command Execution Status
- *  ALT_QSPI_FLSHCMD_CMDEXECSTAT_E_NOACTION    | 0x0   | No Action               
- * 
+ *  ALT_QSPI_FLSHCMD_CMDEXECSTAT_E_NOACTION    | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_CMDEXECSTAT
- * 
+ *
  * Command Execution Status
  */
 #define ALT_QSPI_FLSHCMD_CMDEXECSTAT_E_EXECUTESTAT  0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_CMDEXECSTAT
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_FLSHCMD_CMDEXECSTAT_E_NOACTION     0x0
@@ -4956,12 +4956,12 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Number of Dummy Bytes - numdummybytes
- * 
+ *
  * Set to the number of dummy bytes required This should be setup before triggering
  * the command via the execute field of this register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMD_NUMDUMMYBYTES register field. */
 #define ALT_QSPI_FLSHCMD_NUMDUMMYBYTES_LSB        7
@@ -4982,12 +4982,12 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Number of Write Data Bytes - numwrdatabytes
- * 
+ *
  * Up to 8 Data bytes may be written using this command.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description 
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------
  *  ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE1 | 0x0   | Write 1 Byte
  *  ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE2 | 0x1   | Write 2 Byte
@@ -4997,55 +4997,55 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
  *  ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE6 | 0x5   | Write 6 Byte
  *  ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE7 | 0x6   | Write 7 Byte
  *  ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE8 | 0x7   | Write 8 Byte
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 1 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE1   0x0
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 2 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE2   0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 3 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE3   0x2
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 4 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE4   0x3
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 5 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE5   0x4
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 6 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE6   0x5
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 7 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE7   0x6
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMWRDATABYTES
- * 
+ *
  * Write 8 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMWRDATABYTES_E_WRBYTE8   0x7
@@ -5069,29 +5069,29 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Write Data Enable - enwrdata
- * 
+ *
  * Set to 1 if the command specified in the command opcode field requires write
  * data bytes to be sent to the device.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                      
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:----------------------------------
  *  ALT_QSPI_FLSHCMD_ENWRDATA_E_WRDATABYTES | 0x1   | Command requires write data bytes
- *  ALT_QSPI_FLSHCMD_ENWRDATA_E_NOACTION    | 0x0   | No Action                        
- * 
+ *  ALT_QSPI_FLSHCMD_ENWRDATA_E_NOACTION    | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENWRDATA
- * 
+ *
  * Command requires write data bytes
  */
 #define ALT_QSPI_FLSHCMD_ENWRDATA_E_WRDATABYTES 0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENWRDATA
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_FLSHCMD_ENWRDATA_E_NOACTION    0x0
@@ -5115,45 +5115,45 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Number of Address Bytes - numaddrbytes
- * 
+ *
  * Set to the number of address bytes required (the address itself is programmed in
  * the FLASH COMMAND ADDRESS REGISTERS). This should be setup before triggering the
  * command via bit 0 of this register. 2'b00 : 1 address byte 2'b01 : 2 address
  * bytes 2'b10 : 3 address bytes 2'b11 : 4 address bytes
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description          
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:----------------------
- *  ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE1 | 0x0   | Write 1 Address Byte 
+ *  ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE1 | 0x0   | Write 1 Address Byte
  *  ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE2 | 0x1   | Write 2 Address Bytes
  *  ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE3 | 0x2   | Write 3 Address Bytes
  *  ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE4 | 0x3   | Write 4 Address Bytes
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMADDRBYTES
- * 
+ *
  * Write 1 Address Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE1   0x0
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMADDRBYTES
- * 
+ *
  * Write 2 Address Bytes
  */
 #define ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE2   0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMADDRBYTES
- * 
+ *
  * Write 3 Address Bytes
  */
 #define ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE3   0x2
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMADDRBYTES
- * 
+ *
  * Write 4 Address Bytes
  */
 #define ALT_QSPI_FLSHCMD_NUMADDRBYTES_E_ADDRBYTE4   0x3
@@ -5177,29 +5177,29 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Mode Bit Enable - enmodebit
- * 
+ *
  * Set to 1 to ensure the mode bits as defined in the Mode Bit Configuration
  * register are sent following the address bytes.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                   
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-------------------------------
  *  ALT_QSPI_FLSHCMD_ENMODBIT_E_END  | 0x1   | Mode Bit follows address bytes
- *  ALT_QSPI_FLSHCMD_ENMODBIT_E_DISD | 0x0   | No Action                     
- * 
+ *  ALT_QSPI_FLSHCMD_ENMODBIT_E_DISD | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENMODBIT
- * 
+ *
  * Mode Bit follows address bytes
  */
 #define ALT_QSPI_FLSHCMD_ENMODBIT_E_END     0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENMODBIT
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_FLSHCMD_ENMODBIT_E_DISD    0x0
@@ -5223,29 +5223,29 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Command Address Enable - encmdaddr
- * 
+ *
  * If enabled, the command specified in bits 31:24 requires an address. This should
  * be setup before triggering the command via writing a 1 to the execute field.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                           
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:---------------------------------------
  *  ALT_QSPI_FLSHCMD_ENCMDADDR_E_END  | 0x1   | Command in bits 31:24 requires address
- *  ALT_QSPI_FLSHCMD_ENCMDADDR_E_DISD | 0x0   | No Action                             
- * 
+ *  ALT_QSPI_FLSHCMD_ENCMDADDR_E_DISD | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENCMDADDR
- * 
+ *
  * Command in bits 31:24 requires address
  */
 #define ALT_QSPI_FLSHCMD_ENCMDADDR_E_END    0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENCMDADDR
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_FLSHCMD_ENCMDADDR_E_DISD   0x0
@@ -5269,12 +5269,12 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Number of Read Data Bytes - numrddatabytes
- * 
+ *
  * Up to 8 data bytes may be read using this command. Set to 0 for 1 byte and 7 for
  * 8 bytes.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:------------
  *  ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE1 | 0x0   | Read 1 Byte
@@ -5285,55 +5285,55 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
  *  ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE6 | 0x5   | Read 6 Byte
  *  ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE7 | 0x6   | Read 7 Byte
  *  ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE8 | 0x7   | Read 8 Byte
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 1 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE1   0x0
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 2 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE2   0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 3 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE3   0x2
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 4 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE4   0x3
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 5 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE5   0x4
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 6 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE6   0x5
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 7 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE7   0x6
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_NUMRDDATABYTES
- * 
+ *
  * Read 8 Byte
  */
 #define ALT_QSPI_FLSHCMD_NUMRDDATABYTES_E_RDBYTE8   0x7
@@ -5357,29 +5357,29 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Read Data Enable - enrddata
- * 
+ *
  * If enabled, the command specified in the command opcode field (bits 31:24)
  * requires read data bytes to be received from the device.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description               
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:---------------------------
  *  ALT_QSPI_FLSHCMD_ENRDDATA_E_EN       | 0x1   | Command Requires read data
- *  ALT_QSPI_FLSHCMD_ENRDDATA_E_NOACTION | 0x0   | No Action                 
- * 
+ *  ALT_QSPI_FLSHCMD_ENRDDATA_E_NOACTION | 0x0   | No Action
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENRDDATA
- * 
+ *
  * Command Requires read data
  */
 #define ALT_QSPI_FLSHCMD_ENRDDATA_E_EN          0x1
 /*
  * Enumerated value for register field ALT_QSPI_FLSHCMD_ENRDDATA
- * 
+ *
  * No Action
  */
 #define ALT_QSPI_FLSHCMD_ENRDDATA_E_NOACTION    0x0
@@ -5403,7 +5403,7 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
 
 /*
  * Field : Command Opcode - cmdopcode
- * 
+ *
  * The command opcode field should be setup before triggering the command. For
  * example, 0x20 maps to SubSector Erase. Writeing to the execute field (bit 0) of
  * this register launches the command. NOTE : Using this approach to issue commands
@@ -5415,9 +5415,9 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
  * parallel using DQ0 and DQ1 pins. If this field is set to 2'b10, then the command
  * opcode, command address, command dummy bytes and command data will all be
  * transferred in parallel using DQ0, DQ1, DQ2 and DQ3 pins.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMD_CMDOPCODE register field. */
 #define ALT_QSPI_FLSHCMD_CMDOPCODE_LSB        24
@@ -5444,7 +5444,7 @@ typedef volatile struct ALT_QSPI_INDWRCNT_s  ALT_QSPI_INDWRCNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_FLSHCMD.
  */
 struct ALT_QSPI_FLSHCMD_s
@@ -5472,24 +5472,24 @@ typedef volatile struct ALT_QSPI_FLSHCMD_s  ALT_QSPI_FLSHCMD_t;
 
 /*
  * Register : Flash Command Address Registers - flashcmdaddr
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [31:0] | RW     | 0x0   | Command Address
- * 
+ *
  */
 /*
  * Field : Command Address - addr
- * 
+ *
  * This should be setup before triggering the command with execute field (bit 0) of
  * the Flash Command Control register. It is the address used by the command
  * specified in the opcode field (bits 31:24) of the Flash Command Control
  * register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMDADDR_ADDR register field. */
 #define ALT_QSPI_FLSHCMDADDR_ADDR_LSB        0
@@ -5516,7 +5516,7 @@ typedef volatile struct ALT_QSPI_FLSHCMD_s  ALT_QSPI_FLSHCMD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_FLSHCMDADDR.
  */
 struct ALT_QSPI_FLSHCMDADDR_s
@@ -5533,24 +5533,24 @@ typedef volatile struct ALT_QSPI_FLSHCMDADDR_s  ALT_QSPI_FLSHCMDADDR_t;
 
 /*
  * Register : Flash Command Read Data Register (Lower) - flashcmdrddatalo
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [31:0] | RW     | 0x0   | Command Read Data (Lower byte)
- * 
+ *
  */
 /*
  * Field : Command Read Data (Lower byte) - data
- * 
+ *
  * This is the data that is returned by the flash device for any status or
  * configuration read operation carried out by triggering the event in the control
  * register. The register will be valid when the polling bit in the control
  * register is low.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMDRDDATALO_DATA register field. */
 #define ALT_QSPI_FLSHCMDRDDATALO_DATA_LSB        0
@@ -5577,7 +5577,7 @@ typedef volatile struct ALT_QSPI_FLSHCMDADDR_s  ALT_QSPI_FLSHCMDADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_FLSHCMDRDDATALO.
  */
 struct ALT_QSPI_FLSHCMDRDDATALO_s
@@ -5594,26 +5594,26 @@ typedef volatile struct ALT_QSPI_FLSHCMDRDDATALO_s  ALT_QSPI_FLSHCMDRDDATALO_t;
 
 /*
  * Register : Flash Command Read Data Register (Upper) - flashcmdrddataup
- * 
+ *
  * Device Instruction Register
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [31:0] | RW     | 0x0   | Command Read Data (Upper byte)
- * 
+ *
  */
 /*
  * Field : Command Read Data (Upper byte) - data
- * 
+ *
  * This is the data that is returned by the FLASH device for any status or
  * configuration read operation carried out by triggering the event in the control
  * register. The register will be valid when the polling bit in the control
  * register is low.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMDRDDATAUP_DATA register field. */
 #define ALT_QSPI_FLSHCMDRDDATAUP_DATA_LSB        0
@@ -5640,7 +5640,7 @@ typedef volatile struct ALT_QSPI_FLSHCMDRDDATALO_s  ALT_QSPI_FLSHCMDRDDATALO_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_FLSHCMDRDDATAUP.
  */
 struct ALT_QSPI_FLSHCMDRDDATAUP_s
@@ -5657,25 +5657,25 @@ typedef volatile struct ALT_QSPI_FLSHCMDRDDATAUP_s  ALT_QSPI_FLSHCMDRDDATAUP_t;
 
 /*
  * Register : Flash Command Write Data Register (Lower) - flashcmdwrdatalo
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [31:0] | RW     | 0x0   | Command Write Data Lower Byte
- * 
+ *
  */
 /*
  * Field : Command Write Data Lower Byte - data
- * 
+ *
  * This is the command write data lower byte. This should be setup before
  * triggering the command with execute field (bit 0) of the Flash Command Control
  * register. It is the data that is to be written to the flash for any status or
  * configuration write operation carried out by triggering the event in the Flash
  * Command Control register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMDWRDATALO_DATA register field. */
 #define ALT_QSPI_FLSHCMDWRDATALO_DATA_LSB        0
@@ -5702,7 +5702,7 @@ typedef volatile struct ALT_QSPI_FLSHCMDRDDATAUP_s  ALT_QSPI_FLSHCMDRDDATAUP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_FLSHCMDWRDATALO.
  */
 struct ALT_QSPI_FLSHCMDWRDATALO_s
@@ -5719,25 +5719,25 @@ typedef volatile struct ALT_QSPI_FLSHCMDWRDATALO_s  ALT_QSPI_FLSHCMDWRDATALO_t;
 
 /*
  * Register : Flash Command Write Data Register (Upper) - flashcmdwrdataup
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [31:0] | RW     | 0x0   | ALT_QSPI_FLSHCMDWRDATAUP_DATA
- * 
+ *
  */
 /*
  * Field : data
- * 
+ *
  * This is the command write data upper byte. This should be setup before
  * triggering the command with execute field (bit 0) of the Flash Command Control
  * register. It is the data that is to be written to the flash for any status or
  * configuration write operation carried out by triggering the event in the Flash
  * Command Control register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_FLSHCMDWRDATAUP_DATA register field. */
 #define ALT_QSPI_FLSHCMDWRDATAUP_DATA_LSB        0
@@ -5764,7 +5764,7 @@ typedef volatile struct ALT_QSPI_FLSHCMDWRDATALO_s  ALT_QSPI_FLSHCMDWRDATALO_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_FLSHCMDWRDATAUP.
  */
 struct ALT_QSPI_FLSHCMDWRDATAUP_s
@@ -5781,20 +5781,20 @@ typedef volatile struct ALT_QSPI_FLSHCMDWRDATAUP_s  ALT_QSPI_FLSHCMDWRDATAUP_t;
 
 /*
  * Register : Module ID Register - moduleid
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset  | Description     
+ *
+ *  Bits    | Access | Reset  | Description
  * :--------|:-------|:-------|:-----------------
  *  [24:0]  | R      | 0x1001 | Module ID number
- *  [31:25] | ???    | 0x0    | *UNDEFINED*     
- * 
+ *  [31:25] | ???    | 0x0    | *UNDEFINED*
+ *
  */
 /*
  * Field : Module ID number - value
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_QSPI_MODULEID_VALUE register field. */
 #define ALT_QSPI_MODULEID_VALUE_LSB        0
@@ -5821,7 +5821,7 @@ typedef volatile struct ALT_QSPI_FLSHCMDWRDATAUP_s  ALT_QSPI_FLSHCMDWRDATAUP_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_QSPI_MODULEID.
  */
 struct ALT_QSPI_MODULEID_s
@@ -5845,7 +5845,7 @@ typedef volatile struct ALT_QSPI_MODULEID_s  ALT_QSPI_MODULEID_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_QSPI.
  */
 struct ALT_QSPI_s

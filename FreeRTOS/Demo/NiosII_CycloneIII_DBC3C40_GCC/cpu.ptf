@@ -3,7 +3,7 @@ SYSTEM cpu
    System_Wizard_Version = "8.00";
    System_Wizard_Build = "215";
    Builder_Application = "sopc_builder_ca";
-   WIZARD_SCRIPT_ARGUMENTS 
+   WIZARD_SCRIPT_ARGUMENTS
    {
       hdl_language = "vhdl";
       device_family = "CYCLONEIII";
@@ -11,7 +11,7 @@ SYSTEM cpu
       generate_sdk = "0";
       do_build_sim = "0";
       hardcopy_compatible = "0";
-      CLOCKS 
+      CLOCKS
       {
          CLOCK clk
          {
@@ -35,13 +35,13 @@ SYSTEM cpu
       desc_column_width = "75";
       base_column_width = "75";
       end_column_width = "75";
-      BOARD_INFO 
+      BOARD_INFO
       {
-         altera_avalon_epcs_flash_controller 
+         altera_avalon_epcs_flash_controller
          {
             reference_designators = "";
          }
-         altera_avalon_cfi_flash 
+         altera_avalon_cfi_flash
          {
             reference_designators = "";
          }
@@ -52,7 +52,7 @@ SYSTEM cpu
    {
       MASTER instruction_master
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -104,7 +104,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Is_Asynchronous = "0";
@@ -132,7 +132,7 @@ SYSTEM cpu
             Irq_Scheme = "individual_requests";
             Interrupt_Range = "0-0";
          }
-         MEMORY_MAP 
+         MEMORY_MAP
          {
             Entry cpu_0/jtag_debug_module
             {
@@ -174,7 +174,7 @@ SYSTEM cpu
       }
       MASTER custom_instruction_master
       {
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "nios_custom_instruction";
             Data_Width = "32";
@@ -185,7 +185,7 @@ SYSTEM cpu
             Base_Address = "N/A";
             Is_Visible = "0";
          }
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT dataa
             {
@@ -275,7 +275,7 @@ SYSTEM cpu
       }
       SLAVE jtag_debug_module
       {
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -330,7 +330,7 @@ SYSTEM cpu
                IRQ_Number = "NC";
             }
          }
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT jtag_debug_module_address
             {
@@ -420,7 +420,7 @@ SYSTEM cpu
       }
       MASTER data_master
       {
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Has_IRQ = "1";
             Irq_Scheme = "individual_requests";
@@ -448,7 +448,7 @@ SYSTEM cpu
             Is_Writeable = "1";
             Interrupt_Range = "0-31";
          }
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT d_irq
             {
@@ -521,7 +521,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         MEMORY_MAP 
+         MEMORY_MAP
          {
             Entry cpu_0/jtag_debug_module
             {
@@ -621,7 +621,7 @@ SYSTEM cpu
             }
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          cache_has_dcache = "0";
          cache_dcache_size = "0";
@@ -772,7 +772,7 @@ SYSTEM cpu
          Boot_Copier_BE = "boot_loader_cfi_be.srec";
          Boot_Copier_EPCS_BE = "boot_loader_epcs_be.srec";
          Boot_Copier_EPCS_SII_SIII_CIII_BE = "boot_loader_epcs_sii_siii_ciii_be.srec";
-         CONSTANTS 
+         CONSTANTS
          {
             CONSTANT __nios_catch_irqs__
             {
@@ -838,7 +838,7 @@ SYSTEM cpu
       }
       class = "altera_nios2";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Clock_Source = "clk";
@@ -849,20 +849,20 @@ SYSTEM cpu
          Required_Device_Family = "STRATIX,STRATIXGX,STRATIXII,STRATIXIIGX,STRATIXIIGXLITE,STRATIXIII,STRATIXIV,CYCLONE,CYCLONEII,CYCLONEIII";
          Default_Module_Name = "cpu";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
             Settings_Summary = "Nios II/s
             <br>&nbsp;&nbsp;16-Kbyte Instruction Cache
-            
+
             <br>&nbsp;&nbsp;JTAG Debug Module
             ";
-            MESSAGES 
+            MESSAGES
             {
             }
          }
       }
       iss_model_name = "altera_nios2";
-      HDL_INFO 
+      HDL_INFO
       {
          PLI_Files = "";
          Precompiled_Simulation_Library_Files = "";
@@ -872,10 +872,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_instruction_master_0
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -892,10 +892,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_instruction_master_1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -915,10 +915,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_instruction_master_2
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -938,10 +938,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_instruction_master_3
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -961,10 +961,10 @@ SYSTEM cpu
       }
       MASTER data_master2
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "1";
             Bus_Type = "avalon";
@@ -982,10 +982,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_data_master_0
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -1005,10 +1005,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_data_master_1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -1028,10 +1028,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_data_master_2
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -1051,10 +1051,10 @@ SYSTEM cpu
       }
       MASTER tightly_coupled_data_master_3
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Register_Incoming_Signals = "0";
             Bus_Type = "avalon";
@@ -1072,7 +1072,7 @@ SYSTEM cpu
             Is_Channel = "1";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT jtag_debug_trigout
          {
@@ -1100,9 +1100,9 @@ SYSTEM cpu
             visible = "0";
          }
       }
-      SIMULATION 
+      SIMULATION
       {
-         DISPLAY 
+         DISPLAY
          {
             SIGNAL aaa
             {
@@ -1447,7 +1447,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -1528,7 +1528,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -1580,7 +1580,7 @@ SYSTEM cpu
          }
       }
       iss_model_name = "altera_memory";
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          allow_mram_sim_contents_only_file = "0";
          ram_block_type = "AUTO";
@@ -1597,11 +1597,11 @@ SYSTEM cpu
          instance_id = "NONE";
          read_during_write_mode = "DONT_CARE";
          ignore_auto_block_type_assignment = "1";
-         MAKE 
+         MAKE
          {
             TARGET delete_placeholder_warning
             {
-               onchip_memory 
+               onchip_memory
                {
                   Command1 = "rm -f $(SIMDIR)/contents_file_warning.txt";
                   Is_Phony = "1";
@@ -1610,7 +1610,7 @@ SYSTEM cpu
             }
             TARGET hex
             {
-               onchip_memory 
+               onchip_memory
                {
                   Command1 = "@echo Post-processing to create $(notdir $@)";
                   Command2 = "elf2hex $(ELF) 0x00904000 0x905FFF --width=32 $(QUARTUS_PROJECT_DIR)/onchip_memory.hex --create-lanes=0 ";
@@ -1620,7 +1620,7 @@ SYSTEM cpu
             }
             TARGET sim
             {
-               onchip_memory 
+               onchip_memory
                {
                   Command1 = "if [ ! -d $(SIMDIR) ]; then mkdir $(SIMDIR) ; fi";
                   Command2 = "@echo Hardware simulation is not enabled for the target SOPC Builder system. Skipping creation of hardware simulation model contents and simulation symbol files. \\(Note: This does not affect the instruction set simulator.\\)";
@@ -1632,9 +1632,9 @@ SYSTEM cpu
          }
          contents_info = "";
       }
-      SIMULATION 
+      SIMULATION
       {
-         DISPLAY 
+         DISPLAY
          {
             SIGNAL a
             {
@@ -1670,7 +1670,7 @@ SYSTEM cpu
             }
          }
       }
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Prohibited_Device_Family = "MERCURY, APEX20K, APEX20KE, APEX20KC, APEXII, ACEX1K, FLEX10KE, EXCALIBUR_ARM, MAXII";
          Instantiate_In_System_Module = "1";
@@ -1679,16 +1679,16 @@ SYSTEM cpu
          Top_Level_Ports_Are_Enumerated = "1";
          Clock_Source = "clk";
          Has_Clock = "1";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
          }
       }
       class = "altera_avalon_onchip_memory2";
       class_version = "7.08";
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -1697,10 +1697,10 @@ SYSTEM cpu
       }
       SLAVE s2
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Is_Memory_Device = "1";
@@ -1718,7 +1718,7 @@ SYSTEM cpu
             Is_Writable = "1";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
       }
    }
@@ -1726,7 +1726,7 @@ SYSTEM cpu
    {
       SLAVE avalon_jtag_slave
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -1820,7 +1820,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Has_IRQ = "1";
             Bus_Type = "avalon";
@@ -1869,7 +1869,7 @@ SYSTEM cpu
       class = "altera_avalon_jtag_uart";
       class_version = "7.08";
       iss_model_name = "altera_avalon_jtag_uart";
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          write_depth = "64";
          read_depth = "64";
@@ -1881,9 +1881,9 @@ SYSTEM cpu
          write_le = "0";
          altera_show_unreleased_jtag_uart_features = "0";
       }
-      SIMULATION 
+      SIMULATION
       {
-         DISPLAY 
+         DISPLAY
          {
             SIGNAL av_chipselect
             {
@@ -1949,7 +1949,7 @@ SYSTEM cpu
          }
          Fix_Me_Up = "";
       }
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Clock_Source = "clk";
@@ -1957,23 +1957,23 @@ SYSTEM cpu
          Instantiate_In_System_Module = "1";
          Iss_Launch_Telnet = "0";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = "<br>Write Depth: 64; Write IRQ Threshold: 8
                 <br>Read  Depth: 64; Read  IRQ Threshold: 8";
          }
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
          Synthesis_HDL_Files = "__PROJECT_DIRECTORY__/jtag_uart_0.vhd";
          Synthesis_Only_Files = "";
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
       }
    }
@@ -1981,7 +1981,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -2115,7 +2115,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Read_Wait_States = "peripheral_controlled";
@@ -2165,7 +2165,7 @@ SYSTEM cpu
             }
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT zs_addr
          {
@@ -2232,7 +2232,7 @@ SYSTEM cpu
          }
       }
       iss_model_name = "altera_memory";
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          register_data_in = "1";
          sim_model_base = "0";
@@ -2259,9 +2259,9 @@ SYSTEM cpu
          starvation_indicator = "0";
          is_initialized = "1";
       }
-      SIMULATION 
+      SIMULATION
       {
-         DISPLAY 
+         DISPLAY
          {
             SIGNAL a
             {
@@ -2441,7 +2441,7 @@ SYSTEM cpu
          }
          Fix_Me_Up = "";
       }
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Instantiate_In_System_Module = "1";
          Is_Enabled = "1";
@@ -2450,9 +2450,9 @@ SYSTEM cpu
          Clock_Source = "clk";
          Has_Clock = "1";
          Disable_Simulation_Port_Wiring = "0";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = "4194304 x 32<br>
@@ -2463,7 +2463,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_new_sdram_controller";
       class_version = "7.08";
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -2475,7 +2475,7 @@ SYSTEM cpu
    {
       SLAVE control_slave
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clock
             {
@@ -2506,7 +2506,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -2551,7 +2551,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_sysid";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Date_Modified = "";
          Is_Enabled = "1";
@@ -2560,24 +2560,24 @@ SYSTEM cpu
          Top_Level_Ports_Are_Enumerated = "1";
          Clock_Source = "clk";
          Has_Clock = "1";
-         View 
+         View
          {
             Settings_Summary = "System ID (at last Generate):<br> <b>2A1C5786</b>    (unique ID tag) <br> <b>485BC1C0</b> (timestamp: Fri Jun 20, 2008 @4:42 PM)";
-            MESSAGES 
+            MESSAGES
             {
             }
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          id = "706500486u";
          timestamp = "1213972928u";
          regenerate_values = "0";
-         MAKE 
+         MAKE
          {
             TARGET verifysysid
             {
-               verifysysid 
+               verifysysid
                {
                   All_Depends_On = "0";
                   Command = "nios2-download $(JTAG_CABLE)                                --sidp=0x009000d8 --id=706500486 --timestamp=1213972928";
@@ -2587,14 +2587,14 @@ SYSTEM cpu
             }
          }
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
          Synthesis_HDL_Files = "__PROJECT_DIRECTORY__/sysid.vhd";
          Synthesis_Only_Files = "";
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
       }
    }
@@ -2602,7 +2602,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -2647,7 +2647,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -2692,7 +2692,7 @@ SYSTEM cpu
             Is_Writable = "1";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT out_port
          {
@@ -2716,7 +2716,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_pio";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Instantiate_In_System_Module = "1";
@@ -2725,18 +2725,18 @@ SYSTEM cpu
          Clock_Source = "clk";
          Has_Clock = "1";
          Date_Modified = "";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = " 8-bit PIO using <br>
-					
-					
+
+
 					 output pins";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          Do_Test_Bench_Wiring = "0";
          Driven_Sim_Value = "0";
@@ -2750,7 +2750,7 @@ SYSTEM cpu
          irq_type = "NONE";
          bit_clearing_edge_register = "0";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -2762,7 +2762,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -2807,7 +2807,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -2852,7 +2852,7 @@ SYSTEM cpu
             Is_Writable = "1";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT out_port
          {
@@ -2876,7 +2876,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_pio";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Instantiate_In_System_Module = "1";
@@ -2885,18 +2885,18 @@ SYSTEM cpu
          Clock_Source = "clk";
          Has_Clock = "1";
          Date_Modified = "";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = " 14-bit PIO using <br>
-					
-					
+
+
 					 output pins";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          Do_Test_Bench_Wiring = "0";
          Driven_Sim_Value = "0";
@@ -2910,7 +2910,7 @@ SYSTEM cpu
          irq_type = "NONE";
          bit_clearing_edge_register = "0";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -2922,7 +2922,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -2974,7 +2974,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -3019,7 +3019,7 @@ SYSTEM cpu
             Is_Writable = "1";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT bidir_port
          {
@@ -3043,7 +3043,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_pio";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Instantiate_In_System_Module = "1";
@@ -3052,18 +3052,18 @@ SYSTEM cpu
          Clock_Source = "clk";
          Has_Clock = "1";
          Date_Modified = "";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = " 32-bit PIO using <br>
 					 tri-state pins with edge type NONE and interrupt source NONE
-					
+
 					";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          Do_Test_Bench_Wiring = "0";
          Driven_Sim_Value = "0";
@@ -3077,7 +3077,7 @@ SYSTEM cpu
          irq_type = "NONE";
          bit_clearing_edge_register = "0";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -3089,7 +3089,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -3120,7 +3120,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -3165,7 +3165,7 @@ SYSTEM cpu
             Is_Writable = "0";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT in_port
          {
@@ -3189,7 +3189,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_pio";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Instantiate_In_System_Module = "1";
@@ -3198,18 +3198,18 @@ SYSTEM cpu
          Clock_Source = "clk";
          Has_Clock = "1";
          Date_Modified = "";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = " 9-bit PIO using <br>
-					
+
 					 input pins with edge type NONE and interrupt source NONE
 					";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          Do_Test_Bench_Wiring = "0";
          Driven_Sim_Value = "0";
@@ -3223,7 +3223,7 @@ SYSTEM cpu
          irq_type = "NONE";
          bit_clearing_edge_register = "0";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -3235,7 +3235,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -3322,7 +3322,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Has_IRQ = "1";
             Bus_Type = "avalon";
@@ -3365,7 +3365,7 @@ SYSTEM cpu
             Address_Group = "0";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT rxd
          {
@@ -3397,27 +3397,27 @@ SYSTEM cpu
       class = "altera_avalon_uart";
       class_version = "7.08";
       iss_model_name = "altera_avalon_uart";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Instantiate_In_System_Module = "1";
          Is_Enabled = "1";
          Iss_Launch_Telnet = "0";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
             Settings_Summary = "8-bit UART with 115200 baud, <br>
                     1 stop bits and N parity";
             Is_Collapsed = "1";
-            MESSAGES 
+            MESSAGES
             {
             }
          }
          Clock_Source = "clk";
          Has_Clock = "1";
       }
-      SIMULATION 
+      SIMULATION
       {
-         DISPLAY 
+         DISPLAY
          {
             SIGNAL a
             {
@@ -3486,7 +3486,7 @@ SYSTEM cpu
             exe = "perl -- uart.pl";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          baud = "115200";
          data_bits = "8";
@@ -3498,7 +3498,7 @@ SYSTEM cpu
          sim_true_baud = "0";
          sim_char_stream = "";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -3510,7 +3510,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -3562,7 +3562,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -3607,7 +3607,7 @@ SYSTEM cpu
             Is_Writable = "1";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT bidir_port
          {
@@ -3631,7 +3631,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_pio";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Instantiate_In_System_Module = "1";
@@ -3640,18 +3640,18 @@ SYSTEM cpu
          Clock_Source = "clk";
          Has_Clock = "1";
          Date_Modified = "";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
             Settings_Summary = " 3-bit PIO using <br>
 					 tri-state pins with edge type NONE and interrupt source NONE
-					
+
 					";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          Do_Test_Bench_Wiring = "0";
          Driven_Sim_Value = "0";
@@ -3665,7 +3665,7 @@ SYSTEM cpu
          irq_type = "NONE";
          bit_clearing_edge_register = "0";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -3677,7 +3677,7 @@ SYSTEM cpu
    {
       SLAVE epcs_control_port
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -3792,7 +3792,7 @@ SYSTEM cpu
                width = "3";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Has_IRQ = "1";
             Bus_Type = "avalon";
@@ -3840,13 +3840,13 @@ SYSTEM cpu
             Base_Address = "0x00906000";
             Address_Group = "0";
          }
-         WIZARD_SCRIPT_ARGUMENTS 
+         WIZARD_SCRIPT_ARGUMENTS
          {
             class = "altera_avalon_epcs_flash_controller";
             flash_reference_designator = "";
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT dclk
          {
@@ -3877,7 +3877,7 @@ SYSTEM cpu
             Is_Enabled = "1";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          databits = "8";
          targetclock = "20";
@@ -3895,16 +3895,16 @@ SYSTEM cpu
          prefix = "epcs_";
          register_offset = "0x400";
          use_asmi_atom = "0";
-         MAKE 
+         MAKE
          {
-            MACRO 
+            MACRO
             {
                EPCS_CONTROLLER_BOOT_ROM_FLASHTARGET_ALT_SIM_PREFIX = "$(EPCS_CONTROLLER_BOOT_ROM_FLASHTARGET_TMP1:0=)";
                EPCS_CONTROLLER_BOOT_ROM_FLASHTARGET_TMP1 = "$(ALT_SIM_OPTIMIZE:1=RUN_ON_HDL_SIMULATOR_ONLY_)";
             }
             MASTER cpu_0
             {
-               MACRO 
+               MACRO
                {
                   BOOTS_FROM_EPCS = "0";
                   BOOT_COPIER_EPCS = "boot_loader_epcs.srec";
@@ -3914,7 +3914,7 @@ SYSTEM cpu
             }
             TARGET delete_placeholder_warning
             {
-               epcs_controller 
+               epcs_controller
                {
                   Command1 = "rm -f $(SIMDIR)/contents_file_warning.txt";
                   Is_Phony = "1";
@@ -3923,7 +3923,7 @@ SYSTEM cpu
             }
             TARGET flashfiles
             {
-               epcs_controller 
+               epcs_controller
                {
                   Command1 = "@if [ $(BOOTS_FROM_EPCS) -eq 1 ]; then echo Post-processing to create $(notdir $@) ; elf2flash --input=$(ELF) --flash= --boot=$(DBL_QUOTE)$(shell $(DBL_QUOTE)$(QUARTUS_ROOTDIR)/sopc_builder/bin/find_sopc_component_dir$(DBL_QUOTE) $(CPU_CLASS) $(QUARTUS_PROJECT_DIR))/$(BOOT_COPIER_EPCS)$(DBL_QUOTE) --outfile=$(EPCS_CONTROLLER_BOOT_ROM_FLASHTARGET_ALT_SIM_PREFIX)epcs_controller_boot_rom.flash --sim_optimize=$(ALT_SIM_OPTIMIZE) --epcs --base=0x0 --end=0x7FFFFFFF  ; fi";
                   Dependency = "$(ELF)";
@@ -3932,7 +3932,7 @@ SYSTEM cpu
             }
             TARGET sim
             {
-               epcs_controller 
+               epcs_controller
                {
                   Command1 = "if [ ! -d $(SIMDIR) ]; then mkdir $(SIMDIR) ; fi";
                   Command2 = "@echo Hardware simulation is not enabled for the target SOPC Builder system. Skipping creation of hardware simulation model contents and simulation symbol files. \\(Note: This does not affect the instruction set simulator.\\)";
@@ -3947,7 +3947,7 @@ SYSTEM cpu
       }
       class = "altera_avalon_epcs_flash_controller";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Clock_Source = "clk";
@@ -3956,14 +3956,14 @@ SYSTEM cpu
          Required_Device_Family = "STRATIX,CYCLONE,CYCLONEII,CYCLONEIII,STRATIXIII,STRATIXII,STRATIXIIGX,ARRIAGX,STRATIXIIGXLITE";
          Fixed_Module_Name = "epcs_controller";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
          }
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
@@ -3975,10 +3975,10 @@ SYSTEM cpu
    {
       SLAVE avalon_slave
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "0cycles";
@@ -4034,7 +4034,7 @@ SYSTEM cpu
       }
       MASTER tristate_master
       {
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon_tristate";
             Is_Asynchronous = "0";
@@ -4051,10 +4051,10 @@ SYSTEM cpu
             Is_Enabled = "1";
             Bridges_To = "avalon_slave";
          }
-         PORT_WIRING 
+         PORT_WIRING
          {
          }
-         MEMORY_MAP 
+         MEMORY_MAP
          {
             Entry cfi_flash/s1
             {
@@ -4070,12 +4070,12 @@ SYSTEM cpu
             }
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
       }
       class = "altera_avalon_tri_state_bridge";
       class_version = "7.08";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Is_Enabled = "1";
          Clock_Source = "clk";
@@ -4083,9 +4083,9 @@ SYSTEM cpu
          Instantiate_In_System_Module = "1";
          Is_Bridge = "1";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
          }
@@ -4095,7 +4095,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT clk
             {
@@ -4154,7 +4154,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Has_IRQ = "1";
             Bus_Type = "avalon";
@@ -4200,23 +4200,23 @@ SYSTEM cpu
       class = "altera_avalon_timer";
       class_version = "7.08";
       iss_model_name = "altera_avalon_timer";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Instantiate_In_System_Module = "1";
          Is_Enabled = "1";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
             Settings_Summary = "Timer with 1 ms timeout period.";
             Is_Collapsed = "1";
-            MESSAGES 
+            MESSAGES
             {
             }
          }
          Clock_Source = "clk";
          Has_Clock = "1";
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          always_run = "0";
          fixed_period = "0";
@@ -4230,14 +4230,14 @@ SYSTEM cpu
          mult = "0.0010";
          ticks_per_sec = "1000";
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Precompiled_Simulation_Library_Files = "";
          Simulation_HDL_Files = "";
          Synthesis_HDL_Files = "__PROJECT_DIRECTORY__/sys_clk.vhd";
          Synthesis_Only_Files = "";
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
       }
    }
@@ -4245,7 +4245,7 @@ SYSTEM cpu
    {
       SLAVE s1
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT data
             {
@@ -4288,7 +4288,7 @@ SYSTEM cpu
                is_shared = "0";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon_tristate";
             Write_Wait_States = "100ns";
@@ -4334,14 +4334,14 @@ SYSTEM cpu
                IRQ_Number = "NC";
             }
          }
-         WIZARD_SCRIPT_ARGUMENTS 
+         WIZARD_SCRIPT_ARGUMENTS
          {
             class = "altera_avalon_cfi_flash";
             Supports_Flash_File_System = "1";
             flash_reference_designator = "";
          }
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
          Setup_Value = "20";
          Wait_Value = "100";
@@ -4349,16 +4349,16 @@ SYSTEM cpu
          Timing_Units = "ns";
          Unit_Multiplier = "1";
          Size = "8388608";
-         MAKE 
+         MAKE
          {
-            MACRO 
+            MACRO
             {
                CFI_FLASH_FLASHTARGET_ALT_SIM_PREFIX = "$(CFI_FLASH_FLASHTARGET_TMP1:0=)";
                CFI_FLASH_FLASHTARGET_TMP1 = "$(ALT_SIM_OPTIMIZE:1=RUN_ON_HDL_SIMULATOR_ONLY_)";
             }
             MASTER cpu_0
             {
-               MACRO 
+               MACRO
                {
                   BOOT_COPIER = "boot_loader_cfi.srec";
                   CPU_CLASS = "altera_nios2";
@@ -4367,7 +4367,7 @@ SYSTEM cpu
             }
             TARGET delete_placeholder_warning
             {
-               cfi_flash 
+               cfi_flash
                {
                   Command1 = "rm -f $(SIMDIR)/contents_file_warning.txt";
                   Is_Phony = "1";
@@ -4376,7 +4376,7 @@ SYSTEM cpu
             }
             TARGET flashfiles
             {
-               cfi_flash 
+               cfi_flash
                {
                   Command1 = "@echo Post-processing to create $(notdir $@)";
                   Command2 = "elf2flash --input=$(ELF) --flash= --boot=$(DBL_QUOTE)$(shell $(DBL_QUOTE)$(QUARTUS_ROOTDIR)/sopc_builder/bin/find_sopc_component_dir$(DBL_QUOTE) $(CPU_CLASS) $(QUARTUS_PROJECT_DIR))/$(BOOT_COPIER)$(DBL_QUOTE) --outfile=$(CFI_FLASH_FLASHTARGET_ALT_SIM_PREFIX)cfi_flash.flash --sim_optimize=$(ALT_SIM_OPTIMIZE) --base=0x0 --end=0x7FFFFF --reset=$(CPU_RESET_ADDRESS) ";
@@ -4386,7 +4386,7 @@ SYSTEM cpu
             }
             TARGET sim
             {
-               cfi_flash 
+               cfi_flash
                {
                   Command1 = "if [ ! -d $(SIMDIR) ]; then mkdir $(SIMDIR) ; fi";
                   Command2 = "@echo Hardware simulation is not enabled for the target SOPC Builder system. Skipping creation of hardware simulation model contents and simulation symbol files. \\(Note: This does not affect the instruction set simulator.\\)";
@@ -4397,7 +4397,7 @@ SYSTEM cpu
             }
          }
       }
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Simulation_Num_Lanes = "2";
          Is_Enabled = "1";
@@ -4406,9 +4406,9 @@ SYSTEM cpu
          Make_Memory_Model = "1";
          Instantiate_In_System_Module = "0";
          Top_Level_Ports_Are_Enumerated = "1";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
          }
@@ -4416,7 +4416,7 @@ SYSTEM cpu
       class = "altera_avalon_cfi_flash";
       class_version = "7.08";
       iss_model_name = "altera_avalon_flash";
-      HDL_INFO 
+      HDL_INFO
       {
       }
    }
@@ -4424,7 +4424,7 @@ SYSTEM cpu
    {
       MASTER vga_dma
       {
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT cpu_clk
             {
@@ -4490,7 +4490,7 @@ SYSTEM cpu
                Is_Enabled = "1";
             }
          }
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Is_Asynchronous = "0";
@@ -4511,7 +4511,7 @@ SYSTEM cpu
             Is_Big_Endian = "0";
             Is_Enabled = "1";
          }
-         MEMORY_MAP 
+         MEMORY_MAP
          {
             Entry cfi_flash/s1
             {
@@ -4529,7 +4529,7 @@ SYSTEM cpu
       }
       SLAVE vga_regs
       {
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon";
             Write_Wait_States = "1cycles";
@@ -4570,7 +4570,7 @@ SYSTEM cpu
                IRQ_Number = "NC";
             }
          }
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT cpu_cs
             {
@@ -4609,7 +4609,7 @@ SYSTEM cpu
             }
          }
       }
-      PORT_WIRING 
+      PORT_WIRING
       {
          PORT r
          {
@@ -4700,27 +4700,27 @@ SYSTEM cpu
       class_version = "7.08";
       gtf_class_name = "nios_vga";
       gtf_class_version = "1.0.1";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Do_Not_Generate = "1";
          Instantiate_In_System_Module = "1";
          Is_Enabled = "1";
          Clock_Source = "clk";
          Has_Clock = "1";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
          }
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Simulation_HDL_Files = "__PROJECT_DIRECTORY__/nios_vga_inst.vhd";
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
-         terminated_ports 
+         terminated_ports
          {
          }
       }
@@ -4729,7 +4729,7 @@ SYSTEM cpu
    {
       SLAVE avalon_tristate_slave
       {
-         SYSTEM_BUILDER_INFO 
+         SYSTEM_BUILDER_INFO
          {
             Bus_Type = "avalon_tristate";
             Write_Wait_States = "1cycles";
@@ -4772,7 +4772,7 @@ SYSTEM cpu
                IRQ_Number = "NC";
             }
          }
-         PORT_WIRING 
+         PORT_WIRING
          {
             PORT addr
             {
@@ -4828,26 +4828,26 @@ SYSTEM cpu
       class_version = "7.08";
       gtf_class_name = "DBC3C40_SRAM";
       gtf_class_version = "1.0";
-      SYSTEM_BUILDER_INFO 
+      SYSTEM_BUILDER_INFO
       {
          Do_Not_Generate = "1";
          Instantiate_In_System_Module = "0";
          Is_Enabled = "1";
          Clock_Source = "clk";
-         View 
+         View
          {
-            MESSAGES 
+            MESSAGES
             {
             }
          }
       }
-      HDL_INFO 
+      HDL_INFO
       {
          Simulation_HDL_Files = "";
       }
-      WIZARD_SCRIPT_ARGUMENTS 
+      WIZARD_SCRIPT_ARGUMENTS
       {
-         terminated_ports 
+         terminated_ports
          {
          }
       }

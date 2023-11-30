@@ -40,7 +40,7 @@
  * \acme_license_stop
  *
  * Project: RTOSDemo
- * Target:  ATmega328PB 
+ * Target:  ATmega328PB
  *
  **/
 

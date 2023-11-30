@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,13 +31,13 @@
 /// \unit
 ///
 /// !!!Purpose
-/// 
+///
 /// This file provides a basic API for PIO configuration and usage of
 /// user-controlled pins. Please refer to the board.h file for a list of
 /// available pin definitions.
-/// 
+///
 /// !!!Usage
-/// 
+///
 /// -# Define a constant pin description array such as the following one, using
 ///    the existing definitions provided by the board.h file if possible:
 ///    \code
@@ -63,7 +63,7 @@
 /// -# Get the level being currently output by a user-controlled pin configured
 ///    as an output using PIO_GetOutputDataStatus().
 //------------------------------------------------------------------------------
- 
+
 #ifndef PIO_H
 #define PIO_H
 
@@ -121,10 +121,10 @@ typedef struct _ExtIntMode {
   unsigned int edgeLvlSel;
   ///select rising/high or falling/low detection event
   ///each of 32 bit field represents one PIO line:
-  ///0 is Falling Edge detection event (if selected Edge interrupt 
+  ///0 is Falling Edge detection event (if selected Edge interrupt
   ///   detection source, or Low Level detection (if selected
   ///   Level interrupt detection source;
-  ///1 is Rising Edge detection(if selected Edge interrupt 
+  ///1 is Rising Edge detection(if selected Edge interrupt
   ///   source, or Low Level detection event(if selected Level
   ///   interrupt detection source.
   unsigned int lowFallOrRiseHighSel;
@@ -159,7 +159,7 @@ typedef struct _GlitchDeBounceFilter {
 typedef struct {
 
     /// Bitmask indicating which pin(s) to configure.
-    unsigned int mask; 
+    unsigned int mask;
     /// Pointer to the PIO controller which has the pin(s).
     AT91S_PIO    *pio;
     /// Peripheral ID of the PIO controller which has the pin(s).
@@ -181,7 +181,7 @@ typedef struct {
 } Pin;
 
 //------------------------------------------------------------------------------
-//         Global Access Macros 
+//         Global Access Macros
 //------------------------------------------------------------------------------
 
 //Get Glitch input filter enable/disable status

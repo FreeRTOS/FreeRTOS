@@ -2,7 +2,7 @@
 *   @brief Vectored Interrupt Module Header File
 *   @date 05.November.2010
 *   @version 1.01.000
-*   
+*
 *   This file contains:
 *   - VIM Type Definitions
 *   - VIM General Definitions

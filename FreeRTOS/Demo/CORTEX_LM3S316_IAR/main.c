@@ -24,15 +24,15 @@
  *
  */
 
-/* 
- * This demo application creates eight co-routines and four tasks (five 
- * including the idle task).  The co-routines execute as part of the idle task 
+/*
+ * This demo application creates eight co-routines and four tasks (five
+ * including the idle task).  The co-routines execute as part of the idle task
  * hook.  The application is limited in size to allow its compilation using
  * the KickStart version of the IAR compiler.
  *
- * Six of the created co-routines are the standard 'co-routine flash' 
- * co-routines contained within the Demo/Common/Minimal/crflash.c file and 
- * documented on the FreeRTOS.org WEB site.  
+ * Six of the created co-routines are the standard 'co-routine flash'
+ * co-routines contained within the Demo/Common/Minimal/crflash.c file and
+ * documented on the FreeRTOS.org WEB site.
  *
  * The 'LCD Task' waits on a message queue for messages informing it what and
  * where to display text.  This is the only task that accesses the LCD
@@ -45,34 +45,34 @@
  * The 'ADC Co-routine' periodically reads the ADC input that is connected to
  * the light sensor, forms a short message from the value, and then sends this
  * message to the LCD Task using the same message queue.  The ADC readings are
- * displayed on the bottom row of the LCD.  
+ * displayed on the bottom row of the LCD.
  *
  * The eighth co-routine and final task control the transmission and reception
- * of a string to UART 0.  The co-routine periodically sends the first 
+ * of a string to UART 0.  The co-routine periodically sends the first
  * character of the string to the UART, with the UART's TxEnd interrupt being
- * used to transmit the remaining characters.  The UART's RxEnd interrupt 
- * receives the characters and places them on a queue to be processed by the 
- * 'COMs Rx' task.  An error is latched should an unexpected character be 
- * received, or any character be received out of sequence.  
+ * used to transmit the remaining characters.  The UART's RxEnd interrupt
+ * receives the characters and places them on a queue to be processed by the
+ * 'COMs Rx' task.  An error is latched should an unexpected character be
+ * received, or any character be received out of sequence.
  *
- * A loopback connector is required to ensure that each character transmitted 
+ * A loopback connector is required to ensure that each character transmitted
  * on the UART is also received on the same UART.  For test purposes the UART
  * FIFO's are not utalised in order to maximise the interrupt overhead.  Also
- * a pseudo random interval is used between the start of each transmission in 
- * order that the resultant interrupts are more randomly distributed and 
+ * a pseudo random interval is used between the start of each transmission in
+ * order that the resultant interrupts are more randomly distributed and
  * therefore more likely to highlight any problems.
  *
  * The flash co-routines control LED's zero to four.  LED five is toggled each
  * time the string is transmitted on the UART.  LED six is toggled each time
- * the string is CORRECTLY received on the UART.  LED seven is latched on 
+ * the string is CORRECTLY received on the UART.  LED seven is latched on
  * should an error be detected in any task or co-routine.
  *
- * In addition the idle task makes repetitive calls to 
- * vSetAndCheckRegisters().  This simply loads the general purpose registers 
- * with a known value, then checks each register to ensure the held value is 
- * still correct.  As a low priority task this checking routine is likely to 
- * get repeatedly swapped in and out.  A register being found to contain an 
- * incorrect value is therefore indicative of an error in the task switching 
+ * In addition the idle task makes repetitive calls to
+ * vSetAndCheckRegisters().  This simply loads the general purpose registers
+ * with a known value, then checks each register to ensure the held value is
+ * still correct.  As a low priority task this checking routine is likely to
+ * get repeatedly swapped in and out.  A register being found to contain an
+ * incorrect value is therefore indicative of an error in the task switching
  * mechanism.
  *
  */
@@ -108,7 +108,7 @@
 /* The length of the queue used to send messages to the LCD task. */
 #define mainLCD_QUEUE_LEN			( 3 )
 
-/* The priority of the co-routine used to initiate the transmission of the 
+/* The priority of the co-routine used to initiate the transmission of the
 string on UART 0. */
 #define mainTX_CO_ROUTINE_PRIORITY	( 1 )
 #define mainADC_CO_ROUTINE_PRIORITY 	( 2 )
@@ -159,7 +159,7 @@ static void prvADCCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE u
 extern void vSetAndCheckRegisters( void );
 
 /*
- * Latch the LED that indicates that an error has occurred. 
+ * Latch the LED that indicates that an error has occurred.
  */
 void vSetErrorLED( void );
 
@@ -231,7 +231,7 @@ void main( void )
 static void prvLCDMessageTask( void * pvParameters )
 {
 /* The strings that are written to the LCD. */
-char *pcStringsToDisplay[] = {										
+char *pcStringsToDisplay[] = {
 									"IAR             ",
 									"Stellaris       ",
 									"Demo            ",
@@ -239,7 +239,7 @@ char *pcStringsToDisplay[] = {
 									""
 								};
 
-QueueHandle_t *pxLCDQueue;	
+QueueHandle_t *pxLCDQueue;
 xLCDMessage xMessageToSend;
 portBASE_TYPE xIndex = 0;
 
@@ -251,20 +251,20 @@ portBASE_TYPE xIndex = 0;
 	for( ;; )
 	{
 		/* Wait until it is time to move onto the next string. */
-		vTaskDelay( mainSTRING_WRITE_DELAY );		
-		
+		vTaskDelay( mainSTRING_WRITE_DELAY );
+
 		/* Create the message object to send to the LCD task. */
 		xMessageToSend.ppcMessageToDisplay = &pcStringsToDisplay[ xIndex ];
 		xMessageToSend.xRow = mainTOP_ROW;
-		
+
 		/* Post the message to be displayed. */
 		if( !xQueueSend( *pxLCDQueue, ( void * ) &xMessageToSend, 0 ) )
 		{
 			uxErrorStatus = pdFAIL;
 		}
-		
+
 		/* Move onto the next message, wrapping when necessary. */
-		xIndex++;		
+		xIndex++;
 		if( *( pcStringsToDisplay[ xIndex ] ) == 0x00 )
 		{
 			xIndex = 0;
@@ -282,7 +282,7 @@ unsigned portBASE_TYPE uxIndex;
 QueueHandle_t *pxLCDQueue;
 xLCDMessage xReceivedMessage;
 char *pcString;
-const unsigned char ucCFGData[] = {	
+const unsigned char ucCFGData[] = {
 											0x30,   /* Set data bus to 8-bits. */
 											0x30,
 											0x30,
@@ -291,7 +291,7 @@ const unsigned char ucCFGData[] = {
 											0x01,   /* Display clear. */
 											0x06,   /* Entry mode [cursor dir][shift]. */
 											0x0C	/* Display on [display on][curson on][blinking on]. */
-									  };  
+									  };
 
 	/* To test the parameter passing mechanism, the queue on which messages are
 	received is passed in as a parameter even though it is available as a file
@@ -312,10 +312,10 @@ const unsigned char ucCFGData[] = {
 
 	/* Clear display. */
 	vTaskDelay( mainCHAR_WRITE_DELAY );
-	prvPDCWrite( PDC_LCD_CSR, LCD_CLEAR ); 
+	prvPDCWrite( PDC_LCD_CSR, LCD_CLEAR );
 
 	uxIndex = 0;
-	for( ;; )    
+	for( ;; )
 	{
 		/* Wait for a message to arrive. */
 		if( xQueueReceive( *pxLCDQueue, &xReceivedMessage, portMAX_DELAY ) )
@@ -325,15 +325,15 @@ const unsigned char ucCFGData[] = {
 
 			/* Where is the string we are going to display? */
 			pcString = *xReceivedMessage.ppcMessageToDisplay;
-			
+
 			while( *pcString )
 			{
-				/* Don't write out the string too quickly as LCD's are usually 
+				/* Don't write out the string too quickly as LCD's are usually
 				pretty slow devices. */
 				vTaskDelay( mainCHAR_WRITE_DELAY );
 				prvPDCWrite( PDC_LCD_RAM, *pcString );
 				pcString++;
-			}		
+			}
 		}
 	}
 }
@@ -348,34 +348,34 @@ static xLCDMessage xMessageToSend;
 
 	/* Co-routines MUST start with a call to crSTART(). */
 	crSTART( xHandle );
-	
+
 	for( ;; )
 	{
 		/* Start an ADC conversion. */
 		ADCProcessorTrigger( ADC_BASE, 0 );
-		
-		/* Simply delay - when we unblock the result should be available */	
+
+		/* Simply delay - when we unblock the result should be available */
 		crDELAY( xHandle, mainADC_DELAY );
-		
+
 		/* Get the ADC result. */
 		ADCSequenceDataGet( ADC_BASE, 0, &ulADCValue );
 
-		/* Create a string with the result. */		
+		/* Create a string with the result. */
 		sprintf( cMessageBuffer, "ADC = %d   ", ulADCValue );
 		pcMessage = cMessageBuffer;
 
 		/* Configure the message we are going to send for display. */
 		xMessageToSend.ppcMessageToDisplay = ( char** ) &pcMessage;
 		xMessageToSend.xRow = mainBOTTOM_ROW;
-		
+
 		/* Send the string to the LCD task for display.  We are sending
 		on a task queue so do not have the option to block. */
 		if( !xQueueSend( xLCDQueue, ( void * ) &xMessageToSend, 0 ) )
 		{
 			uxErrorStatus = pdFAIL;
-		}		
+		}
 	}
-	
+
 	/* Co-routines MUST end with a call to crEND(). */
 	crEND();
 }
@@ -385,7 +385,7 @@ static void prvSetupHardware( void )
 {
 	/* Setup the PLL. */
 	SysCtlClockSet( SYSCTL_SYSDIV_10 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_6MHZ );
-	
+
 	/* Initialise the hardware used to talk to the LCD, LED's and UART. */
 	PDCInit();
 	vParTestInitialise();
@@ -418,7 +418,7 @@ void vSetErrorLED( void )
 
 void vApplicationIdleHook( void )
 {
-	/* The co-routines are executed in the idle task using the idle task 
+	/* The co-routines are executed in the idle task using the idle task
 	hook. */
 	for( ;; )
 	{
@@ -427,7 +427,7 @@ void vApplicationIdleHook( void )
 
 		/* Run the register check function between each co-routine. */
 		vSetAndCheckRegisters();
-		
+
 		/* See if the comms task and co-routine has found any errors. */
 		if( uxGetCommsStatus() != pdPASS )
 		{

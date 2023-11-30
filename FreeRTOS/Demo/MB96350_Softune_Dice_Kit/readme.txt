@@ -1,25 +1,25 @@
 ==========================================================================
              DICE2 Project for DICE-KIT-16FX Evaluation Board
 ==========================================================================
-                   Fujitsu Microelectronics Europe GmbH                       
-   
+                   Fujitsu Microelectronics Europe GmbH
+
  The following  software  is for  demonstration  purposes only.  It is not
  fully  tested, nor validated  in order  to fullfill  its task  under  all
  circumstances.  Therefore,  this software or  any part of it must only be
- used in an evaluation laboratory environment.                        
+ used in an evaluation laboratory environment.
  This software is subject to the rules of our standard DISCLAIMER, that is
- delivered with our SW-tools on the Fujitsu Microcontrollers DVD 
+ delivered with our SW-tools on the Fujitsu Microcontrollers DVD
  (V5.0 or higher "\START.HTM").
 ==========================================================================
-               
+
 History
 Date        Ver     Author  Softune     Description
 2008-04-28  1.0     AVo/HWe V30L34R06   original version
 ==========================================================================
 
-This is Demoproject for the DICE-KIT-16FX Evaluation-Board. 
-It includes some basic settings for e.g. Linker, C-Compiler 
-which must be checked and modified in detail, 
+This is Demoproject for the DICE-KIT-16FX Evaluation-Board.
+It includes some basic settings for e.g. Linker, C-Compiler
+which must be checked and modified in detail,
 corresponding to the user application.
 
 Description:

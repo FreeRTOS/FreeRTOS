@@ -44,9 +44,9 @@ FIQ_Addr:       DCD   TZ_FIQ_Handler
 
 
         SECTION .cstartup:CODE:NOROOT(2)
-        SECTION IRQ_STACK:DATA:NOROOT(2)        
+        SECTION IRQ_STACK:DATA:NOROOT(2)
         SECTION NW_CSTACK:DATA:NOROOT(3)
-        
+
         PUBLIC  nw_start
         PUBLIC  TZ_IRQ_Handler
         EXTERN  main_nw
@@ -70,12 +70,12 @@ ARM_MODE_SYS  DEFINE   0x1F
 
 
 nw_start:
-        
-        ;- Keep IRQ disable, Keep FIQ(F) disable and switch back in SVC mode        
+
+        ;- Keep IRQ disable, Keep FIQ(F) disable and switch back in SVC mode
         MSR     CPSR_c, #ARM_MODE_SVC | I_BIT
         LDR     sp, =SFE(NW_CSTACK)        ; End of CSTACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-              
+
         MRS     r0, cpsr                ; Original PSR value
          ;; Set up the sys stack pointer.
 
@@ -84,7 +84,7 @@ nw_start:
         MSR     cpsr_c, r0              ; Change the mode
         LDR     sp, =SFE(NW_CSTACK-0x1900); End of CSTACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-        
+
          ;; Set up the sys stack pointer.
 
         BIC     r0 ,r0, #MODE_MSK       ; Clear the mode bits
@@ -92,19 +92,19 @@ nw_start:
         MSR     cpsr_c, r0              ; Change the mode
         LDR     sp, =SFE(IRQ_STACK); End of CSTACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-               
+
        ;; Set up the normal stack pointer.
 
         BIC     r0 ,r0, #MODE_MSK       ; Clear the mode bits
         ORR     r0 ,r0, #ARM_MODE_SVC   ; Set System mode bits
         MSR     cpsr_c, r0              ; Change the mode
         CPSIE   I
-        
+
                 /* Branch to main() */
         LDR     r0, =main_nw
         BLX     r0
-       
-       
+
+
 
 
 /*
@@ -112,7 +112,7 @@ nw_start:
    handler, as defined in the AIC. Supports interrupt nesting.
  */
 TZ_IRQ_Handler:
-        
+
         SUB     lr, lr, #4
         STMFD   sp!, {lr}
         MRS     lr, SPSR
@@ -139,8 +139,8 @@ TZ_IRQ_Handler:
         ADD     sp, sp, r1
 
         LDMIA   sp!, {r1-r3, r4, r12, lr}
-        
-        ;- Keep IRQ disable, Keep FIQ(F) disable and switch back in IRQ mode        
+
+        ;- Keep IRQ disable, Keep FIQ(F) disable and switch back in IRQ mode
         MSR     CPSR_c, #ARM_MODE_IRQ | I_BIT
 
         /* Acknowledge interrupt */
@@ -151,5 +151,5 @@ TZ_IRQ_Handler:
         LDMIA   sp!, {r0, lr}
         MSR     SPSR_cxsf, lr
         LDMIA   sp!, {pc}^
-       
+
   END

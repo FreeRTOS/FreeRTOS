@@ -1,20 +1,20 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
-* Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.    
+* Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name	   : platform.h
@@ -35,7 +35,7 @@
 *                               its part number in r_bsp_config.h. Moved mcu_info.h to the 'mcu' folder. Made an effort
 *                               to remove any extra files that the user would need to touch. Removed the flash_options.c
 *                               file and put its contents in vecttbl.c.
-*         : 17.07.2012 1.50     Fixed bug with exception callback function names. Added BCLK_OUTPUT and SDCLK_OUTPUT 
+*         : 17.07.2012 1.50     Fixed bug with exception callback function names. Added BCLK_OUTPUT and SDCLK_OUTPUT
 *                               macro options in r_bsp_config.h. Added some extra code to handle exceptions in
 *                               vecttbl.c. Added vecttbl.h so that user has prototypes for exception callbacks.
 *         : 08.11.2012 1.60		Added RX111 BSP

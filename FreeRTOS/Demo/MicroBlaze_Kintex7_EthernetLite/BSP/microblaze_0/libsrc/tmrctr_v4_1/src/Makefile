@@ -9,7 +9,7 @@ RELEASEDIR=../../../lib
 INCLUDEDIR=../../../include
 INCLUDES=-I./. -I${INCLUDEDIR}
 
-OUTS = *.o 
+OUTS = *.o
 
 LIBSOURCES=*.c
 INCLUDEFILES=*.h
@@ -17,10 +17,10 @@ INCLUDEFILES=*.h
 libs:
 	echo "Compiling tmrctr"
 	$(COMPILER) $(COMPILER_FLAGS) $(EXTRA_COMPILER_FLAGS) $(INCLUDES) $(LIBSOURCES)
-	$(ARCHIVER) -r ${RELEASEDIR}/${LIB} ${OUTS} 
+	$(ARCHIVER) -r ${RELEASEDIR}/${LIB} ${OUTS}
 	make clean
 
-include: 
+include:
 	${CP} $(INCLUDEFILES) $(INCLUDEDIR)
 
 clean:

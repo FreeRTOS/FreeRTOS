@@ -24,7 +24,7 @@
 #define __DISCOVER_BOARD_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32l1xx.h"  
+#include "stm32l1xx.h"
 
 #define bool _Bool
 #define FALSE 0
@@ -34,7 +34,7 @@
 
 #define GPIO_HIGH(a,b) 		a->BSRRL = b
 #define GPIO_LOW(a,b)		a->BSRRH = b
-#define GPIO_TOGGLE(a,b) 	a->ODR ^= b 
+#define GPIO_TOGGLE(a,b) 	a->ODR ^= b
 
 #define USERBUTTON_GPIO_PORT	GPIOA
 #define USERBUTTON_GPIO_PIN     GPIO_Pin_0

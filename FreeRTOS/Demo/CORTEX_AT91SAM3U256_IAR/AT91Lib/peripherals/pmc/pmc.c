@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -86,9 +86,9 @@ void PMC_DisableMainOscillator(void)
 /// Disables the processor clock
 //------------------------------------------------------------------------------
 void PMC_DisableProcessorClock(void)
-{    
-    AT91C_BASE_PMC->PMC_SCDR = AT91C_PMC_PCK;   
-    while ((AT91C_BASE_PMC->PMC_SCSR & AT91C_PMC_PCK) != AT91C_PMC_PCK); 
+{
+    AT91C_BASE_PMC->PMC_SCDR = AT91C_PMC_PCK;
+    while ((AT91C_BASE_PMC->PMC_SCSR & AT91C_PMC_PCK) != AT91C_PMC_PCK);
 }
 
 //------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ void PMC_EnableAllPeripherals(void)
 {
     AT91C_BASE_PMC->PMC_PCER = MASK_STATUS;
     while( (AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != MASK_STATUS);
-    TRACE_INFO("Enable all periph clocks\n\r"); 
+    TRACE_INFO("Enable all periph clocks\n\r");
 }
 
 //------------------------------------------------------------------------------
@@ -170,17 +170,17 @@ unsigned int PMC_IsAllPeriphEnabled(void)
 //-----------------------------------------------------------------------------
 unsigned int PMC_IsPeriphEnabled(unsigned int id)
 {
-    return (AT91C_BASE_PMC->PMC_PCSR & (1 << id));  
+    return (AT91C_BASE_PMC->PMC_PCSR & (1 << id));
 }
 //------------------------------------------------------------------------------
 /// Put the CPU in Idle Mode for lower consumption
 //------------------------------------------------------------------------------
 void PMC_CPUInIdleMode(void)
 {
-#ifndef CP15_PRESENT	
+#ifndef CP15_PRESENT
     PMC_DisableProcessorClock();
 #else
-    AT91C_BASE_PMC->PMC_SCDR = AT91C_PMC_PCK; 
+    AT91C_BASE_PMC->PMC_SCDR = AT91C_PMC_PCK;
     CP15_WaitForInterrupt();
 #endif
 }

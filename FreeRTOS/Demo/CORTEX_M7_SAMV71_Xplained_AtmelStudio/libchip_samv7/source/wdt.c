@@ -43,7 +43,7 @@
  * trapped in a deadlock. It can generate a general reset or a processor
  * reset only. It is clocked by slow clock divided by 128.
  *
- * The WDT is running at reset with 16 seconds watchdog period (slow clock at 
+ * The WDT is running at reset with 16 seconds watchdog period (slow clock at
  * 32.768 kHz)
  * and external reset generation enabled. The user must either disable it or
  * reprogram it to meet the application requires.

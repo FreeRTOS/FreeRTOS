@@ -1,4 +1,4 @@
-/** @file system.c 
+/** @file system.c
 *   @brief System Driver Source File
 *   @date 05.November.2010
 *   @version 1.01.000
@@ -31,9 +31,9 @@ void systemInit(void)
                        |  1U;
 #else
     /* 180MHz */
-    flashWREG->FRDCNTL =  0x01000000U 
-                       | (3U << 8U) 
-                       | (1U << 4U) 
+    flashWREG->FRDCNTL =  0x01000000U
+                       | (3U << 8U)
+                       | (1U << 4U)
                        |  1U;
 #endif
 
@@ -71,12 +71,12 @@ void systemInit(void)
     /** @b Initialize @b Pll: */
 
     /** - Setup pll control register 1:
-    *     - Setup reset on oscillator slip 
+    *     - Setup reset on oscillator slip
     *     - Setup bypass on pll slip
     *     - Setup Pll output clock divider
     *     - Setup reset on oscillator fail
-    *     - Setup reference clock divider 
-    *     - Setup Pll multiplier          
+    *     - Setup reference clock divider
+    *     - Setup Pll multiplier
     */
 
 #if	startupCPU_100MHZ == 1
@@ -89,15 +89,15 @@ void systemInit(void)
                         | (74U << 8U);
 #else
     /* 180Mhz */
-    systemREG1->PLLCTL1 =  0x00000000U 
-                        |  0x20000000U 
-                        | (0U << 24U) 
-                        |  0x00000000U 
-                        | (5U << 16U) 
+    systemREG1->PLLCTL1 =  0x00000000U
+                        |  0x20000000U
+                        | (0U << 24U)
+                        |  0x00000000U
+                        | (5U << 16U)
                         | (134U << 8U);
 #endif
 
-    /** - Setup pll control register 1 
+    /** - Setup pll control register 1
     *     - Enable/Disable frequency modulation
     *     - Setup spreading rate
     *     - Setup bandwidth adjustment
@@ -114,17 +114,17 @@ void systemInit(void)
 
     /** - Start clock source lock */
     systemREG1->CSDISCLR = 0x00000000U
-                         | 0x00000000U 
-                         | 0x00000000U 
-                         | 0x00000000U 
-                         | 0x00000002U; 
+                         | 0x00000000U
+                         | 0x00000000U
+                         | 0x00000000U
+                         | 0x00000002U;
 
     /** - Wait for until clocks are locked */
     while ((systemREG1->CSVSTAT & 0x00000002U) == 0x00); /* wait for PLL */
 
     /** - Setup GCLK, HCLK and VCLK clock source for normal operation, power down mode and after wakeup */
-    systemREG1->GHVSRC = (SYS_PLL << 24U) 
-                       | (SYS_PLL << 16U) 
+    systemREG1->GHVSRC = (SYS_PLL << 24U)
+                       | (SYS_PLL << 16U)
                        |  SYS_PLL;
 
     /** - Power-up all peripharals */
@@ -146,7 +146,7 @@ void systemInit(void)
     /* 90MHz (180Mhz/2) */
     systemREG1->RCLKSRC = (1U << 24U)
                         | (SYS_VCLK << 16U)
-                        | (1U << 8U)  
+                        | (1U << 8U)
                         |  SYS_VCLK;
 
 #if 0

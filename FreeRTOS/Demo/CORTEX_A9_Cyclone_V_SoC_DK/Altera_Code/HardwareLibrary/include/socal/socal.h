@@ -63,7 +63,7 @@ extern "C"
 #else   /* __ASSEMBLY__ */
 /*! Cast the pointer to specified pointer type.
  *
- *  Note: This macro expands to \e ptr value only for assembler language 
+ *  Note: This macro expands to \e ptr value only for assembler language
  *        targets.
  *
  *  \param type     The pointer type to cast to

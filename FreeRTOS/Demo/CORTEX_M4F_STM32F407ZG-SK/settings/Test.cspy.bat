@@ -7,9 +7,9 @@
 @REM Note that this file is generated every time a new debug session
 @REM is initialized, so you may want to move or rename the file before
 @REM making changes.
-@REM 
+@REM
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\config\flashloader\ST\FlashSTM32F4xxx.board" --backend -B "--endian=little" "--cpu=Cortex-M4" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\CONFIG\debugger\ST\iostm32f4xxx.ddf" "--drv_verify_download" "--semihosting" "--device=STM32F4xxx" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" "--drv_swo_clock_setup=120000000,1,2000000" 
+"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\config\flashloader\ST\FlashSTM32F4xxx.board" --backend -B "--endian=little" "--cpu=Cortex-M4" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\CONFIG\debugger\ST\iostm32f4xxx.ddf" "--drv_verify_download" "--semihosting" "--device=STM32F4xxx" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" "--drv_swo_clock_setup=120000000,1,2000000"
 
 

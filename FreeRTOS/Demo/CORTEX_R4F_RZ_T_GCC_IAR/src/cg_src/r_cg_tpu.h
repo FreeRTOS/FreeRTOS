@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -102,7 +102,7 @@ Macro definitions (Register bit)
 /*
     Timer I/O Control Register (TIOR)
 */
-/* I/O Control A (IOA[3:0]) for TPU0.TIORH, TPU1.TIOR, TPU2.TIOR, TPU3.TIORH, TPU4.TIORH, TPU5.TIOR 
+/* I/O Control A (IOA[3:0]) for TPU0.TIORH, TPU1.TIOR, TPU2.TIOR, TPU3.TIORH, TPU4.TIORH, TPU5.TIOR
                                 TPU6.TIORH, TPU7.TIOR, TPU8.TIOR, TPU9.TIORH, TPU10.TIOR, TPU11.TIOR*/
 #define _TPU_IOA_DISABLE                (0x00U)   /* Output prohibited */
 #define _TPU_IOA_LL                     (0x01U)   /* Initial output is low. Low output at compare match */
@@ -118,7 +118,7 @@ Macro definitions (Register bit)
                                                                    or TPU7.TCNT or TPU10.TCNT up-count/down-count */
 #define _TPU_IOA_TGRA                   (0x0DU)   /* Input capture at TPU0.TGRA or TPU3.TGRA compare match/input capture
                                                                    or TPU6.TGRA or TPU9.TGRA compare match/input capture */
-/* I/O Control B (IOB[3:0]) for TPU0.TIORH, TPU1.TIOR, TPU2.TIOR, TPU3.TIORH, TPU4.TIORH, TPU5.TIOR 
+/* I/O Control B (IOB[3:0]) for TPU0.TIORH, TPU1.TIOR, TPU2.TIOR, TPU3.TIORH, TPU4.TIORH, TPU5.TIOR
                                 TPU6.TIORH, TPU7.TIOR, TPU8.TIOR, TPU9.TIORH, TPU10.TIOR, TPU11.TIOR*/
 #define _TPU_IOB_DISABLE                (0x00U)   /* Output prohibited */
 #define _TPU_IOB_LL                     (0x10U)   /* Initial output is low. Low output at compare match */
@@ -244,7 +244,7 @@ Macro definitions (Register bit)
 #define _TPU1_PWM_SIG_MTU67             (0x00001400UL)   /* PWM output signals of MTU6 and MTU7 */
 #define _TPU1_PWM_SIG_GPT02             (0x00001800UL)   /* PWM output signals of GPT0 to GPT2 */
 /*
-    Timer Interrupt Enable Register (TIER) 
+    Timer Interrupt Enable Register (TIER)
 */
 /* TGR Interrupt Enable A (TGIEA) */
 #define _TPU_TGIEA_DISABLE              (0x00U)   /* Interrupt requests TGIA disabled */

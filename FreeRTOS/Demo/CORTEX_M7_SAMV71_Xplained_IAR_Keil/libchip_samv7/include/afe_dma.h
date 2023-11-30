@@ -82,7 +82,7 @@ typedef struct
 
 /** Constant structure associated with AFE port. This structure prevents
     client applications to have access in the same time. */
-typedef struct 
+typedef struct
 {
     /** Pointer to AFE Hardware registers */
     Afec* pAfeHw ;

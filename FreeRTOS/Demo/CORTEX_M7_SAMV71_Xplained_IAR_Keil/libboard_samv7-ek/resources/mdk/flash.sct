@@ -38,7 +38,7 @@ LR_IROM1 0x40000000 0x00200000  ; load region size_region
 	{
 		*.o (vectors, +FIRST)
 	}
- 	
+
 	ER_IROM2 +0
 	{
 		*.o
@@ -58,6 +58,6 @@ LR_IROM1 0x40000000 0x00200000  ; load region size_region
 
     	ARM_LIB_STACK 0x20405FFC EMPTY -0x1000
     	{
-    	}	
+    	}
 }
 

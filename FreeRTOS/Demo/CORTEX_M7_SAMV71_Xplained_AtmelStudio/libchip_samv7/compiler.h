@@ -72,7 +72,7 @@
 #elif defined (  __GNUC__  )
     #define NO_INIT
 #endif
-   
+
 
 /* Define memory sync for tool chains */
 #if defined   ( __CC_ARM   )
@@ -311,7 +311,7 @@
 	NVIC_EnableIRQ(      (IRQn_Type)int_num);                          \
 
 //@}
-      
+
 
 #  define cpu_irq_enable()                     \
 	do {                                       \

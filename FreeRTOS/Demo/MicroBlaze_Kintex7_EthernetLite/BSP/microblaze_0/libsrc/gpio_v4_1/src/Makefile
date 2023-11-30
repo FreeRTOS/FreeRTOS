@@ -12,7 +12,7 @@ INCLUDES=-I./. -I${INCLUDEDIR}
 INCLUDEFILES=xgpio_l.h xgpio.h
 
 LIBSOURCES=*.c
-OUTS = *.o 
+OUTS = *.o
 
 
 libs:
@@ -21,8 +21,8 @@ libs:
 	$(ARCHIVER) -r ${RELEASEDIR}/${LIB} $(OUTS)
 	make clean
 
-include: 
-	 ${CP} ${INCLUDEFILES} ${INCLUDEDIR} 
+include:
+	 ${CP} ${INCLUDEFILES} ${INCLUDEDIR}
 
 clean:
 	rm -rf ${OUTS}

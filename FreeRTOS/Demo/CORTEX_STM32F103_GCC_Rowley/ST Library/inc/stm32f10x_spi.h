@@ -100,7 +100,7 @@ typedef struct
 #define SPI_NSS_Hard                    ((u16)0x0000)
 
 #define IS_SPI_NSS(NSS) (((NSS) == SPI_NSS_Soft) || \
-                         ((NSS) == SPI_NSS_Hard))                         
+                         ((NSS) == SPI_NSS_Hard))
 
 /* SPI BaudRate Prescaler  */
 #define SPI_BaudRatePrescaler_2         ((u16)0x0000)
@@ -163,7 +163,7 @@ typedef struct
                                     ((FORMAT) == I2S_DataFormat_24b) || \
                                     ((FORMAT) == I2S_DataFormat_32b))
 
-/* I2S MCLK Output */ 
+/* I2S MCLK Output */
 #define I2S_MCLKOutput_Enable           ((u16)0x0200)
 #define I2S_MCLKOutput_Disable          ((u16)0x0000)
 

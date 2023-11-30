@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -41,7 +41,7 @@
  * -# Setting baudrate which is different from mode to mode.
    </li>
  * <li> Enable transmitter or receiver respectively by set US_CR_TXEN or US_CR_RXEN in US_CR.</li>
- * <li> Read from or write to the peripheral with  \ref dmad_module </li> 
+ * <li> Read from or write to the peripheral with  \ref dmad_module </li>
  * </ul>
  *
  * For more accurate information, please look at the USART section of the
@@ -173,11 +173,11 @@ void USART_SetReceiverEnabled(Usart *usart, uint8_t enabled)
 void USART_SetRTSEnabled( Usart *usart, uint8_t enabled)
 {
     if (enabled) {
-    
+
         usart->US_CR = US_CR_RTSEN;
     }
     else {
-        
+
         usart->US_CR = US_CR_RTSDIS;
     }
 }

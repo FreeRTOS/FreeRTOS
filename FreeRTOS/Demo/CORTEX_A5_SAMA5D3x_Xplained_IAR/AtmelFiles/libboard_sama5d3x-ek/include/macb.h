@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -109,7 +109,7 @@ extern void MACB_SetupTimeout(Macb *pMacb, uint32_t toMax);
 
 extern void MACB_Init(Macb *pMacb, sEmacd *pEmacd, uint8_t phyAddress);
 
-extern uint8_t MACB_InitPhy(Macb *pMacb, 
+extern uint8_t MACB_InitPhy(Macb *pMacb,
                             uint32_t mck,
                             const Pin *pResetPins,
                             uint32_t nbResetPins,

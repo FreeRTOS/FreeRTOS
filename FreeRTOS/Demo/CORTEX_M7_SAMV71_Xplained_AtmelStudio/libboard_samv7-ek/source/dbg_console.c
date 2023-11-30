@@ -51,7 +51,7 @@
 
 
 #define CONSOLE_BAUDRATE    115200
-#define CONSOLE_EDBG 
+#define CONSOLE_EDBG
 
 #if defined CONSOLE_EDBG
 #define CONSOLE_ON_USART
@@ -123,14 +123,14 @@ extern void DBG_Configure( uint32_t baudrate, uint32_t masterClock)
 	Uart *pUart = CONSOLE_UART;
 	/* Configure PIO */
 	PIO_Configure( pPins, PIO_LISTSIZE( pPins ) );
-	
+
 	// Reset & disable receiver and transmitter, disable interrupts
 	pUart->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX | UART_CR_RSTSTA;
 	pUart->UART_IDR = 0xFFFFFFFF;
 	PMC_EnablePeripheral(CONSOLE_ID);
 	pUart->UART_BRGR = (masterClock / baudrate) / 16;
 	// Configure mode register
-	pUart->UART_MR 
+	pUart->UART_MR
 			= (UART_MR_CHMODE_NORMAL | UART_MR_PAR_NO
 					| UART_MR_BRSRCCK_PERIPH_CLK);
 	// Enable receiver and transmitter
@@ -142,18 +142,18 @@ extern void DBG_Configure( uint32_t baudrate, uint32_t masterClock)
 	// Disable the MATRIX registers write protection
 	MATRIX->MATRIX_WPMR  = MATRIX_WPMR_WPKEY_PASSWD;
 	MATRIX->CCFG_SYSIO |= CCFG_SYSIO_SYSIO4;
-  
+
 	PIO_Configure( pPins, PIO_LISTSIZE( pPins ) );
-	
+
 	// Reset & disable receiver and transmitter, disable interrupts
 	pUsart->US_CR = US_CR_RSTRX | US_CR_RSTTX | US_CR_RSTSTA;
 	pUsart->US_IDR = 0xFFFFFFFF;
 	PMC_EnablePeripheral(CONSOLE_ID);
 	pUsart->US_BRGR = (masterClock / baudrate) / 16;
-   
+
 	// Configure mode register
-	pUsart->US_MR 
-			= (US_MR_USART_MODE_NORMAL | US_MR_PAR_NO| US_MR_USCLKS_MCK 
+	pUsart->US_MR
+			= (US_MR_USART_MODE_NORMAL | US_MR_PAR_NO| US_MR_USCLKS_MCK
 					| US_MR_CHRL_8_BIT);
 
 	// Enable receiver and transmitter
@@ -294,7 +294,7 @@ extern void DBG_DumpFrame( uint8_t* pucFrame, uint32_t dwSize )
  *  \param dwSize     Buffer size in bytes.
  *  \param dwAddress  Start address to display
  */
-extern void DBG_DumpMemory( uint8_t* pucBuffer, uint32_t dwSize, 
+extern void DBG_DumpMemory( uint8_t* pucBuffer, uint32_t dwSize,
 				uint32_t dwAddress )
 {
 	uint32_t i;

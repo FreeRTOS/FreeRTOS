@@ -133,13 +133,13 @@ struct  tftphdr {
   }
 #if __GNUC__
  __attribute__ ((packed))
-#endif 
+#endif
    th_u;
   char  th_data[1];   /* data or error string */
 }
 #if __GNUC__
 __attribute__ ((packed))
-#endif 
+#endif
 ;
 #if __ICCAVR32__
 #pragma pack()

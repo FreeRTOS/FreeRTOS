@@ -26,9 +26,9 @@
 
 /*
 	USB Communications Device Class driver.
-	Implements task vUSBCDCTask and provides an Abstract Control Model serial 
-	interface.  Control is through endpoint 0, device-to-host notification is 
-	provided by interrupt-in endpoint 3, and raw data is transferred through 
+	Implements task vUSBCDCTask and provides an Abstract Control Model serial
+	interface.  Control is through endpoint 0, device-to-host notification is
+	provided by interrupt-in endpoint 3, and raw data is transferred through
 	bulk endpoints 1 and 2.
 
 	- developed from original FreeRTOS HID example by Scott Miller
@@ -104,12 +104,12 @@ static xCONTROL_MESSAGE pxControlTx;
 static xCONTROL_MESSAGE pxControlRx;
 
 /* Queue holding pointers to pending messages */
-QueueHandle_t xUSBInterruptQueue; 
+QueueHandle_t xUSBInterruptQueue;
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted.  Rx queue must be larger than FIFO size. */
-static QueueHandle_t xRxCDC; 
-static QueueHandle_t xTxCDC; 
+static QueueHandle_t xRxCDC;
+static QueueHandle_t xTxCDC;
 
 /* Line coding - 115,200 baud, N-8-1 */
 static const unsigned char pxLineCoding[] = { 0x00, 0xC2, 0x01, 0x00, 0x00, 0x00, 0x08 };
@@ -136,16 +136,16 @@ portBASE_TYPE xByte;
 	portENTER_CRITICAL();
 		 vDetachUSBInterface();
 	portEXIT_CRITICAL();
-	
+
 	vTaskDelay( portTICK_PERIOD_MS * 60 );
 
 	/* Init USB interface */
 	portENTER_CRITICAL();
 		vInitUSBInterface();
 	portEXIT_CRITICAL();
-	
+
 	/* Main task loop.  Process incoming endpoint 0 interrupts, handle data transfers. */
-	 
+
 	for( ;; )
 	{
 		/* Look for data coming from the ISR. */
@@ -160,18 +160,18 @@ portBASE_TYPE xByte;
 			if( pxMessage->ulISR & AT91C_UDP_ENDBUSRES )
 			{
 				/* End of bus reset - reset the endpoints and de-configure. */
-				prvResetEndPoints();		
+				prvResetEndPoints();
 			}
 		}
-		
+
 		/* See if we're ready to send and receive data. */
-		if( eDriverState == eREADY_TO_SEND && ucControlState ) 
+		if( eDriverState == eREADY_TO_SEND && ucControlState )
 		{
 			if( ( !(AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ] & AT91C_UDP_TXPKTRDY) ) && uxQueueMessagesWaiting( xTxCDC ) )
 			{
 				for( xByte = 0; xByte < 64; xByte++ )
-				{				   
-					if( !xQueueReceive( xTxCDC, &ucByte, 0 ) ) 
+				{
+					if( !xQueueReceive( xTxCDC, &ucByte, 0 ) )
 					{
 						/* No data buffered to transmit. */
 						break;
@@ -179,7 +179,7 @@ portBASE_TYPE xByte;
 
 					/* Got a byte to transmit. */
 					AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_2 ] = ucByte;
-				} 
+				}
 				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ] |= AT91C_UDP_TXPKTRDY;
 			}
 
@@ -208,19 +208,19 @@ portBASE_TYPE xByte;
 
 					/* Re-enable endpoint 1's interrupts */
 					AT91C_BASE_UDP->UDP_IER = AT91C_UDP_EPINT1;
-				
+
 					/* Update the current bank in use */
-					if( uiCurrentBank == AT91C_UDP_RX_DATA_BK0 ) 
+					if( uiCurrentBank == AT91C_UDP_RX_DATA_BK0 )
 					{
 						uiCurrentBank = AT91C_UDP_RX_DATA_BK1;
 					}
-					else 
+					else
 					{
 						uiCurrentBank = AT91C_UDP_RX_DATA_BK0;
 					}
 
 				}
-				else 
+				else
 				{
 					break;
 				}
@@ -322,54 +322,54 @@ unsigned long ulRxBytes;
 		{
 			/* We sent an acknowledgement of a SET_CONFIG request.  We
 			are now at the end of the enumeration.
-			
+
 			TODO: Config 0 sets unconfigured state, should enter Address state.
 			Request for unsupported config should stall. */
 			AT91C_BASE_UDP->UDP_GLBSTATE = AT91C_UDP_CONFG;
-			
+
 			/* Set up endpoints */
 			portENTER_CRITICAL();
 			{
 				unsigned long ulTemp;
 
 				/* Set endpoint 1 to bulk-out */
-				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];					
+				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];
 				usbCSR_SET_BIT( &ulTemp, AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_BULK_OUT );
-				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] = ulTemp;		
+				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] = ulTemp;
 				AT91C_BASE_UDP->UDP_IER = AT91C_UDP_EPINT1;
 				/* Set endpoint 2 to bulk-in */
-				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ];					
+				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ];
 				usbCSR_SET_BIT( &ulTemp, AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_BULK_IN );
-				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ] = ulTemp;		
+				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_2 ] = ulTemp;
 				AT91C_BASE_UDP->UDP_IER = AT91C_UDP_EPINT2;
 					/* Set endpoint 3 to interrupt-in, enable it, and enable interrupts */
-				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_3 ];					
+				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_3 ];
 				usbCSR_SET_BIT( &ulTemp, AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_INT_IN );
-				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_3 ] = ulTemp;		
+				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_3 ] = ulTemp;
 				/*AT91F_UDP_EnableIt( AT91C_BASE_UDP, AT91C_UDP_EPINT3 );				 */
 			}
 			portEXIT_CRITICAL();
 
 			eDriverState = eREADY_TO_SEND;
-		}		
+		}
 		else if( eDriverState == eJUST_GOT_ADDRESS )
 		{
 			/* We sent an acknowledgement of a SET_ADDRESS request.  Move
 			to the addressed state. */
 			if( ulReceivedAddress != ( unsigned long ) 0 )
-			{			
+			{
 				AT91C_BASE_UDP->UDP_GLBSTATE = AT91C_UDP_FADDEN;
 			}
 			else
 			{
 				AT91C_BASE_UDP->UDP_GLBSTATE = 0;
-			}			
+			}
 
-			AT91C_BASE_UDP->UDP_FADDR = ( AT91C_UDP_FEN | ulReceivedAddress );		
+			AT91C_BASE_UDP->UDP_FADDR = ( AT91C_UDP_FEN | ulReceivedAddress );
 			eDriverState = eNOTHING;
 		}
 		else
-		{		
+		{
 			/* The TXCOMP was not for any special type of transmission.  See
 			if there is any more data to send. */
 			prvSendNextSegment();
@@ -380,14 +380,14 @@ unsigned long ulRxBytes;
 	{
 		/* Received a control data packet.  May be a 0-length ACK or a data stage. */
 		unsigned char ucBytesToGet;
-	 
+
 		/* Got data.  Cancel any outgoing data. */
 		pxControlTx.ulNextCharIndex = pxControlTx.ulTotalDataLength;
-		
+
 		 /* Determine how many bytes we need to receive. */
 		ucBytesToGet = pxControlRx.ulTotalDataLength - pxControlRx.ulNextCharIndex;
-		if( ucBytesToGet > ulRxBytes ) 
-		{	
+		if( ucBytesToGet > ulRxBytes )
+		{
 			ucBytesToGet = ulRxBytes;
 		}
 
@@ -399,7 +399,7 @@ unsigned long ulRxBytes;
 
 		/* Get the required data and update the index. */
 		memcpy( pxControlRx.ucBuffer, pxMessage->ucFifoData, ucBytesToGet );
-		pxControlRx.ulNextCharIndex += ucBytesToGet;	
+		pxControlRx.ulNextCharIndex += ucBytesToGet;
 	}
 
 	if( pxMessage->ulCSR0 & AT91C_UDP_RXSETUP )
@@ -407,7 +407,7 @@ unsigned long ulRxBytes;
 		/* Received a SETUP packet.  May be followed by data packets. */
 
 		if( ulRxBytes >= usbEXPECTED_NUMBER_OF_BYTES )
-		{		 		
+		{
 			/* Create an xUSB_REQUEST variable from the raw bytes array. */
 
 			xRequest.ucReqType = pxMessage->ucFifoData[ usbREQUEST_TYPE_INDEX ];
@@ -416,11 +416,11 @@ unsigned long ulRxBytes;
 			xRequest.usValue = pxMessage->ucFifoData[ usbVALUE_HIGH_BYTE ];
 			xRequest.usValue <<= 8;
 			xRequest.usValue |= pxMessage->ucFifoData[ usbVALUE_LOW_BYTE ];
-						
+
 			xRequest.usIndex = pxMessage->ucFifoData[ usbINDEX_HIGH_BYTE ];
 			xRequest.usIndex <<= 8;
 			xRequest.usIndex |= pxMessage->ucFifoData[ usbINDEX_LOW_BYTE ];
-			
+
 			xRequest.usLength = pxMessage->ucFifoData[ usbLENGTH_HIGH_BYTE ];
 			xRequest.usLength <<= 8;
 			xRequest.usLength |= pxMessage->ucFifoData[ usbLENGTH_LOW_BYTE ];
@@ -429,7 +429,7 @@ unsigned long ulRxBytes;
 			if( ! (xRequest.ucReqType & 0x80) ) /* Host-to-Device transfer, may need to get data first */
 			{
 				if( xRequest.usLength > usbMAX_CONTROL_MESSAGE_SIZE )
-				{	
+				{
 					/* Too big!  No space for control data, stall and abort. */
 					prvSendStall();
 					return;
@@ -440,49 +440,49 @@ unsigned long ulRxBytes;
 			else
 			{
 				/* We're sending the data, don't wait for any. */
-				pxControlRx.ulTotalDataLength = 0; 
+				pxControlRx.ulTotalDataLength = 0;
 			}
 		}
 	}
 
 	/* See if we've got a pending request and all its associated data ready */
-	if( ( pxMessage->ulCSR0 & ( AT91C_UDP_RX_DATA_BK0 | AT91C_UDP_RXSETUP ) ) 
+	if( ( pxMessage->ulCSR0 & ( AT91C_UDP_RX_DATA_BK0 | AT91C_UDP_RXSETUP ) )
 		&& ( pxControlRx.ulNextCharIndex >= pxControlRx.ulTotalDataLength ) )
 	{
 		unsigned char ucRequest;
 
-		/* Manipulate the ucRequestType and the ucRequest parameters to 
-		generate a zero based request selection.  This is just done to 
-		break up the requests into subsections for clarity.  The 
+		/* Manipulate the ucRequestType and the ucRequest parameters to
+		generate a zero based request selection.  This is just done to
+		break up the requests into subsections for clarity.  The
 		alternative would be to have more huge switch statement that would
 		be difficult to optimise. */
 		ucRequest = ( ( xRequest.ucReqType & 0x60 ) >> 3 );
 		ucRequest |= ( xRequest.ucReqType & 0x03 );
-			
+
 		switch( ucRequest )
 		{
-			case usbSTANDARD_DEVICE_REQUEST:	
+			case usbSTANDARD_DEVICE_REQUEST:
 				/* Standard Device request */
 				prvHandleStandardDeviceRequest( &xRequest );
 				break;
 
-			case usbSTANDARD_INTERFACE_REQUEST:	
+			case usbSTANDARD_INTERFACE_REQUEST:
 				/* Standard Interface request */
 				prvHandleStandardInterfaceRequest( &xRequest );
 				break;
 
-			case usbSTANDARD_END_POINT_REQUEST:	
+			case usbSTANDARD_END_POINT_REQUEST:
 				/* Standard Endpoint request */
 				prvHandleStandardEndPointRequest( &xRequest );
 				break;
 
-			case usbCLASS_INTERFACE_REQUEST:	
+			case usbCLASS_INTERFACE_REQUEST:
 				/* Class Interface request */
 				prvHandleClassInterfaceRequest( &xRequest );
 				break;
 
 			default:	/* This is not something we want to respond to. */
-				prvSendStall();	
+				prvSendStall();
 		}
 	}
 }
@@ -505,7 +505,7 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 
 			/* The index to the string descriptor is the lower byte. */
 			switch( pxRequest->usValue & 0xff )
-			{			
+			{
 				case usbLANGUAGE_STRING:
 					prvSendControlData( ( unsigned char * ) &pxLanguageStringDescriptor, pxRequest->usLength, sizeof(pxLanguageStringDescriptor), pdTRUE );
 					break;
@@ -564,10 +564,10 @@ unsigned short usStatus = 0;
 			prvSendZLP();
 			break;
 
-		case usbSET_ADDRESS_REQUEST:			
+		case usbSET_ADDRESS_REQUEST:
 			/* Get assigned address and send ack, but don't implement new address until we get a TXCOMP */
-			prvSendZLP();			
-			eDriverState = eJUST_GOT_ADDRESS;			
+			prvSendZLP();
+			eDriverState = eJUST_GOT_ADDRESS;
 			ulReceivedAddress = ( unsigned long ) pxRequest->usValue;
 			break;
 
@@ -645,13 +645,13 @@ unsigned short usStatus = 0;
 			break;
 
 		case usbGET_DESCRIPTOR_REQUEST:
-			prvGetStandardInterfaceDescriptor( pxRequest ); 
+			prvGetStandardInterfaceDescriptor( pxRequest );
 			break;
 
 		/* This minimal implementation does not respond to these. */
 		case usbGET_INTERFACE_REQUEST:
 		case usbSET_FEATURE_REQUEST:
-		case usbSET_INTERFACE_REQUEST:	
+		case usbSET_INTERFACE_REQUEST:
 
 		default:
 			prvSendStall();
@@ -666,10 +666,10 @@ static void prvHandleStandardEndPointRequest( xUSB_REQUEST *pxRequest )
 	{
 		/* This minimal implementation does not expect to respond to these. */
 		case usbGET_STATUS_REQUEST:
-		case usbCLEAR_FEATURE_REQUEST: 
+		case usbCLEAR_FEATURE_REQUEST:
 		case usbSET_FEATURE_REQUEST:
 
-		default:			
+		default:
 			prvSendStall();
 			break;
 	}
@@ -685,7 +685,7 @@ static void vDetachUSBInterface( void)
 
 	/* Disable pull up */
 	AT91C_BASE_PIOA->PIO_SODR = AT91C_PIO_PA16;
-} 
+}
 /*-----------------------------------------------------------*/
 
 static void vInitUSBInterface( void )
@@ -694,17 +694,17 @@ extern void ( vUSB_ISR_Wrapper )( void );
 
 	/* Create the queue used to communicate between the USB ISR and task. */
 	xUSBInterruptQueue = xQueueCreate( usbQUEUE_LENGTH + 1, sizeof( xISRStatus * ) );
-	
+
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxCDC = xQueueCreate( USB_CDC_QUEUE_SIZE, ( unsigned char ) sizeof( signed char ) );
 	xTxCDC = xQueueCreate( USB_CDC_QUEUE_SIZE + 1, ( unsigned char ) sizeof( signed char ) );
 
 	if( (!xUSBInterruptQueue) || (!xRxCDC) || (!xTxCDC) )
-	{	
+	{
 		/* Not enough RAM to create queues!. */
 		return;
 	}
-	
+
 	/* Initialise a few state variables. */
 	pxControlTx.ulNextCharIndex = ( unsigned long ) 0;
 	pxControlRx.ulNextCharIndex = ( unsigned long ) 0;
@@ -728,7 +728,7 @@ extern void ( vUSB_ISR_Wrapper )( void );
 	AT91C_BASE_PIOA->PIO_OER = AT91C_PIO_PA16;
 
 
-	/* Start without the pullup - this will get set at the end of this 
+	/* Start without the pullup - this will get set at the end of this
 	function. */
    	AT91C_BASE_PIOA->PIO_SODR = AT91C_PIO_PA16;
 
@@ -748,7 +748,7 @@ extern void ( vUSB_ISR_Wrapper )( void );
 	/* Enable the transceiver. */
 	AT91C_UDP_TRANSCEIVER_ENABLE = 0;
 
-	/* Enable the USB interrupts - other interrupts get enabled as the 
+	/* Enable the USB interrupts - other interrupts get enabled as the
 	enumeration process progresses. */
 	AT91F_AIC_ConfigureIt( AT91C_ID_UDP, usbINTERRUPT_PRIORITY, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, ( void (*)( void ) ) vUSB_ISR_Wrapper );
 	AT91C_BASE_AIC->AIC_IECR = 0x1 << AT91C_ID_UDP;
@@ -769,7 +769,7 @@ static void prvSendControlData( unsigned char *pucData, unsigned short usRequest
 	}
 	else if( ( ulLengthToSend < ( unsigned long ) usRequestedLength ) && lSendingDescriptor )
 	{
-		/* We are sending a descriptor.  If the descriptor is an exact 
+		/* We are sending a descriptor.  If the descriptor is an exact
 		multiple of the FIFO length then it will have to be terminated
 		with a NULL packet.  Set the state to indicate this if
 		necessary. */
@@ -786,12 +786,12 @@ static void prvSendControlData( unsigned char *pucData, unsigned short usRequest
 	(if it is greater than 8 bytes in length). */
 	memcpy( pxControlTx.ucBuffer, pucData, ulLengthToSend );
 
-	/* Reinitialise the buffer index so we start sending from the start of 
+	/* Reinitialise the buffer index so we start sending from the start of
 	the data. */
 	pxControlTx.ulTotalDataLength = ulLengthToSend;
 	pxControlTx.ulNextCharIndex = ( unsigned long ) 0;
 
-	/* Send the first 8 bytes now.  The rest will get sent in response to 
+	/* Send the first 8 bytes now.  The rest will get sent in response to
 	TXCOMP interrupts. */
 	prvSendNextSegment();
 }
@@ -805,7 +805,7 @@ volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 	if( pxControlTx.ulTotalDataLength > pxControlTx.ulNextCharIndex )
 	{
 		ulLengthLeftToSend = pxControlTx.ulTotalDataLength - pxControlTx.ulNextCharIndex;
-	
+
 		/* We can only send 8 bytes to the fifo at a time. */
 		if( ulLengthLeftToSend > usbFIFO_LENGTH )
 		{
@@ -827,11 +827,11 @@ volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 		while( ulNextLength > ( unsigned long ) 0 )
 		{
 			AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ] = pxControlTx.ucBuffer[ pxControlTx.ulNextCharIndex ];
-	
+
 			ulNextLength--;
 			pxControlTx.ulNextCharIndex++;
 		}
-	
+
 		/* Start the transmission. */
 		portENTER_CRITICAL();
 		{
@@ -843,7 +843,7 @@ volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 	}
 	else
 	{
-		/* There is no data to send.  If we were sending a descriptor and the 
+		/* There is no data to send.  If we were sending a descriptor and the
 		descriptor was an exact multiple of the max packet size then we need
 		to send a null to terminate the transmission. */
 		if( eDriverState == eSENDING_EVEN_DESCRIPTOR )

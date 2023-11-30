@@ -16,9 +16,9 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armproc.dll" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armjlink.dll"  %1 --plugin "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armbat.dll" --macro "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_A5_SAMA5D3x_Xplained_IAR\..\..\..\..\libraries\libboard_sama5d3x-ek\resources\ewarm\sama5d3x-ek-ddram.mac" --backend -B "--endian=little" "--cpu=Cortex-A5" "--fpu=None" "-p" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\CONFIG\debugger\Atmel\ATSAMA5D35.ddf" "--drv_verify_download" "--semihosting=none" "--device=ATSAMA5D35" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--drv_catch_exceptions=0x000" 
+"C:\DevTools\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armproc.dll" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armjlink.dll"  %1 --plugin "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armbat.dll" --macro "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_A5_SAMA5D3x_Xplained_IAR\..\..\..\..\libraries\libboard_sama5d3x-ek\resources\ewarm\sama5d3x-ek-ddram.mac" --backend -B "--endian=little" "--cpu=Cortex-A5" "--fpu=None" "-p" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\CONFIG\debugger\Atmel\ATSAMA5D35.ddf" "--drv_verify_download" "--semihosting=none" "--device=ATSAMA5D35" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--drv_catch_exceptions=0x000"
 
 

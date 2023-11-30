@@ -70,7 +70,7 @@ unsigned long ul;
 /*-----------------------------------------------------------*/
 
 void vParTestSetLED( unsigned long ulLED, signed long xValue )
-{	
+{
 	if( ulLED < ulNumLEDs )
 	{
 		if( xValue == pdFALSE )
@@ -97,6 +97,6 @@ unsigned long ulBitState;
 		gioSetBit( hetPORT, ulLEDBits[ ulLED ], !ulBitState );
 	}
 }
-							
+
 
 

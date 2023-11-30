@@ -4,8 +4,8 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the GPIO 
-  *          firmware library. 
+  * @brief   This file contains all the functions prototypes for the GPIO
+  *          firmware library.
   ******************************************************************************
   * @attention
   *
@@ -52,7 +52,7 @@
 #define IS_GPIO_LIST_PERIPH(PERIPH) (((PERIPH) == GPIOA) || \
                                      ((PERIPH) == GPIOB))
 
-/** @defgroup Configuration_Mode_enumeration 
+/** @defgroup Configuration_Mode_enumeration
   * @{
   */
 typedef enum
@@ -84,7 +84,7 @@ typedef enum
   * @}
   */
 
-/** @defgroup Output_Maximum_frequency_enumeration 
+/** @defgroup Output_Maximum_frequency_enumeration
   * @{
   */
 typedef enum
@@ -100,7 +100,7 @@ typedef enum
   * @}
   */
 
-/** @defgroup Configuration_Pull-Up_Pull-Down_enumeration 
+/** @defgroup Configuration_Pull-Up_Pull-Down_enumeration
   * @{
   */
 typedef enum
@@ -120,7 +120,7 @@ typedef enum
   * @{
   */
 typedef enum
-{ 
+{
   Bit_RESET = 0,
   Bit_SET
 }BitAction;
@@ -131,13 +131,13 @@ typedef enum
   */
 
 /**
-  * @brief  GPIO Init structure definition  
+  * @brief  GPIO Init structure definition
   */
 typedef struct
 {
   uint32_t GPIO_Pin;              /*!< Specifies the GPIO pins to be configured.
                                        This parameter can be any value of @ref GPIO_pins_define */
-                                       
+
   GPIOMode_TypeDef GPIO_Mode;     /*!< Specifies the operating mode for the selected pins.
                                        This parameter can be a value of @ref GPIOMode_TypeDef   */
 
@@ -157,7 +157,7 @@ typedef struct
   * @{
   */
 
-/** @defgroup GPIO_pins_define 
+/** @defgroup GPIO_pins_define
   * @{
   */
 #define GPIO_Pin_0                 ((uint16_t)0x0001)  /*!< Pin 0 selected    */
@@ -201,7 +201,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup GPIO_Pin_sources 
+/** @defgroup GPIO_Pin_sources
   * @{
   */
 #define GPIO_PinSource0            ((uint8_t)0x00)
@@ -241,44 +241,44 @@ typedef struct
   * @}
   */
 
-/** @defgroup GPIO_Alternate_function_selection_define 
+/** @defgroup GPIO_Alternate_function_selection_define
   * @{
   */
 
-/** 
+/**
   * @brief  AF 0 selection
   */
 #define GPIO_AF_0            ((uint8_t)0x00) /* WKUP, EVENTOUT, TIM15, SPI1, TIM17,
                                                 MCO, SWDAT, SWCLK, TIM14, BOOT,
                                                 USART1, CEC, IR_OUT, SPI2 */
-/** 
+/**
   * @brief  AF 1 selection
   */
 #define GPIO_AF_1            ((uint8_t)0x01) /* USART2, CEC, Tim3, USART1, USART2,
                                                 EVENTOUT, I2C1, I2C2, TIM15 */
-/** 
+/**
   * @brief  AF 2 selection
   */
 #define GPIO_AF_2            ((uint8_t)0x02) /* TIM2, TIM1, EVENTOUT, TIM16, TIM17 */
-/** 
+/**
   * @brief  AF 3 selection
   */
 #define GPIO_AF_3            ((uint8_t)0x03) /* TS, I2C1, TIM15, EVENTOUT */
 
-/** 
+/**
   * @brief  AF 4 selection
   */
 #define GPIO_AF_4            ((uint8_t)0x04) /* TIM14 */
-/** 
+/**
   * @brief  AF 5 selection
   */
 #define GPIO_AF_5            ((uint8_t)0x05) /* TIM16, TIM17 */
 
-/** 
+/**
   * @brief  AF 6 selection
   */
 #define GPIO_AF_6            ((uint8_t)0x06) /* EVENTOUT */
-/** 
+/**
   * @brief  AF 7 selection
   */
 #define GPIO_AF_7            ((uint8_t)0x07) /* COMP1 OUT and COMP2 OUT */
@@ -292,7 +292,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup GPIO_Speed_Legacy 
+/** @defgroup GPIO_Speed_Legacy
   * @{
   */
 

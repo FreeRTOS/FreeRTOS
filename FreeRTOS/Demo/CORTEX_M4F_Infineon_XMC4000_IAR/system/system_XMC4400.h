@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     system_XMC4400.h
  * @brief    Header file for the XMC4400-Series systeminit
- *           
+ *
  * @version  V1.0
  * @date     17. August 2012
  *
@@ -10,8 +10,8 @@
 
  *
  * @par
- * Infineon Technologies AG (Infineon) is supplying this software for use with Infineon’s microcontrollers.  
- * This file can be freely distributed within development tools that are supporting such microcontrollers. 
+ * Infineon Technologies AG (Infineon) is supplying this software for use with Infineon’s microcontrollers.
+ * This file can be freely distributed within development tools that are supporting such microcontrollers.
 
  *
  * @par
@@ -59,9 +59,9 @@ extern void SystemInit (void);
  */
 extern void SystemCoreClockUpdate (void);
 
-/* this weak function enables DAVE3 clock App usage */		
-extern uint32_t AllowPLLInitByStartup(void);		
-				
+/* this weak function enables DAVE3 clock App usage */
+extern uint32_t AllowPLLInitByStartup(void);
+
 
 
 #ifdef __cplusplus

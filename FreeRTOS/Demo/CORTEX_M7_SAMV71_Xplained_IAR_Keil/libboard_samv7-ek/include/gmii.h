@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -76,7 +76,7 @@
 #define GMII_RESTART_AUTONEG   (1 << 9)  // 1 = Restart auto-negotiation 0 = Normal operation
 #define GMII_DUPLEX_MODE       (1 << 8)  // 1 = Full duplex operation 0 = Normal operation
 //      Reserved                7        // Read as 0, ignore on write
-#define GMII_SPEED_SELECT_MSB  (1 << 6)  // 
+#define GMII_SPEED_SELECT_MSB  (1 << 6)  //
 //      Reserved                5 to 0   // Read as 0, ignore on write
 
 
@@ -107,7 +107,7 @@
 #define GMII_RF               (1 << 13) // Remote Fault
 //      Reserved               12       // Write as 0, ignore on read
 #define GMII_PAUSE_MASK       (3 << 11) // 0,0 = No Pause 1,0 = Asymmetric Pause(link partner)
-                                        // 0,1 = Symmetric Pause 1,1 = Symmetric&Asymmetric Pause(local device)   
+                                        // 0,1 = Symmetric Pause 1,1 = Symmetric&Asymmetric Pause(local device)
 #define GMII_T4               (1 << 9)  // 100BASE-T4 Support
 #define GMII_TX_FDX           (1 << 8)  // 100BASE-TX Full Duplex Support
 #define GMII_TX_HDX           (1 << 7)  // 100BASE-TX Support

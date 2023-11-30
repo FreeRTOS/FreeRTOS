@@ -165,12 +165,12 @@ OnTheFlyBreakAdmit=0
 
 [Break Environment]
 Flag=Enable
-Code0=00DE00F1 1 0 1  
+Code0=00DE00F1 1 0 1
 CodeBreakFlag0=Enable
-Code1=00DE012F 1 0 1 main.c$103 
+Code1=00DE012F 1 0 1 main.c$103
 CodeBreakFlag1=Enable
 Debug File=C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\ABS\96340_FreeRTOS_96348hs.abs
-Code2=00DE013E 1 0 1 
+Code2=00DE013E 1 0 1
 CodeBreakFlag2=Enable
 Code3=00DE1B64 1 0 1 \prvRLT0_TICKISR
 CodeBreakFlag3=Enable

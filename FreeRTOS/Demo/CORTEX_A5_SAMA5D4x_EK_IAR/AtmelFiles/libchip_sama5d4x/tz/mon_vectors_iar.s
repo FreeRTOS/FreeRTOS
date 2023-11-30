@@ -61,22 +61,22 @@ AIC_FVR     DEFINE   0x14
  * -----------------------------------------------------------------------------
  */
 monitor_vectors:
-	B	.			; Reset: not used by Monitor 
+	B	.			; Reset: not used by Monitor
 	B	.			; Undef: not used by Monitor
 	LDR	pc, =SM_Handler
-	B	.			; Prefetch: can be used by Monitor 
-	B	.			; Data abort: can be used by Monitor 
+	B	.			; Prefetch: can be used by Monitor
+	B	.			; Data abort: can be used by Monitor
 	B	.			; RESERVED */
-	B	.			; IRQ: can be used by Monitor 
-	B	.			; FIQ - can be used by Monitor 
+	B	.			; IRQ: can be used by Monitor
+	B	.			; FIQ - can be used by Monitor
 
 
 
         SECTION monitor:CODE:NOROOT(2)
         SECTION MSTACK:DATA:NOROOT(3)
 
-        
-        
+
+
 SM_Handler:
 
     CPSID         IF
@@ -91,92 +91,92 @@ SM_Handler:
 //    LDRNE   r0, =SCR_SW_BIT
     MCR     p15, 0, r0, c1, c1, 0        ; Write Secure Configuration Register data
     ISB
-    
-    LDREQ   r2, =MON_DATA_BASE              
-    LDRNE   r3, =MON_DATA_BASE 
-    
+
+    LDREQ   r2, =MON_DATA_BASE
+    LDRNE   r3, =MON_DATA_BASE
+
     ADDEQ   r3, r2, #Struct_size
     ADDNE   r2, r3, #Struct_size
 
     STM	r2!, {r4-r12}                   ; Save r4 to r12 registers of current world
     LDM     r3!, {r4-r12}               ; Restore r4 to r12 registers of world we need to switch
-    
+
     ; Save current world MON_LR MON_SP and MON_SPSR and restore for other world
     MRS     r1, SPSR
     STM     r2!, {r1, sp, lr}
     LDM     r3!, {r1, sp, lr}
     MSR     spsr_cxsf, r1
-    
+
     ; Save current world SVC_LR, SVC_SP and SVC_SPSR and restore for other world
     CPS	    #ARM_MODE_SVC
     MRS     r1, SPSR
     STM     r2!, {r1, sp, lr}
     LDM     r3!, {r1, sp, lr}
-    MSR     spsr_cxsf, r1   
-    
+    MSR     spsr_cxsf, r1
+
     ; Save current world FIQ_LR FIQ_SP and FIQ_SPSR and restore for other world
     CPS	    #ARM_MODE_FIQ
     MRS     r1, SPSR
     STM     r2!, {r1, sp, lr}
     LDM     r3!, {r1, sp, lr}
-    MSR     spsr_cxsf, r1   
-    
+    MSR     spsr_cxsf, r1
+
     ; Save current world IRQ_LR IRQ_SP and IRQ_SPSR and restore for other world
     CPS	    #ARM_MODE_IRQ
     MRS     r1, SPSR
     STM     r2!, {r1, sp, lr}
     LDM     r3!, {r1, sp, lr}
-    MSR     spsr_cxsf, r1   
+    MSR     spsr_cxsf, r1
 
     ; Change to SVC mode before going to MON mode
     CPS	    #ARM_MODE_SVC
-    CPS	    #ARM_MODE_MON    
-   
+    CPS	    #ARM_MODE_MON
+
     CLREX                               ; Clear local monitor
 
     LDREQ     r0, =SCR_NW_BIT           ; set FIQ to moitor exception(optional) and NS bit to 1 if comming from secure
-    MCREQ     p15, 0, r0, c1, c1, 0     ; Write Secure Configuration Register data  
+    MCREQ     p15, 0, r0, c1, c1, 0     ; Write Secure Configuration Register data
     ISB
-    
+
     /* set the monitor vector base */
     LDREQ     r2, =NWVector
     MCREQ     p15, 0, r2, c12, c0, 0	 ; non secure copy of VBAR
-    
-    BNE       secureworld  
-  
-nonsecureworld:  
+
+    BNE       secureworld
+
+nonsecureworld:
     CPSIE     IF
 
-secureworld:  
+secureworld:
     CPSIE     F
-  
+
     ; Now restore args (r0-r3)
     ; -------------------------
     POP     {r0-r3}
 
-    
+
     ; exception return
     ; -------------------------
     MOVS    pc, lr
-  
-  
-  
+
+
+
 //***************************************************//
 ; Monitor initialization code
 //***************************************************//
 
         SECTION monitor:CODE:NOROOT(2)
         SECTION MSTACK:DATA:NOROOT(3)
-        
+
         PUBLIC SecureMonitor_init
         EXTERN nw_start
         EXTERN TzResetVector
-        
+
         ARM
 
 SecureMonitor_init:
-        
-       
+
+
 	/* Switch to MON mode */
 	MRS	r4, cpsr
 	CPS     #ARM_MODE_MON           ; change back to SVC mode
@@ -184,31 +184,31 @@ SecureMonitor_init:
         /* set the monitor stack */
 	LDR	sp, =SFE(MSTACK)
         BIC     sp,sp,#0x7                      ; Make sure SP is 8 aligned
-        
+
         /* set the monitor vector base */
 	LDR	r2, =monitor_vectors            ; Update monitor exception vector table addr
-	MCR	p15, 0, r2, c12, c0, 1        
+	MCR	p15, 0, r2, c12, c0, 1
 
         MSR     cpsr_c, r4                  ; change back to SVC mode
-        
+
          /* set the monitor vector base */
 	LDR	r2, =TzResetVector              ; Update secure exception vector table addr
 	MCR	p15, 0, r2, c12, c0, 0
-        
+
         // Load zero to context memory block
         MOV     r3, #0
         LDR     r0, =MON_DATA_SIZE
         LDR     r1, =MON_DATA_BASE
-        MOV     r2, #0  
-        
-loop_init:        
+        MOV     r2, #0
+
+loop_init:
         CMP     r2, r0
         STRNE   r3,[r1]
         ADD     r1, r1, #4
         ADD     r2, r2, #1
         BNE     loop_init
-        
-        BX      lr       
+
+        BX      lr
 
 
   END

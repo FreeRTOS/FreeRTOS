@@ -107,8 +107,8 @@ signed long R_BSP_Min(signed long data1, signed long data2)
 
 /***********************************************************************************************************************
 * Function Name: R_BSP_MulAndAccOperation_B
-* Description  : Performs a multiply-and-accumulate operation with the initial value specified by init, the number of 
-*                multiply-and-accumulate operations specified by count, and the start addresses of values to be 
+* Description  : Performs a multiply-and-accumulate operation with the initial value specified by init, the number of
+*                multiply-and-accumulate operations specified by count, and the start addresses of values to be
 *                multiplied specified by addr1 and addr2.
 * Arguments    : init   - Initial value.
 *                count  - Count of multiply-and-accumulate operations.
@@ -132,7 +132,7 @@ long long R_BSP_MulAndAccOperation_B(long long init, unsigned long count, signed
 /***********************************************************************************************************************
 * Function Name: R_BSP_MulAndAccOperation_W
 * Description  : Performs a multiply-and-accumulate operation with the initial value specified by init, the number of
-*                multiply-and-accumulate operations specified by count, and the start addresses of values to be 
+*                multiply-and-accumulate operations specified by count, and the start addresses of values to be
 *                multiplied specified by addr1 and addr2.
 * Arguments    : init   - Initial value.
 *                count  - Count of multiply-and-accumulate operations.
@@ -156,7 +156,7 @@ long long R_BSP_MulAndAccOperation_W(long long init, unsigned long count, short 
 /***********************************************************************************************************************
 * Function Name: R_BSP_MulAndAccOperation_L
 * Description  : Performs a multiply-and-accumulate operation with the initial value specified by init, the number of
-*                multiply-and-accumulate operations specified by count, and the start addresses of values to be 
+*                multiply-and-accumulate operations specified by count, and the start addresses of values to be
 *                multiplied specified by addr1 and addr2.
 * Arguments    : init   - Initial value.
 *                count  - Count of multiply-and-accumulate operations.
@@ -179,7 +179,7 @@ long long R_BSP_MulAndAccOperation_L(long long init, unsigned long count, long *
 
 /***********************************************************************************************************************
 * Function Name: R_BSP_RotateLeftWithCarry
-* Description  : Rotates data including the C flag to left by one bit. 
+* Description  : Rotates data including the C flag to left by one bit.
 *                The bit pushed out of the operand is set to the C flag.
 * Arguments    : data - Data to be rotated to left.
 * Return Value : data - Result of 1-bit left rotation of data including the C flag.
@@ -187,7 +187,7 @@ long long R_BSP_MulAndAccOperation_L(long long init, unsigned long count, long *
 #if defined(__GNUC__)
 unsigned long R_BSP_RotateLeftWithCarry(unsigned long data)
 {
-    __asm("rolc %0":"=r"(data) : "r"(data):); 
+    __asm("rolc %0":"=r"(data) : "r"(data):);
     return data;
 }
 #endif /* defined(__GNUC__) */
@@ -218,7 +218,7 @@ unsigned long R_BSP_RotateRightWithCarry(unsigned long data)
 #if defined(__GNUC__)
 unsigned long R_BSP_RotateLeft(unsigned long data, unsigned long num)
 {
-    __asm("rotl %1, %0":"=r"(data) : "r"(num),"0"(data) :); 
+    __asm("rotl %1, %0":"=r"(data) : "r"(num),"0"(data) :);
     return data;
 }
 #endif /* defined(__GNUC__) */
@@ -234,7 +234,7 @@ unsigned long R_BSP_RotateLeft(unsigned long data, unsigned long num)
 #if defined(__GNUC__)
 unsigned long R_BSP_RotateRight(unsigned long data, unsigned long num)
 {
-    __asm("rotr %1, %0":"=r"(data) : "r"(num),"0"(data) :); 
+    __asm("rotr %1, %0":"=r"(data) : "r"(num),"0"(data) :);
     return data;
 }
 #endif /* defined(__GNUC__) */
@@ -356,9 +356,9 @@ signed long long R_BSP_GetACC(void)
 /***********************************************************************************************************************
 * Function Name: R_BSP_MulAndAccOperation_2byte
 * Description  : Performs a multiply-and-accumulate operation between data of two bytes each and returns the result as
-*                four bytes. The multiply-and-accumulate operation is executed with DSP functional instructions (MULLO, 
+*                four bytes. The multiply-and-accumulate operation is executed with DSP functional instructions (MULLO,
 *                MACLO, and MACHI). Data in the middle of the multiply-and-accumulate operation is retained in ACC as
-*                48-bit data. After all multiply-and-accumulate operations have finished, the contents of ACC are 
+*                48-bit data. After all multiply-and-accumulate operations have finished, the contents of ACC are
 *                fetched by the MVFACMI instruction and used as the return value of the intrinsic function.
 * Arguments    : data1 - Start address of values 1 to be multiplied.
 *                data2 - Start address of values 2 to be multiplied.
@@ -389,9 +389,9 @@ long R_BSP_MulAndAccOperation_2byte(short* data1, short* data2, unsigned long co
 /***********************************************************************************************************************
 * Function Name: R_BSP_MulAndAccOperation_FixedPoint1
 * Description  : Performs a multiply-and-accumulate operation between data of two bytes each and returns the result as
-*                two bytes. The multiply-and-accumulate operation is executed with DSP functional instructions (MULLO, 
+*                two bytes. The multiply-and-accumulate operation is executed with DSP functional instructions (MULLO,
 *                MACLO, and MACHI). Data in the middle of the multiply-and-accumulate operation is retained in ACC as
-*                48-bit data. After all multiply-and-accumulate operations have finished, rounding is applied to the 
+*                48-bit data. After all multiply-and-accumulate operations have finished, rounding is applied to the
 *                multiply-and-accumulate operation result of ACC.
 *                The macw1 function performs rounding with the "RACW #1" instruction.
 * Arguments    : data1 - Start address of values 1 to be multiplied.
@@ -424,9 +424,9 @@ short R_BSP_MulAndAccOperation_FixedPoint1(short* data1, short* data2, unsigned 
 /***********************************************************************************************************************
 * Function Name: R_BSP_MulAndAccOperation_FixedPoint2
 * Description  : Performs a multiply-and-accumulate operation between data of two bytes each and returns the result as
-*                two bytes. The multiply-and-accumulate operation is executed with DSP functional instructions (MULLO, 
+*                two bytes. The multiply-and-accumulate operation is executed with DSP functional instructions (MULLO,
 *                MACLO, and MACHI). Data in the middle of the multiply-and-accumulate operation is retained in ACC as
-*                48-bit data. After all multiply-and-accumulate operations have finished, rounding is applied to the 
+*                48-bit data. After all multiply-and-accumulate operations have finished, rounding is applied to the
 *                multiply-and-accumulate operation result of ACC.
 *                the macw2 function performs rounding with the "RACW #2" instruction.
 * Arguments    : data1 - Start address of values 1 to be multiplied.
@@ -965,7 +965,7 @@ void R_BSP_CalcSine_Cosine(float f, float *sin, float *cos)
 
 /***********************************************************************************************************************
 * Function Name: R_BSP_CalcAtan_SquareRoot
-* Description  : Uses the trigonometric function unit to calculate the arc tangent of x and y and the square root of 
+* Description  : Uses the trigonometric function unit to calculate the arc tangent of x and y and the square root of
 *                the sum of squares of these values at the same time (single precision).
 * Arguments    : y - Coordinate y (the numerator of the tangent)
 *                x - Coordinate x (the denominator of the tangent)

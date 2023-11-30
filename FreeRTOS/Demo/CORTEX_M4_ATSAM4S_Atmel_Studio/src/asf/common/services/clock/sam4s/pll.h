@@ -102,7 +102,7 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 	vco_hz = osc_get_rate(e_src) / ul_div;
 	Assert(vco_hz >= PLL_INPUT_MIN_HZ);
 	Assert(vco_hz <= PLL_INPUT_MAX_HZ);
-	
+
 	vco_hz *= ul_mul;
 	Assert(vco_hz >= PLL_OUTPUT_MIN_HZ);
 	Assert(vco_hz <= PLL_OUTPUT_MAX_HZ);
@@ -130,7 +130,7 @@ static inline void pll_config_read(struct pll_config *p_cfg, uint32_t ul_pll_id)
 static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
+
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack(); // Always stop PLL first!
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | p_cfg->ctrl;
@@ -143,7 +143,7 @@ static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_
 static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
+
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack(); // Always stop PLL first!
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | p_cfg->ctrl;
@@ -153,13 +153,13 @@ static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id
 	}
 }
 
-/** 
+/**
  * \note This will only disable the selected PLL, not the underlying oscillator (mainck).
  */
 static inline void pll_disable(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
+
 	if (ul_pll_id == PLLA_ID)
 		pmc_disable_pllack();
 	else
@@ -169,7 +169,7 @@ static inline void pll_disable(uint32_t ul_pll_id)
 static inline uint32_t pll_is_locked(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
-	
+
 	if (ul_pll_id == PLLA_ID)
 		return pmc_is_locked_pllack();
 	else

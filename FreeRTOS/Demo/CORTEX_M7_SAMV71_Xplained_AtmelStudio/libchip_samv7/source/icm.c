@@ -113,7 +113,7 @@ void ICM_SoftReset(void)
 
 /**
  * \brief Recompute Internal hash.
- * \param region, When REHASH[region] is set to one, the region digest is re-computed. 
+ * \param region, When REHASH[region] is set to one, the region digest is re-computed.
  * \note This bit is only available when Region monitoring is disabled.
  */
 void ICM_ReComputeHash(uint8_t region)
@@ -145,7 +145,7 @@ void ICM_DisableMonitor(uint8_t region)
  */
 void ICM_Configure(uint32_t mode)
 {
-    ICM->ICM_CFG = mode; 
+    ICM->ICM_CFG = mode;
 }
 
 /**

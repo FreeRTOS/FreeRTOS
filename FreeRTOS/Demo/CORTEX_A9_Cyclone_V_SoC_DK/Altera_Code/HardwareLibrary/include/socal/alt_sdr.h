@@ -41,54 +41,54 @@ extern "C"
 /*
  * Component : SDRAM Controller - ALT_SDR
  * SDRAM Controller
- * 
+ *
  * Address map for the SDRAM Interface registers
- * 
+ *
  */
 /*
  * Register Group : SDRAM Controller Module - ALT_SDR_CTL
  * SDRAM Controller Module
- * 
+ *
  * Address map for the SDRAM controller and multi-port front-end.
- * 
+ *
  * All registers in this group reset to zero.
- * 
+ *
  */
 /*
  * Register : Controller Configuration Register - ctrlcfg
- * 
+ *
  * The Controller Configuration Register determines the behavior of the controller.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description               
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------
- *  [2:0]   | RW     | Unknown | DRAM Memory Type          
- *  [7:3]   | RW     | Unknown | DRAM Memory Burst Length  
+ *  [2:0]   | RW     | Unknown | DRAM Memory Type
+ *  [7:3]   | RW     | Unknown | DRAM Memory Burst Length
  *  [9:8]   | RW     | Unknown | Address Interleaving Order
- *  [10]    | RW     | Unknown | ECC Enable                
+ *  [10]    | RW     | Unknown | ECC Enable
  *  [11]    | RW     | Unknown | ECC Auto-Correction Enable
- *  [12]    | RW     | Unknown | TBD                       
+ *  [12]    | RW     | Unknown | TBD
  *  [13]    | RW     | Unknown | Generate Single Bit Errors
  *  [14]    | RW     | Unknown | Generate Double Bit Errors
- *  [15]    | RW     | Unknown | Command Reorder Enable    
- *  [21:16] | RW     | Unknown | Starvation Limit          
- *  [22]    | RW     | Unknown | DQS Tracking Enable       
- *  [23]    | RW     | Unknown | No DM Pins Present        
- *  [24]    | RW     | Unknown | Burst Interrupt Enable    
- *  [25]    | RW     | Unknown | Burst Terminate Enable    
- *  [31:26] | ???    | Unknown | *UNDEFINED*               
- * 
+ *  [15]    | RW     | Unknown | Command Reorder Enable
+ *  [21:16] | RW     | Unknown | Starvation Limit
+ *  [22]    | RW     | Unknown | DQS Tracking Enable
+ *  [23]    | RW     | Unknown | No DM Pins Present
+ *  [24]    | RW     | Unknown | Burst Interrupt Enable
+ *  [25]    | RW     | Unknown | Burst Terminate Enable
+ *  [31:26] | ???    | Unknown | *UNDEFINED*
+ *
  */
 /*
  * Field : DRAM Memory Type - memtype
- * 
+ *
  * Selects memory type. Program this field with one of the following binary values,
  * &quot;001&quot; for DDR2 SDRAM, &quot;010&quot; for DDR3 SDRAM, &quot;011&quot;
  * for LPDDR1 SDRAM or &quot;100&quot; for LPDDR2 SDRAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_MEMTYPE register field. */
 #define ALT_SDR_CTL_CTLCFG_MEMTYPE_LSB        0
@@ -109,16 +109,16 @@ extern "C"
 
 /*
  * Field : DRAM Memory Burst Length - membl
- * 
+ *
  * Configures burst length as a static decimal value.  Legal values are valid for
  * JEDEC allowed DRAM values for the DRAM selected in cfg_type.  For DDR3, this
  * should be programmed with 8 (binary &quot;01000&quot;), for DDR2 it can be
  * either 4 or 8 depending on the exact DRAM chip.  LPDDR2 can be programmed with
  * 4, 8, or 16 and LPDDR can be programmed with 2, 4, or 8. You must also program
  * the membl field in the staticcfg register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_MEMBL register field. */
 #define ALT_SDR_CTL_CTLCFG_MEMBL_LSB        3
@@ -139,15 +139,15 @@ extern "C"
 
 /*
  * Field : Address Interleaving Order - addrorder
- * 
+ *
  * Selects the order for address interleaving.  Programming this field with
  * different values gives different mappings between the AXI or Avalon-MM address
  * and the SDRAM address. Program this field with the following binary values to
  * select the ordering. &quot;00&quot; - chip, row, bank, column, &quot;01&quot; -
  * chip, bank, row, column, &quot;10&quot;-row, chip, bank, column
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_ADDRORDER register field. */
 #define ALT_SDR_CTL_CTLCFG_ADDRORDER_LSB        8
@@ -168,13 +168,13 @@ extern "C"
 
 /*
  * Field : ECC Enable - eccen
- * 
+ *
  * Enable the generation and checking of ECC.  This bit must only be set if the
  * memory connected to the SDRAM interface is 24 or 40 bits wide. If you set this,
  * you must clear the useeccasdata field in the staticcfg register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_ECCEN register field. */
 #define ALT_SDR_CTL_CTLCFG_ECCEN_LSB        10
@@ -195,12 +195,12 @@ extern "C"
 
 /*
  * Field : ECC Auto-Correction Enable - ecccorren
- * 
+ *
  * Enable auto correction of the read data returned when single bit error is
  * detected.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_ECCCORREN register field. */
 #define ALT_SDR_CTL_CTLCFG_ECCCORREN_LSB        11
@@ -221,13 +221,13 @@ extern "C"
 
 /*
  * Field : TBD - cfg_enable_ecc_code_overwrites
- * 
+ *
  * Set to a one to enable ECC overwrites.  ECC overwrites occur when a correctable
  * ECC error is seen and cause a new read/modify/write to be scheduled for that
  * location to clear the ECC error.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_CFG_EN_ECC_CODE_OVERWRS register field. */
 #define ALT_SDR_CTL_CTLCFG_CFG_EN_ECC_CODE_OVERWRS_LSB        12
@@ -248,12 +248,12 @@ extern "C"
 
 /*
  * Field : Generate Single Bit Errors - gensbe
- * 
+ *
  * Enable the deliberate insertion of single bit errors in data written to memory.
  * This should only be used for testing purposes.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_GENSBE register field. */
 #define ALT_SDR_CTL_CTLCFG_GENSBE_LSB        13
@@ -274,12 +274,12 @@ extern "C"
 
 /*
  * Field : Generate Double Bit Errors - gendbe
- * 
+ *
  * Enable the deliberate insertion of double bit errors in data written to memory.
  * This should only be used for testing purposes.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_GENDBE register field. */
 #define ALT_SDR_CTL_CTLCFG_GENDBE_LSB        14
@@ -300,12 +300,12 @@ extern "C"
 
 /*
  * Field : Command Reorder Enable - reorderen
- * 
+ *
  * This bit controls whether the controller can re-order operations to optimize
  * SDRAM bandwidth.  It should generally be set to a one.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_REORDEREN register field. */
 #define ALT_SDR_CTL_CTLCFG_REORDEREN_LSB        15
@@ -326,13 +326,13 @@ extern "C"
 
 /*
  * Field : Starvation Limit - starvelimit
- * 
+ *
  * Specifies the number of DRAM burst transactions an individual transaction will
  * allow to reorder ahead of it before its priority is raised in the memory
  * controller.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_STARVELIMIT register field. */
 #define ALT_SDR_CTL_CTLCFG_STARVELIMIT_LSB        16
@@ -353,11 +353,11 @@ extern "C"
 
 /*
  * Field : DQS Tracking Enable - dqstrken
- * 
+ *
  * Enables DQS tracking in the PHY.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_DQSTRKEN register field. */
 #define ALT_SDR_CTL_CTLCFG_DQSTRKEN_LSB        22
@@ -378,11 +378,11 @@ extern "C"
 
 /*
  * Field : No DM Pins Present - nodmpins
- * 
+ *
  * Set to a one to enable DRAM operation if no DM pins are connected.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_NODMPINS register field. */
 #define ALT_SDR_CTL_CTLCFG_NODMPINS_LSB        23
@@ -403,12 +403,12 @@ extern "C"
 
 /*
  * Field : Burst Interrupt Enable - burstintren
- * 
+ *
  * Set to a one to enable the controller to issue burst interrupt commands. This
  * must only be set when the DRAM memory type is LPDDR2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_BURSTINTREN register field. */
 #define ALT_SDR_CTL_CTLCFG_BURSTINTREN_LSB        24
@@ -429,12 +429,12 @@ extern "C"
 
 /*
  * Field : Burst Terminate Enable - bursttermen
- * 
+ *
  * Set to a one to enable the controller to issue burst terminate commands. This
  * must only be set when the DRAM memory type is LPDDR2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLCFG_BURSTTERMEN register field. */
 #define ALT_SDR_CTL_CTLCFG_BURSTTERMEN_LSB        25
@@ -461,7 +461,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_CTLCFG.
  */
 struct ALT_SDR_CTL_CTLCFG_s
@@ -492,29 +492,29 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
 
 /*
  * Register : DRAM Timings 1 Register - dramtiming1
- * 
+ *
  * This register implements JEDEC standardized timing parameters.  It should be
  * programmed in clock cycles, for the value specified by the memory vendor.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description               
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------
- *  [3:0]   | RW     | Unknown | CAS Write Latency         
- *  [8:4]   | RW     | Unknown | Additive Latency          
- *  [13:9]  | RW     | Unknown | CAS Read Latency          
+ *  [3:0]   | RW     | Unknown | CAS Write Latency
+ *  [8:4]   | RW     | Unknown | Additive Latency
+ *  [13:9]  | RW     | Unknown | CAS Read Latency
  *  [17:14] | RW     | Unknown | Activate to Activate Delay
- *  [23:18] | RW     | Unknown | Four Activate Window Time 
- *  [31:24] | RW     | Unknown | Refresh Cycle Time        
- * 
+ *  [23:18] | RW     | Unknown | Four Activate Window Time
+ *  [31:24] | RW     | Unknown | Refresh Cycle Time
+ *
  */
 /*
  * Field : CAS Write Latency - tcwl
- * 
+ *
  * Memory write latency.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING1_TCWL register field. */
 #define ALT_SDR_CTL_DRAMTIMING1_TCWL_LSB        0
@@ -535,11 +535,11 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
 
 /*
  * Field : Additive Latency - tal
- * 
+ *
  * Memory additive latency.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING1_TAL register field. */
 #define ALT_SDR_CTL_DRAMTIMING1_TAL_LSB        4
@@ -560,11 +560,11 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
 
 /*
  * Field : CAS Read Latency - tcl
- * 
+ *
  * Memory read latency.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING1_TCL register field. */
 #define ALT_SDR_CTL_DRAMTIMING1_TCL_LSB        9
@@ -585,11 +585,11 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
 
 /*
  * Field : Activate to Activate Delay - trrd
- * 
+ *
  * The activate to activate, different banks timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING1_TRRD register field. */
 #define ALT_SDR_CTL_DRAMTIMING1_TRRD_LSB        14
@@ -610,11 +610,11 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
 
 /*
  * Field : Four Activate Window Time - tfaw
- * 
+ *
  * The four-activate window timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING1_TFAW register field. */
 #define ALT_SDR_CTL_DRAMTIMING1_TFAW_LSB        18
@@ -635,11 +635,11 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
 
 /*
  * Field : Refresh Cycle Time - trfc
- * 
+ *
  * The refresh cycle timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING1_TRFC register field. */
 #define ALT_SDR_CTL_DRAMTIMING1_TRFC_LSB        24
@@ -666,7 +666,7 @@ typedef volatile struct ALT_SDR_CTL_CTLCFG_s  ALT_SDR_CTL_CTLCFG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMTIMING1.
  */
 struct ALT_SDR_CTL_DRAMTIMING1_s
@@ -688,29 +688,29 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING1_s  ALT_SDR_CTL_DRAMTIMING1_t;
 
 /*
  * Register : DRAM Timings 2 Register - dramtiming2
- * 
+ *
  * This register implements JEDEC standardized timing parameters.  It should be
  * programmed in clock cycles, for the value specified by the memory vendor.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                    
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:--------------------------------
- *  [12:0]  | RW     | Unknown | Refresh Interval               
+ *  [12:0]  | RW     | Unknown | Refresh Interval
  *  [16:13] | RW     | Unknown | Activate to Read or Write Delay
- *  [20:17] | RW     | Unknown | Row Precharge Time             
- *  [24:21] | RW     | Unknown | Write Recovery Time            
- *  [28:25] | RW     | Unknown | Write to Read Time             
- *  [31:29] | ???    | 0x0     | *UNDEFINED*                    
- * 
+ *  [20:17] | RW     | Unknown | Row Precharge Time
+ *  [24:21] | RW     | Unknown | Write Recovery Time
+ *  [28:25] | RW     | Unknown | Write to Read Time
+ *  [31:29] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Refresh Interval - trefi
- * 
+ *
  * The refresh interval timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING2_TREFI register field. */
 #define ALT_SDR_CTL_DRAMTIMING2_TREFI_LSB        0
@@ -731,11 +731,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING1_s  ALT_SDR_CTL_DRAMTIMING1_t;
 
 /*
  * Field : Activate to Read or Write Delay - trcd
- * 
+ *
  * The activate to read/write timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING2_TRCD register field. */
 #define ALT_SDR_CTL_DRAMTIMING2_TRCD_LSB        13
@@ -756,11 +756,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING1_s  ALT_SDR_CTL_DRAMTIMING1_t;
 
 /*
  * Field : Row Precharge Time - trp
- * 
+ *
  * The precharge to activate timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING2_TRP register field. */
 #define ALT_SDR_CTL_DRAMTIMING2_TRP_LSB        17
@@ -781,11 +781,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING1_s  ALT_SDR_CTL_DRAMTIMING1_t;
 
 /*
  * Field : Write Recovery Time - twr
- * 
+ *
  * The write recovery timing.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING2_TWR register field. */
 #define ALT_SDR_CTL_DRAMTIMING2_TWR_LSB        21
@@ -806,11 +806,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING1_s  ALT_SDR_CTL_DRAMTIMING1_t;
 
 /*
  * Field : Write to Read Time - twtr
- * 
+ *
  * The write to read timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING2_TWTR register field. */
 #define ALT_SDR_CTL_DRAMTIMING2_TWTR_LSB        25
@@ -837,7 +837,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING1_s  ALT_SDR_CTL_DRAMTIMING1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMTIMING2.
  */
 struct ALT_SDR_CTL_DRAMTIMING2_s
@@ -859,29 +859,29 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING2_s  ALT_SDR_CTL_DRAMTIMING2_t;
 
 /*
  * Register : DRAM Timings 3 Register - dramtiming3
- * 
+ *
  * This register implements JEDEC standardized timing parameters.  It should be
  * programmed in clock cycles, for the value specified by the memory vendor.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                    
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:--------------------------------
- *  [3:0]   | RW     | Unknown | Read to Precharge Time         
- *  [8:4]   | RW     | Unknown | Activate to Precharge Time     
- *  [14:9]  | RW     | Unknown | Row Cycle Time                 
+ *  [3:0]   | RW     | Unknown | Read to Precharge Time
+ *  [8:4]   | RW     | Unknown | Activate to Precharge Time
+ *  [14:9]  | RW     | Unknown | Row Cycle Time
  *  [18:15] | RW     | Unknown | Mode Register Programming Delay
- *  [22:19] | RW     | Unknown | CAS to CAS Delay               
- *  [31:23] | ???    | 0x0     | *UNDEFINED*                    
- * 
+ *  [22:19] | RW     | Unknown | CAS to CAS Delay
+ *  [31:23] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Read to Precharge Time - trtp
- * 
+ *
  * The read to precharge timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING3_TRTP register field. */
 #define ALT_SDR_CTL_DRAMTIMING3_TRTP_LSB        0
@@ -902,11 +902,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING2_s  ALT_SDR_CTL_DRAMTIMING2_t;
 
 /*
  * Field : Activate to Precharge Time - tras
- * 
+ *
  * The activate to precharge timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING3_TRAS register field. */
 #define ALT_SDR_CTL_DRAMTIMING3_TRAS_LSB        4
@@ -927,11 +927,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING2_s  ALT_SDR_CTL_DRAMTIMING2_t;
 
 /*
  * Field : Row Cycle Time - trc
- * 
+ *
  * The activate to activate timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING3_TRC register field. */
 #define ALT_SDR_CTL_DRAMTIMING3_TRC_LSB        9
@@ -952,11 +952,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING2_s  ALT_SDR_CTL_DRAMTIMING2_t;
 
 /*
  * Field : Mode Register Programming Delay - tmrd
- * 
+ *
  * Mode register timing parameter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING3_TMRD register field. */
 #define ALT_SDR_CTL_DRAMTIMING3_TMRD_LSB        15
@@ -977,11 +977,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING2_s  ALT_SDR_CTL_DRAMTIMING2_t;
 
 /*
  * Field : CAS to CAS Delay - tccd
- * 
+ *
  * The CAS to CAS delay time.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING3_TCCD register field. */
 #define ALT_SDR_CTL_DRAMTIMING3_TCCD_LSB        19
@@ -1008,7 +1008,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING2_s  ALT_SDR_CTL_DRAMTIMING2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMTIMING3.
  */
 struct ALT_SDR_CTL_DRAMTIMING3_s
@@ -1030,27 +1030,27 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING3_s  ALT_SDR_CTL_DRAMTIMING3_t;
 
 /*
  * Register : DRAM Timings 4 Register - dramtiming4
- * 
+ *
  * This register implements JEDEC standardized timing parameters.  It should be
  * programmed in clock cycles, for the value specified by the memory vendor.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                   
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:-------------------------------
- *  [9:0]   | RW     | Unknown | Self-refresh Exit             
- *  [19:10] | RW     | Unknown | Power Down Exit               
+ *  [9:0]   | RW     | Unknown | Self-refresh Exit
+ *  [19:10] | RW     | Unknown | Power Down Exit
  *  [23:20] | RW     | Unknown | Minimum Low Power State Cycles
- *  [31:24] | ???    | 0x0     | *UNDEFINED*                   
- * 
+ *  [31:24] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Self-refresh Exit - selfrfshexit
- * 
+ *
  * The self refresh exit cycles, tXS.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING4_SELFRFSHEXIT register field. */
 #define ALT_SDR_CTL_DRAMTIMING4_SELFRFSHEXIT_LSB        0
@@ -1071,11 +1071,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING3_s  ALT_SDR_CTL_DRAMTIMING3_t;
 
 /*
  * Field : Power Down Exit - pwrdownexit
- * 
+ *
  * The power down exit cycles, tXPDLL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING4_PWRDOWNEXIT register field. */
 #define ALT_SDR_CTL_DRAMTIMING4_PWRDOWNEXIT_LSB        10
@@ -1096,12 +1096,12 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING3_s  ALT_SDR_CTL_DRAMTIMING3_t;
 
 /*
  * Field : Minimum Low Power State Cycles - minpwrsavecycles
- * 
+ *
  * The minimum number of cycles to stay in a low power state. This applies to both
  * power down and self-refresh and should be set to the greater of tPD and tCKESR.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMTIMING4_MINPWRSAVECYCLES register field. */
 #define ALT_SDR_CTL_DRAMTIMING4_MINPWRSAVECYCLES_LSB        20
@@ -1128,7 +1128,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING3_s  ALT_SDR_CTL_DRAMTIMING3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMTIMING4.
  */
 struct ALT_SDR_CTL_DRAMTIMING4_s
@@ -1148,26 +1148,26 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING4_s  ALT_SDR_CTL_DRAMTIMING4_t;
 
 /*
  * Register : Lower Power Timing Register - lowpwrtiming
- * 
+ *
  * This register controls the behavior of the low power logic in the controller.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description               
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------
- *  [15:0]  | RW     | Unknown | Auto-power Down Cycles    
+ *  [15:0]  | RW     | Unknown | Auto-power Down Cycles
  *  [19:16] | RW     | Unknown | Clock Disable Delay Cycles
- *  [31:20] | ???    | 0x0     | *UNDEFINED*               
- * 
+ *  [31:20] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Auto-power Down Cycles - autopdcycles
- * 
+ *
  * The number of idle clock cycles after which the controller should place the
  * memory into power-down mode.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWRTIMING_AUTOPDCYCLES register field. */
 #define ALT_SDR_CTL_LOWPWRTIMING_AUTOPDCYCLES_LSB        0
@@ -1188,13 +1188,13 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING4_s  ALT_SDR_CTL_DRAMTIMING4_t;
 
 /*
  * Field : Clock Disable Delay Cycles - clkdisablecycles
- * 
+ *
  * Set to a the number of clocks after the execution of an self-refresh to stop the
  * clock.  This register is generally set based on PHY design latency and should
  * generally not be changed.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWRTIMING_CLKDISCYCLES register field. */
 #define ALT_SDR_CTL_LOWPWRTIMING_CLKDISCYCLES_LSB        16
@@ -1221,7 +1221,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMTIMING4_s  ALT_SDR_CTL_DRAMTIMING4_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_LOWPWRTIMING.
  */
 struct ALT_SDR_CTL_LOWPWRTIMING_s
@@ -1240,30 +1240,30 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRTIMING_s  ALT_SDR_CTL_LOWPWRTIMING_t;
 
 /*
  * Register : ODT Control Register - dramodt
- * 
+ *
  * This register controls which ODT pin is asserted during reads or writes. Bits
  * [1:0] control which ODT pin is asserted during to accesses to chip select 0,
  * bits [3:2] which ODT pin is asserted during accesses to chip select 1. For
  * example, a value of &quot;1001&quot; will cause ODT[0] to be asserted for
  * accesses to CS[0], and ODT[1] to be asserted for access to CS[1] pin. Set this
  * to &quot;0001&quot; if there is only one chip select available.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description      
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------------
  *  [3:0]  | RW     | Unknown | Write ODT Control
- *  [7:4]  | RW     | Unknown | Read ODT Control 
- *  [31:8] | ???    | 0x0     | *UNDEFINED*      
- * 
+ *  [7:4]  | RW     | Unknown | Read ODT Control
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Write ODT Control - cfg_write_odt_chip
- * 
+ *
  * This register controls which ODT pin is asserted during writes.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMODT_CFG_WR_ODT_CHIP register field. */
 #define ALT_SDR_CTL_DRAMODT_CFG_WR_ODT_CHIP_LSB        0
@@ -1284,11 +1284,11 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRTIMING_s  ALT_SDR_CTL_LOWPWRTIMING_t;
 
 /*
  * Field : Read ODT Control - cfg_read_odt_chip
- * 
+ *
  * This register controls which ODT pin is asserted during reads.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMODT_CFG_RD_ODT_CHIP register field. */
 #define ALT_SDR_CTL_DRAMODT_CFG_RD_ODT_CHIP_LSB        4
@@ -1315,7 +1315,7 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRTIMING_s  ALT_SDR_CTL_LOWPWRTIMING_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMODT.
  */
 struct ALT_SDR_CTL_DRAMODT_s
@@ -1334,29 +1334,29 @@ typedef volatile struct ALT_SDR_CTL_DRAMODT_s  ALT_SDR_CTL_DRAMODT_t;
 
 /*
  * Register : DRAM Address Widths Register - dramaddrw
- * 
+ *
  * This register configures the width of the various address fields of the DRAM.
  * The values specified in this register must match the memory devices being used.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description             
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:-------------------------
  *  [4:0]   | RW     | Unknown | DRAM Column Address Bits
- *  [9:5]   | RW     | Unknown | DRAM Row Address Bits   
- *  [12:10] | RW     | Unknown | DRAM Bank Address Bits  
- *  [15:13] | RW     | Unknown | DRAM Chip Address Bits  
- *  [31:16] | ???    | 0x0     | *UNDEFINED*             
- * 
+ *  [9:5]   | RW     | Unknown | DRAM Row Address Bits
+ *  [12:10] | RW     | Unknown | DRAM Bank Address Bits
+ *  [15:13] | RW     | Unknown | DRAM Chip Address Bits
+ *  [31:16] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : DRAM Column Address Bits - colbits
- * 
+ *
  * The number of column address bits for the memory devices in your memory
  * interface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMADDRW_COLBITS register field. */
 #define ALT_SDR_CTL_DRAMADDRW_COLBITS_LSB        0
@@ -1377,11 +1377,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMODT_s  ALT_SDR_CTL_DRAMODT_t;
 
 /*
  * Field : DRAM Row Address Bits - rowbits
- * 
+ *
  * The number of row address bits for the memory devices in your memory interface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMADDRW_ROWBITS register field. */
 #define ALT_SDR_CTL_DRAMADDRW_ROWBITS_LSB        5
@@ -1402,11 +1402,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMODT_s  ALT_SDR_CTL_DRAMODT_t;
 
 /*
  * Field : DRAM Bank Address Bits - bankbits
- * 
+ *
  * The number of bank address bits for the memory devices in your memory interface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMADDRW_BANKBITS register field. */
 #define ALT_SDR_CTL_DRAMADDRW_BANKBITS_LSB        10
@@ -1427,12 +1427,12 @@ typedef volatile struct ALT_SDR_CTL_DRAMODT_s  ALT_SDR_CTL_DRAMODT_t;
 
 /*
  * Field : DRAM Chip Address Bits - csbits
- * 
+ *
  * The number of chip select address bits for the memory devices in your memory
  * interface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMADDRW_CSBITS register field. */
 #define ALT_SDR_CTL_DRAMADDRW_CSBITS_LSB        13
@@ -1459,7 +1459,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMODT_s  ALT_SDR_CTL_DRAMODT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMADDRW.
  */
 struct ALT_SDR_CTL_DRAMADDRW_s
@@ -1480,25 +1480,25 @@ typedef volatile struct ALT_SDR_CTL_DRAMADDRW_s  ALT_SDR_CTL_DRAMADDRW_t;
 
 /*
  * Register : DRAM Interface Data Width Register - dramifwidth
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description              
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:--------------------------
  *  [7:0]  | RW     | Unknown | DRAM Interface Data Width
- *  [31:8] | ???    | 0x0     | *UNDEFINED*              
- * 
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : DRAM Interface Data Width - ifwidth
- * 
+ *
  * This register controls the interface width of the SDRAM interface, including any
  * bits used for ECC. For example, for a 32-bit interface with ECC, program this
  * register with 0x28. You must also program the ctrlwidth register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMIFWIDTH_IFWIDTH register field. */
 #define ALT_SDR_CTL_DRAMIFWIDTH_IFWIDTH_LSB        0
@@ -1525,7 +1525,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMADDRW_s  ALT_SDR_CTL_DRAMADDRW_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMIFWIDTH.
  */
 struct ALT_SDR_CTL_DRAMIFWIDTH_s
@@ -1543,24 +1543,24 @@ typedef volatile struct ALT_SDR_CTL_DRAMIFWIDTH_s  ALT_SDR_CTL_DRAMIFWIDTH_t;
 
 /*
  * Register : DRAM Devices Data Width Register - dramdevwidth
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description            
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------------------
  *  [3:0]  | RW     | Unknown | DRAM Devices Data Width
- *  [31:4] | ???    | 0x0     | *UNDEFINED*            
- * 
+ *  [31:4] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : DRAM Devices Data Width - devwidth
- * 
+ *
  * This register specifies the width of the physical DRAM chips, for example 8 or
  * 16.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMDEVWIDTH_DEVWIDTH register field. */
 #define ALT_SDR_CTL_DRAMDEVWIDTH_DEVWIDTH_LSB        0
@@ -1587,7 +1587,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMIFWIDTH_s  ALT_SDR_CTL_DRAMIFWIDTH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMDEVWIDTH.
  */
 struct ALT_SDR_CTL_DRAMDEVWIDTH_s
@@ -1605,28 +1605,28 @@ typedef volatile struct ALT_SDR_CTL_DRAMDEVWIDTH_s  ALT_SDR_CTL_DRAMDEVWIDTH_t;
 
 /*
  * Register : DRAM Status Register - dramsts
- * 
+ *
  * This register provides the status of the calibration and ECC logic.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:----------------------------
- *  [0]    | RW     | Unknown | PHY Calibration Successful 
- *  [1]    | RW     | Unknown | PHY Calibration Failed     
- *  [2]    | RW     | Unknown | Single Bit Error Seen      
- *  [3]    | RW     | Unknown | Double Bit Error Seen      
+ *  [0]    | RW     | Unknown | PHY Calibration Successful
+ *  [1]    | RW     | Unknown | PHY Calibration Failed
+ *  [2]    | RW     | Unknown | Single Bit Error Seen
+ *  [3]    | RW     | Unknown | Double Bit Error Seen
  *  [4]    | RW     | Unknown | ECC Auto-Correction Dropped
- *  [31:5] | ???    | 0x0     | *UNDEFINED*                
- * 
+ *  [31:5] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : PHY Calibration Successful - calsuccess
- * 
+ *
  * This bit will be set to 1 if the PHY was able to successfully calibrate.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMSTS_CALSUCCESS register field. */
 #define ALT_SDR_CTL_DRAMSTS_CALSUCCESS_LSB        0
@@ -1647,11 +1647,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMDEVWIDTH_s  ALT_SDR_CTL_DRAMDEVWIDTH_t;
 
 /*
  * Field : PHY Calibration Failed - calfail
- * 
+ *
  * This bit  will be set to 1 if the PHY was unable to calibrate.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMSTS_CALFAIL register field. */
 #define ALT_SDR_CTL_DRAMSTS_CALFAIL_LSB        1
@@ -1672,11 +1672,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMDEVWIDTH_s  ALT_SDR_CTL_DRAMDEVWIDTH_t;
 
 /*
  * Field : Single Bit Error Seen - sbeerr
- * 
+ *
  * This bit will be set to 1 if there have been any ECC single bit errors detected.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMSTS_SBEERR register field. */
 #define ALT_SDR_CTL_DRAMSTS_SBEERR_LSB        2
@@ -1697,11 +1697,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMDEVWIDTH_s  ALT_SDR_CTL_DRAMDEVWIDTH_t;
 
 /*
  * Field : Double Bit Error Seen - dbeerr
- * 
+ *
  * This bit will be set to 1 if there have been any ECC double bit errors detected.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMSTS_DBEERR register field. */
 #define ALT_SDR_CTL_DRAMSTS_DBEERR_LSB        3
@@ -1722,11 +1722,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMDEVWIDTH_s  ALT_SDR_CTL_DRAMDEVWIDTH_t;
 
 /*
  * Field : ECC Auto-Correction Dropped - corrdrop
- * 
+ *
  * This bit will be set to 1 if there any auto-corrections have been dropped.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMSTS_CORRDROP register field. */
 #define ALT_SDR_CTL_DRAMSTS_CORRDROP_LSB        4
@@ -1753,7 +1753,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMDEVWIDTH_s  ALT_SDR_CTL_DRAMDEVWIDTH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMSTS.
  */
 struct ALT_SDR_CTL_DRAMSTS_s
@@ -1775,27 +1775,27 @@ typedef volatile struct ALT_SDR_CTL_DRAMSTS_s  ALT_SDR_CTL_DRAMSTS_t;
 
 /*
  * Register : ECC Interrupt  Register - dramintr
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                           
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:---------------------------------------
- *  [0]    | RW     | Unknown | Interrupt Enable                      
- *  [1]    | RW     | Unknown | Mask Single Bit Error Interrupt       
- *  [2]    | RW     | Unknown | Mask Double Bit Error Interrupt       
+ *  [0]    | RW     | Unknown | Interrupt Enable
+ *  [1]    | RW     | Unknown | Mask Single Bit Error Interrupt
+ *  [2]    | RW     | Unknown | Mask Double Bit Error Interrupt
  *  [3]    | RW     | Unknown | Mask Dropped Auto-correction Interrupt
- *  [4]    | RW     | Unknown | Clear Interrupt Signal                
- *  [31:5] | ???    | 0x0     | *UNDEFINED*                           
- * 
+ *  [4]    | RW     | Unknown | Clear Interrupt Signal
+ *  [31:5] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Enable - intren
- * 
+ *
  * Enable the interrupt output.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMINTR_INTREN register field. */
 #define ALT_SDR_CTL_DRAMINTR_INTREN_LSB        0
@@ -1816,11 +1816,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMSTS_s  ALT_SDR_CTL_DRAMSTS_t;
 
 /*
  * Field : Mask Single Bit Error Interrupt - sbemask
- * 
+ *
  * Mask the single bit error interrupt.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMINTR_SBEMSK register field. */
 #define ALT_SDR_CTL_DRAMINTR_SBEMSK_LSB        1
@@ -1841,11 +1841,11 @@ typedef volatile struct ALT_SDR_CTL_DRAMSTS_s  ALT_SDR_CTL_DRAMSTS_t;
 
 /*
  * Field : Mask Double Bit Error Interrupt - dbemask
- * 
+ *
  * Mask the double bit error interrupt.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMINTR_DBEMSK register field. */
 #define ALT_SDR_CTL_DRAMINTR_DBEMSK_LSB        2
@@ -1866,13 +1866,13 @@ typedef volatile struct ALT_SDR_CTL_DRAMSTS_s  ALT_SDR_CTL_DRAMSTS_t;
 
 /*
  * Field : Mask Dropped Auto-correction Interrupt - corrdropmask
- * 
+ *
  * Set this bit to a one to mask interrupts for an ECC correction write back
  * needing to be dropped.  This indicates a burst of memory errors in a short
  * period of time.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMINTR_CORRDROPMSK register field. */
 #define ALT_SDR_CTL_DRAMINTR_CORRDROPMSK_LSB        3
@@ -1893,12 +1893,12 @@ typedef volatile struct ALT_SDR_CTL_DRAMSTS_s  ALT_SDR_CTL_DRAMSTS_t;
 
 /*
  * Field : Clear Interrupt Signal - intrclr
- * 
+ *
  * Writing to this self-clearing bit clears the interrupt signal. Writing to this
  * bit also clears the error count and error address registers.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DRAMINTR_INTRCLR register field. */
 #define ALT_SDR_CTL_DRAMINTR_INTRCLR_LSB        4
@@ -1925,7 +1925,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMSTS_s  ALT_SDR_CTL_DRAMSTS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DRAMINTR.
  */
 struct ALT_SDR_CTL_DRAMINTR_s
@@ -1947,24 +1947,24 @@ typedef volatile struct ALT_SDR_CTL_DRAMINTR_s  ALT_SDR_CTL_DRAMINTR_t;
 
 /*
  * Register : ECC Single Bit Error Count Register - sbecount
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description           
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:-----------------------
  *  [7:0]  | RW     | Unknown | Single Bit Error Count
- *  [31:8] | ???    | 0x0     | *UNDEFINED*           
- * 
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Single Bit Error Count - count
- * 
+ *
  * Reports the number of single bit errors that have occurred since the status
  * register counters were last cleared.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_SBECOUNT_COUNT register field. */
 #define ALT_SDR_CTL_SBECOUNT_COUNT_LSB        0
@@ -1991,7 +1991,7 @@ typedef volatile struct ALT_SDR_CTL_DRAMINTR_s  ALT_SDR_CTL_DRAMINTR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_SBECOUNT.
  */
 struct ALT_SDR_CTL_SBECOUNT_s
@@ -2009,24 +2009,24 @@ typedef volatile struct ALT_SDR_CTL_SBECOUNT_s  ALT_SDR_CTL_SBECOUNT_t;
 
 /*
  * Register : ECC Double Bit Error Count Register - dbecount
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description           
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:-----------------------
  *  [7:0]  | RW     | Unknown | Double Bit Error Count
- *  [31:8] | ???    | 0x0     | *UNDEFINED*           
- * 
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Double Bit Error Count - count
- * 
+ *
  * Reports the number of double bit errors that have occurred since the status
  * register counters were last cleared.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DBECOUNT_COUNT register field. */
 #define ALT_SDR_CTL_DBECOUNT_COUNT_LSB        0
@@ -2053,7 +2053,7 @@ typedef volatile struct ALT_SDR_CTL_SBECOUNT_s  ALT_SDR_CTL_SBECOUNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DBECOUNT.
  */
 struct ALT_SDR_CTL_DBECOUNT_s
@@ -2071,22 +2071,22 @@ typedef volatile struct ALT_SDR_CTL_DBECOUNT_s  ALT_SDR_CTL_DBECOUNT_t;
 
 /*
  * Register : ECC Error Address Register - erraddr
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description      
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------------
  *  [31:0] | RW     | Unknown | ECC Error Address
- * 
+ *
  */
 /*
  * Field : ECC Error Address - addr
- * 
+ *
  * The address of the most recent ECC error.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_ERRADDR_ADDR register field. */
 #define ALT_SDR_CTL_ERRADDR_ADDR_LSB        0
@@ -2113,7 +2113,7 @@ typedef volatile struct ALT_SDR_CTL_DBECOUNT_s  ALT_SDR_CTL_DBECOUNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_ERRADDR.
  */
 struct ALT_SDR_CTL_ERRADDR_s
@@ -2130,24 +2130,24 @@ typedef volatile struct ALT_SDR_CTL_ERRADDR_s  ALT_SDR_CTL_ERRADDR_t;
 
 /*
  * Register : ECC Auto-correction Dropped Count Register - dropcount
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                  
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------------------------
  *  [7:0]  | RW     | Unknown | Dropped Auto-correction Count
- *  [31:8] | ???    | 0x0     | *UNDEFINED*                  
- * 
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Dropped Auto-correction Count - corrdropcount
- * 
+ *
  * This gives the count of the number of ECC write back transactions dropped due to
  * the internal FIFO overflowing.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DROPCOUNT_CORRDROPCOUNT register field. */
 #define ALT_SDR_CTL_DROPCOUNT_CORRDROPCOUNT_LSB        0
@@ -2174,7 +2174,7 @@ typedef volatile struct ALT_SDR_CTL_ERRADDR_s  ALT_SDR_CTL_ERRADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DROPCOUNT.
  */
 struct ALT_SDR_CTL_DROPCOUNT_s
@@ -2192,22 +2192,22 @@ typedef volatile struct ALT_SDR_CTL_DROPCOUNT_s  ALT_SDR_CTL_DROPCOUNT_t;
 
 /*
  * Register : ECC Auto-correction Dropped Address Register - dropaddr
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                    
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:--------------------------------
  *  [31:0] | RW     | Unknown | Dropped Auto-correction Address
- * 
+ *
  */
 /*
  * Field : Dropped Auto-correction Address - corrdropaddr
- * 
+ *
  * This register gives the last address which was dropped.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_DROPADDR_CORRDROPADDR register field. */
 #define ALT_SDR_CTL_DROPADDR_CORRDROPADDR_LSB        0
@@ -2234,7 +2234,7 @@ typedef volatile struct ALT_SDR_CTL_DROPCOUNT_s  ALT_SDR_CTL_DROPCOUNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_DROPADDR.
  */
 struct ALT_SDR_CTL_DROPADDR_s
@@ -2251,29 +2251,29 @@ typedef volatile struct ALT_SDR_CTL_DROPADDR_s  ALT_SDR_CTL_DROPADDR_t;
 
 /*
  * Register : Low Power Control Register - lowpwreq
- * 
+ *
  * This register instructs the controller to put the DRAM into a power down state.
  * Note that some commands are only valid for certain memory types.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                     
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:---------------------------------
- *  [0]    | RW     | Unknown | Deep Power Down Request         
+ *  [0]    | RW     | Unknown | Deep Power Down Request
  *  [2:1]  | RW     | Unknown | Deep Power Down Chip Select Mask
- *  [3]    | RW     | Unknown | Self-refresh Request            
- *  [5:4]  | RW     | Unknown | Self-refresh Chip Select Mask   
- *  [31:6] | ???    | 0x0     | *UNDEFINED*                     
- * 
+ *  [3]    | RW     | Unknown | Self-refresh Request
+ *  [5:4]  | RW     | Unknown | Self-refresh Chip Select Mask
+ *  [31:6] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Deep Power Down Request - deeppwrdnreq
- * 
+ *
  * Write a one to this bit to request a deep power down.  This bit should only be
  * written with LPDDR2 DRAMs, DDR3 DRAMs do not support deep power down.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWREQ_DEEPPWRDNREQ register field. */
 #define ALT_SDR_CTL_LOWPWREQ_DEEPPWRDNREQ_LSB        0
@@ -2294,14 +2294,14 @@ typedef volatile struct ALT_SDR_CTL_DROPADDR_s  ALT_SDR_CTL_DROPADDR_t;
 
 /*
  * Field : Deep Power Down Chip Select Mask - deeppwrdnmask
- * 
+ *
  * Write ones to this register to select which DRAM chip selects will be powered
  * down.  Typical usage is to set both of these bits when deeppwrdnreq is set but
  * the controller does support putting a single chip into deep power down and
  * keeping the other chip running.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWREQ_DEEPPWRDNMSK register field. */
 #define ALT_SDR_CTL_LOWPWREQ_DEEPPWRDNMSK_LSB        1
@@ -2322,14 +2322,14 @@ typedef volatile struct ALT_SDR_CTL_DROPADDR_s  ALT_SDR_CTL_DROPADDR_t;
 
 /*
  * Field : Self-refresh Request - selfrshreq
- * 
+ *
  * Write a one to this bit to request the RAM be put into a self refresh state.
  * This bit is treated as a static value so the RAM will remain in self-refresh as
  * long as this register bit is set to a one.  This power down mode can be selected
  * for all DRAMs supported by the controller.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWREQ_SELFRSHREQ register field. */
 #define ALT_SDR_CTL_LOWPWREQ_SELFRSHREQ_LSB        3
@@ -2350,12 +2350,12 @@ typedef volatile struct ALT_SDR_CTL_DROPADDR_s  ALT_SDR_CTL_DROPADDR_t;
 
 /*
  * Field : Self-refresh Chip Select Mask - selfrfshmask
- * 
+ *
  * Write a one to each bit of this field to have a self refresh request apply to
  * both chips.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWREQ_SELFRFSHMSK register field. */
 #define ALT_SDR_CTL_LOWPWREQ_SELFRFSHMSK_LSB        4
@@ -2382,7 +2382,7 @@ typedef volatile struct ALT_SDR_CTL_DROPADDR_s  ALT_SDR_CTL_DROPADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_LOWPWREQ.
  */
 struct ALT_SDR_CTL_LOWPWREQ_s
@@ -2403,26 +2403,26 @@ typedef volatile struct ALT_SDR_CTL_LOWPWREQ_s  ALT_SDR_CTL_LOWPWREQ_t;
 
 /*
  * Register : Low Power Acknowledge Register - lowpwrack
- * 
+ *
  * This register gives the status of the power down commands requested by the Low
  * Power Control register.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:----------------------------
  *  [0]    | RW     | Unknown | Deep Power Down Acknowledge
- *  [1]    | RW     | Unknown | Self-refresh Acknowledge   
- *  [31:2] | ???    | 0x0     | *UNDEFINED*                
- * 
+ *  [1]    | RW     | Unknown | Self-refresh Acknowledge
+ *  [31:2] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Deep Power Down Acknowledge - deeppwrdnack
- * 
+ *
  * This bit is set to a one after a deep power down has been executed
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWRACK_DEEPPWRDNACK register field. */
 #define ALT_SDR_CTL_LOWPWRACK_DEEPPWRDNACK_LSB        0
@@ -2443,11 +2443,11 @@ typedef volatile struct ALT_SDR_CTL_LOWPWREQ_s  ALT_SDR_CTL_LOWPWREQ_t;
 
 /*
  * Field : Self-refresh Acknowledge - selfrfshack
- * 
+ *
  * This bit is a one to indicate that the controller is in a self-refresh state.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_LOWPWRACK_SELFRFSHACK register field. */
 #define ALT_SDR_CTL_LOWPWRACK_SELFRFSHACK_LSB        1
@@ -2474,7 +2474,7 @@ typedef volatile struct ALT_SDR_CTL_LOWPWREQ_s  ALT_SDR_CTL_LOWPWREQ_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_LOWPWRACK.
  */
 struct ALT_SDR_CTL_LOWPWRACK_s
@@ -2493,35 +2493,35 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRACK_s  ALT_SDR_CTL_LOWPWRACK_t;
 
 /*
  * Register : Static Configuration Register - staticcfg
- * 
+ *
  * This register controls configuration values which cannot be updated while
  * transactions are flowing.
- * 
+ *
  * You should write once to this register with the membl and eccen fields set to
  * your desired configuration, and then write to the register again with membl and
  * eccen and the applycfg bit set. The applycfg bit is write only.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description                
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:----------------------------
- *  [1:0]  | RW     | Unknown | Memory Burst Length        
- *  [2]    | RW     | Unknown | Use ECC Bits As Data       
+ *  [1:0]  | RW     | Unknown | Memory Burst Length
+ *  [2]    | RW     | Unknown | Use ECC Bits As Data
  *  [3]    | RW     | Unknown | Apply Configuration Changes
- *  [31:4] | ???    | 0x0     | *UNDEFINED*                
- * 
+ *  [31:4] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Memory Burst Length - membl
- * 
+ *
  * This field specifies the DRAM burst length. Write the following values to set
  * the a burst length appropriate for the specific DRAM being used. &quot;00&quot;
  * for burst length 2, &quot;01&quot; for burst length 4, &quot;10&quot; for burst
  * length 8. If you set this, you must also set the membl field in the ctrlcfg
  * register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_STATICCFG_MEMBL register field. */
 #define ALT_SDR_CTL_STATICCFG_MEMBL_LSB        0
@@ -2542,14 +2542,14 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRACK_s  ALT_SDR_CTL_LOWPWRACK_t;
 
 /*
  * Field : Use ECC Bits As Data - useeccasdata
- * 
+ *
  * This field allows the FPGA ports to directly access the extra data bits that are
  * normally used to hold the ECC code. The interface width must be set to 24 or 40
  * in the dramifwidth register. If you set this, you must clear the eccen field in
  * the ctrlcfg register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_STATICCFG_USEECCASDATA register field. */
 #define ALT_SDR_CTL_STATICCFG_USEECCASDATA_LSB        2
@@ -2570,12 +2570,12 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRACK_s  ALT_SDR_CTL_LOWPWRACK_t;
 
 /*
  * Field : Apply Configuration Changes - applycfg
- * 
+ *
  * Write with this bit set to apply all the settings loaded in SDR registers to the
  * memory interface. This bit is write-only and always returns 0 if read.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_STATICCFG_APPLYCFG register field. */
 #define ALT_SDR_CTL_STATICCFG_APPLYCFG_LSB        3
@@ -2602,7 +2602,7 @@ typedef volatile struct ALT_SDR_CTL_LOWPWRACK_s  ALT_SDR_CTL_LOWPWRACK_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_STATICCFG.
  */
 struct ALT_SDR_CTL_STATICCFG_s
@@ -2622,27 +2622,27 @@ typedef volatile struct ALT_SDR_CTL_STATICCFG_s  ALT_SDR_CTL_STATICCFG_t;
 
 /*
  * Register : Memory Controller Width Register - ctrlwidth
- * 
+ *
  * This register controls the width of the physical DRAM interface.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description               
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:---------------------------
  *  [1:0]  | RW     | Unknown | Controller Interface Width
- *  [31:2] | ???    | 0x0     | *UNDEFINED*               
- * 
+ *  [31:2] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Controller Interface Width - ctrlwidth
- * 
+ *
  * Specifies controller DRAM interface width, with the following encoding.
  * &quot;00&quot; for 8-bit, &quot;01&quot; for 16-bit (no ECC) or 24-bit (ECC
  * enabled), &quot;10&quot; for 32-bit (no ECC) or 40-bit (ECC enabled). You must
  * also program the dramifwidth register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_CTLWIDTH_CTLWIDTH register field. */
 #define ALT_SDR_CTL_CTLWIDTH_CTLWIDTH_LSB        0
@@ -2669,7 +2669,7 @@ typedef volatile struct ALT_SDR_CTL_STATICCFG_s  ALT_SDR_CTL_STATICCFG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_CTLWIDTH.
  */
 struct ALT_SDR_CTL_CTLWIDTH_s
@@ -2687,31 +2687,31 @@ typedef volatile struct ALT_SDR_CTL_CTLWIDTH_s  ALT_SDR_CTL_CTLWIDTH_t;
 
 /*
  * Register : Port Configuration Register - portcfg
- * 
+ *
  * This register should be set to a zero in any bit which corresponds to a port
  * which does mostly sequential memory accesses.  For ports with highly random
  * accesses, the bit should be set to a one.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description          
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:----------------------
- *  [9:0]   | ???    | Unknown | *UNDEFINED*          
+ *  [9:0]   | ???    | Unknown | *UNDEFINED*
  *  [19:10] | RW     | Unknown | Auto-precharge Enable
- *  [31:20] | ???    | 0x0     | *UNDEFINED*          
- * 
+ *  [31:20] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Auto-precharge Enable - autopchen
- * 
+ *
  * One bit per control port.  Set bit N to a 1 to have the controller request an
  * automatic precharge following bus command completion (close the row
  * automatically).  Set to a zero to request that the controller attempt to keep a
  * row open.  For random dominated operations this register should be set to a 1
  * for all active ports.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PORTCFG_AUTOPCHEN register field. */
 #define ALT_SDR_CTL_PORTCFG_AUTOPCHEN_LSB        10
@@ -2738,7 +2738,7 @@ typedef volatile struct ALT_SDR_CTL_CTLWIDTH_s  ALT_SDR_CTL_CTLWIDTH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_PORTCFG.
  */
 struct ALT_SDR_CTL_PORTCFG_s
@@ -2757,21 +2757,21 @@ typedef volatile struct ALT_SDR_CTL_PORTCFG_s  ALT_SDR_CTL_PORTCFG_t;
 
 /*
  * Register : FPGA Ports Reset Control Register - fpgaportrst
- * 
+ *
  * This register implements functionality to allow the CPU to control when the MPFE
  * will enable the ports to the FPGA fabric.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description       
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:-------------------
  *  [13:0]  | RW     | Unknown | Port Reset Control
- *  [31:14] | ???    | 0x0     | *UNDEFINED*       
- * 
+ *  [31:14] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Port Reset Control - portrstn
- * 
+ *
  * This register should be written to with a 1 to enable the selected FPGA port to
  * exit reset.  Writing a bit to a zero will stretch the port reset until the
  * register is written. Read data ports are connected to bits 3:0, with read data
@@ -2780,9 +2780,9 @@ typedef volatile struct ALT_SDR_CTL_PORTCFG_s  ALT_SDR_CTL_PORTCFG_t;
  * 7. Command ports are connected to bits 8 to 13, with command port 0 at bit 8 to
  * command port 5 at bit 13. Expected usage would be to set all the bits at the
  * same time but setting some bits to a zero and others to a one is supported.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_FPGAPORTRST_PORTRSTN register field. */
 #define ALT_SDR_CTL_FPGAPORTRST_PORTRSTN_LSB        0
@@ -2809,7 +2809,7 @@ typedef volatile struct ALT_SDR_CTL_PORTCFG_s  ALT_SDR_CTL_PORTCFG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_FPGAPORTRST.
  */
 struct ALT_SDR_CTL_FPGAPORTRST_s
@@ -2827,31 +2827,31 @@ typedef volatile struct ALT_SDR_CTL_FPGAPORTRST_s  ALT_SDR_CTL_FPGAPORTRST_t;
 
 /*
  * Register : Memory Protection Port Default Register - protportdefault
- * 
+ *
  * This register controls the default protection assignment for a port.  Ports
  * which have explicit rules which define regions which are illegal to access
  * should set the bits to pass by default.  Ports which have explicit rules which
  * define legal areas should set the bit to force all transactions to fail.
  * Leaving this register to all zeros should be used for systems which do not
  * desire any protection from the memory controller.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description        
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:--------------------
  *  [9:0]   | RW     | Unknown | Port Default Action
- *  [31:10] | ???    | 0x0     | *UNDEFINED*        
- * 
+ *  [31:10] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Port Default Action - portdefault
- * 
+ *
  * Determines the default action for a transactions from a port.  Set a bit to a
  * zero to indicate that all accesses from the port should pass by default, set a
  * bit to a one if the default protection is to fail the access.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTPORTDEFAULT_PORTDEFAULT register field. */
 #define ALT_SDR_CTL_PROTPORTDEFAULT_PORTDEFAULT_LSB        0
@@ -2878,7 +2878,7 @@ typedef volatile struct ALT_SDR_CTL_FPGAPORTRST_s  ALT_SDR_CTL_FPGAPORTRST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_PROTPORTDEFAULT.
  */
 struct ALT_SDR_CTL_PROTPORTDEFAULT_s
@@ -2896,34 +2896,34 @@ typedef volatile struct ALT_SDR_CTL_PROTPORTDEFAULT_s  ALT_SDR_CTL_PROTPORTDEFAU
 
 /*
  * Register : Memory Protection Address Register - protruleaddr
- * 
+ *
  * This register is used to control the memory protection for port 0 transactions.
  * Address ranges can either be used to allow access to memory regions or disallow
  * access to memory regions.  If trustzone is being used, access can be enabled for
  * protected transactions or disabled for unprotected transactions.  The default
  * state of this register is to allow all access.  Address values used for
  * protection are only physical addresses.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description 
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:-------------
- *  [11:0]  | RW     | Unknown | Low Address 
+ *  [11:0]  | RW     | Unknown | Low Address
  *  [23:12] | RW     | Unknown | High Address
- *  [31:24] | ???    | 0x0     | *UNDEFINED* 
- * 
+ *  [31:24] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Low Address - lowaddr
- * 
+ *
  * Lower 12 bits of the address for a check.  Address is compared to be less than
  * or equal to the address of a transaction.  Note that since AXI transactions
  * cannot cross a 4K byte boundary, the transaction start and transaction end
  * address must also fall within the same 1MByte block pointed to by this address
  * pointer.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEADDR_LOWADDR register field. */
 #define ALT_SDR_CTL_PROTRULEADDR_LOWADDR_LSB        0
@@ -2944,15 +2944,15 @@ typedef volatile struct ALT_SDR_CTL_PROTPORTDEFAULT_s  ALT_SDR_CTL_PROTPORTDEFAU
 
 /*
  * Field : High Address - highaddr
- * 
+ *
  * Upper 12 bits of the address for a check.  Address is compared to be greater
  * than or equal to the address of a transaction.  Note that since AXI transactions
  * cannot cross a 4K byte boundary, the transaction start and transaction end
  * address must also fall within the same 1MByte block pointed to by this address
  * pointer.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEADDR_HIGHADDR register field. */
 #define ALT_SDR_CTL_PROTRULEADDR_HIGHADDR_LSB        12
@@ -2979,7 +2979,7 @@ typedef volatile struct ALT_SDR_CTL_PROTPORTDEFAULT_s  ALT_SDR_CTL_PROTPORTDEFAU
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_PROTRULEADDR.
  */
 struct ALT_SDR_CTL_PROTRULEADDR_s
@@ -2998,26 +2998,26 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEADDR_s  ALT_SDR_CTL_PROTRULEADDR_t;
 
 /*
  * Register : Memory Protection ID Register - protruleid
- * 
- * 
+ *
+ *
  * Register Layout
- * 
+ *
  *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:------------
- *  [11:0]  | RW     | Unknown | Low ID     
- *  [23:12] | RW     | Unknown | High ID    
+ *  [11:0]  | RW     | Unknown | Low ID
+ *  [23:12] | RW     | Unknown | High ID
  *  [31:24] | ???    | 0x0     | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Low ID - lowid
- * 
+ *
  * AxID for the protection rule.  Incoming AxID needs to be greater than or equal
  * to this value.  For all AxIDs from a port, AxID high should be programmed to all
  * ones.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEID_LOWID register field. */
 #define ALT_SDR_CTL_PROTRULEID_LOWID_LSB        0
@@ -3038,13 +3038,13 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEADDR_s  ALT_SDR_CTL_PROTRULEADDR_t;
 
 /*
  * Field : High ID - highid
- * 
+ *
  * AxID for the protection rule.  Incoming AxID needs to be less than or equal to
  * this value.  For all AxIDs from a port, AxID high should be programmed to all
  * ones.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEID_HIGHID register field. */
 #define ALT_SDR_CTL_PROTRULEID_HIGHID_LSB        12
@@ -3071,7 +3071,7 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEADDR_s  ALT_SDR_CTL_PROTRULEADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_PROTRULEID.
  */
 struct ALT_SDR_CTL_PROTRULEID_s
@@ -3090,31 +3090,31 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEID_s  ALT_SDR_CTL_PROTRULEID_t;
 
 /*
  * Register : Memory Protection Rule Data Register - protruledata
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description          
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:----------------------
  *  [1:0]   | RW     | Unknown | Security Bit Behavior
- *  [2]     | RW     | Unknown | Valid Rule           
- *  [12:3]  | RW     | Unknown | Port Mask            
- *  [13]    | RW     | Unknown | Rule Results         
- *  [31:14] | ???    | 0x0     | *UNDEFINED*          
- * 
+ *  [2]     | RW     | Unknown | Valid Rule
+ *  [12:3]  | RW     | Unknown | Port Mask
+ *  [13]    | RW     | Unknown | Rule Results
+ *  [31:14] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Security Bit Behavior - security
- * 
+ *
  * A value of 2'b00 will make the rule apply to secure transactions.
- * 
+ *
  * A value of 2'b01 will make the rule apply to non-secure transactions.
- * 
+ *
  * A value of 2'b10 or 2'b11 will make the rule apply to secure and non-secure
  * transactions.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEDATA_SECURITY register field. */
 #define ALT_SDR_CTL_PROTRULEDATA_SECURITY_LSB        0
@@ -3135,11 +3135,11 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEID_s  ALT_SDR_CTL_PROTRULEID_t;
 
 /*
  * Field : Valid Rule - validrule
- * 
+ *
  * Set to bit to a one to make a rule valid, set to a zero to invalidate a rule.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEDATA_VALIDRULE register field. */
 #define ALT_SDR_CTL_PROTRULEDATA_VALIDRULE_LSB        2
@@ -3160,14 +3160,14 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEID_s  ALT_SDR_CTL_PROTRULEID_t;
 
 /*
  * Field : Port Mask - portmask
- * 
+ *
  * Set  bit x to a one to have this rule apply to port x, set bit x to a zero to
  * have the rule not apply to a port.&#10;Note that port 0-port 5 are the FPGA
  * fabric ports, port 6 is L3 read, port 7 is CPU read, port 8 is L3 write, port 9
  * is CPU write.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEDATA_PORTMSK register field. */
 #define ALT_SDR_CTL_PROTRULEDATA_PORTMSK_LSB        3
@@ -3188,12 +3188,12 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEID_s  ALT_SDR_CTL_PROTRULEID_t;
 
 /*
  * Field : Rule Results - ruleresult
- * 
+ *
  * Set this bit to a one to force a protection failure, zero to allow the access
  * the succeed
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULEDATA_RULERESULT register field. */
 #define ALT_SDR_CTL_PROTRULEDATA_RULERESULT_LSB        13
@@ -3220,7 +3220,7 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEID_s  ALT_SDR_CTL_PROTRULEID_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_PROTRULEDATA.
  */
 struct ALT_SDR_CTL_PROTRULEDATA_s
@@ -3241,28 +3241,28 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEDATA_s  ALT_SDR_CTL_PROTRULEDATA_t;
 
 /*
  * Register : Memory Protection Rule Read-Write Register - protrulerdwr
- * 
+ *
  * This register is used to perform read and write operations to the internal
  * protection table.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------
  *  [4:0]  | RW     | Unknown | Rule Offset
- *  [5]    | RW     | Unknown | Rule Write 
- *  [6]    | RW     | Unknown | Rule Read  
+ *  [5]    | RW     | Unknown | Rule Write
+ *  [6]    | RW     | Unknown | Rule Read
  *  [31:7] | ???    | 0x0     | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Rule Offset - ruleoffset
- * 
+ *
  * This field defines which of the 20 rules in the protection table you want to
  * read or write.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULERDWR_RULEOFFSET register field. */
 #define ALT_SDR_CTL_PROTRULERDWR_RULEOFFSET_LSB        0
@@ -3283,13 +3283,13 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEDATA_s  ALT_SDR_CTL_PROTRULEDATA_t;
 
 /*
  * Field : Rule Write - writerule
- * 
+ *
  * Write to this bit to have the memory_prot_data register to the table at the
  * offset specified by port_offset.  Bit automatically clears after a single cycle
  * and the write operation is complete.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULERDWR_WRRULE register field. */
 #define ALT_SDR_CTL_PROTRULERDWR_WRRULE_LSB        5
@@ -3310,14 +3310,14 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEDATA_s  ALT_SDR_CTL_PROTRULEDATA_t;
 
 /*
  * Field : Rule Read - readrule
- * 
+ *
  * Write to this bit to have the memory_prot_data register loaded with the value
  * from the internal protection table at offset.  Table value will be loaded before
  * a rdy is returned so read data from the register will be correct for any follow-
  * on reads to the memory_prot_data register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_PROTRULERDWR_RDRULE register field. */
 #define ALT_SDR_CTL_PROTRULERDWR_RDRULE_LSB        6
@@ -3344,7 +3344,7 @@ typedef volatile struct ALT_SDR_CTL_PROTRULEDATA_s  ALT_SDR_CTL_PROTRULEDATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_PROTRULERDWR.
  */
 struct ALT_SDR_CTL_PROTRULERDWR_s
@@ -3364,26 +3364,26 @@ typedef volatile struct ALT_SDR_CTL_PROTRULERDWR_s  ALT_SDR_CTL_PROTRULERDWR_t;
 
 /*
  * Register : QOS Control Register - qoslowpri
- * 
+ *
  * This register controls the mapping of AXI4 QOS received from the FPGA fabric to
  * the internal priority used for traffic prioritization.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description           
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:-----------------------
  *  [19:0]  | RW     | Unknown | Low Priority QoS Value
- *  [31:20] | ???    | 0x0     | *UNDEFINED*           
- * 
+ *  [31:20] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Low Priority QoS Value - lowpriorityval
- * 
+ *
  * This 20 bit field is a 2 bit field for each of the 10 ports.  The field used for
  * each port in this register controls the priority used for a port
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_QOSLOWPRI_LOWPRIORITYVAL register field. */
 #define ALT_SDR_CTL_QOSLOWPRI_LOWPRIORITYVAL_LSB        0
@@ -3410,7 +3410,7 @@ typedef volatile struct ALT_SDR_CTL_PROTRULERDWR_s  ALT_SDR_CTL_PROTRULERDWR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_QOSLOWPRI.
  */
 struct ALT_SDR_CTL_QOSLOWPRI_s
@@ -3428,24 +3428,24 @@ typedef volatile struct ALT_SDR_CTL_QOSLOWPRI_s  ALT_SDR_CTL_QOSLOWPRI_t;
 
 /*
  * Register : qoshighpri Register - qoshighpri
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description            
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:------------------------
  *  [19:0]  | RW     | Unknown | High Priority QoS Value
- *  [31:20] | ???    | 0x0     | *UNDEFINED*            
- * 
+ *  [31:20] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : High Priority QoS Value - highpriorityval
- * 
+ *
  * This 20 bit field is a 2 bit field for each of the 10 ports.  The field used for
  * each port in this register controls the priority used for a port
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_QOSHIGHPRI_HIGHPRIORITYVAL register field. */
 #define ALT_SDR_CTL_QOSHIGHPRI_HIGHPRIORITYVAL_LSB        0
@@ -3472,7 +3472,7 @@ typedef volatile struct ALT_SDR_CTL_QOSLOWPRI_s  ALT_SDR_CTL_QOSLOWPRI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_QOSHIGHPRI.
  */
 struct ALT_SDR_CTL_QOSHIGHPRI_s
@@ -3490,23 +3490,23 @@ typedef volatile struct ALT_SDR_CTL_QOSHIGHPRI_s  ALT_SDR_CTL_QOSHIGHPRI_t;
 
 /*
  * Register : qospriorityen Register - qospriorityen
- * 
- * 
+ *
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description        
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:--------------------
  *  [9:0]   | RW     | Unknown | Per-Port QoS Enable
- *  [31:10] | ???    | 0x0     | *UNDEFINED*        
- * 
+ *  [31:10] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Per-Port QoS Enable - priorityen
- * 
+ *
  * This 10 bit field is set to a one to enable QOS usage for a port.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_QOSPRIORITYEN_PRIORITYEN register field. */
 #define ALT_SDR_CTL_QOSPRIORITYEN_PRIORITYEN_LSB        0
@@ -3533,7 +3533,7 @@ typedef volatile struct ALT_SDR_CTL_QOSHIGHPRI_s  ALT_SDR_CTL_QOSHIGHPRI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_QOSPRIORITYEN.
  */
 struct ALT_SDR_CTL_QOSPRIORITYEN_s
@@ -3551,26 +3551,26 @@ typedef volatile struct ALT_SDR_CTL_QOSPRIORITYEN_s  ALT_SDR_CTL_QOSPRIORITYEN_t
 
 /*
  * Register : Scheduler priority Register - mppriority
- * 
+ *
  * This register is used to configure the DRAM burst operation scheduling.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description         
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------
  *  [29:0]  | RW     | Unknown | Port User Priorities
- *  [31:30] | ???    | 0x0     | *UNDEFINED*         
- * 
+ *  [31:30] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Port User Priorities - userpriority
- * 
+ *
  * Set absolute user priority of the port.  Each port is represented by a 3 bit
  * value, 000=lowest priority, 111=highest priority.  Port 0 is bits 2:0.  Port
  * number offset corresponds to the control port assignment.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_MPPRIORITY_USERPRIORITY register field. */
 #define ALT_SDR_CTL_MPPRIORITY_USERPRIORITY_LSB        0
@@ -3597,7 +3597,7 @@ typedef volatile struct ALT_SDR_CTL_QOSPRIORITYEN_s  ALT_SDR_CTL_QOSPRIORITYEN_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_MPPRIORITY.
  */
 struct ALT_SDR_CTL_MPPRIORITY_s
@@ -3615,26 +3615,26 @@ typedef volatile struct ALT_SDR_CTL_MPPRIORITY_s  ALT_SDR_CTL_MPPRIORITY_t;
 
 /*
  * Register : Controller Command Pool Priority Remap Register - remappriority
- * 
+ *
  * This register controls the priority for transactions in the controller command
  * pool.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description   
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:---------------
  *  [7:0]  | RW     | Unknown | Priority Remap
- *  [31:8] | ???    | 0x0     | *UNDEFINED*   
- * 
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Priority Remap - priorityremap
- * 
+ *
  * Set bit N of this register to the value to a one to enable the controller
  * command pool priority bit of a transaction from MPFE priority N
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_REMAPPRIORITY_PRIORITYREMAP register field. */
 #define ALT_SDR_CTL_REMAPPRIORITY_PRIORITYREMAP_LSB        0
@@ -3661,7 +3661,7 @@ typedef volatile struct ALT_SDR_CTL_MPPRIORITY_s  ALT_SDR_CTL_MPPRIORITY_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_REMAPPRIORITY.
  */
 struct ALT_SDR_CTL_REMAPPRIORITY_s
@@ -3680,30 +3680,30 @@ typedef volatile struct ALT_SDR_CTL_REMAPPRIORITY_s  ALT_SDR_CTL_REMAPPRIORITY_t
 /*
  * Register Group : Port Sum of Weight Register - ALT_SDR_CTL_MPWT
  * Port Sum of Weight Register
- * 
+ *
  * This register is used to configure the DRAM burst operation scheduling.
- * 
+ *
  */
 /*
  * Register : Port Sum of Weight Register[1/4] - mpweight_0_4
- * 
+ *
  * This register is used to configure the DRAM burst operation scheduling.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description              
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:--------------------------
  *  [31:0] | RW     | Unknown | Port Static Weights[31:0]
- * 
+ *
  */
 /*
  * Field : Port Static Weights[31:0] - staticweight_31_0
- * 
+ *
  * Set static weight of the port.  Each port is programmed with a 5 bit value.
  * Port 0 is bits 4:0, port 1 is bits 9:5, up to port 9 being bits 49:45
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_MPWT_MPWEIGHT_0_4_STATICWEIGHT_31_0 register field. */
 #define ALT_SDR_CTL_MPWT_MPWEIGHT_0_4_STATICWEIGHT_31_0_LSB        0
@@ -3730,7 +3730,7 @@ typedef volatile struct ALT_SDR_CTL_REMAPPRIORITY_s  ALT_SDR_CTL_REMAPPRIORITY_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_MPWT_MPWEIGHT_0_4.
  */
 struct ALT_SDR_CTL_MPWT_MPWEIGHT_0_4_s
@@ -3749,25 +3749,25 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_0_4_s  ALT_SDR_CTL_MPWT_MPWEIG
 
 /*
  * Register : Port Sum of Weight Register[2/4] - mpweight_1_4
- * 
+ *
  * This register is used to configure the DRAM burst operation scheduling.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description               
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------
  *  [17:0]  | RW     | Unknown | Port Static Weights[49:32]
- *  [31:18] | RW     | Unknown | Port Sum of Weights[13:0] 
- * 
+ *  [31:18] | RW     | Unknown | Port Sum of Weights[13:0]
+ *
  */
 /*
  * Field : Port Static Weights[49:32] - staticweight_49_32
- * 
+ *
  * Set static weight of the port.  Each port is programmed with a 5 bit value.
  * Port 0 is bits 4:0, port 1 is bits 9:5, up to port 9 being bits 49:45
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_STATICWEIGHT_49_32 register field. */
 #define ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_STATICWEIGHT_49_32_LSB        0
@@ -3788,13 +3788,13 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_0_4_s  ALT_SDR_CTL_MPWT_MPWEIG
 
 /*
  * Field : Port Sum of Weights[13:0] - sumofweights_13_0
- * 
+ *
  * Set the sum of static weights for particular user priority.  This register is
  * used as part of the deficit round robin implementation.  It should be set to the
  * sum of the weights for the ports
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_SUMOFWEIGHTS_13_0 register field. */
 #define ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_SUMOFWEIGHTS_13_0_LSB        18
@@ -3821,7 +3821,7 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_0_4_s  ALT_SDR_CTL_MPWT_MPWEIG
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_MPWT_MPWEIGHT_1_4.
  */
 struct ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_s
@@ -3841,25 +3841,25 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_s  ALT_SDR_CTL_MPWT_MPWEIG
 
 /*
  * Register : Port Sum of Weight Register[3/4] - mpweight_2_4
- * 
+ *
  * This register is used to configure the DRAM burst operation scheduling.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description               
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:---------------------------
  *  [31:0] | RW     | Unknown | Port Sum of Weights[45:14]
- * 
+ *
  */
 /*
  * Field : Port Sum of Weights[45:14] - sumofweights_45_14
- * 
+ *
  * Set the sum of static weights for particular user priority.  This register is
  * used as part of the deficit round robin implementation.  It should be set to the
  * sum of the weights for the ports
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_MPWT_MPWEIGHT_2_4_SUMOFWEIGHTS_45_14 register field. */
 #define ALT_SDR_CTL_MPWT_MPWEIGHT_2_4_SUMOFWEIGHTS_45_14_LSB        0
@@ -3886,7 +3886,7 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_1_4_s  ALT_SDR_CTL_MPWT_MPWEIG
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_MPWT_MPWEIGHT_2_4.
  */
 struct ALT_SDR_CTL_MPWT_MPWEIGHT_2_4_s
@@ -3905,26 +3905,26 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_2_4_s  ALT_SDR_CTL_MPWT_MPWEIG
 
 /*
  * Register : Port Sum of Weight Register[4/4] - mpweight_3_4
- * 
+ *
  * This register is used to configure the DRAM burst operation scheduling.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description               
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------------
  *  [17:0]  | RW     | Unknown | Port Sum of Weights[63:46]
- *  [31:18] | ???    | 0x0     | *UNDEFINED*               
- * 
+ *  [31:18] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Port Sum of Weights[63:46] - sumofweights_63_46
- * 
+ *
  * Set the sum of static weights for particular user priority.  This register is
  * used as part of the deficit round robin implementation.  It should be set to the
  * sum of the weights for the ports
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDR_CTL_MPWT_MPWEIGHT_3_4_SUMOFWEIGHTS_63_46 register field. */
 #define ALT_SDR_CTL_MPWT_MPWEIGHT_3_4_SUMOFWEIGHTS_63_46_LSB        0
@@ -3951,7 +3951,7 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_2_4_s  ALT_SDR_CTL_MPWT_MPWEIG
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDR_CTL_MPWT_MPWEIGHT_3_4.
  */
 struct ALT_SDR_CTL_MPWT_MPWEIGHT_3_4_s
@@ -3977,7 +3977,7 @@ typedef volatile struct ALT_SDR_CTL_MPWT_MPWEIGHT_3_4_s  ALT_SDR_CTL_MPWT_MPWEIG
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SDR_CTL_MPWT.
  */
 struct ALT_SDR_CTL_MPWT_s
@@ -4012,7 +4012,7 @@ typedef volatile struct ALT_SDR_CTL_MPWT_raw_s  ALT_SDR_CTL_MPWT_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SDR_CTL.
  */
 struct ALT_SDR_CTL_s
@@ -4117,7 +4117,7 @@ typedef volatile struct ALT_SDR_CTL_raw_s  ALT_SDR_CTL_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SDR.
  */
 struct ALT_SDR_s

@@ -115,7 +115,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ) __asm volatile( "NOP" ); }
-	
+
 /* Demo application specific settings. */
 #if defined( PART_XMC4500 )
 	/* Hardware includes. */

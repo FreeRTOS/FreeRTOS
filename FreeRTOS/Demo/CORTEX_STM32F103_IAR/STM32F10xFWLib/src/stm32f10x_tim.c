@@ -106,7 +106,7 @@ static void TI3_Config(TIM_TypeDef* TIMx, u16 TIM_ICPolarity, u16 TIM_ICSelectio
                        u8 TIM_ICFilter);
 static void TI4_Config(TIM_TypeDef* TIMx, u16 TIM_ICPolarity, u16 TIM_ICSelection,
                        u8 TIM_ICFilter);
-static void ETR_Config(TIM_TypeDef* TIMx, u16 TIM_ExtTRGPrescaler, 
+static void ETR_Config(TIM_TypeDef* TIMx, u16 TIM_ExtTRGPrescaler,
                        u16 TIM_ExtTRGPolarity, u8 ExtTRGFilter);
 /* Private functions ---------------------------------------------------------*/
 
@@ -119,24 +119,24 @@ static void ETR_Config(TIM_TypeDef* TIMx, u16 TIM_ExtTRGPrescaler,
 * Return         : None
 *******************************************************************************/
 void TIM_DeInit(TIM_TypeDef* TIMx)
-{  
+{
   switch (*(u32*)&TIMx)
   {
     case TIM2_BASE:
       RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM2, ENABLE);
       RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM2, DISABLE);
       break;
- 
+
     case TIM3_BASE:
       RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM3, ENABLE);
       RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM3, DISABLE);
       break;
- 
+
     case TIM4_BASE:
       RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4, ENABLE);
       RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4, DISABLE);
       break;
- 
+
     default:
       break;
   }
@@ -144,7 +144,7 @@ void TIM_DeInit(TIM_TypeDef* TIMx)
 
 /*******************************************************************************
 * Function Name  : TIM_TimeBaseInit
-* Description    : Initializes the TIMx Time Base Unit peripheral according to 
+* Description    : Initializes the TIMx Time Base Unit peripheral according to
 *                  the specified parameters in the TIM_TimeBaseInitStruct.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_TimeBaseInitStruct: pointer to a TIM_TimeBaseInitTypeDef
@@ -158,7 +158,7 @@ void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseIn
   /* Check the parameters */
   assert(IS_TIM_COUNTER_MODE(TIM_TimeBaseInitStruct->TIM_CounterMode));
   assert(IS_TIM_CKD_DIV(TIM_TimeBaseInitStruct->TIM_ClockDivision));
-  
+
   /* Set the Autoreload value */
   TIMx->ARR = TIM_TimeBaseInitStruct->TIM_Period ;
 
@@ -184,7 +184,7 @@ void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseIn
 void TIM_OCInit(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
 {
   u32 tmpccmrx = 0, tmpccer = 0;
-  
+
   /* Check the parameters */
   assert(IS_TIM_OC_MODE(TIM_OCInitStruct->TIM_OCMode));
   assert(IS_TIM_CHANNEL(TIM_OCInitStruct->TIM_Channel));
@@ -196,7 +196,7 @@ void TIM_OCInit(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
       (TIM_OCInitStruct->TIM_Channel == (u16)TIM_Channel_2))
   {
     tmpccmrx = TIMx->CCMR1;
-    
+
     /* Reset the Output Compare Bits */
     tmpccmrx &= Tab_OCModeMask[TIM_OCInitStruct->TIM_Channel];
 
@@ -240,11 +240,11 @@ void TIM_OCInit(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
 
     TIMx->CCMR1 = (u16)tmpccmrx;
   }
-  else 
+  else
   {
     if ((TIM_OCInitStruct->TIM_Channel == TIM_Channel_3) ||
         (TIM_OCInitStruct->TIM_Channel == TIM_Channel_4))
-    { 
+    {
       tmpccmrx = TIMx->CCMR2;
 
       /* Reset the Output Compare Bits */
@@ -291,7 +291,7 @@ void TIM_OCInit(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
       TIMx->CCMR2 = (u16)tmpccmrx;
     }
   }
-  
+
   TIMx->CCER = (u16)tmpccer;
 }
 
@@ -315,7 +315,7 @@ void TIM_ICInit(TIM_TypeDef* TIMx, TIM_ICInitTypeDef* TIM_ICInitStruct)
   assert(IS_TIM_IC_SELECTION(TIM_ICInitStruct->TIM_ICSelection));
   assert(IS_TIM_IC_PRESCALER(TIM_ICInitStruct->TIM_ICPrescaler));
   assert(IS_TIM_IC_FILTER(TIM_ICInitStruct->TIM_ICFilter));
-  
+
   if (TIM_ICInitStruct->TIM_ICMode == TIM_ICMode_ICAP)
   {
     if (TIM_ICInitStruct->TIM_Channel == TIM_Channel_1)
@@ -431,7 +431,7 @@ void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState)
 {
   /* Check the parameters */
   assert(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the TIM Counter */
@@ -467,7 +467,7 @@ void TIM_ITConfig(TIM_TypeDef* TIMx, u16 TIM_IT, FunctionalState NewState)
   /* Check the parameters */
   assert(IS_TIM_IT(TIM_IT));
   assert(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the Interrupt sources */
@@ -505,7 +505,7 @@ void TIM_DMAConfig(TIM_TypeDef* TIMx, u16 TIM_DMABase, u16 TIM_DMABurstLength)
   /* Check the parameters */
   assert(IS_TIM_DMA_BASE(TIM_DMABase));
   assert(IS_TIM_DMA_LENGTH(TIM_DMABurstLength));
-  
+
   tmpdcr = TIMx->DCR;
 
   /* Reset the DBA and the DBL Bits */
@@ -536,7 +536,7 @@ void TIM_DMAConfig(TIM_TypeDef* TIMx, u16 TIM_DMABase, u16 TIM_DMABurstLength)
 void TIM_DMACmd(TIM_TypeDef* TIMx, u16 TIM_DMASource, FunctionalState Newstate)
 {
   u32 tmpdier = 0;
-  
+
   /* Check the parameters */
   assert(IS_TIM_DMA_SOURCE(TIM_DMASource));
   assert(IS_FUNCTIONAL_STATE(Newstate));
@@ -692,7 +692,7 @@ void TIM_ETRClockMode1Config(TIM_TypeDef* TIMx, u16 TIM_ExtTRGPrescaler, u16 TIM
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, u16 TIM_ExtTRGPrescaler, 
+void TIM_ETRClockMode2Config(TIM_TypeDef* TIMx, u16 TIM_ExtTRGPrescaler,
                              u16 TIM_ExtTRGPolarity, u8 ExtTRGFilter)
 {
   /* Check the parameters */
@@ -939,7 +939,7 @@ void TIM_ForcedOC4Config(TIM_TypeDef* TIMx, u16 TIM_ForcedAction)
 void TIM_ARRPreloadConfig(TIM_TypeDef* TIMx, FunctionalState Newstate)
 {
   u32 tmpcr1 = 0;
-  
+
   /* Check the parameters */
   assert(IS_FUNCTIONAL_STATE(Newstate));
 
@@ -1288,7 +1288,7 @@ void TIM_EncoderInterfaceConfig(TIM_TypeDef* TIMx, u16 TIM_EncoderMode,
   u32 tmpsmcr = 0;
   u32 tmpccmr1 = 0;
   u32 tmpccer = 0;
-    
+
   /* Check the parameters */
   assert(IS_TIM_ENCODER_MODE(TIM_EncoderMode));
   assert(IS_TIM_IC_POLARITY(TIM_IC1Polarity));
@@ -1813,7 +1813,7 @@ void TIM_SetIC3Prescaler(TIM_TypeDef* TIMx, u16 TIM_IC3Prescaler)
 void TIM_SetIC4Prescaler(TIM_TypeDef* TIMx, u16 TIM_IC4Prescaler)
 {
   u32 tmpccmr2 = 0;
-   
+
   /* Check the parameters */
   assert(IS_TIM_IC_PRESCALER(TIM_IC4Prescaler));
 
@@ -2019,14 +2019,14 @@ void TIM_ClearFlag(TIM_TypeDef* TIMx, u16 TIM_FLAG)
 ITStatus TIM_GetITStatus(TIM_TypeDef* TIMx, u16 TIM_IT)
 {
   ITStatus bitstatus = RESET;
-  
+
   u16 itstatus = 0x0, itenable = 0x0;
 
   /* Check the parameters */
   assert(IS_TIM_GET_IT(TIM_IT));
-  
+
   itstatus = TIMx->SR & TIM_IT;
-  
+
   itenable = TIMx->DIER & TIM_IT;
 
   if ((itstatus != (u16)RESET)  && (itenable != (u16)RESET))
@@ -2059,7 +2059,7 @@ void TIM_ClearITPendingBit(TIM_TypeDef* TIMx, u16 TIM_IT)
 {
   /* Check the parameters */
   assert(IS_TIM_IT(TIM_IT));
-  
+
   /* Clear the IT pending Bit */
   TIMx->SR &= (u16)~TIM_IT;
 }
@@ -2116,7 +2116,7 @@ static void PWMI_Config(TIM_TypeDef* TIMx, TIM_ICInitTypeDef* TIM_ICInitStruct)
     TIM_SetIC2Prescaler(TIMx, TIM_ICInitStruct->TIM_ICPrescaler);
   }
   else
-  {	 
+  {
     /* TI1 Configuration */
     TI2_Config(TIMx, TIM_ICInitStruct->TIM_ICPolarity, TIM_ICInitStruct->TIM_ICSelection,
                TIM_ICInitStruct->TIM_ICFilter);

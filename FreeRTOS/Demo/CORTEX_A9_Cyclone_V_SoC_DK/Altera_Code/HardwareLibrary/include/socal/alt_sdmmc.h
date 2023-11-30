@@ -41,71 +41,71 @@ extern "C"
 /*
  * Component : SDMMC Module - ALT_SDMMC
  * SDMMC Module
- * 
+ *
  * Registers in the SD/MMC module
- * 
+ *
  */
 /*
  * Register : Control Register - ctrl
- * 
+ *
  * Sets various operating condiitions.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                  
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------------
- *  [0]     | RW     | 0x0   | Controller Reset             
- *  [1]     | RW     | 0x0   | FIFO Reset                   
- *  [2]     | RW     | 0x0   | Dma Reset                    
- *  [3]     | ???    | 0x0   | *UNDEFINED*                  
- *  [4]     | RW     | 0x0   | Int Enable                   
- *  [5]     | ???    | 0x0   | *UNDEFINED*                  
- *  [6]     | RW     | 0x0   | Read Wait                    
- *  [7]     | RW     | 0x0   | Send Irq Response            
- *  [8]     | RW     | 0x0   | Abort Read Data              
- *  [9]     | RW     | 0x0   | Send CCSD                    
- *  [10]    | RW     | 0x0   | Send Auto Stop CCSD          
+ *  [0]     | RW     | 0x0   | Controller Reset
+ *  [1]     | RW     | 0x0   | FIFO Reset
+ *  [2]     | RW     | 0x0   | Dma Reset
+ *  [3]     | ???    | 0x0   | *UNDEFINED*
+ *  [4]     | RW     | 0x0   | Int Enable
+ *  [5]     | ???    | 0x0   | *UNDEFINED*
+ *  [6]     | RW     | 0x0   | Read Wait
+ *  [7]     | RW     | 0x0   | Send Irq Response
+ *  [8]     | RW     | 0x0   | Abort Read Data
+ *  [9]     | RW     | 0x0   | Send CCSD
+ *  [10]    | RW     | 0x0   | Send Auto Stop CCSD
  *  [11]    | RW     | 0x0   | Ceata Device Interrupt Status
- *  [24:12] | ???    | 0x0   | *UNDEFINED*                  
- *  [25]    | RW     | 0x0   | Use Internal DMAC            
- *  [31:26] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [24:12] | ???    | 0x0   | *UNDEFINED*
+ *  [25]    | RW     | 0x0   | Use Internal DMAC
+ *  [31:26] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Controller Reset - controller_reset
- * 
+ *
  * This bit resets the controller. This bit is auto-cleared after two l4_mp_clk and
  * two sdmmc_clk clock cycles. This resets:
- * 
+ *
  * * BIU/CIU interface
- * 
+ *
  * * CIU and state machines
- * 
+ *
  * * abort_read_data, send_irq_response, and read_wait bits of control register
- * 
+ *
  * * start_cmd bit of command register
- * 
+ *
  * Does not affect any registers, DMA interface, FIFO or host interrupts.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description            
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:------------------------
- *  ALT_SDMMC_CTL_CTLLER_RST_E_NOCHANGE | 0x0   | No change -default     
+ *  ALT_SDMMC_CTL_CTLLER_RST_E_NOCHANGE | 0x0   | No change -default
  *  ALT_SDMMC_CTL_CTLLER_RST_E_ACTIVATE | 0x1   | Reset SD/MMC controller
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_CTLLER_RST
- * 
+ *
  * No change -default
  */
 #define ALT_SDMMC_CTL_CTLLER_RST_E_NOCHANGE 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_CTLLER_RST
- * 
+ *
  * Reset SD/MMC controller
  */
 #define ALT_SDMMC_CTL_CTLLER_RST_E_ACTIVATE 0x1
@@ -129,29 +129,29 @@ extern "C"
 
 /*
  * Field : FIFO Reset - fifo_reset
- * 
+ *
  * This bit resets the FIFO. This bit is auto-cleared after completion of reset
  * operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                              
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:------------------------------------------
- *  ALT_SDMMC_CTL_FIFO_RST_E_NOCHANGE | 0x0   | No change                                
+ *  ALT_SDMMC_CTL_FIFO_RST_E_NOCHANGE | 0x0   | No change
  *  ALT_SDMMC_CTL_FIFO_RST_E_ACTIVATE | 0x1   | Reset to data FIFO To reset FIFO pointers
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_FIFO_RST
- * 
+ *
  * No change
  */
 #define ALT_SDMMC_CTL_FIFO_RST_E_NOCHANGE   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_FIFO_RST
- * 
+ *
  * Reset to data FIFO To reset FIFO pointers
  */
 #define ALT_SDMMC_CTL_FIFO_RST_E_ACTIVATE   0x1
@@ -175,28 +175,28 @@ extern "C"
 
 /*
  * Field : Dma Reset - dma_reset
- * 
+ *
  * This bit resets the DMA interface control logic
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                               
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-------------------------------------------
- *  ALT_SDMMC_CTL_DMA_RST_E_NOCHANGE | 0x0   | No change                                 
+ *  ALT_SDMMC_CTL_DMA_RST_E_NOCHANGE | 0x0   | No change
  *  ALT_SDMMC_CTL_DMA_RST_E_ACTIVATE | 0x1   | Reset internal DMA interface control logic
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_DMA_RST
- * 
+ *
  * No change
  */
 #define ALT_SDMMC_CTL_DMA_RST_E_NOCHANGE    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_DMA_RST
- * 
+ *
  * Reset internal DMA interface control logic
  */
 #define ALT_SDMMC_CTL_DMA_RST_E_ACTIVATE    0x1
@@ -220,29 +220,29 @@ extern "C"
 
 /*
  * Field : Int Enable - int_enable
- * 
+ *
  * This bit enables and disable interrupts if one or more unmasked interrupts are
  * set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description       
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-------------------
  *  ALT_SDMMC_CTL_INT_EN_E_DISD | 0x0   | Disable Interrupts
- *  ALT_SDMMC_CTL_INT_EN_E_END  | 0x1   | Enable interrupts 
- * 
+ *  ALT_SDMMC_CTL_INT_EN_E_END  | 0x1   | Enable interrupts
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_INT_EN
- * 
+ *
  * Disable Interrupts
  */
 #define ALT_SDMMC_CTL_INT_EN_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_INT_EN
- * 
+ *
  * Enable interrupts
  */
 #define ALT_SDMMC_CTL_INT_EN_E_END  0x1
@@ -266,28 +266,28 @@ extern "C"
 
 /*
  * Field : Read Wait - read_wait
- * 
+ *
  * For sending read-wait to SDIO cards.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description     
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-----------------
- *  ALT_SDMMC_CTL_RD_WAIT_E_DEASSERT | 0x0   | Read Wait       
+ *  ALT_SDMMC_CTL_RD_WAIT_E_DEASSERT | 0x0   | Read Wait
  *  ALT_SDMMC_CTL_RD_WAIT_E_ASSERT   | 0x1   | Assert Read Wait
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_RD_WAIT
- * 
+ *
  * Read Wait
  */
 #define ALT_SDMMC_CTL_RD_WAIT_E_DEASSERT    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_RD_WAIT
- * 
+ *
  * Assert Read Wait
  */
 #define ALT_SDMMC_CTL_RD_WAIT_E_ASSERT      0x1
@@ -311,32 +311,32 @@ extern "C"
 
 /*
  * Field : Send Irq Response - send_irq_response
- * 
+ *
  * Bit automatically clears once response is sent. To wait for MMC card interrupts,
  * host issues CMD40, and SD/MMC waits for interrupt response from MMC card(s). In
  * meantime, if host wants SD/MMC to exit waiting for interrupt state, it can set
  * this bit, at which time SD/MMC command state-machine sends CMD40 response on bus
  * and returns to idle state.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description           
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-----------------------
- *  ALT_SDMMC_CTL_SEND_IRQ_RESPONSE_E_NOCHANGE | 0x0   | No change             
+ *  ALT_SDMMC_CTL_SEND_IRQ_RESPONSE_E_NOCHANGE | 0x0   | No change
  *  ALT_SDMMC_CTL_SEND_IRQ_RESPONSE_E_ACTIVATE | 0x1   | Send auto IRQ response
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_SEND_IRQ_RESPONSE
- * 
+ *
  * No change
  */
 #define ALT_SDMMC_CTL_SEND_IRQ_RESPONSE_E_NOCHANGE  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_SEND_IRQ_RESPONSE
- * 
+ *
  * Send auto IRQ response
  */
 #define ALT_SDMMC_CTL_SEND_IRQ_RESPONSE_E_ACTIVATE  0x1
@@ -360,31 +360,31 @@ extern "C"
 
 /*
  * Field : Abort Read Data - abort_read_data
- * 
+ *
  * After suspend command is issued during read-transfer, software polls card to
  * find when suspend happened. Once suspend occurs software sets bit to reset data
  * state-machine, which is waiting for next block of data. Bit automatically clears
  * once data statemachine resets to idle. Used in SDIO card suspend sequence.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:------------
- *  ALT_SDMMC_CTL_ABT_RD_DATA_E_NOCHANGE | 0x0   | No change  
- *  ALT_SDMMC_CTL_ABT_RD_DATA_E_ACTIVATE | 0x1   | Abort Read 
- * 
+ *  ALT_SDMMC_CTL_ABT_RD_DATA_E_NOCHANGE | 0x0   | No change
+ *  ALT_SDMMC_CTL_ABT_RD_DATA_E_ACTIVATE | 0x1   | Abort Read
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_ABT_RD_DATA
- * 
+ *
  * No change
  */
 #define ALT_SDMMC_CTL_ABT_RD_DATA_E_NOCHANGE    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_ABT_RD_DATA
- * 
+ *
  * Abort Read
  */
 #define ALT_SDMMC_CTL_ABT_RD_DATA_E_ACTIVATE    0x1
@@ -408,37 +408,37 @@ extern "C"
 
 /*
  * Field : Send CCSD - send_ccsd
- * 
+ *
  * When set, SD/MMC sends CCSD to CE-ATA device. Software sets this bit only if
  * current command is expecting CCS (that is, RW_BLK) and interrupts are enabled in
  * CE-ATA device. Once the CCSD pattern is sent to device, SD/MMC automatically
  * clears send_ccsd bit. It also sets Command Done (CD) bit in RINTSTS register and
  * generates interrupt to host if Command Done interrupt is not masked.
- * 
+ *
  * NOTE: Once send_ccsd bit is set, it takes two card clock cycles to drive the
  * CCSD on the CMD line. Due to this, during the boundary conditions it may happen
  * that CCSD is sent to the CE-ATA device, even if the device signalled CCS.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                     
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------------------------------
- *  ALT_SDMMC_CTL_SEND_CCSD_E_DEASSERT | 0x0   | Clear bit if SD/MMC does not reset the bit      
+ *  ALT_SDMMC_CTL_SEND_CCSD_E_DEASSERT | 0x0   | Clear bit if SD/MMC does not reset the bit
  *  ALT_SDMMC_CTL_SEND_CCSD_E_ASSERT   | 0x1   | Send Command Completion Signal Disable (CCSD) to
- * :                                   |       | CE-ATA device                                   
- * 
+ * :                                   |       | CE-ATA device
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_SEND_CCSD
- * 
+ *
  * Clear bit if SD/MMC does not reset the bit
  */
 #define ALT_SDMMC_CTL_SEND_CCSD_E_DEASSERT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_SEND_CCSD
- * 
+ *
  * Send Command Completion Signal Disable (CCSD) to CE-ATA device
  */
 #define ALT_SDMMC_CTL_SEND_CCSD_E_ASSERT    0x1
@@ -462,33 +462,33 @@ extern "C"
 
 /*
  * Field : Send Auto Stop CCSD - send_auto_stop_ccsd
- * 
+ *
  * Always set send_auto_stop_ccsd and send_ccsd bits together; send_auto_stop_ccsd
  * should not be set independent of send_ccsd. When set, SD/MMC automatically sends
  * internally generated STOP command (CMD12) to CE-ATA device. After sending
  * internally-generated STOP command, Auto Command Done (ACD) bit in RINTSTS is set
  * and generates interrupt to host if Auto CommandDone interrupt is not masked.
  * After sending the CCSD, SD/MMC automatically clears send_auto_stop_ccsd bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                               
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:-------------------------------------------
  *  ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD_E_DEASSERT | 0x0   | Clear bit if SD/MMC does not reset the bit
- *  ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD_E_ASSERT   | 0x1   | Send internally generated STOP.           
- * 
+ *  ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD_E_ASSERT   | 0x1   | Send internally generated STOP.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD
- * 
+ *
  * Clear bit if SD/MMC does not reset the bit
  */
 #define ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD_E_DEASSERT    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD
- * 
+ *
  * Send internally generated STOP.
  */
 #define ALT_SDMMC_CTL_SEND_AUTO_STOP_CCSD_E_ASSERT      0x1
@@ -512,31 +512,31 @@ extern "C"
 
 /*
  * Field : Ceata Device Interrupt Status - ceata_device_interrupt_status
- * 
+ *
  * Software should appropriately write to this bit after power-on reset or any
  * other reset to CE-ATA device. After reset, usually CE-ATA device interrupt is
  * disabled (nIEN = 1). If the host enables CE-ATA device interrupt, then software
  * should set this bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                            
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:----------------------------------------
  *  ALT_SDMMC_CTL_CEATA_DEVICE_INT_STAT_E_DISD | 0x0   | Interrupts not enabled in CE-ATA device
  *  ALT_SDMMC_CTL_CEATA_DEVICE_INT_STAT_E_END  | 0x1   | Interrupts are enabled in CE-ATA device
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_CEATA_DEVICE_INT_STAT
- * 
+ *
  * Interrupts not enabled in CE-ATA device
  */
 #define ALT_SDMMC_CTL_CEATA_DEVICE_INT_STAT_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_CEATA_DEVICE_INT_STAT
- * 
+ *
  * Interrupts are enabled in CE-ATA device
  */
 #define ALT_SDMMC_CTL_CEATA_DEVICE_INT_STAT_E_END   0x1
@@ -560,29 +560,29 @@ extern "C"
 
 /*
  * Field : Use Internal DMAC - use_internal_dmac
- * 
+ *
  * Enable and Disable Internal DMA transfers.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                                
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:--------------------------------------------
  *  ALT_SDMMC_CTL_USE_INTERNAL_DMAC_E_DISD | 0x0   | The host performs data transfers thru slave
- * :                                       |       | interface                                  
- *  ALT_SDMMC_CTL_USE_INTERNAL_DMAC_E_END  | 0x1   | Internal DMAC used for data transfer       
- * 
+ * :                                       |       | interface
+ *  ALT_SDMMC_CTL_USE_INTERNAL_DMAC_E_END  | 0x1   | Internal DMAC used for data transfer
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_USE_INTERNAL_DMAC
- * 
+ *
  * The host performs data transfers thru slave interface
  */
 #define ALT_SDMMC_CTL_USE_INTERNAL_DMAC_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTL_USE_INTERNAL_DMAC
- * 
+ *
  * Internal DMAC used for data transfer
  */
 #define ALT_SDMMC_CTL_USE_INTERNAL_DMAC_E_END   0x1
@@ -612,7 +612,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CTL.
  */
 struct ALT_SDMMC_CTL_s
@@ -643,44 +643,44 @@ typedef volatile struct ALT_SDMMC_CTL_s  ALT_SDMMC_CTL_t;
 
 /*
  * Register : Power Enable Register - pwren
- * 
+ *
  * Power on/off switch for card; once power is turned on, firmware should wait for
  * regulator/switch ramp-up time before trying to initialize card.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [0]    | RW     | 0x0   | Power Enable
- *  [31:1] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Power Enable - power_enable
- * 
+ *
  * Power on/off switch for one card; for example, bit[0] controls the card. Once
  * power is turned on, firmware should wait for regulator/switch ramp-up time
  * before trying to initialize card.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                           | Value | Description
  * :-------------------------------|:------|:------------
- *  ALT_SDMMC_PWREN_POWER_EN_E_OFF | 0x0   | Power Off  
- *  ALT_SDMMC_PWREN_POWER_EN_E_ON  | 0x1   | Power On   
- * 
+ *  ALT_SDMMC_PWREN_POWER_EN_E_OFF | 0x0   | Power Off
+ *  ALT_SDMMC_PWREN_POWER_EN_E_ON  | 0x1   | Power On
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_PWREN_POWER_EN
- * 
+ *
  * Power Off
  */
 #define ALT_SDMMC_PWREN_POWER_EN_E_OFF  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_PWREN_POWER_EN
- * 
+ *
  * Power On
  */
 #define ALT_SDMMC_PWREN_POWER_EN_E_ON   0x1
@@ -710,7 +710,7 @@ typedef volatile struct ALT_SDMMC_CTL_s  ALT_SDMMC_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_PWREN.
  */
 struct ALT_SDMMC_PWREN_s
@@ -728,26 +728,26 @@ typedef volatile struct ALT_SDMMC_PWREN_s  ALT_SDMMC_PWREN_t;
 
 /*
  * Register : Clock Divider Register - clkdiv
- * 
+ *
  * Divides Clock sdmmc_clk.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------
  *  [7:0]  | RW     | 0x0   | Clk Divider 0
- *  [31:8] | ???    | 0x0   | *UNDEFINED*  
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clk Divider 0 - clk_divider0
- * 
+ *
  * Clock divider-0 value. Clock division is 2*n. For example, value of 0 means
  * divide by 2*0 = 0 (no division, bypass), value of 1 means divide by 2*1 = 2,
  * value of ff means divide by 2*255 = 510, and so on.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_CLKDIV_CLK_DIVR0 register field. */
 #define ALT_SDMMC_CLKDIV_CLK_DIVR0_LSB        0
@@ -774,7 +774,7 @@ typedef volatile struct ALT_SDMMC_PWREN_s  ALT_SDMMC_PWREN_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CLKDIV.
  */
 struct ALT_SDMMC_CLKDIV_s
@@ -792,36 +792,36 @@ typedef volatile struct ALT_SDMMC_CLKDIV_s  ALT_SDMMC_CLKDIV_t;
 
 /*
  * Register : SD Clock Source Register - clksrc
- * 
+ *
  * Selects among available clock dividers. The sdmmc_cclk_out is always from clock
  * divider 0.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [1:0]  | RW     | 0x0   | Clock Source
- *  [31:2] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clock Source - clk_source
- * 
+ *
  * Selects among available clock dividers. The SD/MMC module is configured with
  * just one clock divider so this register should always be set to choose clkdiv0.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description    
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------
  *  ALT_SDMMC_CLKSRC_CLK_SRC_E_CLKDIV0 | 0x0   | Clock divider 0
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CLKSRC_CLK_SRC
- * 
+ *
  * Clock divider 0
  */
 #define ALT_SDMMC_CLKSRC_CLK_SRC_E_CLKDIV0  0x0
@@ -851,7 +851,7 @@ typedef volatile struct ALT_SDMMC_CLKDIV_s  ALT_SDMMC_CLKDIV_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CLKSRC.
  */
 struct ALT_SDMMC_CLKSRC_s
@@ -869,43 +869,43 @@ typedef volatile struct ALT_SDMMC_CLKSRC_s  ALT_SDMMC_CLKSRC_t;
 
 /*
  * Register : Clock Enable Register - clkena
- * 
+ *
  * Controls external SD/MMC Clock Enable.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description   
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------
- *  [0]     | RW     | 0x0   | Cclk Enable   
- *  [15:1]  | ???    | 0x0   | *UNDEFINED*   
+ *  [0]     | RW     | 0x0   | Cclk Enable
+ *  [15:1]  | ???    | 0x0   | *UNDEFINED*
  *  [16]    | RW     | 0x0   | Cclk Low Power
- *  [31:17] | ???    | 0x0   | *UNDEFINED*   
- * 
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Cclk Enable - cclk_enable
- * 
+ *
  * Enables sdmmc_cclk_out.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description   
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:---------------
  *  ALT_SDMMC_CLKENA_CCLK_EN_E_DISD | 0x0   | SD/MMC Disable
- *  ALT_SDMMC_CLKENA_CCLK_EN_E_END  | 0x1   | SD/MMC Enable 
- * 
+ *  ALT_SDMMC_CLKENA_CCLK_EN_E_END  | 0x1   | SD/MMC Enable
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CLKENA_CCLK_EN
- * 
+ *
  * SD/MMC Disable
  */
 #define ALT_SDMMC_CLKENA_CCLK_EN_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CLKENA_CCLK_EN
- * 
+ *
  * SD/MMC Enable
  */
 #define ALT_SDMMC_CLKENA_CCLK_EN_E_END  0x1
@@ -929,30 +929,30 @@ typedef volatile struct ALT_SDMMC_CLKSRC_s  ALT_SDMMC_CLKSRC_t;
 
 /*
  * Field : Cclk Low Power - cclk_low_power
- * 
+ *
  * In low-power mode, stop sdmmc_cclk_out when card in IDLE (should be normally set
  * to only MMC and SD memory cards; for SDIO cards, if interrupts must be detected,
  * clock should not be stopped).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description       
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------
  *  ALT_SDMMC_CLKENA_CCLK_LOW_POWER_E_DISD | 0x0   | Non-low-power mode
- *  ALT_SDMMC_CLKENA_CCLK_LOW_POWER_E_END  | 0x1   | Low-power mode    
- * 
+ *  ALT_SDMMC_CLKENA_CCLK_LOW_POWER_E_END  | 0x1   | Low-power mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CLKENA_CCLK_LOW_POWER
- * 
+ *
  * Non-low-power mode
  */
 #define ALT_SDMMC_CLKENA_CCLK_LOW_POWER_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CLKENA_CCLK_LOW_POWER
- * 
+ *
  * Low-power mode
  */
 #define ALT_SDMMC_CLKENA_CCLK_LOW_POWER_E_END   0x1
@@ -982,7 +982,7 @@ typedef volatile struct ALT_SDMMC_CLKSRC_s  ALT_SDMMC_CLKSRC_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CLKENA.
  */
 struct ALT_SDMMC_CLKENA_s
@@ -1002,24 +1002,24 @@ typedef volatile struct ALT_SDMMC_CLKENA_s  ALT_SDMMC_CLKENA_t;
 
 /*
  * Register : Timeout Register - tmout
- * 
+ *
  * Sets timeout values
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset    | Description     
+ *
+ *  Bits   | Access | Reset    | Description
  * :-------|:-------|:---------|:-----------------
  *  [7:0]  | RW     | 0x40     | Response Timeout
- *  [31:8] | RW     | 0xffffff | Data Timeout    
- * 
+ *  [31:8] | RW     | 0xffffff | Data Timeout
+ *
  */
 /*
  * Field : Response Timeout - response_timeout
- * 
+ *
  * Response timeout value. Value is in number of card output clocks sdmmc_cclk_out.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_TMOUT_RESPONSE_TMO register field. */
 #define ALT_SDMMC_TMOUT_RESPONSE_TMO_LSB        0
@@ -1040,13 +1040,13 @@ typedef volatile struct ALT_SDMMC_CLKENA_s  ALT_SDMMC_CLKENA_t;
 
 /*
  * Field : Data Timeout - data_timeout
- * 
+ *
  * Value for card Data Read Timeout; same value also used for Data Starvation by
  * Host timeout. Value is in number of card output clocks sdmmc_cclk_out of
  * selected card.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_TMOUT_DATA_TMO register field. */
 #define ALT_SDMMC_TMOUT_DATA_TMO_LSB        8
@@ -1073,7 +1073,7 @@ typedef volatile struct ALT_SDMMC_CLKENA_s  ALT_SDMMC_CLKENA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_TMOUT.
  */
 struct ALT_SDMMC_TMOUT_s
@@ -1091,43 +1091,43 @@ typedef volatile struct ALT_SDMMC_TMOUT_s  ALT_SDMMC_TMOUT_t;
 
 /*
  * Register : Card Type Register - ctype
- * 
+ *
  * Describes card formats.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description           
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------
  *  [0]     | RW     | 0x0   | Card Width 1 or 4 Bits
- *  [15:1]  | ???    | 0x0   | *UNDEFINED*           
- *  [16]    | RW     | 0x0   | Card Width 8 Bit      
- *  [31:17] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [15:1]  | ???    | 0x0   | *UNDEFINED*
+ *  [16]    | RW     | 0x0   | Card Width 8 Bit
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Card Width 1 or 4 Bits - card_width2
- * 
+ *
  * Ignored if card_width1 is MODE8BIT.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:------------
- *  ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD1BIT | 0x0   | 1-bit mode 
- *  ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD4BIT | 0x1   | 4-bit mode 
- * 
+ *  ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD1BIT | 0x0   | 1-bit mode
+ *  ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD4BIT | 0x1   | 4-bit mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTYPE_CARD_WIDTH2
- * 
+ *
  * 1-bit mode
  */
 #define ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD1BIT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTYPE_CARD_WIDTH2
- * 
+ *
  * 4-bit mode
  */
 #define ALT_SDMMC_CTYPE_CARD_WIDTH2_E_MOD4BIT   0x1
@@ -1151,29 +1151,29 @@ typedef volatile struct ALT_SDMMC_TMOUT_s  ALT_SDMMC_TMOUT_t;
 
 /*
  * Field : Card Width 8 Bit - card_width1
- * 
+ *
  * Indicates if card is 8 bit or othersize. If not 8-bit, card_width2 specifies the
  * width.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description   
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:---------------
  *  ALT_SDMMC_CTYPE_CARD_WIDTH1_E_NON8BIT | 0x0   | Non 8-bit mode
- *  ALT_SDMMC_CTYPE_CARD_WIDTH1_E_MOD8BIT | 0x1   | 8-bit mode    
- * 
+ *  ALT_SDMMC_CTYPE_CARD_WIDTH1_E_MOD8BIT | 0x1   | 8-bit mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CTYPE_CARD_WIDTH1
- * 
+ *
  * Non 8-bit mode
  */
 #define ALT_SDMMC_CTYPE_CARD_WIDTH1_E_NON8BIT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CTYPE_CARD_WIDTH1
- * 
+ *
  * 8-bit mode
  */
 #define ALT_SDMMC_CTYPE_CARD_WIDTH1_E_MOD8BIT   0x1
@@ -1203,7 +1203,7 @@ typedef volatile struct ALT_SDMMC_TMOUT_s  ALT_SDMMC_TMOUT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CTYPE.
  */
 struct ALT_SDMMC_CTYPE_s
@@ -1223,24 +1223,24 @@ typedef volatile struct ALT_SDMMC_CTYPE_s  ALT_SDMMC_CTYPE_t;
 
 /*
  * Register : Block Size Register - blksiz
- * 
+ *
  * The Block Size.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------
- *  [15:0]  | RW     | 0x200 | Block Size 
+ *  [15:0]  | RW     | 0x200 | Block Size
  *  [31:16] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Block Size - block_size
- * 
+ *
  * The size of a block in bytes.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_BLKSIZ_BLOCK_SIZE register field. */
 #define ALT_SDMMC_BLKSIZ_BLOCK_SIZE_LSB        0
@@ -1267,7 +1267,7 @@ typedef volatile struct ALT_SDMMC_CTYPE_s  ALT_SDMMC_CTYPE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_BLKSIZ.
  */
 struct ALT_SDMMC_BLKSIZ_s
@@ -1285,32 +1285,32 @@ typedef volatile struct ALT_SDMMC_BLKSIZ_s  ALT_SDMMC_BLKSIZ_t;
 
 /*
  * Register : Byte Count Register - bytcnt
- * 
+ *
  * The number of bytes to be transferred.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | RW     | 0x200 | Byte Count 
- * 
+ *  [31:0] | RW     | 0x200 | Byte Count
+ *
  */
 /*
  * Field : Byte Count - byte_count
- * 
+ *
  * This value should be an integer multiple of the Block Size for block transfers.
  * For undefined number of byte transfers, byte count should be set to 0. When byte
  * count is set to 0, it is responsibility of host to explicitly send stop/abort
  * command to terminate data transfer.
- * 
+ *
  * Note: In SDIO mode, if a single transfer is greater than 4 bytes and non-DWORD-
  * aligned, the transfer should be broken where only the last transfer is non-
  * DWORD-aligned and less than 4 bytes. For example, if a transfer of 129 bytes
  * must occur, then the driver should start at least two transfers; one with 128
  * bytes and the other with 1 byte.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_BYTCNT_BYTE_COUNT register field. */
 #define ALT_SDMMC_BYTCNT_BYTE_COUNT_LSB        0
@@ -1337,7 +1337,7 @@ typedef volatile struct ALT_SDMMC_BLKSIZ_s  ALT_SDMMC_BLKSIZ_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_BYTCNT.
  */
 struct ALT_SDMMC_BYTCNT_s
@@ -1354,58 +1354,58 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Register : Interrupt Mask Register - intmask
- * 
+ *
  * Allows Masking of Various Interrupts
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                    
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------------
- *  [0]     | RW     | 0x0   | Card Detected                  
- *  [1]     | RW     | 0x0   | Response Error                 
- *  [2]     | RW     | 0x0   | Command Done                   
- *  [3]     | RW     | 0x0   | Data Transfer Over             
- *  [4]     | RW     | 0x0   | Transmit FIFO Data Request     
- *  [5]     | RW     | 0x0   | Receive FIFO Data Request (    
- *  [6]     | RW     | 0x0   | Response CRC Error             
- *  [7]     | RW     | 0x0   | Data CRC Error                 
- *  [8]     | RW     | 0x0   | Response Timeout               
- *  [9]     | RW     | 0x0   | Data Read Timeout              
- *  [10]    | RW     | 0x0   | Data Starvation  Host Timeout  
- *  [11]    | RW     | 0x0   | FIFO Underrun Overrun Error    
- *  [12]    | RW     | 0x0   | Hardware Locked Write Error    
- *  [13]    | RW     | 0x0   | Start-bit Error                
- *  [14]    | RW     | 0x0   | Auto Command Done              
+ *  [0]     | RW     | 0x0   | Card Detected
+ *  [1]     | RW     | 0x0   | Response Error
+ *  [2]     | RW     | 0x0   | Command Done
+ *  [3]     | RW     | 0x0   | Data Transfer Over
+ *  [4]     | RW     | 0x0   | Transmit FIFO Data Request
+ *  [5]     | RW     | 0x0   | Receive FIFO Data Request (
+ *  [6]     | RW     | 0x0   | Response CRC Error
+ *  [7]     | RW     | 0x0   | Data CRC Error
+ *  [8]     | RW     | 0x0   | Response Timeout
+ *  [9]     | RW     | 0x0   | Data Read Timeout
+ *  [10]    | RW     | 0x0   | Data Starvation  Host Timeout
+ *  [11]    | RW     | 0x0   | FIFO Underrun Overrun Error
+ *  [12]    | RW     | 0x0   | Hardware Locked Write Error
+ *  [13]    | RW     | 0x0   | Start-bit Error
+ *  [14]    | RW     | 0x0   | Auto Command Done
  *  [15]    | RW     | 0x0   | End-bit Error Read Write no CRC
- *  [16]    | RW     | 0x0   | SDIO Interrupt Mask            
- *  [31:17] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [16]    | RW     | 0x0   | SDIO Interrupt Mask
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Card Detected - cd
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description        
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:--------------------
- *  ALT_SDMMC_INTMSK_CD_E_MSK   | 0x0   | Card Detected Mask 
+ *  ALT_SDMMC_INTMSK_CD_E_MSK   | 0x0   | Card Detected Mask
  *  ALT_SDMMC_INTMSK_CD_E_NOMSK | 0x1   | Card Detect No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_CD
- * 
+ *
  * Card Detected Mask
  */
 #define ALT_SDMMC_INTMSK_CD_E_MSK   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_CD
- * 
+ *
  * Card Detect No Mask
  */
 #define ALT_SDMMC_INTMSK_CD_E_NOMSK 0x1
@@ -1429,29 +1429,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Response Error - re
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description           
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------
- *  ALT_SDMMC_INTMSK_RE_E_MSK   | 0x0   | Response error Mask   
+ *  ALT_SDMMC_INTMSK_RE_E_MSK   | 0x0   | Response error Mask
  *  ALT_SDMMC_INTMSK_RE_E_NOMSK | 0x1   | Response error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RE
- * 
+ *
  * Response error Mask
  */
 #define ALT_SDMMC_INTMSK_RE_E_MSK   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RE
- * 
+ *
  * Response error No Mask
  */
 #define ALT_SDMMC_INTMSK_RE_E_NOMSK 0x1
@@ -1475,29 +1475,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Command Done - cmd
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description         
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:---------------------
- *  ALT_SDMMC_INTMSK_CMD_E_MSK   | 0x0   | Command Done Mask   
+ *  ALT_SDMMC_INTMSK_CMD_E_MSK   | 0x0   | Command Done Mask
  *  ALT_SDMMC_INTMSK_CMD_E_NOMSK | 0x1   | Command Done No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_CMD
- * 
+ *
  * Command Done Mask
  */
 #define ALT_SDMMC_INTMSK_CMD_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_CMD
- * 
+ *
  * Command Done No Mask
  */
 #define ALT_SDMMC_INTMSK_CMD_E_NOMSK    0x1
@@ -1521,29 +1521,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Data Transfer Over - dto
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description               
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:---------------------------
- *  ALT_SDMMC_INTMSK_DTO_E_MSK   | 0x0   | Data transfer over Mask   
+ *  ALT_SDMMC_INTMSK_DTO_E_MSK   | 0x0   | Data transfer over Mask
  *  ALT_SDMMC_INTMSK_DTO_E_NOMSK | 0x1   | Data transfer over No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_DTO
- * 
+ *
  * Data transfer over Mask
  */
 #define ALT_SDMMC_INTMSK_DTO_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_DTO
- * 
+ *
  * Data transfer over No Mask
  */
 #define ALT_SDMMC_INTMSK_DTO_E_NOMSK    0x1
@@ -1567,29 +1567,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Transmit FIFO Data Request - txdr
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                       
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------------
- *  ALT_SDMMC_INTMSK_TXDR_E_MSK   | 0x0   | Transmit FIFO data request Mask   
+ *  ALT_SDMMC_INTMSK_TXDR_E_MSK   | 0x0   | Transmit FIFO data request Mask
  *  ALT_SDMMC_INTMSK_TXDR_E_NOMSK | 0x1   | Transmit FIFO data request No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_TXDR
- * 
+ *
  * Transmit FIFO data request Mask
  */
 #define ALT_SDMMC_INTMSK_TXDR_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_TXDR
- * 
+ *
  * Transmit FIFO data request No Mask
  */
 #define ALT_SDMMC_INTMSK_TXDR_E_NOMSK   0x1
@@ -1613,29 +1613,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Receive FIFO Data Request ( - rxdr
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                      
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------------------
- *  ALT_SDMMC_INTMSK_RXDR_E_MSK   | 0x0   | Receive FIFO data request Mask   
+ *  ALT_SDMMC_INTMSK_RXDR_E_MSK   | 0x0   | Receive FIFO data request Mask
  *  ALT_SDMMC_INTMSK_RXDR_E_NOMSK | 0x1   | Receive FIFO data request No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RXDR
- * 
+ *
  * Receive FIFO data request Mask
  */
 #define ALT_SDMMC_INTMSK_RXDR_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RXDR
- * 
+ *
  * Receive FIFO data request No Mask
  */
 #define ALT_SDMMC_INTMSK_RXDR_E_NOMSK   0x1
@@ -1659,29 +1659,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Response CRC Error - rcrc
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description               
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:---------------------------
- *  ALT_SDMMC_INTMSK_RCRC_E_MSK   | 0x0   | Response CRC error Mask   
+ *  ALT_SDMMC_INTMSK_RCRC_E_MSK   | 0x0   | Response CRC error Mask
  *  ALT_SDMMC_INTMSK_RCRC_E_NOMSK | 0x1   | Response CRC error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RCRC
- * 
+ *
  * Response CRC error Mask
  */
 #define ALT_SDMMC_INTMSK_RCRC_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RCRC
- * 
+ *
  * Response CRC error No Mask
  */
 #define ALT_SDMMC_INTMSK_RCRC_E_NOMSK   0x1
@@ -1705,29 +1705,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Data CRC Error - dcrc
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description           
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------
- *  ALT_SDMMC_INTMSK_DCRC_E_MSK   | 0x0   | Data CRC error Mask   
+ *  ALT_SDMMC_INTMSK_DCRC_E_MSK   | 0x0   | Data CRC error Mask
  *  ALT_SDMMC_INTMSK_DCRC_E_NOMSK | 0x1   | Data CRC error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_DCRC
- * 
+ *
  * Data CRC error Mask
  */
 #define ALT_SDMMC_INTMSK_DCRC_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_DCRC
- * 
+ *
  * Data CRC error No Mask
  */
 #define ALT_SDMMC_INTMSK_DCRC_E_NOMSK   0x1
@@ -1751,29 +1751,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Response Timeout - rto
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description             
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:-------------------------
- *  ALT_SDMMC_INTMSK_RTO_E_MSK   | 0x0   | Response timeout Mask   
+ *  ALT_SDMMC_INTMSK_RTO_E_MSK   | 0x0   | Response timeout Mask
  *  ALT_SDMMC_INTMSK_RTO_E_NOMSK | 0x1   | Response timeout No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RTO
- * 
+ *
  * Response timeout Mask
  */
 #define ALT_SDMMC_INTMSK_RTO_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_RTO
- * 
+ *
  * Response timeout No Mask
  */
 #define ALT_SDMMC_INTMSK_RTO_E_NOMSK    0x1
@@ -1797,29 +1797,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Data Read Timeout - drt
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description              
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------------
- *  ALT_SDMMC_INTMSK_DRT_E_MSK   | 0x0   | Data read timeout Mask   
+ *  ALT_SDMMC_INTMSK_DRT_E_MSK   | 0x0   | Data read timeout Mask
  *  ALT_SDMMC_INTMSK_DRT_E_NOMSK | 0x1   | Data read timeout No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_DRT
- * 
+ *
  * Data read timeout Mask
  */
 #define ALT_SDMMC_INTMSK_DRT_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_DRT
- * 
+ *
  * Data read timeout No Mask
  */
 #define ALT_SDMMC_INTMSK_DRT_E_NOMSK    0x1
@@ -1843,29 +1843,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Data Starvation  Host Timeout - hto
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                            
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------------------------
- *  ALT_SDMMC_INTMSK_HTO_E_MSK   | 0x0   | Data starvation by host timeout Mask   
+ *  ALT_SDMMC_INTMSK_HTO_E_MSK   | 0x0   | Data starvation by host timeout Mask
  *  ALT_SDMMC_INTMSK_HTO_E_NOMSK | 0x1   | Data starvation by host timeout No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_HTO
- * 
+ *
  * Data starvation by host timeout Mask
  */
 #define ALT_SDMMC_INTMSK_HTO_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_HTO
- * 
+ *
  * Data starvation by host timeout No Mask
  */
 #define ALT_SDMMC_INTMSK_HTO_E_NOMSK    0x1
@@ -1889,29 +1889,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : FIFO Underrun Overrun Error - frun
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                        
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:------------------------------------
- *  ALT_SDMMC_INTMSK_FRUN_E_MSK   | 0x0   | FIFO underrun/overrun error Mask   
+ *  ALT_SDMMC_INTMSK_FRUN_E_MSK   | 0x0   | FIFO underrun/overrun error Mask
  *  ALT_SDMMC_INTMSK_FRUN_E_NOMSK | 0x1   | FIFO underrun/overrun error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_FRUN
- * 
+ *
  * FIFO underrun/overrun error Mask
  */
 #define ALT_SDMMC_INTMSK_FRUN_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_FRUN
- * 
+ *
  * FIFO underrun/overrun error No Mask
  */
 #define ALT_SDMMC_INTMSK_FRUN_E_NOMSK   0x1
@@ -1935,29 +1935,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Hardware Locked Write Error - hle
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                        
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:------------------------------------
- *  ALT_SDMMC_INTMSK_HLE_E_MSK   | 0x0   | Hardware locked write error Mask   
+ *  ALT_SDMMC_INTMSK_HLE_E_MSK   | 0x0   | Hardware locked write error Mask
  *  ALT_SDMMC_INTMSK_HLE_E_NOMSK | 0x1   | Hardware locked write error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_HLE
- * 
+ *
  * Hardware locked write error Mask
  */
 #define ALT_SDMMC_INTMSK_HLE_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_HLE
- * 
+ *
  * Hardware locked write error No Mask
  */
 #define ALT_SDMMC_INTMSK_HLE_E_NOMSK    0x1
@@ -1981,29 +1981,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Start-bit Error - sbe
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description            
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:------------------------
- *  ALT_SDMMC_INTMSK_SBE_E_MSK   | 0x0   | Start-bit error Mask   
+ *  ALT_SDMMC_INTMSK_SBE_E_MSK   | 0x0   | Start-bit error Mask
  *  ALT_SDMMC_INTMSK_SBE_E_NOMSK | 0x1   | Start-bit error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_SBE
- * 
+ *
  * Start-bit error Mask
  */
 #define ALT_SDMMC_INTMSK_SBE_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_SBE
- * 
+ *
  * Start-bit error No Mask
  */
 #define ALT_SDMMC_INTMSK_SBE_E_NOMSK    0x1
@@ -2027,29 +2027,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : Auto Command Done - acd
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description              
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------------
- *  ALT_SDMMC_INTMSK_ACD_E_MSK   | 0x0   | Auto command done Mask   
+ *  ALT_SDMMC_INTMSK_ACD_E_MSK   | 0x0   | Auto command done Mask
  *  ALT_SDMMC_INTMSK_ACD_E_NOMSK | 0x1   | Auto command done No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_ACD
- * 
+ *
  * Auto command done Mask
  */
 #define ALT_SDMMC_INTMSK_ACD_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_ACD
- * 
+ *
  * Auto command done No Mask
  */
 #define ALT_SDMMC_INTMSK_ACD_E_NOMSK    0x1
@@ -2073,29 +2073,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : End-bit Error Read Write no CRC - ebe
- * 
+ *
  * Bits used to mask unwanted interrupts. Value of 0 masks interrupts, value of 1
  * enables interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description          
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------
- *  ALT_SDMMC_INTMSK_EBE_E_MSK   | 0x0   | End-bit error Mask   
+ *  ALT_SDMMC_INTMSK_EBE_E_MSK   | 0x0   | End-bit error Mask
  *  ALT_SDMMC_INTMSK_EBE_E_NOMSK | 0x1   | End-bit error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_EBE
- * 
+ *
  * End-bit error Mask
  */
 #define ALT_SDMMC_INTMSK_EBE_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_EBE
- * 
+ *
  * End-bit error No Mask
  */
 #define ALT_SDMMC_INTMSK_EBE_E_NOMSK    0x1
@@ -2119,29 +2119,29 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
 
 /*
  * Field : SDIO Interrupt Mask - sdio_int_mask
- * 
+ *
  * In current application, MMC-Ver3.3 only Bit 16 of this field is used. Bits 17 to
  * 31 are unused and return 0
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                 
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-----------------------------
  *  ALT_SDMMC_INTMSK_SDIO_INT_MSK_E_DISD | 0x0   | SDIO Mask Interrupt Disabled
- *  ALT_SDMMC_INTMSK_SDIO_INT_MSK_E_END  | 0x1   | SDIO Interrupt Enabled      
- * 
+ *  ALT_SDMMC_INTMSK_SDIO_INT_MSK_E_END  | 0x1   | SDIO Interrupt Enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_SDIO_INT_MSK
- * 
+ *
  * SDIO Mask Interrupt Disabled
  */
 #define ALT_SDMMC_INTMSK_SDIO_INT_MSK_E_DISD    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_INTMSK_SDIO_INT_MSK
- * 
+ *
  * SDIO Interrupt Enabled
  */
 #define ALT_SDMMC_INTMSK_SDIO_INT_MSK_E_END     0x1
@@ -2171,7 +2171,7 @@ typedef volatile struct ALT_SDMMC_BYTCNT_s  ALT_SDMMC_BYTCNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_INTMSK.
  */
 struct ALT_SDMMC_INTMSK_s
@@ -2205,23 +2205,23 @@ typedef volatile struct ALT_SDMMC_INTMSK_s  ALT_SDMMC_INTMSK_t;
 
 /*
  * Register : Command Argument Register - cmdarg
- * 
+ *
  * See Field Description.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | RW     | 0x0   | Cmd Arg    
- * 
+ *  [31:0] | RW     | 0x0   | Cmd Arg
+ *
  */
 /*
  * Field : Cmd Arg - cmd_arg
- * 
+ *
  * Values indicates command argument to be passed to card.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_CMDARG_CMD_ARG register field. */
 #define ALT_SDMMC_CMDARG_CMD_ARG_LSB        0
@@ -2248,7 +2248,7 @@ typedef volatile struct ALT_SDMMC_INTMSK_s  ALT_SDMMC_INTMSK_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CMDARG.
  */
 struct ALT_SDMMC_CMDARG_s
@@ -2265,45 +2265,45 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Register : Command Register - cmd
- * 
+ *
  * This register issues various commands.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                       
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------------
- *  [5:0]   | RW     | 0x0   | Cmd Index                         
- *  [6]     | RW     | 0x0   | Response Expect                   
- *  [7]     | RW     | 0x0   | Response Length                   
- *  [8]     | RW     | 0x0   | Check Response Crc                
- *  [9]     | RW     | 0x0   | Data Transfer Expected            
- *  [10]    | RW     | 0x0   | Read Write                        
- *  [11]    | RW     | 0x0   | Transfer Mode                     
- *  [12]    | RW     | 0x0   | Send Auto Stop                    
- *  [13]    | RW     | 0x0   | Wait Previous Data Complete       
- *  [14]    | RW     | 0x0   | Stop Abort Cmd                    
- *  [15]    | RW     | 0x0   | Send Initialization               
- *  [20:16] | RW     | 0x0   | Card Number                       
- *  [21]    | RW     | 0x0   | Update Clock Registers Only       
- *  [22]    | RW     | 0x0   | Read CE-ATA Device                
+ *  [5:0]   | RW     | 0x0   | Cmd Index
+ *  [6]     | RW     | 0x0   | Response Expect
+ *  [7]     | RW     | 0x0   | Response Length
+ *  [8]     | RW     | 0x0   | Check Response Crc
+ *  [9]     | RW     | 0x0   | Data Transfer Expected
+ *  [10]    | RW     | 0x0   | Read Write
+ *  [11]    | RW     | 0x0   | Transfer Mode
+ *  [12]    | RW     | 0x0   | Send Auto Stop
+ *  [13]    | RW     | 0x0   | Wait Previous Data Complete
+ *  [14]    | RW     | 0x0   | Stop Abort Cmd
+ *  [15]    | RW     | 0x0   | Send Initialization
+ *  [20:16] | RW     | 0x0   | Card Number
+ *  [21]    | RW     | 0x0   | Update Clock Registers Only
+ *  [22]    | RW     | 0x0   | Read CE-ATA Device
  *  [23]    | RW     | 0x0   | Command Completion Signal Expected
- *  [24]    | RW     | 0x0   | Enable Boot                       
- *  [25]    | RW     | 0x0   | Expect Boot Ack                   
- *  [26]    | RW     | 0x0   | Disable Boot                      
- *  [27]    | RW     | 0x0   | Boot Mode                         
- *  [28]    | RW     | 0x0   | Volt Switch                       
- *  [29]    | RW     | 0x1   | Use Hold Reg                      
- *  [30]    | ???    | 0x0   | *UNDEFINED*                       
- *  [31]    | RW     | 0x0   | Start Cmd                         
- * 
+ *  [24]    | RW     | 0x0   | Enable Boot
+ *  [25]    | RW     | 0x0   | Expect Boot Ack
+ *  [26]    | RW     | 0x0   | Disable Boot
+ *  [27]    | RW     | 0x0   | Boot Mode
+ *  [28]    | RW     | 0x0   | Volt Switch
+ *  [29]    | RW     | 0x1   | Use Hold Reg
+ *  [30]    | ???    | 0x0   | *UNDEFINED*
+ *  [31]    | RW     | 0x0   | Start Cmd
+ *
  */
 /*
  * Field : Cmd Index - cmd_index
- * 
+ *
  * Tracks the command index number. Values from 0-31.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_CMD_CMD_INDEX register field. */
 #define ALT_SDMMC_CMD_CMD_INDEX_LSB        0
@@ -2324,28 +2324,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Response Expect - response_expect
- * 
+ *
  * Response expected from card.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                   
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------------------
  *  ALT_SDMMC_CMD_RESPONSE_EXPECT_E_RESP   | 0x0   | No response expected from card
- *  ALT_SDMMC_CMD_RESPONSE_EXPECT_E_NORESP | 0x1   | Response expected from card   
- * 
+ *  ALT_SDMMC_CMD_RESPONSE_EXPECT_E_NORESP | 0x1   | Response expected from card
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RESPONSE_EXPECT
- * 
+ *
  * No response expected from card
  */
 #define ALT_SDMMC_CMD_RESPONSE_EXPECT_E_RESP    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RESPONSE_EXPECT
- * 
+ *
  * Response expected from card
  */
 #define ALT_SDMMC_CMD_RESPONSE_EXPECT_E_NORESP  0x1
@@ -2369,28 +2369,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Response Length - response_length
- * 
+ *
  * Provides long and short response
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                      
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------------------------
  *  ALT_SDMMC_CMD_RESPONSE_LEN_E_SHORT | 0x0   | Short response expected from card
- *  ALT_SDMMC_CMD_RESPONSE_LEN_E_LONG  | 0x1   | Long response expected from card 
- * 
+ *  ALT_SDMMC_CMD_RESPONSE_LEN_E_LONG  | 0x1   | Long response expected from card
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RESPONSE_LEN
- * 
+ *
  * Short response expected from card
  */
 #define ALT_SDMMC_CMD_RESPONSE_LEN_E_SHORT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RESPONSE_LEN
- * 
+ *
  * Long response expected from card
  */
 #define ALT_SDMMC_CMD_RESPONSE_LEN_E_LONG   0x1
@@ -2414,29 +2414,29 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Check Response Crc - check_response_crc
- * 
+ *
  * Some of command responses do not return valid CRC bits. Software should disable
  * CRC checks for those commands in order to disable CRC checking by controller.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                     | Value | Description              
+ *
+ *  Enum                                     | Value | Description
  * :-----------------------------------------|:------|:--------------------------
  *  ALT_SDMMC_CMD_CHECK_RESPONSE_CRC_E_NOCHK | 0x0   | Do not check response CRC
- *  ALT_SDMMC_CMD_CHECK_RESPONSE_CRC_E_CHK   | 0x1   | Check Response CRC       
- * 
+ *  ALT_SDMMC_CMD_CHECK_RESPONSE_CRC_E_CHK   | 0x1   | Check Response CRC
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_CHECK_RESPONSE_CRC
- * 
+ *
  * Do not check response CRC
  */
 #define ALT_SDMMC_CMD_CHECK_RESPONSE_CRC_E_NOCHK    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_CHECK_RESPONSE_CRC
- * 
+ *
  * Check Response CRC
  */
 #define ALT_SDMMC_CMD_CHECK_RESPONSE_CRC_E_CHK      0x1
@@ -2460,28 +2460,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Data Transfer Expected - data_expected
- * 
+ *
  * Set decision on data transfer expecetd or not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                           
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:---------------------------------------
  *  ALT_SDMMC_CMD_DATA_EXPECTED_E_NODATXFEREXP | 0x0   | No data transfer expected (read/write)
- *  ALT_SDMMC_CMD_DATA_EXPECTED_E_DATAXFEREXP  | 0x1   | Data transfer expected (read/write)   
- * 
+ *  ALT_SDMMC_CMD_DATA_EXPECTED_E_DATAXFEREXP  | 0x1   | Data transfer expected (read/write)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_DATA_EXPECTED
- * 
+ *
  * No data transfer expected (read/write)
  */
 #define ALT_SDMMC_CMD_DATA_EXPECTED_E_NODATXFEREXP  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_DATA_EXPECTED
- * 
+ *
  * Data transfer expected (read/write)
  */
 #define ALT_SDMMC_CMD_DATA_EXPECTED_E_DATAXFEREXP   0x1
@@ -2505,28 +2505,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Read Write - read_write
- * 
+ *
  * Read/Write from card. Don't care if no data transfer expected.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description   
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:---------------
  *  ALT_SDMMC_CMD_RD_WR_E_RD | 0x0   | Read from card
- *  ALT_SDMMC_CMD_RD_WR_E_WR | 0x1   | Write to card 
- * 
+ *  ALT_SDMMC_CMD_RD_WR_E_WR | 0x1   | Write to card
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RD_WR
- * 
+ *
  * Read from card
  */
 #define ALT_SDMMC_CMD_RD_WR_E_RD    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RD_WR
- * 
+ *
  * Write to card
  */
 #define ALT_SDMMC_CMD_RD_WR_E_WR    0x1
@@ -2550,28 +2550,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Transfer Mode - transfer_mode
- * 
+ *
  * Block transfer command. Don't care if no data expected
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                 
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------------
- *  ALT_SDMMC_CMD_TFR_MOD_E_BLK | 0x0   | Block data transfer command 
+ *  ALT_SDMMC_CMD_TFR_MOD_E_BLK | 0x0   | Block data transfer command
  *  ALT_SDMMC_CMD_TFR_MOD_E_STR | 0x1   | Stream data transfer command
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_TFR_MOD
- * 
+ *
  * Block data transfer command
  */
 #define ALT_SDMMC_CMD_TFR_MOD_E_BLK 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_TFR_MOD
- * 
+ *
  * Stream data transfer command
  */
 #define ALT_SDMMC_CMD_TFR_MOD_E_STR 0x1
@@ -2595,37 +2595,37 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Send Auto Stop - send_auto_stop
- * 
+ *
  * When set, SD/MMC sends stop command to SD_MMC_CEATA cards at end of data
  * transfer. Determine the following:
- * 
+ *
  * * -when send_auto_stop bit should be set, since some data   transfers do not
  *   need explicit stop commands. *-open-ended transfers that software should
  *   explicitly   send to stop command.
- * 
+ *
  * Additionally, when resume is sent to resume- suspended memory access of SD-Combo
  * card, bit should be set correctly if suspended data transfer needs
  * send_auto_stop. Don't care if no data expected from card.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                                 
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:---------------------------------------------
  *  ALT_SDMMC_CMD_SEND_AUTO_STOP_E_NOSEND | 0x0   | No stop command sent at end of data transfer
- *  ALT_SDMMC_CMD_SEND_AUTO_STOP_E_SEND   | 0x1   | Send stop command at end of data transfer   
- * 
+ *  ALT_SDMMC_CMD_SEND_AUTO_STOP_E_SEND   | 0x1   | Send stop command at end of data transfer
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_SEND_AUTO_STOP
- * 
+ *
  * No stop command sent at end of data transfer
  */
 #define ALT_SDMMC_CMD_SEND_AUTO_STOP_E_NOSEND   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_SEND_AUTO_STOP
- * 
+ *
  * Send stop command at end of data transfer
  */
 #define ALT_SDMMC_CMD_SEND_AUTO_STOP_E_SEND     0x1
@@ -2649,30 +2649,30 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Wait Previous Data Complete - wait_prvdata_complete
- * 
+ *
  * Determines when command is sent. The send command at once option is typically
  * used to query status of card during data transfer or to stop current data
  * transfer.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                               
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:-------------------------------------------
- *  ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE_E_NOWAIT | 0x0   | Send command at once                      
+ *  ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE_E_NOWAIT | 0x0   | Send command at once
  *  ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE_E_WAIT   | 0x1   | Wait for previous data transfer completion
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE
- * 
+ *
  * Send command at once
  */
 #define ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE_E_NOWAIT    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE
- * 
+ *
  * Wait for previous data transfer completion
  */
 #define ALT_SDMMC_CMD_WAIT_PRVDATA_COMPLETE_E_WAIT      0x1
@@ -2696,37 +2696,37 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Stop Abort Cmd - stop_abort_cmd
- * 
+ *
  * When open-ended or predefined data transfer is in progress, and host issues stop
  * or abort command to stop data transfer, bit should be set so that command/data
  * state-machines of CIU can return correctly to idle state. This is also
  * applicable for Boot mode transfers. To Abort boot mode, this bit should be set
  * along with CMD[26] = disable_boot.
- * 
+ *
  * Note: If abort is sent to function-number currently selected or not in data-
  * transfer mode, then bit should be set to 0.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                     
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-------------------------------------------------
  *  ALT_SDMMC_CMD_STOP_ABT_CMD_E_NOSTOPABRT | 0x0   | Don't stop or abort command to stop current data
- * :                                        |       | transfer in progress                            
- *  ALT_SDMMC_CMD_STOP_ABT_CMD_E_STOPABRT   | 0x1   | Stop or Abort command, intended to stop current 
- * :                                        |       | data transfer in progress                       
- * 
+ * :                                        |       | transfer in progress
+ *  ALT_SDMMC_CMD_STOP_ABT_CMD_E_STOPABRT   | 0x1   | Stop or Abort command, intended to stop current
+ * :                                        |       | data transfer in progress
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_STOP_ABT_CMD
- * 
+ *
  * Don't stop or abort command to stop current data transfer in progress
  */
 #define ALT_SDMMC_CMD_STOP_ABT_CMD_E_NOSTOPABRT 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_STOP_ABT_CMD
- * 
+ *
  * Stop or Abort command, intended to stop current data transfer in progress
  */
 #define ALT_SDMMC_CMD_STOP_ABT_CMD_E_STOPABRT   0x1
@@ -2750,34 +2750,34 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Send Initialization - send_initialization
- * 
+ *
  * After power on, 80 clocks must be sent to the card for initialization before
  * sending any commands to card. Bit should be set while sending first command to
  * card so that controller will initialize clocks before sending command to card.
  * This bit should not be set for either of the boot modes (alternate or
  * mandatory).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                     
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SDMMC_CMD_SEND_INITIALIZATION_E_NOINIT | 0x0   | Do not send initialization sequence (80 clocks  
- * :                                           |       | of 1) before sending this command               
+ *  ALT_SDMMC_CMD_SEND_INITIALIZATION_E_NOINIT | 0x0   | Do not send initialization sequence (80 clocks
+ * :                                           |       | of 1) before sending this command
  *  ALT_SDMMC_CMD_SEND_INITIALIZATION_E_INIT   | 0x1   | Send initialization sequence before sending this
- * :                                           |       | command                                         
- * 
+ * :                                           |       | command
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_SEND_INITIALIZATION
- * 
+ *
  * Do not send initialization sequence (80 clocks of 1) before sending this command
  */
 #define ALT_SDMMC_CMD_SEND_INITIALIZATION_E_NOINIT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_SEND_INITIALIZATION
- * 
+ *
  * Send initialization sequence before sending this command
  */
 #define ALT_SDMMC_CMD_SEND_INITIALIZATION_E_INIT    0x1
@@ -2801,11 +2801,11 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Card Number - card_number
- * 
+ *
  * Card number in use must always be 0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_CMD_CARD_NUMBER register field. */
 #define ALT_SDMMC_CMD_CARD_NUMBER_LSB        16
@@ -2826,10 +2826,10 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Update Clock Registers Only - update_clock_registers_only
- * 
+ *
  * Following register values transferred into card clock domain: CLKDIV, CLRSRC,
  * CLKENA.
- * 
+ *
  * Changes card clocks (change frequency, truncate off or on, and set low-frequency
  * mode); provided in order to change clock frequency or stop clock without having
  * to send command to cards. During normal command sequence, when
@@ -2837,27 +2837,27 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
  * from BIU to CIU: CMD, CMDARG, TMOUT, CTYPE, BLKSIZ, BYTCNT. CIU uses new
  * register values for new command sequence to card(s). When bit is set, there are
  * no Command Done interrupts because no command is sent to SD_MMC_CEATA cards.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                                     
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY_E_NORMCMD     | 0x0   | Normal command sequence                         
+ *  ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY_E_NORMCMD     | 0x0   | Normal command sequence
  *  ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY_E_UPDATCLKREG | 0x1   | Do not send commands, just update clock register
- * :                                                 |       | value into card clock domain                    
- * 
+ * :                                                 |       | value into card clock domain
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY
- * 
+ *
  * Normal command sequence
  */
 #define ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY_E_NORMCMD        0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY
- * 
+ *
  * Do not send commands, just update clock register value into card clock domain
  */
 #define ALT_SDMMC_CMD_UPDATE_CLK_REGS_ONLY_E_UPDATCLKREG    0x1
@@ -2881,34 +2881,34 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Read CE-ATA Device - read_ceata_device
- * 
+ *
  * Software should set this bit to indicate that CE-ATA device is being accessed
  * for read transfer. This bit is used to disable read data timeout indication
  * while performing CE-ATA read transfers. Maximum value of I/O transmission delay
  * can be no less than 10 seconds. SD/MMC should not indicate read data timeout
  * while waiting for data from CE-ATA device.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                  
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:----------------------------------------------
  *  ALT_SDMMC_CMD_RD_CEATA_DEVICE_E_NORD | 0x0   | Host is not performing read access (RW_REG or
- * :                                     |       | RW_BLK) towards CE-ATA device                
- *  ALT_SDMMC_CMD_RD_CEATA_DEVICE_E_RD   | 0x1   | Host is performing read access (RW_REG or    
- * :                                     |       | RW_BLK) towards CE-ATA device                
- * 
+ * :                                     |       | RW_BLK) towards CE-ATA device
+ *  ALT_SDMMC_CMD_RD_CEATA_DEVICE_E_RD   | 0x1   | Host is performing read access (RW_REG or
+ * :                                     |       | RW_BLK) towards CE-ATA device
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RD_CEATA_DEVICE
- * 
+ *
  * Host is not performing read access (RW_REG or RW_BLK) towards CE-ATA device
  */
 #define ALT_SDMMC_CMD_RD_CEATA_DEVICE_E_NORD    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_RD_CEATA_DEVICE
- * 
+ *
  * Host is performing read access (RW_REG or RW_BLK) towards CE-ATA device
  */
 #define ALT_SDMMC_CMD_RD_CEATA_DEVICE_E_RD      0x1
@@ -2932,36 +2932,36 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Command Completion Signal Expected - ccs_expected
- * 
+ *
  * If the command expects Command Completion Signal (CCS) from the CE-ATA device,
  * the software should set this control bit. SD/MMC sets Data Transfer Over (DTO)
  * bit in RINTSTS register and generates interrupt to host if Data Transfer Over
  * interrupt is not masked.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                                    
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:------------------------------------------------
- *  ALT_SDMMC_CMD_CCS_EXPECTED_E_DISD | 0x0   | Interrupts are not enabled in CE-ATA device    
- * :                                  |       | (nIEN = 1 in ATA control register), or command 
- * :                                  |       | does not expect CCS from device                
+ *  ALT_SDMMC_CMD_CCS_EXPECTED_E_DISD | 0x0   | Interrupts are not enabled in CE-ATA device
+ * :                                  |       | (nIEN = 1 in ATA control register), or command
+ * :                                  |       | does not expect CCS from device
  *  ALT_SDMMC_CMD_CCS_EXPECTED_E_END  | 0x1   | Interrupts are enabled in CE-ATA device (nIEN =
- * :                                  |       | 0), and RW_BLK command expects command         
- * :                                  |       | completion signal from CE-ATA device           
- * 
+ * :                                  |       | 0), and RW_BLK command expects command
+ * :                                  |       | completion signal from CE-ATA device
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_CCS_EXPECTED
- * 
+ *
  * Interrupts are not enabled in CE-ATA device (nIEN = 1 in ATA control register),
  * or command does not expect CCS from device
  */
 #define ALT_SDMMC_CMD_CCS_EXPECTED_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_CCS_EXPECTED
- * 
+ *
  * Interrupts are enabled in CE-ATA device (nIEN = 0), and RW_BLK command expects
  * command completion signal from CE-ATA device
  */
@@ -2986,30 +2986,30 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Enable Boot - enable_boot
- * 
+ *
  * This bit should be set only for mandatory boot mode. When Software sets this bit
  * along with start_cmd, CIU starts the boot sequence for the corresponding card by
  * asserting the CMD line low. Do NOT set disable_boot and enable_boot together
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description 
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:-------------
  *  ALT_SDMMC_CMD_EN_BOOT_E_DISD | 0x0   | Disable Boot
- *  ALT_SDMMC_CMD_EN_BOOT_E_END  | 0x1   | Enable Boot 
- * 
+ *  ALT_SDMMC_CMD_EN_BOOT_E_END  | 0x1   | Enable Boot
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_EN_BOOT
- * 
+ *
  * Disable Boot
  */
 #define ALT_SDMMC_CMD_EN_BOOT_E_DISD    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_EN_BOOT
- * 
+ *
  * Enable Boot
  */
 #define ALT_SDMMC_CMD_EN_BOOT_E_END     0x1
@@ -3033,29 +3033,29 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Expect Boot Ack - expect_boot_ack
- * 
+ *
  * When Software sets this bit along with enable_boot, CIU expects a boot
  * acknowledge start pattern of 0-1-0 from the selected card.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description    
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:----------------
- *  ALT_SDMMC_CMD_EXPECT_BOOT_ACK_E_NOBOOTACK | 0x0   | No Boot ACK    
+ *  ALT_SDMMC_CMD_EXPECT_BOOT_ACK_E_NOBOOTACK | 0x0   | No Boot ACK
  *  ALT_SDMMC_CMD_EXPECT_BOOT_ACK_E_BOOTACK   | 0x1   | Expect Boot ACK
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_EXPECT_BOOT_ACK
- * 
+ *
  * No Boot ACK
  */
 #define ALT_SDMMC_CMD_EXPECT_BOOT_ACK_E_NOBOOTACK   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_EXPECT_BOOT_ACK
- * 
+ *
  * Expect Boot ACK
  */
 #define ALT_SDMMC_CMD_EXPECT_BOOT_ACK_E_BOOTACK     0x1
@@ -3079,29 +3079,29 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Disable Boot - disable_boot
- * 
+ *
  * When software sets this bit along with start_cmd, CIU terminates the boot
  * operation. Do NOT set disable_boot and enable_boot together.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description        
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:--------------------
  *  ALT_SDMMC_CMD_DIS_BOOT_E_NOTERMBOOT | 0x0   | Boot not Terminated
- *  ALT_SDMMC_CMD_DIS_BOOT_E_TERMBOOT   | 0x1   | Terminate Boot     
- * 
+ *  ALT_SDMMC_CMD_DIS_BOOT_E_TERMBOOT   | 0x1   | Terminate Boot
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_DIS_BOOT
- * 
+ *
  * Boot not Terminated
  */
 #define ALT_SDMMC_CMD_DIS_BOOT_E_NOTERMBOOT 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_DIS_BOOT
- * 
+ *
  * Terminate Boot
  */
 #define ALT_SDMMC_CMD_DIS_BOOT_E_TERMBOOT   0x1
@@ -3125,28 +3125,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Boot Mode - boot_mode
- * 
+ *
  * Type of Boot Mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description             
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------
  *  ALT_SDMMC_CMD_BOOT_MOD_E_MANDATORY | 0x0   | Mandatory Boot Operation
  *  ALT_SDMMC_CMD_BOOT_MOD_E_ALTERNATE | 0x1   | Alternate Boot Operation
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_BOOT_MOD
- * 
+ *
  * Mandatory Boot Operation
  */
 #define ALT_SDMMC_CMD_BOOT_MOD_E_MANDATORY  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_BOOT_MOD
- * 
+ *
  * Alternate Boot Operation
  */
 #define ALT_SDMMC_CMD_BOOT_MOD_E_ALTERNATE  0x1
@@ -3170,28 +3170,28 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Volt Switch - volt_switch
- * 
+ *
  * Voltage switch bit. When set must be set for CMD11 only.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                   
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-------------------------------
  *  ALT_SDMMC_CMD_VOLT_SWITCH_E_NOVOLTSW | 0x0   | No voltage switching - default
- *  ALT_SDMMC_CMD_VOLT_SWITCH_E_VOLTSW   | 0x1   | Voltage switching enabled     
- * 
+ *  ALT_SDMMC_CMD_VOLT_SWITCH_E_VOLTSW   | 0x1   | Voltage switching enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_VOLT_SWITCH
- * 
+ *
  * No voltage switching - default
  */
 #define ALT_SDMMC_CMD_VOLT_SWITCH_E_NOVOLTSW    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_VOLT_SWITCH
- * 
+ *
  * Voltage switching enabled
  */
 #define ALT_SDMMC_CMD_VOLT_SWITCH_E_VOLTSW      0x1
@@ -3215,37 +3215,37 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Use Hold Reg - use_hold_reg
- * 
+ *
  * Set to one for SDR12 and SDR25 (with non-zero phase-shifted cclk_in_drv); zero
  * phase shift is not allowed in these modes.
- * 
+ *
  * * Set to 1'b0 for SDR50, SDR104, and DDR50 (with zero  phase-shifted
  *   cclk_in_drv).
- * 
+ *
  * * Set to 1'b1 for SDR50, SDR104, and DDR50  (with non-zero phase-shifted
  *   cclk_in_drv).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                               
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:-------------------------------------------
- *  ALT_SDMMC_CMD_USE_HOLD_REG_E_BYPASS   | 0x0   | CMD and DATA sent to card bypassing HOLD  
- * :                                      |       | Register                                  
+ *  ALT_SDMMC_CMD_USE_HOLD_REG_E_BYPASS   | 0x0   | CMD and DATA sent to card bypassing HOLD
+ * :                                      |       | Register
  *  ALT_SDMMC_CMD_USE_HOLD_REG_E_NOBYPASS | 0x1   | CMD and DATA sent to card through the HOLD
- * :                                      |       | Register                                  
- * 
+ * :                                      |       | Register
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_USE_HOLD_REG
- * 
+ *
  * CMD and DATA sent to card bypassing HOLD Register
  */
 #define ALT_SDMMC_CMD_USE_HOLD_REG_E_BYPASS     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_USE_HOLD_REG
- * 
+ *
  * CMD and DATA sent to card through the HOLD Register
  */
 #define ALT_SDMMC_CMD_USE_HOLD_REG_E_NOBYPASS   0x1
@@ -3269,32 +3269,32 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
 
 /*
  * Field : Start Cmd - start_cmd
- * 
+ *
  * Once command is taken by CIU, bit is cleared. If Start Cmd issued host should
  * not attempt to write to any command registers. If write is attempted, hardware
  * lock error is set in raw interrupt register. Once command is sent and response
  * is received from SD_MMC_CEATA cards, Command Done bit is set in raw interrupt
  * register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description     
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-----------------
- *  ALT_SDMMC_CMD_START_CMD_E_NOSTART | 0x0   | No Start Cmd    
+ *  ALT_SDMMC_CMD_START_CMD_E_NOSTART | 0x0   | No Start Cmd
  *  ALT_SDMMC_CMD_START_CMD_E_START   | 0x1   | Start Cmd Issued
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_START_CMD
- * 
+ *
  * No Start Cmd
  */
 #define ALT_SDMMC_CMD_START_CMD_E_NOSTART   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_CMD_START_CMD
- * 
+ *
  * Start Cmd Issued
  */
 #define ALT_SDMMC_CMD_START_CMD_E_START     0x1
@@ -3324,7 +3324,7 @@ typedef volatile struct ALT_SDMMC_CMDARG_s  ALT_SDMMC_CMDARG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CMD.
  */
 struct ALT_SDMMC_CMD_s
@@ -3363,23 +3363,23 @@ typedef volatile struct ALT_SDMMC_CMD_s  ALT_SDMMC_CMD_t;
 
 /*
  * Register : Response Register 0 - resp0
- * 
+ *
  * Preserves previous command.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | R      | 0x0   | Response 0 
- * 
+ *  [31:0] | R      | 0x0   | Response 0
+ *
  */
 /*
  * Field : Response 0 - response0
- * 
+ *
  * Bit[31:0] of response.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_RESP0_RESPONSE0 register field. */
 #define ALT_SDMMC_RESP0_RESPONSE0_LSB        0
@@ -3406,7 +3406,7 @@ typedef volatile struct ALT_SDMMC_CMD_s  ALT_SDMMC_CMD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_RESP0.
  */
 struct ALT_SDMMC_RESP0_s
@@ -3423,24 +3423,24 @@ typedef volatile struct ALT_SDMMC_RESP0_s  ALT_SDMMC_RESP0_t;
 
 /*
  * Register : Response Register 1 - resp1
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | R      | 0x0   | Response 1 
- * 
+ *  [31:0] | R      | 0x0   | Response 1
+ *
  */
 /*
  * Field : Response 1 - response1
- * 
+ *
  * Register represents bit[63:32] of long response. When CIU sends auto-stop
  * command, then response is saved in register. Response for previous command sent
  * by host is still preserved in Response 0 register. Additional auto-stop issued
  * only for data transfer commands, and response type is always short for them.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_RESP1_RESPONSE1 register field. */
 #define ALT_SDMMC_RESP1_RESPONSE1_LSB        0
@@ -3467,7 +3467,7 @@ typedef volatile struct ALT_SDMMC_RESP0_s  ALT_SDMMC_RESP0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_RESP1.
  */
 struct ALT_SDMMC_RESP1_s
@@ -3484,21 +3484,21 @@ typedef volatile struct ALT_SDMMC_RESP1_s  ALT_SDMMC_RESP1_t;
 
 /*
  * Register : Response Register 2 - resp2
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | R      | 0x0   | Response 2 
- * 
+ *  [31:0] | R      | 0x0   | Response 2
+ *
  */
 /*
  * Field : Response 2 - response2
- * 
+ *
  * Bit[95:64] of long response
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_RESP2_RESPONSE2 register field. */
 #define ALT_SDMMC_RESP2_RESPONSE2_LSB        0
@@ -3525,7 +3525,7 @@ typedef volatile struct ALT_SDMMC_RESP1_s  ALT_SDMMC_RESP1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_RESP2.
  */
 struct ALT_SDMMC_RESP2_s
@@ -3542,21 +3542,21 @@ typedef volatile struct ALT_SDMMC_RESP2_s  ALT_SDMMC_RESP2_t;
 
 /*
  * Register : Response Register 3 - resp3
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | R      | 0x0   | Response 3 
- * 
+ *  [31:0] | R      | 0x0   | Response 3
+ *
  */
 /*
  * Field : Response 3 - response3
- * 
+ *
  * Bit[127:96] of long response
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_RESP3_RESPONSE3 register field. */
 #define ALT_SDMMC_RESP3_RESPONSE3_LSB        0
@@ -3583,7 +3583,7 @@ typedef volatile struct ALT_SDMMC_RESP2_s  ALT_SDMMC_RESP2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_RESP3.
  */
 struct ALT_SDMMC_RESP3_s
@@ -3600,57 +3600,57 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Register : Masked Interrupt Status Register - mintsts
- * 
+ *
  * Describes state of Masked Interrupt Register.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                 
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------
- *  [0]     | R      | 0x0   | Card Detect                 
- *  [1]     | R      | 0x0   | Response Error              
- *  [2]     | R      | 0x0   | Command Done                
- *  [3]     | R      | 0x0   | Data Transfer Over          
- *  [4]     | R      | 0x0   | Data TX FIFO Data Request   
- *  [5]     | R      | 0x0   | Receive FIFO Data Request   
- *  [6]     | R      | 0x0   | Response CRC Error          
- *  [7]     | R      | 0x0   | Data CRC Error              
- *  [8]     | R      | 0x0   | Response Timeout            
- *  [9]     | R      | 0x0   | Data Read Timeout           
+ *  [0]     | R      | 0x0   | Card Detect
+ *  [1]     | R      | 0x0   | Response Error
+ *  [2]     | R      | 0x0   | Command Done
+ *  [3]     | R      | 0x0   | Data Transfer Over
+ *  [4]     | R      | 0x0   | Data TX FIFO Data Request
+ *  [5]     | R      | 0x0   | Receive FIFO Data Request
+ *  [6]     | R      | 0x0   | Response CRC Error
+ *  [7]     | R      | 0x0   | Data CRC Error
+ *  [8]     | R      | 0x0   | Response Timeout
+ *  [9]     | R      | 0x0   | Data Read Timeout
  *  [10]    | R      | 0x0   | Data Starvation Host Timeout
- *  [11]    | R      | 0x0   | FIFO Underrun Overrun Error 
- *  [12]    | R      | 0x0   | Hardware Locked Write Error 
- *  [13]    | R      | 0x0   | Start-bit Error             
- *  [14]    | R      | 0x0   | Auto Command Done           
- *  [15]    | R      | 0x0   | End-bit Error               
- *  [16]    | R      | 0x0   | SDIO Interrupts             
- *  [31:17] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [11]    | R      | 0x0   | FIFO Underrun Overrun Error
+ *  [12]    | R      | 0x0   | Hardware Locked Write Error
+ *  [13]    | R      | 0x0   | Start-bit Error
+ *  [14]    | R      | 0x0   | Auto Command Done
+ *  [15]    | R      | 0x0   | End-bit Error
+ *  [16]    | R      | 0x0   | SDIO Interrupts
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Card Detect - cd
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description          
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:----------------------
- *  ALT_SDMMC_MINTSTS_CD_E_MSK   | 0x0   | Card Detected Mask   
+ *  ALT_SDMMC_MINTSTS_CD_E_MSK   | 0x0   | Card Detected Mask
  *  ALT_SDMMC_MINTSTS_CD_E_NOMSK | 0x1   | Card Detected No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_CD
- * 
+ *
  * Card Detected Mask
  */
 #define ALT_SDMMC_MINTSTS_CD_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_CD
- * 
+ *
  * Card Detected No Mask
  */
 #define ALT_SDMMC_MINTSTS_CD_E_NOMSK    0x1
@@ -3674,28 +3674,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Response Error - resp
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description           
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:-----------------------
- *  ALT_SDMMC_MINTSTS_RESP_E_MSK   | 0x0   | Response error Mask   
+ *  ALT_SDMMC_MINTSTS_RESP_E_MSK   | 0x0   | Response error Mask
  *  ALT_SDMMC_MINTSTS_RESP_E_NOMSK | 0x1   | Response error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RESP
- * 
+ *
  * Response error Mask
  */
 #define ALT_SDMMC_MINTSTS_RESP_E_MSK    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RESP
- * 
+ *
  * Response error No Mask
  */
 #define ALT_SDMMC_MINTSTS_RESP_E_NOMSK  0x1
@@ -3719,28 +3719,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Command Done - cmd_done
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description         
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:---------------------
- *  ALT_SDMMC_MINTSTS_CMD_DONE_E_MSK   | 0x0   | Command Done Mask   
+ *  ALT_SDMMC_MINTSTS_CMD_DONE_E_MSK   | 0x0   | Command Done Mask
  *  ALT_SDMMC_MINTSTS_CMD_DONE_E_NOMSK | 0x1   | Command Done No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_CMD_DONE
- * 
+ *
  * Command Done Mask
  */
 #define ALT_SDMMC_MINTSTS_CMD_DONE_E_MSK    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_CMD_DONE
- * 
+ *
  * Command Done No Mask
  */
 #define ALT_SDMMC_MINTSTS_CMD_DONE_E_NOMSK  0x1
@@ -3764,28 +3764,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Data Transfer Over - dt
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description               
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:---------------------------
- *  ALT_SDMMC_MINTSTS_DT_E_MSK   | 0x0   | Data transfer over Mask   
+ *  ALT_SDMMC_MINTSTS_DT_E_MSK   | 0x0   | Data transfer over Mask
  *  ALT_SDMMC_MINTSTS_DT_E_NOMSK | 0x1   | Data transfer over No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DT
- * 
+ *
  * Data transfer over Mask
  */
 #define ALT_SDMMC_MINTSTS_DT_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DT
- * 
+ *
  * Data transfer over No Mask
  */
 #define ALT_SDMMC_MINTSTS_DT_E_NOMSK    0x1
@@ -3809,28 +3809,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Data TX FIFO Data Request - dttxfifodr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                       
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-----------------------------------
- *  ALT_SDMMC_MINTSTS_DTTXFIFODR_E_MSK   | 0x0   | Transmit FIFO data request Mask   
+ *  ALT_SDMMC_MINTSTS_DTTXFIFODR_E_MSK   | 0x0   | Transmit FIFO data request Mask
  *  ALT_SDMMC_MINTSTS_DTTXFIFODR_E_NOMSK | 0x1   | Transmit FIFO data request No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DTTXFIFODR
- * 
+ *
  * Transmit FIFO data request Mask
  */
 #define ALT_SDMMC_MINTSTS_DTTXFIFODR_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DTTXFIFODR
- * 
+ *
  * Transmit FIFO data request No Mask
  */
 #define ALT_SDMMC_MINTSTS_DTTXFIFODR_E_NOMSK    0x1
@@ -3854,28 +3854,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Receive FIFO Data Request - rxfifodr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                      
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------------------------
- *  ALT_SDMMC_MINTSTS_RXFIFODR_E_MSK   | 0x0   | Receive FIFO data request Mask   
+ *  ALT_SDMMC_MINTSTS_RXFIFODR_E_MSK   | 0x0   | Receive FIFO data request Mask
  *  ALT_SDMMC_MINTSTS_RXFIFODR_E_NOMSK | 0x1   | Receive FIFO data request No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RXFIFODR
- * 
+ *
  * Receive FIFO data request Mask
  */
 #define ALT_SDMMC_MINTSTS_RXFIFODR_E_MSK    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RXFIFODR
- * 
+ *
  * Receive FIFO data request No Mask
  */
 #define ALT_SDMMC_MINTSTS_RXFIFODR_E_NOMSK  0x1
@@ -3899,28 +3899,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Response CRC Error - respcrcerr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description               
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:---------------------------
- *  ALT_SDMMC_MINTSTS_RESPCRCERR_E_MSK   | 0x0   | Response CRC error Mask   
+ *  ALT_SDMMC_MINTSTS_RESPCRCERR_E_MSK   | 0x0   | Response CRC error Mask
  *  ALT_SDMMC_MINTSTS_RESPCRCERR_E_NOMSK | 0x1   | Response CRC error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RESPCRCERR
- * 
+ *
  * Response CRC error Mask
  */
 #define ALT_SDMMC_MINTSTS_RESPCRCERR_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RESPCRCERR
- * 
+ *
  * Response CRC error No Mask
  */
 #define ALT_SDMMC_MINTSTS_RESPCRCERR_E_NOMSK    0x1
@@ -3944,28 +3944,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Data CRC Error - datacrcerr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description           
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-----------------------
- *  ALT_SDMMC_MINTSTS_DATACRCERR_E_MSK   | 0x0   | Data CRC error Mask   
+ *  ALT_SDMMC_MINTSTS_DATACRCERR_E_MSK   | 0x0   | Data CRC error Mask
  *  ALT_SDMMC_MINTSTS_DATACRCERR_E_NOMSK | 0x1   | Data CRC error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DATACRCERR
- * 
+ *
  * Data CRC error Mask
  */
 #define ALT_SDMMC_MINTSTS_DATACRCERR_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DATACRCERR
- * 
+ *
  * Data CRC error No Mask
  */
 #define ALT_SDMMC_MINTSTS_DATACRCERR_E_NOMSK    0x1
@@ -3989,28 +3989,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Response Timeout - respto
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description             
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-------------------------
- *  ALT_SDMMC_MINTSTS_RESPTO_E_MSK   | 0x0   | Response timeout Mask   
+ *  ALT_SDMMC_MINTSTS_RESPTO_E_MSK   | 0x0   | Response timeout Mask
  *  ALT_SDMMC_MINTSTS_RESPTO_E_NOMSK | 0x1   | Response timeout No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RESPTO
- * 
+ *
  * Response timeout Mask
  */
 #define ALT_SDMMC_MINTSTS_RESPTO_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_RESPTO
- * 
+ *
  * Response timeout No Mask
  */
 #define ALT_SDMMC_MINTSTS_RESPTO_E_NOMSK    0x1
@@ -4034,28 +4034,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Data Read Timeout - datardto
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description              
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:--------------------------
- *  ALT_SDMMC_MINTSTS_DATARDTO_E_MSK   | 0x0   | Data read timeout Mask   
+ *  ALT_SDMMC_MINTSTS_DATARDTO_E_MSK   | 0x0   | Data read timeout Mask
  *  ALT_SDMMC_MINTSTS_DATARDTO_E_NOMSK | 0x1   | Data read timeout No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DATARDTO
- * 
+ *
  * Data read timeout Mask
  */
 #define ALT_SDMMC_MINTSTS_DATARDTO_E_MSK    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DATARDTO
- * 
+ *
  * Data read timeout No Mask
  */
 #define ALT_SDMMC_MINTSTS_DATARDTO_E_NOMSK  0x1
@@ -4079,28 +4079,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Data Starvation Host Timeout - dshto
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                            
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:----------------------------------------
- *  ALT_SDMMC_MINTSTS_DSHTO_E_MSK   | 0x0   | Data starvation by host timeout Mask   
+ *  ALT_SDMMC_MINTSTS_DSHTO_E_MSK   | 0x0   | Data starvation by host timeout Mask
  *  ALT_SDMMC_MINTSTS_DSHTO_E_NOMSK | 0x1   | Data starvation by host timeout No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DSHTO
- * 
+ *
  * Data starvation by host timeout Mask
  */
 #define ALT_SDMMC_MINTSTS_DSHTO_E_MSK   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_DSHTO
- * 
+ *
  * Data starvation by host timeout No Mask
  */
 #define ALT_SDMMC_MINTSTS_DSHTO_E_NOMSK 0x1
@@ -4124,28 +4124,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : FIFO Underrun Overrun Error - fifoovunerr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                        
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:------------------------------------
- *  ALT_SDMMC_MINTSTS_FIFOOVUNERR_E_MSK   | 0x0   | FIFO underrun/overrun error Mask   
+ *  ALT_SDMMC_MINTSTS_FIFOOVUNERR_E_MSK   | 0x0   | FIFO underrun/overrun error Mask
  *  ALT_SDMMC_MINTSTS_FIFOOVUNERR_E_NOMSK | 0x1   | FIFO underrun/overrun error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_FIFOOVUNERR
- * 
+ *
  * FIFO underrun/overrun error Mask
  */
 #define ALT_SDMMC_MINTSTS_FIFOOVUNERR_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_FIFOOVUNERR
- * 
+ *
  * FIFO underrun/overrun error No Mask
  */
 #define ALT_SDMMC_MINTSTS_FIFOOVUNERR_E_NOMSK   0x1
@@ -4169,28 +4169,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Hardware Locked Write Error - hlwerr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                        
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:------------------------------------
- *  ALT_SDMMC_MINTSTS_HLWERR_E_MSK   | 0x0   | Hardware locked write error Mask   
+ *  ALT_SDMMC_MINTSTS_HLWERR_E_MSK   | 0x0   | Hardware locked write error Mask
  *  ALT_SDMMC_MINTSTS_HLWERR_E_NOMSK | 0x1   | Hardware locked write error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_HLWERR
- * 
+ *
  * Hardware locked write error Mask
  */
 #define ALT_SDMMC_MINTSTS_HLWERR_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_HLWERR
- * 
+ *
  * Hardware locked write error No Mask
  */
 #define ALT_SDMMC_MINTSTS_HLWERR_E_NOMSK    0x1
@@ -4214,28 +4214,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Start-bit Error - strerr
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description            
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:------------------------
- *  ALT_SDMMC_MINTSTS_STRERR_E_MSK   | 0x0   | Start-bit error Mask   
+ *  ALT_SDMMC_MINTSTS_STRERR_E_MSK   | 0x0   | Start-bit error Mask
  *  ALT_SDMMC_MINTSTS_STRERR_E_NOMSK | 0x1   | Start-bit error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_STRERR
- * 
+ *
  * Start-bit error Mask
  */
 #define ALT_SDMMC_MINTSTS_STRERR_E_MSK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_STRERR
- * 
+ *
  * Start-bit error No Mask
  */
 #define ALT_SDMMC_MINTSTS_STRERR_E_NOMSK    0x1
@@ -4259,28 +4259,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : Auto Command Done - acd
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description              
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:--------------------------
- *  ALT_SDMMC_MINTSTS_ACD_E_MSK   | 0x0   | Auto command done Mask   
+ *  ALT_SDMMC_MINTSTS_ACD_E_MSK   | 0x0   | Auto command done Mask
  *  ALT_SDMMC_MINTSTS_ACD_E_NOMSK | 0x1   | Auto command done No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_ACD
- * 
+ *
  * Auto command done Mask
  */
 #define ALT_SDMMC_MINTSTS_ACD_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_ACD
- * 
+ *
  * Auto command done No Mask
  */
 #define ALT_SDMMC_MINTSTS_ACD_E_NOMSK   0x1
@@ -4304,28 +4304,28 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : End-bit Error - ebe
- * 
+ *
  * Interrupt enabled only if corresponding bit in interrupt mask register is set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description          
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------
- *  ALT_SDMMC_MINTSTS_EBE_E_MSK   | 0x0   | End-bit error Mask   
+ *  ALT_SDMMC_MINTSTS_EBE_E_MSK   | 0x0   | End-bit error Mask
  *  ALT_SDMMC_MINTSTS_EBE_E_NOMSK | 0x1   | End-bit error No Mask
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_EBE
- * 
+ *
  * End-bit error Mask
  */
 #define ALT_SDMMC_MINTSTS_EBE_E_MSK     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_EBE
- * 
+ *
  * End-bit error No Mask
  */
 #define ALT_SDMMC_MINTSTS_EBE_E_NOMSK   0x1
@@ -4349,31 +4349,31 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
 
 /*
  * Field : SDIO Interrupts - sdio_interrupt
- * 
+ *
  * Interrupt from SDIO card: one bit for each card. Bit[16] is for Card[0]. SDIO
  * interrupt for card enabled only if corresponding sdio_int_mask bit is set in
  * Interrupt mask register (mask bit 1 enables interrupt; 0 masks interrupt). In
  * MMC-Ver3.3-only mode, bits always 0.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------------------
- *  ALT_SDMMC_MINTSTS_SDIO_INT_E_ACT   | 0x1   | SDIO interrupt from card   
+ *  ALT_SDMMC_MINTSTS_SDIO_INT_E_ACT   | 0x1   | SDIO interrupt from card
  *  ALT_SDMMC_MINTSTS_SDIO_INT_E_INACT | 0x0   | No SDIO interrupt from card
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_SDIO_INT
- * 
+ *
  * SDIO interrupt from card
  */
 #define ALT_SDMMC_MINTSTS_SDIO_INT_E_ACT    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_MINTSTS_SDIO_INT
- * 
+ *
  * No SDIO interrupt from card
  */
 #define ALT_SDMMC_MINTSTS_SDIO_INT_E_INACT  0x0
@@ -4403,7 +4403,7 @@ typedef volatile struct ALT_SDMMC_RESP3_s  ALT_SDMMC_RESP3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_MINTSTS.
  */
 struct ALT_SDMMC_MINTSTS_s
@@ -4437,58 +4437,58 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Register : Raw Interrupt Status Register - rintsts
- * 
+ *
  * Interrupt Status Before Masking.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                                 
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------------------------
- *  [0]     | RW     | 0x0   | Card Detect                                 
- *  [1]     | RW     | 0x0   | Response Error                              
- *  [2]     | RW     | 0x0   | Command Done                                
- *  [3]     | RW     | 0x0   | Data Transfer Over                          
- *  [4]     | RW     | 0x0   | Transmit FIFO Data Request                  
- *  [5]     | RW     | 0x0   | Receive FIFO Data Request                   
- *  [6]     | RW     | 0x0   | Response CRC Error                          
- *  [7]     | RW     | 0x0   | Data CRC Error                              
- *  [8]     | RW     | 0x0   | Response Timeout Boot Ack Received          
- *  [9]     | RW     | 0x0   | Data Read Timeout Boot Data Start           
+ *  [0]     | RW     | 0x0   | Card Detect
+ *  [1]     | RW     | 0x0   | Response Error
+ *  [2]     | RW     | 0x0   | Command Done
+ *  [3]     | RW     | 0x0   | Data Transfer Over
+ *  [4]     | RW     | 0x0   | Transmit FIFO Data Request
+ *  [5]     | RW     | 0x0   | Receive FIFO Data Request
+ *  [6]     | RW     | 0x0   | Response CRC Error
+ *  [7]     | RW     | 0x0   | Data CRC Error
+ *  [8]     | RW     | 0x0   | Response Timeout Boot Ack Received
+ *  [9]     | RW     | 0x0   | Data Read Timeout Boot Data Start
  *  [10]    | RW     | 0x0   | Data Starvation Host Timeout Volt Switch_int
- *  [11]    | RW     | 0x0   | FIFO Underrun Overrun Error                 
- *  [12]    | RW     | 0x0   | Hardware Locked Write Error                 
- *  [13]    | RW     | 0x0   | Start-bit error (SBE)                       
- *  [14]    | RW     | 0x0   | Auto Cmommand Done                          
- *  [15]    | RW     | 0x0   | End-bit Error                               
- *  [16]    | RW     | 0x0   | SDIO Interrupt                              
- *  [31:17] | ???    | 0x0   | *UNDEFINED*                                 
- * 
+ *  [11]    | RW     | 0x0   | FIFO Underrun Overrun Error
+ *  [12]    | RW     | 0x0   | Hardware Locked Write Error
+ *  [13]    | RW     | 0x0   | Start-bit error (SBE)
+ *  [14]    | RW     | 0x0   | Auto Cmommand Done
+ *  [15]    | RW     | 0x0   | End-bit Error
+ *  [16]    | RW     | 0x0   | SDIO Interrupt
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Card Detect - cd
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description            
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:------------------------
- *  ALT_SDMMC_RINTSTS_CD_E_INACT | 0x0   | Card detect (CD)       
+ *  ALT_SDMMC_RINTSTS_CD_E_INACT | 0x0   | Card detect (CD)
  *  ALT_SDMMC_RINTSTS_CD_E_ACT   | 0x1   | Clears Card detect (CD)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_CD
- * 
+ *
  * Card detect (CD)
  */
 #define ALT_SDMMC_RINTSTS_CD_E_INACT    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_CD
- * 
+ *
  * Clears Card detect (CD)
  */
 #define ALT_SDMMC_RINTSTS_CD_E_ACT      0x1
@@ -4512,29 +4512,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Response Error - re
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description               
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:---------------------------
- *  ALT_SDMMC_RINTSTS_RE_E_INACT | 0x0   | Response error (RE)       
+ *  ALT_SDMMC_RINTSTS_RE_E_INACT | 0x0   | Response error (RE)
  *  ALT_SDMMC_RINTSTS_RE_E_ACT   | 0x1   | Clears Response error (RE)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_RE
- * 
+ *
  * Response error (RE)
  */
 #define ALT_SDMMC_RINTSTS_RE_E_INACT    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_RE
- * 
+ *
  * Clears Response error (RE)
  */
 #define ALT_SDMMC_RINTSTS_RE_E_ACT      0x1
@@ -4558,29 +4558,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Command Done - cmd
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description             
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-------------------------
- *  ALT_SDMMC_RINTSTS_CMD_E_INACT | 0x0   | Command done (CD)       
+ *  ALT_SDMMC_RINTSTS_CMD_E_INACT | 0x0   | Command done (CD)
  *  ALT_SDMMC_RINTSTS_CMD_E_ACT   | 0x1   | Clears Command done (CD)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_CMD
- * 
+ *
  * Command done (CD)
  */
 #define ALT_SDMMC_RINTSTS_CMD_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_CMD
- * 
+ *
  * Clears Command done (CD)
  */
 #define ALT_SDMMC_RINTSTS_CMD_E_ACT     0x1
@@ -4604,29 +4604,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Data Transfer Over - dto
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                    
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:--------------------------------
- *  ALT_SDMMC_RINTSTS_DTO_E_INACT | 0x0   | Data transfer over (DTO)       
+ *  ALT_SDMMC_RINTSTS_DTO_E_INACT | 0x0   | Data transfer over (DTO)
  *  ALT_SDMMC_RINTSTS_DTO_E_ACT   | 0x1   | Clears Data transfer over (DTO)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_DTO
- * 
+ *
  * Data transfer over (DTO)
  */
 #define ALT_SDMMC_RINTSTS_DTO_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_DTO
- * 
+ *
  * Clears Data transfer over (DTO)
  */
 #define ALT_SDMMC_RINTSTS_DTO_E_ACT     0x1
@@ -4650,29 +4650,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Transmit FIFO Data Request - txdr
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                             
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:-----------------------------------------
- *  ALT_SDMMC_RINTSTS_TXDR_E_INACT | 0x0   | Transmit FIFO data request (TXDR)       
+ *  ALT_SDMMC_RINTSTS_TXDR_E_INACT | 0x0   | Transmit FIFO data request (TXDR)
  *  ALT_SDMMC_RINTSTS_TXDR_E_ACT   | 0x1   | Clears Transmit FIFO data request (TXDR)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_TXDR
- * 
+ *
  * Transmit FIFO data request (TXDR)
  */
 #define ALT_SDMMC_RINTSTS_TXDR_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_TXDR
- * 
+ *
  * Clears Transmit FIFO data request (TXDR)
  */
 #define ALT_SDMMC_RINTSTS_TXDR_E_ACT    0x1
@@ -4696,29 +4696,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Receive FIFO Data Request - rxdr
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                            
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:----------------------------------------
- *  ALT_SDMMC_RINTSTS_RXDR_E_INACT | 0x0   | Receive FIFO data request (RXDR)       
+ *  ALT_SDMMC_RINTSTS_RXDR_E_INACT | 0x0   | Receive FIFO data request (RXDR)
  *  ALT_SDMMC_RINTSTS_RXDR_E_ACT   | 0x1   | Clears Receive FIFO data request (RXDR)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_RXDR
- * 
+ *
  * Receive FIFO data request (RXDR)
  */
 #define ALT_SDMMC_RINTSTS_RXDR_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_RXDR
- * 
+ *
  * Clears Receive FIFO data request (RXDR)
  */
 #define ALT_SDMMC_RINTSTS_RXDR_E_ACT    0x1
@@ -4742,29 +4742,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Response CRC Error - rcrc
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                     
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:---------------------------------
- *  ALT_SDMMC_RINTSTS_RCRC_E_INACT | 0x0   | Response CRC error (RCRC)       
+ *  ALT_SDMMC_RINTSTS_RCRC_E_INACT | 0x0   | Response CRC error (RCRC)
  *  ALT_SDMMC_RINTSTS_RCRC_E_ACT   | 0x1   | Clears Response CRC error (RCRC)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_RCRC
- * 
+ *
  * Response CRC error (RCRC)
  */
 #define ALT_SDMMC_RINTSTS_RCRC_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_RCRC
- * 
+ *
  * Clears Response CRC error (RCRC)
  */
 #define ALT_SDMMC_RINTSTS_RCRC_E_ACT    0x1
@@ -4788,29 +4788,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Data CRC Error - dcrc
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                 
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:-----------------------------
- *  ALT_SDMMC_RINTSTS_DCRC_E_INACT | 0x0   | Data CRC error (DCRC)       
+ *  ALT_SDMMC_RINTSTS_DCRC_E_INACT | 0x0   | Data CRC error (DCRC)
  *  ALT_SDMMC_RINTSTS_DCRC_E_ACT   | 0x1   | Clears Data CRC error (DCRC)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_DCRC
- * 
+ *
  * Data CRC error (DCRC)
  */
 #define ALT_SDMMC_RINTSTS_DCRC_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_DCRC
- * 
+ *
  * Clears Data CRC error (DCRC)
  */
 #define ALT_SDMMC_RINTSTS_DCRC_E_ACT    0x1
@@ -4834,30 +4834,30 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Response Timeout Boot Ack Received - bar
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                    
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:------------------------------------------------
- *  ALT_SDMMC_RINTSTS_BAR_E_INACT | 0x0   | Response timeout (RTO)/Boot Ack Received (BAR) 
+ *  ALT_SDMMC_RINTSTS_BAR_E_INACT | 0x0   | Response timeout (RTO)/Boot Ack Received (BAR)
  *  ALT_SDMMC_RINTSTS_BAR_E_ACT   | 0x1   | Clears Response timeout (RTO)/Boot Ack Received
- * :                              |       | (BAR)                                          
- * 
+ * :                              |       | (BAR)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_BAR
- * 
+ *
  * Response timeout (RTO)/Boot Ack Received (BAR)
  */
 #define ALT_SDMMC_RINTSTS_BAR_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_BAR
- * 
+ *
  * Clears Response timeout (RTO)/Boot Ack Received (BAR)
  */
 #define ALT_SDMMC_RINTSTS_BAR_E_ACT     0x1
@@ -4881,30 +4881,30 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Data Read Timeout Boot Data Start - bds
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                    
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:------------------------------------------------
- *  ALT_SDMMC_RINTSTS_BDS_E_INACT | 0x0   | Data read timeout (DRTO)/Boot Data Start (BDS) 
+ *  ALT_SDMMC_RINTSTS_BDS_E_INACT | 0x0   | Data read timeout (DRTO)/Boot Data Start (BDS)
  *  ALT_SDMMC_RINTSTS_BDS_E_ACT   | 0x1   | Clears Data read timeout (DRTO)/Boot Data Start
- * :                              |       | (BDS)                                          
- * 
+ * :                              |       | (BDS)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_BDS
- * 
+ *
  * Data read timeout (DRTO)/Boot Data Start (BDS)
  */
 #define ALT_SDMMC_RINTSTS_BDS_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_BDS
- * 
+ *
  * Clears Data read timeout (DRTO)/Boot Data Start (BDS)
  */
 #define ALT_SDMMC_RINTSTS_BDS_E_ACT     0x1
@@ -4928,31 +4928,31 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Data Starvation Host Timeout Volt Switch_int - hto
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:---------------------------------------------
- *  ALT_SDMMC_RINTSTS_HTO_E_INACT | 0x0   | Data starvation-by-host timeout (HTO)       
- * :                              |       | /Volt_switch_int                            
+ *  ALT_SDMMC_RINTSTS_HTO_E_INACT | 0x0   | Data starvation-by-host timeout (HTO)
+ * :                              |       | /Volt_switch_int
  *  ALT_SDMMC_RINTSTS_HTO_E_ACT   | 0x1   | Clears Data starvation-by-host timeout (HTO)
- * :                              |       | /Volt_switch_int                            
- * 
+ * :                              |       | /Volt_switch_int
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_HTO
- * 
+ *
  * Data starvation-by-host timeout (HTO) /Volt_switch_int
  */
 #define ALT_SDMMC_RINTSTS_HTO_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_HTO
- * 
+ *
  * Clears Data starvation-by-host timeout (HTO) /Volt_switch_int
  */
 #define ALT_SDMMC_RINTSTS_HTO_E_ACT     0x1
@@ -4976,29 +4976,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : FIFO Underrun Overrun Error - frun
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description                             
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:-----------------------------------------
- *  ALT_SDMMC_RINTSTS_FRUN_E_INACT | 0x0   | FIFO underrun/overrun error (FRUN)      
+ *  ALT_SDMMC_RINTSTS_FRUN_E_INACT | 0x0   | FIFO underrun/overrun error (FRUN)
  *  ALT_SDMMC_RINTSTS_FRUN_E_ACT   | 0x1   | Clear FIFO underrun/overrun error (FRUN)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_FRUN
- * 
+ *
  * FIFO underrun/overrun error (FRUN)
  */
 #define ALT_SDMMC_RINTSTS_FRUN_E_INACT  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_FRUN
- * 
+ *
  * Clear FIFO underrun/overrun error (FRUN)
  */
 #define ALT_SDMMC_RINTSTS_FRUN_E_ACT    0x1
@@ -5022,29 +5022,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Hardware Locked Write Error - hle
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                             
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------------------
- *  ALT_SDMMC_RINTSTS_HLE_E_INACT | 0x0   | Hardware locked write error (HLE)       
+ *  ALT_SDMMC_RINTSTS_HLE_E_INACT | 0x0   | Hardware locked write error (HLE)
  *  ALT_SDMMC_RINTSTS_HLE_E_ACT   | 0x1   | Clears Hardware locked write error (HLE)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_HLE
- * 
+ *
  * Hardware locked write error (HLE)
  */
 #define ALT_SDMMC_RINTSTS_HLE_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_HLE
- * 
+ *
  * Clears Hardware locked write error (HLE)
  */
 #define ALT_SDMMC_RINTSTS_HLE_E_ACT     0x1
@@ -5068,29 +5068,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Start-bit error (SBE) - sbe
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------
- *  ALT_SDMMC_RINTSTS_SBE_E_INACT | 0x0   | Start-bit error (SBE)       
+ *  ALT_SDMMC_RINTSTS_SBE_E_INACT | 0x0   | Start-bit error (SBE)
  *  ALT_SDMMC_RINTSTS_SBE_E_ACT   | 0x1   | Clears Start-bit error (SBE)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_SBE
- * 
+ *
  * Start-bit error (SBE)
  */
 #define ALT_SDMMC_RINTSTS_SBE_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_SBE
- * 
+ *
  * Clears Start-bit error (SBE)
  */
 #define ALT_SDMMC_RINTSTS_SBE_E_ACT     0x1
@@ -5114,29 +5114,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : Auto Cmommand Done - acd
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------
- *  ALT_SDMMC_RINTSTS_ACD_E_INACT | 0x0   | Auto command done (ACD)     
+ *  ALT_SDMMC_RINTSTS_ACD_E_INACT | 0x0   | Auto command done (ACD)
  *  ALT_SDMMC_RINTSTS_ACD_E_ACT   | 0x1   | Clear Auto command done (ACD
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_ACD
- * 
+ *
  * Auto command done (ACD)
  */
 #define ALT_SDMMC_RINTSTS_ACD_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_ACD
- * 
+ *
  * Clear Auto command done (ACD
  */
 #define ALT_SDMMC_RINTSTS_ACD_E_ACT     0x1
@@ -5160,29 +5160,29 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : End-bit Error - ebe
- * 
+ *
  * Writes to bits clear status bit. Value of 1 clears status bit, and value of 0
  * leaves bit intact. Bits are logged regardless of interrupt mask status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                   
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-----------------------------------------------
- *  ALT_SDMMC_RINTSTS_EBE_E_INACT | 0x0   | End-bit error (read)/write no CRC (EBE)       
+ *  ALT_SDMMC_RINTSTS_EBE_E_INACT | 0x0   | End-bit error (read)/write no CRC (EBE)
  *  ALT_SDMMC_RINTSTS_EBE_E_ACT   | 0x1   | Clears End-bit error (read)/write no CRC (EBE)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_EBE
- * 
+ *
  * End-bit error (read)/write no CRC (EBE)
  */
 #define ALT_SDMMC_RINTSTS_EBE_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_EBE
- * 
+ *
  * Clears End-bit error (read)/write no CRC (EBE)
  */
 #define ALT_SDMMC_RINTSTS_EBE_E_ACT     0x1
@@ -5206,28 +5206,28 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
 
 /*
  * Field : SDIO Interrupt - sdio_interrupt
- * 
+ *
  * Interrupt from SDIO card.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                   
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------------
- *  ALT_SDMMC_RINTSTS_SDIO_INT_E_ACT   | 0x1   | SDIO interrupt from card bit  
+ *  ALT_SDMMC_RINTSTS_SDIO_INT_E_ACT   | 0x1   | SDIO interrupt from card bit
  *  ALT_SDMMC_RINTSTS_SDIO_INT_E_INACT | 0x0   | No SDIO interrupt from card bi
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_SDIO_INT
- * 
+ *
  * SDIO interrupt from card bit
  */
 #define ALT_SDMMC_RINTSTS_SDIO_INT_E_ACT    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_RINTSTS_SDIO_INT
- * 
+ *
  * No SDIO interrupt from card bi
  */
 #define ALT_SDMMC_RINTSTS_SDIO_INT_E_INACT  0x0
@@ -5257,7 +5257,7 @@ typedef volatile struct ALT_SDMMC_MINTSTS_s  ALT_SDMMC_MINTSTS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_RINTSTS.
  */
 struct ALT_SDMMC_RINTSTS_s
@@ -5291,51 +5291,51 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Register : Status Register - status
- * 
+ *
  * Reports various operting status conditions.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description       
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------
- *  [0]     | R      | 0x0   | FIFO Rx Watermark 
- *  [1]     | R      | 0x1   | FIFO Tx Watermark 
- *  [2]     | R      | 0x1   | FIFO Empty        
- *  [3]     | R      | 0x0   | FIFO Full         
+ *  [0]     | R      | 0x0   | FIFO Rx Watermark
+ *  [1]     | R      | 0x1   | FIFO Tx Watermark
+ *  [2]     | R      | 0x1   | FIFO Empty
+ *  [3]     | R      | 0x0   | FIFO Full
  *  [7:4]   | R      | 0x0   | Command FSM States
- *  [8]     | R      | 0x1   | Data 3 Status     
- *  [9]     | R      | 0x0   | Data Busy         
+ *  [8]     | R      | 0x1   | Data 3 Status
+ *  [9]     | R      | 0x0   | Data Busy
  *  [10]    | R      | 0x0   | Data State MC Busy
- *  [16:11] | R      | 0x0   | Response Index    
- *  [29:17] | R      | 0x0   | FIFO Count        
- *  [31:30] | ???    | 0x0   | *UNDEFINED*       
- * 
+ *  [16:11] | R      | 0x0   | Response Index
+ *  [29:17] | R      | 0x0   | FIFO Count
+ *  [31:30] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : FIFO Rx Watermark - fifo_rx_watermark
- * 
+ *
  * FIFO reached Receive watermark level; not qualified with data transfer
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                                     
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-------------------------------------------------
  *  ALT_SDMMC_STAT_FIFO_RX_WATERMARK_E_RXWATERMARK   | 0x0   | FIFO reached watermark level; not qualified with
- * :                                                 |       | data transfer.                                  
- *  ALT_SDMMC_STAT_FIFO_RX_WATERMARK_E_NORXWATERMARK | 0x1   | FIFO not at watermark Level                     
- * 
+ * :                                                 |       | data transfer.
+ *  ALT_SDMMC_STAT_FIFO_RX_WATERMARK_E_NORXWATERMARK | 0x1   | FIFO not at watermark Level
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_RX_WATERMARK
- * 
+ *
  * FIFO reached watermark level; not qualified with data transfer.
  */
 #define ALT_SDMMC_STAT_FIFO_RX_WATERMARK_E_RXWATERMARK      0x0
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_RX_WATERMARK
- * 
+ *
  * FIFO not at watermark Level
  */
 #define ALT_SDMMC_STAT_FIFO_RX_WATERMARK_E_NORXWATERMARK    0x1
@@ -5359,29 +5359,29 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : FIFO Tx Watermark - fifo_tx_watermark
- * 
+ *
  * FIFO reached Transmit watermark level; not qualified with data transfer.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                               
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-------------------------------------------
  *  ALT_SDMMC_STAT_FIFO_TX_WATERMARK_E_TXWATERMARK   | 0x1   | FIFO reached transmit watermark level: not
- * :                                                 |       | qualified with data transfer.             
- *  ALT_SDMMC_STAT_FIFO_TX_WATERMARK_E_NOTXWATERMARK | 0x0   | FIFO not at transmit watermark Level      
- * 
+ * :                                                 |       | qualified with data transfer.
+ *  ALT_SDMMC_STAT_FIFO_TX_WATERMARK_E_NOTXWATERMARK | 0x0   | FIFO not at transmit watermark Level
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_TX_WATERMARK
- * 
+ *
  * FIFO reached transmit watermark level: not qualified with data transfer.
  */
 #define ALT_SDMMC_STAT_FIFO_TX_WATERMARK_E_TXWATERMARK      0x1
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_TX_WATERMARK
- * 
+ *
  * FIFO not at transmit watermark Level
  */
 #define ALT_SDMMC_STAT_FIFO_TX_WATERMARK_E_NOTXWATERMARK    0x0
@@ -5405,28 +5405,28 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : FIFO Empty - fifo_empty
- * 
+ *
  * FIFO is empty status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                     | Value | Description   
+ *
+ *  Enum                                     | Value | Description
  * :-----------------------------------------|:------|:---------------
- *  ALT_SDMMC_STAT_FIFO_EMPTY_E_FIFOEMPTY    | 0x1   | FIFO is empty 
+ *  ALT_SDMMC_STAT_FIFO_EMPTY_E_FIFOEMPTY    | 0x1   | FIFO is empty
  *  ALT_SDMMC_STAT_FIFO_EMPTY_E_FIFONOTEMPTY | 0x0   | FIFO not empty
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_EMPTY
- * 
+ *
  * FIFO is empty
  */
 #define ALT_SDMMC_STAT_FIFO_EMPTY_E_FIFOEMPTY       0x1
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_EMPTY
- * 
+ *
  * FIFO not empty
  */
 #define ALT_SDMMC_STAT_FIFO_EMPTY_E_FIFONOTEMPTY    0x0
@@ -5450,28 +5450,28 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : FIFO Full - fifo_full
- * 
+ *
  * FIFO is full status.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description     
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-----------------
- *  ALT_SDMMC_STAT_FIFO_FULL_E_FIFOFULL    | 0x0   | FIFO is full    
+ *  ALT_SDMMC_STAT_FIFO_FULL_E_FIFOFULL    | 0x0   | FIFO is full
  *  ALT_SDMMC_STAT_FIFO_FULL_E_FIFONOTFULL | 0x1   | FIFO is not full
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_FULL
- * 
+ *
  * FIFO is full
  */
 #define ALT_SDMMC_STAT_FIFO_FULL_E_FIFOFULL     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_FIFO_FULL
- * 
+ *
  * FIFO is not full
  */
 #define ALT_SDMMC_STAT_FIFO_FULL_E_FIFONOTFULL  0x1
@@ -5495,126 +5495,126 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : Command FSM States - command_fsm_states
- * 
+ *
  * The command FSM state.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                          | Value | Description                                
+ *
+ *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:--------------------------------------------
  *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_IDLEANDOTHERS | 0x0   | Idle, Wait for CCS, Send CCSD, or Boot Mode
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_SENDINITSEQ   | 0x1   | Send init sequence                         
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDSTART    | 0x2   | Tx cmd start bit                           
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDTXBIT    | 0x3   | Tx cmd tx bit                              
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDINDXARG  | 0x4   | Tx cmd index + arg                         
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDCRC7     | 0x5   | Tx cmd crc7                                
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDEND      | 0x6   | Tx cmd end bit                             
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPSTART   | 0x7   | Rx resp start bit                          
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPIRQ     | 0x8   | Rx resp IRQ response                       
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPTX      | 0x9   | Rx resp tx bit                             
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPCMDIDX  | 0xa   | Rx resp cmd idx                            
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPDATA    | 0xb   | Rx resp data                               
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPCRC7    | 0xc   | Rx resp crc7                               
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPEND     | 0xd   | Rx resp end bit                            
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_CMDPATHWAIT   | 0xe   | Cmd path wait NCC                          
- *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_WAITCMDTURN   | 0xf   | Wait: CMD-to-reponse turnaround            
- * 
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_SENDINITSEQ   | 0x1   | Send init sequence
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDSTART    | 0x2   | Tx cmd start bit
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDTXBIT    | 0x3   | Tx cmd tx bit
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDINDXARG  | 0x4   | Tx cmd index + arg
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDCRC7     | 0x5   | Tx cmd crc7
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDEND      | 0x6   | Tx cmd end bit
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPSTART   | 0x7   | Rx resp start bit
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPIRQ     | 0x8   | Rx resp IRQ response
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPTX      | 0x9   | Rx resp tx bit
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPCMDIDX  | 0xa   | Rx resp cmd idx
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPDATA    | 0xb   | Rx resp data
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPCRC7    | 0xc   | Rx resp crc7
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPEND     | 0xd   | Rx resp end bit
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_CMDPATHWAIT   | 0xe   | Cmd path wait NCC
+ *  ALT_SDMMC_STAT_CMD_FSM_STATES_E_WAITCMDTURN   | 0xf   | Wait: CMD-to-reponse turnaround
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Idle, Wait for CCS, Send CCSD, or Boot Mode
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_IDLEANDOTHERS   0x0
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Send init sequence
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_SENDINITSEQ     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Tx cmd start bit
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDSTART      0x2
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Tx cmd tx bit
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDTXBIT      0x3
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Tx cmd index + arg
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDINDXARG    0x4
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Tx cmd crc7
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDCRC7       0x5
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Tx cmd end bit
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_TXCMDEND        0x6
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp start bit
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPSTART     0x7
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp IRQ response
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPIRQ       0x8
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp tx bit
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPTX        0x9
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp cmd idx
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPCMDIDX    0xa
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp data
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPDATA      0xb
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp crc7
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPCRC7      0xc
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Rx resp end bit
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_RXRESPEND       0xd
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Cmd path wait NCC
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_CMDPATHWAIT     0xe
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_CMD_FSM_STATES
- * 
+ *
  * Wait: CMD-to-reponse turnaround
  */
 #define ALT_SDMMC_STAT_CMD_FSM_STATES_E_WAITCMDTURN     0xf
@@ -5638,29 +5638,29 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : Data 3 Status - data_3_status
- * 
+ *
  * Raw selected card_data[3]; checks whether card is present. The default can be
  * cardpresent or not present depend on cdata_in.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description     
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:-----------------
- *  ALT_SDMMC_STAT_DATA_3_STAT_E_CARDPRESENT    | 0x1   | Card Present    
+ *  ALT_SDMMC_STAT_DATA_3_STAT_E_CARDPRESENT    | 0x1   | Card Present
  *  ALT_SDMMC_STAT_DATA_3_STAT_E_CARDNOTPRESENT | 0x0   | Card Not Present
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_DATA_3_STAT
- * 
+ *
  * Card Present
  */
 #define ALT_SDMMC_STAT_DATA_3_STAT_E_CARDPRESENT    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_DATA_3_STAT
- * 
+ *
  * Card Not Present
  */
 #define ALT_SDMMC_STAT_DATA_3_STAT_E_CARDNOTPRESENT 0x0
@@ -5684,29 +5684,29 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : Data Busy - data_busy
- * 
+ *
  * Inverted version of raw selected card_data[0]. The default can be cardpresent or
  * not present depend on cdata_in.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description       
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------
- *  ALT_SDMMC_STAT_DATA_BUSY_E_CARDBUSY    | 0x1   | card data busy    
+ *  ALT_SDMMC_STAT_DATA_BUSY_E_CARDBUSY    | 0x1   | card data busy
  *  ALT_SDMMC_STAT_DATA_BUSY_E_CARDNOTBUSY | 0x0   | card data not busy
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_DATA_BUSY
- * 
+ *
  * card data busy
  */
 #define ALT_SDMMC_STAT_DATA_BUSY_E_CARDBUSY     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_DATA_BUSY
- * 
+ *
  * card data not busy
  */
 #define ALT_SDMMC_STAT_DATA_BUSY_E_CARDNOTBUSY  0x0
@@ -5730,28 +5730,28 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : Data State MC Busy - data_state_mc_busy
- * 
+ *
  * Data transmit or receive state-machine is busy.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                | Value | Description           
+ *
+ *  Enum                                                | Value | Description
  * :----------------------------------------------------|:------|:-----------------------
- *  ALT_SDMMC_STAT_DATA_STATE_MC_BUSY_E_DATASTATEBSY    | 0x1   | Data State MC busy    
+ *  ALT_SDMMC_STAT_DATA_STATE_MC_BUSY_E_DATASTATEBSY    | 0x1   | Data State MC busy
  *  ALT_SDMMC_STAT_DATA_STATE_MC_BUSY_E_DATASTATENOTBSY | 0x0   | Data State MC not busy
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_DATA_STATE_MC_BUSY
- * 
+ *
  * Data State MC busy
  */
 #define ALT_SDMMC_STAT_DATA_STATE_MC_BUSY_E_DATASTATEBSY    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_STAT_DATA_STATE_MC_BUSY
- * 
+ *
  * Data State MC not busy
  */
 #define ALT_SDMMC_STAT_DATA_STATE_MC_BUSY_E_DATASTATENOTBSY 0x0
@@ -5775,11 +5775,11 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : Response Index - response_index
- * 
+ *
  * Index of previous response, including any auto-stop sent by core
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_STAT_RESPONSE_INDEX register field. */
 #define ALT_SDMMC_STAT_RESPONSE_INDEX_LSB        11
@@ -5800,11 +5800,11 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
 
 /*
  * Field : FIFO Count - fifo_count
- * 
+ *
  * FIFO count - Number of filled locations in FIFO
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_STAT_FIFO_COUNT register field. */
 #define ALT_SDMMC_STAT_FIFO_COUNT_LSB        17
@@ -5831,7 +5831,7 @@ typedef volatile struct ALT_SDMMC_RINTSTS_s  ALT_SDMMC_RINTSTS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_STAT.
  */
 struct ALT_SDMMC_STAT_s
@@ -5858,23 +5858,23 @@ typedef volatile struct ALT_SDMMC_STAT_s  ALT_SDMMC_STAT_t;
 
 /*
  * Register : FIFO Threshold Watermark Register - fifoth
- * 
+ *
  * DMA and FIFO Control Fields.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                  
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------------
- *  [11:0]  | RW     | 0x0   | Tx WMark                     
- *  [15:12] | ???    | 0x0   | *UNDEFINED*                  
- *  [27:16] | RW     | 0x3ff | Rx WMark                     
+ *  [11:0]  | RW     | 0x0   | Tx WMark
+ *  [15:12] | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x3ff | Rx WMark
  *  [30:28] | RW     | 0x0   | DMA Multiple Transaction Size
- *  [31]    | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31]    | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Tx WMark - tx_wmark
- * 
+ *
  * FIFO threshold watermark level when transmitting data to card. When FIFO data
  * count is less than or equal to this number, DMA/FIFO request is raised. If
  * Interrupt is enabled, then interrupt occurs. During end of packet, request or
@@ -5886,13 +5886,13 @@ typedef volatile struct ALT_SDMMC_STAT_s  ALT_SDMMC_STAT_t;
  * empty). In DMA mode, at end of packet, if last transfer is less than burst size,
  * DMA controller does single cycles until required bytes are transferred. 12 bits
  * - 1 bit less than FIFO-count of status register, which is 13 bits.
- * 
+ *
  * Limitation: TX_WMark >= 1;
- * 
+ *
  * Recommended: FIFO_DEPTH/2 = 512; (means less than or equal to 512)
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_FIFOTH_TX_WMARK register field. */
 #define ALT_SDMMC_FIFOTH_TX_WMARK_LSB        0
@@ -5913,7 +5913,7 @@ typedef volatile struct ALT_SDMMC_STAT_s  ALT_SDMMC_STAT_t;
 
 /*
  * Field : Rx WMark - rx_wmark
- * 
+ *
  * FIFO threshold watermark level when receiving data to card. When FIFO data count
  * reaches greater than this number, DMA/FIFO request is raised. During end of
  * packet, request is generated regardless of threshold programming in order to
@@ -5926,18 +5926,18 @@ typedef volatile struct ALT_SDMMC_STAT_s  ALT_SDMMC_STAT_t;
  * transfers to flush out any remaining bytes before Data Transfer Done interrupt
  * is set. 12 bits - 1 bit less than FIFO-count of status register, which is 13
  * bits.
- * 
+ *
  * Limitation: RX_WMark <= 1022
- * 
+ *
  * Recommended: 511; means greater than (FIFO_DEPTH/2) - 1)
- * 
+ *
  * NOTE: In DMA mode during CCS time-out, the DMA does not generate the request at
  * the end of packet, even if remaining bytes are less than threshold. In this
  * case, there will be some data left in the FIFO. It is the responsibility of the
  * application to reset the FIFO after the CCS timeout.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_FIFOTH_RX_WMARK register field. */
 #define ALT_SDMMC_FIFOTH_RX_WMARK_LSB        16
@@ -5958,68 +5958,68 @@ typedef volatile struct ALT_SDMMC_STAT_s  ALT_SDMMC_STAT_t;
 
 /*
  * Field : DMA Multiple Transaction Size - dw_dma_multiple_transaction_size
- * 
+ *
  * Burst size of multiple transaction; should be programmed same as DMA controller
  * multiple-transaction-size SRC/DEST_MSIZE.
- * 
+ *
  * The units for transfers is 32 bits. A single transfer would be signalled based
  * on this value. Value should be sub-multiple of 512. Allowed combinations for
  * MSize and TX_WMark.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                       | Value | Description                
+ *
+ *  Enum                                                       | Value | Description
  * :-----------------------------------------------------------|:------|:----------------------------
  *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZE1   | 0x0   | Msize 1 and TX_WMARK 1-1023
- *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZE4   | 0x1   | Msize 4 and TX_WMARK 256   
- *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZEK8  | 0x2   | Msize 8 and TX_WMARK 128   
- *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZEK16 | 0x3   | Msize 16 and TX_WMARK 64   
- *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZEK1  | 0x5   | Msize 1 and RX_WMARK 512   
- *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZEK4  | 0x6   | Msize 4 and RX_WMARK 128   
- *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZE8   | 0x7   | Msize 8 and RX_WMARK 64    
- * 
+ *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZE4   | 0x1   | Msize 4 and TX_WMARK 256
+ *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZEK8  | 0x2   | Msize 8 and TX_WMARK 128
+ *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZEK16 | 0x3   | Msize 16 and TX_WMARK 64
+ *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZEK1  | 0x5   | Msize 1 and RX_WMARK 512
+ *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZEK4  | 0x6   | Msize 4 and RX_WMARK 128
+ *  ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZE8   | 0x7   | Msize 8 and RX_WMARK 64
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 1 and TX_WMARK 1-1023
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZE1    0x0
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 4 and TX_WMARK 256
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZE4    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 8 and TX_WMARK 128
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZEK8   0x2
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 16 and TX_WMARK 64
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_TXMSIZEK16  0x3
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 1 and RX_WMARK 512
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZEK1   0x5
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 4 and RX_WMARK 128
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZEK4   0x6
 /*
  * Enumerated value for register field ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE
- * 
+ *
  * Msize 8 and RX_WMARK 64
  */
 #define ALT_SDMMC_FIFOTH_DW_DMA_MULT_TRANSACTION_SIZE_E_RXMSIZE8    0x7
@@ -6049,7 +6049,7 @@ typedef volatile struct ALT_SDMMC_STAT_s  ALT_SDMMC_STAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_FIFOTH.
  */
 struct ALT_SDMMC_FIFOTH_s
@@ -6070,41 +6070,41 @@ typedef volatile struct ALT_SDMMC_FIFOTH_s  ALT_SDMMC_FIFOTH_t;
 
 /*
  * Register : Card Detect Register - cdetect
- * 
+ *
  * Determines if card is present.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
  *  [0]    | R      | 0x1   | Card Detect
  *  [31:1] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Card Detect - card_detect_n
- * 
+ *
  * Value on sdmmc_cd_i input port.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                          | Value | Description      
+ *
+ *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:------------------
  *  ALT_SDMMC_CDETECT_CARD_DETECT_N_E_NOTDETECTED | 0x1   | Card not Detected
- *  ALT_SDMMC_CDETECT_CARD_DETECT_N_E_DETECTED    | 0x0   | Card Detected    
- * 
+ *  ALT_SDMMC_CDETECT_CARD_DETECT_N_E_DETECTED    | 0x0   | Card Detected
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CDETECT_CARD_DETECT_N
- * 
+ *
  * Card not Detected
  */
 #define ALT_SDMMC_CDETECT_CARD_DETECT_N_E_NOTDETECTED   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_CDETECT_CARD_DETECT_N
- * 
+ *
  * Card Detected
  */
 #define ALT_SDMMC_CDETECT_CARD_DETECT_N_E_DETECTED      0x0
@@ -6134,7 +6134,7 @@ typedef volatile struct ALT_SDMMC_FIFOTH_s  ALT_SDMMC_FIFOTH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CDETECT.
  */
 struct ALT_SDMMC_CDETECT_s
@@ -6152,41 +6152,41 @@ typedef volatile struct ALT_SDMMC_CDETECT_s  ALT_SDMMC_CDETECT_t;
 
 /*
  * Register : Write Protect Register - wrtprt
- * 
+ *
  * See Field Description.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------
  *  [0]    | R      | 0x1   | Write Protect
- *  [31:1] | ???    | 0x0   | *UNDEFINED*  
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Write Protect - write_protect
- * 
+ *
  * Value on sdmmc_wp_i input port.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description           
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------
- *  ALT_SDMMC_WRTPRT_WR_PROTECT_E_END  | 0x1   | Write Protect Enabled 
+ *  ALT_SDMMC_WRTPRT_WR_PROTECT_E_END  | 0x1   | Write Protect Enabled
  *  ALT_SDMMC_WRTPRT_WR_PROTECT_E_DISD | 0x0   | Write Protect Disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_WRTPRT_WR_PROTECT
- * 
+ *
  * Write Protect Enabled
  */
 #define ALT_SDMMC_WRTPRT_WR_PROTECT_E_END   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_WRTPRT_WR_PROTECT
- * 
+ *
  * Write Protect Disabled
  */
 #define ALT_SDMMC_WRTPRT_WR_PROTECT_E_DISD  0x0
@@ -6216,7 +6216,7 @@ typedef volatile struct ALT_SDMMC_CDETECT_s  ALT_SDMMC_CDETECT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_WRTPRT.
  */
 struct ALT_SDMMC_WRTPRT_s
@@ -6234,21 +6234,21 @@ typedef volatile struct ALT_SDMMC_WRTPRT_s  ALT_SDMMC_WRTPRT_t;
 
 /*
  * Register : Transferred CIU Card Byte Count Register - tcbcnt
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [31:0] | R      | 0x0   | Trans Card Byte Count
- * 
+ *
  */
 /*
  * Field : Trans Card Byte Count - trans_card_byte_count
- * 
+ *
  * Number of bytes transferred by CIU unit to card.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_TCBCNT_TRANS_CARD_BYTE_COUNT register field. */
 #define ALT_SDMMC_TCBCNT_TRANS_CARD_BYTE_COUNT_LSB        0
@@ -6275,7 +6275,7 @@ typedef volatile struct ALT_SDMMC_WRTPRT_s  ALT_SDMMC_WRTPRT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_TCBCNT.
  */
 struct ALT_SDMMC_TCBCNT_s
@@ -6292,25 +6292,25 @@ typedef volatile struct ALT_SDMMC_TCBCNT_s  ALT_SDMMC_TCBCNT_t;
 
 /*
  * Register : Transferred Host to BIU-FIFO Byte Count Register - tbbcnt
- * 
+ *
  * Tracks number of bytes transferred between Host and FIFO.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [31:0] | R      | 0x0   | Trans FIFO Byte Count
- * 
+ *
  */
 /*
  * Field : Trans FIFO Byte Count - trans_fifo_byte_count
- * 
+ *
  * Number of bytes transferred between Host/DMA memory and BIU FIFO. In 32-bit AMBA
  * data-bus-width modes, register should be accessed in full to avoid read-
  * coherency problems. Both TCBCNT and TBBCNT share same coherency register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_TBBCNT_TRANS_FIFO_BYTE_COUNT register field. */
 #define ALT_SDMMC_TBBCNT_TRANS_FIFO_BYTE_COUNT_LSB        0
@@ -6337,7 +6337,7 @@ typedef volatile struct ALT_SDMMC_TCBCNT_s  ALT_SDMMC_TCBCNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_TBBCNT.
  */
 struct ALT_SDMMC_TBBCNT_s
@@ -6354,23 +6354,23 @@ typedef volatile struct ALT_SDMMC_TBBCNT_s  ALT_SDMMC_TBBCNT_t;
 
 /*
  * Register : Debounce Count Register - debnce
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset    | Description   
+ *
+ *  Bits    | Access | Reset    | Description
  * :--------|:-------|:---------|:---------------
  *  [23:0]  | RW     | 0xffffff | Debounce Count
- *  [31:24] | ???    | 0x0      | *UNDEFINED*   
- * 
+ *  [31:24] | ???    | 0x0      | *UNDEFINED*
+ *
  */
 /*
  * Field : Debounce Count - debounce_count
- * 
+ *
  * Number of host clocks l4_mp_clk used by debounce filter logic; typical debounce
  * time is 5-25 ms.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_DEBNCE_DEBOUNCE_COUNT register field. */
 #define ALT_SDMMC_DEBNCE_DEBOUNCE_COUNT_LSB        0
@@ -6397,7 +6397,7 @@ typedef volatile struct ALT_SDMMC_TBBCNT_s  ALT_SDMMC_TBBCNT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_DEBNCE.
  */
 struct ALT_SDMMC_DEBNCE_s
@@ -6415,21 +6415,21 @@ typedef volatile struct ALT_SDMMC_DEBNCE_s  ALT_SDMMC_DEBNCE_t;
 
 /*
  * Register : User ID Register - usrid
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset     | Description
  * :-------|:-------|:----------|:------------
- *  [31:0] | RW     | 0x7967797 | User ID    
- * 
+ *  [31:0] | RW     | 0x7967797 | User ID
+ *
  */
 /*
  * Field : User ID - usr_id
- * 
+ *
  * User identification field; Value is 0x7967797.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_USRID_USR_ID register field. */
 #define ALT_SDMMC_USRID_USR_ID_LSB        0
@@ -6456,7 +6456,7 @@ typedef volatile struct ALT_SDMMC_DEBNCE_s  ALT_SDMMC_DEBNCE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_USRID.
  */
 struct ALT_SDMMC_USRID_s
@@ -6473,21 +6473,21 @@ typedef volatile struct ALT_SDMMC_USRID_s  ALT_SDMMC_USRID_t;
 
 /*
  * Register : Version ID Register - verid
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:------------
- *  [31:0] | R      | 0x5342240a | Version ID 
- * 
+ *  [31:0] | R      | 0x5342240a | Version ID
+ *
  */
 /*
  * Field : Version ID - ver_id
- * 
+ *
  * Synopsys version id. Current value is 32'h5342240a
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_VERID_VER_ID register field. */
 #define ALT_SDMMC_VERID_VER_ID_LSB        0
@@ -6514,7 +6514,7 @@ typedef volatile struct ALT_SDMMC_USRID_s  ALT_SDMMC_USRID_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_VERID.
  */
 struct ALT_SDMMC_VERID_s
@@ -6531,46 +6531,46 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Register : Hardware Configuration Register - hcon
- * 
+ *
  * Hardware configurations registers. Register can be used to develop
  * configuration-independent software drivers.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description             
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------------------
- *  [0]     | R      | 0x1   | Card Type               
- *  [5:1]   | R      | 0x0   | Number of Cards         
- *  [6]     | R      | 0x0   | Slave Bus Type          
- *  [9:7]   | R      | 0x1   | Slave Bus Data Width    
- *  [15:10] | R      | 0xc   | Slave Bus Address Width 
- *  [17:16] | R      | 0x0   | DMA Interface Type      
- *  [20:18] | R      | 0x1   | Generic DMA Data Width  
- *  [21]    | R      | 0x0   | FIFO RAM Location       
- *  [22]    | R      | 0x1   | Implement Hold Register 
- *  [23]    | R      | 0x1   | Clock False Path        
+ *  [0]     | R      | 0x1   | Card Type
+ *  [5:1]   | R      | 0x0   | Number of Cards
+ *  [6]     | R      | 0x0   | Slave Bus Type
+ *  [9:7]   | R      | 0x1   | Slave Bus Data Width
+ *  [15:10] | R      | 0xc   | Slave Bus Address Width
+ *  [17:16] | R      | 0x0   | DMA Interface Type
+ *  [20:18] | R      | 0x1   | Generic DMA Data Width
+ *  [21]    | R      | 0x0   | FIFO RAM Location
+ *  [22]    | R      | 0x1   | Implement Hold Register
+ *  [23]    | R      | 0x1   | Clock False Path
  *  [25:24] | R      | 0x0   | Number of Clock Dividers
- *  [26]    | R      | 0x0   | Area Optimized          
- *  [31:27] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [26]    | R      | 0x0   | Area Optimized
+ *  [31:27] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Card Type - ct
- * 
+ *
  * Supported card types
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description     
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-----------------
  *  ALT_SDMMC_HCON_CT_E_SDMMC | 0x1   | Card Type SD/MMC
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_CT
- * 
+ *
  * Card Type SD/MMC
  */
 #define ALT_SDMMC_HCON_CT_E_SDMMC   0x1
@@ -6594,21 +6594,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Number of Cards - nc
- * 
+ *
  * Maximum number of cards less one
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                        | Value | Description
  * :----------------------------|:------|:------------
- *  ALT_SDMMC_HCON_NC_E_NUMCARD | 0x0   | 1 Card     
- * 
+ *  ALT_SDMMC_HCON_NC_E_NUMCARD | 0x0   | 1 Card
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_NC
- * 
+ *
  * 1 Card
  */
 #define ALT_SDMMC_HCON_NC_E_NUMCARD 0x0
@@ -6632,21 +6632,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Slave Bus Type - hbus
- * 
+ *
  * Slave bus type.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                      | Value | Description
  * :--------------------------|:------|:------------
- *  ALT_SDMMC_HCON_HBUS_E_APB | 0x0   | APB Bus    
- * 
+ *  ALT_SDMMC_HCON_HBUS_E_APB | 0x0   | APB Bus
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_HBUS
- * 
+ *
  * APB Bus
  */
 #define ALT_SDMMC_HCON_HBUS_E_APB   0x0
@@ -6670,21 +6670,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Slave Bus Data Width - hdatawidth
- * 
+ *
  * Slave bus data width
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description  
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:--------------
  *  ALT_SDMMC_HCON_HDATAWIDTH_E_WIDTH32BITS | 0x1   | Width 32 Bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_HDATAWIDTH
- * 
+ *
  * Width 32 Bits
  */
 #define ALT_SDMMC_HCON_HDATAWIDTH_E_WIDTH32BITS 0x1
@@ -6708,21 +6708,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Slave Bus Address Width - haddrwidth
- * 
+ *
  * Slave bus address width less one
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description  
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:--------------
  *  ALT_SDMMC_HCON_HADDRWIDTH_E_WIDTH13BITS | 0xc   | Width 13 Bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_HADDRWIDTH
- * 
+ *
  * Width 13 Bits
  */
 #define ALT_SDMMC_HCON_HADDRWIDTH_E_WIDTH13BITS 0xc
@@ -6746,22 +6746,22 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : DMA Interface Type - dmaintf
- * 
+ *
  * DMA interface type
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                     
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-------------------------------------------------
  *  ALT_SDMMC_HCON_DMAINTF_E_NONE | 0x0   | No External DMA Controller Interface (SD/MMC has
- * :                              |       | its own internal DMA Controller                 
- * 
+ * :                              |       | its own internal DMA Controller
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_DMAINTF
- * 
+ *
  * No External DMA Controller Interface (SD/MMC has its own internal DMA Controller
  */
 #define ALT_SDMMC_HCON_DMAINTF_E_NONE   0x0
@@ -6785,22 +6785,22 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Generic DMA Data Width - dmadatawidth
- * 
+ *
  * Encodes bit width of external DMA controller interface. Doesn't apply to the
  * SD/MMC because it has no external DMA controller interface.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description 
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------
  *  ALT_SDMMC_HCON_DMADATAWIDTH_E_WIDTH32BITS | 0x1   | 32-bits wide
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_DMADATAWIDTH
- * 
+ *
  * 32-bits wide
  */
 #define ALT_SDMMC_HCON_DMADATAWIDTH_E_WIDTH32BITS   0x1
@@ -6824,21 +6824,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : FIFO RAM Location - rios
- * 
+ *
  * FIFO RAM location
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description             
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-------------------------
  *  ALT_SDMMC_HCON_RIOS_E_OUTSIDE | 0x0   | FIFO RAM Outside IP Core
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_RIOS
- * 
+ *
  * FIFO RAM Outside IP Core
  */
 #define ALT_SDMMC_HCON_RIOS_E_OUTSIDE   0x0
@@ -6862,21 +6862,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Implement Hold Register - ihr
- * 
+ *
  * Implement hold register
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description             
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-------------------------
  *  ALT_SDMMC_HCON_IHR_E_IMPLEMENTED | 0x1   | Implements Hold Register
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_IHR
- * 
+ *
  * Implements Hold Register
  */
 #define ALT_SDMMC_HCON_IHR_E_IMPLEMENTED    0x1
@@ -6900,21 +6900,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Clock False Path - scfp
- * 
+ *
  * Clock False Path
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description         
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:---------------------
  *  ALT_SDMMC_HCON_SCFP_E_SET | 0x1   | Clock False Path Set
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_SCFP
- * 
+ *
  * Clock False Path Set
  */
 #define ALT_SDMMC_HCON_SCFP_E_SET   0x1
@@ -6938,21 +6938,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Number of Clock Dividers - ncd
- * 
+ *
  * Number of clock dividers less one
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description      
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:------------------
  *  ALT_SDMMC_HCON_NCD_E_ONEDIV | 0x0   | One Clock Divider
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_NCD
- * 
+ *
  * One Clock Divider
  */
 #define ALT_SDMMC_HCON_NCD_E_ONEDIV 0x0
@@ -6976,21 +6976,21 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
 
 /*
  * Field : Area Optimized - aro
- * 
+ *
  * Area optimized
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description           
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------
  *  ALT_SDMMC_HCON_ARO_E_NOTOPTFORAREA | 0x0   | Not Optimized For Area
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_HCON_ARO
- * 
+ *
  * Not Optimized For Area
  */
 #define ALT_SDMMC_HCON_ARO_E_NOTOPTFORAREA  0x0
@@ -7020,7 +7020,7 @@ typedef volatile struct ALT_SDMMC_VERID_s  ALT_SDMMC_VERID_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_HCON.
  */
 struct ALT_SDMMC_HCON_s
@@ -7049,47 +7049,47 @@ typedef volatile struct ALT_SDMMC_HCON_s  ALT_SDMMC_HCON_t;
 
 /*
  * Register : UHS-1 Register - uhs_reg
- * 
+ *
  * UHS-1 Register
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description      
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------
  *  [0]     | RW     | 0x0   | High Voltage Mode
- *  [15:1]  | ???    | 0x0   | *UNDEFINED*      
- *  [16]    | RW     | 0x0   | DDR Mode         
- *  [31:17] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [15:1]  | ???    | 0x0   | *UNDEFINED*
+ *  [16]    | RW     | 0x0   | DDR Mode
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : High Voltage Mode - volt_reg
- * 
+ *
  * Determines the voltage fed to the buffers by an external voltage regulator.
  * These bits function as the output of the host controller and are fed to an
  * external voltage regulator. The voltage regulator must switch the voltage of the
  * buffers of a particular card to either 3.3V or 1.8V, depending on the value
  * programmed in the register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                   
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-------------------------------
  *  ALT_SDMMC_UHS_REG_VOLT_REG_E_BUF33V | 0x0   | Buffers supplied with 3.3V Vdd
  *  ALT_SDMMC_UHS_REG_VOLT_REG_E_BUF18V | 0x1   | Buffers supplied with 1.8V Vdd
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_UHS_REG_VOLT_REG
- * 
+ *
  * Buffers supplied with 3.3V Vdd
  */
 #define ALT_SDMMC_UHS_REG_VOLT_REG_E_BUF33V 0x0
 /*
  * Enumerated value for register field ALT_SDMMC_UHS_REG_VOLT_REG
- * 
+ *
  * Buffers supplied with 1.8V Vdd
  */
 #define ALT_SDMMC_UHS_REG_VOLT_REG_E_BUF18V 0x1
@@ -7113,28 +7113,28 @@ typedef volatile struct ALT_SDMMC_HCON_s  ALT_SDMMC_HCON_t;
 
 /*
  * Field : DDR Mode - ddr_reg
- * 
+ *
  * Determines the voltage fed to the buffers by an external voltage regulator.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------
  *  ALT_SDMMC_UHS_REG_DDR_REG_E_NONDDR | 0x0   | Non-DDR mode
- *  ALT_SDMMC_UHS_REG_DDR_REG_E_DDR    | 0x1   | DDR mode    
- * 
+ *  ALT_SDMMC_UHS_REG_DDR_REG_E_DDR    | 0x1   | DDR mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_UHS_REG_DDR_REG
- * 
+ *
  * Non-DDR mode
  */
 #define ALT_SDMMC_UHS_REG_DDR_REG_E_NONDDR  0x0
 /*
  * Enumerated value for register field ALT_SDMMC_UHS_REG_DDR_REG
- * 
+ *
  * DDR mode
  */
 #define ALT_SDMMC_UHS_REG_DDR_REG_E_DDR     0x1
@@ -7164,7 +7164,7 @@ typedef volatile struct ALT_SDMMC_HCON_s  ALT_SDMMC_HCON_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_UHS_REG.
  */
 struct ALT_SDMMC_UHS_REG_s
@@ -7184,40 +7184,40 @@ typedef volatile struct ALT_SDMMC_UHS_REG_s  ALT_SDMMC_UHS_REG_t;
 
 /*
  * Register : Hardware Reset Register - rst_n
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [0]    | RW     | 0x1   | Card Reset 
+ *  [0]    | RW     | 0x1   | Card Reset
  *  [31:1] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Card Reset - card_reset
- * 
+ *
  * This bit causes the cards to enter pre-idle state, which requires it to be re-
  * initialized.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description    
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:----------------
- *  ALT_SDMMC_RST_N_CARD_RST_E_ASSERT   | 0x1   | Active Mode    
+ *  ALT_SDMMC_RST_N_CARD_RST_E_ASSERT   | 0x1   | Active Mode
  *  ALT_SDMMC_RST_N_CARD_RST_E_DEASSERT | 0x0   | Not Active Mode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_RST_N_CARD_RST
- * 
+ *
  * Active Mode
  */
 #define ALT_SDMMC_RST_N_CARD_RST_E_ASSERT   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_RST_N_CARD_RST
- * 
+ *
  * Not Active Mode
  */
 #define ALT_SDMMC_RST_N_CARD_RST_E_DEASSERT 0x0
@@ -7247,7 +7247,7 @@ typedef volatile struct ALT_SDMMC_UHS_REG_s  ALT_SDMMC_UHS_REG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_RST_N.
  */
 struct ALT_SDMMC_RST_N_s
@@ -7265,46 +7265,46 @@ typedef volatile struct ALT_SDMMC_RST_N_s  ALT_SDMMC_RST_N_t;
 
 /*
  * Register : Bus Mode Register - bmod
- * 
+ *
  * Details different bus operating modes.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description              
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------
- *  [0]     | RW     | 0x0   | Software Reset           
- *  [1]     | RW     | 0x0   | Fixed Burst              
- *  [6:2]   | RW     | 0x0   | Descriptor Skip Length   
- *  [7]     | RW     | 0x0   | IDMAC Enable             
+ *  [0]     | RW     | 0x0   | Software Reset
+ *  [1]     | RW     | 0x0   | Fixed Burst
+ *  [6:2]   | RW     | 0x0   | Descriptor Skip Length
+ *  [7]     | RW     | 0x0   | IDMAC Enable
  *  [10:8]  | R      | 0x0   | Programmable Burst Length
- *  [31:11] | ???    | 0x0   | *UNDEFINED*              
- * 
+ *  [31:11] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Software Reset - swr
- * 
+ *
  * This bit resets all internal registers of the DMA Controller. It is
  * automatically cleared after 1 clock cycle.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                  
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:------------------------------
  *  ALT_SDMMC_BMOD_SWR_E_SFTRST   | 0x1   | Resets DMA Internal Registers
- *  ALT_SDMMC_BMOD_SWR_E_NOSFTRST | 0x0   | No reset - default           
- * 
+ *  ALT_SDMMC_BMOD_SWR_E_NOSFTRST | 0x0   | No reset - default
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_SWR
- * 
+ *
  * Resets DMA Internal Registers
  */
 #define ALT_SDMMC_BMOD_SWR_E_SFTRST     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_SWR
- * 
+ *
  * No reset - default
  */
 #define ALT_SDMMC_BMOD_SWR_E_NOSFTRST   0x0
@@ -7328,30 +7328,30 @@ typedef volatile struct ALT_SDMMC_RST_N_s  ALT_SDMMC_RST_N_t;
 
 /*
  * Field : Fixed Burst - fb
- * 
+ *
  * Controls whether the AHB Master interface performs fixed burst transfers or not.
  * Will use only SINGLE, INCR4, INCR8 or INCR16 during start of normal burst
  * transfers.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description              
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:--------------------------
- *  ALT_SDMMC_BMOD_FB_E_FIXEDBRST   | 0x1   | AHB Master Fixed Burst   
+ *  ALT_SDMMC_BMOD_FB_E_FIXEDBRST   | 0x1   | AHB Master Fixed Burst
  *  ALT_SDMMC_BMOD_FB_E_NOFIXEDBRST | 0x0   | Non Fixed Burst - default
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_FB
- * 
+ *
  * AHB Master Fixed Burst
  */
 #define ALT_SDMMC_BMOD_FB_E_FIXEDBRST   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_FB
- * 
+ *
  * Non Fixed Burst - default
  */
 #define ALT_SDMMC_BMOD_FB_E_NOFIXEDBRST 0x0
@@ -7375,12 +7375,12 @@ typedef volatile struct ALT_SDMMC_RST_N_s  ALT_SDMMC_RST_N_t;
 
 /*
  * Field : Descriptor Skip Length - dsl
- * 
+ *
  * Specifies the number of HWord/Word/Dword (depending on 16/32/64-bit bus) to skip
  * between two unchained descriptors.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_BMOD_DSL register field. */
 #define ALT_SDMMC_BMOD_DSL_LSB        2
@@ -7401,28 +7401,28 @@ typedef volatile struct ALT_SDMMC_RST_N_s  ALT_SDMMC_RST_N_t;
 
 /*
  * Field : IDMAC Enable - de
- * 
+ *
  * Enables and Disables Internal DMA.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description  
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:--------------
- *  ALT_SDMMC_BMOD_DE_E_END  | 0x1   | IDMAC Enable 
+ *  ALT_SDMMC_BMOD_DE_E_END  | 0x1   | IDMAC Enable
  *  ALT_SDMMC_BMOD_DE_E_DISD | 0x0   | IDMAC Disable
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_DE
- * 
+ *
  * IDMAC Enable
  */
 #define ALT_SDMMC_BMOD_DE_E_END     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_DE
- * 
+ *
  * IDMAC Disable
  */
 #define ALT_SDMMC_BMOD_DE_E_DISD    0x0
@@ -7446,74 +7446,74 @@ typedef volatile struct ALT_SDMMC_RST_N_s  ALT_SDMMC_RST_N_t;
 
 /*
  * Field : Programmable Burst Length - pbl
- * 
+ *
  * These bits indicate the maximum number of beats to be performed in one IDMAC
  * transaction. The IDMAC will always attempt to burst as specified in PBL each
  * time it starts a Burst transfer on the host bus. This value is the mirror of
  * MSIZE of FIFOTH register. In order to change this value, write the required
  * value to FIFOTH register. This is an encode value as follows.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description 
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-------------
- *  ALT_SDMMC_BMOD_PBL_E_TRANS1   | 0x0   | Transfer 1  
- *  ALT_SDMMC_BMOD_PBL_E_TRANS4   | 0x1   | Transfer 4  
- *  ALT_SDMMC_BMOD_PBL_E_TRANS8   | 0x2   | Transfer 8  
- *  ALT_SDMMC_BMOD_PBL_E_TRANS16  | 0x3   | Transfer 16 
- *  ALT_SDMMC_BMOD_PBL_E_TRANS32  | 0x4   | Transfer 32 
- *  ALT_SDMMC_BMOD_PBL_E_TRANS64  | 0x5   | Transfer 64 
+ *  ALT_SDMMC_BMOD_PBL_E_TRANS1   | 0x0   | Transfer 1
+ *  ALT_SDMMC_BMOD_PBL_E_TRANS4   | 0x1   | Transfer 4
+ *  ALT_SDMMC_BMOD_PBL_E_TRANS8   | 0x2   | Transfer 8
+ *  ALT_SDMMC_BMOD_PBL_E_TRANS16  | 0x3   | Transfer 16
+ *  ALT_SDMMC_BMOD_PBL_E_TRANS32  | 0x4   | Transfer 32
+ *  ALT_SDMMC_BMOD_PBL_E_TRANS64  | 0x5   | Transfer 64
  *  ALT_SDMMC_BMOD_PBL_E_TRANS128 | 0x6   | Transfer 128
  *  ALT_SDMMC_BMOD_PBL_E_TRANS256 | 0x7   | Transfer 256
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 1
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS1     0x0
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 4
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS4     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 8
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS8     0x2
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 16
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS16    0x3
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 32
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS32    0x4
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 64
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS64    0x5
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 128
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS128   0x6
 /*
  * Enumerated value for register field ALT_SDMMC_BMOD_PBL
- * 
+ *
  * Transfer 256
  */
 #define ALT_SDMMC_BMOD_PBL_E_TRANS256   0x7
@@ -7543,7 +7543,7 @@ typedef volatile struct ALT_SDMMC_RST_N_s  ALT_SDMMC_RST_N_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_BMOD.
  */
 struct ALT_SDMMC_BMOD_s
@@ -7565,25 +7565,25 @@ typedef volatile struct ALT_SDMMC_BMOD_s  ALT_SDMMC_BMOD_t;
 
 /*
  * Register : Poll Demand Register - pldmnd
- * 
+ *
  * See Field Description.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
  *  [31:0] | W      | 0x0   | Poll Demand
- * 
+ *
  */
 /*
  * Field : Poll Demand - pd
- * 
+ *
  * If the OWN bit of a descriptor is not set, the FSM goes to the Suspend state.
  * The host needs to write any value into this register for the IDMAC FSM to resume
  * normal descriptor fetch operation.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_PLDMND_PD register field. */
 #define ALT_SDMMC_PLDMND_PD_LSB        0
@@ -7610,7 +7610,7 @@ typedef volatile struct ALT_SDMMC_BMOD_s  ALT_SDMMC_BMOD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_PLDMND.
  */
 struct ALT_SDMMC_PLDMND_s
@@ -7627,25 +7627,25 @@ typedef volatile struct ALT_SDMMC_PLDMND_s  ALT_SDMMC_PLDMND_t;
 
 /*
  * Register : Descriptor List Base Address Register - dbaddr
- * 
+ *
  * See Field Descriptor
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
- *  [1:0]  | ???    | 0x0   | *UNDEFINED*             
+ *  [1:0]  | ???    | 0x0   | *UNDEFINED*
  *  [31:2] | RW     | 0x0   | Start of Descriptor List
- * 
+ *
  */
 /*
  * Field : Start of Descriptor List - sdl
- * 
+ *
  * Contains the base address of the First Descriptor. This is the byte address
  * divided by 4.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_DBADDR_SDL register field. */
 #define ALT_SDMMC_DBADDR_SDL_LSB        2
@@ -7672,7 +7672,7 @@ typedef volatile struct ALT_SDMMC_PLDMND_s  ALT_SDMMC_PLDMND_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_DBADDR.
  */
 struct ALT_SDMMC_DBADDR_s
@@ -7690,51 +7690,51 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Register : Internal DMAC Status Register - idsts
- * 
+ *
  * Sets Internal DMAC Status Fields
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                     
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------------
- *  [0]     | RW     | 0x0   | Transmit Interrupt              
- *  [1]     | RW     | 0x0   | Receive Interrupt               
- *  [2]     | RW     | 0x0   | Fatal Bus Error Interrupt       
- *  [3]     | ???    | 0x0   | *UNDEFINED*                     
+ *  [0]     | RW     | 0x0   | Transmit Interrupt
+ *  [1]     | RW     | 0x0   | Receive Interrupt
+ *  [2]     | RW     | 0x0   | Fatal Bus Error Interrupt
+ *  [3]     | ???    | 0x0   | *UNDEFINED*
  *  [4]     | RW     | 0x0   | Descriptor Unavailable Interrupt
- *  [5]     | RW     | 0x0   | Card Error Summary              
- *  [7:6]   | ???    | 0x0   | *UNDEFINED*                     
- *  [8]     | RW     | 0x0   | Normal Interrupt Summary        
- *  [9]     | RW     | 0x0   | Abnormal Interrupt Summary      
- *  [12:10] | R      | 0x0   | Error Bits                      
- *  [16:13] | R      | 0x0   | Finite State Machine            
- *  [31:17] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [5]     | RW     | 0x0   | Card Error Summary
+ *  [7:6]   | ???    | 0x0   | *UNDEFINED*
+ *  [8]     | RW     | 0x0   | Normal Interrupt Summary
+ *  [9]     | RW     | 0x0   | Abnormal Interrupt Summary
+ *  [12:10] | R      | 0x0   | Error Bits
+ *  [16:13] | R      | 0x0   | Finite State Machine
+ *  [31:17] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit Interrupt - ti
- * 
+ *
  * Indicates that data transmission is finished for a descriptor.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                              
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:------------------------------------------
- *  ALT_SDMMC_IDSTS_TI_E_CLR   | 0x1   | Clears Transmit Interrupt Status Bit     
+ *  ALT_SDMMC_IDSTS_TI_E_CLR   | 0x1   | Clears Transmit Interrupt Status Bit
  *  ALT_SDMMC_IDSTS_TI_E_NOCLR | 0x0   | No Clear of Transmit Interrupt Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_TI
- * 
+ *
  * Clears Transmit Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_TI_E_CLR    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_TI
- * 
+ *
  * No Clear of Transmit Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_TI_E_NOCLR  0x0
@@ -7758,28 +7758,28 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Receive Interrupt - ri
- * 
+ *
  * Indicates the completion of data reception for a descriptor
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                             
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------------------------
- *  ALT_SDMMC_IDSTS_RI_E_CLR   | 0x1   | Clears Receive Interrupt Status Bit     
+ *  ALT_SDMMC_IDSTS_RI_E_CLR   | 0x1   | Clears Receive Interrupt Status Bit
  *  ALT_SDMMC_IDSTS_RI_E_NOCLR | 0x0   | No Clear of Receive Interrupt Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_RI
- * 
+ *
  * Clears Receive Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_RI_E_CLR    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_RI
- * 
+ *
  * No Clear of Receive Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_RI_E_NOCLR  0x0
@@ -7803,29 +7803,29 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Fatal Bus Error Interrupt - fbe
- * 
+ *
  * Indicates that a Bus Error occurred (IDSTS[12:10]). When setthe DMA disables all
  * its bus accesses.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                     
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-------------------------------------------------
- *  ALT_SDMMC_IDSTS_FBE_E_CLR   | 0x1   | Clears Fatal Bus Error Interrupt Status Bit     
+ *  ALT_SDMMC_IDSTS_FBE_E_CLR   | 0x1   | Clears Fatal Bus Error Interrupt Status Bit
  *  ALT_SDMMC_IDSTS_FBE_E_NOCLR | 0x0   | No Clear of Fatal Bus Error Interrupt Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FBE
- * 
+ *
  * Clears Fatal Bus Error Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_FBE_E_CLR   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FBE
- * 
+ *
  * No Clear of Fatal Bus Error Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_FBE_E_NOCLR 0x0
@@ -7849,31 +7849,31 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Descriptor Unavailable Interrupt - du
- * 
+ *
  * This status bit is set when the descriptor is unavailable due to OWN bit = 0
  * (DES0[31] =0).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                                   
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------------------------------
  *  ALT_SDMMC_IDSTS_DU_E_CLR   | 0x1   | Clears Descriptor Unavailable Interrupt Status
- * :                           |       | Bit                                           
- *  ALT_SDMMC_IDSTS_DU_E_NOCLR | 0x0   | No Clear of Descriptor Unavailable Interrupt  
- * :                           |       | Status Bit                                    
- * 
+ * :                           |       | Bit
+ *  ALT_SDMMC_IDSTS_DU_E_NOCLR | 0x0   | No Clear of Descriptor Unavailable Interrupt
+ * :                           |       | Status Bit
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_DU
- * 
+ *
  * Clears Descriptor Unavailable Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_DU_E_CLR    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_DU
- * 
+ *
  * No Clear of Descriptor Unavailable Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_DU_E_NOCLR  0x0
@@ -7897,43 +7897,43 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Card Error Summary - ces
- * 
+ *
  * Indicates the status of the transaction to/from the card; also present in
  * RINTSTS. Indicates the logical OR of the following bits:
- * 
+ *
  * EBE - End Bit Error
- * 
+ *
  * RTO - Response Timeout/Boot Ack Timeout
- * 
+ *
  * RCRC - Response CRC
- * 
+ *
  * SBE - Start Bit Error
- * 
+ *
  * DRTO - Data Read Timeout/BDS timeout
- * 
+ *
  * DCRC - Data CRC for Receive
- * 
+ *
  * RE - Response Error
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                     
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-------------------------------------------------
- *  ALT_SDMMC_IDSTS_CES_E_CLR   | 0x1   | Clears Card Error Summary Interrupt Status Bit  
+ *  ALT_SDMMC_IDSTS_CES_E_CLR   | 0x1   | Clears Card Error Summary Interrupt Status Bit
  *  ALT_SDMMC_IDSTS_CES_E_NOCLR | 0x0   | No Clear Card Error Summary Interrupt Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_CES
- * 
+ *
  * Clears Card Error Summary Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_CES_E_CLR   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_CES
- * 
+ *
  * No Clear Card Error Summary Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_CES_E_NOCLR 0x0
@@ -7957,35 +7957,35 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Normal Interrupt Summary - nis
- * 
+ *
  * Logical OR of the following:
- * 
+ *
  * IDSTS[0] - Transmit Interrupt
- * 
+ *
  * IDSTS[1] - Receive Interrupt
- * 
+ *
  * Only unmasked bits affect this bit. This is a sticky bit and must be cleared
  * each time a corresponding bit that causes NIS to be set is cleared.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                  
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------------------------------
- *  ALT_SDMMC_IDSTS_NIS_E_CLR   | 0x1   | Clears Normal Interrupt Summary  Status Bit  
+ *  ALT_SDMMC_IDSTS_NIS_E_CLR   | 0x1   | Clears Normal Interrupt Summary  Status Bit
  *  ALT_SDMMC_IDSTS_NIS_E_NOCLR | 0x0   | No Clear Normal Interrupt Summary  Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_NIS
- * 
+ *
  * Clears Normal Interrupt Summary  Status Bit
  */
 #define ALT_SDMMC_IDSTS_NIS_E_CLR   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_NIS
- * 
+ *
  * No Clear Normal Interrupt Summary  Status Bit
  */
 #define ALT_SDMMC_IDSTS_NIS_E_NOCLR 0x0
@@ -8009,37 +8009,37 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Abnormal Interrupt Summary - ais
- * 
+ *
  * Logical OR of the following:
- * 
+ *
  * IDSTS[2] - Fatal Bus Interrupt
- * 
+ *
  * IDSTS[4] - DU bit Interrupt
- * 
+ *
  * IDSTS[5] - Card Error Summary Interrupt
- * 
+ *
  * Only unmasked bits affect this bit. This is a sticky bit and must be cleared
  * each time a corresponding bit that causes AIS to be set is cleared.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                   
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------------------------------
- *  ALT_SDMMC_IDSTS_AIS_E_CLR   | 0x1   | Clears Abnormal Summary Interrupt Status Bit  
+ *  ALT_SDMMC_IDSTS_AIS_E_CLR   | 0x1   | Clears Abnormal Summary Interrupt Status Bit
  *  ALT_SDMMC_IDSTS_AIS_E_NOCLR | 0x0   | No Clear Abnormal Summary Interrupt Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_AIS
- * 
+ *
  * Clears Abnormal Summary Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_AIS_E_CLR   0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_AIS
- * 
+ *
  * No Clear Abnormal Summary Interrupt Status Bit
  */
 #define ALT_SDMMC_IDSTS_AIS_E_NOCLR 0x0
@@ -8063,29 +8063,29 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Error Bits - eb
- * 
+ *
  * Indicates the type of error that caused a Bus Error. Valid only with Fatal Bus
  * Error bit (IDSTS[2]) set. This field does not generate an interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                                    
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:------------------------------------------------
- *  ALT_SDMMC_IDSTS_EB_E_HOSTARBTTX | 0x1   | Host Abort during transmission Status Bit      
+ *  ALT_SDMMC_IDSTS_EB_E_HOSTARBTTX | 0x1   | Host Abort during transmission Status Bit
  *  ALT_SDMMC_IDSTS_EB_E_HOSTARBRX  | 0x2   | Host Abort received during reception Status Bit
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_EB
- * 
+ *
  * Host Abort during transmission Status Bit
  */
 #define ALT_SDMMC_IDSTS_EB_E_HOSTARBTTX 0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_EB
- * 
+ *
  * Host Abort received during reception Status Bit
  */
 #define ALT_SDMMC_IDSTS_EB_E_HOSTARBRX  0x2
@@ -8109,77 +8109,77 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
 
 /*
  * Field : Finite State Machine - fsm
- * 
+ *
  * DMAC FSM present state.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description    
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:----------------
- *  ALT_SDMMC_IDSTS_FSM_E_DMAIDLE      | 0x0   | DMA IDLE       
- *  ALT_SDMMC_IDSTS_FSM_E_DMASUSPEND   | 0x1   | DMA SUSPEND    
- *  ALT_SDMMC_IDSTS_FSM_E_DESCRD       | 0x2   | DESC_RD        
- *  ALT_SDMMC_IDSTS_FSM_E_DESCCHK      | 0x3   | DESC_CHK       
+ *  ALT_SDMMC_IDSTS_FSM_E_DMAIDLE      | 0x0   | DMA IDLE
+ *  ALT_SDMMC_IDSTS_FSM_E_DMASUSPEND   | 0x1   | DMA SUSPEND
+ *  ALT_SDMMC_IDSTS_FSM_E_DESCRD       | 0x2   | DESC_RD
+ *  ALT_SDMMC_IDSTS_FSM_E_DESCCHK      | 0x3   | DESC_CHK
  *  ALT_SDMMC_IDSTS_FSM_E_DMARDREQWAIT | 0x4   | DMA RD REQ WAIT
  *  ALT_SDMMC_IDSTS_FSM_E_DMAWRREQWAIT | 0x5   | DMA WR REQ WAIT
- *  ALT_SDMMC_IDSTS_FSM_E_DMARD        | 0x6   | DMA RD         
- *  ALT_SDMMC_IDSTS_FSM_E_DMAWR        | 0x7   | DMA WR         
- *  ALT_SDMMC_IDSTS_FSM_E_DECCLOSE     | 0x8   | DESC CLOSE     
- * 
+ *  ALT_SDMMC_IDSTS_FSM_E_DMARD        | 0x6   | DMA RD
+ *  ALT_SDMMC_IDSTS_FSM_E_DMAWR        | 0x7   | DMA WR
+ *  ALT_SDMMC_IDSTS_FSM_E_DECCLOSE     | 0x8   | DESC CLOSE
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DMA IDLE
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DMAIDLE       0x0
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DMA SUSPEND
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DMASUSPEND    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DESC_RD
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DESCRD        0x2
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DESC_CHK
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DESCCHK       0x3
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DMA RD REQ WAIT
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DMARDREQWAIT  0x4
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DMA WR REQ WAIT
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DMAWRREQWAIT  0x5
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DMA RD
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DMARD         0x6
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DMA WR
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DMAWR         0x7
 /*
  * Enumerated value for register field ALT_SDMMC_IDSTS_FSM
- * 
+ *
  * DESC CLOSE
  */
 #define ALT_SDMMC_IDSTS_FSM_E_DECCLOSE      0x8
@@ -8209,7 +8209,7 @@ typedef volatile struct ALT_SDMMC_DBADDR_s  ALT_SDMMC_DBADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_IDSTS.
  */
 struct ALT_SDMMC_IDSTS_s
@@ -8237,50 +8237,50 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Register : Internal DMAC Interrupt Enable Register - idinten
- * 
+ *
  * Various DMA Interrupt Enable Status
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                        
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------------------
- *  [0]     | RW     | 0x0   | Transmit Interrupt Enable          
- *  [1]     | RW     | 0x0   | Receive Interrupt Enable           
- *  [2]     | RW     | 0x0   | Fatal Bus Error                    
- *  [3]     | ???    | 0x0   | *UNDEFINED*                        
- *  [4]     | RW     | 0x0   | Descriptor Unavailable Interrupt   
+ *  [0]     | RW     | 0x0   | Transmit Interrupt Enable
+ *  [1]     | RW     | 0x0   | Receive Interrupt Enable
+ *  [2]     | RW     | 0x0   | Fatal Bus Error
+ *  [3]     | ???    | 0x0   | *UNDEFINED*
+ *  [4]     | RW     | 0x0   | Descriptor Unavailable Interrupt
  *  [5]     | RW     | 0x0   | Card Error Summary Interrupt Enable
- *  [7:6]   | ???    | 0x0   | *UNDEFINED*                        
- *  [8]     | RW     | 0x0   | Normal Interrupt Summary Enable    
- *  [9]     | RW     | 0x0   | Abnormal Interrupt Summary Enable. 
- *  [31:10] | ???    | 0x0   | *UNDEFINED*                        
- * 
+ *  [7:6]   | ???    | 0x0   | *UNDEFINED*
+ *  [8]     | RW     | 0x0   | Normal Interrupt Summary Enable
+ *  [9]     | RW     | 0x0   | Abnormal Interrupt Summary Enable.
+ *  [31:10] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit Interrupt Enable - ti
- * 
+ *
  * Enables and Disables Transmit Interrupt when Normal Interrupt Summary Enable is
  * set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                   
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-------------------------------
- *  ALT_SDMMC_IDINTEN_TI_E_END  | 0x1   | Transmit Interrupt is enabled 
+ *  ALT_SDMMC_IDINTEN_TI_E_END  | 0x1   | Transmit Interrupt is enabled
  *  ALT_SDMMC_IDINTEN_TI_E_DISD | 0x0   | Transmit Interrupt is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_TI
- * 
+ *
  * Transmit Interrupt is enabled
  */
 #define ALT_SDMMC_IDINTEN_TI_E_END  0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_TI
- * 
+ *
  * Transmit Interrupt is disabled
  */
 #define ALT_SDMMC_IDINTEN_TI_E_DISD 0x0
@@ -8304,29 +8304,29 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Field : Receive Interrupt Enable - ri
- * 
+ *
  * Enables and Disables Receive Interrupt  when Normal Interrupt Summary Enable is
  * set.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                  
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:------------------------------
- *  ALT_SDMMC_IDINTEN_RI_E_END  | 0x1   | Receive Interrupt is enabled 
+ *  ALT_SDMMC_IDINTEN_RI_E_END  | 0x1   | Receive Interrupt is enabled
  *  ALT_SDMMC_IDINTEN_RI_E_DISD | 0x0   | Receive Interrupt is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_RI
- * 
+ *
  * Receive Interrupt is enabled
  */
 #define ALT_SDMMC_IDINTEN_RI_E_END  0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_RI
- * 
+ *
  * Receive Interrupt is disabled
  */
 #define ALT_SDMMC_IDINTEN_RI_E_DISD 0x0
@@ -8350,29 +8350,29 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Field : Fatal Bus Error - fbe
- * 
+ *
  * When set with Abnormal Interrupt Summary Enable, the Fatal Bus Error Interrupt
  * is enabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                          
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------------------------
- *  ALT_SDMMC_IDINTEN_FBE_E_END  | 0x1   | Fatal Bus Error Interrupt is enabled 
+ *  ALT_SDMMC_IDINTEN_FBE_E_END  | 0x1   | Fatal Bus Error Interrupt is enabled
  *  ALT_SDMMC_IDINTEN_FBE_E_DISD | 0x0   | Fatal Bus Error Interrupt is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_FBE
- * 
+ *
  * Fatal Bus Error Interrupt is enabled
  */
 #define ALT_SDMMC_IDINTEN_FBE_E_END     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_FBE
- * 
+ *
  * Fatal Bus Error Interrupt is disabled
  */
 #define ALT_SDMMC_IDINTEN_FBE_E_DISD    0x0
@@ -8396,29 +8396,29 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Field : Descriptor Unavailable Interrupt - du
- * 
+ *
  * When set along with Abnormal Interrupt Summary Enable, the DU interrupt is
  * enabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                                 
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:---------------------------------------------
- *  ALT_SDMMC_IDINTEN_DU_E_END  | 0x1   | Descriptor Unavailable Interrupt is enabled 
+ *  ALT_SDMMC_IDINTEN_DU_E_END  | 0x1   | Descriptor Unavailable Interrupt is enabled
  *  ALT_SDMMC_IDINTEN_DU_E_DISD | 0x0   | Descriptor Unavailable Interrupt is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_DU
- * 
+ *
  * Descriptor Unavailable Interrupt is enabled
  */
 #define ALT_SDMMC_IDINTEN_DU_E_END  0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_DU
- * 
+ *
  * Descriptor Unavailable Interrupt is disabled
  */
 #define ALT_SDMMC_IDINTEN_DU_E_DISD 0x0
@@ -8442,28 +8442,28 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Field : Card Error Summary Interrupt Enable - ces
- * 
+ *
  * Enable and disable Card Error Interrupt Summary
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                             
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:-----------------------------------------
- *  ALT_SDMMC_IDINTEN_CES_E_END  | 0x1   | Card Error Summary Interrupt is enabled 
+ *  ALT_SDMMC_IDINTEN_CES_E_END  | 0x1   | Card Error Summary Interrupt is enabled
  *  ALT_SDMMC_IDINTEN_CES_E_DISD | 0x0   | Card Error Summary Interrupt is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_CES
- * 
+ *
  * Card Error Summary Interrupt is enabled
  */
 #define ALT_SDMMC_IDINTEN_CES_E_END     0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_CES
- * 
+ *
  * Card Error Summary Interrupt is disabled
  */
 #define ALT_SDMMC_IDINTEN_CES_E_DISD    0x0
@@ -8487,28 +8487,28 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Field : Normal Interrupt Summary Enable - ni
- * 
+ *
  * Enable and Disable Normal Interrupt Summary
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                         
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-------------------------------------
- *  ALT_SDMMC_IDINTEN_NI_E_END  | 0x1   | Normal Interrupt Summary is enabled 
+ *  ALT_SDMMC_IDINTEN_NI_E_END  | 0x1   | Normal Interrupt Summary is enabled
  *  ALT_SDMMC_IDINTEN_NI_E_DISD | 0x0   | Normal Interrupt Summary is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_NI
- * 
+ *
  * Normal Interrupt Summary is enabled
  */
 #define ALT_SDMMC_IDINTEN_NI_E_END  0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_NI
- * 
+ *
  * Normal Interrupt Summary is disabled
  */
 #define ALT_SDMMC_IDINTEN_NI_E_DISD 0x0
@@ -8532,34 +8532,34 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
 
 /*
  * Field : Abnormal Interrupt Summary Enable. - ai
- * 
+ *
  * This bit enables the following bits:
- * 
+ *
  * IDINTEN[2] - Fatal Bus Error Interrupt
- * 
+ *
  * IDINTEN[4] - DU Interrupt
- * 
+ *
  * IDINTEN[5] - Card Error Summary Interrupt
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                           
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:---------------------------------------
- *  ALT_SDMMC_IDINTEN_AI_E_END  | 0x1   | Abnormal Interrupt Summary is enabled 
+ *  ALT_SDMMC_IDINTEN_AI_E_END  | 0x1   | Abnormal Interrupt Summary is enabled
  *  ALT_SDMMC_IDINTEN_AI_E_DISD | 0x0   | Abnormal Interrupt Summary is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_AI
- * 
+ *
  * Abnormal Interrupt Summary is enabled
  */
 #define ALT_SDMMC_IDINTEN_AI_E_END  0x1
 /*
  * Enumerated value for register field ALT_SDMMC_IDINTEN_AI
- * 
+ *
  * Abnormal Interrupt Summary is disabled
  */
 #define ALT_SDMMC_IDINTEN_AI_E_DISD 0x0
@@ -8589,7 +8589,7 @@ typedef volatile struct ALT_SDMMC_IDSTS_s  ALT_SDMMC_IDSTS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_IDINTEN.
  */
 struct ALT_SDMMC_IDINTEN_s
@@ -8615,24 +8615,24 @@ typedef volatile struct ALT_SDMMC_IDINTEN_s  ALT_SDMMC_IDINTEN_t;
 
 /*
  * Register : Current Host Descriptor Address Register - dscaddr
- * 
+ *
  * See Field Description.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------------------
  *  [31:0] | R      | 0x0   | Current Host Descriptor Address Register
- * 
+ *
  */
 /*
  * Field : Current Host Descriptor Address Register - hda
- * 
+ *
  * Cleared on reset. Pointer updated by IDMAC during operation. This register
  * points to the start address of the current descriptor read by the IDMAC.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_DSCADDR_HDA register field. */
 #define ALT_SDMMC_DSCADDR_HDA_LSB        0
@@ -8659,7 +8659,7 @@ typedef volatile struct ALT_SDMMC_IDINTEN_s  ALT_SDMMC_IDINTEN_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_DSCADDR.
  */
 struct ALT_SDMMC_DSCADDR_s
@@ -8676,24 +8676,24 @@ typedef volatile struct ALT_SDMMC_DSCADDR_s  ALT_SDMMC_DSCADDR_t;
 
 /*
  * Register : Current Buffer Descriptor Address Register - bufaddr
- * 
+ *
  * See Field Description.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [31:0] | R      | 0x0   | Host Buffer Address Pointer
- * 
+ *
  */
 /*
  * Field : Host Buffer Address Pointer - hba
- * 
+ *
  * Cleared on Reset. Pointer updated by IDMAC during operation. This register
  * points to the current Data Buffer Address being accessed by the IDMAC.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_BUFADDR_HBA register field. */
 #define ALT_SDMMC_BUFADDR_HBA_LSB        0
@@ -8720,7 +8720,7 @@ typedef volatile struct ALT_SDMMC_DSCADDR_s  ALT_SDMMC_DSCADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_BUFADDR.
  */
 struct ALT_SDMMC_BUFADDR_s
@@ -8737,44 +8737,44 @@ typedef volatile struct ALT_SDMMC_BUFADDR_s  ALT_SDMMC_BUFADDR_t;
 
 /*
  * Register : Card Threshold Control Register - cardthrctl
- * 
+ *
  * See Field descriptions
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description               
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------
  *  [0]     | RW     | 0x0   | Card Read Threshold Enable
- *  [15:1]  | ???    | 0x0   | *UNDEFINED*               
- *  [27:16] | RW     | 0x0   | Card Read Threshold       
- *  [31:28] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [15:1]  | ???    | 0x0   | *UNDEFINED*
+ *  [27:16] | RW     | 0x0   | Card Read Threshold
+ *  [31:28] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Card Read Threshold Enable - cardrdthren
- * 
+ *
  * Host Controller initiates Read Transfer only if CardRdThreshold amount of space
  * is available in receive FIFO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                    
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:--------------------------------
- *  ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_E_END  | 0x1   | Card Read Threshold is enabled 
+ *  ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_E_END  | 0x1   | Card Read Threshold is enabled
  *  ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_E_DISD | 0x0   | Card Read Threshold is disabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_CARDTHRCTL_CARDRDTHREN
- * 
+ *
  * Card Read Threshold is enabled
  */
 #define ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_E_END  0x1
 /*
  * Enumerated value for register field ALT_SDMMC_CARDTHRCTL_CARDRDTHREN
- * 
+ *
  * Card Read Threshold is disabled
  */
 #define ALT_SDMMC_CARDTHRCTL_CARDRDTHREN_E_DISD 0x0
@@ -8798,11 +8798,11 @@ typedef volatile struct ALT_SDMMC_BUFADDR_s  ALT_SDMMC_BUFADDR_t;
 
 /*
  * Field : Card Read Threshold - cardrdthreshold
- * 
+ *
  * Card Read Threshold size
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_CARDTHRCTL_CARDRDTHRESHOLD register field. */
 #define ALT_SDMMC_CARDTHRCTL_CARDRDTHRESHOLD_LSB        16
@@ -8829,7 +8829,7 @@ typedef volatile struct ALT_SDMMC_BUFADDR_s  ALT_SDMMC_BUFADDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_CARDTHRCTL.
  */
 struct ALT_SDMMC_CARDTHRCTL_s
@@ -8849,41 +8849,41 @@ typedef volatile struct ALT_SDMMC_CARDTHRCTL_s  ALT_SDMMC_CARDTHRCTL_t;
 
 /*
  * Register : Back End Power Register - back_end_power_r
- * 
+ *
  * See Field Description
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description   
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------
  *  [15:0]  | RW     | 0x0   | Back End Power
- *  [31:16] | ???    | 0x0   | *UNDEFINED*   
- * 
+ *  [31:16] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Back End Power - back_end_power
- * 
+ *
  * Back end power operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                 | Value | Description                                
+ *
+ *  Enum                                                 | Value | Description
  * :-----------------------------------------------------|:------|:--------------------------------------------
  *  ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER_E_BACKEND1 | 0x1   | Back-end Power supplied to card only 1 card
- *  ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER_E_BACKEND0 | 0x0   | Off Reset                                  
- * 
+ *  ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER_E_BACKEND0 | 0x0   | Off Reset
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER
- * 
+ *
  * Back-end Power supplied to card only 1 card
  */
 #define ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER_E_BACKEND1    0x1
 /*
  * Enumerated value for register field ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER
- * 
+ *
  * Off Reset
  */
 #define ALT_SDMMC_BACK_END_POWER_R_BACK_END_POWER_E_BACKEND0    0x0
@@ -8913,7 +8913,7 @@ typedef volatile struct ALT_SDMMC_CARDTHRCTL_s  ALT_SDMMC_CARDTHRCTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_BACK_END_POWER_R.
  */
 struct ALT_SDMMC_BACK_END_POWER_R_s
@@ -8931,25 +8931,25 @@ typedef volatile struct ALT_SDMMC_BACK_END_POWER_R_s  ALT_SDMMC_BACK_END_POWER_R
 
 /*
  * Register : Data FIFO Access - data
- * 
+ *
  * Provides read/write access to data FIFO. Addresses 0x200 and above are mapped to
  * the data FIFO. More than one address is mapped to data FIFO so that FIFO can be
  * accessed using bursts.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------
- *  [31:0] | RW     | Unknown | FIFO Data  
- * 
+ *  [31:0] | RW     | Unknown | FIFO Data
+ *
  */
 /*
  * Field : FIFO Data - value
- * 
+ *
  * Provides read/write access to data FIFO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SDMMC_DATA_VALUE register field. */
 #define ALT_SDMMC_DATA_VALUE_LSB        0
@@ -8976,7 +8976,7 @@ typedef volatile struct ALT_SDMMC_BACK_END_POWER_R_s  ALT_SDMMC_BACK_END_POWER_R
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SDMMC_DATA.
  */
 struct ALT_SDMMC_DATA_s
@@ -8999,7 +8999,7 @@ typedef volatile struct ALT_SDMMC_DATA_s  ALT_SDMMC_DATA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SDMMC.
  */
 struct ALT_SDMMC_s

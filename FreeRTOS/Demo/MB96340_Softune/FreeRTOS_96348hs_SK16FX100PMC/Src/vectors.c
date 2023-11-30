@@ -64,7 +64,7 @@ extern __interrupt void vPortYieldDelayed( void );
    Use following statements to define vectors. All resource related
    vectors are predefined. Remaining software interrupts can be added here
    as well.
-   NOTE: If software interrupts 0 to 7 are defined here, this might 
+   NOTE: If software interrupts 0 to 7 are defined here, this might
    conflict with the reset vector in the start-up file.
 -----------------------------------------------------------------------------*/
 #pragma intvect DefaultIRQHandler 11		/* Non-maskable Interrupt       */
@@ -140,8 +140,8 @@ extern __interrupt void vPortYieldDelayed( void );
 #pragma intvect DefaultIRQHandler 77		/* ALARM0                       */
 #pragma intvect DefaultIRQHandler 78		/* ALARM1                       */
 
-#if ( INCLUDE_TraceListTasks == 1 )  
-	#pragma intvect UART0_TraceRxISR       79   /* LIN-UART 0 RX                */	
+#if ( INCLUDE_TraceListTasks == 1 )
+	#pragma intvect UART0_TraceRxISR       79   /* LIN-UART 0 RX                */
 	#pragma intvect DefaultIRQHandler       80   /* LIN-UART 0 TX                */
 #else
 	#pragma intvect UART0_RxISR 79   /* LIN-UART 0 RX                */
@@ -170,7 +170,7 @@ extern __interrupt void vPortYieldDelayed( void );
 /*---------------------------------------------------------------------------
    DefaultIRQHandler()
    This function is a placeholder for all vector definitions. Either use
-   your own placeholder or add necessary code here. 
+   your own placeholder or add necessary code here.
 -----------------------------------------------------------------------------*/
 __interrupt void DefaultIRQHandler( void )
 {

@@ -24,7 +24,7 @@
  *
  */
 
-/* 
+/*
 Changes from V2.0.0
 
 	+ Use scheduler suspends in place of critical sections.
@@ -110,7 +110,7 @@ unsigned char ucBit;
 
 			PORTB = ucCurrentOutputValue;
 		}
-		xTaskResumeAll();			
+		xTaskResumeAll();
 	}
 }
 

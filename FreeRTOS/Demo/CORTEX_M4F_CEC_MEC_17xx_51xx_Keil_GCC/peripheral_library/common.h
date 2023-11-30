@@ -37,7 +37,7 @@
 /** @file common.h
 * \brief header file including common headers from various modules
 * \author App Firmware Team
-* 
+*
 **********************************************************************************/
 #ifndef _COMMON_H_
 #define _COMMON_H_

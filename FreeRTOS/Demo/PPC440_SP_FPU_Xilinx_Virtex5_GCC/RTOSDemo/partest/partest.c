@@ -40,7 +40,7 @@
 #define partstCHANNEL_1		0x01
 #define partstMAX_8BIT_LED	0x07
 
-/* The outputs are split into two IO sections, these variables maintain the 
+/* The outputs are split into two IO sections, these variables maintain the
 current value of either section. */
 static unsigned portBASE_TYPE uxCurrentOutput8Bit, uxCurrentOutput5Bit;
 
@@ -74,7 +74,7 @@ unsigned portBASE_TYPE uxBaseAddress, *puxCurrentValue;
 		{
 			uxBaseAddress = XPAR_LEDS_8BIT_BASEADDR;
 			puxCurrentValue = &uxCurrentOutput5Bit;
-		}	
+		}
 		else
 		{
 			uxBaseAddress = XPAR_LEDS_POSITIONS_BASEADDR;
@@ -115,7 +115,7 @@ unsigned portBASE_TYPE uxBaseAddress, *puxCurrentValue;
 
 			uxBaseAddress = XPAR_LEDS_8BIT_BASEADDR;
 			puxCurrentValue = &uxCurrentOutput5Bit;
-		}	
+		}
 		else
 		{
 			uxBaseAddress = XPAR_LEDS_POSITIONS_BASEADDR;

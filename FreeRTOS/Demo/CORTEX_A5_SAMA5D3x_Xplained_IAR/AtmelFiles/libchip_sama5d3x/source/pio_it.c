@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -185,7 +185,7 @@ extern void PIO_InitializeInterrupts( uint32_t dwPriority )
     PIOE->PIO_IDR = 0xFFFFFFFF ;
     IRQ_ConfigureIT(ID_PIOE, dwPriority, PIO_IT_InterruptHandler);
     IRQ_EnableIT(ID_PIOE);
-   
+
 }
 
 /**

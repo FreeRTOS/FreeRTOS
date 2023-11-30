@@ -293,19 +293,19 @@ const DeviceVectors exception_table = {
 };
 
 
-#ifdef ENABLE_TCM 
+#ifdef ENABLE_TCM
 /** \brief  TCM memory enable
 
 	The function enables TCM memories
  */
-__STATIC_INLINE void TCM_Enable(void) 
+__STATIC_INLINE void TCM_Enable(void)
 {
 
 	__DSB();
 	__ISB();
-	SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk 
+	SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk
 					| SCB_ITCMCR_RETEN_Msk);
-	SCB->DTCMCR = ( SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk 
+	SCB->DTCMCR = ( SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk
 					| SCB_DTCMCR_RETEN_Msk);
 	__DSB();
 	__ISB();
@@ -316,7 +316,7 @@ __STATIC_INLINE void TCM_Enable(void)
 
 	The function enables TCM memories
  */
-__STATIC_INLINE void TCM_Disable(void) 
+__STATIC_INLINE void TCM_Disable(void)
 {
 
 	__DSB();
@@ -354,20 +354,20 @@ void Reset_Handler(void)
 		pSrc = (uint32_t *) & _sfixed;
 		SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
-	#ifdef ENABLE_TCM 
+	#ifdef ENABLE_TCM
 	// 32 Kb
-		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB 
+		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB
 						| EEFC_FCR_FARG(8));
 		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_SGPB
 						| EEFC_FCR_FARG(7));
- 
+
 		TCM_Enable();
 	#else
-		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB 
+		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB
 						| EEFC_FCR_FARG(8));
-		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB 
+		EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB
 						| EEFC_FCR_FARG(7));
-	
+
 		TCM_Disable();
 	#endif
 

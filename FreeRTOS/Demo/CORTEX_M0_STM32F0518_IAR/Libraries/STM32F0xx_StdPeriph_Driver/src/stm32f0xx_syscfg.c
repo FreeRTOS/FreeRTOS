@@ -4,21 +4,21 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file provides firmware functions to manage the following 
+  * @brief   This file provides firmware functions to manage the following
   *          functionalities of the SYSCFG peripheral:
-  *           + Remapping the memory mapped at 0x00000000  
+  *           + Remapping the memory mapped at 0x00000000
   *           + Remapping the DMA channels
-  *           + Enabling I2C fast mode plus driving capability for I2C pins   
+  *           + Enabling I2C fast mode plus driving capability for I2C pins
   *           + Configuring the EXTI lines connection to the GPIO port
   *           + Configuring the CFGR2 features (Connecting some internal signal
   *             to the break input of TIM1)
-  *   
+  *
   *  @verbatim
  ===============================================================================
                      ##### How to use this driver #####
  ===============================================================================
-    [..] 
-               The SYSCFG registers can be accessed only when the SYSCFG 
+    [..]
+               The SYSCFG registers can be accessed only when the SYSCFG
                interface APB clock is enabled.
                To enable SYSCFG APB clock use:
                RCC_APBPeriphClockCmd(RCC_APBPeriph_SYSCFG, ENABLE).
@@ -48,10 +48,10 @@
   * @{
   */
 
-/** @defgroup SYSCFG 
+/** @defgroup SYSCFG
   * @brief SYSCFG driver modules
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -62,10 +62,10 @@
 
 /** @defgroup SYSCFG_Private_Functions
   * @{
-  */ 
+  */
 
 /** @defgroup SYSCFG_Group1 SYSCFG Initialization and Configuration functions
- *  @brief   SYSCFG Initialization and Configuration functions 
+ *  @brief   SYSCFG Initialization and Configuration functions
  *
 @verbatim
  ===============================================================================
@@ -103,7 +103,7 @@ void SYSCFG_DeInit(void)
   * @brief  Configures the memory mapping at address 0x00000000.
   * @param  SYSCFG_MemoryRemap: selects the memory remapping.
   *   This parameter can be one of the following values:
-  *     @arg SYSCFG_MemoryRemap_Flash: Main Flash memory mapped at 0x00000000  
+  *     @arg SYSCFG_MemoryRemap_Flash: Main Flash memory mapped at 0x00000000
   *     @arg SYSCFG_MemoryRemap_SystemMemory: System Flash memory mapped at 0x00000000
   *     @arg SYSCFG_MemoryRemap_SRAM: Embedded SRAM mapped at 0x00000000
   * @retval None
@@ -137,11 +137,11 @@ void SYSCFG_MemoryRemapConfig(uint32_t SYSCFG_MemoryRemap)
   *     @arg SYSCFG_DMARemap_USART1Rx: Remap USART1 Rx DMA requests from channel3 to channel5
   *     @arg SYSCFG_DMARemap_USART1Tx: Remap USART1 Tx DMA requests from channel2 to channel4
   *     @arg SYSCFG_DMARemap_ADC1: Remap ADC1 DMA requests from channel1 to channel2
-  * @param  NewState: new state of the DMA channel remapping. 
+  * @param  NewState: new state of the DMA channel remapping.
   *         This parameter can be: ENABLE or DISABLE.
   * @note   When enabled, DMA channel of the selected peripheral is remapped
   * @note   When disabled, Default DMA channel is mapped to the selected peripheral
-  * @note 
+  * @note
   *           By default TIM17 DMA requests is mapped to channel 1
   *           use SYSCFG_DMAChannelRemapConfig(SYSCFG_DMARemap_TIM17, Enable)
   *           to remap TIM17 DMA requests to channel 2
@@ -175,7 +175,7 @@ void SYSCFG_DMAChannelRemapConfig(uint32_t SYSCFG_DMARemap, FunctionalState NewS
   *     @arg SYSCFG_I2CFastModePlus_PB7: Configure fast mode plus driving capability for PB7
   *     @arg SYSCFG_I2CFastModePlus_PB8: Configure fast mode plus driving capability for PB8
   *     @arg SYSCFG_I2CFastModePlus_PB9: Configure fast mode plus driving capability for PB9
-  * @param  NewState: new state of the DMA channel remapping. 
+  * @param  NewState: new state of the DMA channel remapping.
   *         This parameter can be: ENABLE or DISABLE.
   * @note   ENABLE:  Enable fast mode plus driving capability for selected pin
   * @note   DISABLE: Disable fast mode plus driving capability for selected pin
@@ -201,7 +201,7 @@ void SYSCFG_I2CFastModePlusConfig(uint32_t SYSCFG_I2CFastModePlus, FunctionalSta
 
 /**
   * @brief  Selects the GPIO pin used as EXTI Line.
-  * @param  EXTI_PortSourceGPIOx : selects the GPIO port to be used as source 
+  * @param  EXTI_PortSourceGPIOx : selects the GPIO port to be used as source
   *                                for EXTI lines where x can be (A, B, C, D or F).
   * @param  EXTI_PinSourcex: specifies the EXTI line to be configured.
   *         This parameter can be EXTI_PinSourcex where x can be (0..15)
@@ -214,7 +214,7 @@ void SYSCFG_EXTILineConfig(uint8_t EXTI_PortSourceGPIOx, uint8_t EXTI_PinSourcex
   /* Check the parameters */
   assert_param(IS_EXTI_PORT_SOURCE(EXTI_PortSourceGPIOx));
   assert_param(IS_EXTI_PIN_SOURCE(EXTI_PinSourcex));
-  
+
   tmp = ((uint32_t)0x0F) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03));
   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] &= ~tmp;
   SYSCFG->EXTICR[EXTI_PinSourcex >> 0x02] |= (((uint32_t)EXTI_PortSourceGPIOx) << (0x04 * (EXTI_PinSourcex & (uint8_t)0x03)));
@@ -241,7 +241,7 @@ void SYSCFG_BreakConfig(uint32_t SYSCFG_Break)
 
 /**
   * @brief  Checks whether the specified SYSCFG flag is set or not.
-  * @param  SYSCFG_Flag: specifies the SYSCFG flag to check. 
+  * @param  SYSCFG_Flag: specifies the SYSCFG flag to check.
   *   This parameter can be one of the following values:
   *     @arg SYSCFG_FLAG_PE: SRAM parity error flag.
   * @retval The new state of SYSCFG_Flag (SET or RESET).
@@ -289,13 +289,13 @@ void SYSCFG_ClearFlag(uint32_t SYSCFG_Flag)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

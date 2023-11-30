@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -39,7 +39,7 @@
  *    request.
  * -# Receive a CDCLineCoding object from the host after a SetLineCoding
  *    request.
- *  
+ *
  */
 
 #ifndef _CDCREQUESTS_H_

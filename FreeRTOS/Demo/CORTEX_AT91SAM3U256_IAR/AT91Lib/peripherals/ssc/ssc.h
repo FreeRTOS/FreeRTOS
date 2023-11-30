@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -67,7 +67,7 @@
 /// \page "SSC configuration macros"
 /// This page lists several macros which are used when configuring a SSC
 /// peripheral.
-/// 
+///
 /// !Macros
 /// - SSC_STTDLY
 /// - SSC_PERIOD
@@ -92,7 +92,7 @@
 #define SSC_DATNB(samples)      ((samples -1) << 8)
 
 /// Calculates the value of the FSLEN field of the Transmit Frame Mode Register
-/// of an SSC interface, given the number of transmit clock periods that the 
+/// of an SSC interface, given the number of transmit clock periods that the
 /// frame sync signal should take.
 #define SSC_FSLEN(periods)      ((periods - 1) << 16)
 //------------------------------------------------------------------------------

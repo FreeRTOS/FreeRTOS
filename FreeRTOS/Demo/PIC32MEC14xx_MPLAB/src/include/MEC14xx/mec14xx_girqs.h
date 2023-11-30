@@ -26,7 +26,7 @@
 
 
 
-#ifndef _MEC14XX_GIRQS_H 
+#ifndef _MEC14XX_GIRQS_H
 #define _MEC14XX_GIRQS_H
 
 #ifdef __cplusplus
@@ -511,7 +511,7 @@ extern "C" {
 #define GIRQ19_PRI_B (JTVIC_PRI_VAL(0, GIRQ19_SRC08_PRI) )
 
 #define GIRQ19_PRI_C (0ul)
-#define GIRQ19_PRI_D (0ul) 
+#define GIRQ19_PRI_D (0ul)
 
 
 /*
@@ -537,7 +537,7 @@ extern "C" {
 #define GIRQ20_PRI_D (0ul)
 
 
-/* GIRQ21 is for Wake purposes. It only wakes IA logic and 
+/* GIRQ21 is for Wake purposes. It only wakes IA logic and
  * does not fire an interrupt to the CPU.
  * No GIRQ21 sources are defined!
  */

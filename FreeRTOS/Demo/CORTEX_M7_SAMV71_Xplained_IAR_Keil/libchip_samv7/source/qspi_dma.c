@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -86,8 +86,8 @@ static uint32_t qspiDmaRxChannel;
  * \brief SPI xDMA Rx callback
  * Invoked on SPi DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to Qspid instance.   
- */ 
+ * \param pArg Pointer to callback argument - Pointer to Qspid instance.
+ */
 static void QSPID_Rx_Cb(uint32_t channel, Qspid* pArg)
 {
     QspidCmd *pQspidCmd = pArg->pCurrentCommand;
@@ -98,7 +98,7 @@ static void QSPID_Rx_Cb(uint32_t channel, Qspid* pArg)
     /* Disable the SPI TX & RX */
     QSPI_Disable ( pQspiHw );
 
-    /* Configure and enable interrupt on RC compare */    
+    /* Configure and enable interrupt on RC compare */
     NVIC_ClearPendingIRQ(XDMAC_IRQn);
     NVIC_DisableIRQ(XDMAC_IRQn);
 
@@ -142,7 +142,7 @@ static uint8_t _qspid_configureDmaChannels( Qspid* pQspid )
     /* Allocate a DMA channel for SPI0/1 TX. */
     qspiDmaTxChannel = XDMAD_AllocateChannel( pQspid->pXdmad, XDMAD_TRANSFER_MEMORY, pQspid->spiId);
     {
-        if ( qspiDmaTxChannel == XDMAD_ALLOC_FAILED ) 
+        if ( qspiDmaTxChannel == XDMAD_ALLOC_FAILED )
         {
             return QSPID_ERROR;
         }
@@ -150,7 +150,7 @@ static uint8_t _qspid_configureDmaChannels( Qspid* pQspid )
     /* Allocate a DMA channel for SPI0/1 RX. */
     qspiDmaRxChannel = XDMAD_AllocateChannel( pQspid->pXdmad, pQspid->spiId, XDMAD_TRANSFER_MEMORY);
     {
-        if ( qspiDmaRxChannel == XDMAD_ALLOC_FAILED ) 
+        if ( qspiDmaRxChannel == XDMAD_ALLOC_FAILED )
         {
             return QSPID_ERROR;
         }
@@ -186,7 +186,7 @@ static uint8_t _spid_configureLinkList(Qspi *pQspiHw, void *pXdmad, QspidCmd *pC
 
 
 
-    /* Setup TX  */ 
+    /* Setup TX  */
 
     xdmadTxCfg.mbr_ubc = TX_MICROBLOCK_LEN;
     xdmadTxCfg.mbr_sa = (uint32_t)pCommand->pTxBuff;
@@ -205,7 +205,7 @@ static uint8_t _spid_configureLinkList(Qspi *pQspiHw, void *pXdmad, QspidCmd *pC
     xdmadTxCfg.mbr_bc = 0;
     xdmadTxCfg.mbr_ds =  0;
     xdmadTxCfg.mbr_sus = 0;
-    xdmadTxCfg.mbr_dus = 0; 
+    xdmadTxCfg.mbr_dus = 0;
 
 
     /* Setup RX Link List */
@@ -227,7 +227,7 @@ static uint8_t _spid_configureLinkList(Qspi *pQspiHw, void *pXdmad, QspidCmd *pC
     xdmadRxCfg.mbr_bc = 0;
     xdmadRxCfg.mbr_ds =  0;
     xdmadRxCfg.mbr_sus = 0;
-    xdmadRxCfg.mbr_dus = 0; 
+    xdmadRxCfg.mbr_dus = 0;
 
 
     if (XDMAD_ConfigureTransfer( pXdmad, qspiDmaRxChannel, &xdmadRxCfg, 0, 0))
@@ -253,10 +253,10 @@ static uint8_t _spid_configureLinkList(Qspi *pQspiHw, void *pXdmad, QspidCmd *pC
  * \param pQspid  Pointer to a Qspid instance.
  * \param pQspiHw Associated SPI peripheral.
  * \param spiId  SPI peripheral identifier.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
 uint32_t QSPID_Configure( Qspid *pQspid ,
-        Qspi *pQspiHw , 
+        Qspi *pQspiHw ,
         uint8_t spiId,
         uint8_t QspiMode,
         sXdmad *pXdmad )
@@ -310,7 +310,7 @@ uint32_t QSPID_SendCommand( Qspid *pQspid, QspidCmd *pCommand)
     if (_spid_configureDmaChannels(pQspid) )
         return QQSPID_ERROR_LOCK;
 
-    /* Configure and enable interrupt on RC compare */    
+    /* Configure and enable interrupt on RC compare */
     NVIC_ClearPendingIRQ(XDMAC_IRQn);
     NVIC_SetPriority( XDMAC_IRQn ,1);
     NVIC_EnableIRQ(XDMAC_IRQn);
@@ -323,9 +323,9 @@ uint32_t QSPID_SendCommand( Qspid *pQspid, QspidCmd *pCommand)
     SPI_Enable (pQspiHw );
 
     /* Start DMA 0(RX) && 1(TX) */
-    if (XDMAD_StartTransfer( pQspid->pXdmad, qspiDmaRxChannel )) 
+    if (XDMAD_StartTransfer( pQspid->pXdmad, qspiDmaRxChannel ))
         return QSPID_ERROR_LOCK;
-    if (XDMAD_StartTransfer( pQspid->pXdmad, qspiDmaTxChannel )) 
+    if (XDMAD_StartTransfer( pQspid->pXdmad, qspiDmaTxChannel ))
         return QSPID_ERROR_LOCK;
 
     return 0;

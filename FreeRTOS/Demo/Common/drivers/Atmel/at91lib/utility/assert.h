@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -40,7 +40,7 @@
             any side-effect; otherwise, the program may not work properly
             anymore when assertions are disabled.
         2 - Use SANITY_CHECK to perform checks with a default error message
-            (outputs the file and line number where the error occured). This 
+            (outputs the file and line number where the error occured). This
             reduces memory overhead caused by assertion error strings.
         3 - Initialize the <DBGU> to see failed assertions at run-time.
         4 - Disable assertions by defining the NOASSERT symbol at compilation

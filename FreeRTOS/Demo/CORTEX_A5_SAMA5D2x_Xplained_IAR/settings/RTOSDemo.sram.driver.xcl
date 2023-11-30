@@ -1,36 +1,36 @@
-"--endian=little" 
+"--endian=little"
 
-"--cpu=Cortex-A5" 
+"--cpu=Cortex-A5"
 
-"--fpu=VFPv4Neon" 
+"--fpu=VFPv4Neon"
 
-"-p" 
+"-p"
 
-"C:\devtools\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\Microchip\ATSAMA5D27.ddf" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\Microchip\ATSAMA5D27.ddf"
 
-"--drv_verify_download" 
+"--drv_verify_download"
 
-"--semihosting=none" 
+"--semihosting=none"
 
-"--device=ATSAMA5D27" 
+"--device=ATSAMA5D27"
 
-"--multicore_nr_of_cores=1" 
+"--multicore_nr_of_cores=1"
 
-"--jet_probe=cmsisdap" 
+"--jet_probe=cmsisdap"
 
-"--jet_standard_reset=0,0,0" 
+"--jet_standard_reset=0,0,0"
 
-"--reset_style=\"0,-,1,Disabled__no_reset_\"" 
+"--reset_style=\"0,-,1,Disabled__no_reset_\""
 
-"--reset_style=\"1,-,0,Software\"" 
+"--reset_style=\"1,-,0,Software\""
 
-"--reset_style=\"2,-,0,Hardware\"" 
+"--reset_style=\"2,-,0,Hardware\""
 
-"--reset_style=\"5,SoftwareReset,0,Custom\"" 
+"--reset_style=\"5,SoftwareReset,0,Custom\""
 
-"--drv_catch_exceptions=0x01a" 
+"--drv_catch_exceptions=0x01a"
 
-"--jet_emu_param=L2CC=0x00A00000" 
+"--jet_emu_param=L2CC=0x00A00000"
 
 
 

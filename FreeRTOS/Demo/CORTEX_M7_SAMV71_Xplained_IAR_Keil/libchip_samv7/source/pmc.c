@@ -236,10 +236,10 @@ extern void PMC_EnableExtOsc(void)
     read_MOR = PMC->CKGR_MOR;
 
     read_MOR &= ~CKGR_MOR_MOSCRCF_Msk;   /* reset MOSCRCF field in MOR register before select RC 12MHz */
-    read_MOR  |= (CKGR_MOR_KEY_PASSWD 
+    read_MOR  |= (CKGR_MOR_KEY_PASSWD
             |   CKGR_MOR_MOSCRCF_12_MHz
-            |   CKGR_MOR_MOSCXTEN     
-            |   CKGR_MOR_MOSCRCEN     
+            |   CKGR_MOR_MOSCXTEN
+            |   CKGR_MOR_MOSCRCEN
             |   CKGR_MOR_MOSCXTST(DEFAUTL_MAIN_OSC_COUNT));  /* enable external crystal - enable RC OSC */
 
     PMC->CKGR_MOR = read_MOR;
@@ -273,7 +273,7 @@ extern void PMC_DisableExtOsc(void)
  * \brief Select external OSC.
  */
 extern void PMC_SelectExtOsc(void)
-{ 
+{
     /* switch from internal RC 12 MHz to external OSC 12 MHz */
     /* wait Main XTAL Oscillator stabilisation*/
     if ((PMC->CKGR_MOR & CKGR_MOR_MOSCSEL ) == CKGR_MOR_MOSCSEL){
@@ -281,9 +281,9 @@ extern void PMC_SelectExtOsc(void)
         return;
     }
     /* enable external OSC 12 MHz */
-    PMC->CKGR_MOR |= CKGR_MOR_MOSCXTEN | CKGR_MOR_KEY_PASSWD; 
+    PMC->CKGR_MOR |= CKGR_MOR_MOSCXTEN | CKGR_MOR_KEY_PASSWD;
     /* wait Main CLK Ready */
-    while(!(PMC->CKGR_MCFR & CKGR_MCFR_MAINFRDY)); 
+    while(!(PMC->CKGR_MCFR & CKGR_MCFR_MAINFRDY));
     /* switch MAIN clock to external OSC 12 MHz*/
     PMC->CKGR_MOR |= CKGR_MOR_MOSCSEL | CKGR_MOR_KEY_PASSWD;
     /* wait MAIN clock status change for external OSC 12 MHz selection*/
@@ -298,11 +298,11 @@ extern void PMC_SelectExtOsc(void)
  * \brief Select external OSC.
  */
 extern void PMC_SelectExtBypassOsc(void)
-{   
+{
     volatile uint32_t timeout;
     if((PMC->CKGR_MOR & CKGR_MOR_MOSCXTBY) != CKGR_MOR_MOSCXTBY){
         PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD |
-            CKGR_MOR_MOSCRCEN | 
+            CKGR_MOR_MOSCRCEN |
             CKGR_MOR_MOSCXTST(0xFF) |
             CKGR_MOR_MOSCXTBY;
         PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL;
@@ -366,7 +366,7 @@ extern void PMC_SetPllaClock(uint32_t mul, uint32_t div)
     if (mul != 0)
     {
         /* Init PLL speed */
-        PMC->CKGR_PLLAR = CKGR_PLLAR_ONE 
+        PMC->CKGR_PLLAR = CKGR_PLLAR_ONE
             | CKGR_PLLAR_PLLACOUNT(DEFAUTL_PLLA_COUNT)
             | CKGR_PLLAR_MULA(mul - 1)
             | CKGR_PLLAR_DIVA(div);
@@ -494,7 +494,7 @@ extern void PMC_ConfigurePCK2(uint32_t MasterClk, uint32_t prescaler)
     PMC->PMC_SCDR = PMC_SCDR_PCK2;  /* disable PCK */
 
     while((PMC->PMC_SCSR)& PMC_SCSR_PCK2);
-    PMC->PMC_PCK[2] = MasterClk | prescaler; 
+    PMC->PMC_PCK[2] = MasterClk | prescaler;
     PMC->PMC_SCER = PMC_SCER_PCK2;
     while(!((PMC->PMC_SR) & PMC_SR_PCKRDY2));
 

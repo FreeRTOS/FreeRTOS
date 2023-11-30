@@ -91,14 +91,14 @@ void SysTick_CounterCmd(u32 SysTick_Counter)
   {
     SysTick->CTRL |= SysTick_Counter_Enable;
   }
-  else if (SysTick_Counter == SysTick_Counter_Disable) 
+  else if (SysTick_Counter == SysTick_Counter_Disable)
   {
     SysTick->CTRL &= SysTick_Counter_Disable;
   }
   else /* SysTick_Counter == SysTick_Counter_Clear */
   {
     SysTick->VAL = SysTick_Counter_Clear;
-  }    
+  }
 }
 
 /*******************************************************************************

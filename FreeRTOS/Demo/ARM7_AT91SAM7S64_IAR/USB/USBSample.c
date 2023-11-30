@@ -28,7 +28,7 @@
 	Sample interrupt driven USB device driver.  This is a minimal implementation
 	for demonstration only.  Although functional, it is not a full and compliant
 	implementation.
-	
+
 	The USB device enumerates as a simple 3 axis joystick, and once configured
 	transmits 3 axis of data which can be viewed from the USB host machine.
 
@@ -36,13 +36,13 @@
 	task.  The interrupt service routine handles the USB hardware - taking a
 	snapshot of the USB status at the point of the interrupt.  The task receives
 	the status information from the interrupt for processing at the task level.
-	
+
 	See the FreeRTOS.org WEB documentation for more information.
 */
 
 /*
 	Changes from V2.5.5
-	
+
 	+ Descriptors that have a length that is an exact multiple of usbFIFO_LENGTH
 	  can now be transmitted.  To this end an extra parameter has been
 	  added to the prvSendControlData() function, and the state
@@ -332,7 +332,7 @@ const char pxManufacturerStringDescriptor[] =
 	'R', 0x00,
 	'T', 0x00,
 	'O', 0x00,
-	'S', 0x00	
+	'S', 0x00
 };
 
 const char pxProductStringDescriptor[] =
@@ -571,18 +571,18 @@ unsigned long ulTemp, ulRxBytes;
 	/* Clear the interrupts from the ICR register.  The bus end interrupt is
 	cleared separately as it does not appear in the mask register. */
 	AT91C_BASE_UDP->UDP_ICR = AT91C_BASE_UDP->UDP_IMR | AT91C_UDP_ENDBUSRES;
-	
+
 	/* If there are bytes in the FIFO then we have to retrieve them here.
 	Ideally this would be done at the task level.  However we need to clear the
 	RXSETUP interrupt before leaving the ISR, and this may cause the data in
 	the FIFO to be overwritten.  Also the DIR bit has to be changed before the
 	RXSETUP bit is cleared (as per the SAM7 manual). */
 	ulTemp = pxMessage->ulCSR0;
-	
+
 	/* Are there any bytes in the FIFO? */
 	ulRxBytes = ulTemp >> 16;
 	ulRxBytes &= usbRX_COUNT_MASK;
-	
+
 	/* With this minimal implementation we are only interested in receiving
 	setup bytes on the control end point. */
 	if( ( ulRxBytes > 0 ) && ( ulTemp & AT91C_UDP_RXSETUP ) )
@@ -591,14 +591,14 @@ unsigned long ulTemp, ulRxBytes;
 		while( ulRxBytes > 0 )
 		{
 			ulRxBytes--;
-			pxMessage->ucFifoData[ ulRxBytes ] = AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ];			
+			pxMessage->ucFifoData[ ulRxBytes ] = AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ];
 		}
-		
+
 		/* The direction must be changed first. */
 		usbCSR_SET_BIT( &ulTemp, ( AT91C_UDP_DIR ) );
 		AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] = ulTemp;
 	}
-	
+
 	/* Must write zero's to TXCOMP, STALLSENT, RXSETUP, and the RX DATA
 	registers to clear the interrupts in the CSR register. */
 	usbCSR_CLEAR_BIT( &ulTemp, usbINT_CLEAR_MASK );
@@ -606,7 +606,7 @@ unsigned long ulTemp, ulRxBytes;
 
 	/* Also clear the interrupts in the CSR1 register. */
 	ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];
-	usbCSR_CLEAR_BIT( &ulTemp, usbINT_CLEAR_MASK );	
+	usbCSR_CLEAR_BIT( &ulTemp, usbINT_CLEAR_MASK );
 	AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] = ulTemp;
 
 	/* The message now contains the entire state and optional data from
@@ -618,7 +618,7 @@ unsigned long ulTemp, ulRxBytes;
 	it the highest priority task that is ready to execute. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
-	/* Clear the AIC ready for the next interrupt. */		
+	/* Clear the AIC ready for the next interrupt. */
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 }
 /*-----------------------------------------------------------*/
@@ -652,7 +652,7 @@ xISRStatus *pxMessage;
 			if( pxMessage->ulISR & AT91C_UDP_ENDBUSRES )
 			{
 				/* Process an end of bus reset interrupt. */
-				prvResetEndPoints();		
+				prvResetEndPoints();
 			}
 		}
 		else
@@ -685,21 +685,21 @@ static signed char x = 0, y = 0, z = 0;
 							lState = usbYUP;
 						}
 						break;
-						
+
 		case usbXDOWN :	x -= usbDATA_INC;
 						if( x <= -usbMAX_COORD )
 						{
 							lState = usbYDOWN;
 						}
 						break;
-						
+
 		case usbYUP :	y += usbDATA_INC;
 						if( y >= usbMAX_COORD )
 						{
 							lState = usbXDOWN;
 						}
 						break;
-						
+
 		case usbYDOWN :	y -= usbDATA_INC;
 						if( y <= -usbMAX_COORD )
 						{
@@ -718,7 +718,7 @@ static signed char x = 0, y = 0, z = 0;
 		AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_1 ] = x;
 		AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_1 ] = y;
 		AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_1 ] = z;
-		
+
 		/* Send the data. */
 		portENTER_CRITICAL();
 		{
@@ -801,10 +801,10 @@ unsigned long ulTemp;
 static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 {
 	if( pxMessage->ulCSR0 & AT91C_UDP_RX_DATA_BK0 )
-	{		
+	{
 		/* We only expect to receive zero length data here as ACK's.
 		Set the data pointer to the end of the current Tx packet to
-		ensure we don't send out any more data. */	
+		ensure we don't send out any more data. */
 		pxCharsForTx.ulNextCharIndex = pxCharsForTx.ulTotalDataLength;
 	}
 
@@ -824,33 +824,33 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 			{
 				unsigned long ulTemp;
 
-				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];					
+				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];
 				usbCSR_SET_BIT( &ulTemp, AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_INT_IN );
-				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] = ulTemp;		
+				AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ] = ulTemp;
 				AT91F_UDP_EnableIt( AT91C_BASE_UDP, AT91C_UDP_EPINT1 );
 			}
 			portEXIT_CRITICAL();
 
 			eDriverState = eREADY_TO_SEND;
-		}		
+		}
 		else if( eDriverState == eJUST_GOT_ADDRESS )
 		{
 			/* We sent an acknowledgement of a SET_ADDRESS request.  Move
 			to the addressed state. */
 			if( ulReceivedAddress != ( unsigned long ) 0 )
-			{			
+			{
 				AT91C_BASE_UDP->UDP_GLBSTATE = AT91C_UDP_FADDEN;
 			}
 			else
 			{
 				AT91C_BASE_UDP->UDP_GLBSTATE = 0;
-			}			
+			}
 
-			AT91C_BASE_UDP->UDP_FADDR = ( AT91C_UDP_FEN | ulReceivedAddress );		
+			AT91C_BASE_UDP->UDP_FADDR = ( AT91C_UDP_FEN | ulReceivedAddress );
 			eDriverState = eNOTHING;
 		}
 		else
-		{		
+		{
 			/* The TXCOMP was not for any special type of transmission.  See
 			if there is any more data to send. */
 			prvSendNextSegment();
@@ -863,7 +863,7 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 		unsigned char ucRequest;
 		unsigned long ulRxBytes;
 
-		/* A data packet is available. */	
+		/* A data packet is available. */
 		ulRxBytes = pxMessage->ulCSR0 >> 16;
 		ulRxBytes &= usbRX_COUNT_MASK;
 
@@ -878,15 +878,15 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 			xRequest.usValue = pxMessage->ucFifoData[ usbVALUE_HIGH_BYTE ];
 			xRequest.usValue <<= 8;
 			xRequest.usValue |= pxMessage->ucFifoData[ usbVALUE_LOW_BYTE ];
-						
+
 			xRequest.usIndex = pxMessage->ucFifoData[ usbINDEX_HIGH_BYTE ];
 			xRequest.usIndex <<= 8;
 			xRequest.usIndex |= pxMessage->ucFifoData[ usbINDEX_LOW_BYTE ];
-			
+
 			xRequest.usLength = pxMessage->ucFifoData[ usbLENGTH_HIGH_BYTE ];
 			xRequest.usLength <<= 8;
 			xRequest.usLength |= pxMessage->ucFifoData[ usbLENGTH_LOW_BYTE ];
-	
+
 			/* Manipulate the ucRequestType and the ucRequest parameters to
 			generate a zero based request selection.  This is just done to
 			break up the requests into subsections for clarity.  The
@@ -897,28 +897,28 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 
 			switch( ucRequest )
 			{
-				case usbSTANDARD_DEVICE_REQUEST:	
+				case usbSTANDARD_DEVICE_REQUEST:
 							/* Standard Device request */
 							prvHandleStandardDeviceRequest( &xRequest );
 							break;
-	
-				case usbSTANDARD_INTERFACE_REQUEST:	
+
+				case usbSTANDARD_INTERFACE_REQUEST:
 							/* Standard Interface request */
 							prvHandleStandardInterfaceRequest( &xRequest );
 							break;
-	
-				case usbSTANDARD_END_POINT_REQUEST:	
+
+				case usbSTANDARD_END_POINT_REQUEST:
 							/* Standard Endpoint request */
 							prvHandleStandardEndPointRequest( &xRequest );
 							break;
-	
-				case usbCLASS_INTERFACE_REQUEST:	
+
+				case usbCLASS_INTERFACE_REQUEST:
 							/* Class Interface request */
 							prvHandleClassInterfaceRequest( &xRequest );
 							break;
-	
+
 				default:	/* This is not something we want to respond to. */
-							prvSendStall();	
+							prvSendStall();
 			}
 		}
 	}
@@ -933,7 +933,7 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 	    case usbDESCRIPTOR_TYPE_DEVICE:
 			prvSendControlData( ( unsigned char * ) &pxDeviceDescriptor, pxRequest->usLength, sizeof( pxDeviceDescriptor ), pdTRUE );
 		    break;
-	
+
 	    case usbDESCRIPTOR_TYPE_CONFIGURATION:
 			prvSendControlData( ( unsigned char * ) &( pxConfigDescriptor ), pxRequest->usLength, sizeof( pxConfigDescriptor ), pdTRUE );
 		    break;
@@ -942,7 +942,7 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 
 			/* The index to the string descriptor is the lower byte. */
 		    switch( pxRequest->usValue & 0xff )
-			{			
+			{
 		        case usbLANGUAGE_STRING:
 					prvSendControlData( ( unsigned char * ) &pxLanguageStringDescriptor, pxRequest->usLength, sizeof(pxLanguageStringDescriptor), pdTRUE );
 			        break;
@@ -1005,13 +1005,13 @@ unsigned short usStatus = 0;
 		    break;
 
 	    case usbSET_ADDRESS_REQUEST:
-	    	
+
 			/* Acknowledge the SET_ADDRESS, but (according to the manual) we
 			cannot actually move to the addressed state until we get a TXCOMP
 			interrupt from this NULL packet.  Therefore we just remember the
 			address and set our state so we know we have received the address. */
-	    	prvUSBTransmitNull();			
-			eDriverState = eJUST_GOT_ADDRESS;	    	
+	    	prvUSBTransmitNull();
+			eDriverState = eJUST_GOT_ADDRESS;
 			ulReceivedAddress = ( unsigned long ) pxRequest->usValue;
 		    break;
 
@@ -1020,7 +1020,7 @@ unsigned short usStatus = 0;
 			/* Acknowledge the SET_CONFIGURATION, but (according to the manual)
 			we cannot actually move to the configured state until we get a
 			TXCOMP interrupt from this NULL packet.  Therefore we just remember the
-			config and set our state so we know we have received the go ahead. */			
+			config and set our state so we know we have received the go ahead. */
 			ucUSBConfig = ( unsigned char ) ( pxRequest->usValue & 0xff );
 			eDriverState = eJUST_GOT_CONFIG;
 			prvUSBTransmitNull();
@@ -1048,7 +1048,7 @@ static void prvHandleClassInterfaceRequest( xUSB_REQUEST *pxRequest )
 	    case usbGET_IDLE_REQUEST:
 	    case usbGET_PROTOCOL_REQUEST:
 	    case usbSET_REPORT_REQUEST:
-	    case usbSET_PROTOCOL_REQUEST:	
+	    case usbSET_PROTOCOL_REQUEST:
 	    default:
 
 			prvSendStall();
@@ -1092,7 +1092,7 @@ unsigned short usStatus = 0;
 		/* This minimal implementation does not respond to these. */
 	    case usbGET_INTERFACE_REQUEST:
 	    case usbSET_FEATURE_REQUEST:
-	    case usbSET_INTERFACE_REQUEST:	
+	    case usbSET_INTERFACE_REQUEST:
 
 	    default:
 			prvSendStall();
@@ -1110,7 +1110,7 @@ static void prvHandleStandardEndPointRequest( xUSB_REQUEST *pxRequest )
 	    case usbCLEAR_FEATURE_REQUEST:
 	    case usbSET_FEATURE_REQUEST:
 
-	    default:			
+	    default:
 			prvSendStall();
 			break;
 	}
@@ -1214,7 +1214,7 @@ volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 	if( pxCharsForTx.ulTotalDataLength > pxCharsForTx.ulNextCharIndex )
 	{
 		ulLengthLeftToSend = pxCharsForTx.ulTotalDataLength - pxCharsForTx.ulNextCharIndex;
-	
+
 		/* We can only send 8 bytes to the fifo at a time. */
 		if( ulLengthLeftToSend > usbFIFO_LENGTH )
 		{
@@ -1236,11 +1236,11 @@ volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 		while( ulNextLength > ( unsigned long ) 0 )
 		{
 			AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ] = pxCharsForTx.ucTxBuffer[ pxCharsForTx.ulNextCharIndex ];
-	
+
 			ulNextLength--;
 			pxCharsForTx.ulNextCharIndex++;
 		}
-	
+
 		/* Start the transmission. */
 		portENTER_CRITICAL();
 		{

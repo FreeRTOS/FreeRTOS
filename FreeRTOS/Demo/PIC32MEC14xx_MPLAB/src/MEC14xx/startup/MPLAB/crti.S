@@ -41,10 +41,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ********************************************************************/
- 
+
 #ifdef __LIBBUILD__
-	# Replace the standard debugging information with a simple filename. This 
-	# prevents the library build directory from showing up in MPLAB IDE. It 
+	# Replace the standard debugging information with a simple filename. This
+	# prevents the library build directory from showing up in MPLAB IDE. It
 	# also effectively disables source-line debugging.
 	.file 1 "libpic32/startup/crti.s"
 	.loc 1 0
@@ -59,7 +59,7 @@
 _init:
 	addu	$sp,$sp,-32
 	sw	$31,20($sp)
-	
+
 	.section .fini, code
 	.globl	_fini
 	.type	_fini,@function

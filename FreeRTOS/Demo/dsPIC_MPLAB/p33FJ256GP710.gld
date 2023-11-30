@@ -198,7 +198,7 @@ SECTIONS
   ** Other sections in data memory are not explicitly mapped.
   ** Instead they are allocated according to their section
   ** attributes, which is most efficient.
-  ** 
+  **
   ** If a specific arrangement of sections is required
   ** (other than what can be achieved using attributes)
   ** additional sections may be defined here. See chapter

@@ -97,22 +97,22 @@ extern uint32_t BMP_GetFileSize(void *file);
 extern uint8_t BMP_Decode(
 				void *file,
 				uint8_t *buffer,
-				uint32_t width, 
+				uint32_t width,
 				uint32_t height,
 				uint8_t bpp );
 
 extern void WriteBMPheader(
-				 uint32_t *pAddressHeader, 
-				 uint32_t  bmpHSize, 
-				 uint32_t  bmpVSize, 
+				 uint32_t *pAddressHeader,
+				 uint32_t  bmpHSize,
+				 uint32_t  bmpVSize,
 				 uint8_t nbByte_Pixels );
 
 extern void BMP_displayHeader(uint32_t* pAddressHeader);
-extern void RGB565toBGR555( 
-				uint8_t *fileSource, 
-				uint8_t *fileDestination, 
-				uint32_t width, 
-				uint32_t height, 
+extern void RGB565toBGR555(
+				uint8_t *fileSource,
+				uint8_t *fileDestination,
+				uint32_t width,
+				uint32_t height,
 				uint8_t bpp );
 
 #endif //#ifndef BMP_H

@@ -68,7 +68,7 @@ unsigned short usThisCount, usDifference;
 
 	/* Capture the free running timer value as we enter the interrupt. */
 	usThisCount = Timer_48MHz_ReadCounter();
-		
+
 	if( usSettleCount >= timerSETTLE_TIME )
 	{
 		/* What is the difference between the timer value in this interrupt
@@ -82,7 +82,7 @@ unsigned short usThisCount, usDifference;
 		if( usDifference > usMaxDifference )
 		{
 			usMaxDifference = usDifference;
-			
+
 			/* Calculate the Jitter based on the difference we expect. */
 			usMaxJitter = usMaxDifference - timerEXPECTED_DIFFERENCE_VALUE;
 		}

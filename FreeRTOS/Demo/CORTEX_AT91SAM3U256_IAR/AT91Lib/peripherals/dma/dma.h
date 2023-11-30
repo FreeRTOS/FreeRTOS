@@ -4,20 +4,20 @@
  * Copyright (c) 2006, Atmel Corporation
 
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the disclaiimer below.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the disclaimer below in the documentation and/or
- * other materials provided with the distribution. 
- * 
+ * other materials provided with the distribution.
+ *
  * Atmel's name may not be used to endorse or promote products derived from
- * this software without specific prior written permission. 
- * 
+ * this software without specific prior written permission.
+ *
  * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -34,17 +34,17 @@
 //------------------------------------------------------------------------------
 /// \dir
 /// !Purpose
-/// 
+///
 /// Interface for configuration the %DMA controller(DMAC).
 ///
 /// !Usage
 ///
-/// -# Enable or disable the a DMAC controller with 
+/// -# Enable or disable the a DMAC controller with
 ///    DMA_Enable() and or DMA_Disable().
 /// -# Enable or disable %Dma interrupt using DMA_EnableIt()
 ///    or DMA_DisableIt().
 /// -# Get %Dma interrupt status by DMA_GetStatus().
-/// -# Enable or disable specified %Dma channel with 
+/// -# Enable or disable specified %Dma channel with
 ///    DMA_EnableChannel() or DMA_DisableChannel().
 /// -# Get %Dma channel status by DMA_GetChannelStatus().
 /// -# Configure source and/or destination start address with
@@ -53,7 +53,7 @@
 /// -# Set source transfer buffer size with DMA_SetSourceBufferSize().
 /// -# Configure source and/or destination transfer mode with
 ///    DMA_SetSourceBufferMode() and/or DMA_SetDestBufferMode().
-/// -# Configure source and/or destination Picture-In-Picutre 
+/// -# Configure source and/or destination Picture-In-Picutre
 ///    mode with DMA_SPIPconfiguration() and/or DMA_DPIPconfiguration().
 //------------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@
 #endif
 
 #define DMA_TRANSFER_SINGLE      0
-#define DMA_TRANSFER_LLI         1  
+#define DMA_TRANSFER_LLI         1
 #define DMA_TRANSFER_RELOAD      2
 #define DMA_TRANSFER_CONTIGUOUS  3
 
@@ -104,11 +104,11 @@
     #define AT91C_DST_REP  AT91C_HDMA_DST_REP
     #define AT91C_SRC_PIP  AT91C_HDMA_SRC_PIP
     #define AT91C_DST_PIP  AT91C_HDMA_DST_PIP
-    
-    #define AT91C_BTC             (0xFF <<  0) 
-    #define AT91C_CBTC            (0xFF <<  8) 
-    #define AT91C_ERR             (0xFF << 16) 
-#endif    
+
+    #define AT91C_BTC             (0xFF <<  0)
+    #define AT91C_CBTC            (0xFF <<  8)
+    #define AT91C_ERR             (0xFF << 16)
+#endif
 
 //------------------------------------------------------------------------------
 //         Exported functions
@@ -147,25 +147,25 @@ extern void DMA_SetDestinationAddr(unsigned char channel, unsigned int address);
 extern void DMA_SetDescriptorAddr(unsigned char channel, unsigned int address);
 
 extern void DMA_SetSourceBufferSize(unsigned char channel,
-                             unsigned int size, 
-                             unsigned char sourceWidth, 
+                             unsigned int size,
+                             unsigned char sourceWidth,
                              unsigned char desDMAdth,
                              unsigned char done);
 
-extern void DMA_SetSourceBufferMode(unsigned char channel, 
+extern void DMA_SetSourceBufferMode(unsigned char channel,
                              unsigned char transferMode,
                              unsigned char addressingType);
-                             
-extern void DMA_SetDestBufferMode(unsigned char channel, 
+
+extern void DMA_SetDestBufferMode(unsigned char channel,
                              unsigned char transferMode,
                              unsigned char addressingType);
-                             
+
 extern void DMA_SetConfiguration(unsigned char channel, unsigned int value);
 
-extern void DMA_SPIPconfiguration(unsigned char channel, 
+extern void DMA_SPIPconfiguration(unsigned char channel,
                      unsigned int pipHole, unsigned int pipBoundary);
 
-extern void DMA_DPIPconfiguration(unsigned char channel, 
+extern void DMA_DPIPconfiguration(unsigned char channel,
                      unsigned int pipHole, unsigned int pipBoundary);
 
 #endif //#ifndef DMA_H

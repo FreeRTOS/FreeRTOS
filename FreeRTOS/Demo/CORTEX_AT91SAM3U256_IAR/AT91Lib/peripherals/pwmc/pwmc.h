@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -40,9 +40,9 @@
 ///       PWMC_ConfigureClocks().
 ///    -# Configure PWMC channel using PWMC_ConfigureChannel(), PWMC_SetPeriod()
 ///       and PWMC_SetDutyCycle().
-///    -# Enable & disable channel using PWMC_EnableChannel() and 
+///    -# Enable & disable channel using PWMC_EnableChannel() and
 ///       PWMC_DisableChannel().
-///    -# Enable & disable the period interrupt for the given PWM channel using 
+///    -# Enable & disable the period interrupt for the given PWM channel using
 ///       PWMC_EnableChannelIt() and PWMC_DisableChannelIt().
 ///
 /// Please refer to the list of functions in the #Overview# tab of this unit

@@ -824,7 +824,7 @@ typedef struct
 #define  LSB2W(u32)     MSB1W(u32)           //!< Least significant byte of 3rd rank of \a u32.
 #define  LSB1W(u32)     MSB2W(u32)           //!< Least significant byte of 2nd rank of \a u32.
 #define  LSB0W(u32)     MSB3W(u32)           //!< Least significant byte of 1st rank of \a u32.
-        
+
 #define  MSW(u64)       (((U32 *)&(u64))[1]) //!< Most significant word of \a u64.
 #define  LSW(u64)       (((U32 *)&(u64))[0]) //!< Least significant word of \a u64.
 #define  MSH0(u64)      (((U16 *)&(u64))[3]) //!< Most significant half-word of 1st rank of \a u64.

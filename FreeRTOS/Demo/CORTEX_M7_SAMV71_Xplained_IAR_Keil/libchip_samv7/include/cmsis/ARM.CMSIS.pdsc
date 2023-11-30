@@ -30,7 +30,7 @@
       PACK:
       - removed G++ specific files from PACK
       - added Component Startup variant "C Startup"
-      - added Pack Checking Utility 
+      - added Pack Checking Utility
       - updated conditions to reflect tool-chain dependency
       - added Taxonomy for Graphics
       - updated Taxonomy for unified drivers from "Drivers" to "CMSIS Drivers"
@@ -461,7 +461,7 @@
       <deny Dvendor="Infineon:7" Dname="XMC4*"/>
       <require Tcompiler="ARMCC"/>
     </condition>
-    
+
     <!-- XMC 4000 Series devices from Infineon require a special library -->
     <condition id="CM4_LE_ARMCC_IFX">
       <description>Cortex-M4 processor based device in little endian mode for the ARM Compiler and Infineon devices</description>
@@ -611,7 +611,7 @@
       <require Tcompiler="IAR"/>
     </condition>
   </conditions>
-  
+
   <components>
     <!-- CMSIS-Core component -->
     <component Cclass="CMSIS" Cgroup="CORE" Cversion="3.30.0" condition="CMSIS Core">
@@ -845,7 +845,7 @@
         <file category="doc" name="CMSIS_RTX\Doc\index.html"/>
         <file category="header" name="CMSIS_RTX\INC\cmsis_os.h"/>
         <file category="source" attr="config"   name="CMSIS_RTX\Templates\RTX_Conf_CM.c" version="4.70"/>
-        
+
         <!-- RTX templates -->
         <file category="header" attr="template" name="CMSIS_RTX\UserCodeTemplates\osObjects.h" select="CMSIS-RTOS 'main' function"/>
         <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\main.c"      select="CMSIS-RTOS 'main' function"/>
@@ -895,7 +895,7 @@
       </files>
     </component>
   </components>
- 
+
   <boards>
     <board name="uVision Simulator" vendor="Keil">
       <description>uVision Simulator</description>

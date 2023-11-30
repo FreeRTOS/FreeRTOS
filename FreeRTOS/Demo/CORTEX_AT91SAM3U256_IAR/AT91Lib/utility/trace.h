@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -41,21 +41,21 @@
 /// -# Uses the TRACE_DEBUG(), TRACE_INFO(), TRACE_WARNING(), TRACE_ERROR()
 ///    TRACE_FATAL() macros to output traces throughout the program.
 /// -# Each type of trace has a level : Debug 5, Info 4, Warning 3, Error 2
-///    and Fatal 1. Disable a group of traces by changing the value of 
-///    TRACE_LEVEL during compilation; traces with a level bigger than TRACE_LEVEL 
+///    and Fatal 1. Disable a group of traces by changing the value of
+///    TRACE_LEVEL during compilation; traces with a level bigger than TRACE_LEVEL
 ///    are not generated. To generate no trace, use the reserved value 0.
 /// -# Trace disabling can be static or dynamic. If dynamic disabling is selected
 ///    the trace level can be modified in runtime. If static disabling is selected
 ///    the disabled traces are not compiled.
 ///
 /// !Trace level description
-/// -# TRACE_DEBUG (5): Traces whose only purpose is for debugging the program, 
+/// -# TRACE_DEBUG (5): Traces whose only purpose is for debugging the program,
 ///    and which do not produce meaningful information otherwise.
-/// -# TRACE_INFO (4): Informational trace about the program execution. Should  
+/// -# TRACE_INFO (4): Informational trace about the program execution. Should
 ///    enable the user to see the execution flow.
 /// -# TRACE_WARNING (3): Indicates that a minor error has happened. In most case
 ///    it can be discarded safely; it may even be expected.
-/// -# TRACE_ERROR (2): Indicates an error which may not stop the program execution, 
+/// -# TRACE_ERROR (2): Indicates an error which may not stop the program execution,
 ///    but which indicates there is a problem with the code.
 /// -# TRACE_FATAL (1): Indicates a major error which prevents the program from going
 ///    any further.
@@ -89,7 +89,7 @@
 #define TRACE_LEVEL_NO_TRACE   0
 
 // By default, all traces are output except the debug one.
-#if !defined(TRACE_LEVEL)    
+#if !defined(TRACE_LEVEL)
 #define TRACE_LEVEL TRACE_LEVEL_INFO
 #endif
 
@@ -154,7 +154,7 @@
 // Empty macro
 #define TRACE_DEBUG(...)      { }
 #define TRACE_INFO(...)       { }
-#define TRACE_WARNING(...)    { }               
+#define TRACE_WARNING(...)    { }
 #define TRACE_ERROR(...)      { }
 #define TRACE_FATAL(...)      { while(1); }
 

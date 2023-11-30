@@ -52,8 +52,8 @@
  * aim of being simple, correct and fully portable. Checksumming is the
  * first thing you would want to optimize for your platform. If you create
  * your own version, link it in and in your sys_arch.h put:
- * 
- * #define LWIP_CHKSUM <your_checksum_routine> 
+ *
+ * #define LWIP_CHKSUM <your_checksum_routine>
 */
 #ifndef LWIP_CHKSUM
 #define LWIP_CHKSUM lwip_standard_chksum
@@ -64,7 +64,7 @@
  *
  * @param dataptr points to start of data to be summed at any boundary
  * @param len length of data to be summed
- * @return host order (!) lwip checksum (non-inverted Internet sum) 
+ * @return host order (!) lwip checksum (non-inverted Internet sum)
  *
  * @note accumulator size limits summable length to 64k
  * @note host endianess is irrelevant (p3 RFC1071)
@@ -165,11 +165,11 @@ lwip_standard_chksum(void *dataptr, int len)
 /**
  * An optimized checksum routine. Basically, it uses loop-unrolling on
  * the checksum loop, treating the head and tail bytes specially, whereas
- * the inner loop acts on 8 bytes at a time. 
+ * the inner loop acts on 8 bytes at a time.
  *
  * @arg start of buffer to be checksummed. May be an odd byte address.
  * @len number of bytes in the buffer to be checksummed.
- * 
+ *
  * by Curt McDowell, Broadcom Corp. December 8th, 2005
  */
 
@@ -339,8 +339,8 @@ inet_chksum_pbuf(struct pbuf *p)
 #define isxdigit(c)          (isdigit(c) || in_range(c, 'a', 'f') || in_range(c, 'A', 'F'))
 #define islower(c)           in_range(c, 'a', 'z')
 #define isspace(c)           (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')
-#endif    
-    
+#endif
+
 /*
  * Ascii internet address interpretation routine.
  * The value returned is in network order.
@@ -494,7 +494,7 @@ inet_ntoa(struct in_addr addr)
  * Again with the aim of being simple, correct and fully portable.
  * Byte swapping is the second thing you would want to optimize. You will
  * need to port it to your architecture and in your cc.h:
- * 
+ *
  * #define LWIP_PLATFORM_BYTESWAP 1
  * #define LWIP_PLATFORM_HTONS(x) <your_htons>
  * #define LWIP_PLATFORM_HTONL(x) <your_htonl>

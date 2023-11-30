@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,7 +31,7 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// This module provides definitions and functions for using the Debug Unit
 /// (DBGU).
 ///
@@ -40,7 +40,7 @@
 /// defining NOFPUT during compilation.
 ///
 /// !Usage
-/// 
+///
 /// -# Enable the DBGU pins (see pio & board.h).
 /// -# Configure the DBGU using DBGU_Configure with the desired operating mode.
 /// -# Send characters using DBGU_PutChar() or the printf() method.
@@ -56,7 +56,7 @@
 //------------------------------------------------------------------------------
 //         Definitions
 //------------------------------------------------------------------------------
- 
+
 /// Standard operating mode (asynchronous, 8bit, no parity, 1 stop bit)
 #define DBGU_STANDARD           AT91C_US_PAR_NONE
 

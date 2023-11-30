@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,19 +31,19 @@
 /// \unit
 ///
 /// !!!Purpose
-/// 
+///
 /// Simple driver for the LCD, which takes care of the initialization.
-/// 
+///
 /// !!!Usage
-/// 
+///
 /// -# Call LCDD_Initialize to configure the LCD controller.
 /// -# Set the buffer displayed by the LCD with LCDD_DisplayBuffer if using
 ///    peripheral LCDC, or start displaying with LCDD_Start if using HX8347.
 //------------------------------------------------------------------------------
- 
+
 #ifndef LCDD_H
 #define LCDD_H
- 
+
 //------------------------------------------------------------------------------
 //         Global functions
 //------------------------------------------------------------------------------

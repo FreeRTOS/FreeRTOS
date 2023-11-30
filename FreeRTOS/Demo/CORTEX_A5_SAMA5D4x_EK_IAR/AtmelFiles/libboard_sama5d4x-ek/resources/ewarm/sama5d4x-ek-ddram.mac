@@ -10,7 +10,7 @@
 // ---------------------------------------------------------
 //  File: sama5d4-ek-ddram.mac
 //  User setup file for CSPY debugger.
-//  
+//
 // ---------------------------------------------------------
 
 __var __tempo_var;
@@ -86,31 +86,31 @@ execUserPreload()
        __writeMemory32(0x00FFFFFF,0xF001C210,"Memory");   // SLAVE 4
        __writeMemory32(0x0000000F,0xF001C290,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C250,"Memory");
-      
+
        __writeMemory32(0x00FFFFFF,0xF001C214,"Memory");   // SLAVE 5
        __writeMemory32(0x0000000F,0xF001C294,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C254,"Memory");
-      
+
        __writeMemory32(0x00FFFFFF,0xF001C218,"Memory");   // SLAVE 6
        __writeMemory32(0x0000000F,0xF001C298,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C258,"Memory");
-      
+
        __writeMemory32(0x00FFFFFF,0xF001C21C,"Memory");   // SLAVE 7
        __writeMemory32(0x0000000F,0xF001C29C,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C25C,"Memory");
-      
+
        __writeMemory32(0x00FFFFFF,0xF001C220,"Memory");   // SLAVE 8
        __writeMemory32(0x0000000F,0xF001C2A0,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C260,"Memory");
-      
+
        __writeMemory32(0x00FFFFFF,0xF001C224,"Memory");   // SLAVE 9
        __writeMemory32(0x0000000F,0xF001C2A4,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C264,"Memory");
-      
+
        __writeMemory32(0x00FFFFFF,0xF001C228,"Memory");   // SLAVE 10
        __writeMemory32(0x0000000F,0xF001C2A8,"Memory");
        __writeMemory32(0x0000FFFF,0xF001C268,"Memory");
-      
+
       PMC_SelectExt12M_Osc();
       PMC_SwitchMck2Main();
       PMC_SetPllA(87);
@@ -185,10 +185,10 @@ Watchdog()
 *   Select external 12MHz oscillator
 */
 PMC_SelectExt12M_Osc()
-{ 
+{
 
 // ---------  Select_ext_Crystal_32k  ---------------
-  
+
     REG_CKGR_MOR = 0xF0018020;
     CKGR_MOR_MOSCXTEN = (0x1 << 0);     /*(CKGR_MOR) Main Crystal Oscillator Enable */
     CKGR_MOR_MOSCXTBY = (0x1 << 1);     /*(CKGR_MOR) Main Crystal Oscillator Bypass */
@@ -210,12 +210,12 @@ PMC_SelectExt12M_Osc()
 
     /* disable external OSC 12 MHz bypass */
     __tempo_var = __readMemory32(REG_CKGR_MOR,"Memory");
-    __tempo_var = (__tempo_var & ~CKGR_MOR_MOSCXTBY) | (0x37 << 16); 
+    __tempo_var = (__tempo_var & ~CKGR_MOR_MOSCXTBY) | (0x37 << 16);
     __writeMemory32(__tempo_var,REG_CKGR_MOR,"Memory");
 
     /* switch MAIN clock to external OSC 12 MHz*/
     __tempo_var = __readMemory32(REG_CKGR_MOR,"Memory");
-    __tempo_var |= CKGR_MOR_MOSCSEL | (0x37 << 16); 
+    __tempo_var |= CKGR_MOR_MOSCSEL | (0x37 << 16);
     __writeMemory32(__tempo_var,REG_CKGR_MOR,"Memory");
 
     /* wait MAIN clock status change for external OSC 12 MHz selection*/
@@ -366,7 +366,7 @@ PMC_SwitchMck2Pll()
 
 __initDDR2(type)
 {
-    
+
 // ------------------ DDR Controller Registers --------------
 
 //  #define REG_MPDDRC_MR                              (0xF0010000U) /**< \brief (MPDDRC) MPDDRC Mode Register */
@@ -405,7 +405,7 @@ __initDDR2(type)
 //  #define REG_MPDDRC_DLL_SWR                         (0xF0010148U) /**< \brief (MPDDRC) MPDDRC DLL Status CLKWR0 Register */
 //  #define REG_MPDDRC_DLL_SAD                         (0xF0010158U) /**< \brief (MPDDRC) MPDDRC DLL Status CLKAD Register */
 // -----------------------------------------------
-   
+
     __delay(2);
     __writeMemory32(0x00008000,0xFC068644,"Memory");   // Disable Watchdog
     __writeMemory32(0x00010000,0xF0018010,"Memory");   // Enable MPDDR controller clock

@@ -88,7 +88,7 @@ typedef struct
 
 /** Constant structure associated with UART port. This structure prevents
     client applications to have access in the same time. */
-typedef struct 
+typedef struct
 {
     /** Pointer to UART Hardware registers */
     Uart* pUartHw ;

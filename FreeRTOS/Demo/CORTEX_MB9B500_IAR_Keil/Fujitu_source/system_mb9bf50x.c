@@ -41,7 +41,7 @@
 //     <o1.1>    SCM_CTL.MOSCE: Main clock oscillation enable
 //     <o2.0..3> CSW_TMR.MOWT: Main clock stabilization wait time
 //           <i> Default: ~ 500 ns
-//                     < 0=> ~ 500 ns 
+//                     < 0=> ~ 500 ns
 //                     < 1=> ~ 8 us
 //                     < 2=> ~ 16 us
 //                     < 3=> ~ 32 us
@@ -60,7 +60,7 @@
 //     <o1.3>    SCM_CTL.SOSCE: Sub clock oscillation enable
 //     <o2.4..6> CSW_TMR.SOWT: SOWT: Sub clock stabilization wait time
 //           <i> Default: ~ 31.19 ms
-//                     <0=> ~ 31.19 ms 
+//                     <0=> ~ 31.19 ms
 //                     <1=> ~ 62.44 ms
 //                     <2=> ~ 0.125 s
 //                     <3=> ~ 0.25 s
@@ -77,9 +77,9 @@
 //                     <1-32><#-1>
 //       <o4.0..3> PLL_CTL1.PLLM: PLL VCO clock frequency division
 //                     <1-16><#-1>
-//       <o3.0..2> PSW_TMR.POWT: PLL clock stabilization wait time  
+//       <o3.0..2> PSW_TMR.POWT: PLL clock stabilization wait time
 //           <i> Default: ~ 128 us
-//                     <0=> ~ 128 us 
+//                     <0=> ~ 128 us
 //                     <1=> ~ 256 us
 //                     <2=> ~ 512 us
 //                     <3=> ~ 1.02 ms
@@ -90,7 +90,7 @@
 //     </e>
 //     <o1.5..7> SCM_CTL.RCS: Master clock switch control
 //           <i> Default: Master Clock = CLKHC
-//                     <0=> Master Clock = CLKHC 
+//                     <0=> Master Clock = CLKHC
 //                     <1=> Master Clock = CLKMO
 //                     <2=> Master Clock = CLKPLL
 //                     <4=> Master Clock = CLKLC
@@ -98,7 +98,7 @@
 //   </h>
 //
 //   <h> Base Clock Prescaler
-//     <o6.0..2> BSC_PSR.BSR: Base clock frequency division 
+//     <o6.0..2> BSC_PSR.BSR: Base clock frequency division
 //           <i> Default: HCLK = Master Clock
 //           <i> HCLK Max = 80MHz
 //                     <0=> HCLK = Master Clock
@@ -111,7 +111,7 @@
 //   </h>
 //
 //   <h> APB0 Prescaler
-//     <o7.0..1> APBC0_PSR.APBC0: APB0 bus clock frequency division 
+//     <o7.0..1> APBC0_PSR.APBC0: APB0 bus clock frequency division
 //           <i> PCLK0 Max = 40MHz
 //           <i> Default: PCLK0 = HCLK
 //                     <0=> PCLK0 = HCLK
@@ -121,7 +121,7 @@
 //   </h>
 //
 //   <h> APB1 Prescaler
-//     <o8.0..1> APBC1_PSR.APBC1: APB1 bus clock frequency 
+//     <o8.0..1> APBC1_PSR.APBC1: APB1 bus clock frequency
 //           <i> PCLK1 Max = 40MHz
 //           <i> Default: PCLK1 = HCLK
 //                     <0=> PCLK1 = HCLK
@@ -132,7 +132,7 @@
 //   </h>
 //
 //   <h> APB2 Prescaler
-//     <o9.0..1> APBC2_PSR.APBC2: APB2 bus clock frequency 
+//     <o9.0..1> APBC2_PSR.APBC2: APB2 bus clock frequency
 //           <i> PCLK2 Max = 40MHz
 //           <i> Default: PCLK2 = HCLK
 //                     <0=> PCLK2 = HCLK
@@ -143,7 +143,7 @@
 //   </h>
 //
 //   <h> SW Watchdog Clock Prescaler
-//     <o10.0..1>SWC_PSR.SWDS: Software watchdog clock frequency division 
+//     <o10.0..1>SWC_PSR.SWDS: Software watchdog clock frequency division
 //           <i> Default: SWDGOGCLK = PCLK0
 //                     <0=> SWDGOGCLK = PCLK0
 //                     <1=> SWDGOGCLK = PCLK0 / 2
@@ -152,7 +152,7 @@
 //   </h>
 //
 //   <h> Trace Clock Prescaler
-//     <o11.0>   TTC_PSR.TTC: Trace clock frequency division 
+//     <o11.0>   TTC_PSR.TTC: Trace clock frequency division
 //           <i> Default: TPIUCLK = HCLK
 //                     <0=> TPIUCLK = HCLK
 //                     <1=> TPIUCLK = HCLK / 2
@@ -175,7 +175,7 @@
 
 /*--------------------- WatchDog Configuration -------------------------------*/
 //
-// <o0.0>  HW Watchdog disable 
+// <o0.0>  HW Watchdog disable
 
 #define HWWD_DISABLE          0x00000001
 
@@ -244,7 +244,7 @@
 /*----------------------------------------------------------------------------
   DEFINES
  *----------------------------------------------------------------------------*/
-    
+
 /*----------------------------------------------------------------------------
   Define clocks
  *----------------------------------------------------------------------------*/
@@ -410,7 +410,7 @@ static void CrtrimSet(void)
 void SystemInit (void) {
 
   uint32_t u32RegisterRead;
-  
+
 #if (HWWD_DISABLE)                                   /* HW Watchdog Disable */
   FM3_HWWDT->WDG_LCK = 0x1ACCE551;                     /* HW Watchdog Unlock */
   FM3_HWWDT->WDG_LCK = 0xE5331AAE;
@@ -427,11 +427,11 @@ void SystemInit (void) {
 
   FM3_CRG->CSW_TMR   = CSW_TMR_Val;                /* set oscillation stabilization wait time */
   if (SCM_CTL_Val & (1UL << 1)) {                    /* Main clock oscillator enabled ? */
-    FM3_CRG->SCM_CTL |= (1UL << 1);                /* enable main oscillator */ 
+    FM3_CRG->SCM_CTL |= (1UL << 1);                /* enable main oscillator */
     while (!(FM3_CRG->SCM_STR & (1UL << 1)));      /* wait for Main clock oscillation stable */
   }
   if (SCM_CTL_Val & (1UL << 3)) {                    /* Sub clock oscillator enabled ? */
-    FM3_CRG->SCM_CTL |= (1UL << 3);                /* enable sub oscillator */ 
+    FM3_CRG->SCM_CTL |= (1UL << 3);                /* enable sub oscillator */
     while (!(FM3_CRG->SCM_STR & (1UL << 3)));      /* wait for Sub clock oscillation stable */
   }
 
@@ -439,11 +439,11 @@ void SystemInit (void) {
   FM3_CRG->PLL_CTL1  = PLL_CTL1_Val;               /* set PLLM and PLLK */
   FM3_CRG->PLL_CTL2  = PLL_CTL2_Val;               /* set PLLN          */
   if (SCM_CTL_Val & (1UL << 4)) {                    /* PLL enabled ? */
-    FM3_CRG->SCM_CTL  |= (1UL << 4);               /* enable PLL */ 
+    FM3_CRG->SCM_CTL  |= (1UL << 4);               /* enable PLL */
     while (!(FM3_CRG->SCM_STR & (1UL << 4)));      /* wait for PLL stable */
   }
 
-  FM3_CRG->SCM_CTL  |= (SCM_CTL_Val & 0xE0);       /* Set Master Clock switch */ 
+  FM3_CRG->SCM_CTL  |= (SCM_CTL_Val & 0xE0);       /* Set Master Clock switch */
   do
   {
     u32RegisterRead = (FM3_CRG->SCM_CTL & 0xE0);

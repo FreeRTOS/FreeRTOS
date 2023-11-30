@@ -46,7 +46,7 @@
 	.extern dRegTest2_st1
 	.extern vGenerateYieldInterrupt
 	.extern vHPETIRQHandler1
-	
+
 	.global vRegTest1
 	.global vRegTest2
 	.global vApplicationHPETTimer1Wrapper

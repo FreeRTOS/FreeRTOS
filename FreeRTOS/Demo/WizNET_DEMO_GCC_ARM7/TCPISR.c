@@ -45,7 +45,7 @@ static long lDummyVariable;
 /*
  * When the WIZnet device asserts an interrupt we send an (empty) message to
  * the TCP task.  This wakes the task so the interrupt can be processed.  The
- * source of the interrupt has to be ascertained by the TCP task as this 
+ * source of the interrupt has to be ascertained by the TCP task as this
  * requires an I2C transaction which cannot be performed from this ISR.
  * Note this code predates the introduction of semaphores, a semaphore should
  * be used in place of the empty queue message.
@@ -56,14 +56,14 @@ extern QueueHandle_t xTCPISRQueue;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Just wake the TCP task so it knows an ISR has occurred. */
-	xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, &xHigherPriorityTaskWoken );	
+	xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, &xHigherPriorityTaskWoken );
 
-	/* We cannot carry on processing interrupts until the TCP task has 
+	/* We cannot carry on processing interrupts until the TCP task has
 	processed this one - so for now interrupts are disabled.  The TCP task will
 	re-enable it. */
 	VICIntEnClear |= tcpEINT0_VIC_CHANNEL_BIT;
 
-	/* Clear the interrupt bit. */	
+	/* Clear the interrupt bit. */
 	VICVectAddr = tcpCLEAR_VIC_INTERRUPT;
 
 	if( xHigherPriorityTaskWoken )

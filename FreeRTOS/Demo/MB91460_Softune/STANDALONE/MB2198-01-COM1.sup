@@ -19,7 +19,7 @@ Monitor Combination0=8/1/2:RealTimeMemory:,8/9/10:RAM Checker:C:48&1
 Core ID=0
 ChangeFlag=Disable
 [Device]
-Communication=RS COM1 115200 
+Communication=RS COM1 115200
 ProductID=0
 Protocol=3
 [Target]

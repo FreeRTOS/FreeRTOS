@@ -1,7 +1,7 @@
 /*
  * Memory Spaces Definitions.
  *
- * Need modifying for a specific board. 
+ * Need modifying for a specific board.
  *   FLASH.ORIGIN: starting address of flash
  *   FLASH.LENGTH: length of flash
  *   RAM.ORIGIN: starting address of RAM bank 0

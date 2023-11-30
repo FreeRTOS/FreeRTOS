@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*---------------------------------------------------------------------------
@@ -231,11 +231,11 @@ void GMACB_DumpRegisters(GMacb *pMacb)
     TRACE_INFO(" _1000BTCR : 0x%X\n\r", value);
     GMACB_ReadPhy(pHw, phyAddress, GMII_1000BTSR, &value, retryMax);
     TRACE_INFO(" _1000BTSR : 0x%X\n\r", value);
-  
+
     GMACB_ReadPhy(pHw, phyAddress, GMII_EMSR, &value, retryMax);
     TRACE_INFO(" _EMSR     : 0x%X\n\r", value);
     TRACE_INFO(" \n\r");
-    
+
     GMACB_ReadPhy(pHw, phyAddress, GMII_RLLMR, &value, retryMax);
     TRACE_INFO(" _RLLMR    : 0x%X\n\r", value);
     GMACB_ReadPhy(pHw, phyAddress, GMII_LMDCDR, &value, retryMax);
@@ -249,9 +249,9 @@ void GMACB_DumpRegisters(GMacb *pMacb)
     GMACB_ReadPhy(pHw, phyAddress, GMII_DDC1R, &value, retryMax);
     TRACE_INFO(" _DDC1R    : 0x%X\n\r", value);
     GMACB_ReadPhy(pHw, phyAddress, GMII_PHYCR, &value, retryMax);
-    TRACE_INFO(" _PHYCR    : 0x%X\n\r", value);  
+    TRACE_INFO(" _PHYCR    : 0x%X\n\r", value);
     TRACE_INFO(" \n\r");
-   
+
     value = GMII_CCR;
     GMACB_WritePhy(pHw, phyAddress, GMII_ERCR, value, retryMax);
     GMACB_ReadPhy(pHw, phyAddress, GMII_ERDRR, &value, retryMax);
@@ -276,11 +276,11 @@ void GMACB_DumpRegisters(GMacb *pMacb)
     GMACB_WritePhy(pHw, phyAddress, GMII_ERCR, value, retryMax);
     GMACB_ReadPhy(pHw, phyAddress, GMII_ERDRR, &value, retryMax);
     TRACE_INFO(" _RCCPSR   : 0x%X\n\r", value);
-    value = GMII_ATR;   
+    value = GMII_ATR;
     GMACB_WritePhy(pHw, phyAddress, GMII_ERCR, value, retryMax);
     GMACB_ReadPhy(pHw, phyAddress, GMII_ERDRR, &value, retryMax);
     TRACE_INFO(" _ATR      : 0x%X\n\r", value);
-    
+
     GMAC_DisableMdio(pHw);
 }
 
@@ -377,7 +377,7 @@ uint8_t GMACB_InitPhy(GMacb *pMacb,
 
     /* Perform RESET */
     TRACE_DEBUG("RESET PHY\n\r");
-    
+
     if (pResetPins) {
         /* Configure PINS */
         PIO_Configure(pResetPins, nbResetPins);
@@ -433,14 +433,14 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
 
     GMAC_EnableMdio(pHw);
 
-    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID1, &value, retryMax)) 
+    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID1, &value, retryMax))
     {
         TRACE_ERROR("Pb GEMAC_ReadPhy Id1\n\r");
         rc = 0;
         goto AutoNegotiateExit;
     }
     TRACE_DEBUG("ReadPhy Id1 0x%X, addresse: %d\n\r", value, phyAddress);
-    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID2, &phyAnar, retryMax)) 
+    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID2, &phyAnar, retryMax))
     {
         TRACE_ERROR("Pb GMACB_ReadPhy Id2\n\r");
         rc = 0;
@@ -454,7 +454,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
         TRACE_DEBUG("Vendor Number Model = 0x%X\n\r", ((phyAnar>>4)&0x3F));
         TRACE_DEBUG("Model Revision Number = 0x%X\n\r", (phyAnar&0x7));
     }
-    else 
+    else
     {
         TRACE_ERROR("Problem OUI value\n\r");
     }
@@ -469,41 +469,41 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
     //value = 0x3028;
     value = 0x2222;
     GMACB_WritePhy(pHw,phyAddress, GMII_ERDWR, value, retryMax);
-    
+
     value = 0xFF00;
     rc = GMACB_WritePhy(pHw,phyAddress, GMII_ICSR, value, retryMax);
- 
+
     /* Set the Auto_negotiation Advertisement Register, MII advertising for Next page
        100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3 */
     rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_ANAR, &phyAnar, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
     phyAnar = GMII_TX_FDX | GMII_TX_HDX |
               GMII_10_FDX | GMII_10_HDX | GMII_AN_IEEE_802_3;
     rc = GMACB_WritePhy(pHw,phyAddress, GMII_ANAR, phyAnar, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
 
     /* Read & modify 1000Base-T control register  */
     rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_1000BTCR, &gbaseTC, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
     gbaseTC |= GMII_1000BaseT_HALF_DUPLEX |GMII_1000BaseT_FULL_DUPLEX;
     rc = GMACB_WritePhy(pHw, phyAddress, GMII_1000BTCR, gbaseTC, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
-    
+
     /* Read & modify control register */
     rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_BMCR, &value, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
@@ -511,14 +511,14 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
     /* Restart Auto_negotiation */
     value |=  GMII_RESTART_AUTONEG;
     rc = GMACB_WritePhy(pHw, phyAddress, GMII_BMCR, value, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
     TRACE_DEBUG(" _BMCR: 0x%X\n\r", value);
 
     /* Check AutoNegotiate complete */
-    while (1) 
+    while (1)
     {
         rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_BMSR, &value, retryMax);
         if (rc == 0)
@@ -527,7 +527,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
             goto AutoNegotiateExit;
         }
         /* Done successfully */
-        if (value & GMII_AUTONEG_COMP) 
+        if (value & GMII_AUTONEG_COMP)
         {
             printf("AutoNegotiate complete\n\r");
             break;
@@ -540,7 +540,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
                 GMACB_DumpRegisters(pMacb);
                 TRACE_ERROR("TimeOut\n\r");
                 rc = 0;
-                goto AutoNegotiateExit; 
+                goto AutoNegotiateExit;
             }
         }
     }
@@ -549,7 +549,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
     while(1)
     {
         rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_1000BTSR, &gbaseTS, retryMax);
-        if (rc == 0) 
+        if (rc == 0)
         {
             goto AutoNegotiateExit;
         }
@@ -573,34 +573,34 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
 
         /* Get the AutoNeg Link partner base page */
         rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_ANLPAR, &phyAnalpar, retryMax);
-        if (rc == 0) 
+        if (rc == 0)
         {
             goto AutoNegotiateExit;
         }
 
         /* Setup the EMAC link speed */
-        if ((phyAnar & phyAnalpar) & GMII_TX_FDX) 
+        if ((phyAnar & phyAnalpar) & GMII_TX_FDX)
         {
             /* set RGMII for 100BaseTX and Full Duplex */
             duplex = GMAC_DUPLEX_FULL;
             speed = GMAC_SPEED_100M;
             break;
         }
-        else if ((phyAnar & phyAnalpar) & GMII_10_FDX) 
+        else if ((phyAnar & phyAnalpar) & GMII_10_FDX)
         {
             /* set RGMII for 10BaseT and Full Duplex */
             duplex = GMAC_DUPLEX_FULL;
             speed = GMAC_SPEED_10M;
             break;
         }
-        else if ((phyAnar & phyAnalpar) & GMII_TX_HDX) 
+        else if ((phyAnar & phyAnalpar) & GMII_TX_HDX)
         {
             /* set RGMII for 100BaseTX and half Duplex */
             duplex = GMAC_DUPLEX_HALF;
             speed = GMAC_SPEED_100M;
             break;
         }
-        else if ((phyAnar & phyAnalpar) & GMII_10_HDX) 
+        else if ((phyAnar & phyAnalpar) & GMII_10_HDX)
         {
             /* set RGMII for 10BaseT and half Duplex */
             duplex = GMAC_DUPLEX_HALF;

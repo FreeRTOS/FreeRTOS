@@ -77,7 +77,7 @@ void SMI_DeInit(void)
 void SMI_Init(SMI_InitTypeDef* SMI_InitStruct)
 {
   u32 Temp = 0;
- 
+
   /* Clear HOLD[7:0], PRESC[6:0] and TCS[3:0] bits */
   Temp = SMI->CR1 & SMI_HOLDPRESCTCS_RESET_Mask;
 
@@ -97,7 +97,7 @@ void SMI_Init(SMI_InitTypeDef* SMI_InitStruct)
   }
 
   /* Store the new value */
-  SMI->CR1 = Temp; 
+  SMI->CR1 = Temp;
 }
 
 /*******************************************************************************
@@ -112,10 +112,10 @@ void SMI_StructInit(SMI_InitTypeDef* SMI_InitStruct)
 {
   /* SMI_CK is sent continuously */
   SMI_InitStruct->SMI_ClockHold = SMI_ClockHold_Mask;
-  
+
   /* SMI_CK = HCLK/2 */
   SMI_InitStruct->SMI_Prescaler = SMI_Prescaler_Mask;
-  
+
   /* Deselect Time set to 6*SMI_CK periods */
   SMI_InitStruct->SMI_DeselectTime = SMI_DeselectTime_Mask;
 }
@@ -133,7 +133,7 @@ void SMI_StructInit(SMI_InitTypeDef* SMI_InitStruct)
 void SMI_ModeConfig(u32 SMI_Mode)
 {
   if(SMI_Mode == SMI_Mode_SW)
-  {   
+  {
     SMI->CR1 |= SMI_Mode_SW;
   }
   else
@@ -150,7 +150,7 @@ void SMI_ModeConfig(u32 SMI_Mode)
 * Input          : - SMI_TxLength: specifies the number of bytes to be transmitted
 *                    to external memory.
 *                    This parameter can be one of the following values:
-*                          - SMI_TxLength_0Bytes: No bytes transmitted  
+*                          - SMI_TxLength_0Bytes: No bytes transmitted
 *                          - SMI_TxLength_1Byte: 1 byte transmitted
 *                          - SMI_TxLength_2Bytes: 2 bytes transmitted
 *                          - SMI_TxLength_3Bytes: 3 bytes transmitted
@@ -158,7 +158,7 @@ void SMI_ModeConfig(u32 SMI_Mode)
 *                  - SMI_RxLength: specifies the number of bytes to be received
 *                    from external memory.
 *                    This parameter can be one of the following values:
-*                          - SMI_RxLength_0Bytes: No bytes received  
+*                          - SMI_RxLength_0Bytes: No bytes received
 *                          - SMI_RxLength_1Byte: 1 byte received
 *                          - SMI_RxLength_2Bytes: 2 bytes received
 *                          - SMI_RxLength_3Bytes: 3 bytes received
@@ -166,16 +166,16 @@ void SMI_ModeConfig(u32 SMI_Mode)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SMI_TxRxLengthConfig(u32 SMI_TxLength, u32 SMI_RxLength) 
+void SMI_TxRxLengthConfig(u32 SMI_TxLength, u32 SMI_RxLength)
 {
   u32 Temp = 0;
- 
+
   /* Clear TRA_LENGTH[2:0] and REC_LENGTH[2:0] bits */
   Temp = SMI->CR2 & SMI_TRARECLENGTH_RESET_Mask;
- 
+
   /* Set TRA_LENGTH[2:0] and REC_LENGTH[2:0] bits according to function parameters */
   Temp |= SMI_TxLength | SMI_RxLength;
- 
+
   /* Store the new value */
   SMI->CR2 = Temp;
 }
@@ -265,9 +265,9 @@ void SMI_SelectBank(u32 SMI_Bank)
       /* Select Bank3 */
       SMI->CR2 |= SMI_BS_Bank3_Mask;
       break;
-      
+
     default:
-      break;      
+      break;
   }
 }
 
@@ -310,7 +310,7 @@ void SMI_SendCmd(u32 Command)
   /* Load the command in the Transmit Register */
   SMI->TR = Command;
 
-  /* Start transfer */    
+  /* Start transfer */
   SMI->CR2 |= SMI_SEND_Mask;
 }
 
@@ -364,7 +364,7 @@ void SMI_WriteBurstConfig(u32 SMI_WriteBurst)
 * Function Name  : SMI_WriteByte
 * Description    : Writes a Byte to the selected memory Bank. This function is
 *                  used in Hardware mode only.
-*                  Before calling this function, send a Write Enable command to 
+*                  Before calling this function, send a Write Enable command to
 *                  the selected memory Bank using SMI_SendWENCmd() function.
 * Input          : - WriteAddr: external memory address from which the data will
 *                    be written.
@@ -382,7 +382,7 @@ void SMI_WriteByte(u32 WriteAddr, u8 Data)
 * Function Name  : SMI_WriteHalfWord
 * Description    : Writes a Half Word to the selected memory Bank. This function
 *                  is used in Hardware mode only.
-*                  Before calling this function, send a Write Enable command to 
+*                  Before calling this function, send a Write Enable command to
 *                  the selected memory Bank using SMI_SendWENCmd() function.
 * Input          : - WriteAddr: external memory address from which the data will
 *                    be written.
@@ -400,7 +400,7 @@ void SMI_WriteHalfWord(u32 WriteAddr, u16 Data)
 * Function Name  : SMI_WriteWord
 * Description    : Writes a Word to the selected memory Bank. This function is
 *                  used in Hardware mode only.
-*                  Before calling this function, send a Write Enable command to 
+*                  Before calling this function, send a Write Enable command to
 *                  the selected memory Bank using SMI_SendWENCmd() function.
 * Input          : - WriteAddr: external memory address from which the data will
 *                    be written.

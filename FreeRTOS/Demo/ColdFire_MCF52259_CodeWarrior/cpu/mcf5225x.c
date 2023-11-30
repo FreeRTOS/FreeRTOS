@@ -3,7 +3,7 @@
  * Purpose:		Source to select CF derivative
  *
  * Notes:
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -28,9 +28,9 @@ cpu_pause(int usecs)
         | MCF_DTIM_DTMR_CLK_DIV1
         | MCF_DTIM_DTMR_RST;
 
-    while ((MCF_DTIM3_DTER & MCF_DTIM_DTER_REF) == 0) 
+    while ((MCF_DTIM3_DTER & MCF_DTIM_DTER_REF) == 0)
     {};
-    
+
     /* Disable the timer */
     MCF_DTIM3_DTMR = 0;
 }
@@ -71,7 +71,7 @@ cpu_handle_interrupt (int vector)
 {
     if (vector < 64 || vector > 192)
         return;
-    
+
     if (vector >= 64 && vector <= 71)
         board_handle_interrupt(vector);
     else

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -77,8 +77,8 @@
  * \brief USART xDMA Rx callback
  * Invoked on USART DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to USARTDma instance.   
- */ 
+ * \param pArg Pointer to callback argument - Pointer to USARTDma instance.
+ */
 static void USARTD_Rx_Cb(uint32_t channel, UsartDma* pArg)
 {
 
@@ -94,7 +94,7 @@ static void USARTD_Rx_Cb(uint32_t channel, UsartDma* pArg)
     /* Invoke the callback associated with the current command */
     if (pUsartdCh && pUsartdCh->callback) {
         pUsartdCh->callback(0, pUsartdCh->pArgument);
-    }    
+    }
     pUsartdCh->Done = 1;
     memory_barrier();
 }
@@ -103,8 +103,8 @@ static void USARTD_Rx_Cb(uint32_t channel, UsartDma* pArg)
  * \brief USART xDMA Rx callback
  * Invoked on USART DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to USARTDma instance.   
- */ 
+ * \param pArg Pointer to callback argument - Pointer to USARTDma instance.
+ */
 static void USARTD_Tx_Cb(uint32_t channel, UsartDma* pArg)
 {
     UsartChannel *pUsartdCh = pArg->pTxChannel;
@@ -185,7 +185,7 @@ static uint8_t _configureTxLinkList(Usart *pUsartHw, void *pXdmad, UsartChannel 
     if ((unsigned int)pUsartHw == (unsigned int)USART0 ) usartId = ID_USART0;
     if ((unsigned int)pUsartHw == (unsigned int)USART1 ) usartId = ID_USART1;
     if ((unsigned int)pUsartHw == (unsigned int)USART2 ) usartId = ID_USART2;
-    /* Setup TX Link List */ 
+    /* Setup TX Link List */
     xdmadTxCfg.mbr_ubc =   XDMA_UBC_NVIEW_NDV0 |
         XDMA_UBC_NDE_FETCH_DIS|
         XDMA_UBC_NSEN_UPDATED |  pUsartTx->BuffSize;
@@ -227,7 +227,7 @@ static uint8_t _configureTxLinkList(Usart *pUsartHw, void *pXdmad, UsartChannel 
  * \param pUsartHw Associated USART peripheral.
  * \param usartId  USART peripheral identifier.
  * \param UsartClk USART clock.
- * \param pXdmad  Pointer to a Dmad instance. 
+ * \param pXdmad  Pointer to a Dmad instance.
  */
 uint32_t USARTD_Configure( UsartDma *pUsartd ,
         Usart *pUsartHw ,
@@ -248,7 +248,7 @@ uint32_t USARTD_Configure( UsartDma *pUsartd ,
 
     /* Driver initialize */
     XDMAD_Initialize(  pUsartd->pXdmad, 0 );
-    /* Configure and enable interrupt on RC compare */ 
+    /* Configure and enable interrupt on RC compare */
     NVIC_ClearPendingIRQ(XDMAC_IRQn);
     NVIC_SetPriority( XDMAC_IRQn ,1);
     return 0;
@@ -264,7 +264,7 @@ uint32_t USARTD_Configure( UsartDma *pUsartd ,
  * \param pUsartHw Associated USART peripheral.
  * \param usartId  USART peripheral identifier.
  * \param UsartClk USART clock.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
 
 uint32_t USARTD_EnableRxChannels( UsartDma *pUsartd, UsartChannel *pRxCh)
@@ -281,7 +281,7 @@ uint32_t USARTD_EnableRxChannels( UsartDma *pUsartd, UsartChannel *pRxCh)
 
     /* Allocate a DMA channel for USART0/1 RX. */
     pRxCh->ChNum =  XDMAD_AllocateChannel( pUsartd->pXdmad, pUsartd->usartId, XDMAD_TRANSFER_MEMORY);
-    if ( pRxCh->ChNum == XDMAD_ALLOC_FAILED ) 
+    if ( pRxCh->ChNum == XDMAD_ALLOC_FAILED )
     {
         return USARTD_ERROR;
     }
@@ -291,7 +291,7 @@ uint32_t USARTD_EnableRxChannels( UsartDma *pUsartd, UsartChannel *pRxCh)
     if (XDMAD_PrepareChannel( pUsartd->pXdmad, pRxCh->ChNum ))
         return USARTD_ERROR;
 
-    /* Enable interrupt  */ 
+    /* Enable interrupt  */
     NVIC_EnableIRQ(XDMAC_IRQn);
 
     if (_configureRxLinkList(pUsartHw, pUsartd->pXdmad, pRxCh))
@@ -310,13 +310,13 @@ uint32_t USARTD_EnableTxChannels( UsartDma *pUsartd, UsartChannel *pTxCh)
     pUsartd->pTxChannel = pTxCh;
 
     /* Enables the USART to transfer data. */
-    USART_SetTransmitterEnabled ( pUsartHw , 1);    
+    USART_SetTransmitterEnabled ( pUsartHw , 1);
 
     XDMAD_FreeChannel( pUsartd->pXdmad, pTxCh->ChNum);
 
     /* Allocate a DMA channel for USART0/1 TX. */
     pTxCh->ChNum =  XDMAD_AllocateChannel( pUsartd->pXdmad, XDMAD_TRANSFER_MEMORY, pUsartd->usartId);
-    if ( pTxCh->ChNum == XDMAD_ALLOC_FAILED ) 
+    if ( pTxCh->ChNum == XDMAD_ALLOC_FAILED )
     {
         return USARTD_ERROR;
     }
@@ -326,7 +326,7 @@ uint32_t USARTD_EnableTxChannels( UsartDma *pUsartd, UsartChannel *pTxCh)
     if ( XDMAD_PrepareChannel( pUsartd->pXdmad, pTxCh->ChNum ))
         return USARTD_ERROR;
 
-    /* Enable interrupt  */ 
+    /* Enable interrupt  */
     NVIC_EnableIRQ(XDMAC_IRQn);
 
     if (_configureTxLinkList(pUsartHw, pUsartd->pXdmad, pTxCh))
@@ -350,7 +350,7 @@ uint32_t USARTD_SendData( UsartDma *pUsartd)
 
     /* Start DMA 0(RX) && 1(TX) */
     while(!pUsartd->pTxChannel->Done);
-    if (XDMAD_StartTransfer( pUsartd->pXdmad, pUsartd->pTxChannel->ChNum )) 
+    if (XDMAD_StartTransfer( pUsartd->pXdmad, pUsartd->pTxChannel->ChNum ))
         return USARTD_ERROR_LOCK;
     pUsartd->pTxChannel->Done=0;
     memory_barrier();
@@ -368,11 +368,11 @@ uint32_t USARTD_SendData( UsartDma *pUsartd)
  * valid.
  */
 uint32_t USARTD_RcvData( UsartDma *pUsartd)
-{    
+{
 
     while(!pUsartd->pRxChannel->Done);
     /* Start DMA 0(RX) && 1(TX) */
-    if (XDMAD_StartTransfer( pUsartd->pXdmad, pUsartd->pRxChannel->ChNum )) 
+    if (XDMAD_StartTransfer( pUsartd->pXdmad, pUsartd->pRxChannel->ChNum ))
         return USARTD_ERROR_LOCK;
     pUsartd->pRxChannel->Done=0;
     memory_barrier();

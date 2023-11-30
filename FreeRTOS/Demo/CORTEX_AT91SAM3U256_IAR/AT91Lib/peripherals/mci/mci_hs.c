@@ -158,7 +158,7 @@ static unsigned int DMACH_MCI_P2M(unsigned int channel_index,
 
     // DMA channel configuration
     srcAddress  = (unsigned int)src_addr;    // Set the data start address
-    destAddress = (unsigned int)dest_addr; //(unsigned int)SSC_THR_ADD; 
+    destAddress = (unsigned int)dest_addr; //(unsigned int)SSC_THR_ADD;
     buffSize    = trans_size;
 
     if(buffSize >= 0x10000){
@@ -174,7 +174,7 @@ static unsigned int DMACH_MCI_P2M(unsigned int channel_index,
     // Set DMA channel DSCR
     DMA_SetDescriptorAddr(channel_index, (unsigned int)&LLI_CH[0]);
 
-    // Set DMA channel control A 
+    // Set DMA channel control A
     DMA_SetSourceBufferSize(channel_index, buffSize,
             (AT91C_HDMA_SRC_WIDTH_WORD >> 24),
             (AT91C_HDMA_DST_WIDTH_WORD >> 28), 0);
@@ -282,7 +282,7 @@ static unsigned int DMACH_MCI_M2P(unsigned int channel_index,
     // Set DMA channel DSCR
     DMA_SetDescriptorAddr(channel_index, (unsigned int)&LLI_CH[0]);
 
-    // Set DMA channel control A 
+    // Set DMA channel control A
     DMA_SetSourceBufferSize(channel_index, buffSize,
                               (AT91C_HDMA_SRC_WIDTH_WORD >> 24),
                               (AT91C_HDMA_DST_WIDTH_WORD >> 28), 0);
@@ -351,10 +351,10 @@ static unsigned int DMACH_MCI_M2P(unsigned int channel_index,
 
         srcAddress += 4*0xFFF;
 
-        
+
         LLI_rownumber++;
     }
-    
+
     return 0;
 }
 
@@ -454,7 +454,7 @@ void MCI_Init(
     // Configure MCI
     //mciCfg = AT91C_MCI_FIFOMODE_AMOUNTDATA | AT91C_MCI_FERRCTRL_RWCMD;
     mciCfg = AT91C_MCI_FIFOMODE_ONEDATA | AT91C_MCI_FERRCTRL_RWCMD;
-    
+
     WRITE_MCI(pMciHw, MCI_CFG, mciCfg);
 
     // Disable the MCI peripheral clock.
@@ -539,7 +539,7 @@ unsigned int MCI_SetSpeed(Mci *pMci,
         clkdiv = (BOARD_MCK / 2 / mciSpeed);
         if (mciLimit && clkdiv < divLimit)
             clkdiv = divLimit;
-        if (clkdiv > 0) 
+        if (clkdiv > 0)
             clkdiv -= 1;
         ASSERT( (clkdiv & 0xFFFFFF00) == 0, "mciSpeed too small");
     }
@@ -656,7 +656,7 @@ unsigned char MCI_SendCommand(Mci *pMci, MciCmd *pCommand)
 
         // DATA transfer from card to host
         if (pCommand->isRead) {
-            
+
           #if defined(MCI_DMA_ENABLE)
             DMACH_MCI_P2M(BOARD_MCI_DMA_CHANNEL,
                           (unsigned int*)&pMciHw->MCI_FIFO,
@@ -665,7 +665,7 @@ unsigned char MCI_SendCommand(Mci *pMci, MciCmd *pCommand)
             DMACH_EnableIt(pMciHw, BOARD_MCI_DMA_CHANNEL);
             DMA_EnableChannel(BOARD_MCI_DMA_CHANNEL);
             mciIer = AT91C_MCI_DMADONE | STATUS_ERRORS;
-          #else 
+          #else
             mciIer = AT91C_MCI_CMDRDY | STATUS_ERRORS;
           #endif
         }
@@ -897,7 +897,7 @@ void MCI_Handler(Mci *pMci)
 
         // Disable interrupts
         WRITE_MCI(pMciHw, MCI_IDR, READ_MCI(pMciHw, MCI_IMR));
-        
+
         // Release the semaphore
         pMci->semaphore++;
 

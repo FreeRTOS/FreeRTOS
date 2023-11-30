@@ -112,7 +112,7 @@ extern void AFEC_Initialize( Afec* pAFE, uint32_t dwID )
  */
 
 extern uint32_t AFEC_SetClock( Afec* pAFE, uint32_t dwClk, uint32_t dwMck )
-{ 
+{
     uint32_t dwPres, dwMr;
     /* Formula for PRESCAL is:
        PRESCAL = peripheral clock/ fAFE Clock - 1 */

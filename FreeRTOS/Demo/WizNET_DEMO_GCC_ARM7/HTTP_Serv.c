@@ -59,7 +59,7 @@ void vHTTPServerTask( void *pvParameters )
 		in the WIZnet hardware, so simply resets all the buffers for each
 		connection - and only processes one connection at a time. */
 		if( lTCPSoftReset() )
-		{	  
+		{
 			/* Create the socket that is going to accept incoming connections. */
 			if( lTCPCreateSocket() )
 			{
@@ -72,9 +72,9 @@ void vHTTPServerTask( void *pvParameters )
 			}
 		}
 
-		/* If we get here then the connection completed or failed.  Wait a 
+		/* If we get here then the connection completed or failed.  Wait a
 		while then try or start again. */
-		vTaskDelay( tcpCONNECTION_DELAY );		
+		vTaskDelay( tcpCONNECTION_DELAY );
 	}
 }
 

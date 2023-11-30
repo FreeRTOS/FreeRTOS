@@ -8,9 +8,9 @@
 
 #
 # This is an ARM DS5 debugger script that is intended to help folks run and
-# debug uboot.  It loads the preloader (a.k.a. spl) into onchip ram, runs it 
+# debug uboot.  It loads the preloader (a.k.a. spl) into onchip ram, runs it
 # to setup DDR, then loads uboot, lets uboot run a bit to calculate relocation
-# offset, and finally reloads symbol table with calculated offset in the 
+# offset, and finally reloads symbol table with calculated offset in the
 # relocated code.
 #
 
@@ -35,14 +35,14 @@ cont
 wait 60s
 
 #
-# 
+#
 # now reload the symbol table with runtime calculated relocation offset.
 # register r8 is uboot's "global data" pointer.
 #
 symbol-file "$sdir/uboot-socfpga/u-boot" ((gd_t*)$r8)->reloc_off
 
 #
-# Now set a break in the board_init_r (from uboot).  It must be a hardware 
+# Now set a break in the board_init_r (from uboot).  It must be a hardware
 # breakpoint because this is after relocation.
 #
 thbreak board_init_r

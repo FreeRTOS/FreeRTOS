@@ -38,10 +38,10 @@ extern "C" {
 #define JTVIC_PRI5          2
 #define JTVIC_PRI7          3
 
-/* Each JTVIC GIRQx has 4 32-bit priority registers where each nibble 
+/* Each JTVIC GIRQx has 4 32-bit priority registers where each nibble
  * encodes one of four priorities.
- * Generate JTVIC GIRQx Priority Register value for field number b with 
- * priority p 
+ * Generate JTVIC GIRQx Priority Register value for field number b with
+ * priority p
  * b is the field [0,7]
  * p is the priority 0=IPL1, 1=IPL3, 2=IPL5, 3=IPL7
  */

@@ -12,21 +12,21 @@ IF EXIST Source Goto END
 
 	REM Create the required directory structure.
 	MD Source
-	MD Source\include	
+	MD Source\include
 	MD Source\portable\GCC\CORTUS_APS3
-	MD Source\portable\MemMang	
+	MD Source\portable\MemMang
 	MD Demo\Common
 	MD Demo\Common\include
-	
+
 	REM Copy the core kernel files.
 	copy ..\..\Source\*.* Source
-	
+
 	REM Copy the common header files
 	copy ..\..\Source\include\*.* Source\include
-	
+
 	REM Copy the portable layer files
 	copy ..\..\Source\portable\GCC\CORTUS_APS3\*.* Source\portable\GCC\CORTUS_APS3
-	
+
 	REM Copy the basic memory allocation files
 	copy ..\..\Source\portable\MemMang\heap_2.c Source\portable\MemMang
 
@@ -38,8 +38,8 @@ IF EXIST Source Goto END
 	copy ..\common\Minimal\integer.c Demo\Common
 	copy ..\common\Minimal\PollQ.c Demo\Common
 	copy ..\common\Minimal\semtest.c Demo\Common
-	
+
 	REM Copy the common demo file headers.
 	copy ..\common\include\*.* Demo\Common\include
-	
+
 : END

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -185,8 +185,8 @@ extern void EMACD_Handler( sEmacd *pEmacd );
 extern void EMACD_Reset( sEmacd * pEmacd );
 
 extern uint8_t EMACD_Send(sEmacd * pEmacd,
-                          void *pBuffer, 
-                          uint32_t size, 
+                          void *pBuffer,
+                          uint32_t size,
                           fEmacdTransferCallback fTxCallback);
 
 extern uint32_t EMACD_TxLoad( sEmacd *pEmacd );

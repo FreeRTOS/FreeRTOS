@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,16 +31,16 @@
 /// \unit
 ///
 /// !Purpose
-/// 
-/// Methods to manage the Coprocessor 15. Coprocessor 15, or System Control 
-/// Coprocessor CP15, is used to configure and control all the items in the 
+///
+/// Methods to manage the Coprocessor 15. Coprocessor 15, or System Control
+/// Coprocessor CP15, is used to configure and control all the items in the
 /// list below:
 /// • ARM core
 /// • Caches (ICache, DCache and write buffer)
 /// • TCM
 /// • MMU
 /// • Other system options
-/// 
+///
 /// !Usage
 ///
 /// -# Enable or disable D cache with Enable_D_Cache and Disable_D_Cache

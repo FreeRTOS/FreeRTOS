@@ -41,37 +41,37 @@ extern "C"
 /*
  * Component : GPIO Module - ALT_GPIO
  * GPIO Module
- * 
+ *
  * Registers in the GPIO module
- * 
+ *
  */
 /*
  * Register : Port A Data Register - gpio_swporta_dr
- * 
+ *
  * This GPIO Data register is used to input or output data
- * 
+ *
  * Check the GPIO chapter in the handbook for details on how GPIO2 is implemented.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------
  *  [28:0]  | RW     | 0x0   | Port A Data
  *  [31:29] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Port A Data - gpio_swporta_dr
- * 
+ *
  * Values written to this register are output on the I/O signals of the GPIO Data
  * Register, if the corresponding data direction bits for GPIO Data Direction Field
  * are set to Output mode. The value read back is equal to the last value written
  * to this register.
- * 
+ *
  * Check the GPIO chapter in the handbook for details on how GPIO2 is implemented.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_GPIO_SWPORTA_DR_GPIO_SWPORTA_DR register field. */
 #define ALT_GPIO_SWPORTA_DR_GPIO_SWPORTA_DR_LSB        0
@@ -98,7 +98,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_SWPORTA_DR.
  */
 struct ALT_GPIO_SWPORTA_DR_s
@@ -118,47 +118,47 @@ typedef volatile struct ALT_GPIO_SWPORTA_DR_s  ALT_GPIO_SWPORTA_DR_t;
 
 /*
  * Register : Port A Data Direction Register - gpio_swporta_ddr
- * 
+ *
  * This register establishes the direction of each corresponding GPIO Data Field
  * Bit.
- * 
+ *
  * Check the GPIO chapter in the handbook for details on how GPIO2 is implemented.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------------
  *  [28:0]  | RW     | 0x0   | Port A Data Direction Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Port A Data Direction Field - gpio_swporta_ddr
- * 
+ *
  * Values written to this register independently control the direction of the
  * corresponding data bit in the Port A Data Register.
- * 
+ *
  * Check the GPIO chapter in the handbook for details on how GPIO2 is implemented.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description     
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:-----------------
- *  ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR_E_IN  | 0x0   | Input Direction 
+ *  ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR_E_IN  | 0x0   | Input Direction
  *  ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR_E_OUT | 0x1   | Output Direction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR
- * 
+ *
  * Input Direction
  */
 #define ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR_E_IN  0x0
 /*
  * Enumerated value for register field ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR
- * 
+ *
  * Output Direction
  */
 #define ALT_GPIO_SWPORTA_DDR_GPIO_SWPORTA_DDR_E_OUT 0x1
@@ -188,7 +188,7 @@ typedef volatile struct ALT_GPIO_SWPORTA_DR_s  ALT_GPIO_SWPORTA_DR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_SWPORTA_DDR.
  */
 struct ALT_GPIO_SWPORTA_DDR_s
@@ -208,44 +208,44 @@ typedef volatile struct ALT_GPIO_SWPORTA_DDR_s  ALT_GPIO_SWPORTA_DDR_t;
 
 /*
  * Register : Interrupt Enable Register - gpio_inten
- * 
+ *
  * The Interrupt enable register allows interrupts for each bit of the Port A data
  * register.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description           
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------
  *  [28:0]  | RW     | 0x0   | Interrupt Enable Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Enable Field - gpio_inten
- * 
+ *
  * Allows each bit of Port A Data Register to be configured for interrupt
  * capability. Interrupts are disabled on the corresponding bits of Port A Data
  * Register if the corresponding data direction register is set to Output.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:----------------------------
  *  ALT_GPIO_INTEN_GPIO_INTEN_E_DIS | 0x0   | Disable Interrupt on Port A
- *  ALT_GPIO_INTEN_GPIO_INTEN_E_EN  | 0x1   | Enable Interrupt on Port A 
- * 
+ *  ALT_GPIO_INTEN_GPIO_INTEN_E_EN  | 0x1   | Enable Interrupt on Port A
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_INTEN_GPIO_INTEN
- * 
+ *
  * Disable Interrupt on Port A
  */
 #define ALT_GPIO_INTEN_GPIO_INTEN_E_DIS 0x0
 /*
  * Enumerated value for register field ALT_GPIO_INTEN_GPIO_INTEN
- * 
+ *
  * Enable Interrupt on Port A
  */
 #define ALT_GPIO_INTEN_GPIO_INTEN_E_EN  0x1
@@ -275,7 +275,7 @@ typedef volatile struct ALT_GPIO_SWPORTA_DDR_s  ALT_GPIO_SWPORTA_DDR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_INTEN.
  */
 struct ALT_GPIO_INTEN_s
@@ -295,43 +295,43 @@ typedef volatile struct ALT_GPIO_INTEN_s  ALT_GPIO_INTEN_t;
 
 /*
  * Register : Interrupt Mask Register - gpio_intmask
- * 
+ *
  * Controls which pins cause interrupts on Port A Data Register inputs.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description         
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------
  *  [28:0]  | RW     | 0x0   | Interrupt Mask Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*         
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Mask Field - gpio_intmask
- * 
+ *
  * Controls whether an interrupt on Port A Data Register can generate an interrupt
  * to the interrupt controller by not masking it. The unmasked status can be read
  * as well as the resultant status after masking.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------
  *  ALT_GPIO_INTMSK_GPIO_INTMSK_E_DIS | 0x0   | Interrupt bits are unmasked
- *  ALT_GPIO_INTMSK_GPIO_INTMSK_E_EN  | 0x1   | Mask Interrupt             
- * 
+ *  ALT_GPIO_INTMSK_GPIO_INTMSK_E_EN  | 0x1   | Mask Interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_INTMSK_GPIO_INTMSK
- * 
+ *
  * Interrupt bits are unmasked
  */
 #define ALT_GPIO_INTMSK_GPIO_INTMSK_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_GPIO_INTMSK_GPIO_INTMSK
- * 
+ *
  * Mask Interrupt
  */
 #define ALT_GPIO_INTMSK_GPIO_INTMSK_E_EN    0x1
@@ -361,7 +361,7 @@ typedef volatile struct ALT_GPIO_INTEN_s  ALT_GPIO_INTEN_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_INTMSK.
  */
 struct ALT_GPIO_INTMSK_s
@@ -381,42 +381,42 @@ typedef volatile struct ALT_GPIO_INTMSK_s  ALT_GPIO_INTMSK_t;
 
 /*
  * Register : Interrupt Level Register - gpio_inttype_level
- * 
+ *
  * The interrupt level register defines the type of interrupt (edge or level).
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description          
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------
  *  [28:0]  | RW     | 0x0   | Interrupt Level Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Level Field - gpio_inttype_level
- * 
+ *
  * This field controls the type of interrupt that can occur on the Port A Data
  * Register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                              | Value | Description    
+ *
+ *  Enum                                              | Value | Description
  * :--------------------------------------------------|:------|:----------------
  *  ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL_E_LEVEL | 0x0   | Level-sensitive
- *  ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL_E_EDGE  | 0x1   | Edge-sensitive 
- * 
+ *  ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL_E_EDGE  | 0x1   | Edge-sensitive
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL
- * 
+ *
  * Level-sensitive
  */
 #define ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL_E_LEVEL   0x0
 /*
  * Enumerated value for register field ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL
- * 
+ *
  * Edge-sensitive
  */
 #define ALT_GPIO_INTTYPE_LEVEL_GPIO_INTTYPE_LEVEL_E_EDGE    0x1
@@ -446,7 +446,7 @@ typedef volatile struct ALT_GPIO_INTMSK_s  ALT_GPIO_INTMSK_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_INTTYPE_LEVEL.
  */
 struct ALT_GPIO_INTTYPE_LEVEL_s
@@ -466,43 +466,43 @@ typedef volatile struct ALT_GPIO_INTTYPE_LEVEL_s  ALT_GPIO_INTTYPE_LEVEL_t;
 
 /*
  * Register : Interrupt Polarity Register - gpio_int_polarity
- * 
+ *
  * Controls the Polarity of Interrupts that can occur on inputs of Port A Data
  * Register
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description           
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------
  *  [28:0]  | RW     | 0x0   | Polarity Control Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Polarity Control Field - gpio_int_polarity
- * 
+ *
  * Controls the polarity of edge or level sensitivity that can occur on input of
  * Port A Data Register.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:------------
- *  ALT_GPIO_INT_POL_GPIO_INT_POL_E_ACTLOW  | 0x0   | Active low 
+ *  ALT_GPIO_INT_POL_GPIO_INT_POL_E_ACTLOW  | 0x0   | Active low
  *  ALT_GPIO_INT_POL_GPIO_INT_POL_E_ACTHIGH | 0x1   | Active high
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_INT_POL_GPIO_INT_POL
- * 
+ *
  * Active low
  */
 #define ALT_GPIO_INT_POL_GPIO_INT_POL_E_ACTLOW  0x0
 /*
  * Enumerated value for register field ALT_GPIO_INT_POL_GPIO_INT_POL
- * 
+ *
  * Active high
  */
 #define ALT_GPIO_INT_POL_GPIO_INT_POL_E_ACTHIGH 0x1
@@ -532,7 +532,7 @@ typedef volatile struct ALT_GPIO_INTTYPE_LEVEL_s  ALT_GPIO_INTTYPE_LEVEL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_INT_POL.
  */
 struct ALT_GPIO_INT_POL_s
@@ -552,41 +552,41 @@ typedef volatile struct ALT_GPIO_INT_POL_s  ALT_GPIO_INT_POL_t;
 
 /*
  * Register : Interrupt Status Register - gpio_intstatus
- * 
+ *
  * The Interrupt status is reported for all Port A Data Register Bits.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description           
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------
  *  [28:0]  | RW     | 0x0   | Interrupt Status Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Status Field - gpio_intstatus
- * 
+ *
  * Interrupt status of Port A Data Register.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:------------
- *  ALT_GPIO_INTSTAT_GPIO_INTSTAT_E_INACT | 0x0   | Inactive   
- *  ALT_GPIO_INTSTAT_GPIO_INTSTAT_E_ACT   | 0x1   | Active     
- * 
+ *  ALT_GPIO_INTSTAT_GPIO_INTSTAT_E_INACT | 0x0   | Inactive
+ *  ALT_GPIO_INTSTAT_GPIO_INTSTAT_E_ACT   | 0x1   | Active
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_INTSTAT_GPIO_INTSTAT
- * 
+ *
  * Inactive
  */
 #define ALT_GPIO_INTSTAT_GPIO_INTSTAT_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_GPIO_INTSTAT_GPIO_INTSTAT
- * 
+ *
  * Active
  */
 #define ALT_GPIO_INTSTAT_GPIO_INTSTAT_E_ACT     0x1
@@ -616,7 +616,7 @@ typedef volatile struct ALT_GPIO_INT_POL_s  ALT_GPIO_INT_POL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_INTSTAT.
  */
 struct ALT_GPIO_INTSTAT_s
@@ -636,43 +636,43 @@ typedef volatile struct ALT_GPIO_INTSTAT_s  ALT_GPIO_INTSTAT_t;
 
 /*
  * Register : Raw Interrupt Status Register - gpio_raw_intstatus
- * 
+ *
  * This is the Raw Interrupt Status Register for Port A Data Register. It is used
  * with the Interrupt Mask Register to allow interrupts from the Port A Data
  * Register.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description               
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------
  *  [28:0]  | RW     | 0x0   | Raw Interrupt Status Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Raw Interrupt Status Field - gpio_raw_intstatus
- * 
+ *
  * Raw interrupt of status of Port A Data Register (premasking bits)
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:------------
- *  ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT_E_INACT | 0x0   | Inactive   
- *  ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT_E_ACT   | 0x1   | Active     
- * 
+ *  ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT_E_INACT | 0x0   | Inactive
+ *  ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT_E_ACT   | 0x1   | Active
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT
- * 
+ *
  * Inactive
  */
 #define ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT_E_INACT   0x0
 /*
  * Enumerated value for register field ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT
- * 
+ *
  * Active
  */
 #define ALT_GPIO_RAW_INTSTAT_GPIO_RAW_INTSTAT_E_ACT     0x1
@@ -702,7 +702,7 @@ typedef volatile struct ALT_GPIO_INTSTAT_s  ALT_GPIO_INTSTAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_RAW_INTSTAT.
  */
 struct ALT_GPIO_RAW_INTSTAT_s
@@ -722,43 +722,43 @@ typedef volatile struct ALT_GPIO_RAW_INTSTAT_s  ALT_GPIO_RAW_INTSTAT_t;
 
 /*
  * Register : Debounce Enable Register - gpio_debounce
- * 
+ *
  * Debounces each IO Pin
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                    
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------------
  *  [28:0]  | RW     | 0x0   | ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE
- *  [31:29] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : gpio_debounce
- * 
+ *
  * Controls whether an external signal that is the source of an interrupt needs to
  * be debounced to remove any spurious glitches. A signal must be valid for two
  * periods of an external clock (gpio_db_clk) before it is internally processed.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description    
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:----------------
- *  ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE_E_DIS | 0x0   | No debounce    
+ *  ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE_E_DIS | 0x0   | No debounce
  *  ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE_E_EN  | 0x1   | Enable debounce
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE
- * 
+ *
  * No debounce
  */
 #define ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE
- * 
+ *
  * Enable debounce
  */
 #define ALT_GPIO_DEBOUNCE_GPIO_DEBOUNCE_E_EN    0x1
@@ -788,7 +788,7 @@ typedef volatile struct ALT_GPIO_RAW_INTSTAT_s  ALT_GPIO_RAW_INTSTAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_DEBOUNCE.
  */
 struct ALT_GPIO_DEBOUNCE_s
@@ -808,41 +808,41 @@ typedef volatile struct ALT_GPIO_DEBOUNCE_s  ALT_GPIO_DEBOUNCE_t;
 
 /*
  * Register : Clear Interrupt Register - gpio_porta_eoi
- * 
+ *
  * Port A Data Register interrupt handling.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                 
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------
  *  [28:0]  | W      | 0x0   | Clears Edge Interrupts Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Clears Edge Interrupts Field - gpio_porta_eoi
- * 
+ *
  * Controls the clearing of edge type interrupts from the Port A Data Register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description       
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------------
  *  ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI_E_NOCLR | 0x0   | No interrupt clear
- *  ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI_E_CLR   | 0x1   | Clear interrupt   
- * 
+ *  ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI_E_CLR   | 0x1   | Clear interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI
- * 
+ *
  * No interrupt clear
  */
 #define ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI_E_NOCLR   0x0
 /*
  * Enumerated value for register field ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI
- * 
+ *
  * Clear interrupt
  */
 #define ALT_GPIO_PORTA_EOI_GPIO_PORTA_EOI_E_CLR     0x1
@@ -872,7 +872,7 @@ typedef volatile struct ALT_GPIO_DEBOUNCE_s  ALT_GPIO_DEBOUNCE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_PORTA_EOI.
  */
 struct ALT_GPIO_PORTA_EOI_s
@@ -892,26 +892,26 @@ typedef volatile struct ALT_GPIO_PORTA_EOI_s  ALT_GPIO_PORTA_EOI_t;
 
 /*
  * Register : External Port A Register - gpio_ext_porta
- * 
+ *
  * The external port register is used to input data to the metastability flops.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description        
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------
  *  [28:0]  | R      | 0x0   | External Port Field
- *  [31:29] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : External Port Field - gpio_ext_porta
- * 
+ *
  * When Port A Data Register is configured as Input, then reading this location
  * reads the values on the signals. When the data direction of Port A Data Register
  * is set as Output, reading this location reads Port A Data Register
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_GPIO_EXT_PORTA_GPIO_EXT_PORTA register field. */
 #define ALT_GPIO_EXT_PORTA_GPIO_EXT_PORTA_LSB        0
@@ -938,7 +938,7 @@ typedef volatile struct ALT_GPIO_PORTA_EOI_s  ALT_GPIO_PORTA_EOI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_EXT_PORTA.
  */
 struct ALT_GPIO_EXT_PORTA_s
@@ -958,41 +958,41 @@ typedef volatile struct ALT_GPIO_EXT_PORTA_s  ALT_GPIO_EXT_PORTA_t;
 
 /*
  * Register : Synchronization Level Register - gpio_ls_sync
- * 
+ *
  * The Synchronization level register is used to synchronize input with l4_mp_clk
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [0]    | RW     | 0x0   | Synchronization Level Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Synchronization Level Field - gpio_ls_sync
- * 
+ *
  * The level-sensitive interrupts is synchronized to l4_mp_clk.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                    
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:--------------------------------
  *  ALT_GPIO_LS_SYNC_GPIO_LS_SYNC_E_NOSYNC | 0x0   | No synchronization to l4_mp_clk
- *  ALT_GPIO_LS_SYNC_GPIO_LS_SYNC_E_SYNC   | 0x1   | Synchronize to l4_mp_clk       
- * 
+ *  ALT_GPIO_LS_SYNC_GPIO_LS_SYNC_E_SYNC   | 0x1   | Synchronize to l4_mp_clk
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_LS_SYNC_GPIO_LS_SYNC
- * 
+ *
  * No synchronization to l4_mp_clk
  */
 #define ALT_GPIO_LS_SYNC_GPIO_LS_SYNC_E_NOSYNC  0x0
 /*
  * Enumerated value for register field ALT_GPIO_LS_SYNC_GPIO_LS_SYNC
- * 
+ *
  * Synchronize to l4_mp_clk
  */
 #define ALT_GPIO_LS_SYNC_GPIO_LS_SYNC_E_SYNC    0x1
@@ -1022,7 +1022,7 @@ typedef volatile struct ALT_GPIO_EXT_PORTA_s  ALT_GPIO_EXT_PORTA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_LS_SYNC.
  */
 struct ALT_GPIO_LS_SYNC_s
@@ -1042,23 +1042,23 @@ typedef volatile struct ALT_GPIO_LS_SYNC_s  ALT_GPIO_LS_SYNC_t;
 
 /*
  * Register : ID Code Register - gpio_id_code
- * 
+ *
  * GPIO ID code.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------
  *  [31:0] | R      | 0x0   | ID Code Field
- * 
+ *
  */
 /*
  * Field : ID Code Field - gpio_id_code
- * 
+ *
  * Chip identification
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_GPIO_ID_CODE_GPIO_ID_CODE register field. */
 #define ALT_GPIO_ID_CODE_GPIO_ID_CODE_LSB        0
@@ -1085,7 +1085,7 @@ typedef volatile struct ALT_GPIO_LS_SYNC_s  ALT_GPIO_LS_SYNC_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_ID_CODE.
  */
 struct ALT_GPIO_ID_CODE_s
@@ -1104,24 +1104,24 @@ typedef volatile struct ALT_GPIO_ID_CODE_s  ALT_GPIO_ID_CODE_t;
 
 /*
  * Register : GPIO Version Register - gpio_ver_id_code
- * 
+ *
  * GPIO Component Version
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description                  
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:------------------------------
  *  [31:0] | R      | 0x3230382a | ASCII Component Version Field
- * 
+ *
  */
 /*
  * Field : ASCII Component Version Field - gpio_ver_id_code
- * 
+ *
  * ASCII value for each number in the version, followed by *. For example.
  * 32_30_31_2A represents the version 2.01
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_GPIO_VER_ID_CODE_GPIO_VER_ID_CODE register field. */
 #define ALT_GPIO_VER_ID_CODE_GPIO_VER_ID_CODE_LSB        0
@@ -1148,7 +1148,7 @@ typedef volatile struct ALT_GPIO_ID_CODE_s  ALT_GPIO_ID_CODE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_VER_ID_CODE.
  */
 struct ALT_GPIO_VER_ID_CODE_s
@@ -1167,45 +1167,45 @@ typedef volatile struct ALT_GPIO_VER_ID_CODE_s  ALT_GPIO_VER_ID_CODE_t;
 
 /*
  * Register : Configuration Register 2 - gpio_config_reg2
- * 
+ *
  * Specifies the bit width of port A.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description          
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------
  *  [4:0]   | R      | 0x1c  | Port A Width (less 1)
  *  [9:5]   | R      | 0x7   | Port B Width (less 1)
  *  [14:10] | R      | 0x7   | Port C Width (less 1)
  *  [19:15] | R      | 0x7   | Port D Width (less 1)
- *  [31:20] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [31:20] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Port A Width (less 1) - encoded_id_pwidth_a
- * 
+ *
  * Specifies the width of GPIO Port A. The value 28 represents the 29-bit width
  * less one.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description              
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:--------------------------
- *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits 
+ *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits
  *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A_E_WIDTHLESSONE29BITS | 0x1c  | Width (less 1) of 29 bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A
- * 
+ *
  * Width (less 1) of 8 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A_E_WIDTHLESSONE8BITS   0x7
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A
- * 
+ *
  * Width (less 1) of 29 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_A_E_WIDTHLESSONE29BITS  0x1c
@@ -1229,29 +1229,29 @@ typedef volatile struct ALT_GPIO_VER_ID_CODE_s  ALT_GPIO_VER_ID_CODE_t;
 
 /*
  * Field : Port B Width (less 1) - encoded_id_pwidth_b
- * 
+ *
  * Specifies the width of GPIO Port B. Ignored because there is no Port B in the
  * GPIO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description              
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:--------------------------
- *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits 
+ *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits
  *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B_E_WIDTHLESSONE29BITS | 0x1c  | Width (less 1) of 29 bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B
- * 
+ *
  * Width (less 1) of 8 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B_E_WIDTHLESSONE8BITS   0x7
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B
- * 
+ *
  * Width (less 1) of 29 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_B_E_WIDTHLESSONE29BITS  0x1c
@@ -1275,29 +1275,29 @@ typedef volatile struct ALT_GPIO_VER_ID_CODE_s  ALT_GPIO_VER_ID_CODE_t;
 
 /*
  * Field : Port C Width (less 1) - encoded_id_pwidth_c
- * 
+ *
  * Specifies the width of GPIO Port C. Ignored because there is no Port C in the
  * GPIO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description              
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:--------------------------
- *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits 
+ *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits
  *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C_E_WIDTHLESSONE29BITS | 0x1c  | Width (less 1) of 29 bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C
- * 
+ *
  * Width (less 1) of 8 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C_E_WIDTHLESSONE8BITS   0x7
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C
- * 
+ *
  * Width (less 1) of 29 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_C_E_WIDTHLESSONE29BITS  0x1c
@@ -1321,29 +1321,29 @@ typedef volatile struct ALT_GPIO_VER_ID_CODE_s  ALT_GPIO_VER_ID_CODE_t;
 
 /*
  * Field : Port D Width (less 1) - encoded_id_pwidth_d
- * 
+ *
  * Specifies the width of GPIO Port D. Ignored because there is no Port D in the
  * GPIO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description              
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:--------------------------
- *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits 
+ *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D_E_WIDTHLESSONE8BITS  | 0x7   | Width (less 1) of 8 bits
  *  ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D_E_WIDTHLESSONE29BITS | 0x1c  | Width (less 1) of 29 bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D
- * 
+ *
  * Width (less 1) of 8 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D_E_WIDTHLESSONE8BITS   0x7
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D
- * 
+ *
  * Width (less 1) of 29 bits
  */
 #define ALT_GPIO_CFG_REG2_ENC_ID_PWIDTH_D_E_WIDTHLESSONE29BITS  0x1c
@@ -1373,7 +1373,7 @@ typedef volatile struct ALT_GPIO_VER_ID_CODE_s  ALT_GPIO_VER_ID_CODE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_CFG_REG2.
  */
 struct ALT_GPIO_CFG_REG2_s
@@ -1396,46 +1396,46 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Register : Configuration Register 1 - gpio_config_reg1
- * 
+ *
  * Reports settings of various GPIO configuration parameters
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                      
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------------------
- *  [1:0]   | R      | 0x2   | APB DATA WIDTH                   
- *  [3:2]   | R      | 0x0   | NUM PORTS                        
- *  [4]     | R      | 0x1   | PORT A SINGLE CTL                
- *  [5]     | R      | 0x1   | PORT B SINGLE CTL                
- *  [6]     | R      | 0x1   | PORT C SINGLE CTL                
- *  [7]     | R      | 0x1   | PORT D SINGLE CTL                
- *  [8]     | R      | 0x0   | HW PORTA                         
- *  [11:9]  | ???    | 0x0   | *UNDEFINED*                      
- *  [12]    | R      | 0x1   | Port A Interrupt Field           
- *  [13]    | R      | 0x1   | Debounce Field                   
+ *  [1:0]   | R      | 0x2   | APB DATA WIDTH
+ *  [3:2]   | R      | 0x0   | NUM PORTS
+ *  [4]     | R      | 0x1   | PORT A SINGLE CTL
+ *  [5]     | R      | 0x1   | PORT B SINGLE CTL
+ *  [6]     | R      | 0x1   | PORT C SINGLE CTL
+ *  [7]     | R      | 0x1   | PORT D SINGLE CTL
+ *  [8]     | R      | 0x0   | HW PORTA
+ *  [11:9]  | ???    | 0x0   | *UNDEFINED*
+ *  [12]    | R      | 0x1   | Port A Interrupt Field
+ *  [13]    | R      | 0x1   | Debounce Field
  *  [14]    | R      | 0x1   | Encoded GPIO Parameters Available
- *  [15]    | R      | 0x1   | ID Field                         
- *  [20:16] | R      | 0x1f  | Encoded ID Width Field           
- *  [31:21] | ???    | 0x0   | *UNDEFINED*                      
- * 
+ *  [15]    | R      | 0x1   | ID Field
+ *  [20:16] | R      | 0x1f  | Encoded ID Width Field
+ *  [31:21] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : APB DATA WIDTH - apb_data_width
- * 
+ *
  * Fixed to support an ABP data bus width of 32-bits.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                           | Value | Description             
+ *
+ *  Enum                                           | Value | Description
  * :-----------------------------------------------|:------|:-------------------------
  *  ALT_GPIO_CFG_REG1_APB_DATA_WIDTH_E_WIDTH32BITS | 0x2   | APB Data Width = 32-bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_APB_DATA_WIDTH
- * 
+ *
  * APB Data Width = 32-bits
  */
 #define ALT_GPIO_CFG_REG1_APB_DATA_WIDTH_E_WIDTH32BITS  0x2
@@ -1459,21 +1459,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : NUM PORTS - num_ports
- * 
+ *
  * The value of this register is fixed at one port (Port A).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description             
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------------
  *  ALT_GPIO_CFG_REG1_NUM_PORTS_E_ONEPORTA | 0x0   | Number of GPIO Ports = 1
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_NUM_PORTS
- * 
+ *
  * Number of GPIO Ports = 1
  */
 #define ALT_GPIO_CFG_REG1_NUM_PORTS_E_ONEPORTA  0x0
@@ -1497,21 +1497,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : PORT A SINGLE CTL - porta_single_ctl
- * 
+ *
  * Indicates the mode of operation of Port A to be software controlled only.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                             
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-----------------------------------------
  *  ALT_GPIO_CFG_REG1_PORTA_SINGLE_CTL_E_SOFTCTLONLY | 0x1   | Software Enabled Individual Port Control
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_PORTA_SINGLE_CTL
- * 
+ *
  * Software Enabled Individual Port Control
  */
 #define ALT_GPIO_CFG_REG1_PORTA_SINGLE_CTL_E_SOFTCTLONLY    0x1
@@ -1535,22 +1535,22 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : PORT B SINGLE CTL - portb_single_ctl
- * 
+ *
  * Indicates the mode of operation of Port B to be software controlled only.
  * Ignored because there is no Port B in the GPIO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                             
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-----------------------------------------
  *  ALT_GPIO_CFG_REG1_PORTB_SINGLE_CTL_E_SOFTCTLONLY | 0x1   | Software Enabled Individual Port Control
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_PORTB_SINGLE_CTL
- * 
+ *
  * Software Enabled Individual Port Control
  */
 #define ALT_GPIO_CFG_REG1_PORTB_SINGLE_CTL_E_SOFTCTLONLY    0x1
@@ -1574,22 +1574,22 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : PORT C SINGLE CTL - portc_single_ctl
- * 
+ *
  * Indicates the mode of operation of Port C to be software controlled only.
  * Ignored because there is no Port C in the GPIO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                             
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-----------------------------------------
  *  ALT_GPIO_CFG_REG1_PORTC_SINGLE_CTL_E_SOFTCTLONLY | 0x1   | Software Enabled Individual Port Control
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_PORTC_SINGLE_CTL
- * 
+ *
  * Software Enabled Individual Port Control
  */
 #define ALT_GPIO_CFG_REG1_PORTC_SINGLE_CTL_E_SOFTCTLONLY    0x1
@@ -1613,22 +1613,22 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : PORT D SINGLE CTL - portd_single_ctl
- * 
+ *
  * Indicates the mode of operation of Port D to be software controlled only.
  * Ignored because there is no Port D in the GPIO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                             | Value | Description                             
+ *
+ *  Enum                                             | Value | Description
  * :-------------------------------------------------|:------|:-----------------------------------------
  *  ALT_GPIO_CFG_REG1_PORTD_SINGLE_CTL_E_SOFTCTLONLY | 0x1   | Software Enabled Individual Port Control
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_PORTD_SINGLE_CTL
- * 
+ *
  * Software Enabled Individual Port Control
  */
 #define ALT_GPIO_CFG_REG1_PORTD_SINGLE_CTL_E_SOFTCTLONLY    0x1
@@ -1652,22 +1652,22 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : HW PORTA - hw_porta
- * 
+ *
  * The value is fixed to enable Port A configuration to be controlled by software
  * only.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                     | Value | Description                           
+ *
+ *  Enum                                     | Value | Description
  * :-----------------------------------------|:------|:---------------------------------------
  *  ALT_GPIO_CFG_REG1_HW_PORTA_E_PORTANOHARD | 0x0   | Software Configuration Control Enabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_HW_PORTA
- * 
+ *
  * Software Configuration Control Enabled
  */
 #define ALT_GPIO_CFG_REG1_HW_PORTA_E_PORTANOHARD    0x0
@@ -1691,21 +1691,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : Port A Interrupt Field - porta_intr
- * 
+ *
  * The value of this field is fixed to allow interrupts on Port A.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description              
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:--------------------------
  *  ALT_GPIO_CFG_REG1_PORTA_INTR_E_PORTAINTERR | 0x1   | Port A Interrupts Enabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_PORTA_INTR
- * 
+ *
  * Port A Interrupts Enabled
  */
 #define ALT_GPIO_CFG_REG1_PORTA_INTR_E_PORTAINTERR  0x1
@@ -1729,21 +1729,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : Debounce Field - debounce
- * 
+ *
  * The value of this field is fixed to allow debouncing of the Port A signals.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description        
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:--------------------
  *  ALT_GPIO_CFG_REG1_DEBOUNCE_E_DEBOUNCEA | 0x1   | Debounce is Enabled
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_DEBOUNCE
- * 
+ *
  * Debounce is Enabled
  */
 #define ALT_GPIO_CFG_REG1_DEBOUNCE_E_DEBOUNCEA  0x1
@@ -1767,21 +1767,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : Encoded GPIO Parameters Available - add_encoded_params
- * 
+ *
  * Fixed to allow the indentification of the Designware IP component.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                            | Value | Description              
+ *
+ *  Enum                                            | Value | Description
  * :------------------------------------------------|:------|:--------------------------
  *  ALT_GPIO_CFG_REG1_ADD_ENC_PARAMS_E_ADDENCPARAMS | 0x1   | Enable IP indentification
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_ADD_ENC_PARAMS
- * 
+ *
  * Enable IP indentification
  */
 #define ALT_GPIO_CFG_REG1_ADD_ENC_PARAMS_E_ADDENCPARAMS 0x1
@@ -1805,21 +1805,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : ID Field - gpio_id
- * 
+ *
  * Provides an ID code value
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description 
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------
  *  ALT_GPIO_CFG_REG1_GPIO_ID_E_IDCODE | 0x1   | GPIO ID Code
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_GPIO_ID
- * 
+ *
  * GPIO ID Code
  */
 #define ALT_GPIO_CFG_REG1_GPIO_ID_E_IDCODE  0x1
@@ -1843,21 +1843,21 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
 
 /*
  * Field : Encoded ID Width Field - encoded_id_width
- * 
+ *
  * This value is fixed at 32 bits.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description      
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:------------------
  *  ALT_GPIO_CFG_REG1_ENC_ID_WIDTH_E_ENCIDWIDTH | 0x1f  | Width of ID Field
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_GPIO_CFG_REG1_ENC_ID_WIDTH
- * 
+ *
  * Width of ID Field
  */
 #define ALT_GPIO_CFG_REG1_ENC_ID_WIDTH_E_ENCIDWIDTH 0x1f
@@ -1887,7 +1887,7 @@ typedef volatile struct ALT_GPIO_CFG_REG2_s  ALT_GPIO_CFG_REG2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_GPIO_CFG_REG1.
  */
 struct ALT_GPIO_CFG_REG1_s
@@ -1925,7 +1925,7 @@ typedef volatile struct ALT_GPIO_CFG_REG1_s  ALT_GPIO_CFG_REG1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_GPIO.
  */
 struct ALT_GPIO_s

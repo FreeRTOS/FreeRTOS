@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -45,22 +45,22 @@
 /// \param rtt_enable
 /// \param wk0_mode
 /// \param wk0_debounce
-//------------------------------------------------------------------------------  
+//------------------------------------------------------------------------------
 void SHDWC_DoShutDown(
     unsigned char rtt_enable,
     unsigned char wk0_mode,
     unsigned char wk0_debounce
     )
 {
-    AT91C_BASE_SHDWC->SHDWC_SHMR =  (rtt_enable << 16) | 
-                                  wk0_mode | ( (wk0_debounce & 0xF) << 4); 
-    
+    AT91C_BASE_SHDWC->SHDWC_SHMR =  (rtt_enable << 16) |
+                                  wk0_mode | ( (wk0_debounce & 0xF) << 4);
+
    AT91C_BASE_SHDWC->SHDWC_SHCR = (0xA5 << 24) | 1;
 }
 
 //------------------------------------------------------------------------------
 /// Get Status
-//------------------------------------------------------------------------------  
+//------------------------------------------------------------------------------
 unsigned int SHDWC_GetStatus(void)
 {
     return AT91C_BASE_SHDWC->SHDWC_SHSR;

@@ -21,10 +21,10 @@ IF EXIST src\FreeRTOS_Source Goto END
     MD src\FreeRTOS_Source\portable
     MD src\FreeRTOS_Source\portable\GCC
     MD src\FreeRTOS_Source\portable\GCC\ARM_CM4F
-    MD src\FreeRTOS_Source\portable\MemMang    
+    MD src\FreeRTOS_Source\portable\MemMang
     MD src\Common_Demo_Source
     MD src\Common_Demo_Source\include
-    
+
     REM Copy the core kernel files into the SDK projects directory
     copy %FREERTOS_SOURCE%\tasks.c src\FreeRTOS_Source
     copy %FREERTOS_SOURCE%\queue.c src\FreeRTOS_Source
@@ -33,10 +33,10 @@ IF EXIST src\FreeRTOS_Source Goto END
 
     REM Copy the common header files into the SDK projects directory
     copy %FREERTOS_SOURCE%\include\*.* src\FreeRTOS_Source\include
-    
+
     REM Copy the portable layer files into the projects directory
     copy %FREERTOS_SOURCE%\portable\GCC\ARM_CM4F\*.* src\FreeRTOS_Source\portable\GCC\ARM_CM4F
-    
+
     REM Copy the basic memory allocation files into the SDK projects directory
     copy %FREERTOS_SOURCE%\portable\MemMang\heap_2.c src\FreeRTOS_Source\portable\MemMang
 
@@ -52,8 +52,8 @@ IF EXIST src\FreeRTOS_Source Goto END
     copy %COMMON_SOURCE%\sp_flop.c         src\Common_Demo_Source
     copy %COMMON_SOURCE%\countsem.c        src\Common_Demo_Source
     copy %COMMON_SOURCE%\integer.c         src\Common_Demo_Source
-    
+
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              src\Common_Demo_Source\include
-    
+
 : END

@@ -3,22 +3,22 @@
 ;   IAR C/C++ Compiler for RL78 version 3.xx or later.
 ;
 ;   Modified for use with Amazon FreeRTOS.
-;    
+;
 ;   IAR Source License
-;    
-;   The following license agreement applies to linker command files, 
-;   example projects (unless another license is explicitly stated), the 
-;   cstartup code, low_level_init.c, and some other low-level runtime 
-;   library files. 
+;
+;   The following license agreement applies to linker command files,
+;   example projects (unless another license is explicitly stated), the
+;   cstartup code, low_level_init.c, and some other low-level runtime
+;   library files.
 ;
 ;   Copyright 2016-2022 IAR Systems AB.
 ;
 ;   This source code is the property of IAR Systems. The source code may only
-;   be used together with the IAR Embedded Workbench. Redistribution and use 
-;   in source and binary forms, with or without modification, is permitted 
+;   be used together with the IAR Embedded Workbench. Redistribution and use
+;   in source and binary forms, with or without modification, is permitted
 ;   provided that the following conditions are met:
 ;
-;   - Redistributions of source code, in whole or in part, must retain the 
+;   - Redistributions of source code, in whole or in part, must retain the
 ;   above copyright notice, this list of conditions and the disclaimer below.
 ;
 ;   - IAR Systems name may not be used to endorse or promote products

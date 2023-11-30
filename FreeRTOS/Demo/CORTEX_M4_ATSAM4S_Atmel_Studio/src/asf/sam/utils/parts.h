@@ -99,7 +99,7 @@
     part_is_defined( SAM3N4A ) || \
     part_is_defined( SAM3N4B ) || \
     part_is_defined( SAM3N4C ) )
-	
+
 #define SAM3X4 ( \
     part_is_defined( SAM3X4C ) || \
 	part_is_defined( SAM3X4E ) )

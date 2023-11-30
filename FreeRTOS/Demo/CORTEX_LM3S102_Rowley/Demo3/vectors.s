@@ -46,7 +46,7 @@ _vectors:
   .word 0 // Reserved
   .word xPortPendSVHandler // Populate if using pendable service request
   .word xPortSysTickHandler
-  // External interrupts start her 
+  // External interrupts start her
   .word GPIO_Port_A_ISR
   .word GPIO_Port_B_ISR
   .word GPIO_Port_C_ISR

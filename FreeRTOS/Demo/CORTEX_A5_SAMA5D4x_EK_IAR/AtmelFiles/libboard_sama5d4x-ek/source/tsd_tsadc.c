@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -210,7 +210,7 @@ void TSD_Handler(uint32_t dwAdcStatus)
             if (TSDCom_IsCalibrationOk())
                 TSD_PenMoved(dwTsData[0], dwTsData[1], dwTsData[2]);
         }
-        
+
     }
 }
 

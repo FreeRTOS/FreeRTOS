@@ -5,7 +5,7 @@
   * @version V1.0.0RC1
   * @date    27-January-2012
   * @brief   CMSIS Cortex-M0 Device Peripheral Access Layer System Header File.
-  ******************************************************************************  
+  ******************************************************************************
   * @attention
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -28,8 +28,8 @@
 
 /** @addtogroup stm32f0xx_system
   * @{
-  */  
-  
+  */
+
 /**
   * @brief Define to prevent recursive inclusion
   */
@@ -38,7 +38,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /** @addtogroup STM32F0xx_System_Includes
   * @{
@@ -78,7 +78,7 @@ extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Cloc
 /** @addtogroup STM32F0xx_System_Exported_Functions
   * @{
   */
-  
+
 extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
 /**
@@ -94,8 +94,8 @@ extern void SystemCoreClockUpdate(void);
 /**
   * @}
   */
-  
+
 /**
   * @}
-  */  
+  */
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

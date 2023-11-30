@@ -5,18 +5,18 @@
 
 
   Notes:
-        1) Default entry point is _startup. 
+        1) Default entry point is _startup.
            . disable interrupts
            . the SP is set to __SP_AFTER_RESET
-           . SP must be initialized to valid memory 
+           . SP must be initialized to valid memory
              in case the memory it points to is not valid using MEMORY_INIT macro
         2) __initialize_hardware is called. Here you can initialize memory and some peripherics
            at this point global variables are not initialized yet
-        3) After __initialize_hardware memory is setup; initialize SP to _SP_INIT and perform 
+        3) After __initialize_hardware memory is setup; initialize SP to _SP_INIT and perform
            needed initialisations for the language (clear memory, data rom copy).
         4) void __initialize_system(void); is called
            to allow additional hardware initialization (UART, GPIOs, etc...)
-        5) Jump to main 
+        5) Jump to main
 
 */
 /********************************************************************************/
@@ -41,14 +41,14 @@ extern unsigned long far __SP_AFTER_RESET[];
 */
 #define MEMORY_INIT
 #endif
-							 
+
 
 void _startup(void);
 
 #ifndef SUPPORT_ROM_TO_RAM
   /*
    * If SUPPORT_ROM_TO_RAM is set, _S_romp is used to define the copy to be performed.
-   * If it is not set, there's a single block to copy, performed directly without 
+   * If it is not set, there's a single block to copy, performed directly without
    * using the __S_romp structure, based on __DATA_RAM, __DATA_ROM and
    * __DATA_END symbols.
    *

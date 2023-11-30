@@ -41,8 +41,8 @@ extern "C"
 /*
  * Component : Boot ROM Module - ALT_ROM
  * Boot ROM Module
- * 
- * 
+ *
+ *
  */
 
 #ifdef __cplusplus

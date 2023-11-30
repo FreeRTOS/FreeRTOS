@@ -55,7 +55,7 @@ Changes from V3.0.1
 /*-----------------------------------------------------------*/
 
 /* Queues to interface between comms API and interrupt routines. */
-QueueHandle_t xRxedChars; 
+QueueHandle_t xRxedChars;
 QueueHandle_t xCharsForTx;
 portBASE_TYPE xHigherPriorityTaskWoken;
 
@@ -64,7 +64,7 @@ portBASE_TYPE xHigherPriorityTaskWoken;
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned char ucQueueLength )
 {
 	unsigned short usSPBRG;
-	
+
 	/* Create the queues used by the ISR's to interface to tasks. */
 	xRxedChars = xQueueCreate( ucQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
 	xCharsForTx = xQueueCreate( ucQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
@@ -117,11 +117,11 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned char
 	/* Enable the Rx interrupt now, the Tx interrupt will get enabled when
 	we have data to send. */
 	bRCIE = serINTERRUPT_ENABLED;
-	
+
 	portEXIT_CRITICAL();
 
 	/* Unlike other ports, this serial code does not allow for more than one
-	com port.  We therefore don't return a pointer to a port structure and 
+	com port.  We therefore don't return a pointer to a port structure and
 	can	instead just return NULL. */
 	return NULL;
 }
@@ -156,7 +156,7 @@ portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, TickType_t x
 		return pdFAIL;
 	}
 
-	/* Turn interrupt on - ensure the compiler only generates a single 
+	/* Turn interrupt on - ensure the compiler only generates a single
 	instruction for this. */
 	bTXIE = serINTERRUPT_ENABLED;
 

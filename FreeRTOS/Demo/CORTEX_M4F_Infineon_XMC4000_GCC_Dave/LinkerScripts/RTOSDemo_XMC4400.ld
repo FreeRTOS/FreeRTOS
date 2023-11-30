@@ -92,14 +92,14 @@ SECTIONS
 	/* DSRAM layout (Lowest to highest)*/
 	/* Fully Descending Stack <-> BSS <-> DATA <-> HEAP */
 	/* Dummy section for stack */
-	Stack (NOLOAD) : 
+	Stack (NOLOAD) :
 	{
 		. = . + stack_size;
 		__Xmc4400_stack = .;
 	} > SRAM_combined
 
 	/* BSS section */
-	.bss : 
+	.bss :
 	{
 		__Xmc4400_sBSS = .;
 		* (.bss);

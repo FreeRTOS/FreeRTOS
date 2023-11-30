@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -181,11 +181,11 @@ void _INIT_IOLIB( void )
     stdin->_Bend = stdin->_Buf + 1;  /* Re-set pointer to the end of buffer */
 
     /* Standard Output File                                                 */
-    if( freopen( FPATH_STDOUT, "w", stdout ) == NULL ) 
+    if( freopen( FPATH_STDOUT, "w", stdout ) == NULL )
         stdout->_Mode = 0xffff; /* Not allow the access if it fails to open */
     stdout->_Mode |= _MNBF;             /* Non-buffering for data           */
     stdout->_Bend = stdout->_Buf + 1;/* Re-set pointer to the end of buffer */
-    
+
     /* Standard Error File                                                  */
     if( freopen( FPATH_STDERR, "w", stderr ) == NULL )
         stderr->_Mode = 0xffff; /* Not allow the access if it fails to open */
@@ -278,7 +278,7 @@ int write(int  fileno,               /* File number                       */
     if(flmod[fileno]&O_WRONLY || flmod[fileno]&O_RDWR)
     {
         if( fileno == STDIN ) return -1;            /* Standard Input     */
-        else if( (fileno == STDOUT) || (fileno == STDERR) ) 
+        else if( (fileno == STDOUT) || (fileno == STDERR) )
 			                                    /* Standard Error/output   */
         {
             for( i = count; i > 0; --i )

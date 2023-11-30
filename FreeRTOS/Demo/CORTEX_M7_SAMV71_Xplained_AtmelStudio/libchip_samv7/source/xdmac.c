@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -197,7 +197,7 @@ void XDMAC_DisableChannels( Xdmac *pXdmac, uint32_t bmChannels )
 
 /**
  * \brief Get Global channel status of given XDMAC.
- * \note: When set to 1, this bit indicates that the channel x is enabled. 
+ * \note: When set to 1, this bit indicates that the channel x is enabled.
    If a channel disable request is issued, this bit remains asserted
    until pending transaction is completed.
  * \param pXdmac Pointer to the XDMAC peripheral.
@@ -400,7 +400,7 @@ void XDMAC_SetDestinationAddr(Xdmac *pXdmac, uint8_t channel, uint32_t addr)
 }
 
 /**
- * \brief Set next descriptor's address & interface for the relevant channel of 
+ * \brief Set next descriptor's address & interface for the relevant channel of
  *  given XDMA.
  *
  * \param pXdmac Pointer to the XDMAC peripheral.
@@ -408,7 +408,7 @@ void XDMAC_SetDestinationAddr(Xdmac *pXdmac, uint8_t channel, uint32_t addr)
  * \param addr Address of next descriptor.
  * \param ndaif Interface of next descriptor.
  */
-void XDMAC_SetDescriptorAddr(Xdmac *pXdmac, uint8_t channel, 
+void XDMAC_SetDescriptorAddr(Xdmac *pXdmac, uint8_t channel,
 		uint32_t addr, uint8_t ndaif)
 {
 	assert(pXdmac);
@@ -418,7 +418,7 @@ void XDMAC_SetDescriptorAddr(Xdmac *pXdmac, uint8_t channel,
 }
 
 /**
- * \brief Set next descriptor's configuration for the relevant channel of 
+ * \brief Set next descriptor's configuration for the relevant channel of
  *  given XDMA.
  *
  * \param pXdmac Pointer to the XDMAC peripheral.

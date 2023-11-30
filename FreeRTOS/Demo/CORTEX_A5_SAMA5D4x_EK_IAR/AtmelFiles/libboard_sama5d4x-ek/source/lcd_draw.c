@@ -33,7 +33,7 @@
  * and basic shapes (line, rectangle, circle).
  *
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -160,7 +160,7 @@ static void _FillRect( uint32_t dwX1, uint32_t dwY1, uint32_t dwX2, uint32_t dwY
         {
             memcpy(&buffer[i], &dwFrontColor, cw);
         }
-        buffer = &buffer[rw]; 
+        buffer = &buffer[rw];
     }
     #endif
 
@@ -277,7 +277,7 @@ void LCDD_Fill( uint32_t dwColor )
 
 void LCDD_Fill0(void)
 {
-    sLCDDLayer *pDisp = LCDD_GetCanvas();    
+    sLCDDLayer *pDisp = LCDD_GetCanvas();
     _HideCanvas();
     _SetFrontColor(0xFF0000);
     _FillRect( 0, 0, pDisp->wImgW/3, pDisp->wImgH );
@@ -439,7 +439,7 @@ extern void LCDD_DrawCircle( uint32_t dwX, uint32_t dwY, uint32_t dwR, uint32_t 
        _DrawPixel(dwX + curY, dwY - curX);
        _DrawPixel(dwX - curY, dwY + curX);
        _DrawPixel(dwX - curY, dwY - curX);
-   
+
        if (d < 0) {
            d += (curX << 2) + 6;
        }

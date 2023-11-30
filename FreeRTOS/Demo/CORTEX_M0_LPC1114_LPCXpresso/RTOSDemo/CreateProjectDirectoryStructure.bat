@@ -19,20 +19,20 @@ IF EXIST Source\FreeRTOS_Source Goto END
 	MD Source\FreeRTOS_Source\portable\MemMang
 	MD Source\Common_Demo_Tasks
 	MD Source\Common_Demo_Tasks\include
-	
+
 	REM Copy the core kernel files.
 	copy ..\..\..\Source\tasks.c Source\FreeRTOS_Source
 	copy ..\..\..\Source\queue.c Source\FreeRTOS_Source
 	copy ..\..\..\Source\list.c Source\FreeRTOS_Source
 	copy ..\..\..\Source\timers.c Source\FreeRTOS_Source
-	
+
 	REM Copy the common header files
 
 	copy ..\..\..\Source\include\*.* Source\FreeRTOS_Source\include
-	
+
 	REM Copy the portable layer files
 	copy ..\..\..\Source\portable\GCC\ARM_CM0\*.* Source\FreeRTOS_Source\portable\GCC\ARM_CM0
-	
+
 	REM Copy the basic memory allocation files
 	copy ..\..\..\Source\portable\MemMang\heap_1.c Source\FreeRTOS_Source\portable\MemMang
 
@@ -41,11 +41,11 @@ IF EXIST Source\FreeRTOS_Source Goto END
 	copy ..\..\Common\minimal\recmutex.c Source\Common_Demo_Tasks
 	copy ..\..\Common\minimal\countsem.c Source\Common_Demo_Tasks
 	copy ..\..\Common\minimal\IntQueue.c Source\Common_Demo_Tasks
-	
+
 	REM Copy the common demo file headers.
 	copy ..\..\Common\include\blocktim.h Source\Common_Demo_Tasks\include
 	copy ..\..\Common\include\recmutex.h Source\Common_Demo_Tasks\include
 	copy ..\..\Common\include\countsem.h Source\Common_Demo_Tasks\include
 	copy ..\..\Common\include\IntQueue.h Source\Common_Demo_Tasks\include
-	
+
 : END

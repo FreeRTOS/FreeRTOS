@@ -46,7 +46,7 @@ enum eNotes  {
 #define BUZZER_SHORTBEEP_DURATION   100
 #define BUZZER_LONGBEEP_DURATION    1000
 #define RTTTL_SEP                   ':'
-   
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 int                              buzz_counter         = 0;
@@ -297,7 +297,7 @@ void BUZZER_Handler( void )
          {
          PlayMusic();
          }
-      else 
+      else
          {
          Buzzer_Counter--;
          }
@@ -306,7 +306,7 @@ void BUZZER_Handler( void )
       }
    else if ( Buzzer_Mode == BUZZER_SHORTBEEP )
       {
-      if ( Buzzer_Counter++ == (BUZZER_SHORTBEEP_DURATION) ) 
+      if ( Buzzer_Counter++ == (BUZZER_SHORTBEEP_DURATION) )
          {
          Buzzer_Mode  = BUZZER_OFF;
 
@@ -474,25 +474,25 @@ void BUZZER_PlayMusic (const u8 *melody )
 
    while( *CurrentMelody != RTTTL_SEP )
       {
-      if( *CurrentMelody == 0 ) 
+      if( *CurrentMelody == 0 )
          {
          return;
          }
 
       // Discard the melody name.
-      CurrentMelody++; 
+      CurrentMelody++;
       }
 
    // Now read the defaults if any.
    for( ++CurrentMelody; *CurrentMelody != RTTTL_SEP; CurrentMelody++ )
       {
-      if( *CurrentMelody == 0 ) 
+      if( *CurrentMelody == 0 )
          {
          return;
          }
 
       // Discard any blank.
-      while ( *CurrentMelody == ' ' ) 
+      while ( *CurrentMelody == ' ' )
          {
          CurrentMelody++;
          }

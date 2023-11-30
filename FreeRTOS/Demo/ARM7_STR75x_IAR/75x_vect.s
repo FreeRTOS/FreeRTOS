@@ -22,7 +22,7 @@
 
 
                 PROGRAM	?RESET
-		SECTION	.intvec:CODE(2)			
+		SECTION	.intvec:CODE(2)
 		CODE32
 
 EIC_base_addr         EQU    0xFFFFF800 ; EIC base address
@@ -235,7 +235,7 @@ IRQHandler
 
 	LDR    r0, =EIC_base_addr
 	LDR    r1, =IVR_off_addr
-	LDR    lr, =ReturnAddress			; Load the return address.	
+	LDR    lr, =ReturnAddress			; Load the return address.
 	ADD    pc,r0,r1						; Branch to the IRQ handler.
 ReturnAddress
 	LDR    r0, =EIC_base_addr
@@ -243,10 +243,10 @@ ReturnAddress
 	MOV    r3,#1
 	MOV    r3,r3,LSL r2
 	STR    r3,[r0, #IPR_off_addr]		; Clear the corresponding IPR bit.
-	
+
 	portRESTORE_CONTEXT					; Restore the context of the selected task.
 
-	
+
 ;*******************************************************************************
 ;* Function Name  : PrefetchAbortHandler
 ;* Description    : This function called when Prefetch Abort exception is entered.

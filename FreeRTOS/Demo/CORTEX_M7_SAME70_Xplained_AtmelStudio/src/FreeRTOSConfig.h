@@ -131,7 +131,7 @@ header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
-standard names.  Defining the constants removes the need to edit the vector 
+standard names.  Defining the constants removes the need to edit the vector
 table in order to install the RTOS interrupt handlers. */
 #define xPortPendSVHandler PendSV_Handler
 #define vPortSVCHandler SVC_Handler

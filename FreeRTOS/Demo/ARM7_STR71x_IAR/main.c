@@ -181,7 +181,7 @@ TickType_t xLastWakeTime;
 		/* Delay until it is time to execute again.  The delay period is
 		shorter following an error so the LED flashes faster. */
 		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
-	
+
 		/* Check all the standard demo application tasks are executing without
 		error. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
@@ -189,7 +189,7 @@ TickType_t xLastWakeTime;
 			/* An error has been detected in one of the tasks - flash faster. */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
 		}
-		
+
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}
 }

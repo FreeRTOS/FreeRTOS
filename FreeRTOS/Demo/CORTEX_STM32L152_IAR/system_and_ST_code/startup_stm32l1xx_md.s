@@ -47,8 +47,8 @@
         EXTERN  SystemInit
         EXTERN vPortSVCHandler
         EXTERN xPortPendSVHandler
-        EXTERN xPortSysTickHandler		
-		
+        EXTERN xPortSysTickHandler
+
         PUBLIC  __vector_table
 
         DATA

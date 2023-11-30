@@ -1,12 +1,12 @@
 //*****************************************************************************
-// To configure the same pin 1 of port 0, write 
-// Control_P0_1(mode, drivestrength); where the mode is INPUT, INPUT_PD ... 
+// To configure the same pin 1 of port 0, write
+// Control_P0_1(mode, drivestrength); where the mode is INPUT, INPUT_PD ...
 // OUTPUT_PP_GP ... OUTPUT_ODAF4. (see definitions below)
 // and drivestrength is WEAK, MEDIUM, STRONG or VERYSTRONG
 //
-// To toggle reset or set a pin you need to call the macro and put in brackets 
-// the name of the port pin. 
-// Example: you want to toggle, reset and set pin 1 of port: 
+// To toggle reset or set a pin you need to call the macro and put in brackets
+// the name of the port pin.
+// Example: you want to toggle, reset and set pin 1 of port:
 // Toggle(P0_1);
 // Reset(P0_1);
 // Set(P0_1);

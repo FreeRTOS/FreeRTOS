@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -61,7 +61,7 @@ typedef enum _USBRC {
     /* Bool codes */
     USBRC_FALSE = 0,   /**< As boolean TRUE */
     USBRC_TRUE  = 1,   /**< As boolean FALSE */
-    /* Error codes */    
+    /* Error codes */
     USBRC_BUSY,        /**< EP/Device is already busy */
     USBRC_ABORTED,     /**< Operation aborted due to error or stall */
     USBRC_CANCELED,    /**< Operation canceled by user */
@@ -76,6 +76,6 @@ typedef enum _USBRC {
     USBRC_SW_NOT_SUPPORTED = 0xFD, /**< Failed due to SW not supported */
     USBRC_HW_NOT_SUPPORTED = 0xFE  /**< Failed due to HW not supported */
 } USBRC;
- 
+
 #endif /* #define USBLIB_TYPES_H */
 

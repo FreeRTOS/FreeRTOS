@@ -69,8 +69,8 @@
 /* Enable support for Task based FPU operations. This will enable support for
 FPU context saving during switches only on architectures with hardware FPU.
 
-NOTE: This constant is defined in the project options as configurations are 
-provided that both enable and disable floating point support. 
+NOTE: This constant is defined in the project options as configurations are
+provided that both enable and disable floating point support.
 #define configUSE_TASK_FPU_SUPPORT				0 */
 
 /* Co-routine definitions. */
@@ -111,5 +111,5 @@ interrupts. */
 	extern void vAssertCalled( const char * pcFile, unsigned long ulLine );
 	#define configASSERT( x ) if( ( x ) == 0  ) vAssertCalled( __FILE__, __LINE__ )
 #endif
-    
+
 #endif /* FREERTOS_CONFIG_H */

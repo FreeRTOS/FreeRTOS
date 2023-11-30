@@ -1,6 +1,6 @@
 /*******************************************************************************
  * (c) Copyright 2009-2015 Microsemi SoC Products Group.  All rights reserved.
- * 
+ *
  * SVN $Revision: 7984 $
  * SVN $Date: 2015-10-12 12:07:40 +0530 (Mon, 12 Oct 2015) $
  */
@@ -85,7 +85,7 @@
 #define TARGET_ADDR_OFFSET    0x08u
 #define TARGET_ADDR_MASK      0xFEu
 #define TARGET_ADDR_SHIFT     1u
- 
+
 /*
  * DIR bit.
  */

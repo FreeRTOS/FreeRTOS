@@ -164,11 +164,11 @@ void PWM_Init(PWM_InitTypeDef* PWM_InitStruct)
 
   /* Sets the period value */
   PWM->ARR = PWM_InitStruct->PWM_Period;
-  
+
   /* Sets the repetition counter */
   PWM->RCR &= PWM_RepetitionCounter_Reset_Mask;
   PWM->RCR |= PWM_InitStruct->PWM_RepetitionCounter;
-  
+
   /* Configures the PWM according to the PWM_InitTypeDef structure parameters */
   OCM_ModuleConfig(PWM_InitStruct);
 }
@@ -178,7 +178,7 @@ void PWM_Init(PWM_InitTypeDef* PWM_InitStruct)
 * Description    : Fills each PWM_InitStruct member with its default value.
 * Input          : PWM_InitStruct : pointer to a PWM_InitTypeDef structure which
 *                  will be initialized.
-* Output         : None                        
+* Output         : None
 * Return         : None.
 *******************************************************************************/
 void PWM_StructInit(PWM_InitTypeDef *PWM_InitStruct)
@@ -232,7 +232,7 @@ void PWM_Cmd(FunctionalState Newstate)
 /*******************************************************************************
 * Function Name  : PWM_CtrlPWMOutputs
 * Description    : Enables or disables PWM peripheral Main Outputs.
-* Input          : Newstate: new state of the PWM peripheral Main Outputs. 
+* Input          : Newstate: new state of the PWM peripheral Main Outputs.
 *                  This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
@@ -268,7 +268,7 @@ void PWM_CtrlPWMOutputs(FunctionalState Newstate)
 * Return         : None
 *******************************************************************************/
 void PWM_ITConfig(u16 PWM_IT, FunctionalState Newstate)
-{ 
+{
   u16 PWM_IT_Enable = 0;
 
   PWM_IT_Enable = PWM_IT & PWM_IT_Enable_Mask;
@@ -309,12 +309,12 @@ void PWM_ITConfig(u16 PWM_IT, FunctionalState Newstate)
 *                         - PWM_DMASource_Update: PWM Update DMA source
 *                  - PWM_OCRMState: the state of output compare request mode.
 *                    This parameter can be one of the following values:
-*                         - PWM_OCRMState_Enable 
-*                         - PWM_OCRMState_Disable 
+*                         - PWM_OCRMState_Enable
+*                         - PWM_OCRMState_Disable
 *                  - PWM_DMABase:DMA Base address.
 *                    This parameter can be one of the following values:
-*                    PWM_DMABase_CR, PWM_DMABase_SCR, PWM_DMABase_OMR1, 
-*                    PWM_DMABase_OMR2, PWM_DMABase_RSR, PWM_DMABase_RER, 
+*                    PWM_DMABase_CR, PWM_DMABase_SCR, PWM_DMABase_OMR1,
+*                    PWM_DMABase_OMR2, PWM_DMABase_RSR, PWM_DMABase_RER,
 *                    PWM_DMABase_ISR, PWM_DMABase_CNT, PWM_DMABase_PSC,
 *                    PWM_DMABase_RCR, PWM_DMABase_ARR, PWM_DMABase_OCR1,
 *                    PWM_DMABase_OCR2, PWM_DMABase_OCR3 ,PWM_DMABase_DTR.
@@ -325,7 +325,7 @@ void PWM_DMAConfig(u16 PWM_DMASources, u16 PWM_OCRMState, u16 PWM_DMABase)
 {
   /* Select the DMA requests */
   PWM->RSR &= ~PWM_DMASources;
-  
+
   /* Sets the OCRM state */
   if(PWM_OCRMState == PWM_OCRMState_Enable)
   {
@@ -519,7 +519,7 @@ void PWM_CounterModeConfig(u16 PWM_CounterMode)
 *                    output waveform.
 *                    This parameter can be one of the following values:
 *                         - PWM_ForcedAction_Active: Force active level on OCxREF
-*                         - PWM_ForcedAction_InActive: Force inactive level on 
+*                         - PWM_ForcedAction_InActive: Force inactive level on
 *                           OCxREF
 * Output         : None
 * Return         : None
@@ -548,7 +548,7 @@ void PWM_ForcedOCConfig(u16 PWM_Channel, u16 PWM_ForcedAction)
         PWM->OMR2 &= PWM_OC3C_Mask;
         PWM->OMR2 |= PWM_ForcedAction;
       }
-      /* Channel 1, Channel 2 and Channel 3 Forced Output Compare mode 
+      /* Channel 1, Channel 2 and Channel 3 Forced Output Compare mode
       configuration */
       else
       {
@@ -557,7 +557,7 @@ void PWM_ForcedOCConfig(u16 PWM_Channel, u16 PWM_ForcedAction)
 
         PWM->OMR1 &= PWM_OC2C_Mask;
         PWM->OMR1 |= (PWM_ForcedAction<<8);
-        
+
         PWM->OMR2 &= PWM_OC3C_Mask;
         PWM->OMR2 |= PWM_ForcedAction;
       }
@@ -639,8 +639,8 @@ FlagStatus PWM_GetFlagStatus(u16 PWM_FLAG)
 
 /*******************************************************************************
 * Function Name  : PWM_ClearFlag
-* Description    : Clears the PWM’s pending flags. 
-* Input          : PWM_FLAG: specifies the flag to clear. 
+* Description    : Clears the PWM’s pending flags.
+* Input          : PWM_FLAG: specifies the flag to clear.
 *                  This parameter can be any combination of the following values:
 *                         - PWM_FLAG_OC1: Output Compare 1 flag
 *                         - PWM_FLAG_OC2: Output Compare 2 flag
@@ -659,7 +659,7 @@ void PWM_ClearFlag(u16 PWM_FLAG)
 /*******************************************************************************
 * Function Name  : PWM_GetITStatus
 * Description    : Checks whether the PWM interrupt has occurred or not.
-* Input          : PWM_IT: specifies the PWM interrupt source to check. 
+* Input          : PWM_IT: specifies the PWM interrupt source to check.
 *                  This parameter can be one of the following values:
 *                         - PWM_IT_OC1: PWM Output Compare 1 Interrupt source
 *                         - PWM_IT_OC2: PWM Output Compare 2 Interrupt source
@@ -677,7 +677,7 @@ ITStatus PWM_GetITStatus(u16 PWM_IT)
 
   /* Calculates the pending bits to be checked */
   PWM_IT_Check = PWM_IT & PWM_IT_Clear_Mask;
-  
+
   if((PWM->ISR & PWM_IT_Check) != RESET )
   {
     return SET;
@@ -712,7 +712,7 @@ void PWM_ClearITPendingBit(u16 PWM_IT)
 
   /* Clears the pending bits */
   PWM->ISR &= ~PWM_IT_Clear;
-  
+
 }
 
 /*******************************************************************************
@@ -727,7 +727,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
 {
   u16 PWM_OCControl = 0x0000;
   u16 DTR_REG = 0x0000;
-    
+
   if(PWM_InitStruct->PWM_Mode == PWM_Mode_OCTiming)
   {
     PWM_OCControl = PWM_OCControl_OCTiming;
@@ -772,7 +772,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
          PWM->OMR1 &= PWM_OC1C_Mask;
          PWM->OMR1 |= PWM_OCControl|PWM_OC1_Enable|PWM_OC1N_Enable|PWM_PLD1_Set;
          PWM->OCR1 = PWM_InitStruct->PWM_Pulse1;
-         
+
         /* Sets the OC1 wave polarity */
         if(PWM_InitStruct->PWM_Polarity1 == PWM_Polarity1_Low)
         {
@@ -829,7 +829,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
             /* OC1E = 0 and OSSR = 1 and sets the polarity */
             PWM->OMR1 &= PWM_OC1_Disable;
             DTR_REG |= PWM_OSSR_Set;
-            
+
             /* Sets the OC1 wave polarity */
             if(PWM_InitStruct->PWM_Polarity1 == PWM_Polarity1_Low)
             {
@@ -849,7 +849,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
           {
             /* Configures Channel 1N on Output Compare mode */
             PWM->OMR1 &= PWM_OC1C_Mask;
-            PWM->OMR1 |= PWM_OCControl |PWM_OC1N_Enable |PWM_PLD1_Set; 
+            PWM->OMR1 |= PWM_OCControl |PWM_OC1N_Enable |PWM_PLD1_Set;
             PWM->OCR1 = PWM_InitStruct->PWM_Pulse1;
 
             /* Sets the OC1N wave polarity */
@@ -886,7 +886,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
             }
           }
           break;
-        } 
+        }
       } /* End not complementary case */
     }/* end channel 1 */
 
@@ -957,7 +957,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
               /* OC2E = 0 and OSSR = 1 sets the polarity */
               PWM->OMR1 &= PWM_OC2_Disable;
               DTR_REG |= PWM_OSSR_Set;
-              
+
               /* Sets the OC2 wave polarity */
               if(PWM_InitStruct->PWM_Polarity2 == PWM_Polarity2_Low)
               {
@@ -1002,7 +1002,7 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
               /* OC2N = 0 OSSR = 1 and sets the polarity */
               PWM->OMR1 &= PWM_OC2N_Disable;
               DTR_REG |= PWM_OSSR_Set;
-              
+
               if(PWM_InitStruct->PWM_Polarity2N == PWM_Polarity2N_Low)
               {
                 PWM->OMR1 |= PWM_OC2NP_Set;
@@ -1148,6 +1148,6 @@ static void OCM_ModuleConfig(PWM_InitTypeDef* PWM_InitStruct)
     DTR_REG |= PWM_InitStruct->PWM_LOCKLevel | PWM_InitStruct->PWM_Emergency |
               PWM_InitStruct->PWM_DeadTime | PWM_InitStruct->PWM_OSSIState;
     PWM->DTR = DTR_REG;
-  } 
+  }
 }
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

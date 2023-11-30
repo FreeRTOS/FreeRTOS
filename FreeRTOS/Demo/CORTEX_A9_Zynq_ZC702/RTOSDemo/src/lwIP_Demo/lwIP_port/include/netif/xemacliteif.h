@@ -30,7 +30,7 @@ extern "C" {
 #include "xemaclite_i.h"
 #include "xstatus.h"
 
-/* structure within each netif, encapsulating all information required for 
+/* structure within each netif, encapsulating all information required for
  * using a particular emaclite instance
  */
 typedef struct {
@@ -45,7 +45,7 @@ void 	xemacliteif_setmac(u32_t index, u8_t *addr);
 u8_t*	xemacliteif_getmac(u32_t index);
 err_t 	xemacliteif_init(struct netif *netif);
 int 	xemacliteif_input(struct netif *netif);
-   
+
 #ifdef __cplusplus
 }
 #endif

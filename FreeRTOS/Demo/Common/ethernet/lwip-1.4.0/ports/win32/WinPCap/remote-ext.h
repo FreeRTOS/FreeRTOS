@@ -2,32 +2,32 @@
  * Copyright (c) 2002 - 2003
  * NetGroup, Politecnico di Torino (Italy)
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- * 
- * 1. Redistributions of source code must retain the above copyright 
+ *
+ * 1. Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright 
- * notice, this list of conditions and the following disclaimer in the 
- * documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Politecnico di Torino nor the names of its 
- * contributors may be used to endorse or promote products derived from 
- * this software without specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Politecnico di Torino nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  */
 
 
@@ -55,7 +55,7 @@ extern "C" {
 	placed into the pcap.h file.
 
 	It includes all new definitions (structures and functions like pcap_open().
-    Some of the functions are not really a remote feature, but, right now, 
+    Some of the functions are not really a remote feature, but, right now,
 	they are placed here.
 */
 
@@ -85,25 +85,25 @@ extern "C" {
 
 
 /*!
-	\brief Internal representation of the type of source in use (file, 
+	\brief Internal representation of the type of source in use (file,
 	remote/local interface).
 
 	This indicates a file, i.e. the user want to open a capture from a local file.
 */
 #define PCAP_SRC_FILE 2
 /*!
-	\brief Internal representation of the type of source in use (file, 
+	\brief Internal representation of the type of source in use (file,
 	remote/local interface).
 
-	This indicates a local interface, i.e. the user want to open a capture from 
+	This indicates a local interface, i.e. the user want to open a capture from
 	a local interface. This does not involve the RPCAP protocol.
 */
 #define PCAP_SRC_IFLOCAL 3
 /*!
-	\brief Internal representation of the type of source in use (file, 
+	\brief Internal representation of the type of source in use (file,
 	remote/local interface).
 
-	This indicates a remote interface, i.e. the user want to open a capture from 
+	This indicates a remote interface, i.e. the user want to open a capture from
 	an interface on a remote host. This does involve the RPCAP protocol.
 */
 #define PCAP_SRC_IFREMOTE 4
@@ -147,7 +147,7 @@ extern "C" {
 	- rpcap://[1:2:3::4]/devicename [IPv6 numeric, no port number]
 	- rpcap://[1:2:3::4]:1234/devicename [IPv6 numeric, with port number]
 	- rpcap://[1:2:3::4]:http/devicename [IPv6 numeric, with literal port number]
-	
+
 	\{
 */
 
@@ -194,7 +194,7 @@ extern "C" {
 
 	It is '1' if you have to open the adapter in promiscuous mode, '0' otherwise.
 	Note that even if this parameter is false, the interface could well be in promiscuous
-	mode for some other reason (for example because another capture process with 
+	mode for some other reason (for example because another capture process with
 	promiscuous mode enabled is currently using that interface).
 	On on Linux systems with 2.2 or later kernels (that have the "any" device), this
 	flag does not work on the "any" device; if an argument of "any" is supplied,
@@ -209,7 +209,7 @@ extern "C" {
 	If it is '1' if you want a UDP data connection, '0' if you want
 	a TCP data connection; control connection is always TCP-based.
 	A UDP connection is much lighter, but it does not guarantee that all
-	the captured packets arrive to the client workstation. Moreover, 
+	the captured packets arrive to the client workstation. Moreover,
 	it could be harmful in case of network congestion.
 	This flag is meaningless if the source is not a remote interface.
 	In that case, it is simply ignored.
@@ -230,7 +230,7 @@ extern "C" {
 /*!
 	\brief Defines if the local adapter will capture its own generated traffic.
 
-	This flag tells the underlying capture driver to drop the packets that were sent by itself. 
+	This flag tells the underlying capture driver to drop the packets that were sent by itself.
 	This is usefult when building applications like bridges, that should ignore the traffic
 	they just sent.
 */
@@ -239,11 +239,11 @@ extern "C" {
 /*!
 	\brief This flag configures the adapter for maximum responsiveness.
 
-	In presence of a large value for nbytes, WinPcap waits for the arrival of several packets before 
-	copying the data to the user. This guarantees a low number of system calls, i.e. lower processor usage, 
-	i.e. better performance, which is good for applications like sniffers. If the user sets the 
-	PCAP_OPENFLAG_MAX_RESPONSIVENESS flag, the capture driver will copy the packets as soon as the application 
-	is ready to receive them. This is suggested for real time applications (like, for example, a bridge) 
+	In presence of a large value for nbytes, WinPcap waits for the arrival of several packets before
+	copying the data to the user. This guarantees a low number of system calls, i.e. lower processor usage,
+	i.e. better performance, which is good for applications like sniffers. If the user sets the
+	PCAP_OPENFLAG_MAX_RESPONSIVENESS flag, the capture driver will copy the packets as soon as the application
+	is ready to receive them. This is suggested for real time applications (like, for example, a bridge)
 	that need the best responsiveness.*/
 #define PCAP_OPENFLAG_MAX_RESPONSIVENESS	16
 
@@ -279,8 +279,8 @@ extern "C" {
 
 	In this case, the 'value' field of the 'pcap_samp' structure indicates the 'waiting
 	time' in milliseconds before one packet got accepted.
-	In other words, if 'value = 10', the first packet is returned to the caller; the next 
-	returned one will be the first packet that arrives when 10ms have elapsed. 
+	In other words, if 'value = 10', the first packet is returned to the caller; the next
+	returned one will be the first packet that arrives when 10ms have elapsed.
 */
 #define PCAP_SAMP_FIRST_AFTER_N_MS 2
 
@@ -325,12 +325,12 @@ extern "C" {
 
 	\brief This structure keeps the information needed to autheticate
 	the user on a remote machine.
-	
-	The remote machine can either grant or refuse the access according 
+
+	The remote machine can either grant or refuse the access according
 	to the information provided.
 	In case the NULL authentication is required, both 'username' and
 	'password' can be NULL pointers.
-	
+
 	This structure is meaningless if the source is not a remote interface;
 	in that case, the functions which requires such a structure can accept
 	a NULL pointer as well.
@@ -341,24 +341,24 @@ struct pcap_rmtauth
 		\brief Type of the authentication required.
 
 		In order to provide maximum flexibility, we can support different types
-		of authentication based on the value of this 'type' variable. The currently 
+		of authentication based on the value of this 'type' variable. The currently
 		supported authentication methods are defined into the
 		\link remote_auth_methods Remote Authentication Methods Section\endlink.
 
 	*/
 	int type;
 	/*!
-		\brief Zero-terminated string containing the username that has to be 
+		\brief Zero-terminated string containing the username that has to be
 		used on the remote machine for authentication.
-		
+
 		This field is meaningless in case of the RPCAP_RMTAUTH_NULL authentication
 		and it can be NULL.
 	*/
 	char *username;
 	/*!
-		\brief Zero-terminated string containing the password that has to be 
+		\brief Zero-terminated string containing the password that has to be
 		used on the remote machine for authentication.
-		
+
 		This field is meaningless in case of the RPCAP_RMTAUTH_NULL authentication
 		and it can be NULL.
 	*/
@@ -427,7 +427,7 @@ struct pcap_samp *pcap_setsampling(pcap_t *p);
 
 /** \name Remote Capture functions
  */
-//\{ 
+//\{
 SOCKET pcap_remoteact_accept(const char *address, const char *port, const char *hostlist, char *connectinghost, struct pcap_rmtauth *auth, char *errbuf);
 int pcap_remoteact_list(char *hostlist, char sep, int size, char *errbuf);
 int pcap_remoteact_close(const char *host, char *errbuf);

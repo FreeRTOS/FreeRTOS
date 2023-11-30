@@ -9,7 +9,7 @@
 /*  NOTE:THIS IS A TYPICAL EXAMPLE.                                    */
 /*                                                                     */
 /***********************************************************************/
-                  
+
 
 
 /*********************************************************************
@@ -25,7 +25,7 @@
 * NOTE       : THIS IS A TYPICAL EXAMPLE.
 *
 * Copyright(c) 2009 Renesas Technology Corp.
-*               And Renesas Solutions Corp.,All Rights Reserved. 
+*               And Renesas Solutions Corp.,All Rights Reserved.
 *
 *********************************************************************/
 
@@ -55,6 +55,6 @@ void Excep_BRK(void);
 
 //;<<VECTOR DATA START (POWER ON RESET)>>
 //;Power On Reset PC
-extern void PowerON_Reset_PC(void);                                                                                                                
+extern void PowerON_Reset_PC(void);
 //;<<VECTOR DATA END (POWER ON RESET)>>
 

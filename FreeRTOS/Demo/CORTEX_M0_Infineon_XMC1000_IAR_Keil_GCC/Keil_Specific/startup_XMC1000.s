@@ -139,7 +139,7 @@ SRAM_BASE            EQU     0x20000000
 VENEER_INIT_CODE     EQU     0xE7FEBF00             ; NOP, B .
 
         LDR     R1, =SRAM_BASE
-        LDR     R2, =VENEER_INIT_CODE                
+        LDR     R2, =VENEER_INIT_CODE
         MOVS    R0, #48                     ; Veneer 0..47
 Init_Veneers
         STR     R2, [R1]
@@ -342,53 +342,53 @@ __user_initial_stackheap
                 MEND
 
                 STAYHERE 0x0                          ;* Reserved
-                STAYHERE 0x1                          ;* Reserved 
-                STAYHERE 0x2                          ;* Reserved 
-                JUMPTO   HardFault_Handler            ;* HardFault Veneer  
-                STAYHERE 0x4                          ;* Reserved 
-                STAYHERE 0x5                          ;* Reserved 
-                STAYHERE 0x6                          ;* Reserved 
-                STAYHERE 0x7                          ;* Reserved 
-                STAYHERE 0x8                          ;* Reserved 
-                STAYHERE 0x9                          ;* Reserved 
+                STAYHERE 0x1                          ;* Reserved
+                STAYHERE 0x2                          ;* Reserved
+                JUMPTO   HardFault_Handler            ;* HardFault Veneer
+                STAYHERE 0x4                          ;* Reserved
+                STAYHERE 0x5                          ;* Reserved
+                STAYHERE 0x6                          ;* Reserved
+                STAYHERE 0x7                          ;* Reserved
+                STAYHERE 0x8                          ;* Reserved
+                STAYHERE 0x9                          ;* Reserved
                 STAYHERE 0xA                          ;* Reserved
-                JUMPTO   SVC_Handler                  ;* SVC Veneer        
+                JUMPTO   SVC_Handler                  ;* SVC Veneer
                 STAYHERE 0xC                          ;* Reserved
                 STAYHERE 0xD                          ;* Reserved
-                JUMPTO   PendSV_Handler               ;* PendSV Veneer     
-                JUMPTO   SysTick_Handler              ;* SysTick Veneer    
-                JUMPTO   SCU_0_IRQHandler             ;* SCU_0 Veneer      
-                JUMPTO   SCU_1_IRQHandler             ;* SCU_1 Veneer      
-                JUMPTO   SCU_2_IRQHandler             ;* SCU_2 Veneer      
-                JUMPTO   ERU0_0_IRQHandler            ;* SCU_3 Veneer      
-                JUMPTO   ERU0_1_IRQHandler            ;* SCU_4 Veneer      
-                JUMPTO   ERU0_2_IRQHandler            ;* SCU_5 Veneer      
-                JUMPTO   ERU0_3_IRQHandler            ;* SCU_6 Veneer      
-                JUMPTO   MATH0_0_IRQHandler           ;* SCU_7 Veneer      
+                JUMPTO   PendSV_Handler               ;* PendSV Veneer
+                JUMPTO   SysTick_Handler              ;* SysTick Veneer
+                JUMPTO   SCU_0_IRQHandler             ;* SCU_0 Veneer
+                JUMPTO   SCU_1_IRQHandler             ;* SCU_1 Veneer
+                JUMPTO   SCU_2_IRQHandler             ;* SCU_2 Veneer
+                JUMPTO   ERU0_0_IRQHandler            ;* SCU_3 Veneer
+                JUMPTO   ERU0_1_IRQHandler            ;* SCU_4 Veneer
+                JUMPTO   ERU0_2_IRQHandler            ;* SCU_5 Veneer
+                JUMPTO   ERU0_3_IRQHandler            ;* SCU_6 Veneer
+                JUMPTO   MATH0_0_IRQHandler           ;* SCU_7 Veneer
                 STAYHERE 0x18                         ;* Reserved
-                JUMPTO   USIC0_0_IRQHandler           ;* USIC0_0 Veneer    
-                JUMPTO   USIC0_1_IRQHandler           ;* USIC0_1 Veneer    
-                JUMPTO   USIC0_2_IRQHandler           ;* USIC0_2 Veneer    
-                JUMPTO   USIC0_3_IRQHandler           ;* USIC0_3 Veneer    
-                JUMPTO   USIC0_4_IRQHandler           ;* USIC0_4 Veneer    
-                JUMPTO   LEDTS0_0_IRQHandler          ;* USIC0_5 Veneer    
-                JUMPTO   VADC0_C0_0_IRQHandler        ;* VADC0_C0_0 Veneer 
-                JUMPTO   VADC0_C0_1_IRQHandler        ;* VADC0_C0_1 Veneer 
-                JUMPTO   VADC0_G0_0_IRQHandler        ;* VADC0_G0_0 Veneer 
-                JUMPTO   VADC0_G0_1_IRQHandler        ;* VADC0_G0_1 Veneer 
-                JUMPTO   VADC0_G1_0_IRQHandler        ;* VADC0_G1_0 Veneer 
-                JUMPTO   VADC0_G1_1_IRQHandler        ;* VADC0_G1_1 Veneer 
-                JUMPTO   CCU40_0_IRQHandler           ;* CCU40_0 Veneer    
-                JUMPTO   CCU40_1_IRQHandler           ;* CCU40_1 Veneer    
-                JUMPTO   CCU40_2_IRQHandler           ;* CCU40_2 Veneer    
-                JUMPTO   CCU40_3_IRQHandler           ;* CCU40_3 Veneer    
-                JUMPTO   CCU80_0_IRQHandler           ;* CCU80_0 Veneer    
-                JUMPTO   CCU80_1_IRQHandler           ;* CCU80_1 Veneer    
-                JUMPTO   POSIF0_0_IRQHandler          ;* POSIF0_0 Veneer   
-                JUMPTO   POSIF0_1_IRQHandler          ;* POSIF0_1 Veneer   
-                JUMPTO   LEDTS0_0_IRQHandler          ;* LEDTS0_0 Veneer   
-                JUMPTO   LEDTS1_0_IRQHandler          ;* LEDTS1_0 Veneer   
-                JUMPTO   BCCU0_0_IRQHandler           ;* BCCU0_0 Veneer    
+                JUMPTO   USIC0_0_IRQHandler           ;* USIC0_0 Veneer
+                JUMPTO   USIC0_1_IRQHandler           ;* USIC0_1 Veneer
+                JUMPTO   USIC0_2_IRQHandler           ;* USIC0_2 Veneer
+                JUMPTO   USIC0_3_IRQHandler           ;* USIC0_3 Veneer
+                JUMPTO   USIC0_4_IRQHandler           ;* USIC0_4 Veneer
+                JUMPTO   LEDTS0_0_IRQHandler          ;* USIC0_5 Veneer
+                JUMPTO   VADC0_C0_0_IRQHandler        ;* VADC0_C0_0 Veneer
+                JUMPTO   VADC0_C0_1_IRQHandler        ;* VADC0_C0_1 Veneer
+                JUMPTO   VADC0_G0_0_IRQHandler        ;* VADC0_G0_0 Veneer
+                JUMPTO   VADC0_G0_1_IRQHandler        ;* VADC0_G0_1 Veneer
+                JUMPTO   VADC0_G1_0_IRQHandler        ;* VADC0_G1_0 Veneer
+                JUMPTO   VADC0_G1_1_IRQHandler        ;* VADC0_G1_1 Veneer
+                JUMPTO   CCU40_0_IRQHandler           ;* CCU40_0 Veneer
+                JUMPTO   CCU40_1_IRQHandler           ;* CCU40_1 Veneer
+                JUMPTO   CCU40_2_IRQHandler           ;* CCU40_2 Veneer
+                JUMPTO   CCU40_3_IRQHandler           ;* CCU40_3 Veneer
+                JUMPTO   CCU80_0_IRQHandler           ;* CCU80_0 Veneer
+                JUMPTO   CCU80_1_IRQHandler           ;* CCU80_1 Veneer
+                JUMPTO   POSIF0_0_IRQHandler          ;* POSIF0_0 Veneer
+                JUMPTO   POSIF0_1_IRQHandler          ;* POSIF0_1 Veneer
+                JUMPTO   LEDTS0_0_IRQHandler          ;* LEDTS0_0 Veneer
+                JUMPTO   LEDTS1_0_IRQHandler          ;* LEDTS1_0 Veneer
+                JUMPTO   BCCU0_0_IRQHandler           ;* BCCU0_0 Veneer
 
                 ALIGN
 

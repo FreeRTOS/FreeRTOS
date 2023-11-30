@@ -108,7 +108,7 @@ static const struct peri_security peri_security_array[] = {
 		.peri_id = ID_PKCC,
 		.matrix = MATRIX_H64MX,
 		.security_type = SECURITY_TYPE_AS,
-	},	
+	},
 	/* AES */
 	{
 		.peri_id = ID_AES,
@@ -516,7 +516,7 @@ int is_peripheral_secure(unsigned int periph_id)
 	uint32_t matrix;
 	Matrix *base;
 	uint32_t mask;
-        
+
 	if ((periph_id > ID_FIQ) && (periph_id < ID_PERIPH_COUNT)) {
 		/* special cases here */
 		if ((periph_id == ID_IRQ)

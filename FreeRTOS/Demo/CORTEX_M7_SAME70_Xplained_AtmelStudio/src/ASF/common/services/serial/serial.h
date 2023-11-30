@@ -103,7 +103,7 @@
  *
  * @{
  */
- 
+
 //! @}
 
 /**
@@ -139,7 +139,7 @@
  * -# \ref sysclk_group "System Clock Management (sysclk)"
  *
  * \subsection serial_basic_use_case_setup_code Example code
- * The following configuration must be added to the project (typically to a 
+ * The following configuration must be added to the project (typically to a
  * conf_uart_serial.h file, but it can also be added to your main application file.)
  *
  * \note The following takes SAM3X configuration for example, other devices have similar
@@ -220,7 +220,7 @@
  * -# \ref sysclk_group "System Clock Management (sysclk)"
  *
  * \subsection serial_use_case_1_setup_code Example code
- * The following configuration must be added to the project (typically to a 
+ * The following configuration must be added to the project (typically to a
  * conf_uart_serial.h file, but it can also be added to your main application file.):
  *
  * \note The following takes SAM3X configuration for example, other devices have similar

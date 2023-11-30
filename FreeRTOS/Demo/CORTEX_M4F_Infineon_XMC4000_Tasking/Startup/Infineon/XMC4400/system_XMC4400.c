@@ -9,9 +9,9 @@
  * Copyright (C) 2011 ARM Limited. All rights reserved.
  *
  * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * ARM Limited (ARM) is supplying this software for use with Cortex-M
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -37,7 +37,7 @@ uint32_t SystemCoreClock;
 #define SCU_CLOCK_BACK_UP_AUTOMATIC	   	3
 
 
-#define HIB_CLOCK_FOSI					1				 
+#define HIB_CLOCK_FOSI					1
 #define HIB_CLOCK_OSCULP				2
 
 
@@ -63,7 +63,7 @@ uint32_t SystemCoreClock;
 //
 // <e> Main Clock Configuration
 //     <o1.0..1> CPU clock divider
-//                     <0=> fCPU = fSYS 
+//                     <0=> fCPU = fSYS
 //                     <1=> fCPU = fSYS / 2
 //     <o2.0..1>  Peripheral Bus clock divider
 //                     <0=> fPB	= fCPU
@@ -73,7 +73,7 @@ uint32_t SystemCoreClock;
 //                     <1=> fCCU = fCPU / 2
 //
 // </e>
-// 
+//
 */
 
 #define SCU_CLOCK_SETUP               1
@@ -81,14 +81,14 @@ uint32_t SystemCoreClock;
 #define	SCU_PBCLKCR_DIV		    0x00000000
 #define	SCU_CCUCLKCR_DIV		0x00000000
 /* not avalible in config wizzard*/
-/*				
-* mandatory clock parameters **************************************************				
-*				
-* source for clock generation				
-* range: SCU_CLOCK_CRYSTAL (crystal or external clock at crystal input)				
-*				
-**************************************************************************************/				
-// Selection of imput lock for PLL	
+/*
+* mandatory clock parameters **************************************************
+*
+* source for clock generation
+* range: SCU_CLOCK_CRYSTAL (crystal or external clock at crystal input)
+*
+**************************************************************************************/
+// Selection of imput lock for PLL
 /*************************************************************************************/
 #define	SCU_PLL_CLOCK_INPUT	SCU_CLOCK_CRYSTAL
 //#define	SCU_PLL_CLOCK_INPUT	SCU_CLOCK_BACK_UP_FACTORY
@@ -104,48 +104,48 @@ uint32_t SystemCoreClock;
 // Global clock parameters
 /*************************************************************************************/
 #define CLOCK_FSYS							120000000
-#define	CLOCK_CRYSTAL_FREQUENCY	12000000		
-#define	CLOCK_BACK_UP						24000000		
-				
+#define	CLOCK_CRYSTAL_FREQUENCY	12000000
+#define	CLOCK_BACK_UP						24000000
+
 /*************************************************************************************/
-/* OSC_HP setup parameters */				
+/* OSC_HP setup parameters */
 /*************************************************************************************/
 #define	SCU_OSC_HP_MODE	0xF0
-#define	SCU_OSCHPWDGDIV	2		
-				
+#define	SCU_OSCHPWDGDIV	2
+
 /*************************************************************************************/
-/* MAIN PLL setup parameters */				
+/* MAIN PLL setup parameters */
 /*************************************************************************************/
-//Divider settings for external crystal @ 12 MHz 
+//Divider settings for external crystal @ 12 MHz
 /*************************************************************************************/
 #define 	SCU_PLL_K1DIV	1
 #define 	SCU_PLL_K2DIV	3
 #define 	SCU_PLL_PDIV	1
 #define 	SCU_PLL_NDIV	79
-				
+
 /*************************************************************************************/
 //Divider settings for use of backup clock source trimmed
 /*************************************************************************************/
-//#define 	SCU_PLL_K1DIV	1		
-//#define 	SCU_PLL_K2DIV	3		
-//#define 	SCU_PLL_PDIV	3		
-//#define 	SCU_PLL_NDIV	79		
+//#define 	SCU_PLL_K1DIV	1
+//#define 	SCU_PLL_K2DIV	3
+//#define 	SCU_PLL_PDIV	3
+//#define 	SCU_PLL_NDIV	79
 /*************************************************************************************/
-	
+
 
 /*--------------------- USB CLOCK Configuration ---------------------------
 //
 // <e> USB Clock Configuration
 //
 // </e>
-// 
+//
 */
 
 #define SCU_USB_CLOCK_SETUP              0
 /* not avalible in config wizzard*/
-#define 	SCU_USBPLL_PDIV	0		
-#define 	SCU_USBPLL_NDIV	31		
-#define 	SCU_USBDIV	3		
+#define 	SCU_USBPLL_PDIV	0
+#define 	SCU_USBPLL_NDIV	31
+#define 	SCU_USBDIV	3
 
 /*--------------------- Flash Wait State Configuration -------------------------------
 //
@@ -153,10 +153,10 @@ uint32_t SystemCoreClock;
 //     <o1.0..3>   Flash Wait State
 //                     <0=> 3 WS
 //                     <1=> 4 WS
-//                     <2=> 5 WS     
+//                     <2=> 5 WS
 //										 <3=> 6 WS
 // </e>
-// 
+//
 */
 
 #define PMU_FLASH             1
@@ -174,10 +174,10 @@ uint32_t SystemCoreClock;
 //     <o3.0..1>   Clockout Pin Selection
 //                     <0=> P1.15
 //                     <1=> P0.8
-//                     
+//
 //
 // </e>
-// 
+//
 */
 
 #define SCU_CLOCKOUT_SETUP               0
@@ -209,7 +209,7 @@ static int USBClockSetup(void);
 
 /**
   * @brief  Setup the microcontroller system.
-  *         Initialize the PLL and update the 
+  *         Initialize the PLL and update the
   *         SystemCoreClock variable.
   * @param  None
   * @retval None
@@ -217,32 +217,32 @@ static int USBClockSetup(void);
 void SystemInit(void)
 {
 int temp;
-	
+
 #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
 SCB->CPACR |= ((3UL << 10*2) |                 /* set CP10 Full Access */
                (3UL << 11*2)  );               /* set CP11 Full Access */
 #endif
-	
+
 /* Enable unaligned memory access - SCB_CCR.UNALIGN_TRP = 0 */
 SCB->CCR &= ~(SCB_CCR_UNALIGN_TRP_Msk);
-	
+
 /* Setup the WDT */
 #if WDT_SETUP
 
-WDT->CTR &= ~WDTENB_nVal; 
+WDT->CTR &= ~WDTENB_nVal;
 
 #endif
 
 
 /* Setup the Flash Wait State */
 #if PMU_FLASH
-temp = FLASH0->FCON; 
+temp = FLASH0->FCON;
 temp &= ~FLASH_FCON_WSPFLASH_Msk;
 temp |= PMU_FLASH_WS+3;
 FLASH0->FCON = temp;
 #endif
 
-	
+
 /* Setup the clockout */
 #if SCU_CLOCKOUT_SETUP
 
@@ -263,7 +263,7 @@ else {
 #endif
 
 
-/* Setup the System clock */ 
+/* Setup the System clock */
 #if SCU_CLOCK_SETUP
 SystemClockSetup();
 #endif
@@ -274,7 +274,7 @@ SystemClockSetup();
 SystemCoreClockUpdate();/*!< System Clock Frequency (Core Clock)*/
 
 
-/* Setup the USB PL */ 
+/* Setup the USB PL */
 #if SCU_USB_CLOCK_SETUP
 USBClockSetup();
 #endif
@@ -286,7 +286,7 @@ USBClockSetup();
 
 /**
   * @brief  Update SystemCoreClock according to Clock Register Values
-  * @note   -  
+  * @note   -
   * @param  None
   * @retval None
   */
@@ -316,18 +316,18 @@ if (SCU_CLK->SYSCLKCR ==  0x00010000)
 		SystemCoreClock = VCO/K2DIV;
 		/* in case the sysclock div is used */
 		SystemCoreClock = SystemCoreClock/((SCU_CLK->SYSCLKCR & SCU_CLK_SYSCLKCR_SYSDIV_Msk)+1);
-		
+
 		}
 		else
 		{
-		/* the selected clock is the PLL external oscillator */		
+		/* the selected clock is the PLL external oscillator */
 		VCO = (CLOCK_CRYSTAL_FREQUENCY/PDIV)*NDIV;
 		SystemCoreClock = VCO/K2DIV;
 		/* in case the sysclock div is used */
 		SystemCoreClock = SystemCoreClock/((SCU_CLK->SYSCLKCR & SCU_CLK_SYSCLKCR_SYSDIV_Msk)+1);
-		} 
-	
-	
+		}
+
+
 	}
 }
 else
@@ -341,7 +341,7 @@ SystemCoreClock = CLOCK_BACK_UP;
 
 /**
   * @brief  -
-  * @note   -  
+  * @note   -
   * @param  None
   * @retval None
   */
@@ -350,17 +350,17 @@ static int SystemClockSetup(void)
 {
 int temp;
 unsigned int long VCO=0;
-int stepping_K2DIV;	
+int stepping_K2DIV;
 
-/* this weak function enables DAVE3 clock App usage */	
+/* this weak function enables DAVE3 clock App usage */
 if(AllowPLLInitByStartup()){
-	 
+
 /* check if PLL is switched on */
 if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)) != 0){
 /* enable PLL first */
   SCU_PLL->PLLCON0 &= ~(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk);
 
-} 
+}
 
 /* Enable OSC_HP if not already on*/
   if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)
@@ -372,22 +372,22 @@ if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)
    if (SCU_OSC->OSCHPCTRL & SCU_OSC_OSCHPCTRL_MODE_Msk){
 	   SCU_OSC->OSCHPCTRL &= ~(SCU_OSC_HP_MODE);	 /*enable the OSC_HP*/
 	   /* setup OSC WDG devider */
-	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);         
+	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);
 	   /* select external OSC as PLL input */
 	   SCU_PLL->PLLCON2 &= ~SCU_PLL_PLLCON2_PINSEL_Msk;
 	   /* restart OSC Watchdog */
-	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;  
+	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;
 
        /* Timeout for wait loop ~150ms */
 	   /********************************/
 	   SysTick->LOAD  = ((5000000+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */		  
-	   do 
+	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
+	   do
 	   {
        ;/* wait for ~150ms  */
-	   }while((((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLSTAT_PLLSP_Msk)) != 0x380)&&(SysTick->VAL >= 500)); 
+	   }while((((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLSTAT_PLLSP_Msk)) != 0x380)&&(SysTick->VAL >= 500));
 
 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 	   if (((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLSTAT_PLLSP_Msk)) != 0x380)
@@ -402,7 +402,7 @@ if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)
 	/********************************************************************************************************************/
 		/* PLL Back up clock selected */
 		SCU_PLL->PLLCON2 |= SCU_PLL_PLLCON2_PINSEL_Msk;
-			
+
 	}
   else if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC)
   {
@@ -419,14 +419,14 @@ if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)
 
 			/* PLL Back up clock selected */
 		SCU_PLL->PLLCON2 |= SCU_PLL_PLLCON2_PINSEL_Msk;
-	
+
 		if (SCU_STANDBY_CLOCK == HIB_CLOCK_FOSI)
 			{
 			/****************************************************************************************************************/
 			/*   Use fOSI as source of the standby clock                                                                             */
 			/****************************************************************************************************************/
 			SCU_HIBERNATE->HDCR &= ~SCU_HIBERNATE_HDCR_STDBYSEL_Msk;
-			
+
 			SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_FOTR_Msk;
 			for(temp=0;temp<=0xFFFF;temp++);
 
@@ -457,23 +457,23 @@ if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)
 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCLR_Msk);
 					for(temp=0;temp<=0xFFFF;temp++);
 					}
-					while ((SCU_HIBERNATE->HDSTAT & SCU_HIBERNATE_HDSTAT_ULPWDG_Msk)==SCU_HIBERNATE_HDSTAT_ULPWDG_Msk); 
+					while ((SCU_HIBERNATE->HDSTAT & SCU_HIBERNATE_HDSTAT_ULPWDG_Msk)==SCU_HIBERNATE_HDSTAT_ULPWDG_Msk);
 
 					SCU_HIBERNATE->HDCLR |= SCU_HIBERNATE_HDCLR_ULPWDG_Msk;
 					while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCLR_Msk);
-				}	
-			// now OSCULP is running and can be used	 	 
+				}
+			// now OSCULP is running and can be used
 			SCU_HIBERNATE->HDCR |= SCU_HIBERNATE_HDCR_STDBYSEL_Msk;
 			while (SCU_GENERAL->MIRRSTS & SCU_GENERAL_MIRRSTS_HDCR_Msk);
-			
+
 			SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_FOTR_Msk;
 			/*TRIAL for delay loop*/
 			for(temp=0;temp<=0xFFFF;temp++);
-			
+
 			SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_AOTREN_Msk;
 			/*TRIAL for delay loop*/
 			for(temp=0;temp<=0xFFFF;temp++);
-			
+
 			}
   }
 
@@ -491,8 +491,8 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 			 if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)VCO = (CLOCK_CRYSTAL_FREQUENCY/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
 			 if ((SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC) ||(SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_FACTORY))
 					VCO = (CLOCK_BACK_UP/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
-	 
-			 stepping_K2DIV = (VCO/24000000)-1;	
+
+			 stepping_K2DIV = (VCO/24000000)-1;
 			 /* Go to bypass the Main PLL */
 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_VCOBYP_Msk;
 		   /* disconnect OSC_HP to PLL */
@@ -512,8 +512,8 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 		   SysTick->LOAD  = ((5000000+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
 		   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
 		   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-		                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */		  
-		   
+		                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
+
 		   while ((!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk))&&(SysTick->VAL >= 500));
 	       SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 
@@ -523,24 +523,24 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 				SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_VCOBYP_Msk;
 				}
 				else return(0);
-		 
-	
+
+
 	   /*********************************************************
 	   here we need to setup the system clock divider
 	   *********************************************************/
-	
+
 		SCU_CLK->CPUCLKCR = SCU_CPUCLKCR_DIV;
-		SCU_CLK->PBCLKCR = SCU_PBCLKCR_DIV;	
+		SCU_CLK->PBCLKCR = SCU_PBCLKCR_DIV;
 		SCU_CLK->CCUCLKCR = SCU_CCUCLKCR_DIV;
-	
+
 
   		/* Switch system clock to PLL */
-	   SCU_CLK->SYSCLKCR |=  0x00010000; 
-				
+	   SCU_CLK->SYSCLKCR |=  0x00010000;
+
 	   /* we may have to reset OSCDISCDIS */
 	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCDISCDIS_Msk;
-				
-																  
+
+
 		 /*********************************************************/
 		 /* Delay for next K2 step ~50탎 */
 		 /*********************************************************/
@@ -548,7 +548,7 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 		 SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
 		 SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
 										 SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
-	
+
 		 while (SysTick->VAL >= 100);								   /* wait for ~50탎  */
 		 SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 		 /*********************************************************/
@@ -561,8 +561,8 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 			 if (SCU_PLL_CLOCK_INPUT == SCU_CLOCK_CRYSTAL)VCO = (CLOCK_CRYSTAL_FREQUENCY/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
 			 if ((SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC) ||(SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_FACTORY))
 					VCO = (CLOCK_BACK_UP/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
-	 
-			 stepping_K2DIV = (VCO/60000000)-1;	
+
+			 stepping_K2DIV = (VCO/60000000)-1;
 
 			 /* Setup devider settings for main PLL */
 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<<24));
@@ -582,11 +582,11 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
 	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
-	
+
 	   while (SysTick->VAL >= 100);								   /* wait for ~50탎  */
 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 	   /********************************/
-	
+
    /*********************************************************
 	   here the ramp up of the system clock starts FSys < 90MHz
 	   *********************************************************/
@@ -596,7 +596,7 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 			 if ((SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_AUTOMATIC) ||(SCU_PLL_CLOCK_INPUT == SCU_CLOCK_BACK_UP_FACTORY))
 					VCO = (CLOCK_BACK_UP/(SCU_PLL_PDIV+1))*(SCU_PLL_NDIV+1);
 
-			 stepping_K2DIV = (VCO/90000000)-1;			
+			 stepping_K2DIV = (VCO/90000000)-1;
 
 			 /* Setup devider settings for main PLL */
 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<<24));
@@ -608,7 +608,7 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 	      SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear request for System OCS Watchdog Trap and System VCO Lock Trap  */
 				return(1);
 		 }
-	
+
 		 /*********************************************************/
 		 /* Delay for next K2 step ~50탎 */
 		 /*********************************************************/
@@ -616,17 +616,17 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
 	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
-	
+
 	   while (SysTick->VAL >= 100);								   /* wait for ~50탎  */
 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 	   /********************************/
-	
+
 	   /* Setup devider settings for main PLL */
 	   SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<24));
-	
+
 	   SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear request for System OCS Watchdog Trap and System VCO Lock Trap  */
 	}
- }/* end this weak function enables DAVE3 clock App usage */	
+ }/* end this weak function enables DAVE3 clock App usage */
    return(1);
 
 }
@@ -634,16 +634,16 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 
 /**
   * @brief  -
-  * @note   -  
+  * @note   -
   * @param  None
   * @retval None
   */
 #if (SCU_USB_CLOCK_SETUP == 1)
 static int USBClockSetup(void)
 {
-/* this weak function enables DAVE3 clock App usage */	
+/* this weak function enables DAVE3 clock App usage */
 if(AllowPLLInitByStartup()){
-	
+
 /* check if PLL is switched on */
 if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPWD_Msk)) != 0){
 	/* enable PLL first */
@@ -659,25 +659,25 @@ if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPW
 		 }
 	   SCU_OSC->OSCHPCTRL &= ~(SCU_OSC_HP_MODE);	 /*enable the OSC_HP*/
 	   /* setup OSC WDG devider */
-	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);         
+	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);
 	   /* restart OSC Watchdog */
-	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;  
-	
+	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;
+
        /* Timeout for wait loop ~150ms */
 	   /********************************/
 	   SysTick->LOAD  = ((5000000+100) & SysTick_LOAD_RELOAD_Msk) - 1;/* set reload register */
 	   SysTick->VAL   = 0;                                         /* Load the SysTick Counter Value */
 	   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */		  
-	   do 
+	                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
+	   do
 	   {
        ;/* wait for ~150ms  */
-	   }while((((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLSTAT_PLLSP_Msk)) != 0x380)&&(SysTick->VAL >= 500)); 
+	   }while((((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLSTAT_PLLSP_Msk)) != 0x380)&&(SysTick->VAL >= 500));
 
 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 	   if (((SCU_PLL->PLLSTAT) & (SCU_PLL_PLLSTAT_PLLHV_Msk | SCU_PLL_PLLSTAT_PLLLV_Msk |SCU_PLL_PLLSTAT_PLLSP_Msk)) != 0x380)
 	   return(0);/* Return Error */
-	
+
   }
 
 
@@ -698,8 +698,8 @@ if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPW
    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_RESLD_Msk;
    /* wait for PLL Lock */
    while (!(SCU_PLL->USBPLLSTAT & SCU_PLL_USBPLLSTAT_VCOLOCK_Msk));
-   
- }/* end this weak function enables DAVE3 clock App usage */	
+
+ }/* end this weak function enables DAVE3 clock App usage */
    return(1);
 
 }

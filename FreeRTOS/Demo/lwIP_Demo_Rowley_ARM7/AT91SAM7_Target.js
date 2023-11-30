@@ -28,7 +28,7 @@ function RAMReset()
 {
   Reset();
   /* Remap SRAM to 0x00000000 */
-  TargetInterface.pokeWord(0xFFFFFF00, 1); // MC_RCR 
+  TargetInterface.pokeWord(0xFFFFFF00, 1); // MC_RCR
 }
 
 function FLASHReset()
@@ -36,7 +36,7 @@ function FLASHReset()
   Reset();
 
 // Mask All interrupt pAic->AIC_IDCR = 0xFFFFFFFF;
-	
+
     TargetInterface.pokeWord(0xffffffff,0xFFFFF124);
     TargetInterface.pokeWord(0xffffffff,0xFFFFF128);
 // disable peripheral clock  Peripheral Clock Disable Register
@@ -53,9 +53,9 @@ function FLASHReset()
 //    {
       // AT91C_BASE_AIC->AIC_EOICR
 //      __mac_pt  =  TargetInterface.peekWord(0xFFFFF130);
-    
+
 //    }
-//   __message "------------------------------- AIC 2 INIT ---------------------------------------------";  
+//   __message "------------------------------- AIC 2 INIT ---------------------------------------------";
 
 }
 

@@ -131,7 +131,7 @@ void MCI_Init(
 
     // Enable the MCI clock
     WRITE_PMC(AT91C_BASE_PMC, PMC_PCER, (1 << mciId));
-    
+
      // Reset the MCI
     WRITE_MCI(pMciHw, MCI_CR, AT91C_MCI_SWRST);
 
@@ -177,7 +177,7 @@ void MCI_Close(Mci *pMci)
 
     // Disable the MCI peripheral clock.
     WRITE_PMC(AT91C_BASE_PMC, PMC_PCDR, (1 << pMci->mciId));
-    
+
     // Disable the MCI
     WRITE_MCI(pMciHw, MCI_CR, AT91C_MCI_MCIDIS);
 
@@ -186,7 +186,7 @@ void MCI_Close(Mci *pMci)
 }
 
 //------------------------------------------------------------------------------
-/// Configure the  MCI CLKDIV in the MCI_MR register. The max. for MCI clock is 
+/// Configure the  MCI CLKDIV in the MCI_MR register. The max. for MCI clock is
 /// MCK/2 and corresponds to CLKDIV = 0
 /// \param pMci  Pointer to the low level MCI driver.
 /// \param mciSpeed  MCI clock speed in Hz.
@@ -223,7 +223,7 @@ void MCI_SetSpeed(Mci *pMci, unsigned int mciSpeed)
 
 //------------------------------------------------------------------------------
 /// Configure the  MCI SDCBUS in the MCI_SDCR register. Only two modes available
-/// 
+///
 /// \param pMci  Pointer to the low level MCI driver.
 /// \param busWidth  MCI bus width mode.
 //------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ unsigned char MCI_SendCommand(Mci *pMci, MciCmd *pCommand)
 
     // Try to acquire the MCI semaphore
     if (pMci->semaphore == 0) {
-    
+
         return MCI_ERROR_LOCK;
     }
     pMci->semaphore--;
@@ -298,15 +298,15 @@ unsigned char MCI_SendCommand(Mci *pMci, MciCmd *pCommand)
         }
 
         // DATA transfer from card to host
-        if (pCommand->isRead) { 
+        if (pCommand->isRead) {
             WRITE_MCI(pMciHw, MCI_RPR, (int) pCommand->pData);
 
             // If Multiblock command set the BLKR register
-            /* if (pCommand->nbBlock > 1) { 
+            /* if (pCommand->nbBlock > 1) {
                 WRITE_MCI(pMciHw, MCI_BLKR, pCommand->nbBlock | (pCommand->blockSize << 16));
             }
             else {
-                WRITE_MCI(pMciHw, MCI_BLKR, (pCommand->blockSize << 16));        		
+                WRITE_MCI(pMciHw, MCI_BLKR, (pCommand->blockSize << 16));
             }*/
 
             // Sanity check
@@ -351,7 +351,7 @@ unsigned char MCI_SendCommand(Mci *pMci, MciCmd *pCommand)
     MCI_Enable(pMci, ENABLE);
 
     // Send the command
-    if((pCommand->conTrans != MCI_CONTINUE_TRANSFER) 
+    if((pCommand->conTrans != MCI_CONTINUE_TRANSFER)
         || (pCommand->blockSize == 0)) {
 
         WRITE_MCI(pMciHw, MCI_ARGR, pCommand->arg);
@@ -453,7 +453,7 @@ void MCI_Handler(Mci *pMci)
 
         // Check error code
         if ((status & STATUS_ERRORS) == AT91C_MCI_RTOE) {
-        
+
             pCommand->status = MCI_STATUS_NORESPONSE;
         }
         // if the command is SEND_OP_COND the CRC error flag is always present
@@ -511,7 +511,7 @@ void MCI_Handler(Mci *pMci)
         if ((status & AT91C_MCI_BLKE) != 0)
             trace_LOG(trace_DEBUG, ">");
         trace_LOG(trace_DEBUG, "\n\r");
-#endif        
+#endif
         // Store the card response in the provided buffer
         if (pCommand->pResp) {
 

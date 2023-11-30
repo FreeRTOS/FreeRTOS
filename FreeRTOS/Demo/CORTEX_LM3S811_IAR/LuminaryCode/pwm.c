@@ -181,7 +181,7 @@ PWMGenConfigure(unsigned long ulBase, unsigned long ulGen,
 //! in clock ticks.
 //!
 //! This function sets the period of the specified PWM generator block, where
-//! the period of the generator block is defined as the number of \b PWM 
+//! the period of the generator block is defined as the number of \b PWM
 //! clock ticks between pulses on the generator block \b zero signal.
 //!
 //! \note Any subsequent calls made to this function before an update occurs
@@ -327,7 +327,7 @@ PWMGenEnable(unsigned long ulBase, unsigned long ulGen)
 //! \param ulGen is the PWM generator to be disabled.  Must be one of
 //! \b PWM_GEN_0, \b PWM_GEN_1, or \b PWM_GEN_2.
 //!
-//! This function blocks the \b PWM clock from driving the timer/counter for 
+//! This function blocks the \b PWM clock from driving the timer/counter for
 //! the specified generator block.
 //!
 //! \return None.

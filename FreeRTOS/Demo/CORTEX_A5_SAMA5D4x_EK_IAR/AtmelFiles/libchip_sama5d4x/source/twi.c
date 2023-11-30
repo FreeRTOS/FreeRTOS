@@ -121,7 +121,7 @@ void TWI_ConfigureMaster( Twi* pTwi, uint32_t dwTwCk, uint32_t dwMCk )
               else if ((uint32_t)pTwi == (uint32_t)TWI2) id = ID_TWI2;
 
     maxClock = PMC_SetPeriMaxClock(id, dwMCk);
-    
+
     /* Configure clock */
     while ( !dwOk )
     {

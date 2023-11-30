@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -41,16 +41,16 @@
 /*----------------------------------------------------------------------------
  *        Macro
  *----------------------------------------------------------------------------*/
-#define GMAC_CACHE 
-#if defined GMAC_CACHE 
+#define GMAC_CACHE
+#if defined GMAC_CACHE
 	 #define GMAC_CACHE_COHERENCE {SCB_CleanInvalidateDCache();}
-#else 
+#else
 	 #define GMAC_CACHE_COHERENCE {}
-#endif     
+#endif
 
 /** ISO/IEC 14882:2003(E) - 5.6 Multiplicative operators:
- * The binary / operator yields the quotient, and the binary % operator yields 
- * the remainder from the division of the first expression by the second. 
+ * The binary / operator yields the quotient, and the binary % operator yields
+ * the remainder from the division of the first expression by the second.
  * If the second operand of / or % is zero the behaviour is undefined; otherwise
  *  (a/b)*b + a%b is equal to a.
  * If both operands are non-negative then the remainder is non-negative;
@@ -68,12 +68,12 @@ __STATIC_INLINE int fixed_mod(int a, int b)
 /** Return count in buffer */
 #define GCIRC_CNT(head,tail,size)  fixed_mod((head) - (tail), (size))
 
-/** Return space available, 0..size-1. always leave one free char as a 
+/** Return space available, 0..size-1. always leave one free char as a
 	completely full buffer has head == tail, which is the same as empty */
 #define GCIRC_SPACE(head,tail,size) GCIRC_CNT((tail),((head)+1),(size))
 
-/** Return count up to the end of the buffer. Carefully avoid accessing head 
-	and tail more than once, so they can change underneath us without returning 
+/** Return count up to the end of the buffer. Carefully avoid accessing head
+	and tail more than once, so they can change underneath us without returning
 	inconsistent results */
 #define GCIRC_CNT_TO_END(head,tail,size) \
 	 ({int end = (size) - (tail); \
@@ -106,10 +106,10 @@ uint8_t ptpTxQueReadIdx = 0u;
 /* This queue holds the transmit event messages */
 ptpMsgType gPtpMsgTxQue[EFRS_BUFFER_LEN];
 uint16_t gPtpMsgTxSeqId[EFRS_BUFFER_LEN];
-   
 
 
-const uint32_t isrMasks[] = { GMAC_IMR_SFT, GMAC_IMR_DRQFT, 
+
+const uint32_t isrMasks[] = { GMAC_IMR_SFT, GMAC_IMR_DRQFT,
 							GMAC_IMR_PDRQFT , GMAC_IMR_PDRSFT };
 
 /*---------------------------------------------------------------------------
@@ -130,27 +130,27 @@ static void GMACD_ResetTx(sGmacd *pDrv, gmacQueList_t queIdx)
 
 	/* Disable TX */
 	GMAC_TransmitEnable(pHw, 0);
-	
+
 	/* Setup the TX descriptors. */
 	GCIRC_CLEAR(pDrv->queueList[queIdx].wTxHead, pDrv->queueList[queIdx].wTxTail);
 	for(Index = 0; Index < pDrv->queueList[queIdx].wTxListSize; Index++) {
-		Address = (uint32_t)(&(pTxBuffer[Index * 
+		Address = (uint32_t)(&(pTxBuffer[Index *
 					pDrv->queueList[queIdx].wTxBufferSize]));
 		pTd[Index].addr = Address;
 		pTd[Index].status.val = (uint32_t)GMAC_TX_USED_BIT;
 	}
-	
+
 	pTd[pDrv->queueList[queIdx].wTxListSize - 1].status.val =
-					GMAC_TX_USED_BIT | GMAC_TX_WRAP_BIT; 
-	
+					GMAC_TX_USED_BIT | GMAC_TX_WRAP_BIT;
+
 	/* Transmit Buffer Queue Pointer Register */
-	  
+
 	GMAC_SetTxQueue(pHw, (uint32_t)pTd, queIdx);
 }
-	
+
 /**
  *  \brief Disable RX & reset registers and descriptor list
- *  \param pDrv Pointer to GMAC Driver instance. 
+ *  \param pDrv Pointer to GMAC Driver instance.
  */
 static void GMACD_ResetRx(sGmacd *pDrv, gmacQueList_t queIdx )
 {
@@ -167,16 +167,16 @@ static void GMACD_ResetRx(sGmacd *pDrv, gmacQueList_t queIdx )
 	/* Setup the RX descriptors. */
 	pDrv->queueList[queIdx].wRxI = 0;
 	for(Index = 0; Index < pDrv->queueList[queIdx].wRxListSize; Index++) {
-		Address = (uint32_t)(&(pRxBuffer[Index * 
+		Address = (uint32_t)(&(pRxBuffer[Index *
 				pDrv->queueList[queIdx].wRxBufferSize]));
 		/* Remove GMAC_RXD_bmOWNERSHIP and GMAC_RXD_bmWRAP */
 		pRd[Index].addr.val = Address & GMAC_ADDRESS_MASK;
 		pRd[Index].status.val = 0;
 	}
-	
+
 	pRd[pDrv->queueList[queIdx].wRxListSize - 1].addr.val |= GMAC_RX_WRAP_BIT;
-	
-	/* Receive Buffer Queue Pointer Register */ 
+
+	/* Receive Buffer Queue Pointer Register */
 	GMAC_SetRxQueue(pHw, (uint32_t)pRd, queIdx);
 }
 
@@ -214,7 +214,7 @@ static void GMACD_TxCompleteHandler(sGmacd *pGmacd, gmacQueList_t qId)
 
 		/* Process all buffers of the current transmitted frame */
 		while ((pTxTd->status.val & GMAC_TX_LAST_BUFFER_BIT) == 0) {
-			GCIRC_INC(pGmacd->queueList[qId].wTxTail, 
+			GCIRC_INC(pGmacd->queueList[qId].wTxTail,
 					pGmacd->queueList[qId].wTxListSize);
 			pTxTd = &pGmacd->queueList[qId].pTxD[pGmacd->queueList[qId].wTxTail];
 			memory_sync();
@@ -234,7 +234,7 @@ static void GMACD_TxCompleteHandler(sGmacd *pGmacd, gmacQueList_t qId)
 	if (pGmacd->queueList[qId].fWakupCb &&
 		GCIRC_SPACE(pGmacd->queueList[qId].wTxHead,
 					pGmacd->queueList[qId].wTxTail,
-					pGmacd->queueList[qId].wTxListSize) >= 
+					pGmacd->queueList[qId].wTxListSize) >=
 						pGmacd->queueList[qId].bWakeupThreshold)
 		pGmacd->queueList[qId].fWakupCb();
 }
@@ -252,29 +252,29 @@ static void GMACD_TxErrorHandler(sGmacd *pGmacd, gmacQueList_t qId)
 	uint32_t               tsr;
 
 	/* Clear TXEN bit into the Network Configuration Register:
-	 * this is a workaround to recover from TX lockups that 
+	 * this is a workaround to recover from TX lockups that
 	 * occur on sama5d3 gmac (r1p24f2) when using  scatter-gather.
 	 * This issue has never been seen on sama5d4 gmac (r1p31).
 	 */
 	GMAC_TransmitEnable(pHw, 0);
 
-	/* The following step should be optional since this function is called 
-	 * directly by the IRQ handler. Indeed, according to Cadence 
+	/* The following step should be optional since this function is called
+	 * directly by the IRQ handler. Indeed, according to Cadence
 	 * documentation, the transmission is halted on errors such as
 	 * too many retries or transmit under run.
 	 * However it would become mandatory if the call of this function
-	 * were scheduled as a task by the IRQ handler (this is how Linux 
+	 * were scheduled as a task by the IRQ handler (this is how Linux
 	 * driver works). Then this function might compete with GMACD_Send().
 	 *
 	 * Setting bit 10, tx_halt, of the Network Control Register is not enough:
-	 * We should wait for bit 3, tx_go, of the Transmit Status Register to 
+	 * We should wait for bit 3, tx_go, of the Transmit Status Register to
 	 * be cleared at transmit completion if a frame is being transmitted.
 	 */
 	GMAC_TransmissionHalt(pHw);
 	while (GMAC_GetTxStatus(pHw) & GMAC_TSR_TXGO);
 
 	/* Treat frames in TX queue including the ones that caused the error. */
-	while (!GCIRC_EMPTY(pGmacd->queueList[qId].wTxHead, 
+	while (!GCIRC_EMPTY(pGmacd->queueList[qId].wTxHead,
 			pGmacd->queueList[qId].wTxTail)) {
 		int tx_completed = 0;
 		pTxTd = &pGmacd->queueList[qId].pTxD[pGmacd->queueList[qId].wTxTail];
@@ -289,7 +289,7 @@ static void GMACD_TxErrorHandler(sGmacd *pGmacd, gmacQueList_t qId)
 
 		/* Go to the last buffer descriptor of the frame */
 		while ((pTxTd->status.val & GMAC_TX_LAST_BUFFER_BIT) == 0) {
-			GCIRC_INC(pGmacd->queueList[qId].wTxTail, 
+			GCIRC_INC(pGmacd->queueList[qId].wTxTail,
 					pGmacd->queueList[qId].wTxListSize);
 			pTxTd = &pGmacd->queueList[qId].pTxD[pGmacd->queueList[qId].wTxTail];
 			GMAC_CACHE_COHERENCE
@@ -298,16 +298,16 @@ static void GMACD_TxErrorHandler(sGmacd *pGmacd, gmacQueList_t qId)
 		/* Notify upper layer that a frame status */
 		fTxCb = pGmacd->queueList[qId].fTxCbList[pGmacd->queueList[qId].wTxTail];
 		if (fTxCb)
-			fTxCb(tx_completed ? GMAC_TSR_TXCOMP : 0); 
+			fTxCb(tx_completed ? GMAC_TSR_TXCOMP : 0);
 		// TODO: which error to notify?
 
 		/* Go to next frame */
 		GCIRC_INC(pGmacd->queueList[qId].wTxTail, pGmacd->queueList[qId].wTxListSize);
-	}    
+	}
 
 	/* Reset TX queue */
 	GMACD_ResetTx(pGmacd, qId);
-	
+
 	/* Clear status */
 	tsr = GMAC_GetTxStatus(pHw);
 	GMAC_ClearTxStatus(pHw, tsr);
@@ -318,22 +318,22 @@ static void GMACD_TxErrorHandler(sGmacd *pGmacd, gmacQueList_t qId)
 		pGmacd->queueList[qId].fWakupCb();
 }
 
- 
+
 /*---------------------------------------------------------------------------
  *         Exported functions
  *---------------------------------------------------------------------------*/
 
 
-#ifndef PTP_1588_TX_DISABLE  
+#ifndef PTP_1588_TX_DISABLE
 
-void GMACD_TxPtpEvtMsgCBRegister (sGmacd * pGmacd, 
-		fGmacdTxPtpEvtCallBack pTxPtpEvtCb, gmacQueList_t queIdx)  
-{  
+void GMACD_TxPtpEvtMsgCBRegister (sGmacd * pGmacd,
+		fGmacdTxPtpEvtCallBack pTxPtpEvtCb, gmacQueList_t queIdx)
+{
   pGmacd->queueList[queIdx].fTxPtpEvtCb = pTxPtpEvtCb;
-} 
+}
 
-#endif   /* #ifdef PTP_1588_TX_DISABLE */  
- 
+#endif   /* #ifdef PTP_1588_TX_DISABLE */
+
 /**
  *  \brief GMAC Interrupt handler
  *  \param pGmacd Pointer to GMAC Driver instance.
@@ -343,7 +343,7 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 	Gmac *pHw = pGmacd->pHw;
 	uint32_t isr;
 	uint32_t rsr;
-	
+
 	/* Interrupt Status Register is cleared on read */
 	while ( (isr = GMAC_GetItStatus(pHw, queIdx)) !=0) {
 		/*  Sync Frame Received - PTP */
@@ -357,12 +357,12 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 			}
 		} else {
 		}
-		
+
 		/* Peer Delay Request Frame Received - PTP */
 		if (0u != (isr & GMAC_ISR_PDRQFR) ) {
 			rsr = GMAC_ISR_PDRQFR;
 			memory_barrier();
-			
+
 			/* Invoke callbacks */
 			if (pGmacd->queueList[queIdx].fRxCb) {
 				pGmacd->queueList[queIdx].fRxCb(rsr);
@@ -373,10 +373,10 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 
 		/* Peer Delay Response Frame Received - PTP */
 		if (0u != (isr & GMAC_ISR_PDRSFR) ) {
-			
+
 			rsr = GMAC_ISR_PDRSFR;
 			memory_barrier();
-			
+
 			/* Invoke callbacks */
 			if (pGmacd->queueList[queIdx].fRxCb) {
 				pGmacd->queueList[queIdx].fRxCb(rsr);
@@ -384,20 +384,20 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 			}
 		} else {
 		}
-	
+
 		if( 0u != (isr & GMAC_ISR_TSU)) {
 			/* Invoke call back with flag set to TSU comparison interrupt */
 			rsr = GMAC_ISR_TSU;
 			memory_barrier();
-		
+
 			/* Invoke callbacks */
-			if (pGmacd->queueList[queIdx].fRxCb) { 
+			if (pGmacd->queueList[queIdx].fRxCb) {
 				pGmacd->queueList[queIdx].fRxCb(rsr);
 			} else {
 			}
 		} else {
 		}
-		
+
 		/* RX packet */
 		if (isr & GMAC_INT_RX_BITS) {
 			/* Clear status */
@@ -414,38 +414,38 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 				GMACD_TxErrorHandler(pGmacd, queIdx);
 				break;
 			}
-	
+
 #ifndef PTP_1588_TX_DISABLE
-			/* Transmit of SYNC / PDELAY_REQ / PDELAY_RSP */    
+			/* Transmit of SYNC / PDELAY_REQ / PDELAY_RSP */
 			if(0u != (isr & isrMasks[gPtpMsgTxQue[ptpTxQueReadIdx]])) {
 			/* Invoke callback */
-			/*  Check if it is possible for multiple messages to be triggered 
+			/*  Check if it is possible for multiple messages to be triggered
 			within a single isr. If so, a loop may be needed to validate the top
 			of the queue with the actual interrupt that has been triggered */
 /* while(0u != (isr & (GMAC_IMR_SFT | GMAC_IMR_PDRQFT | GMAC_IMR_PDRSFT))) { */
 			if (pGmacd->queueList[queIdx].fTxPtpEvtCb) {
 				switch (gPtpMsgTxQue[ptpTxQueReadIdx]) {
 				case SYNC_MSG_TYPE:
-					pGmacd->queueList[queIdx].fTxPtpEvtCb 
-									(gPtpMsgTxQue[ptpTxQueReadIdx], 
-									GMAC_GetTxEvtFrameSec(pHw), 
-									GMAC_GetTxEvtFrameNsec(pHw), 
+					pGmacd->queueList[queIdx].fTxPtpEvtCb
+									(gPtpMsgTxQue[ptpTxQueReadIdx],
+									GMAC_GetTxEvtFrameSec(pHw),
+									GMAC_GetTxEvtFrameNsec(pHw),
 									gPtpMsgTxSeqId[ptpTxQueReadIdx]);
 					isr &= GMAC_IMR_SFT;
 					break;
 				case PDELAY_REQ_TYPE:
-					pGmacd->queueList[queIdx].fTxPtpEvtCb 
-									(gPtpMsgTxQue[ptpTxQueReadIdx], 
-									GMAC_GetTxPeerEvtFrameSec(pHw), 
-									GMAC_GetTxPeerEvtFrameNsec(pHw), 
+					pGmacd->queueList[queIdx].fTxPtpEvtCb
+									(gPtpMsgTxQue[ptpTxQueReadIdx],
+									GMAC_GetTxPeerEvtFrameSec(pHw),
+									GMAC_GetTxPeerEvtFrameNsec(pHw),
 									gPtpMsgTxSeqId[ptpTxQueReadIdx]);
 					isr &= GMAC_IMR_PDRQFT;
 					break;
 				case PDELAY_RESP_TYPE:
-					pGmacd->queueList[queIdx].fTxPtpEvtCb 
-									(gPtpMsgTxQue[ptpTxQueReadIdx], 
-									GMAC_GetTxPeerEvtFrameSec(pHw), 
-									GMAC_GetTxPeerEvtFrameNsec(pHw), 
+					pGmacd->queueList[queIdx].fTxPtpEvtCb
+									(gPtpMsgTxQue[ptpTxQueReadIdx],
+									GMAC_GetTxPeerEvtFrameSec(pHw),
+									GMAC_GetTxPeerEvtFrameNsec(pHw),
 									gPtpMsgTxSeqId[ptpTxQueReadIdx]);
 					isr &= GMAC_IMR_PDRSFT;
 					break;
@@ -458,8 +458,8 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 
 			ptpTxQueReadIdx++;
 			ptpTxQueReadIdx &= (EFRS_BUFFER_LEN-1);
-			
-			} else { 
+
+			} else {
 				/* if(0u != (isr & isrMasks[gPtpMsgTxQue[ptpTxQueReadIdx]])) */
 			}
 #endif /* #ifndef PTP_1588_TX_DISABLE */
@@ -475,7 +475,7 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 
 /**
  * \brief Initialize the GMAC with the Gmac controller address
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param pHw    Pointer to HW address for registers.
  *  \param bID     HW ID for power management
  *  \param enableCAF    Enable/Disable CopyAllFrame.
@@ -483,12 +483,12 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
  */
  void GMACD_Init(sGmacd *pGmacd,
 				Gmac *pHw,
-				uint8_t bID, 
-				uint8_t enableCAF, 
+				uint8_t bID,
+				uint8_t enableCAF,
 				uint8_t enableNBC )
 {
 	uint32_t dwNcfgr;
-	
+
 	/* Check parameters */
 //    assert(GRX_BUFFERS * GMAC_RX_UNITSIZE > GMAC_FRAME_LENTGH_MAX);
 
@@ -504,10 +504,10 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 	/* Disable TX & RX and more */
 	GMAC_NetworkControl(pHw, 0);
 	GMAC_DisableAllQueueIt(pHw, ~0u);
-	
+
 	GMAC_ClearStatistics(pHw);
 	/* Clear all status bits in the receive status register. */
-	GMAC_ClearRxStatus(pHw, GMAC_RSR_RXOVR | GMAC_RSR_REC 
+	GMAC_ClearRxStatus(pHw, GMAC_RSR_RXOVR | GMAC_RSR_REC
 					| GMAC_RSR_BNA |GMAC_RSR_HNO);
 
 	/* Clear all status bits in the transmit status register */
@@ -530,7 +530,7 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
 	if( enableNBC ) {
 		dwNcfgr |= GMAC_NCFGR_NBC;
 	}
-	
+
 	GMAC_Configure(pHw, dwNcfgr);
 }
 
@@ -546,7 +546,7 @@ void GMACD_Handler(sGmacd *pGmacd, gmacQueList_t queIdx)
  * \note If input address is not 8-byte aligned the address is automatically
  *       adjusted and the list size is reduced by one.
  */
-uint8_t GMACD_InitTransfer(sGmacd *pGmacd, const sGmacInit *pInit, 
+uint8_t GMACD_InitTransfer(sGmacd *pGmacd, const sGmacInit *pInit,
 							gmacQueList_t queIdx)
 {
 	Gmac *pHw = pGmacd->pHw;
@@ -570,7 +570,7 @@ uint8_t GMACD_InitTransfer(sGmacd *pGmacd, const sGmacInit *pInit,
 
 	if (pInit->bIsGem) {
 		if(!queIdx) {
-			dwDmaCfg = (GMAC_DCFGR_DRBS(wRxBufferSize >> 6) ) 
+			dwDmaCfg = (GMAC_DCFGR_DRBS(wRxBufferSize >> 6) )
 				| GMAC_DCFGR_RXBMS(3) | GMAC_DCFGR_TXPBMS;
 			switch (pInit->bDmaBurstLength) {
 			case 16:
@@ -627,7 +627,7 @@ uint8_t GMACD_InitTransfer(sGmacd *pGmacd, const sGmacInit *pInit,
 	case GMAC_QUE_0:
 		/* YBP: Que 0 should be configured last so as to enable transmit and
 		Receive in the NCR register */
-		
+
 		/* Enable Rx and Tx, plus the status register. */
 		GMAC_TransmitEnable(pHw, 1);
 		GMAC_ReceiveEnable(pHw, 1);
@@ -638,7 +638,7 @@ uint8_t GMACD_InitTransfer(sGmacd *pGmacd, const sGmacInit *pInit,
 				  GMAC_INT_TX_BITS |
 				  GMAC_INT_TX_ERR_BITS, GMAC_QUE_0);
 		break;
-		
+
 	case GMAC_QUE_1:
 		GMAC_EnableIt(pHw,
 				  GMAC_INT_RX_BITS |
@@ -667,22 +667,22 @@ void GMACD_Reset(sGmacd *pGmacd)
 	GMACD_ResetRx(pGmacd, GMAC_QUE_0);
 	GMACD_ResetRx(pGmacd, GMAC_QUE_1);
 	GMACD_ResetRx(pGmacd, GMAC_QUE_2);
-	
+
 	GMACD_ResetTx(pGmacd, GMAC_QUE_0);
 	GMACD_ResetTx(pGmacd, GMAC_QUE_1);
 	GMACD_ResetTx(pGmacd, GMAC_QUE_2);
-	
+
 	//memset((void*)&GmacStatistics, 0x00, sizeof(GmacStats));
 	GMAC_NetworkControl(pHw, GMAC_NCR_TXEN | GMAC_NCR_RXEN
 							 | GMAC_NCR_WESTAT | GMAC_NCR_CLRSTAT);
 }
 
 /**
- * \brief Send a frame split into buffers. If the frame size is larger than 
- * transfer buffer size error returned. If frame transfer status is monitored, 
+ * \brief Send a frame split into buffers. If the frame size is larger than
+ * transfer buffer size error returned. If frame transfer status is monitored,
  * specify callback for each frame.
- *  \param pGmacd Pointer to GMAC Driver instance. 
- *  \param sgl Pointer to a scatter-gather list describing the buffers of the 
+ *  \param pGmacd Pointer to GMAC Driver instance.
+ *  \param sgl Pointer to a scatter-gather list describing the buffers of the
  * ethernet frame.
  *  \param fTxCb Pointer to callback function.
  */
@@ -709,19 +709,19 @@ uint8_t GMACD_SendSG(sGmacd *pGmacd,
 		return GMACD_PARAM;
 	}
 	/* Check available space */
-	if (GCIRC_SPACE(pGmacd->queueList[queIdx].wTxHead, 
+	if (GCIRC_SPACE(pGmacd->queueList[queIdx].wTxHead,
 			pGmacd->queueList[queIdx].wTxTail,
 			pGmacd->queueList[queIdx].wTxListSize) < (int)sgl->len)
 		return GMACD_TX_BUSY;
 
 	/* Tag end of TX queue */
-	wTxHead = fixed_mod(pGmacd->queueList[queIdx].wTxHead + sgl->len, 
+	wTxHead = fixed_mod(pGmacd->queueList[queIdx].wTxHead + sgl->len,
 			pGmacd->queueList[queIdx].wTxListSize);
 	wTxPos = wTxHead;
 	pGmacd->queueList[queIdx].fTxCbList[wTxPos] = NULL;
 	pTxTd = &pTd[wTxPos];
 	pTxTd->status.val = GMAC_TX_USED_BIT;
-	/* Update buffer descriptors in reverse order to avoid a race 
+	/* Update buffer descriptors in reverse order to avoid a race
 	 * condition with hardware.
 	 */
 	for (i = (int)(sgl->len-1); i >= 0; --i) {
@@ -747,11 +747,11 @@ uint8_t GMACD_SendSG(sGmacd *pGmacd,
 		 *  MUST be done before status word to avoid a race condition.
 		 */
 		pTxTd->addr = (uint32_t)sg->pBuffer;
-		
+
 #else
 		/* Copy data into transmission buffer */
 		if (sg->pBuffer && sg->size){
-			memcpy((void *)pTxTd->addr, sg->pBuffer, sg->size); 
+			memcpy((void *)pTxTd->addr, sg->pBuffer, sg->size);
 		 }
 #endif
 		GMAC_CACHE_COHERENCE
@@ -775,16 +775,16 @@ uint8_t GMACD_SendSG(sGmacd *pGmacd,
 	/* Update TX ring buffer pointers */
 	pGmacd->queueList[queIdx].wTxHead = wTxHead;
 	/* Now start to transmit if it is not already done */
-	
+
 	GMAC_TransmissionStart(pHw);
 	return GMACD_OK;
 }
 
 /**
- * \brief Send a packet with GMAC. If the packet size is larger than transfer 
+ * \brief Send a packet with GMAC. If the packet size is larger than transfer
  * buffer size error returned. If packet transfer status is monitored, specify
  * callback for each packet.
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param pBuffer   The buffer to be send
  *  \param size     The size of buffer to be send
  *  \param fTxCb Threshold Wakeup callback
@@ -798,7 +798,7 @@ uint8_t GMACD_Send(sGmacd *pGmacd,
 {
 	sGmacSGList sgl;
 	sGmacSG sg;
-	
+
 	uint8_t *msgPtr;
 	ptpMsgType ptpMsg;
 	/* Init single entry scatter-gather list */
@@ -808,30 +808,30 @@ uint8_t GMACD_Send(sGmacd *pGmacd,
 	sgl.sg = &sg;
 
 
-	
+
 #ifndef PTP_1588_TX_DISABLE
 
 	msgPtr = (uint8_t *)pBuffer;
 	if(0x88u == msgPtr[12] && 0xf7u == msgPtr[13]) {
 		/* Extract Tx PTP message  type */
 		ptpMsg = (ptpMsgType)(msgPtr[14] & 0x0F);
-		if (ptpMsg == SYNC_MSG_TYPE || ptpMsg == PDELAY_REQ_TYPE 
+		if (ptpMsg == SYNC_MSG_TYPE || ptpMsg == PDELAY_REQ_TYPE
 			|| ptpMsg == PDELAY_RESP_TYPE) {
-			/* Only add message to Tx queue of msg types that have 
+			/* Only add message to Tx queue of msg types that have
 				tx event ISRs enabled. */
 			gPtpMsgTxQue[ptpTxQueWriteIdx] = ptpMsg;
-			
+
 			/* Copy the Sequence Id */
-			gPtpMsgTxSeqId[ptpTxQueWriteIdx] = 
+			gPtpMsgTxSeqId[ptpTxQueWriteIdx] =
 				(uint16_t)(((uint16_t)msgPtr[44] << 8) | msgPtr[45]);
 			ptpTxQueWriteIdx++;
 			ptpTxQueWriteIdx &= (EFRS_BUFFER_LEN-1u);
-		} else { 
+		} else {
 				/* if (ptpMsg == SYNC_MSG_TYPE || ptpMsg == PDELAY_REQ_TYPE\
 				|| ptpMsg == PDELAY_RESP_TYPE) { */
 		}
 	} else { /* if(0x88 == msgPtr[12] && 0xf7 == msgPtr[13]) { */
-	}  
+	}
 #endif /* #ifndef PTP_1588_TX_DISABLE */
 	return GMACD_SendSG(pGmacd, &sgl, fTxCb, queIdx);
 }
@@ -851,15 +851,15 @@ uint32_t GMACD_TxLoad(sGmacd *pGmacd, gmacQueList_t queIdx)
  * \brief Receive a packet with GMAC.
  * If not enough buffer for the packet, the remaining data is lost but right
  * frame length is returned.
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param pFrame           Buffer to store the frame
  *  \param frameSize        Size of the frame
  *  \param pRcvSize         Received size
  *  \return                 OK, no data, or frame too small
  */
-uint8_t GMACD_Poll(sGmacd * pGmacd, 
-				  uint8_t *pFrame, 
-				  uint32_t frameSize, 
+uint8_t GMACD_Poll(sGmacd * pGmacd,
+				  uint8_t *pFrame,
+				  uint32_t frameSize,
 				  uint32_t *pRcvSize,
 				  gmacQueList_t queIdx)
 {
@@ -868,26 +868,26 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
 	uint32_t   tmpFrameSize = 0;
 	uint8_t  *pTmpFrame = 0;
 	uint32_t   tmpIdx = pGmacd->queueList[queIdx].wRxI;
-	volatile sGmacRxDescriptor *pRxTd = 
-		&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI]; 
+	volatile sGmacRxDescriptor *pRxTd =
+		&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI];
 
 	uint8_t isFrame = 0;
-	
+
 	if (pFrame == NULL) return GMACD_PARAM;
 
 	/* Set the default return value */
 	*pRcvSize = 0;
-	
+
 	/* Process received RxTd */
 	while ((pRxTd->addr.val & GMAC_RX_OWNERSHIP_BIT) == GMAC_RX_OWNERSHIP_BIT) {
 		/* A start of frame has been received, discard previous fragments */
 		if ((pRxTd->status.val & GMAC_RX_SOF_BIT) == GMAC_RX_SOF_BIT) {
 			/* Skip previous fragment */
 			while (tmpIdx != pGmacd->queueList[queIdx].wRxI) {
-				pRxTd = 
-					&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI]; 
+				pRxTd =
+					&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI];
 				pRxTd->addr.val &= ~(GMAC_RX_OWNERSHIP_BIT);
-				GCIRC_INC(pGmacd->queueList[queIdx].wRxI, 
+				GCIRC_INC(pGmacd->queueList[queIdx].wRxI,
 					pGmacd->queueList[queIdx].wRxListSize);
 			}
 			pTmpFrame = pFrame;
@@ -897,16 +897,16 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
 		}
 		/* Increment the pointer */
 		GCIRC_INC(tmpIdx, pGmacd->queueList[queIdx].wRxListSize);
-		
+
 		/* Copy data in the frame buffer */
 		if (isFrame) {
 			if (tmpIdx == pGmacd->queueList[queIdx].wRxI) {
 				TRACE_INFO("no EOF (Invalid of buffers too small)\n\r");
 				do {
-					pRxTd = 
-						&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI]; 
+					pRxTd =
+						&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI];
 					pRxTd->addr.val &= ~(GMAC_RX_OWNERSHIP_BIT);
-					GCIRC_INC(pGmacd->queueList[queIdx].wRxI, 
+					GCIRC_INC(pGmacd->queueList[queIdx].wRxI,
 						pGmacd->queueList[queIdx].wRxListSize);
 				} while(tmpIdx != pGmacd->queueList[queIdx].wRxI);
 				return GMACD_RX_NULL;
@@ -938,13 +938,13 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
 				/* All data have been copied in the application frame buffer
 					=> release TD */
 				while (pGmacd->queueList[queIdx].wRxI != tmpIdx) {
-					pRxTd = 
-						&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI]; 
+					pRxTd =
+						&pGmacd->queueList[queIdx].pRxD[pGmacd->queueList[queIdx].wRxI];
 					pRxTd->addr.val &= ~(GMAC_RX_OWNERSHIP_BIT);
-					GCIRC_INC(pGmacd->queueList[queIdx].wRxI, 
+					GCIRC_INC(pGmacd->queueList[queIdx].wRxI,
 						pGmacd->queueList[queIdx].wRxListSize);
 				}
-				
+
 				GMAC_CACHE_COHERENCE
 				return GMACD_OK;
 			}
@@ -962,12 +962,12 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
 }
 
 /**
- * \brief Registers pRxCb callback. Callback will be invoked after the next 
- * received frame. When GMAC_Poll() returns GMAC_RX_NO_DATA the application task 
- * call GMAC_Set_RxCb() to register pRxCb() callback and enters suspend state. 
- * The callback is in charge to resume the task once a new frame has been 
+ * \brief Registers pRxCb callback. Callback will be invoked after the next
+ * received frame. When GMAC_Poll() returns GMAC_RX_NO_DATA the application task
+ * call GMAC_Set_RxCb() to register pRxCb() callback and enters suspend state.
+ * The callback is in charge to resume the task once a new frame has been
  * received. The next time GMAC_Poll() is called, it will be successful.
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param fRxCb   Pointer to callback function
  *  \return        OK, no data, or frame too small
  */
@@ -988,9 +988,9 @@ void GMACD_SetRxCallback(sGmacd * pGmacd, fGmacdTransferCallback fRxCb,
 /**
  * Register/Clear TX wakeup callback.
  *
- * When GMACD_Send() returns GMACD_TX_BUSY (all TD busy) the application 
- * task calls GMACD_SetTxWakeupCallback() to register fWakeup() callback and 
- * enters suspend state. The callback is in charge to resume the task once 
+ * When GMACD_Send() returns GMACD_TX_BUSY (all TD busy) the application
+ * task calls GMACD_SetTxWakeupCallback() to register fWakeup() callback and
+ * enters suspend state. The callback is in charge to resume the task once
  * several TD have been released. The next time GMACD_Send() will be called,
  * it shall be successful.
  *

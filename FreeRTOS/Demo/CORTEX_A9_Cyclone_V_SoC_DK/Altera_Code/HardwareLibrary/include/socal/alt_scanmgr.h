@@ -41,67 +41,67 @@ extern "C"
 /*
  * Component : Scan Manager Module Registers - ALT_SCANMGR
  * Scan Manager Module Registers
- * 
+ *
  * Registers in the Scan Manager module.
- * 
+ *
  * These registers are implemented by an ARM JTAG-AP module from the ARM DAP. Some
  * register and field names have been changed to match the usage in the Scan
  * Manager. If modified, the corresponding names from the ARM documentation are
  * provided. Only registers and fields that are relevant to the JTAG-AP use in the
  * Scan Manager are listed.
- * 
+ *
  */
 /*
  * Register : Control/Status Word Register - stat
- * 
+ *
  * Consist of control bit and status information.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description                         
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:-------------------------------------
- *  [0]     | ???    | 0x0     | *UNDEFINED*                         
- *  [1]     | RW     | 0x0     | Reset output to the FPGA JTAG       
- *  [2]     | ???    | 0x0     | *UNDEFINED*                         
- *  [3]     | R      | Unknown | Ignore                              
- *  [23:4]  | ???    | 0x0     | *UNDEFINED*                         
+ *  [0]     | ???    | 0x0     | *UNDEFINED*
+ *  [1]     | RW     | 0x0     | Reset output to the FPGA JTAG
+ *  [2]     | ???    | 0x0     | *UNDEFINED*
+ *  [3]     | R      | Unknown | Ignore
+ *  [23:4]  | ???    | 0x0     | *UNDEFINED*
  *  [26:24] | R      | 0x0     | Response FIFO Outstanding Byte Count
- *  [27]    | ???    | 0x0     | *UNDEFINED*                         
- *  [30:28] | R      | 0x0     | Command FIFO Outstanding Byte Count 
- *  [31]    | R      | 0x0     | Scan-Chain Engine Active            
- * 
+ *  [27]    | ???    | 0x0     | *UNDEFINED*
+ *  [30:28] | R      | 0x0     | Command FIFO Outstanding Byte Count
+ *  [31]    | R      | 0x0     | Scan-Chain Engine Active
+ *
  */
 /*
  * Field : Reset output to the FPGA JTAG - trst
- * 
+ *
  * Specifies the value of the nTRST signal driven to the FPGA JTAG only. The FPGA
  * JTAG scan-chain must be enabled via the EN register to drive the value specified
  * in this field. The nTRST signal is driven with the inverted value of this
  * field.The nTRST signal is active low so, when this bit is set to 1, FPGA JTAG is
  * reset.
- * 
+ *
  * The name of this field in ARM documentation is TRST_OUT.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                     
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SCANMGR_STAT_TRST_E_DONT_RST_FPGA_JTAG | 0x0   | Don't reset FPGA JTAG.                          
- *  ALT_SCANMGR_STAT_TRST_E_RST_FPGA_JTAG      | 0x1   | Reset FPGA JTAG. Must have the FPGA JTAG scan-  
+ *  ALT_SCANMGR_STAT_TRST_E_DONT_RST_FPGA_JTAG | 0x0   | Don't reset FPGA JTAG.
+ *  ALT_SCANMGR_STAT_TRST_E_RST_FPGA_JTAG      | 0x1   | Reset FPGA JTAG. Must have the FPGA JTAG scan-
  * :                                           |       | chain enabled in the EN register to take effect.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_STAT_TRST
- * 
+ *
  * Don't reset FPGA JTAG.
  */
 #define ALT_SCANMGR_STAT_TRST_E_DONT_RST_FPGA_JTAG  0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_STAT_TRST
- * 
+ *
  * Reset FPGA JTAG. Must have the FPGA JTAG scan-chain enabled in the EN register
  * to take effect.
  */
@@ -126,13 +126,13 @@ extern "C"
 
 /*
  * Field : Ignore - ignore
- * 
+ *
  * Ignore this field. Its value is undefined (may be 0 or 1).
- * 
+ *
  * The name of this field in ARM documentation is PORTCONNECTED.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_STAT_IGNORE register field. */
 #define ALT_SCANMGR_STAT_IGNORE_LSB        3
@@ -153,12 +153,12 @@ extern "C"
 
 /*
  * Field : Response FIFO Outstanding Byte Count - rfifocnt
- * 
+ *
  * Response FIFO outstanding byte count. Returns the number of bytes of response
  * data available in the Response FIFO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_STAT_RFIFOCNT register field. */
 #define ALT_SCANMGR_STAT_RFIFOCNT_LSB        24
@@ -179,12 +179,12 @@ extern "C"
 
 /*
  * Field : Command FIFO Outstanding Byte Count - wfifocnt
- * 
+ *
  * Command FIFO outstanding byte count. Returns the number of command bytes held in
  * the Command FIFO that have yet to be processed by the Scan-Chain Engine.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_STAT_WFIFOCNT register field. */
 #define ALT_SCANMGR_STAT_WFIFOCNT_LSB        28
@@ -205,33 +205,33 @@ extern "C"
 
 /*
  * Field : Scan-Chain Engine Active - active
- * 
+ *
  * Indicates if the Scan-Chain Engine is processing commands from the Command FIFO
  * or not.
- * 
+ *
  * The Scan-Chain Engine is only guaranteed to be inactive if both the ACTIVE and
  * WFIFOCNT fields are zero.
- * 
+ *
  * The name of this field in ARM documentation is SERACTV.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                                   
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:-----------------------------------------------
- *  ALT_SCANMGR_STAT_ACT_E_POSSIBLY_INACT | 0x0   | The Scan-Chain Engine may or may not be       
+ *  ALT_SCANMGR_STAT_ACT_E_POSSIBLY_INACT | 0x0   | The Scan-Chain Engine may or may not be
  * :                                      |       | processing commands from the Command FIFO. The
- * :                                      |       | Scan-Chain Engine is only guaranteed to be    
- * :                                      |       | inactive if both this ACTIVE field and the    
- * :                                      |       | WFIFOCNT fields are both zero.                
- *  ALT_SCANMGR_STAT_ACT_E_ACT            | 0x1   | The Scan-Chain Engine is processing commands  
- * :                                      |       | from the Command FIFO.                        
- * 
+ * :                                      |       | Scan-Chain Engine is only guaranteed to be
+ * :                                      |       | inactive if both this ACTIVE field and the
+ * :                                      |       | WFIFOCNT fields are both zero.
+ *  ALT_SCANMGR_STAT_ACT_E_ACT            | 0x1   | The Scan-Chain Engine is processing commands
+ * :                                      |       | from the Command FIFO.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_STAT_ACT
- * 
+ *
  * The Scan-Chain Engine may or may not be processing commands from the Command
  * FIFO. The Scan-Chain Engine is only guaranteed to be inactive if both this
  * ACTIVE field and the WFIFOCNT fields are both zero.
@@ -239,7 +239,7 @@ extern "C"
 #define ALT_SCANMGR_STAT_ACT_E_POSSIBLY_INACT   0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_STAT_ACT
- * 
+ *
  * The Scan-Chain Engine is processing commands from the Command FIFO.
  */
 #define ALT_SCANMGR_STAT_ACT_E_ACT              0x1
@@ -269,7 +269,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SCANMGR_STAT.
  */
 struct ALT_SCANMGR_STAT_s
@@ -294,61 +294,61 @@ typedef volatile struct ALT_SCANMGR_STAT_s  ALT_SCANMGR_STAT_t;
 
 /*
  * Register : Scan-Chain Enable Register - en
- * 
+ *
  * This register is used to enable one of the 5 scan-chains (0-3 and 7). Only one
  * scan-chain must be enabled at a time. A scan-chain is enabled by writing its
  * corresponding enable field.
- * 
+ *
  * Software must use the System Manager to put the corresponding I/O scan-chain
  * into the frozen state before attempting to send I/O configuration data to the
  * I/O scan-chain.
- * 
+ *
  * Software must only write to this register when the Scan-Chain Engine is
  * inactive.Writing this field at any other time has unpredictable results. This
  * means that before writing to this field, software must read the STAT register
  * and check that the ACTIVE and WFIFOCNT fields are both zero.
- * 
+ *
  * The name of this register in ARM documentation is PSEL.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
- *  [0]    | RW     | 0x0   | I/O Scan-Chain 0 Enable    
- *  [1]    | RW     | 0x0   | I/O Scan-Chain 1 Enable    
- *  [2]    | RW     | 0x0   | I/O Scan-Chain 2 Enable    
- *  [3]    | RW     | 0x0   | I/O Scan-Chain 3 Enable    
- *  [6:4]  | ???    | 0x0   | *UNDEFINED*                
+ *  [0]    | RW     | 0x0   | I/O Scan-Chain 0 Enable
+ *  [1]    | RW     | 0x0   | I/O Scan-Chain 1 Enable
+ *  [2]    | RW     | 0x0   | I/O Scan-Chain 2 Enable
+ *  [3]    | RW     | 0x0   | I/O Scan-Chain 3 Enable
+ *  [6:4]  | ???    | 0x0   | *UNDEFINED*
  *  [7]    | RW     | 0x0   | FPGA JTAG Scan-Chain Enable
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : I/O Scan-Chain 0 Enable - ioscanchain0
- * 
+ *
  * Used to enable or disable I/O Scan-Chain 0
- * 
+ *
  * The name of this field in ARM documentation is PSEL0.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description       
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------
  *  ALT_SCANMGR_EN_IOSCANCHAIN0_E_DIS | 0x0   | Disable scan-chain
- *  ALT_SCANMGR_EN_IOSCANCHAIN0_E_EN  | 0x1   | Enable scan-chain 
- * 
+ *  ALT_SCANMGR_EN_IOSCANCHAIN0_E_EN  | 0x1   | Enable scan-chain
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN0
- * 
+ *
  * Disable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN0_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN0
- * 
+ *
  * Enable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN0_E_EN    0x1
@@ -372,30 +372,30 @@ typedef volatile struct ALT_SCANMGR_STAT_s  ALT_SCANMGR_STAT_t;
 
 /*
  * Field : I/O Scan-Chain 1 Enable - ioscanchain1
- * 
+ *
  * Used to enable or disable I/O Scan-Chain 1
- * 
+ *
  * The name of this field in ARM documentation is PSEL1.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description       
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------
  *  ALT_SCANMGR_EN_IOSCANCHAIN1_E_DIS | 0x0   | Disable scan-chain
- *  ALT_SCANMGR_EN_IOSCANCHAIN1_E_EN  | 0x1   | Enable scan-chain 
- * 
+ *  ALT_SCANMGR_EN_IOSCANCHAIN1_E_EN  | 0x1   | Enable scan-chain
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN1
- * 
+ *
  * Disable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN1_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN1
- * 
+ *
  * Enable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN1_E_EN    0x1
@@ -419,30 +419,30 @@ typedef volatile struct ALT_SCANMGR_STAT_s  ALT_SCANMGR_STAT_t;
 
 /*
  * Field : I/O Scan-Chain 2 Enable - ioscanchain2
- * 
+ *
  * Used to enable or disable I/O Scan-Chain 2
- * 
+ *
  * The name of this field in ARM documentation is PSEL2.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description       
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------
  *  ALT_SCANMGR_EN_IOSCANCHAIN2_E_DIS | 0x0   | Disable scan-chain
- *  ALT_SCANMGR_EN_IOSCANCHAIN2_E_EN  | 0x1   | Enable scan-chain 
- * 
+ *  ALT_SCANMGR_EN_IOSCANCHAIN2_E_EN  | 0x1   | Enable scan-chain
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN2
- * 
+ *
  * Disable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN2_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN2
- * 
+ *
  * Enable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN2_E_EN    0x1
@@ -466,30 +466,30 @@ typedef volatile struct ALT_SCANMGR_STAT_s  ALT_SCANMGR_STAT_t;
 
 /*
  * Field : I/O Scan-Chain 3 Enable - ioscanchain3
- * 
+ *
  * Used to enable or disable I/O Scan-Chain 3
- * 
+ *
  * The name of this field in ARM documentation is PSEL3.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description       
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:-------------------
  *  ALT_SCANMGR_EN_IOSCANCHAIN3_E_DIS | 0x0   | Disable scan-chain
- *  ALT_SCANMGR_EN_IOSCANCHAIN3_E_EN  | 0x1   | Enable scan-chain 
- * 
+ *  ALT_SCANMGR_EN_IOSCANCHAIN3_E_EN  | 0x1   | Enable scan-chain
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN3
- * 
+ *
  * Disable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN3_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_IOSCANCHAIN3
- * 
+ *
  * Enable scan-chain
  */
 #define ALT_SCANMGR_EN_IOSCANCHAIN3_E_EN    0x1
@@ -513,32 +513,32 @@ typedef volatile struct ALT_SCANMGR_STAT_s  ALT_SCANMGR_STAT_t;
 
 /*
  * Field : FPGA JTAG Scan-Chain Enable - fpgajtag
- * 
+ *
  * Used to enable or disable FPGA JTAG scan-chain.Software must use the System
  * Manager to enable the Scan Manager to drive the FPGA JTAG before attempting to
  * communicate with the FPGA JTAG via the Scan Manager.
- * 
+ *
  * The name of this field in ARM documentation is PSEL7.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description       
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:-------------------
  *  ALT_SCANMGR_EN_FPGAJTAG_E_DIS | 0x0   | Disable scan-chain
- *  ALT_SCANMGR_EN_FPGAJTAG_E_EN  | 0x1   | Enable scan-chain 
- * 
+ *  ALT_SCANMGR_EN_FPGAJTAG_E_EN  | 0x1   | Enable scan-chain
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_FPGAJTAG
- * 
+ *
  * Disable scan-chain
  */
 #define ALT_SCANMGR_EN_FPGAJTAG_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SCANMGR_EN_FPGAJTAG
- * 
+ *
  * Enable scan-chain
  */
 #define ALT_SCANMGR_EN_FPGAJTAG_E_EN    0x1
@@ -568,7 +568,7 @@ typedef volatile struct ALT_SCANMGR_STAT_s  ALT_SCANMGR_STAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SCANMGR_EN.
  */
 struct ALT_SCANMGR_EN_s
@@ -591,35 +591,35 @@ typedef volatile struct ALT_SCANMGR_EN_s  ALT_SCANMGR_EN_t;
 
 /*
  * Register : FIFO Single Byte Register - fifosinglebyte
- * 
+ *
  * Writes to the FIFO Single Byte Register write a single byte value to the command
  * FIFO.  If the command FIFO is full, the APB write operation is stalled until the
  * command FIFO is not full.
- * 
+ *
  * Reads from the Single Byte FIFO Register read a single byte value from the
  * command FIFO.  If the command FIFO is empty, the APB read operation is stalled
  * until the command FIFO is not empty.
- * 
+ *
  * See the ARM documentation for a description of the read and write values.
- * 
+ *
  * The name of this register in ARM documentation is BWFIFO1 for writes and BRFIFO1
  * for reads.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description      
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------------
  *  [7:0]  | RW     | Unknown | Single Byte Value
- *  [31:8] | ???    | 0x0     | *UNDEFINED*      
- * 
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Single Byte Value - value
- * 
+ *
  * Transfers single byte value to/from command FIFO
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_FIFOSINGLEBYTE_VALUE register field. */
 #define ALT_SCANMGR_FIFOSINGLEBYTE_VALUE_LSB        0
@@ -646,7 +646,7 @@ typedef volatile struct ALT_SCANMGR_EN_s  ALT_SCANMGR_EN_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SCANMGR_FIFOSINGLEBYTE.
  */
 struct ALT_SCANMGR_FIFOSINGLEBYTE_s
@@ -664,35 +664,35 @@ typedef volatile struct ALT_SCANMGR_FIFOSINGLEBYTE_s  ALT_SCANMGR_FIFOSINGLEBYTE
 
 /*
  * Register : FIFO Double Byte Register - fifodoublebyte
- * 
+ *
  * Writes to the FIFO Double Byte Register write a double byte value to the command
  * FIFO.  If the command FIFO is full, the APB write operation is stalled until the
  * command FIFO is not full.
- * 
+ *
  * Reads from the Double Byte FIFO Register read a double byte value from the
  * command FIFO.  If the command FIFO is empty, the APB read operation is stalled
  * until the command FIFO is not empty.
- * 
+ *
  * See the ARM documentation for a description of the read and write values.
- * 
+ *
  * The name of this register in ARM documentation is BWFIFO2 for writes and BRFIFO2
  * for reads.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description      
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:------------------
  *  [15:0]  | RW     | Unknown | Double Byte Value
- *  [31:16] | ???    | 0x0     | *UNDEFINED*      
- * 
+ *  [31:16] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Double Byte Value - value
- * 
+ *
  * Transfers double byte value to/from command FIFO
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_FIFODOUBLEBYTE_VALUE register field. */
 #define ALT_SCANMGR_FIFODOUBLEBYTE_VALUE_LSB        0
@@ -719,7 +719,7 @@ typedef volatile struct ALT_SCANMGR_FIFOSINGLEBYTE_s  ALT_SCANMGR_FIFOSINGLEBYTE
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SCANMGR_FIFODOUBLEBYTE.
  */
 struct ALT_SCANMGR_FIFODOUBLEBYTE_s
@@ -737,35 +737,35 @@ typedef volatile struct ALT_SCANMGR_FIFODOUBLEBYTE_s  ALT_SCANMGR_FIFODOUBLEBYTE
 
 /*
  * Register : FIFO Triple Byte Register - fifotriplebyte
- * 
+ *
  * Writes to the FIFO Triple Byte Register write a triple byte value to the command
  * FIFO.  If the command FIFO is full, the APB write operation is stalled until the
  * command FIFO is not full.
- * 
+ *
  * Reads from the Triple Byte FIFO Register read a triple byte value from the
  * command FIFO.  If the command FIFO is empty, the APB read operation is stalled
  * until the command FIFO is not empty.
- * 
+ *
  * See the ARM documentation for a description of the read and write values.
- * 
+ *
  * The name of this register in ARM documentation is BWFIFO3 for writes and BRFIFO3
  * for reads.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description      
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:------------------
  *  [23:0]  | RW     | Unknown | Triple Byte Value
- *  [31:24] | ???    | 0x0     | *UNDEFINED*      
- * 
+ *  [31:24] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : Triple Byte Value - value
- * 
+ *
  * Transfers triple byte value to/from command FIFO
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_FIFOTRIPLEBYTE_VALUE register field. */
 #define ALT_SCANMGR_FIFOTRIPLEBYTE_VALUE_LSB        0
@@ -792,7 +792,7 @@ typedef volatile struct ALT_SCANMGR_FIFODOUBLEBYTE_s  ALT_SCANMGR_FIFODOUBLEBYTE
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SCANMGR_FIFOTRIPLEBYTE.
  */
 struct ALT_SCANMGR_FIFOTRIPLEBYTE_s
@@ -810,34 +810,34 @@ typedef volatile struct ALT_SCANMGR_FIFOTRIPLEBYTE_s  ALT_SCANMGR_FIFOTRIPLEBYTE
 
 /*
  * Register : FIFO Quad Byte Register - fifoquadbyte
- * 
+ *
  * Writes to the FIFO Quad Byte Register write a quad byte value to the command
  * FIFO.  If the command FIFO is full, the APB write operation is stalled until the
  * command FIFO is not full.
- * 
+ *
  * Reads from the Quad Byte FIFO Register read a quad byte value from the command
  * FIFO.  If the command FIFO is empty, the APB read operation is stalled until the
  * command FIFO is not empty.
- * 
+ *
  * See the ARM documentation for a description of the read and write values.
- * 
+ *
  * The name of this register in ARM documentation is BWFIFO4 for writes and BRFIFO4
  * for reads.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description    
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:----------------
  *  [31:0] | RW     | Unknown | Quad Byte Value
- * 
+ *
  */
 /*
  * Field : Quad Byte Value - value
- * 
+ *
  * Transfers quad byte value to/from command FIFO
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SCANMGR_FIFOQUADBYTE_VALUE register field. */
 #define ALT_SCANMGR_FIFOQUADBYTE_VALUE_LSB        0
@@ -864,7 +864,7 @@ typedef volatile struct ALT_SCANMGR_FIFOTRIPLEBYTE_s  ALT_SCANMGR_FIFOTRIPLEBYTE
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SCANMGR_FIFOQUADBYTE.
  */
 struct ALT_SCANMGR_FIFOQUADBYTE_s
@@ -887,7 +887,7 @@ typedef volatile struct ALT_SCANMGR_FIFOQUADBYTE_s  ALT_SCANMGR_FIFOQUADBYTE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SCANMGR.
  */
 struct ALT_SCANMGR_s

@@ -35,7 +35,7 @@
  * NOTE: All the additional labels surrounding every instruction are
  * there to force GCC OBJDUMP to disassemble microMIPS correctly.
  */
-    
+
 /*
  * NOTE: GIRQ18 has only one source, no need for indirect jumps.
  */

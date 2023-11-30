@@ -3,7 +3,7 @@
  * Purpose:		File to be included by all project files
  *
  * Notes:
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */
@@ -16,39 +16,39 @@
 /*
  * Debug prints ON (#define) or OFF (#undef)
  */
-#undef DEBUG_PRINT 
-#undef DEBUG_PRINT_D0D1 
+#undef DEBUG_PRINT
+#undef DEBUG_PRINT_D0D1
 
-/* 
- * Include the generic CPU header file 
+/*
+ * Include the generic CPU header file
  */
 #include "mcf5xxx.h"
 
-/* 
- * Include the specific CPU header file 
+/*
+ * Include the specific CPU header file
  */
 #include "mcf5225x.h"
 
 #include "mcf5225x_evb.h"
 
-/* 
- * MetroWerks looks for an underscore prepended to C function names 
+/*
+ * MetroWerks looks for an underscore prepended to C function names
  */
 #define _UNDERSCORE_
 
-/* 
+/*
  * The source uses __interrupt__ to identify a function as
- * an interrupt or exception handler.  Codewarrior uses 
+ * an interrupt or exception handler.  Codewarrior uses
  * __declspec(interrupt), so we are appeasing it like this.
  */
 #define __interrupt__   __declspec(interrupt)
 
-/* 
- * Force functions to return values in D0 
+/*
+ * Force functions to return values in D0
  */
 #pragma pointers_in_D0
 
-/* 
+/*
  * Provide a few assembly instructions for C level routines
  */
 #define halt()      asm( halt)
@@ -63,8 +63,8 @@
 #define stop_2100() asm( stop #0x2100)
 #define stop_2000() asm( stop #0x2000)
 
-/* 
- * Define custom sections for relocating code, data, and constants 
+/*
+ * Define custom sections for relocating code, data, and constants
  */
 #pragma define_section relocate_code ".relocate_code" far_absolute RX
 #pragma define_section relocate_data ".relocate_data" far_absolute RW
@@ -72,8 +72,8 @@
 #define __relocate_code__   __declspec(relocate_code)
 #define __relocate_data__   __declspec(relocate_data)
 #define __relocate_const__  __declspec(relocate_const)
- 
-/* 
+
+/*
  * Include common utilities
  */
 void assert_failed(char *, int);
@@ -85,7 +85,7 @@ void assert_failed(char *, int);
 #else
 #define ASSERT(expr)
 #endif
- 
+
 //#include "assert.h"
 //#include "io.h"
 //#include "stdlib.h"

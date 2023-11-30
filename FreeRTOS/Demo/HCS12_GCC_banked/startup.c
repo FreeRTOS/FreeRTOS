@@ -48,7 +48,7 @@ __premain (void)
 	COPCTL = RSBCK;
 	// stops TCNT counter when debugging stops
 	TSCR1 |= (1<<5);			// TFRZ
-	
+
 	// PLL
 	CLKSEL = 0;				// disable PLL to configure
 	// xtal 16MHz, bus 24MHz
@@ -75,6 +75,6 @@ __premain (void)
 #elif PORT_LED==M6811_PTH	//PTH
 	DDRH = 0xff;
 #endif
-	
+
 }
 

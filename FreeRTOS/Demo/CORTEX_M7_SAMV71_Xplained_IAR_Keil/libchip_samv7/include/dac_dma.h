@@ -81,7 +81,7 @@ typedef struct
     /** Tx loop back. */
     uint16_t loopback;
     /** DACC channel*/
-    uint8_t dacChannel; 
+    uint8_t dacChannel;
     /** Callback function invoked at the end of transfer. */
     DacCallback callback;
     /** Callback arguments. */
@@ -91,7 +91,7 @@ typedef struct
 
 /** Constant structure associated with DAC port. This structure prevents
     client applications to have access in the same time. */
-typedef struct 
+typedef struct
 {
     /** Pointer to DAC Hardware registers */
     Dacc* pDacHw ;

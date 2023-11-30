@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file provides firmware functions to manage the following 
+  * @brief   This file provides firmware functions to manage the following
   *          functionalities of the GPIO peripheral:
   *           + Initialization and Configuration functions
   *           + GPIO Read and Write functions
@@ -29,27 +29,27 @@
          (++) Analog: required mode when a pin is to be used as ADC channel,
               DAC output or comparator input.
       (#) Peripherals alternate function:
-         (++) For ADC, DAC and comparators, configure the desired pin in analog 
+         (++) For ADC, DAC and comparators, configure the desired pin in analog
               mode using GPIO_InitStruct->GPIO_Mode = GPIO_Mode_AN
          (++) For other peripherals (TIM, USART...):
-              (+++) Connect the pin to the desired peripherals' Alternate 
-                    Function (AF) using GPIO_PinAFConfig() function. For PortC, 
+              (+++) Connect the pin to the desired peripherals' Alternate
+                    Function (AF) using GPIO_PinAFConfig() function. For PortC,
                     PortD and PortF, no configuration is needed.
               (+++) Configure the desired pin in alternate function mode using
                     GPIO_InitStruct->GPIO_Mode = GPIO_Mode_AF
-              (+++) Select the type, pull-up/pull-down and output speed via 
+              (+++) Select the type, pull-up/pull-down and output speed via
                     GPIO_PuPd, GPIO_OType and GPIO_Speed members
               (+++) Call GPIO_Init() function
       (#) To get the level of a pin configured in input mode use GPIO_ReadInputDataBit()
       (#) To set/reset the level of a pin configured in output mode use
           GPIO_SetBits()/GPIO_ResetBits()
-      (#) During and just after reset, the alternate functions are not active and 
+      (#) During and just after reset, the alternate functions are not active and
           the GPIO pins are configured in input floating mode (except JTAG pins).
-      (#) The LSE oscillator pins OSC32_IN and OSC32_OUT can be used as 
-          general-purpose (PC14 and PC15, respectively) when the LSE oscillator 
+      (#) The LSE oscillator pins OSC32_IN and OSC32_OUT can be used as
+          general-purpose (PC14 and PC15, respectively) when the LSE oscillator
           is off. The LSE has priority over the GPIO function.
-      (#) The HSE oscillator pins OSC_IN/OSC_OUT can be used as general-purpose 
-          PD0 and PD1, respectively, when the HSE oscillator is off. The HSE has 
+      (#) The HSE oscillator pins OSC_IN/OSC_OUT can be used as general-purpose
+          PD0 and PD1, respectively, when the HSE oscillator is off. The HSE has
           priority over the GPIO function.
     @endverbatim
   ******************************************************************************
@@ -77,7 +77,7 @@
   * @{
   */
 
-/** @defgroup GPIO 
+/** @defgroup GPIO
   * @brief GPIO driver modules
   * @{
   */
@@ -89,7 +89,7 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup GPIO_Private_Functions 
+/** @defgroup GPIO_Private_Functions
   * @{
   */
 
@@ -106,7 +106,7 @@
   */
 
 /**
-  * @brief  Deinitializes the GPIOx peripheral registers to their default reset 
+  * @brief  Deinitializes the GPIOx peripheral registers to their default reset
   *         values.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
   * @retval None
@@ -147,7 +147,7 @@ void GPIO_DeInit(GPIO_TypeDef* GPIOx)
 }
 
 /**
-  * @brief  Initializes the GPIOx peripheral according to the specified 
+  * @brief  Initializes the GPIOx peripheral according to the specified
   *         parameters in the GPIO_InitStruct.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
   * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure that contains
@@ -207,7 +207,7 @@ void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
 
 /**
   * @brief  Fills each GPIO_InitStruct member with its default value.
-  * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure which will 
+  * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure which will
   *         be initialized.
   * @retval None
   */
@@ -260,10 +260,10 @@ void GPIO_PinLockConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 /** @defgroup GPIO_Group2 GPIO Read and Write
  *  @brief   GPIO Read and Write
  *
-@verbatim   
+@verbatim
  ===============================================================================
                       ##### GPIO Read and Write #####
- ===============================================================================  
+ ===============================================================================
 
 @endverbatim
   * @{
@@ -273,7 +273,7 @@ void GPIO_PinLockConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   * @brief  Reads the specified input port pin.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
   * @param  GPIO_Pin: specifies the port bit to read.
-  * @note   This parameter can be GPIO_Pin_x where x can be:(0..15) for GPIOA, 
+  * @note   This parameter can be GPIO_Pin_x where x can be:(0..15) for GPIOA,
   *         GPIOB or GPIOC,(0..2) for GPIOD and(0..3) for GPIOF.
   * @retval The input port pin value.
   */
@@ -313,7 +313,7 @@ uint16_t GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
   * @brief  Reads the specified output data port bit.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
   * @param  GPIO_Pin: Specifies the port bit to read.
-  * @note   This parameter can be GPIO_Pin_x where x can be:(0..15) for GPIOA, 
+  * @note   This parameter can be GPIO_Pin_x where x can be:(0..15) for GPIOA,
   *         GPIOB or GPIOC,(0..2) for GPIOD and(0..3) for GPIOF.
   * @retval The output port pin value.
   */
@@ -353,7 +353,7 @@ uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx)
   * @brief  Sets the selected data port bits.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
   * @param  GPIO_Pin: specifies the port bits to be written.
-  * @note   This parameter can be GPIO_Pin_x where x can be:(0..15) for GPIOA, 
+  * @note   This parameter can be GPIO_Pin_x where x can be:(0..15) for GPIOA,
   *         GPIOB or GPIOC,(0..2) for GPIOD and(0..3) for GPIOF.
   * @retval None
   */
@@ -370,7 +370,7 @@ void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   * @brief  Clears the selected data port bits.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
   * @param  GPIO_Pin: specifies the port bits to be written.
-  * @note   This parameter can be GPIO_Pin_x where x can be: (0..15) for GPIOA, 
+  * @note   This parameter can be GPIO_Pin_x where x can be: (0..15) for GPIOA,
   *         GPIOB or GPIOC,(0..2) for GPIOD and(0..3) for GPIOF.
   * @retval None
   */
@@ -391,8 +391,8 @@ void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   *   This parameter can be one of the BitAction enumeration values:
   *     @arg Bit_RESET: to clear the port pin
   *     @arg Bit_SET: to set the port pin
-  * @note   The GPIO_Pin parameter can be GPIO_Pin_x where x can be: (0..15) for GPIOA, 
-  *         GPIOB or GPIOC,(0..2) for GPIOD and(0..3) for GPIOF.  
+  * @note   The GPIO_Pin parameter can be GPIO_Pin_x where x can be: (0..15) for GPIOA,
+  *         GPIOB or GPIOC,(0..2) for GPIOD and(0..3) for GPIOF.
   * @retval None
   */
 void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
@@ -415,7 +415,7 @@ void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
 /**
   * @brief  Writes data to the specified GPIO data port.
   * @param  GPIOx: where x can be (A, B, C, D or F) to select the GPIO peripheral.
-  * @param  PortVal: specifies the value to be written to the port output data 
+  * @param  PortVal: specifies the value to be written to the port output data
   *                  register.
   * @retval None
   */
@@ -434,10 +434,10 @@ void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal)
 /** @defgroup GPIO_Group3 GPIO Alternate functions configuration functions
  *  @brief   GPIO Alternate functions configuration functions
  *
-@verbatim   
+@verbatim
  ===============================================================================
           ##### GPIO Alternate functions configuration functions #####
- ===============================================================================  
+ ===============================================================================
 
 @endverbatim
   * @{
@@ -451,18 +451,18 @@ void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal)
   * @param  GPIO_AF: selects the pin to used as Alternate function.
   *   This parameter can be one of the following value:
  *     @arg GPIO_AF_0:WKUP, EVENTOUT, TIM15, SPI1, TIM17,MCO, SWDAT, SWCLK, TIM14,
- *                    BOOT,USART1, CEC, IR_OUT, SPI2 
- *     @arg GPIO_AF_1:USART2, CEC, Tim3, USART1, USART2,EVENTOUT, I2C1, I2C2, TIM15 
+ *                    BOOT,USART1, CEC, IR_OUT, SPI2
+ *     @arg GPIO_AF_1:USART2, CEC, Tim3, USART1, USART2,EVENTOUT, I2C1, I2C2, TIM15
  *     @arg GPIO_AF_2:TIM2, TIM1, EVENTOUT, TIM16, TIM17.
- *     @arg GPIO_AF_3:TS, I2C1, TIM15, EVENTOUT 
+ *     @arg GPIO_AF_3:TS, I2C1, TIM15, EVENTOUT
  *     @arg GPIO_AF_4:TIM14.
  *     @arg GPIO_AF_5:TIM16, TIM17.
  *     @arg GPIO_AF_6:EVENTOUT.
- *     @arg GPIO_AF_7:COMP1 OUT, COMP2 OUT 
+ *     @arg GPIO_AF_7:COMP1 OUT, COMP2 OUT
  * @note  The pin should already been configured in Alternate Function mode(AF)
  *        using GPIO_InitStruct->GPIO_Mode = GPIO_Mode_AF
- * @note  Refer to the Alternate function mapping table in the device datasheet 
- *        for the detailed mapping of the system and peripherals'alternate 
+ * @note  Refer to the Alternate function mapping table in the device datasheet
+ *        for the detailed mapping of the system and peripherals'alternate
  *        function I/O pins.
  * @retval None
  */

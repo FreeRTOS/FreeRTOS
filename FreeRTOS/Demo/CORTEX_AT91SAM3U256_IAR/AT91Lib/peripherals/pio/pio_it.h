@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,7 +31,7 @@
 /// \unit
 ///
 /// !!!Purpose
-/// 
+///
 /// Configuration and handling of interrupts on PIO status changes. The API
 /// provided here have several advantages over the traditional PIO interrupt
 /// configuration approach:
@@ -39,7 +39,7 @@
 ///    - It automatically demultiplexes interrupts when multiples pins have been
 ///      configured on a single PIO controller
 ///    - It allows a group of pins to share the same interrupt
-/// 
+///
 /// However, it also has several minor drawbacks that may prevent from using it
 /// in particular applications:
 ///    - It enables the clocks of all PIO controllers
@@ -49,7 +49,7 @@
 ///      increased by modifying the appropriate constant in pio_it.c.
 ///
 /// !!!Usage
-/// 
+///
 /// -# Initialize the PIO interrupt mechanism using PIO_InitializeInterrupts()
 ///    with the desired priority (0 ... 7).
 /// -# Configure a status change interrupt on one or more pin(s) with

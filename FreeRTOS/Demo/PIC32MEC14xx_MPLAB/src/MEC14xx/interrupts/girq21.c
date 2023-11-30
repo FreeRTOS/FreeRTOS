@@ -37,7 +37,7 @@
 
 /*
  * GIRQ21 is a wake peripheral logic only interrupt.
- * It's purpose is to allow the peripheral logic such as SMBus or LPC to 
+ * It's purpose is to allow the peripheral logic such as SMBus or LPC to
  * wake an service HW event without waking the EC.
  * This handler is superfluous.
  */

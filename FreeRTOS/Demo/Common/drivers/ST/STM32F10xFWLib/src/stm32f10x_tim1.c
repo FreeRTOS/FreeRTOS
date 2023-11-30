@@ -333,7 +333,7 @@ void TIM1_OC1Init(TIM1_OCInitTypeDef* TIM1_OCInitStruct)
   assert(IS_TIM1_OC_POLARITY(TIM1_OCInitStruct->TIM1_OCPolarity));
   assert(IS_TIM1_OCN_POLARITY(TIM1_OCInitStruct->TIM1_OCNPolarity));
   assert(IS_TIM1_OCIDLE_STATE(TIM1_OCInitStruct->TIM1_OCIdleState));
-  assert(IS_TIM1_OCNIDLE_STATE(TIM1_OCInitStruct->TIM1_OCNIdleState)); 
+  assert(IS_TIM1_OCNIDLE_STATE(TIM1_OCInitStruct->TIM1_OCNIdleState));
 
   tmpccmr = TIM1->CCMR1;
 
@@ -627,7 +627,7 @@ void TIM1_ICInit(TIM1_ICInitTypeDef* TIM1_ICInitStruct)
 
 /*******************************************************************************
 * Function Name  : TIM1_PWMIConfig
-* Description    : Configures the TIM1 peripheral in PWM Input Mode according 
+* Description    : Configures the TIM1 peripheral in PWM Input Mode according
 *                  to the specified parameters in the TIM1_ICInitStruct.
 * Input          : - TIM1_ICInitStruct: pointer to a TIM1_ICInitTypeDef structure
 *                    that contains the configuration information for the specified
@@ -682,7 +682,7 @@ void TIM1_PWMIConfig(TIM1_ICInitTypeDef* TIM1_ICInitStruct)
     TIM1_SetIC2Prescaler(TIM1_ICInitStruct->TIM1_ICPrescaler);
   }
   else
-  {	 
+  {
     /* TI2 Configuration */
     TI2_Config(TIM1_ICInitStruct->TIM1_ICPolarity, TIM1_ICInitStruct->TIM1_ICSelection,
                TIM1_ICInitStruct->TIM1_ICFilter);
@@ -967,7 +967,7 @@ void TIM1_ETRClockMode1Config(u16 TIM1_ExtTRGPrescaler, u16 TIM1_ExtTRGPolarity,
   /* Select the External clock mode1 */
   TIM1->SMCR &= SMCR_SMS_Mask;
   TIM1->SMCR |= TIM1_SlaveMode_External1;
-  
+
   /* Select the Trigger selection : ETRF */
   TIM1->SMCR &= SMCR_TS_Mask;
   TIM1->SMCR |= TIM1_TS_ETRF;
@@ -1021,7 +1021,7 @@ void TIM1_ITRxExternalClockConfig(u16 TIM1_InputTriggerSource)
 {
   /* Check the parameters */
   assert(IS_TIM1_INTERNAL_TRIGGER_SELECTION(TIM1_InputTriggerSource));
-  
+
   /* Select the Internal Trigger */
   TIM1_SelectInputTrigger(TIM1_InputTriggerSource);
 
@@ -1367,7 +1367,7 @@ void TIM1_CounterModeConfig(u16 TIM1_CounterMode)
 
 /*******************************************************************************
 * Function Name  : TIM1_ForcedOC1Config
-* Description    : Forces the TIM1 Channel1 output waveform to active or inactive 
+* Description    : Forces the TIM1 Channel1 output waveform to active or inactive
 *                  level.
 * Input          : - TIM1_ForcedAction: specifies the forced Action to be set to
 *                    the output waveform.
@@ -1398,7 +1398,7 @@ void TIM1_ForcedOC1Config(u16 TIM1_ForcedAction)
 
 /*******************************************************************************
 * Function Name  : TIM1_ForcedOC2Config
-* Description    : Forces the TIM1 Channel2 output waveform to active or inactive 
+* Description    : Forces the TIM1 Channel2 output waveform to active or inactive
 *                  level.
 * Input          : - TIM1_ForcedAction: specifies the forced Action to be set to
 *                    the output waveform.
@@ -1429,7 +1429,7 @@ void TIM1_ForcedOC2Config(u16 TIM1_ForcedAction)
 
 /*******************************************************************************
 * Function Name  : TIM1_ForcedOC3Config
-* Description    : Forces the TIM1 Channel3 output waveform to active or inactive 
+* Description    : Forces the TIM1 Channel3 output waveform to active or inactive
 *                  level.
 * Input          : - TIM1_ForcedAction: specifies the forced Action to be set to
 *                    the output waveform.
@@ -1460,7 +1460,7 @@ void TIM1_ForcedOC3Config(u16 TIM1_ForcedAction)
 
 /*******************************************************************************
 * Function Name  : TIM1_ForcedOC4Config
-* Description    : Forces the TIM1 Channel4 output waveform to active or inactive 
+* Description    : Forces the TIM1 Channel4 output waveform to active or inactive
 *                  level.
 * Input          : - TIM1_ForcedAction: specifies the forced Action to be set to
 *                    the output waveform.
@@ -1542,7 +1542,7 @@ void TIM1_SelectCCDMA(FunctionalState Newstate)
 
 /*******************************************************************************
 * Function Name  : TIM1_CCPreloadControl
-* Description    : Sets or Resets the TIM1 peripheral Capture Compare Preload 
+* Description    : Sets or Resets the TIM1 peripheral Capture Compare Preload
 *                  Control bit.
 * Input          : - Newstate: new state of the Capture Compare Preload Control bit
 *                    This parameter can be: ENABLE or DISABLE.
@@ -1882,7 +1882,7 @@ void TIM1_OC4PolarityConfig(u16 TIM1_OCPolarity)
 *                       - TIM1_Channel3: TIM1 Channel3
 *                       - TIM1_Channel4: TIM1 Channel4
 *                 - Newstate: specifies the TIM1 Channel CCxE bit new state.
-*                   This parameter can be: ENABLE or DISABLE. 
+*                   This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -1895,7 +1895,7 @@ void TIM1_CCxCmd(u16 TIM1_Channel, FunctionalState Newstate)
   if(TIM1_Channel == TIM1_Channel_1)
   {
     /* Set or Reset the CC1E Bit */
-    *(vu32 *) CCER_CC1E_BB = (u16)Newstate;  
+    *(vu32 *) CCER_CC1E_BB = (u16)Newstate;
   }
   else if(TIM1_Channel == TIM1_Channel_2)
   {
@@ -1923,7 +1923,7 @@ void TIM1_CCxCmd(u16 TIM1_Channel, FunctionalState Newstate)
 *                       - TIM1_Channel2: TIM1 Channel2
 *                       - TIM1_Channel3: TIM1 Channel3
 *                 - Newstate: specifies the TIM1 Channel CCxNE bit new state.
-*                   This parameter can be: ENABLE or DISABLE. 
+*                   This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -1936,14 +1936,14 @@ void TIM1_CCxNCmd(u16 TIM1_Channel, FunctionalState Newstate)
   if(TIM1_Channel == TIM1_Channel_1)
   {
     /* Set or Reset the CC1NE Bit */
-    *(vu32 *) CCER_CC1NE_BB = (u16)Newstate;  
+    *(vu32 *) CCER_CC1NE_BB = (u16)Newstate;
   }
   else if(TIM1_Channel == TIM1_Channel_2)
   {
     /* Set or Reset the CC2NE Bit */
     *(vu32 *) CCER_CC2NE_BB = (u16)Newstate;
   }
-  else 
+  else
   {
     /* Set or Reset the CC3NE Bit */
     *(vu32 *) CCER_CC3NE_BB = (u16)Newstate;
@@ -1953,7 +1953,7 @@ void TIM1_CCxNCmd(u16 TIM1_Channel, FunctionalState Newstate)
 /*******************************************************************************
 * Function Name  : TIM1_SelectOCxM
 * Description    : Selects the TIM1 Ouput Compare Mode.
-*                  This function disables the selected channel before changing 
+*                  This function disables the selected channel before changing
 *                  the Ouput Compare Mode. User has to enable this channel using
 *                  TIM1_CCxCmd and TIM1_CCxNCmd functions.
 * Input          : - TIM1_Channel: specifies the TIM1 Channel
@@ -2107,7 +2107,7 @@ void TIM1_SetCompare4(u16 Compare4)
 void TIM1_SetIC1Prescaler(u16 TIM1_IC1Prescaler)
 {
   u32 tmpccmr1 = 0;
-  
+
   /* Check the parameters */
   assert(IS_TIM1_IC_PRESCALER(TIM1_IC1Prescaler));
 
@@ -2409,14 +2409,14 @@ void TIM1_ClearFlag(u16 TIM1_FLAG)
 ITStatus TIM1_GetITStatus(u16 TIM1_IT)
 {
   ITStatus bitstatus = RESET;
-  
+
   u16 TIM1_itStatus = 0x0, TIM1_itEnable = 0x0;
 
   /* Check the parameters */
   assert(IS_TIM1_GET_IT(TIM1_IT));
-  
+
   TIM1_itStatus = TIM1->SR & TIM1_IT;
-  
+
   TIM1_itEnable = TIM1->DIER & TIM1_IT;
 
   if ((TIM1_itStatus != (u16)RESET ) && (TIM1_itEnable != (u16)RESET ))
@@ -2612,7 +2612,7 @@ static void TI4_Config(u16 TIM1_ICPolarity, u16 TIM1_ICSelection,
   u32 tmpccmr2 = 0;
 
   tmpccmr2 = TIM1->CCMR2;
-  
+
   /* Disable the Channel 4: Reset the CCE Bit */
   *(vu32 *) CCER_CC4E_BB = CCER_CCE_Reset;
 

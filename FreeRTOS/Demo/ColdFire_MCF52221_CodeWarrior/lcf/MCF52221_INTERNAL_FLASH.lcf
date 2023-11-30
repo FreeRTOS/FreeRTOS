@@ -2,11 +2,11 @@
 
 KEEP_SECTION {.vectortable}
 
-# Memory ranges	
+# Memory ranges
 
 MEMORY {
    vectorrom   (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000400
-   cfmprotrom  (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000020   
+   cfmprotrom  (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000020
    code        (RX)  : ORIGIN = 0x00000500, LENGTH = 0x0001FB00
    userram     (RWX) : ORIGIN = 0x20000000, LENGTH = 0x00004000
 }
@@ -16,7 +16,7 @@ SECTIONS {
 # Heap and Stack sizes definition
 	___heap_size	  = 0x4;
 	___stack_size     = 0x100;
-	
+
 
 
 
@@ -36,14 +36,14 @@ SECTIONS {
    ___FLASHBAR_SIZE  = 0x00020000;
 
    ___SP_AFTER_RESET = ___RAMBAR + ___RAMBAR_SIZE - 4;
-   
-  .userram	  : {} > userram		
-  .code	    : {} > code		
-	
+
+  .userram	  : {} > userram
+  .code	    : {} > code
+
 	.vectors :
 	{
 		exceptions.c(.vectortable)
-		. = ALIGN (0x4); 
+		. = ALIGN (0x4);
 	} > vectorrom
 
 	.cfmprotect :
@@ -57,21 +57,21 @@ SECTIONS {
 		*(.text)
 		. = ALIGN (0x4);
 		*(.rodata)
-		. = ALIGN (0x4);		
+		. = ALIGN (0x4);
 		___ROM_AT = .;
 		___DATA_ROM = .;
 	} >> code
 
-	.data : AT(___ROM_AT) 
-	{  
+	.data : AT(___ROM_AT)
+	{
 		___DATA_RAM = .;
 		. = ALIGN(0x4);
-		*(.exception)	
-		. = ALIGN(0x4);	
+		*(.exception)
+		. = ALIGN(0x4);
 		__exception_table_start__ = .;
 		EXCEPTION
 		__exception_table_end__ = .;
-		
+
 		___sinit__ = .;
 	    STATICINIT
 		__START_DATA = .;
@@ -119,9 +119,9 @@ SECTIONS {
 
 		. = ALIGN (0x4);
 	} >> userram
-  	
+
 #	___VECTOR_RAM		= ADDR(.vectorram);
-	
+
 	__SP_INIT		= ___SP_INIT;
 
 	_romp_at = ___ROM_AT + SIZEOF(.data);

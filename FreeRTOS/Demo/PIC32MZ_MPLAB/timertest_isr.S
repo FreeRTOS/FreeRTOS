@@ -30,7 +30,7 @@
 
 	.set	nomips16
  	.set 	noreorder
- 	
+
  	.extern vT2InterruptHandler
 	.extern xISRStackTop
  	.global	vT2InterruptWrapper

@@ -95,7 +95,7 @@ static int usart_set_baudrate(volatile avr32_usart_t *usart, unsigned int baudra
   {
     // Use 16x oversampling, clear SYNC bit.
     usart->mr &=~ (AVR32_USART_MR_OVER_MASK | AVR32_USART_MR_SYNC_MASK);
-    cd = (pba_hz + 8 * baudrate) / (16 * baudrate); 
+    cd = (pba_hz + 8 * baudrate) / (16 * baudrate);
 
     if ((cd >65535)) return USART_INVALID_INPUT;
   }
@@ -105,17 +105,17 @@ static int usart_set_baudrate(volatile avr32_usart_t *usart, unsigned int baudra
     usart->mr |= AVR32_USART_MR_OVER_MASK;
     // clear SYNC bit
     usart->mr &=~ AVR32_USART_MR_SYNC_MASK;
-        
+
     cd = (pba_hz + 4 * baudrate) / (8 * baudrate);
 
     if ((cd < 1)||(cd >65535)) return USART_INVALID_INPUT;
   }
   else
   {
-    // set SYNC to 1 
+    // set SYNC to 1
     usart->mr |= AVR32_USART_MR_SYNC_MASK;
     // use PBA/BaudRate
-    cd = (pba_hz / baudrate);    
+    cd = (pba_hz / baudrate);
   }
   usart->brgr = cd << AVR32_USART_BRGR_CD_OFFSET;
 

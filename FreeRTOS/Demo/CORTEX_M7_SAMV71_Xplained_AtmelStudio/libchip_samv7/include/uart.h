@@ -36,7 +36,7 @@
 //         Global functions
 //------------------------------------------------------------------------------
 
-void UART_Configure(Uart *uart, uint32_t mode, uint32_t baudrate, 
+void UART_Configure(Uart *uart, uint32_t mode, uint32_t baudrate,
 		uint32_t masterClock);
 
 void UART_SetTransmitterEnabled(Uart *uart, uint8_t enabled);

@@ -33,7 +33,7 @@
 typedef struct {
     __IOM uint32_t SHA_CON;                     /* Offset: 0x000 (R/W)  Control register */
     __IOM uint32_t SHA_MODE;                    /* Offset: 0x004 (R/W)  Mode register */
-    __IOM uint32_t SHA_INTSTATE;                /* Offset: 0x008 (R/W)  Instatus register */ 
+    __IOM uint32_t SHA_INTSTATE;                /* Offset: 0x008 (R/W)  Instatus register */
     __IOM uint32_t SHA_BASEADDR;                /* Offset: 0x00c (R/W)  Baseaddr register */
     __IOM uint32_t SHA_DESTADDR;                /* Offset: 0x010 (R/W)  Dest addr register */
     __IOM uint32_t SHA_COUNTER0;                /* Offset: 0x014 (R/W)  count0 register */

@@ -24,7 +24,7 @@
 /** @defgroup MEC14xx system
  */
 
-#ifndef __SYSTEM_MEC14xx_H 
+#ifndef __SYSTEM_MEC14xx_H
 #define __SYSTEM_MEC14xx_H
 
 #ifdef __cplusplus

@@ -29,9 +29,9 @@
 
 #include "mb96356rs.h"
 
-/* 
- * The below define should be same as the option selected by the Memory 
- * Model (Project->Setup Project->C Compiler->Category->Target Depend ) 
+/*
+ * The below define should be same as the option selected by the Memory
+ * Model (Project->Setup Project->C Compiler->Category->Target Depend )
  *
  * Valid settings here include:
  * ------- Memory models ---------      Data	  Code
@@ -54,7 +54,7 @@ the ComTest tasks will be included in place of the trace task. */
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
@@ -92,7 +92,7 @@ to exclude the API function. */
 
 #define configKERNEL_INTERRUPT_PRIORITY 6
 
-/* Passed into the Dice tasks to let then know if they are controlling the 
+/* Passed into the Dice tasks to let then know if they are controlling the
 display on the left side or the right side. */
 #define configLEFT_DISPLAY		0
 #define configRIGHT_DISPLAY		1

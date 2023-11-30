@@ -14,8 +14,8 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
-  
+  */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __IAR_STM32F407ZG_SK_H
 #define __IAR_STM32F407ZG_SK_H
@@ -26,8 +26,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
-   
-typedef enum 
+
+typedef enum
 {
   LED1 = 0,
   LED2 = 1,
@@ -35,8 +35,8 @@ typedef enum
   LED4 = 3
 } Led_TypeDef;
 
-typedef enum 
-{  
+typedef enum
+{
   BUTTON_WAKEUP = 0,
   BUTTON_TAMPER = 1,
   BUTTON_USER = 2,
@@ -47,43 +47,43 @@ typedef enum
   BUTTON_SEL = 7
 } Button_TypeDef;
 
-typedef enum 
-{  
+typedef enum
+{
   BUTTON_MODE_GPIO = 0,
   BUTTON_MODE_EXTI = 1
 } ButtonMode_TypeDef;
 
-typedef enum 
+typedef enum
 {
   COM1 = 0,
   COM2 = 1
-} COM_TypeDef;   
+} COM_TypeDef;
 
 #define LEDn                             4
 
 #define LED1_PIN                         GPIO_Pin_6
 #define LED1_GPIO_PORT                   GPIOF
-#define LED1_GPIO_CLK                    RCC_AHB1Periph_GPIOF  
-  
+#define LED1_GPIO_CLK                    RCC_AHB1Periph_GPIOF
+
 #define LED2_PIN                         GPIO_Pin_7
 #define LED2_GPIO_PORT                   GPIOF
-#define LED2_GPIO_CLK                    RCC_AHB1Periph_GPIOF  
-  
+#define LED2_GPIO_CLK                    RCC_AHB1Periph_GPIOF
+
 #define LED3_PIN                         GPIO_Pin_8
 #define LED3_GPIO_PORT                   GPIOF
-#define LED3_GPIO_CLK                    RCC_AHB1Periph_GPIOF  
-  
+#define LED3_GPIO_CLK                    RCC_AHB1Periph_GPIOF
+
 #define LED4_PIN                         GPIO_Pin_9
 #define LED4_GPIO_PORT                   GPIOF
 #define LED4_GPIO_CLK                    RCC_AHB1Periph_GPIOF
 
 /**
   * @}
-  */ 
-  
+  */
+
 /** @addtogroup IAR_STM32F407ZG_SK_LOW_LEVEL_BUTTON
   * @{
-  */  
+  */
 #define BUTTONn                          8 /**/
 
 /**
@@ -95,7 +95,7 @@ typedef enum
 #define WAKEUP_BUTTON_EXTI_LINE          EXTI_Line0
 #define WAKEUP_BUTTON_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOA
 #define WAKEUP_BUTTON_EXTI_PIN_SOURCE    EXTI_PinSource0
-#define WAKEUP_BUTTON_EXTI_IRQn          EXTI0_IRQn 
+#define WAKEUP_BUTTON_EXTI_IRQn          EXTI0_IRQn
 
 /**
  * @brief Tamper push-button
@@ -106,7 +106,7 @@ typedef enum
 #define TAMPER_BUTTON_EXTI_LINE          EXTI_Line13
 #define TAMPER_BUTTON_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOC
 #define TAMPER_BUTTON_EXTI_PIN_SOURCE    EXTI_PinSource13
-#define TAMPER_BUTTON_EXTI_IRQn          EXTI15_10_IRQn 
+#define TAMPER_BUTTON_EXTI_IRQn          EXTI15_10_IRQn
 
 /**
  * @brief Key push-button
@@ -172,7 +172,7 @@ typedef enum
 
 /**
   * @}
-  */ 
+  */
 
 /** @addtogroup IAR_STM32F407ZG_SK_LOW_LEVEL_COM
   * @{
@@ -181,7 +181,7 @@ typedef enum
 
 /**
  * @brief Definition for COM port1, connected to USART6
- */ 
+ */
 #define EVAL_COM1                        USART6
 #define EVAL_COM1_CLK                    RCC_APB2Periph_USART6
 #define EVAL_COM1_TX_PIN                 GPIO_Pin_6
@@ -198,7 +198,7 @@ typedef enum
 
 /**
  * @brief Definition for COM port2, connected to USART3
- */ 
+ */
 #define EVAL_COM2                        USART3
 #define EVAL_COM2_CLK                    RCC_APB1Periph_USART3
 #define EVAL_COM2_TX_PIN                 GPIO_Pin_8
@@ -225,7 +225,7 @@ typedef enum
 
 /**
   * @BUZZER
-  */ 
+  */
 #define BUZZER_GPIO_PIN                  GPIO_Pin_10
 #define BUZZER_GPIO_PORT                 GPIOA
 #define BUZZER_GPIO_CLK                  RCC_AHB1Periph_GPIOA
@@ -236,7 +236,7 @@ typedef enum
 
 /**
   * @USB OTG
-  */ 
+  */
 #define OTG_FS_VBUS_PIN                    GPIO_Pin_9
 #define OTG_FS_VBUS_PORT                   GPIOA
 #define OTG_FS_VBUS_CLK                    RCC_AHB1Periph_GPIOA
@@ -254,7 +254,7 @@ typedef enum
 
 /**
   * @USB HOST
-  */ 
+  */
 #define OTG_HS_VBUS_PIN                    GPIO_Pin_13
 #define OTG_HS_VBUS_PORT                   GPIOB
 #define OTG_HS_VBUS_CLK                    RCC_AHB1Periph_GPIOB
@@ -277,7 +277,7 @@ typedef enum
 
 /**
   * @TRIMER
-  */ 
+  */
 #define TRIMER_PIN                      GPIO_Pin_0
 #define TRIMER_PORT                     GPIOC
 #define TRIMER_CLK                      RCC_AHB1Periph_GPIOC
@@ -286,10 +286,10 @@ typedef enum
 
 /** @addtogroup IAR_STM32F407ZG_SK_LOW_LEVEL_SD_FLASH
   * @{
-  */ 
+  */
 /**
   * @SD
-  */ 
+  */
 #define SD_CP_PIN                       GPIO_Pin_3
 #define SD_CP_PORT                      GPIOD
 #define SD_CP_CLK                       RCC_AHB1Periph_GPIOD
@@ -331,7 +331,7 @@ typedef enum
 #define SD_CLK_SOURCE                   GPIO_PinSource12
 /**
   * @brief  SD FLASH SDIO Interface
-  */ 
+  */
 #define SD_SDIO_DMA_STREAM3	          3
 //#define SD_SDIO_DMA_STREAM6           6
 
@@ -342,7 +342,7 @@ typedef enum
  #define SD_SDIO_DMA_FLAG_DMEIF        DMA_FLAG_DMEIF3
  #define SD_SDIO_DMA_FLAG_TEIF         DMA_FLAG_TEIF3
  #define SD_SDIO_DMA_FLAG_HTIF         DMA_FLAG_HTIF3
- #define SD_SDIO_DMA_FLAG_TCIF         DMA_FLAG_TCIF3 
+ #define SD_SDIO_DMA_FLAG_TCIF         DMA_FLAG_TCIF3
 #elif defined SD_SDIO_DMA_STREAM6
  #define SD_SDIO_DMA_STREAM            DMA2_Stream6
  #define SD_SDIO_DMA_CHANNEL           DMA_Channel_4
@@ -350,16 +350,16 @@ typedef enum
  #define SD_SDIO_DMA_FLAG_DMEIF        DMA_FLAG_DMEIF6
  #define SD_SDIO_DMA_FLAG_TEIF         DMA_FLAG_TEIF6
  #define SD_SDIO_DMA_FLAG_HTIF         DMA_FLAG_HTIF6
- #define SD_SDIO_DMA_FLAG_TCIF         DMA_FLAG_TCIF6 
+ #define SD_SDIO_DMA_FLAG_TCIF         DMA_FLAG_TCIF6
 #endif /* SD_SDIO_DMA_STREAM3 */
 
 /**
   * @}
-  */ 
-  
+  */
+
 /**
   * @CAN
-  */ 
+  */
 #define CAN_TX_PIN                      GPIO_Pin_9
 #define CAN_TX_PORT                     GPIOB
 #define CAN_TX_CLK                      RCC_AHB1Periph_GPIOB
@@ -379,17 +379,17 @@ typedef enum
 
 /**
   * @}
-  */  
+  */
 /**
   * @}
-  */ 
-  
+  */
+
 /** @defgroup IAR_STM32F407ZG_SK_LOW_LEVEL_Exported_Macros
   * @{
-  */  
+  */
 /**
   * @}
-  */ 
+  */
 
 
 /** @defgroup IAR_STM32F407ZG_SK_LOW_LEVEL_Exported_Functions
@@ -401,11 +401,11 @@ void STM_EVAL_LEDOff(Led_TypeDef Led);
 void STM_EVAL_LEDToggle(Led_TypeDef Led);
 void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode);
 uint32_t STM_EVAL_PBGetState(Button_TypeDef Button);
-void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct); 
+void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
 /**
   * @}
   */
-  
+
 #ifdef __cplusplus
 }
 #endif
@@ -413,11 +413,7 @@ void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
 #endif /* __IAR_STM32F407ZG_SK_H */
 /**
   * @}
-  */ 
-
-/**
-  * @}
-  */ 
+  */
 
 /**
   * @}
@@ -425,6 +421,10 @@ void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
 
 /**
   * @}
-  */  
+  */
+
+/**
+  * @}
+  */
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

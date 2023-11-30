@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -94,8 +94,8 @@ typedef struct
 //------------------------------------------------------------------------------
 //         Exported functions
 //------------------------------------------------------------------------------
-extern unsigned char CAN_Init( unsigned int baudrate, 
-                               CanTransfer *canTransferRead, 
+extern unsigned char CAN_Init( unsigned int baudrate,
+                               CanTransfer *canTransferRead,
                                CanTransfer *canTransferWrite );
 extern void CAN_BasicTestSuite(void);
 extern void CAN_disable( void );

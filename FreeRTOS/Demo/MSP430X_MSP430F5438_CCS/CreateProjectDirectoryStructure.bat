@@ -12,26 +12,26 @@ IF EXIST FreeRTOS_Source Goto END
 
 	REM Create the required directory structure.
 	MD FreeRTOS_Source
-	MD FreeRTOS_Source\include	
+	MD FreeRTOS_Source\include
 	MD FreeRTOS_Source\portable\CCS
 	MD FreeRTOS_Source\portable\CCS\MSP430X
-	MD FreeRTOS_Source\portable\MemMang	
+	MD FreeRTOS_Source\portable\MemMang
 	MD Demo_Source\Common_Demo_Files
 	MD Demo_Source\Common_Demo_Files\include
-	
+
 	REM Copy the core kernel files.
 	copy ..\..\Source\tasks.c FreeRTOS_Source
 	copy ..\..\Source\queue.c FreeRTOS_Source
 	copy ..\..\Source\list.c FreeRTOS_Source
 	copy ..\..\Source\timers.c FreeRTOS_Source
-	
+
 	REM Copy the common header files
 
 	copy ..\..\Source\include\*.* FreeRTOS_Source\include
-	
+
 	REM Copy the portable layer files
 	copy ..\..\Source\portable\CCS\MSP430X\*.* FreeRTOS_Source\portable\CCS\MSP430X
-	
+
 	REM Copy the basic memory allocation files
 	copy ..\..\Source\portable\MemMang\heap_1.c FreeRTOS_Source\portable\MemMang
 
@@ -41,7 +41,7 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\Common\minimal\GenQTest.c Demo_Source\Common_Demo_Files
 	copy ..\Common\minimal\TimerDemo.c Demo_Source\Common_Demo_Files
 	copy ..\Common\minimal\countsem.c Demo_Source\Common_Demo_Files
-	
+
 	REM Copy the common demo file headers.
 	copy ..\Common\include\dynamic.h Demo_Source\Common_Demo_Files\include
 	copy ..\Common\include\comtest.h Demo_Source\Common_Demo_Files\include
@@ -51,5 +51,5 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\Common\include\partest.h Demo_Source\Common_Demo_Files\include
 	copy ..\Common\include\TimerDemo.h Demo_Source\Common_Demo_Files\include
 	copy ..\Common\include\countsem.h Demo_Source\Common_Demo_Files\include
-	
+
 : END

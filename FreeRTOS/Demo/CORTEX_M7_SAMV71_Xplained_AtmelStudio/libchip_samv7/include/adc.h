@@ -42,7 +42,7 @@
  *  -# Select the active channel using ADC_EnableChannel().
  *  -# Start the conversion with ADC_StartConversion().
  *  -# Wait the end of the conversion by polling status with ADC_GetStatus().
- *  -# Finally, get the converted data using ADC_GetConvertedData() or 
+ *  -# Finally, get the converted data using ADC_GetConvertedData() or
  * ADC_GetLastConvertedData().
  *
 */
@@ -140,7 +140,7 @@
  *------------------------------------------------------------------------------*/
 extern void ADC_Initialize( Adc* pAdc, uint32_t dwId );
 extern uint32_t ADC_SetClock( Adc* pAdc, uint32_t dwPres, uint32_t dwMck );
-extern void ADC_SetTiming( Adc* pAdc, uint32_t dwStartup, uint32_t dwTracking, 
+extern void ADC_SetTiming( Adc* pAdc, uint32_t dwStartup, uint32_t dwTracking,
 		uint32_t dwSettling );
 extern void ADC_SetTrigger( Adc* pAdc, uint32_t dwTrgSel );
 extern void ADC_SetTriggerMode(Adc *pAdc, uint32_t dwMode);

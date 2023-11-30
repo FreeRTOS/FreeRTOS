@@ -26,7 +26,7 @@
 typedef struct
 {
   u32 ADC_Mode;
-  FunctionalState ADC_ScanConvMode; 
+  FunctionalState ADC_ScanConvMode;
   FunctionalState ADC_ContinuousConvMode;
   u32 ADC_ExternalTrigConv;
   u32 ADC_DataAlign;
@@ -37,7 +37,7 @@ typedef struct
 #define IS_ADC_ALL_PERIPH(PERIPH) (((*(u32*)&(PERIPH)) == ADC1_BASE) || \
                                    ((*(u32*)&(PERIPH)) == ADC2_BASE) || \
                                    ((*(u32*)&(PERIPH)) == ADC3_BASE))
-                                 
+
 #define IS_ADC_DMA_PERIPH(PERIPH) (((*(u32*)&(PERIPH)) == ADC1_BASE) || \
                                    ((*(u32*)&(PERIPH)) == ADC3_BASE))
 

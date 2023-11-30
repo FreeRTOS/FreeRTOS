@@ -41,11 +41,11 @@ POSSIBILITY OF SUCH DAMAGE.
  * nrf5340_network_bitfields.h. The macros defined in this file were available previously. Do not use these
  * macros on purpose. Use the ones defined in nrf5340_network.h and nrf5340_network_bitfields.h instead.
  */
- 
+
 /* The serial box interrupt ISRs were renamed. Adding old names as macros. */
 #define SPIM0_SPIS0_TWIM0_TWIS0_UARTE0_IRQHandler          SERIAL0_IRQHandler
 #define SPIM0_SPIS0_TWIM0_TWIS0_UARTE0_IRQn                SERIAL0_IRQn
- 
+
  /*lint --flb "Leave library region" */
 
 #endif /* NRF5340_NETWORK_NAME_CHANGE_H */

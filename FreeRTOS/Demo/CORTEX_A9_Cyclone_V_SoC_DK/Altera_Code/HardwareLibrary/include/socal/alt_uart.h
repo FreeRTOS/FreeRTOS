@@ -41,29 +41,29 @@ extern "C"
 /*
  * Component : UART Module - ALT_UART
  * UART Module
- * 
+ *
  * Registers in the UART module
- * 
+ *
  */
 /*
  * Register : Rx Buffer, Tx Holding, and Divisor Latch Low - rbr_thr_dll
- * 
+ *
  * This is a multi-function register. This register holds receives and transmit
  * data and controls the least-signficant 8 bits of the baud rate divisor.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | RW     | 0x0   | Value      
+ *  [7:0]  | RW     | 0x0   | Value
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Value - value
- * 
+ *
  * Receive Buffer Register:
- * 
+ *
  * This register contains the data byte received on the serial input port
  * (uart_rxd). The data in this register is valid only if the Data Ready ( bit [0]
  * in the Line Status Register(LSR)) is set to 1. If FIFOs are disabled(bit[0] of
@@ -74,9 +74,9 @@ extern "C"
  * not read before the next data character arrives, then the data already in the
  * FIFO will be preserved but any incoming data will be lost. An overrun error will
  * also occur.
- * 
+ *
  * Transmit Holding Register:
- * 
+ *
  * This register contains data to be transmitted on the serial output port. Data
  * should only be written to the THR when the THR Empty bit [5] of the LSR Register
  * is set to 1. If FIFOs are disabled (bit [0] of Register FCR) is set to 0 and
@@ -86,24 +86,24 @@ extern "C"
  * THRE is set up to 128 characters of data may be written to the THR before the
  * FIFO is full. Any attempt to write data when the FIFO is full results in the
  * write data being lost.
- * 
+ *
  * Divisor Latch Low:
- * 
+ *
  * This register makes up the lower 8-bits of a 16-bit, Read/write, Divisor Latch
  * register that contains the baud rate divisor for the UART. This register may
  * only be accessed when the DLAB bit [7] of the LCR Register is set to 1. The
  * output baud rate is equal to the serial clock l4_sp_clk frequency divided by
  * sixteen times the value of the baud rate divisor, as follows:
- * 
+ *
  * baud rate = (serial clock freq) / (16 * divisor)
- * 
+ *
  * Note that with the Divisor Latch Registers (DLL and DLH) set to zero, the baud
  * clock is disabled and no serial communications will occur. Also, once the DLL is
  * set, at least 8 l4_sp_clk clock cycles should be allowed to pass before
  * transmitting or receiving data.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_RBR_THR_DLL_VALUE register field. */
 #define ALT_UART_RBR_THR_DLL_VALUE_LSB        0
@@ -130,7 +130,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_RBR_THR_DLL.
  */
 struct ALT_UART_RBR_THR_DLL_s
@@ -150,78 +150,78 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Register : Interrupt Enable and Divisor Latch High - ier_dlh
- * 
+ *
  * This is a multi-function register. This register enables/disables receive and
  * transmit interrupts and also controls the most-significant 8-bits of the baud
  * rate divisor.
- * 
+ *
  * Divisor Latch High Register:
- * 
+ *
  * This register is accessed when the DLAB bit [7] of the LCR Register is set to
  * 1.Bits[7:0] contain the high order 8-bits of the baud rate divisor.The output
  * baud rate is equal to the serial clock l4_sp_clk frequency divided by sixteen
  * times the value of the baud rate divisor, as follows:
- * 
+ *
  * baud rate = (serial clock freq) / (16 * divisor):
- * 
+ *
  * Note that with the Divisor Latch Registers (DLLand DLH) set to zero, the baud
  * clock is disabled and no serial communications will occur. Also, once the DLL is
  * set, at least 8 l4_sp_clk clock cycles should be allowed to pass before
  * transmitting or receiving data.
- * 
+ *
  * Interrupt Enable Register:
- * 
+ *
  * This register may only be accessed when the DLAB bit [7] of the LCR Register is
  * set to 0.Allows control of the Interrupt Enables for transmit and receive
  * functions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------------------
- *  [0]    | RW     | 0x0   | DLH[0] and Receive Data Interrupt Enable   
- *  [1]    | RW     | 0x0   | DLH[1] and Transmit Data Interrupt Control 
- *  [2]    | RW     | 0x0   | DLH[2] and Enable Receiver Line Status     
- *  [3]    | RW     | 0x0   | DLH[3] and Enable Modem Status Interrupt   
- *  [4]    | RW     | 0x0   | DLH[4]                                     
- *  [5]    | RW     | 0x0   | DLH[5]                                     
- *  [6]    | RW     | 0x0   | DLH[6]                                     
+ *  [0]    | RW     | 0x0   | DLH[0] and Receive Data Interrupt Enable
+ *  [1]    | RW     | 0x0   | DLH[1] and Transmit Data Interrupt Control
+ *  [2]    | RW     | 0x0   | DLH[2] and Enable Receiver Line Status
+ *  [3]    | RW     | 0x0   | DLH[3] and Enable Modem Status Interrupt
+ *  [4]    | RW     | 0x0   | DLH[4]
+ *  [5]    | RW     | 0x0   | DLH[5]
+ *  [6]    | RW     | 0x0   | DLH[6]
  *  [7]    | RW     | 0x0   | DLH[7] and PTIME THRE Interrupt Mode Enable
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                                
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : DLH[0] and Receive Data Interrupt Enable - erbfi_dlh0
- * 
+ *
  * Divisor Latch High Register:
- * 
+ *
  * Bit 0 of DLH value.
- * 
+ *
  * Interrupt Enable Register:
- * 
+ *
  * Used to enable/disable the generation of the Receive Data Available Interrupt
  * and the Character Timeout Interrupt(if FIFO's enabled). These are the second
  * highest priority interrupts.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description      
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:------------------
  *  ALT_UART_IER_DLH_ERBFI_DLH0_E_DISD | 0x0   | Interrupt Disable
- *  ALT_UART_IER_DLH_ERBFI_DLH0_E_END  | 0x1   | Interrupt Enable 
- * 
+ *  ALT_UART_IER_DLH_ERBFI_DLH0_E_END  | 0x1   | Interrupt Enable
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_ERBFI_DLH0
- * 
+ *
  * Interrupt Disable
  */
 #define ALT_UART_IER_DLH_ERBFI_DLH0_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_ERBFI_DLH0
- * 
+ *
  * Interrupt Enable
  */
 #define ALT_UART_IER_DLH_ERBFI_DLH0_E_END   0x1
@@ -245,36 +245,36 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[1] and Transmit Data Interrupt Control - etbei_dlhl
- * 
+ *
  * Divisor Latch High Register:
- * 
+ *
  * Bit 1 of DLH value.
- * 
+ *
  * Interrupt Enable Register:
- * 
+ *
  * Enable Transmit Holding Register Empty Interrupt. This is used to enable/disable
  * the generation of Transmitter Holding Register Empty Interrupt. This is the
  * third highest priority interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                               | Value | Description
  * :-----------------------------------|:------|:------------
- *  ALT_UART_IER_DLH_ETBEI_DLHL_E_DISD | 0x0   | Tx disable 
- *  ALT_UART_IER_DLH_ETBEI_DLHL_E_END  | 0x1   | Tx enable  
- * 
+ *  ALT_UART_IER_DLH_ETBEI_DLHL_E_DISD | 0x0   | Tx disable
+ *  ALT_UART_IER_DLH_ETBEI_DLHL_E_END  | 0x1   | Tx enable
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_ETBEI_DLHL
- * 
+ *
  * Tx disable
  */
 #define ALT_UART_IER_DLH_ETBEI_DLHL_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_ETBEI_DLHL
- * 
+ *
  * Tx enable
  */
 #define ALT_UART_IER_DLH_ETBEI_DLHL_E_END   0x1
@@ -298,35 +298,35 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[2] and Enable Receiver Line Status - elsi_dhl2
- * 
+ *
  * Divisor Latch High Register:
- * 
+ *
  * Bit 2 of DLH value.
- * 
+ *
  * Interrupt Enable Register:
- * 
+ *
  * This is used to enable/disable the generation of Receiver Line Status Interrupt.
  * This is the highest priority interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:----------------------------
  *  ALT_UART_IER_DLH_ELSI_DHL2_E_DISD | 0x0   | Disable interrupt line stat
- *  ALT_UART_IER_DLH_ELSI_DHL2_E_END  | 0x1   | Enable interrupt line stat 
- * 
+ *  ALT_UART_IER_DLH_ELSI_DHL2_E_END  | 0x1   | Enable interrupt line stat
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_ELSI_DHL2
- * 
+ *
  * Disable interrupt line stat
  */
 #define ALT_UART_IER_DLH_ELSI_DHL2_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_ELSI_DHL2
- * 
+ *
  * Enable interrupt line stat
  */
 #define ALT_UART_IER_DLH_ELSI_DHL2_E_END    0x1
@@ -350,35 +350,35 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[3] and Enable Modem Status Interrupt - edssi_dhl3
- * 
+ *
  * Divisor Latch High Register:
- * 
+ *
  * Bit 3 of DLH value.
- * 
+ *
  * Interrupt Enable Register:
- * 
+ *
  * This is used to enable/disable the generation of Modem Status Interrupts. This
  * is the fourth highest priority interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                   
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------------
  *  ALT_UART_IER_DLH_EDSSI_DHL3_E_DISD | 0x0   | disable modem status interrupt
- *  ALT_UART_IER_DLH_EDSSI_DHL3_E_END  | 0x1   | enable modem status interrupt 
- * 
+ *  ALT_UART_IER_DLH_EDSSI_DHL3_E_END  | 0x1   | enable modem status interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_EDSSI_DHL3
- * 
+ *
  * disable modem status interrupt
  */
 #define ALT_UART_IER_DLH_EDSSI_DHL3_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_EDSSI_DHL3
- * 
+ *
  * enable modem status interrupt
  */
 #define ALT_UART_IER_DLH_EDSSI_DHL3_E_END   0x1
@@ -402,11 +402,11 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[4] - dlh4
- * 
+ *
  * Bit 4 of DLH value.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_IER_DLH_DLH4 register field. */
 #define ALT_UART_IER_DLH_DLH4_LSB        4
@@ -427,11 +427,11 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[5] - dlh5
- * 
+ *
  * Bit 5 of DLH value.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_IER_DLH_DLH5 register field. */
 #define ALT_UART_IER_DLH_DLH5_LSB        5
@@ -452,11 +452,11 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[6] - dlh6
- * 
+ *
  * Bit 6 of DLH value.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_IER_DLH_DLH6 register field. */
 #define ALT_UART_IER_DLH_DLH6_LSB        6
@@ -477,34 +477,34 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
 
 /*
  * Field : DLH[7] and PTIME THRE Interrupt Mode Enable - ptime_dlh7
- * 
+ *
  * Divisor Latch High Register:
- * 
+ *
  * Bit 7 of DLH value.
- * 
+ *
  * Interrupt Enable Register:
- * 
+ *
  * This is used to enable/disable the generation of THRE Interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                        
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:------------------------------------
  *  ALT_UART_IER_DLH_PTIME_DLH7_E_DISD | 0x0   | disable tx-hold-reg-empty interrupt
- *  ALT_UART_IER_DLH_PTIME_DLH7_E_END  | 0x1   | enable tx-hold-reg-empty interrupt 
- * 
+ *  ALT_UART_IER_DLH_PTIME_DLH7_E_END  | 0x1   | enable tx-hold-reg-empty interrupt
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_PTIME_DLH7
- * 
+ *
  * disable tx-hold-reg-empty interrupt
  */
 #define ALT_UART_IER_DLH_PTIME_DLH7_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_UART_IER_DLH_PTIME_DLH7
- * 
+ *
  * enable tx-hold-reg-empty interrupt
  */
 #define ALT_UART_IER_DLH_PTIME_DLH7_E_END   0x1
@@ -534,7 +534,7 @@ typedef volatile struct ALT_UART_RBR_THR_DLL_s  ALT_UART_RBR_THR_DLL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_IER_DLH.
  */
 struct ALT_UART_IER_DLH_s
@@ -561,71 +561,71 @@ typedef volatile struct ALT_UART_IER_DLH_s  ALT_UART_IER_DLH_t;
 
 /*
  * Register : Interrupt Identity Register (when read) - iir
- * 
+ *
  * Returns interrupt identification and FIFO enable/disable when read.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [3:0]  | R      | 0x1   | Interrupt ID
- *  [5:4]  | ???    | 0x0   | *UNDEFINED* 
+ *  [5:4]  | ???    | 0x0   | *UNDEFINED*
  *  [7:6]  | R      | 0x0   | FIFO Enabled
- *  [31:8] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt ID - id
- * 
+ *
  * This indicates the highest priority pending interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description           
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-----------------------
- *  ALT_UART_IIR_ID_E_MODMSTAT       | 0x0   | Modem status          
- *  ALT_UART_IIR_ID_E_NOINTRPENDING  | 0x1   | No Interrupt pending  
- *  ALT_UART_IIR_ID_E_THREMPTY       | 0x2   | THR empty             
+ *  ALT_UART_IIR_ID_E_MODMSTAT       | 0x0   | Modem status
+ *  ALT_UART_IIR_ID_E_NOINTRPENDING  | 0x1   | No Interrupt pending
+ *  ALT_UART_IIR_ID_E_THREMPTY       | 0x2   | THR empty
  *  ALT_UART_IIR_ID_E_RXDATAVAILABLE | 0x4   | Receive data available
- *  ALT_UART_IIR_ID_E_RXLINESTAT     | 0x6   | Receive line status   
- *  ALT_UART_IIR_ID_E_CHARTMO        | 0xc   | Character timeout     
- * 
+ *  ALT_UART_IIR_ID_E_RXLINESTAT     | 0x6   | Receive line status
+ *  ALT_UART_IIR_ID_E_CHARTMO        | 0xc   | Character timeout
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IIR_ID
- * 
+ *
  * Modem status
  */
 #define ALT_UART_IIR_ID_E_MODMSTAT          0x0
 /*
  * Enumerated value for register field ALT_UART_IIR_ID
- * 
+ *
  * No Interrupt pending
  */
 #define ALT_UART_IIR_ID_E_NOINTRPENDING     0x1
 /*
  * Enumerated value for register field ALT_UART_IIR_ID
- * 
+ *
  * THR empty
  */
 #define ALT_UART_IIR_ID_E_THREMPTY          0x2
 /*
  * Enumerated value for register field ALT_UART_IIR_ID
- * 
+ *
  * Receive data available
  */
 #define ALT_UART_IIR_ID_E_RXDATAVAILABLE    0x4
 /*
  * Enumerated value for register field ALT_UART_IIR_ID
- * 
+ *
  * Receive line status
  */
 #define ALT_UART_IIR_ID_E_RXLINESTAT        0x6
 /*
  * Enumerated value for register field ALT_UART_IIR_ID
- * 
+ *
  * Character timeout
  */
 #define ALT_UART_IIR_ID_E_CHARTMO           0xc
@@ -649,28 +649,28 @@ typedef volatile struct ALT_UART_IER_DLH_s  ALT_UART_IER_DLH_t;
 
 /*
  * Field : FIFO Enabled - fifoen
- * 
+ *
  * This is used to indicate whether the FIFO's are enabled or disabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description  
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:--------------
  *  ALT_UART_IIR_FIFOEN_E_DISD | 0x0   | FIFO disabled
- *  ALT_UART_IIR_FIFOEN_E_END  | 0x3   | FIFO enabled 
- * 
+ *  ALT_UART_IIR_FIFOEN_E_END  | 0x3   | FIFO enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_IIR_FIFOEN
- * 
+ *
  * FIFO disabled
  */
 #define ALT_UART_IIR_FIFOEN_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_UART_IIR_FIFOEN
- * 
+ *
  * FIFO enabled
  */
 #define ALT_UART_IIR_FIFOEN_E_END   0x3
@@ -700,7 +700,7 @@ typedef volatile struct ALT_UART_IER_DLH_s  ALT_UART_IER_DLH_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_IIR.
  */
 struct ALT_UART_IIR_s
@@ -722,48 +722,48 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
 
 /*
  * Register : FIFO Control (when written) - fcr
- * 
+ *
  * Controls FIFO Operations when written.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset   | Description           
+ *
+ *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:-----------------------
- *  [0]    | W      | Unknown | FIFO Enable           
- *  [1]    | W      | Unknown | Rx FIFO Reset         
- *  [2]    | W      | Unknown | Tx FIFO Reset         
- *  [3]    | W      | Unknown | DMA Mode              
+ *  [0]    | W      | Unknown | FIFO Enable
+ *  [1]    | W      | Unknown | Rx FIFO Reset
+ *  [2]    | W      | Unknown | Tx FIFO Reset
+ *  [3]    | W      | Unknown | DMA Mode
  *  [5:4]  | W      | Unknown | Tx Empty Trigger Level
- *  [7:6]  | W      | Unknown | Rx Trigger Level      
- *  [31:8] | ???    | 0x0     | *UNDEFINED*           
- * 
+ *  [7:6]  | W      | Unknown | Rx Trigger Level
+ *  [31:8] | ???    | 0x0     | *UNDEFINED*
+ *
  */
 /*
  * Field : FIFO Enable - fifoe
- * 
+ *
  * Enables/disables the transmit (Tx) and receive (Rx ) FIFO's. Whenever the value
  * of this bit is changed both the Tx and Rx  controller portion of FIFO's will be
  * reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description   
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:---------------
  *  ALT_UART_FCR_FIFOE_E_DISD | 0x0   | FIFOs disabled
- *  ALT_UART_FCR_FIFOE_E_END  | 0x1   | FIFOs enabled 
- * 
+ *  ALT_UART_FCR_FIFOE_E_END  | 0x1   | FIFOs enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FCR_FIFOE
- * 
+ *
  * FIFOs disabled
  */
 #define ALT_UART_FCR_FIFOE_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_UART_FCR_FIFOE
- * 
+ *
  * FIFOs enabled
  */
 #define ALT_UART_FCR_FIFOE_E_END    0x1
@@ -787,30 +787,30 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
 
 /*
  * Field : Rx FIFO Reset - rfifor
- * 
+ *
  * Resets the control portion of the receive FIFO and treats the FIFO as empty.
  * This will also de-assert the DMA Rxrequest and single signals. Note that this
  * bit is self-clearing' and it is not necessary to clear this bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------------
  *  ALT_UART_FCR_RFIFOR_E_NORST | 0x0   | No Reset of Rx FIFO Control
- *  ALT_UART_FCR_RFIFOR_E_RST   | 0x1   | Resets of Rx FIFO Control  
- * 
+ *  ALT_UART_FCR_RFIFOR_E_RST   | 0x1   | Resets of Rx FIFO Control
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FCR_RFIFOR
- * 
+ *
  * No Reset of Rx FIFO Control
  */
 #define ALT_UART_FCR_RFIFOR_E_NORST 0x0
 /*
  * Enumerated value for register field ALT_UART_FCR_RFIFOR
- * 
+ *
  * Resets of Rx FIFO Control
  */
 #define ALT_UART_FCR_RFIFOR_E_RST   0x1
@@ -834,32 +834,32 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
 
 /*
  * Field : Tx FIFO Reset - xfifor
- * 
+ *
  * Resets the control portion of the transmit FIFO and treats the FIFO as empty.
  * This will also de-assert the DMA Tx request and single signals when additional
  * DMA handshaking is used.
- * 
+ *
  * Note that this bit is 'self-clearing' and it is not necessary to clear this bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:----------------------------
  *  ALT_UART_FCR_XFIFOR_E_NORST | 0x0   | No Reset of Tx FIFO Control
- *  ALT_UART_FCR_XFIFOR_E_RST   | 0x1   | Resets Tx FIFO Control     
- * 
+ *  ALT_UART_FCR_XFIFOR_E_RST   | 0x1   | Resets Tx FIFO Control
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FCR_XFIFOR
- * 
+ *
  * No Reset of Tx FIFO Control
  */
 #define ALT_UART_FCR_XFIFOR_E_NORST 0x0
 /*
  * Enumerated value for register field ALT_UART_FCR_XFIFOR
- * 
+ *
  * Resets Tx FIFO Control
  */
 #define ALT_UART_FCR_XFIFOR_E_RST   0x1
@@ -883,58 +883,58 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
 
 /*
  * Field : DMA Mode - dmam
- * 
+ *
  * This determines the DMA signalling mode used for the uart_dma_tx_req_n and
  * uart_dma_rx_req_n output signals when additional DMA handshaking signals are not
  * selected. DMA mode 0 supports single DMA data transfers at a time. In mode 0,
  * the uart_dma_tx_req_n signal goes active low under the following conditions:
- * 
+ *
  * * When the Transmitter Holding Register is empty in non-FIFO mode.
- * 
+ *
  * * When the transmitter FIFO is empty in FIFO mode with Programmable  THRE
  *   interrupt mode disabled.
- * 
+ *
  * * When the transmitter FIFO is at or below the programmed threshold  with
  *   Programmable THRE interrupt mode enabled.
- * 
+ *
  * It goes inactive under the following conditions
- * 
+ *
  * * When a single character has been written into the Transmitter  Holding
  *   Register or transmitter FIFO with Programmable THRE interrupt mode disabled.
- * 
+ *
  * * When the transmitter FIFO is above the threshold with Programmable THRE
  *   interrupt mode enabled.
- * 
+ *
  * DMA mode 1 supports multi-DMA data transfers, where multiple transfers are made
  * continuously until the receiver FIFO has been emptied or the transmit FIFO has
  * been filled. In mode 1 the uart_dma_tx_req_n signal is asserted under the
  * following conditions:
- * 
+ *
  * * When the transmitter FIFO is empty with Programmable THRE  interrupt mode
  *   disabled.
- * 
+ *
  * * When the transmitter FIFO is at or below the programmed  threshold with
  *   Programmable THRE interrupt mode enabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description               
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:---------------------------
- *  ALT_UART_FCR_DMAM_E_SINGLE | 0x0   | Single DMA Transfer Mode  
+ *  ALT_UART_FCR_DMAM_E_SINGLE | 0x0   | Single DMA Transfer Mode
  *  ALT_UART_FCR_DMAM_E_MULT   | 0x1   | Multiple DMA Transfer Mode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FCR_DMAM
- * 
+ *
  * Single DMA Transfer Mode
  */
 #define ALT_UART_FCR_DMAM_E_SINGLE  0x0
 /*
  * Enumerated value for register field ALT_UART_FCR_DMAM
- * 
+ *
  * Multiple DMA Transfer Mode
  */
 #define ALT_UART_FCR_DMAM_E_MULT    0x1
@@ -958,45 +958,45 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
 
 /*
  * Field : Tx Empty Trigger Level - tet
- * 
+ *
  * This is used to select the empty threshold level at which the THRE Interrupts
  * will be generated when the mode is active. It also determines when the uart DMA
  * transmit request signal uart_dma_tx_req_n will be asserted when in certain modes
  * of operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description           
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:-----------------------
- *  ALT_UART_FCR_TET_E_FIFOEMPTY   | 0x0   | FIFO empty            
+ *  ALT_UART_FCR_TET_E_FIFOEMPTY   | 0x0   | FIFO empty
  *  ALT_UART_FCR_TET_E_TWOCHARS    | 0x1   | Two characters in FIFO
- *  ALT_UART_FCR_TET_E_QUARTERFULL | 0x2   | FIFO 1/4 full         
- *  ALT_UART_FCR_TET_E_HALFFULL    | 0x3   | FIFO 1/2 full         
- * 
+ *  ALT_UART_FCR_TET_E_QUARTERFULL | 0x2   | FIFO 1/4 full
+ *  ALT_UART_FCR_TET_E_HALFFULL    | 0x3   | FIFO 1/2 full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FCR_TET
- * 
+ *
  * FIFO empty
  */
 #define ALT_UART_FCR_TET_E_FIFOEMPTY    0x0
 /*
  * Enumerated value for register field ALT_UART_FCR_TET
- * 
+ *
  * Two characters in FIFO
  */
 #define ALT_UART_FCR_TET_E_TWOCHARS     0x1
 /*
  * Enumerated value for register field ALT_UART_FCR_TET
- * 
+ *
  * FIFO 1/4 full
  */
 #define ALT_UART_FCR_TET_E_QUARTERFULL  0x2
 /*
  * Enumerated value for register field ALT_UART_FCR_TET
- * 
+ *
  * FIFO 1/2 full
  */
 #define ALT_UART_FCR_TET_E_HALFFULL     0x3
@@ -1020,47 +1020,47 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
 
 /*
  * Field : Rx Trigger Level - rt
- * 
+ *
  * This register is configured to implement FIFOs. Bits[7:6], Rx Trigger (or RT):
  * This is used to select the trigger level in the receiver FIFO at which the
  * Received Data Available Interrupt will be generated. In auto flow control mode
  * it is used to determine when the uart_rts_n signal will be de-asserted. It also
  * determines when the uart_dma_rx_req_n signal will be asserted when in certain
  * modes of operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description          
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------------
  *  ALT_UART_FCR_RT_E_ONECHAR     | 0x0   | one character in fifo
- *  ALT_UART_FCR_RT_E_QUARTERFULL | 0x1   | FIFO 1/4 full        
- *  ALT_UART_FCR_RT_E_HALFFULL    | 0x2   | FIFO 1/2 full        
+ *  ALT_UART_FCR_RT_E_QUARTERFULL | 0x1   | FIFO 1/4 full
+ *  ALT_UART_FCR_RT_E_HALFFULL    | 0x2   | FIFO 1/2 full
  *  ALT_UART_FCR_RT_E_FULLLESS2   | 0x3   | FIFO 2 less than full
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FCR_RT
- * 
+ *
  * one character in fifo
  */
 #define ALT_UART_FCR_RT_E_ONECHAR       0x0
 /*
  * Enumerated value for register field ALT_UART_FCR_RT
- * 
+ *
  * FIFO 1/4 full
  */
 #define ALT_UART_FCR_RT_E_QUARTERFULL   0x1
 /*
  * Enumerated value for register field ALT_UART_FCR_RT
- * 
+ *
  * FIFO 1/2 full
  */
 #define ALT_UART_FCR_RT_E_HALFFULL      0x2
 /*
  * Enumerated value for register field ALT_UART_FCR_RT
- * 
+ *
  * FIFO 2 less than full
  */
 #define ALT_UART_FCR_RT_E_FULLLESS2     0x3
@@ -1090,7 +1090,7 @@ typedef volatile struct ALT_UART_IIR_s  ALT_UART_IIR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_FCR.
  */
 struct ALT_UART_FCR_s
@@ -1115,62 +1115,62 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
 
 /*
  * Register : Line Control Register (When Written) - lcr
- * 
+ *
  * Formats serial data.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
- *  [1:0]  | RW     | 0x0   | Data Length Select      
- *  [2]    | RW     | 0x0   | Stop Bits               
- *  [3]    | RW     | 0x0   | Parity Enable           
- *  [4]    | RW     | 0x0   | Even Parity Select      
- *  [5]    | ???    | 0x0   | *UNDEFINED*             
- *  [6]    | RW     | 0x0   | Break Control Bit       
+ *  [1:0]  | RW     | 0x0   | Data Length Select
+ *  [2]    | RW     | 0x0   | Stop Bits
+ *  [3]    | RW     | 0x0   | Parity Enable
+ *  [4]    | RW     | 0x0   | Even Parity Select
+ *  [5]    | ???    | 0x0   | *UNDEFINED*
+ *  [6]    | RW     | 0x0   | Break Control Bit
  *  [7]    | RW     | 0x0   | Divisor Latch Access Bit
- *  [31:8] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Data Length Select - dls
- * 
+ *
  * Data Length Select.Selects the number of data bits per character that the
  * peripheral will transmit and receive.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                    | Value | Description
  * :------------------------|:------|:------------
- *  ALT_UART_LCR_DLS_E_LEN5 | 0x0   | 5 bits     
- *  ALT_UART_LCR_DLS_E_LEN6 | 0x1   | 6 bits     
- *  ALT_UART_LCR_DLS_E_LEN7 | 0x2   | 7 bits     
- *  ALT_UART_LCR_DLS_E_LEN8 | 0x3   | 8 bits     
- * 
+ *  ALT_UART_LCR_DLS_E_LEN5 | 0x0   | 5 bits
+ *  ALT_UART_LCR_DLS_E_LEN6 | 0x1   | 6 bits
+ *  ALT_UART_LCR_DLS_E_LEN7 | 0x2   | 7 bits
+ *  ALT_UART_LCR_DLS_E_LEN8 | 0x3   | 8 bits
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LCR_DLS
- * 
+ *
  * 5 bits
  */
 #define ALT_UART_LCR_DLS_E_LEN5 0x0
 /*
  * Enumerated value for register field ALT_UART_LCR_DLS
- * 
+ *
  * 6 bits
  */
 #define ALT_UART_LCR_DLS_E_LEN6 0x1
 /*
  * Enumerated value for register field ALT_UART_LCR_DLS
- * 
+ *
  * 7 bits
  */
 #define ALT_UART_LCR_DLS_E_LEN7 0x2
 /*
  * Enumerated value for register field ALT_UART_LCR_DLS
- * 
+ *
  * 8 bits
  */
 #define ALT_UART_LCR_DLS_E_LEN8 0x3
@@ -1194,30 +1194,30 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
 
 /*
  * Field : Stop Bits - stop
- * 
+ *
  * Number of stop bits. Used to select the number of stop bits per character that
  * the peripheral will transmit and receive.Note that regardless of the number of
  * stop bits selected the receiver will only check the first stop bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                              | Value | Description                              
+ *
+ *  Enum                              | Value | Description
  * :----------------------------------|:------|:------------------------------------------
- *  ALT_UART_LCR_STOP_E_ONESTOP       | 0x0   | one stop bit                             
+ *  ALT_UART_LCR_STOP_E_ONESTOP       | 0x0   | one stop bit
  *  ALT_UART_LCR_STOP_E_ONEPOINT5STOP | 0x1   | 1.5 stop bits when DLS (LCR[1:0]) is zero
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LCR_STOP
- * 
+ *
  * one stop bit
  */
 #define ALT_UART_LCR_STOP_E_ONESTOP         0x0
 /*
  * Enumerated value for register field ALT_UART_LCR_STOP
- * 
+ *
  * 1.5 stop bits when DLS (LCR[1:0]) is zero
  */
 #define ALT_UART_LCR_STOP_E_ONEPOINT5STOP   0x1
@@ -1241,29 +1241,29 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
 
 /*
  * Field : Parity Enable - pen
- * 
+ *
  * This bit is used to enable and disable parity generation and detection in a
  * transmitted and received data character.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                    | Value | Description    
+ *
+ *  Enum                    | Value | Description
  * :------------------------|:------|:----------------
  *  ALT_UART_LCR_PEN_E_DISD | 0x0   | parity disabled
- *  ALT_UART_LCR_PEN_E_END  | 0x1   | parity enabled 
- * 
+ *  ALT_UART_LCR_PEN_E_END  | 0x1   | parity enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LCR_PEN
- * 
+ *
  * parity disabled
  */
 #define ALT_UART_LCR_PEN_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_UART_LCR_PEN
- * 
+ *
  * parity enabled
  */
 #define ALT_UART_LCR_PEN_E_END  0x1
@@ -1287,30 +1287,30 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
 
 /*
  * Field : Even Parity Select - eps
- * 
+ *
  * This is used to select between even and odd parity, when parity is enabled (PEN
  * set to one). If set to one, an even number of logic '1's is transmitted or
  * checked. If set to zero, an odd number of logic '1's is transmitted or checked.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                       | Value | Description
  * :---------------------------|:------|:------------
- *  ALT_UART_LCR_EPS_E_ODDPAR  | 0x0   | odd parity 
+ *  ALT_UART_LCR_EPS_E_ODDPAR  | 0x0   | odd parity
  *  ALT_UART_LCR_EPS_E_EVENPAR | 0x1   | even parity
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LCR_EPS
- * 
+ *
  * odd parity
  */
 #define ALT_UART_LCR_EPS_E_ODDPAR   0x0
 /*
  * Enumerated value for register field ALT_UART_LCR_EPS
- * 
+ *
  * even parity
  */
 #define ALT_UART_LCR_EPS_E_EVENPAR  0x1
@@ -1334,16 +1334,16 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
 
 /*
  * Field : Break Control Bit - break
- * 
+ *
  * This is used to cause a break condition to be transmitted to the receiving
  * device. If set to one the serial output is forced to the spacing (logic 0)
  * state. When not in Loopback Mode, as determined by MCR[4], the sout line is
  * forced low until the Break bit is cleared. When in Loopback Mode, the break
  * condition is internally looped back to the receiver and the sir_out_n line is
  * forced low.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_LCR_BREAK register field. */
 #define ALT_UART_LCR_BREAK_LSB        6
@@ -1364,13 +1364,13 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
 
 /*
  * Field : Divisor Latch Access Bit - dlab
- * 
+ *
  * Used to enable reading and writing of the Divisor Latch  register (DLL and DLH)
  * to set the baud rate of the  UART. This bit must be cleared after initial baud
  * rate setup in order to access other registers.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_LCR_DLAB register field. */
 #define ALT_UART_LCR_DLAB_LSB        7
@@ -1397,7 +1397,7 @@ typedef volatile struct ALT_UART_FCR_s  ALT_UART_FCR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_LCR.
  */
 struct ALT_UART_LCR_s
@@ -1423,53 +1423,53 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
 
 /*
  * Register : Modem Control Register - mcr
- * 
+ *
  * Reports various operations of the modem signals
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
- *  [0]    | RW     | 0x0   | Data Terminal Ready     
- *  [1]    | RW     | 0x0   | Request to Send         
- *  [2]    | RW     | 0x0   | Out1                    
- *  [3]    | RW     | 0x0   | out2                    
- *  [4]    | RW     | 0x0   | LoopBack Bit            
+ *  [0]    | RW     | 0x0   | Data Terminal Ready
+ *  [1]    | RW     | 0x0   | Request to Send
+ *  [2]    | RW     | 0x0   | Out1
+ *  [3]    | RW     | 0x0   | out2
+ *  [4]    | RW     | 0x0   | LoopBack Bit
  *  [5]    | RW     | 0x0   | Auto Flow Control Enable
- *  [31:6] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [31:6] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Data Terminal Ready - dtr
- * 
+ *
  * This is used to directly control the Data Terminal Ready output. The value
  * written to this location is inverted and driven out on uart_dtr_n, that is: The
  * Data Terminal Ready output is used to inform the modem or data set that the UART
  * is ready to establish communications.
- * 
+ *
  * Note that Loopback mode bit [4] of MCR is set to one, the uart_dtr_n output is
  * held inactive high while the value of this location is internally looped  back
  * to an input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                     
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:---------------------------------
  *  ALT_UART_MCR_DTR_E_LOGIC1 | 0x0   | uart_dtr_n de-asserted (logic 1)
- *  ALT_UART_MCR_DTR_E_LOGIC0 | 0x1   | uart_dtr_n asserted (logic 0)   
- * 
+ *  ALT_UART_MCR_DTR_E_LOGIC0 | 0x1   | uart_dtr_n asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MCR_DTR
- * 
+ *
  * uart_dtr_n de-asserted (logic 1)
  */
 #define ALT_UART_MCR_DTR_E_LOGIC1   0x0
 /*
  * Enumerated value for register field ALT_UART_MCR_DTR
- * 
+ *
  * uart_dtr_n asserted (logic 0)
  */
 #define ALT_UART_MCR_DTR_E_LOGIC0   0x1
@@ -1493,7 +1493,7 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
 
 /*
  * Field : Request to Send - rts
- * 
+ *
  * This is used to directly control the Request to Send (uart_rts_n) output. The
  * Request to Send (uart_rts_n) output is used to inform the modem or data set that
  * the UART is ready to exchange data. When Auto RTS Flow Control is not enabled
@@ -1503,30 +1503,30 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
  * but is also gated with the receiver FIFO threshold trigger (uart_rts_n is
  * inactive high when above the threshold). The uart_rts_n signal will be de-
  * asserted when MCR[1] is set low.
- * 
+ *
  * Note that in Loopback mode (MCR[4] set to one), the uart_rts_n output is held
  * inactive high while the value of this location is internally looped back to an
  * input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                     
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:---------------------------------
  *  ALT_UART_MCR_RTS_E_LOGIC1 | 0x0   | uart_rts_n de-asserted (logic 1)
- *  ALT_UART_MCR_RTS_E_LOGIC0 | 0x1   | uart_rts_n asserted (logic 0)   
- * 
+ *  ALT_UART_MCR_RTS_E_LOGIC0 | 0x1   | uart_rts_n asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MCR_RTS
- * 
+ *
  * uart_rts_n de-asserted (logic 1)
  */
 #define ALT_UART_MCR_RTS_E_LOGIC1   0x0
 /*
  * Enumerated value for register field ALT_UART_MCR_RTS
- * 
+ *
  * uart_rts_n asserted (logic 0)
  */
 #define ALT_UART_MCR_RTS_E_LOGIC0   0x1
@@ -1550,33 +1550,33 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
 
 /*
  * Field : Out1 - out1
- * 
+ *
  * The value written to this location is inverted and driven out on uart_out1_n
  * pin.
- * 
+ *
  * Note that in Loopback mode (MCR[4] set to one), the uart_out1_n output is held
  * inactive high while the value of this location is internally looped back to an
  * input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                      
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:----------------------------------
  *  ALT_UART_MCR_OUT1_E_LOGIC1 | 0x0   | uart_out1_n de-asserted (logic 1)
- *  ALT_UART_MCR_OUT1_E_LOGIC0 | 0x1   | uart_out1_n asserted (logic 0)   
- * 
+ *  ALT_UART_MCR_OUT1_E_LOGIC0 | 0x1   | uart_out1_n asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MCR_OUT1
- * 
+ *
  * uart_out1_n de-asserted (logic 1)
  */
 #define ALT_UART_MCR_OUT1_E_LOGIC1  0x0
 /*
  * Enumerated value for register field ALT_UART_MCR_OUT1
- * 
+ *
  * uart_out1_n asserted (logic 0)
  */
 #define ALT_UART_MCR_OUT1_E_LOGIC0  0x1
@@ -1600,33 +1600,33 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
 
 /*
  * Field : out2 - out2
- * 
+ *
  * This is used to directly control the user-designated uart_out2_n output. The
  * value written to this location is inverted and driven out on uart_out2_n
- * 
+ *
  * Note: In Loopback mode bit 4 of the modem control register (MCR) is set to one,
  * the uart_out2_n output is held inactive high while the value of this location is
  * internally looped back to an input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description                      
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:----------------------------------
  *  ALT_UART_MCR_OUT2_E_LOGIC1 | 0x0   | uart_out2_n de-asserted (logic 1)
- *  ALT_UART_MCR_OUT2_E_LOGIC0 | 0x1   | uart_out2_n asserted (logic 0)   
- * 
+ *  ALT_UART_MCR_OUT2_E_LOGIC0 | 0x1   | uart_out2_n asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MCR_OUT2
- * 
+ *
  * uart_out2_n de-asserted (logic 1)
  */
 #define ALT_UART_MCR_OUT2_E_LOGIC1  0x0
 /*
  * Enumerated value for register field ALT_UART_MCR_OUT2
- * 
+ *
  * uart_out2_n asserted (logic 0)
  */
 #define ALT_UART_MCR_OUT2_E_LOGIC0  0x1
@@ -1650,7 +1650,7 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
 
 /*
  * Field : LoopBack Bit - loopback
- * 
+ *
  * This is used to put the UART into a diagnostic mode for test purposes. If UART
  * mode is NOT active, bit [6] of the modem control register MCR is set to zero,
  * data on the sout line is held high, while serial data output is looped back to
@@ -1659,9 +1659,9 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
  * uart_ri_n, uart_dcd_n) are disconnected and the modem control outputs
  * (uart_dtr_n, uart_rts_n, uart_out1_n, uart_out2_n) are loopedback to the inputs,
  * internally.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_MCR_LOOPBACK register field. */
 #define ALT_UART_MCR_LOOPBACK_LSB        4
@@ -1682,28 +1682,28 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
 
 /*
  * Field : Auto Flow Control Enable - afce
- * 
+ *
  * When FIFOs are enabled, the Auto Flow Control enable bits are active.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description                    
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:--------------------------------
  *  ALT_UART_MCR_AFCE_E_DISD | 0x0   | Auto Flow Control Mode disabled
- *  ALT_UART_MCR_AFCE_E_END  | 0x1   | Auto Flow Control Mode enabled 
- * 
+ *  ALT_UART_MCR_AFCE_E_END  | 0x1   | Auto Flow Control Mode enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MCR_AFCE
- * 
+ *
  * Auto Flow Control Mode disabled
  */
 #define ALT_UART_MCR_AFCE_E_DISD    0x0
 /*
  * Enumerated value for register field ALT_UART_MCR_AFCE
- * 
+ *
  * Auto Flow Control Mode enabled
  */
 #define ALT_UART_MCR_AFCE_E_END     0x1
@@ -1733,7 +1733,7 @@ typedef volatile struct ALT_UART_LCR_s  ALT_UART_LCR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_MCR.
  */
 struct ALT_UART_MCR_s
@@ -1758,50 +1758,50 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Register : Line Status Register - lsr
- * 
+ *
  * Reports status of transmit and receive.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------------
- *  [0]    | R      | 0x0   | Data Ready bit                     
- *  [1]    | R      | 0x0   | Overrun error                      
- *  [2]    | R      | 0x0   | Parity Error                       
- *  [3]    | R      | 0x0   | Framing Error                      
- *  [4]    | R      | 0x0   | Break Interrupt                    
+ *  [0]    | R      | 0x0   | Data Ready bit
+ *  [1]    | R      | 0x0   | Overrun error
+ *  [2]    | R      | 0x0   | Parity Error
+ *  [3]    | R      | 0x0   | Framing Error
+ *  [4]    | R      | 0x0   | Break Interrupt
  *  [5]    | R      | 0x1   | Transmit Holding Register Empty bit
- *  [6]    | R      | 0x1   | Transmitter Empty bit              
- *  [7]    | R      | 0x0   | Receiver FIFO Error bit            
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                        
- * 
+ *  [6]    | R      | 0x1   | Transmitter Empty bit
+ *  [7]    | R      | 0x0   | Receiver FIFO Error bit
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Data Ready bit - dr
- * 
+ *
  * This is used to indicate that the receiver contains at least one character in
  * the RBR or the receiver FIFO. This bit is cleared when the RBR is read in the
  * non-FIFO mode, or when the receiver FIFO is empty, in the FIFO mode.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description  
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:--------------
  *  ALT_UART_LSR_DR_E_NODATARDY | 0x0   | no data ready
- *  ALT_UART_LSR_DR_E_DATARDY   | 0x1   | data ready   
- * 
+ *  ALT_UART_LSR_DR_E_DATARDY   | 0x1   | data ready
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LSR_DR
- * 
+ *
  * no data ready
  */
 #define ALT_UART_LSR_DR_E_NODATARDY 0x0
 /*
  * Enumerated value for register field ALT_UART_LSR_DR
- * 
+ *
  * data ready
  */
 #define ALT_UART_LSR_DR_E_DATARDY   0x1
@@ -1825,7 +1825,7 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Overrun error - oe
- * 
+ *
  * This is used to indicate the occurrence of an overrun error. This occurs if a
  * new data character was received before the previous data was read. In the non-
  * FIFO mode, the OE bit is set when a new character arrives in the receiver before
@@ -1834,26 +1834,26 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
  * full and new character arrives at the receiver. The data in the FIFO is retained
  * and the data in the receive shift register is lost.Reading the LSR clears the OE
  * bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description     
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------
  *  ALT_UART_LSR_OE_E_NOOVERRUN | 0x0   | no overrun error
- *  ALT_UART_LSR_OE_E_OVERRUN   | 0x1   | overrun error   
- * 
+ *  ALT_UART_LSR_OE_E_OVERRUN   | 0x1   | overrun error
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LSR_OE
- * 
+ *
  * no overrun error
  */
 #define ALT_UART_LSR_OE_E_NOOVERRUN 0x0
 /*
  * Enumerated value for register field ALT_UART_LSR_OE
- * 
+ *
  * overrun error
  */
 #define ALT_UART_LSR_OE_E_OVERRUN   0x1
@@ -1877,33 +1877,33 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Parity Error - pe
- * 
+ *
  * This is used to indicate the occurrence of a parity error in the receiver if the
  * Parity Enable (PEN) bit (LCR[3]) is set. Since the parity error is associated
  * with a character received, it is revealed when the character with the parity
  * error arrives at the top of the FIFO. It should be noted that the Parity Error
  * (PE) bit (LSR[2]) will be set if a break interrupt has occurred, as indicated by
  * Break Interrupt (BI) bit (LSR[4]). Reading the LSR clears the PE bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description    
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:----------------
  *  ALT_UART_LSR_PE_E_NOPARITYERR | 0x0   | no parity error
  *  ALT_UART_LSR_PE_E_PARITYERR   | 0x1   | no parity error
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LSR_PE
- * 
+ *
  * no parity error
  */
 #define ALT_UART_LSR_PE_E_NOPARITYERR   0x0
 /*
  * Enumerated value for register field ALT_UART_LSR_PE
- * 
+ *
  * no parity error
  */
 #define ALT_UART_LSR_PE_E_PARITYERR     0x1
@@ -1927,7 +1927,7 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Framing Error - fe
- * 
+ *
  * This is used to indicate the occurrence of a framing error in the receiver. A
  * framing error occurs when the receiver does not detect a valid STOP bit in the
  * received data. In the FIFO mode, since the framing error is associated with a
@@ -1938,26 +1938,26 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
  * and/or parity and stop. It should be noted that the Framing Error (FE)
  * bit(LSR[3]) will be set if a break interrupt has occurred, as indicated by a
  * Break Interrupt BIT bit (LSR[4]). Reading the LSR clears the FE bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description     
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------
  *  ALT_UART_LSR_FE_E_NOFRMERR | 0x0   | no framing error
- *  ALT_UART_LSR_FE_E_FRMERR   | 0x1   | framing error   
- * 
+ *  ALT_UART_LSR_FE_E_FRMERR   | 0x1   | framing error
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LSR_FE
- * 
+ *
  * no framing error
  */
 #define ALT_UART_LSR_FE_E_NOFRMERR  0x0
 /*
  * Enumerated value for register field ALT_UART_LSR_FE
- * 
+ *
  * framing error
  */
 #define ALT_UART_LSR_FE_E_FRMERR    0x1
@@ -1981,7 +1981,7 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Break Interrupt - bi
- * 
+ *
  * This is used to indicate the detection of a break sequence on the serial input
  * data.  Set whenever the serial input, sin, is held in a logic 0 state for longer
  * than the sum of start time + data bits + parity + stop bits. A break condition
@@ -1989,9 +1989,9 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
  * be received by the UART. The character associated with the break condition is
  * carried through the FIFO and is revealed when the character is at the top of the
  * FIFO. Reading the LSR clears the BI bit.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_LSR_BI register field. */
 #define ALT_UART_LSR_BI_LSB        4
@@ -2012,7 +2012,7 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Transmit Holding Register Empty bit - thre
- * 
+ *
  * If THRE mode is disabled (IER[7] set to zero) this bit indicates that the THR or
  * Tx FIFO is empty. This bit is set whenever data is transferred from the THR or
  * Tx FIFO to the transmitter shift register and no new data has been written to
@@ -2021,9 +2021,9 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
  * one and FCR[0] set to one respectively), the functionality will indicate the
  * transmitter FIFO is full, and no longer controls THRE interrupts, which are then
  * controlled by the FCR[5:4] thresholdsetting.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_LSR_THRE register field. */
 #define ALT_UART_LSR_THRE_LSB        5
@@ -2044,31 +2044,31 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Transmitter Empty bit - temt
- * 
+ *
  * If in FIFO mode and FIFO's enabled (FCR[0] set to one), this bit is set whenever
  * the Transmitter Shift Register and the FIFO are both empty. If FIFO's are
  * disabled, this bit is set whenever the Transmitter Holding Register and the
  * Transmitter Shift Register are both empty.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description           
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:-----------------------
  *  ALT_UART_LSR_TEMT_E_NOTEMPTY | 0x0   | Transmit Empty not set
- *  ALT_UART_LSR_TEMT_E_EMPTY    | 0x1   | Transmit Empty set    
- * 
+ *  ALT_UART_LSR_TEMT_E_EMPTY    | 0x1   | Transmit Empty set
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LSR_TEMT
- * 
+ *
  * Transmit Empty not set
  */
 #define ALT_UART_LSR_TEMT_E_NOTEMPTY    0x0
 /*
  * Enumerated value for register field ALT_UART_LSR_TEMT
- * 
+ *
  * Transmit Empty set
  */
 #define ALT_UART_LSR_TEMT_E_EMPTY       0x1
@@ -2092,32 +2092,32 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
 
 /*
  * Field : Receiver FIFO Error bit - rfe
- * 
+ *
  * This bit is only relevant when FIFO's are enabled (FCR[0] set to one). This is
  * used to indicate if there is at least one parity error, framing error, or break
  * indication in the FIFO. This bit is cleared when the LSR is read and the
  * character with the error is at the top of the receiver FIFO and there are no
  * subsequent errors in the FIFO.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description        
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:--------------------
  *  ALT_UART_LSR_RFE_E_NOERR | 0x0   | no error in Rx FIFO
- *  ALT_UART_LSR_RFE_E_ERR   | 0x1   | error in Rx FIFO   
- * 
+ *  ALT_UART_LSR_RFE_E_ERR   | 0x1   | error in Rx FIFO
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_LSR_RFE
- * 
+ *
  * no error in Rx FIFO
  */
 #define ALT_UART_LSR_RFE_E_NOERR    0x0
 /*
  * Enumerated value for register field ALT_UART_LSR_RFE
- * 
+ *
  * error in Rx FIFO
  */
 #define ALT_UART_LSR_RFE_E_ERR      0x1
@@ -2147,7 +2147,7 @@ typedef volatile struct ALT_UART_MCR_s  ALT_UART_MCR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_LSR.
  */
 struct ALT_UART_LSR_s
@@ -2174,60 +2174,60 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Register : Modem Status Register - msr
- * 
+ *
  * It should be noted that whenever bits 0, 1, 2 or 3 are set to logic one, to
  * indicate a change on the modem control inputs, a modem status interrupt will be
  * generated if enabled via the IER regardless of when the change occurred. Since
  * the delta bits (bits 0, 1, 3) can get set after a reset if their respective
  * modem signals are active (see individual bits for details), a read of the MSR
  * after reset can be performed to prevent unwanted interrupts.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
- *  [0]    | R      | 0x0   | Delta Clear to Send            
- *  [1]    | R      | 0x0   | Delta Data Set Ready           
+ *  [0]    | R      | 0x0   | Delta Clear to Send
+ *  [1]    | R      | 0x0   | Delta Data Set Ready
  *  [2]    | R      | 0x0   | Trailing Edge of Ring Indicator
- *  [3]    | R      | 0x0   | Delta Data Carrier Detect      
- *  [4]    | R      | 0x0   | Clear to Send                  
- *  [5]    | R      | 0x0   | Data Set Ready                 
- *  [6]    | R      | 0x0   | Ring Indicator                 
- *  [7]    | R      | 0x0   | Data Carrier Detect            
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [3]    | R      | 0x0   | Delta Data Carrier Detect
+ *  [4]    | R      | 0x0   | Clear to Send
+ *  [5]    | R      | 0x0   | Data Set Ready
+ *  [6]    | R      | 0x0   | Ring Indicator
+ *  [7]    | R      | 0x0   | Data Carrier Detect
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Delta Clear to Send - dcts
- * 
+ *
  * This is used to indicate that the modem control line uart_cts_n has changed
  * since the last time the MSR was read. That is: Reading the MSR clears the DCTS
  * bit. In Loopback Mode bit [4] of MCR set to one, DCTS reflects changes on bit
  * [1] RTS of register MCR.
- * 
+ *
  * Note: If the DCTS bit is not set and the uart_cts_n signal is asserted (low) and
  * a reset occurs (software or otherwise), then the DCTS bit will get set when the
  * reset is removed if the uart_cts_n signal remains asserted.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                                   
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-----------------------------------------------
  *  ALT_UART_MSR_DCTS_E_NOCHG | 0x0   | no change on uart_cts_n since last read of MSR
- *  ALT_UART_MSR_DCTS_E_CHG   | 0x1   | change on uart_cts_n since last read of MSR   
- * 
+ *  ALT_UART_MSR_DCTS_E_CHG   | 0x1   | change on uart_cts_n since last read of MSR
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_DCTS
- * 
+ *
  * no change on uart_cts_n since last read of MSR
  */
 #define ALT_UART_MSR_DCTS_E_NOCHG   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_DCTS
- * 
+ *
  * change on uart_cts_n since last read of MSR
  */
 #define ALT_UART_MSR_DCTS_E_CHG     0x1
@@ -2251,35 +2251,35 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Delta Data Set Ready - ddsr
- * 
+ *
  * This is used to indicate that the modem control line uart_dsr_n has changed
  * since the last time the MSR was read. Reading the MSR clears the DDSR bit.In
  * Loopback Mode (MCR[4] set to one), DDSR reflects changes on bit [0] DTR of
  * register MCR .
- * 
+ *
  * Note, if the DDSR bit is not set and the uart_dsr_n signal is asserted (low) and
  * a reset occurs (software or otherwise), then the DDSR bit will get set when the
  * reset is removed if the uart_dsr_n signal remains asserted.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                                   
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-----------------------------------------------
  *  ALT_UART_MSR_DDSR_E_NOCHG | 0x0   | no change on uart_dsr_n since last read of MSR
- *  ALT_UART_MSR_DDSR_E_CHG   | 0x1   | change on uart_dsr_n since last read of MSR   
- * 
+ *  ALT_UART_MSR_DDSR_E_CHG   | 0x1   | change on uart_dsr_n since last read of MSR
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_DDSR
- * 
+ *
  * no change on uart_dsr_n since last read of MSR
  */
 #define ALT_UART_MSR_DDSR_E_NOCHG   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_DDSR
- * 
+ *
  * change on uart_dsr_n since last read of MSR
  */
 #define ALT_UART_MSR_DDSR_E_CHG     0x1
@@ -2303,32 +2303,32 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Trailing Edge of Ring Indicator - teri
- * 
+ *
  * This is used to indicate that a change on the input uart_ri_n (from an active
  * low, to an inactive high state) has occurred since the last time the MSR was
  * read. Reading the MSR clears the TERI bit. In Loopback Mode bit [4] of register
  * MCR is set to one, TERI reflects when bit [2] of register MCR has changed state
  * from a high to a low.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                                  
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:----------------------------------------------
  *  ALT_UART_MSR_TERI_E_NOCHG | 0x0   | no change on uart_ri_n since last read of MSR
- *  ALT_UART_MSR_TERI_E_CHG   | 0x1   | change on uart_ri_n since last read of MSR   
- * 
+ *  ALT_UART_MSR_TERI_E_CHG   | 0x1   | change on uart_ri_n since last read of MSR
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_TERI
- * 
+ *
  * no change on uart_ri_n since last read of MSR
  */
 #define ALT_UART_MSR_TERI_E_NOCHG   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_TERI
- * 
+ *
  * change on uart_ri_n since last read of MSR
  */
 #define ALT_UART_MSR_TERI_E_CHG     0x1
@@ -2352,35 +2352,35 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Delta Data Carrier Detect - ddcd
- * 
+ *
  * This is used to indicate that the modem control line dcd_n has changed since the
  * last time the MSR was read. Reading the MSR clears the DDCD bit. In Loopback
  * Mode bit [4] of register MCR is set to one, DDCD reflects changes bit [3]
  * uart_out2 of register MCR.
- * 
+ *
  * Note: If the DDCD bit is not set and the uart_dcd_n signal is asserted (low) and
  * a reset occurs (software or otherwise), then the DDCD bit will get set when the
  * reset is removed if the uart_dcd_n signal remains asserted.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                                   
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-----------------------------------------------
  *  ALT_UART_MSR_DDCD_E_NOCHG | 0x0   | no change on uart_dcd_n since last read of MSR
- *  ALT_UART_MSR_DDCD_E_CHG   | 0x1   | change on uart_dcd_n since last read of MSR   
- * 
+ *  ALT_UART_MSR_DDCD_E_CHG   | 0x1   | change on uart_dcd_n since last read of MSR
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_DDCD
- * 
+ *
  * no change on uart_dcd_n since last read of MSR
  */
 #define ALT_UART_MSR_DDCD_E_NOCHG   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_DDCD
- * 
+ *
  * change on uart_dcd_n since last read of MSR
  */
 #define ALT_UART_MSR_DDCD_E_CHG     0x1
@@ -2404,32 +2404,32 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Clear to Send - cts
- * 
+ *
  * This is used to indicate the current state of the modem control line uart_cts_n.
  * That is, this bit is the complement uart_cts_n. When the Clear to Send input
  * (uart_cts_n) is asserted it is an indication that the modem or data set is ready
  * to exchange data with the uart. In Loopback Mode bit [4] of register MCR is set
  * to one, CTS is the same as bit [1] RTS of register MCR.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                              
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:------------------------------------------
  *  ALT_UART_MSR_CTS_E_LOGIC1 | 0x0   | uart_cts_n input is de-asserted (logic 1)
- *  ALT_UART_MSR_CTS_E_LOGIC0 | 0x1   | uart_cts_n input is asserted (logic 0)   
- * 
+ *  ALT_UART_MSR_CTS_E_LOGIC0 | 0x1   | uart_cts_n input is asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_CTS
- * 
+ *
  * uart_cts_n input is de-asserted (logic 1)
  */
 #define ALT_UART_MSR_CTS_E_LOGIC1   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_CTS
- * 
+ *
  * uart_cts_n input is asserted (logic 0)
  */
 #define ALT_UART_MSR_CTS_E_LOGIC0   0x1
@@ -2453,32 +2453,32 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Data Set Ready - dsr
- * 
+ *
  * This is used to indicate the current state of the modem control line uart_dsr_n.
  * That is this bit is the complement f uart_dsr_n. When the Data Set Ready input
  * (uart_dsr_n) is asserted it is an indication that the modem or data set is ready
  * to establish communications with the uart. In Loopback Mode bit [4] of register
  * MCR is set to one, DSR is the same as bit [0] (DTR) of register MCR.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                              
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:------------------------------------------
  *  ALT_UART_MSR_DSR_E_LOGIC1 | 0x0   | uart_dsr_n input is de-asserted (logic 1)
- *  ALT_UART_MSR_DSR_E_LOGIC0 | 0x1   | uart_dsr_n input is asserted (logic 0)   
- * 
+ *  ALT_UART_MSR_DSR_E_LOGIC0 | 0x1   | uart_dsr_n input is asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_DSR
- * 
+ *
  * uart_dsr_n input is de-asserted (logic 1)
  */
 #define ALT_UART_MSR_DSR_E_LOGIC1   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_DSR
- * 
+ *
  * uart_dsr_n input is asserted (logic 0)
  */
 #define ALT_UART_MSR_DSR_E_LOGIC0   0x1
@@ -2502,32 +2502,32 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Ring Indicator - ri
- * 
+ *
  * This bit is used to indicate the current state of the modem control line
  * uart_ri_n. That is this bit is the complement uart_ri_n. When the Ring Indicator
  * input (uart_ri_n) is asserted it is an indication that a telephone ringing
  * signal has been received by the modem or data set. In Loopback Mode bit [4] of
  * register MCR set to one, RI is the same as bit [2] uart_out1_n of register MCR.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description                             
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:-----------------------------------------
  *  ALT_UART_MSR_RI_E_LOGIC1 | 0x0   | uart_ri_n input is de-asserted (logic 1)
- *  ALT_UART_MSR_RI_E_LOGIC0 | 0x1   | uart_ri_n input is asserted (logic 0)   
- * 
+ *  ALT_UART_MSR_RI_E_LOGIC0 | 0x1   | uart_ri_n input is asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_RI
- * 
+ *
  * uart_ri_n input is de-asserted (logic 1)
  */
 #define ALT_UART_MSR_RI_E_LOGIC1    0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_RI
- * 
+ *
  * uart_ri_n input is asserted (logic 0)
  */
 #define ALT_UART_MSR_RI_E_LOGIC0    0x1
@@ -2551,32 +2551,32 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
 
 /*
  * Field : Data Carrier Detect - dcd
- * 
+ *
  * This is used to indicate the current state of the modem control line uart_dcd_n.
  * That is this bit is the complement uart_dcd_n. When the Data Carrier Detect
  * input (uart_dcd_n) is asserted it is an indication that the carrier has been
  * detected by the modem or data set. In Loopback Mode (MCR[4] set to one), DCD is
  * the same as MCR[3] (uart_out2).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                              
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:------------------------------------------
  *  ALT_UART_MSR_DCD_E_LOGIC1 | 0x0   | uart_dcd_n input is de-asserted (logic 1)
- *  ALT_UART_MSR_DCD_E_LOGIC0 | 0x1   | uart_dcd_n input is asserted (logic 0)   
- * 
+ *  ALT_UART_MSR_DCD_E_LOGIC0 | 0x1   | uart_dcd_n input is asserted (logic 0)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_MSR_DCD
- * 
+ *
  * uart_dcd_n input is de-asserted (logic 1)
  */
 #define ALT_UART_MSR_DCD_E_LOGIC1   0x0
 /*
  * Enumerated value for register field ALT_UART_MSR_DCD
- * 
+ *
  * uart_dcd_n input is asserted (logic 0)
  */
 #define ALT_UART_MSR_DCD_E_LOGIC0   0x1
@@ -2606,7 +2606,7 @@ typedef volatile struct ALT_UART_LSR_s  ALT_UART_LSR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_MSR.
  */
 struct ALT_UART_MSR_s
@@ -2633,24 +2633,24 @@ typedef volatile struct ALT_UART_MSR_s  ALT_UART_MSR_t;
 
 /*
  * Register : Scratchpad Register - scr
- * 
+ *
  * Scratchpad Register
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
  *  [7:0]  | RW     | 0x0   | Scratchpad Register
- *  [31:8] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Scratchpad Register - scr
- * 
+ *
  * This register is for programmers to use as a temporary storage space.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_SCR_SCR register field. */
 #define ALT_UART_SCR_SCR_LSB        0
@@ -2677,7 +2677,7 @@ typedef volatile struct ALT_UART_MSR_s  ALT_UART_MSR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SCR.
  */
 struct ALT_UART_SCR_s
@@ -2697,20 +2697,20 @@ typedef volatile struct ALT_UART_SCR_s  ALT_UART_SCR_t;
 
 /*
  * Register : Shadow Receive Buffer Register - srbr
- * 
+ *
  * Used to accomadate burst accesses from the master.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [7:0]  | RW     | 0x0   | Shadow Receive Buffer
- *  [31:8] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow Receive Buffer - srbr
- * 
+ *
  * This is a shadow register for the RBR and has been allocated one 32-bit location
  * so as to accommodate burst accesses from the master.This register contains the
  * data byte received on the serial input port (sin). The data in this register is
@@ -2722,9 +2722,9 @@ typedef volatile struct ALT_UART_SCR_s  ALT_UART_SCR_t;
  * this register is not read before the next data character arrives, then the data
  * already in the FIFO will be preserved but any incoming data will be lost. An
  * overrun error will also occur.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_SRBR_SRBR register field. */
 #define ALT_UART_SRBR_SRBR_LSB        0
@@ -2751,7 +2751,7 @@ typedef volatile struct ALT_UART_SCR_s  ALT_UART_SCR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SRBR.
  */
 struct ALT_UART_SRBR_s
@@ -2771,20 +2771,20 @@ typedef volatile struct ALT_UART_SRBR_s  ALT_UART_SRBR_t;
 
 /*
  * Register : Shadow Transmit Buffer Register - sthr
- * 
+ *
  * Used to accomadate burst accesses from the master.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
  *  [7:0]  | RW     | 0x0   | Shadow Transmit Buffer
- *  [31:8] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow Transmit Buffer - sthr
- * 
+ *
  * This is a shadow register for the THR and has been allocated sixteen 32-bit
  * locations so as to accommodate burst accesses from the master. This register
  * contains data to be transmitted on the serial output port (sout). Data should
@@ -2796,9 +2796,9 @@ typedef volatile struct ALT_UART_SRBR_s  ALT_UART_SRBR_t;
  * of data may be written to the THR before the FIFO is full. The UART FIFO depth
  * is configured for 128 characters. Any attempt to write data when the FIFO is
  * full results in the write data being lost.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_STHR_STHR register field. */
 #define ALT_UART_STHR_STHR_LSB        0
@@ -2825,7 +2825,7 @@ typedef volatile struct ALT_UART_SRBR_s  ALT_UART_SRBR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_STHR.
  */
 struct ALT_UART_STHR_s
@@ -2845,47 +2845,47 @@ typedef volatile struct ALT_UART_STHR_s  ALT_UART_STHR_t;
 
 /*
  * Register : FIFO Access Register - far
- * 
+ *
  * This register is used in FIFO access testing.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [0]    | RW     | 0x0   | FIFO ACCESS Bit
- *  [31:1] | ???    | 0x0   | *UNDEFINED*    
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : FIFO ACCESS Bit - srbr_sthr
- * 
+ *
  * This register is used to enable a FIFO access mode for testing, so that the
  * receive FIFO can be written by the master and the transmit FIFO can be read by
  * the master when FIFO's are enabled. When FIFO's are not enabled it allows the
  * RBR to be written by the master and the THR to be read by the master
- * 
+ *
  * Note: That when the FIFO access mode is enabled/disabled, the control portion of
  * the receive FIFO and transmit FIFO is reset and the FIFO's are treated as empty.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description              
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:--------------------------
  *  ALT_UART_FAR_SRBR_STHR_E_DISD | 0x0   | FIFO access mode disabled
- *  ALT_UART_FAR_SRBR_STHR_E_END  | 0x1   | FIFO access mode enabled 
- * 
+ *  ALT_UART_FAR_SRBR_STHR_E_END  | 0x1   | FIFO access mode enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_FAR_SRBR_STHR
- * 
+ *
  * FIFO access mode disabled
  */
 #define ALT_UART_FAR_SRBR_STHR_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_UART_FAR_SRBR_STHR
- * 
+ *
  * FIFO access mode enabled
  */
 #define ALT_UART_FAR_SRBR_STHR_E_END    0x1
@@ -2915,7 +2915,7 @@ typedef volatile struct ALT_UART_STHR_s  ALT_UART_STHR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_FAR.
  */
 struct ALT_UART_FAR_s
@@ -2935,28 +2935,28 @@ typedef volatile struct ALT_UART_FAR_s  ALT_UART_FAR_t;
 
 /*
  * Register : Transmit FIFO Read Register - tfr
- * 
+ *
  * Used in FIFO Access test mode.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description       
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------
  *  [7:0]  | R      | 0x0   | Transmit FIFO Read
- *  [31:8] | ???    | 0x0   | *UNDEFINED*       
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Read - tfr
- * 
+ *
  * These bits are only valid when FIFO access mode is enabled (FAR[0] is set to
  * one). When FIFO's are enabled, reading this register gives the data at the top
  * of the transmit FIFO. Each consecutive read pops the transmit FIFO and gives the
  * next data value that is currently at the top of the FIFO. When FIFO's are not
  * enabled, reading this register gives the data in the THR.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_TFR_TFR register field. */
 #define ALT_UART_TFR_TFR_LSB        0
@@ -2983,7 +2983,7 @@ typedef volatile struct ALT_UART_FAR_s  ALT_UART_FAR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_TFR.
  */
 struct ALT_UART_TFR_s
@@ -3003,30 +3003,30 @@ typedef volatile struct ALT_UART_TFR_s  ALT_UART_TFR_t;
 
 /*
  * Register : Receive FIFO Write - RFW
- * 
+ *
  * Used only with FIFO access test mode.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description               
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------
- *  [7:0]   | W      | 0x0   | Receive FIFO Write Field  
- *  [8]     | W      | 0x0   | Receive FIFO Parity Error 
+ *  [7:0]   | W      | 0x0   | Receive FIFO Write Field
+ *  [8]     | W      | 0x0   | Receive FIFO Parity Error
  *  [9]     | W      | 0x0   | Receive FIFO Framing Error
- *  [31:10] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:10] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Receive FIFO Write Field - rfwd
- * 
+ *
  * These bits are only valid when FIFO access mode is enabled (FAR[0] is set to
  * one). When FIFO's are enabled, the data that is written to the RFWD is pushed
  * into the receive FIFO. Each consecutive write pushes the new data to the next
  * write location in the receive FIFO. When FIFO's are not enabled, the data that
  * is written to the RFWD is pushed into the RBR.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_RFW_RFWD register field. */
 #define ALT_UART_RFW_RFWD_LSB        0
@@ -3047,14 +3047,14 @@ typedef volatile struct ALT_UART_TFR_s  ALT_UART_TFR_t;
 
 /*
  * Field : Receive FIFO Parity Error - rfpe
- * 
+ *
  * These bits are only valid when FIFO access mode is enabled (FAR[0] is set to
  * one). When FIFO's are enabled, this bit is used to write parity error detection
  * information to the receive FIFO. When FIFO's are not enabled, this bit is used
  * to write parity error detection information to the RBR.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_RFW_RFPE register field. */
 #define ALT_UART_RFW_RFPE_LSB        8
@@ -3075,14 +3075,14 @@ typedef volatile struct ALT_UART_TFR_s  ALT_UART_TFR_t;
 
 /*
  * Field : Receive FIFO Framing Error - RFFE
- * 
+ *
  * These bits are only valid when FIFO access mode is enabled (FAR[0] is set to
  * one). When FIFO's are enabled, this bit is used to write framing error detection
  * information to the receive FIFO. When FIFO's are not enabled, this bit is used
  * to write framing error detection information to the RBR.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_RFW_RFFE register field. */
 #define ALT_UART_RFW_RFFE_LSB        9
@@ -3109,7 +3109,7 @@ typedef volatile struct ALT_UART_TFR_s  ALT_UART_TFR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_RFW.
  */
 struct ALT_UART_RFW_s
@@ -3131,46 +3131,46 @@ typedef volatile struct ALT_UART_RFW_s  ALT_UART_RFW_t;
 
 /*
  * Register : UART Status Register - usr
- * 
+ *
  * Status of FIFO Operations.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
- *  [0]    | ???    | 0x0   | *UNDEFINED*           
+ *  [0]    | ???    | 0x0   | *UNDEFINED*
  *  [1]    | R      | 0x1   | Transmit FIFO Not Full
- *  [2]    | R      | 0x1   | Transmit FIFO Empty   
+ *  [2]    | R      | 0x1   | Transmit FIFO Empty
  *  [3]    | R      | 0x0   | Receive FIFO Not Empty
- *  [4]    | R      | 0x0   | Receive FIFO Full     
- *  [31:5] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [4]    | R      | 0x0   | Receive FIFO Full
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Not Full - tfnf
- * 
+ *
  * This Bit is used to indicate that the transmit FIFO in not full. This bit is
  * cleared when the Tx FIFO is full.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description              
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:--------------------------
- *  ALT_UART_USR_TFNF_E_FULL    | 0x0   | Transmit FIFO is full    
+ *  ALT_UART_USR_TFNF_E_FULL    | 0x0   | Transmit FIFO is full
  *  ALT_UART_USR_TFNF_E_NOTFULL | 0x1   | Transmit FIFO is not full
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_USR_TFNF
- * 
+ *
  * Transmit FIFO is full
  */
 #define ALT_UART_USR_TFNF_E_FULL    0x0
 /*
  * Enumerated value for register field ALT_UART_USR_TFNF
- * 
+ *
  * Transmit FIFO is not full
  */
 #define ALT_UART_USR_TFNF_E_NOTFULL 0x1
@@ -3194,29 +3194,29 @@ typedef volatile struct ALT_UART_RFW_s  ALT_UART_RFW_t;
 
 /*
  * Field : Transmit FIFO Empty - tfe
- * 
+ *
  * This is used to indicate that the transmit FIFO is completely empty. This bit is
  * cleared when the Tx FIFO is no longer empty.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description               
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:---------------------------
  *  ALT_UART_USR_TFE_E_NOTEMPTY | 0x0   | Transmit FIFO is not empty
- *  ALT_UART_USR_TFE_E_EMPTY    | 0x1   | Transmit FIFO is empty    
- * 
+ *  ALT_UART_USR_TFE_E_EMPTY    | 0x1   | Transmit FIFO is empty
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_USR_TFE
- * 
+ *
  * Transmit FIFO is not empty
  */
 #define ALT_UART_USR_TFE_E_NOTEMPTY 0x0
 /*
  * Enumerated value for register field ALT_UART_USR_TFE
- * 
+ *
  * Transmit FIFO is empty
  */
 #define ALT_UART_USR_TFE_E_EMPTY    0x1
@@ -3240,29 +3240,29 @@ typedef volatile struct ALT_UART_RFW_s  ALT_UART_RFW_t;
 
 /*
  * Field : Receive FIFO Not Empty - rfne
- * 
+ *
  * This Bit is used to indicate that the receive FIFO contains one or more entries.
  * This bit is cleared when the Rx FIFO is empty.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description              
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------------
- *  ALT_UART_USR_RFNE_E_EMPTY    | 0x0   | Receiive FIFO is empty   
+ *  ALT_UART_USR_RFNE_E_EMPTY    | 0x0   | Receiive FIFO is empty
  *  ALT_UART_USR_RFNE_E_NOTEMPTY | 0x1   | Receive FIFO is not empty
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_USR_RFNE
- * 
+ *
  * Receiive FIFO is empty
  */
 #define ALT_UART_USR_RFNE_E_EMPTY       0x0
 /*
  * Enumerated value for register field ALT_UART_USR_RFNE
- * 
+ *
  * Receive FIFO is not empty
  */
 #define ALT_UART_USR_RFNE_E_NOTEMPTY    0x1
@@ -3286,29 +3286,29 @@ typedef volatile struct ALT_UART_RFW_s  ALT_UART_RFW_t;
 
 /*
  * Field : Receive FIFO Full - rff
- * 
+ *
  * This Bit is used to indicate that the receive FIFO is completely full. This bit
  * is cleared when the Rx FIFO is no longer full.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                       | Value | Description           
+ *
+ *  Enum                       | Value | Description
  * :---------------------------|:------|:-----------------------
  *  ALT_UART_USR_RFF_E_NOTFULL | 0x0   | Receiive FIFO not full
- *  ALT_UART_USR_RFF_E_FULL    | 0x1   | Transmit FIFO is full 
- * 
+ *  ALT_UART_USR_RFF_E_FULL    | 0x1   | Transmit FIFO is full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_USR_RFF
- * 
+ *
  * Receiive FIFO not full
  */
 #define ALT_UART_USR_RFF_E_NOTFULL  0x0
 /*
  * Enumerated value for register field ALT_UART_USR_RFF
- * 
+ *
  * Transmit FIFO is full
  */
 #define ALT_UART_USR_RFF_E_FULL     0x1
@@ -3338,7 +3338,7 @@ typedef volatile struct ALT_UART_RFW_s  ALT_UART_RFW_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_USR.
  */
 struct ALT_UART_USR_s
@@ -3362,25 +3362,25 @@ typedef volatile struct ALT_UART_USR_s  ALT_UART_USR_t;
 
 /*
  * Register : Transmit FIFO Level - tfl
- * 
+ *
  * This register is used to specify the number of data entries in the Tx FIFO.
  * Status Bits in USR register monitor the FIFO state.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
  *  [4:0]  | R      | 0x0   | Transmit FIFO Level
- *  [31:5] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Transmit FIFO Level - tfl
- * 
+ *
  * This indicates the number of data entries in the transmit FIFO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_TFL_TFL register field. */
 #define ALT_UART_TFL_TFL_LSB        0
@@ -3407,7 +3407,7 @@ typedef volatile struct ALT_UART_USR_s  ALT_UART_USR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_TFL.
  */
 struct ALT_UART_TFL_s
@@ -3427,25 +3427,25 @@ typedef volatile struct ALT_UART_TFL_s  ALT_UART_TFL_t;
 
 /*
  * Register : Receive FIFO Level Write - rfl
- * 
+ *
  * This register is used to specify the number of data entries in the Tx FIFO.
  * Status Bits in USR register monitor the FIFO state.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description              
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------
  *  [4:0]  | R      | 0x0   | Receive FIFO Level Status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*              
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Receive FIFO Level Status - rfl
- * 
+ *
  * This indicates the number of data entries in the receive FIFO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_RFL_RFL register field. */
 #define ALT_UART_RFL_RFL_LSB        0
@@ -3472,7 +3472,7 @@ typedef volatile struct ALT_UART_TFL_s  ALT_UART_TFL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_RFL.
  */
 struct ALT_UART_RFL_s
@@ -3492,44 +3492,44 @@ typedef volatile struct ALT_UART_RFL_s  ALT_UART_RFL_t;
 
 /*
  * Register : Software Reset Register - srr
- * 
+ *
  * Provides Software Resets for Tx/Rx FIFO's and the uart.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------
- *  [0]    | W      | 0x0   | UART Reset   
+ *  [0]    | W      | 0x0   | UART Reset
  *  [1]    | W      | 0x0   | Rx FIFO Reset
  *  [2]    | W      | 0x0   | Tx FIFO Reset
- *  [31:3] | ???    | 0x0   | *UNDEFINED*  
- * 
+ *  [31:3] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : UART Reset - ur
- * 
+ *
  * This asynchronously resets the UART and synchronously removes the reset
  * assertion.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                    | Value | Description  
+ *
+ *  Enum                    | Value | Description
  * :------------------------|:------|:--------------
  *  ALT_UART_SRR_UR_E_NORST | 0x0   | No reset Uart
- *  ALT_UART_SRR_UR_E_RST   | 0x1   | Reset Uart   
- * 
+ *  ALT_UART_SRR_UR_E_RST   | 0x1   | Reset Uart
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SRR_UR
- * 
+ *
  * No reset Uart
  */
 #define ALT_UART_SRR_UR_E_NORST 0x0
 /*
  * Enumerated value for register field ALT_UART_SRR_UR
- * 
+ *
  * Reset Uart
  */
 #define ALT_UART_SRR_UR_E_RST   0x1
@@ -3553,33 +3553,33 @@ typedef volatile struct ALT_UART_RFL_s  ALT_UART_RFL_t;
 
 /*
  * Field : Rx FIFO Reset - rfr
- * 
+ *
  * This is a shadow register for the Rx  FIFO Reset bit (FCR[1]). This can be used
  * to remove the burden on software having to store previously written FCR values
  * (which are pretty static) just to reset the receive FIFO. This resets the
  * control portion of the receive FIFO and treats the FIFO as empty. This will also
  * de-assert the DMA Rx request and single signals. Note that this bit is 'self-
  * clearing' and it is not necessary to clear this bit.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description     
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:-----------------
  *  ALT_UART_SRR_RFR_E_NORST | 0x0   | No reset Rx FIFO
- *  ALT_UART_SRR_RFR_E_RST   | 0x1   | Reset Rx FIFO   
- * 
+ *  ALT_UART_SRR_RFR_E_RST   | 0x1   | Reset Rx FIFO
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SRR_RFR
- * 
+ *
  * No reset Rx FIFO
  */
 #define ALT_UART_SRR_RFR_E_NORST    0x0
 /*
  * Enumerated value for register field ALT_UART_SRR_RFR
- * 
+ *
  * Reset Rx FIFO
  */
 #define ALT_UART_SRR_RFR_E_RST      0x1
@@ -3603,32 +3603,32 @@ typedef volatile struct ALT_UART_RFL_s  ALT_UART_RFL_t;
 
 /*
  * Field : Tx FIFO Reset - xfr
- * 
+ *
  * This is a  shadow register forthe Tx FIFO Reset bit (FCR[2]). This can be used
  * to remove the burden on software having to store previously written FCR values
  * (which are pretty static) just to reset the transmit FIFO.This resets the
  * control portion of the transmit FIFO and treats the FIFO as empty. This will
  * also de-assert the DMA Tx request and single signals.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                     | Value | Description     
+ *
+ *  Enum                     | Value | Description
  * :-------------------------|:------|:-----------------
  *  ALT_UART_SRR_XFR_E_NORST | 0x0   | No reset Tx FIFO
- *  ALT_UART_SRR_XFR_E_RST   | 0x1   | Reset Tx FIFO   
- * 
+ *  ALT_UART_SRR_XFR_E_RST   | 0x1   | Reset Tx FIFO
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SRR_XFR
- * 
+ *
  * No reset Tx FIFO
  */
 #define ALT_UART_SRR_XFR_E_NORST    0x0
 /*
  * Enumerated value for register field ALT_UART_SRR_XFR
- * 
+ *
  * Reset Tx FIFO
  */
 #define ALT_UART_SRR_XFR_E_RST      0x1
@@ -3658,7 +3658,7 @@ typedef volatile struct ALT_UART_RFL_s  ALT_UART_RFL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SRR.
  */
 struct ALT_UART_SRR_s
@@ -3680,21 +3680,21 @@ typedef volatile struct ALT_UART_SRR_s  ALT_UART_SRR_t;
 
 /*
  * Register : Shadow Request to Send - srts
- * 
+ *
  * This is a shadow register for the RTS status (MCR[1]), this can be used to
  * remove the burden of having to performing a read modify write on the MCR.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
  *  [0]    | RW     | 0x0   | Shadow Request to Send
- *  [31:1] | ???    | 0x0   | *UNDEFINED*           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow Request to Send - srts
- * 
+ *
  * This is used to directly control the Request to Send (uart_rts_n) output. The
  * Request to Send (uart_rts_n) output is used to inform the modem or data set that
  * the UART is read to exchange data. The uart_rts_n signal is set low by
@@ -3702,30 +3702,30 @@ typedef volatile struct ALT_UART_SRR_s  ALT_UART_SRR_t;
  * and FIFO's are enabled (FCR[0] set to one), the uart_rts_n output is controlled
  * in the same way, but is also gated with the receiver FIFO threshold trigger
  * (uart_rts_n is inactive high when above the threshold).
- * 
+ *
  * Note that in Loopback mode (MCR[4] set to one), the uart_rts_n output is held
  * inactive high while the value of this location is internally looped back to an
  * input.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description      
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:------------------
  *  ALT_UART_SRTS_SRTS_E_LOGIC0 | 0x1   | uart_rts_n logic0
  *  ALT_UART_SRTS_SRTS_E_LOGIC1 | 0x0   | uart_rts_n logic1
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SRTS_SRTS
- * 
+ *
  * uart_rts_n logic0
  */
 #define ALT_UART_SRTS_SRTS_E_LOGIC0 0x1
 /*
  * Enumerated value for register field ALT_UART_SRTS_SRTS
- * 
+ *
  * uart_rts_n logic1
  */
 #define ALT_UART_SRTS_SRTS_E_LOGIC1 0x0
@@ -3755,7 +3755,7 @@ typedef volatile struct ALT_UART_SRR_s  ALT_UART_SRR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SRTS.
  */
 struct ALT_UART_SRTS_s
@@ -3775,47 +3775,47 @@ typedef volatile struct ALT_UART_SRTS_s  ALT_UART_SRTS_t;
 
 /*
  * Register : Shadow Break Control Register - sbcr
- * 
+ *
  * This is a shadow register for the Break bit [6] of the register LCR. This can be
  * used to remove the burden of having to performing a read modify write on the
  * LCR.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------
  *  [0]    | RW     | 0x0   | Shadow Break Control
- *  [31:1] | ???    | 0x0   | *UNDEFINED*         
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow Break Control - sbcr
- * 
+ *
  * This is used to cause a break condition to be transmitted to the receiving
  * device. If set to one the serial output is forced to the spacing (logic 0)
  * state. When not in Loopback Mode, as determined by MCR[4], the uart_txd line is
  * forced low until the Break bit is cleared. When in Loopback Mode, the break
  * condition is internally looped back to the receiver.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:----------------------------
- *  ALT_UART_SBCR_SBCR_E_DISD | 0x0   | no break                   
+ *  ALT_UART_SBCR_SBCR_E_DISD | 0x0   | no break
  *  ALT_UART_SBCR_SBCR_E_END  | 0x1   | break serial output spacing
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SBCR_SBCR
- * 
+ *
  * no break
  */
 #define ALT_UART_SBCR_SBCR_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_UART_SBCR_SBCR
- * 
+ *
  * break serial output spacing
  */
 #define ALT_UART_SBCR_SBCR_E_END    0x1
@@ -3845,7 +3845,7 @@ typedef volatile struct ALT_UART_SRTS_s  ALT_UART_SRTS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SBCR.
  */
 struct ALT_UART_SBCR_s
@@ -3865,43 +3865,43 @@ typedef volatile struct ALT_UART_SBCR_s  ALT_UART_SBCR_t;
 
 /*
  * Register : Shadow DMA Mode - sdmam
- * 
+ *
  * This is a shadow register for the DMA mode bit (FCR[3]).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [0]    | RW     | 0x0   | Shadow DMA Mode
- *  [31:1] | ???    | 0x0   | *UNDEFINED*    
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow DMA Mode - sdmam
- * 
+ *
  * This can be used to remove the burden of having to store the previously written
  * value to the FCR in memory and having to mask this value so that only the DMA
  * Mode bit gets updated.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description               
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:---------------------------
- *  ALT_UART_SDMAM_SDMAM_E_SINGLE | 0x0   | Single DMA Transfer Mode  
+ *  ALT_UART_SDMAM_SDMAM_E_SINGLE | 0x0   | Single DMA Transfer Mode
  *  ALT_UART_SDMAM_SDMAM_E_MULT   | 0x1   | Multiple DMA Transfer Mode
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SDMAM_SDMAM
- * 
+ *
  * Single DMA Transfer Mode
  */
 #define ALT_UART_SDMAM_SDMAM_E_SINGLE   0x0
 /*
  * Enumerated value for register field ALT_UART_SDMAM_SDMAM
- * 
+ *
  * Multiple DMA Transfer Mode
  */
 #define ALT_UART_SDMAM_SDMAM_E_MULT     0x1
@@ -3931,7 +3931,7 @@ typedef volatile struct ALT_UART_SBCR_s  ALT_UART_SBCR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SDMAM.
  */
 struct ALT_UART_SDMAM_s
@@ -3951,45 +3951,45 @@ typedef volatile struct ALT_UART_SDMAM_s  ALT_UART_SDMAM_t;
 
 /*
  * Register : Shadow FIFO Enable - sfe
- * 
+ *
  * This is a shadow register for the FIFO enable bit [0] of register FCR.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description       
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------
  *  [0]    | RW     | 0x0   | Shadow FIFO Enable
- *  [31:1] | ???    | 0x0   | *UNDEFINED*       
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow FIFO Enable - sfe
- * 
+ *
  * This can be used to remove the burden of having to store the previously written
  * value to the FCR in memory and having to mask this value so that only the FIFO
  * enable bit gets updated. This enables/disables the transmit (Tx) and receive (Rx
  * ) FIFO's. If this bit is set to zero (disabled) after being enabled then both
  * the Tx and Rx  controller portion of FIFO's will be reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                    | Value | Description  
+ *
+ *  Enum                    | Value | Description
  * :------------------------|:------|:--------------
  *  ALT_UART_SFE_SFE_E_DISD | 0x0   | Disable Rx/Tx
- *  ALT_UART_SFE_SFE_E_END  | 0x1   | Enable Rx/Tx 
- * 
+ *  ALT_UART_SFE_SFE_E_END  | 0x1   | Enable Rx/Tx
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SFE_SFE
- * 
+ *
  * Disable Rx/Tx
  */
 #define ALT_UART_SFE_SFE_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_UART_SFE_SFE
- * 
+ *
  * Enable Rx/Tx
  */
 #define ALT_UART_SFE_SFE_E_END  0x1
@@ -4019,7 +4019,7 @@ typedef volatile struct ALT_UART_SDMAM_s  ALT_UART_SDMAM_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SFE.
  */
 struct ALT_UART_SFE_s
@@ -4039,20 +4039,20 @@ typedef volatile struct ALT_UART_SFE_s  ALT_UART_SFE_t;
 
 /*
  * Register : Shadow Rx Trigger - srt
- * 
+ *
  * This is a shadow register for the Rx trigger bits (FCR[7:6]).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [1:0]  | RW     | 0x0   | Shadow Rx  Trigger Bits
- *  [31:2] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow Rx  Trigger Bits - srt
- * 
+ *
  * This can be used to remove the burden of having to store the previously written
  * value to the FCR in memory and having to mask this value so that only the Rx
  * trigger bit gets updated. This is used to select the trigger level in the
@@ -4060,40 +4060,40 @@ typedef volatile struct ALT_UART_SFE_s  ALT_UART_SFE_t;
  * It also determines when the uart_dma_rx_req_n signal will be asserted when DMA
  * Mode (FCR[3]) is set to one. The enum below shows trigger levels that are
  * supported.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description          
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:----------------------
  *  ALT_UART_SRT_SRT_E_ONECHAR     | 0x0   | one character in fifo
- *  ALT_UART_SRT_SRT_E_QUARTERFULL | 0x1   | FIFO 1/4 full        
- *  ALT_UART_SRT_SRT_E_HALFFULL    | 0x2   | FIFO 1/2 full        
+ *  ALT_UART_SRT_SRT_E_QUARTERFULL | 0x1   | FIFO 1/4 full
+ *  ALT_UART_SRT_SRT_E_HALFFULL    | 0x2   | FIFO 1/2 full
  *  ALT_UART_SRT_SRT_E_FULLLESS2   | 0x3   | FIFO 2 less than full
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_SRT_SRT
- * 
+ *
  * one character in fifo
  */
 #define ALT_UART_SRT_SRT_E_ONECHAR      0x0
 /*
  * Enumerated value for register field ALT_UART_SRT_SRT
- * 
+ *
  * FIFO 1/4 full
  */
 #define ALT_UART_SRT_SRT_E_QUARTERFULL  0x1
 /*
  * Enumerated value for register field ALT_UART_SRT_SRT
- * 
+ *
  * FIFO 1/2 full
  */
 #define ALT_UART_SRT_SRT_E_HALFFULL     0x2
 /*
  * Enumerated value for register field ALT_UART_SRT_SRT
- * 
+ *
  * FIFO 2 less than full
  */
 #define ALT_UART_SRT_SRT_E_FULLLESS2    0x3
@@ -4123,7 +4123,7 @@ typedef volatile struct ALT_UART_SFE_s  ALT_UART_SFE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_SRT.
  */
 struct ALT_UART_SRT_s
@@ -4143,59 +4143,59 @@ typedef volatile struct ALT_UART_SRT_s  ALT_UART_SRT_t;
 
 /*
  * Register : Shadow Tx Empty Trigger - stet
- * 
+ *
  * This is a shadow register for the Tx empty trigger bits (FCR[5:4]).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | Shadow Tx Empty Trigger Bits
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Shadow Tx Empty Trigger Bits - stet
- * 
+ *
  * This can be used to remove the burden of having to store the previously written
  * value to the FCR in memory and having to mask this value so that only the Tx
  * empty trigger bit gets updated. This is used to select the empty threshold level
  * at which the THRE Interrupts will be generated when the mode is active. These
  * threshold levels are also described in. The enum trigger levels are supported.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description           
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:-----------------------
- *  ALT_UART_STET_STET_E_FIFOEMPTY   | 0x0   | FIFO empty            
+ *  ALT_UART_STET_STET_E_FIFOEMPTY   | 0x0   | FIFO empty
  *  ALT_UART_STET_STET_E_TWOCHARS    | 0x1   | Two characters in FIFO
- *  ALT_UART_STET_STET_E_QUARTERFULL | 0x2   | FIFO quarter full     
- *  ALT_UART_STET_STET_E_HALFFULL    | 0x3   | FIFO half full        
- * 
+ *  ALT_UART_STET_STET_E_QUARTERFULL | 0x2   | FIFO quarter full
+ *  ALT_UART_STET_STET_E_HALFFULL    | 0x3   | FIFO half full
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_STET_STET
- * 
+ *
  * FIFO empty
  */
 #define ALT_UART_STET_STET_E_FIFOEMPTY      0x0
 /*
  * Enumerated value for register field ALT_UART_STET_STET
- * 
+ *
  * Two characters in FIFO
  */
 #define ALT_UART_STET_STET_E_TWOCHARS       0x1
 /*
  * Enumerated value for register field ALT_UART_STET_STET
- * 
+ *
  * FIFO quarter full
  */
 #define ALT_UART_STET_STET_E_QUARTERFULL    0x2
 /*
  * Enumerated value for register field ALT_UART_STET_STET
- * 
+ *
  * FIFO half full
  */
 #define ALT_UART_STET_STET_E_HALFFULL       0x3
@@ -4225,7 +4225,7 @@ typedef volatile struct ALT_UART_SRT_s  ALT_UART_SRT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_STET.
  */
 struct ALT_UART_STET_s
@@ -4245,45 +4245,45 @@ typedef volatile struct ALT_UART_STET_s  ALT_UART_STET_t;
 
 /*
  * Register : Halt Tx - htx
- * 
+ *
  * Used to halt transmission for testing.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [0]    | RW     | 0x0   | Halt Tx Bits
- *  [31:1] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Halt Tx Bits - htx
- * 
+ *
  * This register is use to halt transmissions for testing, so that the transmit
  * FIFO can be filled by the master when FIFO's are enabled.
- * 
+ *
  * Note, if FIFO's are not enabled, the setting of the halt Tx register will have
  * no effect on operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                    | Value | Description     
+ *
+ *  Enum                    | Value | Description
  * :------------------------|:------|:-----------------
  *  ALT_UART_HTX_HTX_E_DISD | 0x0   | Halt Tx disabled
- *  ALT_UART_HTX_HTX_E_END  | 0x1   | Halt Tx enabled 
- * 
+ *  ALT_UART_HTX_HTX_E_END  | 0x1   | Halt Tx enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_HTX_HTX
- * 
+ *
  * Halt Tx disabled
  */
 #define ALT_UART_HTX_HTX_E_DISD 0x0
 /*
  * Enumerated value for register field ALT_UART_HTX_HTX
- * 
+ *
  * Halt Tx enabled
  */
 #define ALT_UART_HTX_HTX_E_END  0x1
@@ -4313,7 +4313,7 @@ typedef volatile struct ALT_UART_STET_s  ALT_UART_STET_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_HTX.
  */
 struct ALT_UART_HTX_s
@@ -4333,28 +4333,28 @@ typedef volatile struct ALT_UART_HTX_s  ALT_UART_HTX_t;
 
 /*
  * Register : DMA Software Acknowledge - dmasa
- * 
+ *
  * DMA Operation Control
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [0]    | W      | 0x0   | DMA Software Acknowledge Bits
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : DMA Software Acknowledge Bits - dmasa
- * 
+ *
  * This register is used to perform DMA software acknowledge if a transfer needs to
  * be terminated due to an error condition. For example, if the DMA disables the
  * channel, then the uart should clear its request. This will cause the Tx request,
  * Tx single, Rx request and Rx single signals to de-assert. Note that this bit is
  * 'self-clearing' and it is not necessary to clear this bit.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_DMASA_DMASA register field. */
 #define ALT_UART_DMASA_DMASA_LSB        0
@@ -4381,7 +4381,7 @@ typedef volatile struct ALT_UART_HTX_s  ALT_UART_HTX_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_DMASA.
  */
 struct ALT_UART_DMASA_s
@@ -4401,47 +4401,47 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Register : Component Parameter Register - cpr
- * 
+ *
  * Describes various fixed hardware setups states.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                      
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:----------------------------------
- *  [1:0]   | R      | 0x2   | APB DATA WIDTH                   
- *  [3:2]   | ???    | 0x0   | *UNDEFINED*                      
- *  [4]     | R      | 0x1   | Auto Flow Control                
- *  [5]     | R      | 0x1   | THRE MODE                        
- *  [6]     | R      | 0x0   | SIR MODE Unsupported             
- *  [7]     | R      | 0x0   | SIR LP MODE Unsupported          
- *  [8]     | R      | 0x1   | ADDITIONAL FEATURES Supported    
- *  [9]     | R      | 0x1   | FIFO ACCESS Supported            
- *  [10]    | R      | 0x1   | FIFO STAT Supported              
- *  [11]    | R      | 0x1   | SHADOW Supported                 
+ *  [1:0]   | R      | 0x2   | APB DATA WIDTH
+ *  [3:2]   | ???    | 0x0   | *UNDEFINED*
+ *  [4]     | R      | 0x1   | Auto Flow Control
+ *  [5]     | R      | 0x1   | THRE MODE
+ *  [6]     | R      | 0x0   | SIR MODE Unsupported
+ *  [7]     | R      | 0x0   | SIR LP MODE Unsupported
+ *  [8]     | R      | 0x1   | ADDITIONAL FEATURES Supported
+ *  [9]     | R      | 0x1   | FIFO ACCESS Supported
+ *  [10]    | R      | 0x1   | FIFO STAT Supported
+ *  [11]    | R      | 0x1   | SHADOW Supported
  *  [12]    | R      | 0x1   | Configuartion ID Register Present
- *  [13]    | R      | 0x1   | DMA EXTRA Supported              
- *  [15:14] | ???    | 0x0   | *UNDEFINED*                      
- *  [23:16] | R      | 0x37  | FIFO Depth                       
- *  [31:24] | ???    | 0x0   | *UNDEFINED*                      
- * 
+ *  [13]    | R      | 0x1   | DMA EXTRA Supported
+ *  [15:14] | ???    | 0x0   | *UNDEFINED*
+ *  [23:16] | R      | 0x37  | FIFO Depth
+ *  [31:24] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : APB DATA WIDTH - apbdatawidth
- * 
+ *
  * Fixed to support an ABP data bus width of 32-bits.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description             
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-------------------------
  *  ALT_UART_CPR_APBDATAWIDTH_E_WIDTH32BITS | 0x2   | APB Data Width = 32-bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_APBDATAWIDTH
- * 
+ *
  * APB Data Width = 32-bits
  */
 #define ALT_UART_CPR_APBDATAWIDTH_E_WIDTH32BITS 0x2
@@ -4465,21 +4465,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : Auto Flow Control - afce_mode
- * 
+ *
  * Allows auto flow control.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                        | Value | Description
  * :----------------------------|:------|:------------
- *  ALT_UART_CPR_AFCE_MOD_E_END | 0x1   | Auto Flow  
- * 
+ *  ALT_UART_CPR_AFCE_MOD_E_END | 0x1   | Auto Flow
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_AFCE_MOD
- * 
+ *
  * Auto Flow
  */
 #define ALT_UART_CPR_AFCE_MOD_E_END 0x1
@@ -4503,22 +4503,22 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : THRE MODE - thre_mode
- * 
+ *
  * Programmable Transmitter Hold Register Empty interrupt
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                              
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:------------------------------------------
  *  ALT_UART_CPR_THRE_MOD_E_END | 0x1   | Programmable Tx Hold Reg. Empty interrupt
- * :                            |       | present                                  
- * 
+ * :                            |       | present
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_THRE_MOD
- * 
+ *
  * Programmable Tx Hold Reg. Empty interrupt present
  */
 #define ALT_UART_CPR_THRE_MOD_E_END 0x1
@@ -4542,21 +4542,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : SIR MODE Unsupported - sir_mode
- * 
+ *
  * Sir mode not used in this application.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description           
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------
  *  ALT_UART_CPR_SIR_MOD_E_DISD | 0x0   | Sir Mode Not Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_SIR_MOD
- * 
+ *
  * Sir Mode Not Supported
  */
 #define ALT_UART_CPR_SIR_MOD_E_DISD 0x0
@@ -4580,21 +4580,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : SIR LP MODE Unsupported - sir_lp_mode
- * 
+ *
  * LP Sir Mode not used in this application.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description              
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:--------------------------
  *  ALT_UART_CPR_SIR_LP_MOD_E_DISD | 0x0   | LP Sir Mode Not Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_SIR_LP_MOD
- * 
+ *
  * LP Sir Mode Not Supported
  */
 #define ALT_UART_CPR_SIR_LP_MOD_E_DISD  0x0
@@ -4618,22 +4618,22 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : ADDITIONAL FEATURES Supported - additional_feat
- * 
+ *
  * Configures the uart to include fifo status register, shadow registers and
  * encoded parameter register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                  
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:------------------------------
  *  ALT_UART_CPR_ADDITIONAL_FEAT_E_END | 0x1   | Additional Features Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_ADDITIONAL_FEAT
- * 
+ *
  * Additional Features Supported
  */
 #define ALT_UART_CPR_ADDITIONAL_FEAT_E_END  0x1
@@ -4657,23 +4657,23 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : FIFO ACCESS Supported - fifo_access
- * 
+ *
  * Configures the peripheral to have a programmable FIFO access mode. This is used
  * for test purposes, to allow the receiver FIFO to be written and the transmit
  * FIFO to be read when FIFOs are implemented and enabled.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description          
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:----------------------
  *  ALT_UART_CPR_FIFO_ACCESS_E_END | 0x1   | FIFO Access Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_FIFO_ACCESS
- * 
+ *
  * FIFO Access Supported
  */
 #define ALT_UART_CPR_FIFO_ACCESS_E_END  0x1
@@ -4697,21 +4697,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : FIFO STAT Supported - fifo_stat
- * 
+ *
  * Configures the peripheral to have three additional FIFO status registers.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description        
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------
  *  ALT_UART_CPR_FIFO_STAT_E_END | 0x1   | FIFO Stat Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_FIFO_STAT
- * 
+ *
  * FIFO Stat Supported
  */
 #define ALT_UART_CPR_FIFO_STAT_E_END    0x1
@@ -4735,24 +4735,24 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : SHADOW Supported - shadow
- * 
+ *
  * Configures the peripheral to have seven additional registers that shadow some of
  * the existing register bits that are regularly modified by software. These can be
  * used to reduce the software overhead that is introduced by having to perform
  * read-modify writes.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description     
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:-----------------
  *  ALT_UART_CPR_SHADOW_E_END | 0x1   | Shadow Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_SHADOW
- * 
+ *
  * Shadow Supported
  */
 #define ALT_UART_CPR_SHADOW_E_END   0x1
@@ -4776,21 +4776,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : Configuartion ID Register Present - uart_add_encoded_param
- * 
+ *
  * Configures the peripheral to have a configuration identification register.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description        
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:--------------------
  *  ALT_UART_CPR_UART_ADD_ENC_PARAM_E_END | 0x1   | ID register present
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_UART_ADD_ENC_PARAM
- * 
+ *
  * ID register present
  */
 #define ALT_UART_CPR_UART_ADD_ENC_PARAM_E_END   0x1
@@ -4814,21 +4814,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : DMA EXTRA Supported - dma_extra
- * 
+ *
  * Configures the peripheral to have four additional DMA signals on the interface.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description        
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------
  *  ALT_UART_CPR_DMA_EXTRA_E_END | 0x1   | DMA Extra Supported
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_DMA_EXTRA
- * 
+ *
  * DMA Extra Supported
  */
 #define ALT_UART_CPR_DMA_EXTRA_E_END    0x1
@@ -4852,21 +4852,21 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
 
 /*
  * Field : FIFO Depth - fifo_mode
- * 
+ *
  * Receiver and Transmitter FIFO depth in bytes.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description         
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:---------------------
  *  ALT_UART_CPR_FIFO_MOD_E_FIFO128BYTES | 0x80  | FIFO Depth 128 bytes
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_UART_CPR_FIFO_MOD
- * 
+ *
  * FIFO Depth 128 bytes
  */
 #define ALT_UART_CPR_FIFO_MOD_E_FIFO128BYTES    0x80
@@ -4896,7 +4896,7 @@ typedef volatile struct ALT_UART_DMASA_s  ALT_UART_DMASA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_CPR.
  */
 struct ALT_UART_CPR_s
@@ -4929,24 +4929,24 @@ typedef volatile struct ALT_UART_CPR_s  ALT_UART_CPR_t;
 
 /*
  * Register : Component Version - ucv
- * 
+ *
  * Used only with Additional Features
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description  
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:--------------
  *  [31:0] | R      | 0x3331312a | ASCII version
- * 
+ *
  */
 /*
  * Field : ASCII version - uart_component_version
- * 
+ *
  * ASCII value for each number in the version, followed by *For example 32_30_31_2A
  * represents the version 2.01a
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_UCV_UART_COMPONENT_VER register field. */
 #define ALT_UART_UCV_UART_COMPONENT_VER_LSB        0
@@ -4973,7 +4973,7 @@ typedef volatile struct ALT_UART_CPR_s  ALT_UART_CPR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_UCV.
  */
 struct ALT_UART_UCV_s
@@ -4992,23 +4992,23 @@ typedef volatile struct ALT_UART_UCV_s  ALT_UART_UCV_t;
 
 /*
  * Register : Component Type Register - ctr
- * 
+ *
  * Describes a hex value associated with the component.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description  
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:--------------
  *  [31:0] | R      | 0x44570110 | Peripheral ID
- * 
+ *
  */
 /*
  * Field : Peripheral ID - peripheral_id
- * 
+ *
  * This register contains the peripherals identification code.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_UART_CTR_PERIPHERAL_ID register field. */
 #define ALT_UART_CTR_PERIPHERAL_ID_LSB        0
@@ -5035,7 +5035,7 @@ typedef volatile struct ALT_UART_UCV_s  ALT_UART_UCV_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_UART_CTR.
  */
 struct ALT_UART_CTR_s
@@ -5060,7 +5060,7 @@ typedef volatile struct ALT_UART_CTR_s  ALT_UART_CTR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_UART.
  */
 struct ALT_UART_s

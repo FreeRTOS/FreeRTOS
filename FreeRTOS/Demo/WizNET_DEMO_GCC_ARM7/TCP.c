@@ -26,7 +26,7 @@
 
 /*
 	Changes from V3.2.3
-	
+
 	+ Modified char* types to compile without warning when using GCC V4.0.1.
 	+ Corrected the address to which the MAC address is written.  Thanks to
 	  Bill Knight for this correction.
@@ -98,7 +98,7 @@ device. */
 /* Length of the data to read for various register reads. */
 #define tcpSTATUS_READ_LEN				( ( unsigned long ) 1 )
 #define tcpSHADOW_READ_LEN				( ( unsigned long ) 1 )
-	
+
 /* Register addresses within the WIZnet device. */
 #define tcpCOMMAND_REG					( ( unsigned short ) 0x0000 )
 #define tcpGATEWAY_ADDR_REG				( ( unsigned short ) 0x0080 )
@@ -155,8 +155,8 @@ const unsigned char const ucDataSIPR[]				= { 172, 25, 218, 201 };/* IP address.
 const unsigned char const ucDataSHAR[]				= { 00, 23, 30, 41, 15, 26 }; /* MAC address - DO NOT USE THIS ON A PUBLIC NETWORK! */
 
 /* Other fixed messages. */
-const unsigned char const ucDataReset[]				= { tcpRESET_CMD }; 
-const unsigned char const ucDataInit[]				= { tcpSYS_INIT_CMD }; 
+const unsigned char const ucDataReset[]				= { tcpRESET_CMD };
+const unsigned char const ucDataInit[]				= { tcpSYS_INIT_CMD };
 const unsigned char const ucDataProtocol[]			= { tcpSOCK_STREAM };
 const unsigned char const ucDataPort[]				= { 0xBA, 0xCC };
 const unsigned char const ucDataSockInit[]			= { tcpSOCK_INIT };
@@ -198,7 +198,7 @@ void ultoa( unsigned long ulVal, char *pcBuffer, long lIgnore )
 unsigned long lNibble;
 long lIndex;
 
-	/* Simple routine to convert an unsigned long value into a string in hex 
+	/* Simple routine to convert an unsigned long value into a string in hex
 	format. */
 
 	/* For each nibble in the number we are converting. */
@@ -221,7 +221,7 @@ long lIndex;
 
 		/* Shift off the top nibble so we use the next nibble next time around. */
 		ulVal <<= 4;
-	}	
+	}
 
 	/* Mark the end of the string with a null terminator. */
 	pcBuffer[ lIndex ] = 0x00;
@@ -236,12 +236,12 @@ unsigned char ucRxBuffer[ tcpMAX_REGISTER_LEN ];
 
 	/* First write out the address of the register we want to read. */
 	i2cMessage( ucRxBuffer, i2cNO_DATA_REQUIRED, tcpDEVICE_ADDRESS, usAddress, i2cWRITE, NULL, portMAX_DELAY );
-	
+
 	/* Then read back from that address. */
 	i2cMessage( ( unsigned char * ) pucDestination, ulLength, tcpDEVICE_ADDRESS, i2cNO_ADDR_REQUIRED, i2cREAD, xMessageComplete, portMAX_DELAY );
 
-	/* I2C messages are queued so use the semaphore to wait for the read to 
-	complete - otherwise we will leave this function before the I2C 
+	/* I2C messages are queued so use the semaphore to wait for the read to
+	complete - otherwise we will leave this function before the I2C
 	transactions have completed. */
 	xSemaphoreTake( xMessageComplete, tcpLONG_DELAY );
 }
@@ -249,13 +249,13 @@ unsigned char ucRxBuffer[ tcpMAX_REGISTER_LEN ];
 
 void vTCPHardReset( void )
 {
-	/* Physical reset of the WIZnet device by using the GPIO lines to hold the 
+	/* Physical reset of the WIZnet device by using the GPIO lines to hold the
 	WIZnet reset lines active for a few milliseconds. */
 
 	/* Make sure the interrupt from the WIZnet is disabled. */
 	VICIntEnClear |= tcpEINT0_VIC_CHANNEL_BIT;
 
-	/* If xMessageComplete is NULL then this is the first time that this 
+	/* If xMessageComplete is NULL then this is the first time that this
 	function has been called and the queue and semaphore used in this file
 	have not yet been created. */
 	if( xMessageComplete == NULL )
@@ -284,7 +284,7 @@ void vTCPHardReset( void )
 	/* Setup the EINT0 to interrupt on required events from the WIZnet device.
 	First enable the EINT0 function of the pin. */
 	PCB_PINSEL1 |= tcpENABLE_EINT0_FUNCTION;
-	
+
 	/* We want the TCP comms to wake us from power save. */
 	SCB_EXTWAKE = tcpWAKE_ON_EINT0;
 
@@ -318,13 +318,13 @@ extern volatile long lTransactionCompleted;
 	/* Reset the internal WIZnet registers. */
 	i2cMessage( ucDataReset,	sizeof( ucDataReset ),	tcpDEVICE_ADDRESS, tcpCOMMAND_REG, i2cWRITE, NULL, portMAX_DELAY );
 
-	/* Now we can configure the protocol.   Here the MAC address, gateway 
+	/* Now we can configure the protocol.   Here the MAC address, gateway
 	address, subnet mask and IP address are configured. */
 	i2cMessage( ucDataSHAR,		sizeof( ucDataSHAR ),	tcpDEVICE_ADDRESS, tcpSOURCE_HA_REG, i2cWRITE, NULL, portMAX_DELAY );
 	i2cMessage( ucDataGAR,		sizeof( ucDataGAR ),	tcpDEVICE_ADDRESS, tcpGATEWAY_ADDR_REG, i2cWRITE, NULL, portMAX_DELAY );
 	i2cMessage( ucDataMSR,		sizeof( ucDataMSR ),	tcpDEVICE_ADDRESS, tcpSUBNET_MASK_REG,	i2cWRITE, NULL, portMAX_DELAY );
 	i2cMessage( ucDataSIPR,		sizeof( ucDataSIPR ),	tcpDEVICE_ADDRESS, tpcSOURCE_IP_REG,	i2cWRITE, NULL, portMAX_DELAY );
-	
+
 	/* Next the memory buffers are configured to give all the WIZnet internal
 	memory over to a single socket.  This gives the socket the maximum internal
 	Tx and Rx buffer space. */
@@ -380,7 +380,7 @@ unsigned char ucStatus;
 
 	/* Read back the status to ensure the socket initialised ok. */
 	prvReadRegister( &ucStatus, tcpINTERRUPT_STATUS_REG, tcpSTATUS_READ_LEN );
-	
+
 	/* We should find that the socket init was successful. */
 	if( ucStatus != tcpISR_SOCKET_INIT )
 	{
@@ -406,11 +406,11 @@ unsigned char ucISR;
 
 	/* Start a passive listen on the socket. */
 
-	/* Enable interrupts in the WizNet device after ensuring none are 
+	/* Enable interrupts in the WizNet device after ensuring none are
 	currently pending. */
 	while( SCB_EXTINT & tcpCLEAR_EINT0 )
 	{
-		/* The WIZnet device is still asserting and interrupt so tell it to 
+		/* The WIZnet device is still asserting and interrupt so tell it to
 		clear. */
 		i2cMessage( ucDataClearInterrupt, sizeof( ucDataClearInterrupt ), tcpDEVICE_ADDRESS, tcpINTERRUPT_REG, i2cWRITE, xMessageComplete, portMAX_DELAY );
 		xSemaphoreTake( xMessageComplete, tcpLONG_DELAY );
@@ -425,7 +425,7 @@ unsigned char ucISR;
 		that the WIZnet device needs attention. */
 	}
 
-	/* Now all the pending interrupts have been cleared we can enable the 
+	/* Now all the pending interrupts have been cleared we can enable the
 	processor interrupts. */
 	VICIntEnable |= tcpEINT0_VIC_CHANNEL_BIT;
 
@@ -446,13 +446,13 @@ unsigned long ulWritePointer, ulAckPointer;
 		lTransactionCompleted = pdTRUE;
 	portEXIT_CRITICAL();
 
-	/* Keep looping - processing interrupts, until we have completed a 
+	/* Keep looping - processing interrupts, until we have completed a
 	transaction.   This uses the WIZnet in it's simplest form.  The socket
 	accepts a connection - we process the connection - then close the socket.
 	We then go back to reinitialise everything and start again. */
 	while( lTransactionCompleted == pdTRUE )
 	{
-		/* Wait for a message on the queue from the WIZnet ISR.  When the 
+		/* Wait for a message on the queue from the WIZnet ISR.  When the
 		WIZnet device asserts an interrupt the ISR simply posts a message
 		onto this queue to wake this task. */
 		if( xQueueReceive( xTCPISRQueue, &ucISR, tcpCONNECTION_WAIT_DELAY ) )
@@ -472,7 +472,7 @@ unsigned long ulWritePointer, ulAckPointer;
 			the next. */
 			SCB_EXTINT = tcpCLEAR_EINT0;
 			VICIntEnable |= tcpEINT0_VIC_CHANNEL_BIT;
-	
+
 			/* Process the interrupt ... */
 
 			if( ucISR & tcpISR_ESTABLISHED )
@@ -481,39 +481,39 @@ unsigned long ulWritePointer, ulAckPointer;
 				a receive command. */
 				i2cMessage( ucDataReceiveCmd, sizeof( ucDataReceiveCmd ), tcpDEVICE_ADDRESS, tcpCOMMAND_REG, i2cWRITE, NULL, portMAX_DELAY );
 			}
-		
+
 			if( ucISR & tcpISR_RX_COMPLETE )
 			{
-				/* We message has been received.  This will be an HTTP get 
+				/* We message has been received.  This will be an HTTP get
 				command.  We only have one page to send so just send it without
 				regard to what the actual requested page was. */
 				prvSendSamplePage();
 			}
-		
+
 		 	if( ucISR & tcpISR_TX_COMPLETE )
 			{
-				/* We have a TX complete interrupt - which oddly does not 
+				/* We have a TX complete interrupt - which oddly does not
 				indicate that the message being sent is complete so we cannot
 				yet close the socket.  Instead we read the position of the Tx
 				pointer within the WIZnet device so we know how much data it
-				has to send.  Later we will read the ack pointer and compare 
-				this to the Tx pointer to ascertain whether the transmission 
+				has to send.  Later we will read the ack pointer and compare
+				this to the Tx pointer to ascertain whether the transmission
 				has completed. */
 
 				/* First read the shadow register. */
 				prvReadRegister( &ucShadow, tcpTX_WRITE_SHADOW_REG, tcpSHADOW_READ_LEN );
-			
+
 				/* Now a short delay is required. */
 				vTaskDelay( tcpSHORT_DELAY );
 
 				/* Then we can read the real register. */
 				prvReadRegister( ( unsigned char * ) &ulWritePointer, tcpTX_WRITE_POINTER_REG, sizeof( ulWritePointer ) );
 
-				/* We cannot do anything more here but need to remember that 
+				/* We cannot do anything more here but need to remember that
 				this interrupt has occurred. */
 				lDataSent = pdTRUE;
 			}
-		
+
 			if( ucISR & tcpISR_CLOSED )
 			{
 				/* The socket has been closed so we can leave this function. */
@@ -522,20 +522,20 @@ unsigned long ulWritePointer, ulAckPointer;
 		}
 		else
 		{
-			/* We have not received an interrupt from the WIZnet device for a 
+			/* We have not received an interrupt from the WIZnet device for a
 			while.  Read the socket status and check that everything is as
 			expected. */
 			prvReadRegister( &ucState, tcpSOCKET_STATE_REG, tcpSTATUS_READ_LEN );
-			
-			if( ( ucState == tcpSTATUS_ESTABLISHED ) && ( lDataSent > 0 ) ) 
+
+			if( ( ucState == tcpSTATUS_ESTABLISHED ) && ( lDataSent > 0 ) )
 			{
 				/* The socket is established and we have already received a Tx
 				end interrupt.  We must therefore be waiting for the Tx buffer
 				inside the WIZnet device to be empty before we can close the
-				socket. 
+				socket.
 
 				Read the Ack pointer register to see if it has caught up with
-				the Tx pointer register.  First we have to read the shadow 
+				the Tx pointer register.  First we have to read the shadow
 				register. */
 				prvReadRegister( &ucShadow, tcpTX_ACK_SHADOW_REG, tcpSHADOW_READ_LEN );
 				vTaskDelay( tcpSHORT_DELAY );
@@ -543,7 +543,7 @@ unsigned long ulWritePointer, ulAckPointer;
 
 				if( ulAckPointer == ulWritePointer )
 				{
-					/* The Ack and write pointer are now equal and we can 
+					/* The Ack and write pointer are now equal and we can
 					safely close the socket. */
 					i2cMessage( ucDataDisconnect, sizeof( ucDataDisconnect ), tcpDEVICE_ADDRESS, tcpCOMMAND_REG, i2cWRITE, NULL, portMAX_DELAY );
 				}
@@ -554,7 +554,7 @@ unsigned long ulWritePointer, ulAckPointer;
 					lDataSent++;
 					if( lDataSent > tcpMAX_ATTEMPTS_TO_CHECK_BUFFER )
 					{
-						/* Assume we cannot complete sending the data and 
+						/* Assume we cannot complete sending the data and
 						therefore cannot safely close the socket.  Start over. */
 						vTCPHardReset();
 						lTransactionCompleted = pdFALSE;
@@ -563,14 +563,14 @@ unsigned long ulWritePointer, ulAckPointer;
 			}
 			else if( ucState != tcpSTATUS_LISTEN )
 			{
-				/* If we have not yet received a Tx end interrupt we would only 
-				ever expect to find the socket still listening for any 
+				/* If we have not yet received a Tx end interrupt we would only
+				ever expect to find the socket still listening for any
 				sustained period. */
 				if( ucState == ucLastState )
 				{
 					lSameStateCount++;
 					if( lSameStateCount > tcpMAX_NON_LISTEN_STAUS_READS )
-					{						
+					{
 						/* We are persistently in an unexpected state.  Assume
 						we cannot safely close the socket and start over. */
 						vTCPHardReset();
@@ -591,7 +591,7 @@ unsigned long ulWritePointer, ulAckPointer;
 		}
 	}
 
-	/* We are going to reinitialise the WIZnet device so do not want our 
+	/* We are going to reinitialise the WIZnet device so do not want our
 	interrupts from the WIZnet to be processed. */
 	VICIntEnClear |= tcpEINT0_VIC_CHANNEL_BIT;
 	return lTransactionCompleted;
@@ -617,7 +617,7 @@ unsigned long ulSendAddress;
 		return;
 	}
 
-	/* Return the new address of the end of the buffer (within the WIZnet 
+	/* Return the new address of the end of the buffer (within the WIZnet
 	device). */
 	*pulTxAddress += ( unsigned long ) lTxLen;
 }
@@ -629,7 +629,7 @@ unsigned char ucTxBuffer[ tcpMAX_REGISTER_LEN ];
 
 	/* We have written some data to the Tx buffer internal to the WIZnet
 	device.  Now we update the Tx pointer inside the WIZnet then send a
-	Send command - which causes	the data up to the new Tx pointer to be 
+	Send command - which causes	the data up to the new Tx pointer to be
 	transmitted. */
 
 	/* Make sure endieness is correct for transmission. */
@@ -710,14 +710,14 @@ static char cPageBuffer[ tcpBUFFER_LEN ];
 	strcat( cPageBuffer, "<br>Refresh = 0x" );
 	lIndex = strlen( cPageBuffer );
 	ultoa( ( unsigned long ) ulRefreshCount, &( cPageBuffer[ lIndex ] ), 0 );
-	
+
 	if( lErrorInTask )
 	{
 		strcat( cPageBuffer, "<p>An error has occurred in at least one task." );
 	}
 	else
 	{
-		strcat( cPageBuffer, "<p>All tasks executing without error." );		
+		strcat( cPageBuffer, "<p>All tasks executing without error." );
 	}
 
 	ulRefreshCount++;

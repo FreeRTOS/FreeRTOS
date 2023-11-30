@@ -21537,7 +21537,7 @@ int serdes_fixcal_code(void)
 	int MaskStatus = 1;
 
   unsigned int rdata = 0;
-  
+
 	/*The valid codes are from 0x26 to 0x3C.
 	*There are 23 valid codes in total.
 	*/
@@ -21571,16 +21571,16 @@ int serdes_fixcal_code(void)
 	int i = 0;
 
   rdata = Xil_In32(0XFD40289C);
-  rdata = rdata & ~0x03; 
-  rdata = rdata | 0x1; 
+  rdata = rdata & ~0x03;
+  rdata = rdata | 0x1;
   Xil_Out32(0XFD40289C, rdata);
   // check supply good status before starting AFE sequencing
-  int count = 0; 
+  int count = 0;
   do
-  { 
+  {
     if (count == PSU_MASK_POLL_TIME)
       break;
-    rdata = Xil_In32(0xFD402B1C); 
+    rdata = Xil_In32(0xFD402B1C);
     count++;
   }while((rdata&0x0000000E) !=0x0000000E);
 

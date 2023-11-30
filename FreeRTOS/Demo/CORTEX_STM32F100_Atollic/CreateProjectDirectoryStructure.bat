@@ -12,25 +12,25 @@ IF EXIST FreeRTOS_Source Goto END
 
 	REM Create the required directory structure.
 	MD FreeRTOS_Source
-	MD FreeRTOS_Source\include	
+	MD FreeRTOS_Source\include
 	MD FreeRTOS_Source\portable\GCC
 	MD FreeRTOS_Source\portable\GCC\ARM_CM3
-	MD FreeRTOS_Source\portable\MemMang	
-	
+	MD FreeRTOS_Source\portable\MemMang
+
 	REM Copy the core kernel files.
 	copy ..\..\Source\tasks.c FreeRTOS_Source
 	copy ..\..\Source\queue.c FreeRTOS_Source
 	copy ..\..\Source\list.c FreeRTOS_Source
 	copy ..\..\Source\timers.c FreeRTOS_Source
-	
+
 	REM Copy the common header files
 
 	copy ..\..\Source\include\*.* FreeRTOS_Source\include
-	
+
 	REM Copy the portable layer files
 	copy ..\..\Source\portable\GCC\ARM_CM3\*.* FreeRTOS_Source\portable\GCC\ARM_CM3
-	
+
 	REM Copy the basic memory allocation files
 	copy ..\..\Source\portable\MemMang\heap_1.c FreeRTOS_Source\portable\MemMang
-	
+
 : END

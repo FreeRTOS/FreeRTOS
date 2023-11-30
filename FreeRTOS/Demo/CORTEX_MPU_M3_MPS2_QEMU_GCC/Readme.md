@@ -59,7 +59,7 @@ The options __ -s -S __ in the above command will start the program waiting
 for the debugger. Check the next section on how to attach the debugger to the
 program.  Place a breakpoint on the MemMang_Handler function in __startup.c__
 file and observe how the program repeated generates memory faults and
-gracefully recovers from those. 
+gracefully recovers from those.
 
 
 ## How to start debugging

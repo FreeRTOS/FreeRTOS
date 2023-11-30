@@ -24,15 +24,15 @@
  *
  */
 
-/* 
+/*
  * This is a very simple demo that creates two tasks and one queue.  One task
- * (the queue receive task) blocks on the queue to wait for data to arrive, 
+ * (the queue receive task) blocks on the queue to wait for data to arrive,
  * toggling an LED each time '100' is received.  The other task (the queue send
  * task) repeatedly blocks for a fixed period before sending '100' to the queue
- * (causing the first task to toggle the LED). 
+ * (causing the first task to toggle the LED).
  *
  * For a much more complete and complex example select either the Debug or
- * Debug_with_optimisation build configurations within the HEW IDE. 
+ * Debug_with_optimisation build configurations within the HEW IDE.
 */
 
 /* Hardware specific includes. */
@@ -64,8 +64,8 @@ static void prvQueueSendTask( void *pvParameters );
 /* The queue used by both tasks. */
 static QueueHandle_t xQueue = NULL;
 
-/* This variable is not used by this simple Blinky example.  It is defined 
-purely to allow the project to link as it is used by the full build 
+/* This variable is not used by this simple Blinky example.  It is defined
+purely to allow the project to link as it is used by the full build
 configuration. */
 volatile unsigned long ulHighFrequencyTickCount = 0UL;
 /*-----------------------------------------------------------*/
@@ -77,10 +77,10 @@ extern void HardwareSetup( void );
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
 	HardwareSetup();
-	
+
 	/* Turn all LEDs off. */
 	vParTestInitialise();
-	
+
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
@@ -93,9 +93,9 @@ extern void HardwareSetup( void );
 		/* Start the tasks running. */
 		vTaskStartScheduler();
 	}
-	
-	/* If all is well the next line of code will not be reached as the scheduler 
-	will be	running.  If the next line is reached then it is likely that there was 
+
+	/* If all is well the next line of code will not be reached as the scheduler
+	will be	running.  If the next line is reached then it is likely that there was
 	insufficient heap available for the idle task to be created. */
 	for( ;; );
 }
@@ -111,7 +111,7 @@ const unsigned long ulValueToSend = 100UL;
 
 	for( ;; )
 	{
-		/* Place this task in the blocked state until it is time to run again. 
+		/* Place this task in the blocked state until it is time to run again.
 		The block state is specified in ticks, the constant used converts ticks
 		to ms. */
 		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
@@ -132,7 +132,7 @@ unsigned long ulReceivedValue;
 
 	for( ;; )
 	{
-		/* Wait until something arrives in the queue - this will block 
+		/* Wait until something arrives in the queue - this will block
 		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
 		FreeRTOSConfig.h. */
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
@@ -148,7 +148,7 @@ unsigned long ulReceivedValue;
 /*-----------------------------------------------------------*/
 
 /* A callback function named vApplicationSetupTimerInterrupt() must be defined
-to configure a tick interrupt source, and configTICK_VECTOR set in 
+to configure a tick interrupt source, and configTICK_VECTOR set in
 FreeRTOSConfig.h to install the tick interrupt handler in the correct position
 in the vector table.  This example uses a compare match timer.  It can be
 into any FreeRTOS project, provided the same compare match timer is available. */
@@ -156,22 +156,22 @@ void vApplicationSetupTimerInterrupt( void )
 {
 	/* Enable compare match timer 0. */
 	MSTP( CMT0 ) = 0;
-	
+
 	/* Interrupt on compare match. */
 	CMT0.CMCR.BIT.CMIE = 1;
-	
+
 	/* Set the compare match value. */
 	CMT0.CMCOR = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 );
-	
+
 	/* Divide the PCLK by 8. */
 	CMT0.CMCR.BIT.CKS = 0;
-	
+
 	/* Enable the interrupt... */
 	_IEN( _CMT0_CMI0 ) = 1;
-	
+
 	/* ...and set its priority to the application defined kernel priority. */
 	_IPR( _CMT0_CMI0 ) = configKERNEL_INTERRUPT_PRIORITY;
-	
+
 	/* Start the timer. */
 	CMT.CMSTR0.BIT.STR0 = 1;
 }
@@ -186,9 +186,9 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-/* If configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2 in 
-FreeRTOSConfig.h, then this function will be called if a task overflows its 
-stack space.  See 
+/* If configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2 in
+FreeRTOSConfig.h, then this function will be called if a task overflows its
+stack space.  See
 http://www.freertos.org/Stacks-and-stack-overflow-checking.html. */
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
@@ -197,7 +197,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 /*-----------------------------------------------------------*/
 
 /* If configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h, then this function
-will be called on each iteration of the idle task.  See 
+will be called on each iteration of the idle task.  See
 http://www.freertos.org/a00016.html */
 void vApplicationIdleHook( void )
 {

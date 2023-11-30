@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -121,7 +121,7 @@ extern "C"
 //! \brief Type definition for \link _COMP_E_Config \endlink structure
 //!
 //! \struct _COMP_E_Config
-//! \brief Configuration structure for Comparator module. See 
+//! \brief Configuration structure for Comparator module. See
 //!        \link COMP_E_initModule \endlink for parameter documentation.
 //
 //*****************************************************************************

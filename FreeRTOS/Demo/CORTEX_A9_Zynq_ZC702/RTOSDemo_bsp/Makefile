@@ -29,7 +29,7 @@ $(PROCESSOR)/lib/libxil.a: $(PROCESSOR)/lib/libxil_init.a
 	@echo "Running Make libs in $(subst /make.libs,,$@)"
 	$(MAKE) -C $(subst /make.libs,,$@) -s libs  "SHELL=$(SHELL)" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
 
-%/make.clean: 
-	$(MAKE) -C $(subst /make.clean,,$@) -s clean 
+%/make.clean:
+	$(MAKE) -C $(subst /make.clean,,$@) -s clean
 clean:
 	rm -f ${PROCESSOR}/lib/libxil.a

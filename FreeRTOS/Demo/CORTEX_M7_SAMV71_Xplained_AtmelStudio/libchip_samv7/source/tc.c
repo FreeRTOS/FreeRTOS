@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup tc_module 
+/** \addtogroup tc_module
  * The TC driver provides the Interface to configure the Timer Counter (TC).
  *
  *  \section Usage
@@ -58,7 +58,7 @@
  *  -# Configure a Timer Counter in the desired mode using TC_Configure().
  *  -# Start or stop the timer clock using TC_Start() and TC_Stop().
  */
- 
+
 /**
  * \file
  *
@@ -163,7 +163,7 @@ extern void TC_Stop(Tc *pTc, uint32_t dwChannel )
  *
  * \return 1 if a proper divisor has been found, otherwise 0.
  */
-extern uint32_t TC_FindMckDivisor( uint32_t dwFreq, uint32_t dwMCk, 
+extern uint32_t TC_FindMckDivisor( uint32_t dwFreq, uint32_t dwMCk,
 		uint32_t *dwDiv, uint32_t *dwTcClks, uint32_t dwBoardMCK )
 {
 	const uint32_t adwDivisors[5] = { 2, 8, 32, 128, BOARD_MCK / 32768 } ;

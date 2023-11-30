@@ -35,7 +35,7 @@
 /** @file defs.h
 * \brief definition header file for generic usages
 * \author App Firmware Team
-* 
+*
 **********************************************************************************/
 #ifndef _DEFS_H_
 #define _DEFS_H_

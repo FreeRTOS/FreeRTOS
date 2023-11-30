@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,11 +30,11 @@
 //------------------------------------------------------------------------------
 /// \unit
 /// !Purpose
-/// 
+///
 /// Configuration and handling of interrupts on PIO status changes.
-/// 
+///
 /// !Usage
-/// 
+///
 /// -# Configure an status change interrupt on one or more pin(s) with
 ///    PIO_ConfigureIt.
 /// -# Enable & disable interrupts on pins using PIO_EnableIt and

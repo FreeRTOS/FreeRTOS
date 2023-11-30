@@ -41,8 +41,8 @@ extern "C"
 /*
  * Component : On-chip RAM Module - ALT_OCRAM
  * On-chip RAM Module
- * 
- * 
+ *
+ *
  */
 
 #ifdef __cplusplus

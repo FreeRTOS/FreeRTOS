@@ -710,7 +710,7 @@ Macro definitions
 
 /* Invalid for ICCRX.
    Because the initilaze function of TFU is called automatically when the TFU function is called. */
-#define R_BSP_INIT_TFU()      
+#define R_BSP_INIT_TFU()
 
 #endif
 

@@ -82,7 +82,7 @@ typedef void (*MciCallback)(unsigned char status, void *pCommand);
 
 //------------------------------------------------------------------------------
 /// MCI Transfer Request prepared by the application upper layer. This structure
-/// is sent to the MCI_SendCommand function to start the transfer. At the end of 
+/// is sent to the MCI_SendCommand function to start the transfer. At the end of
 /// the transfer, the callback is invoked by the interrupt handler.
 //------------------------------------------------------------------------------
 typedef struct _MciCmd {

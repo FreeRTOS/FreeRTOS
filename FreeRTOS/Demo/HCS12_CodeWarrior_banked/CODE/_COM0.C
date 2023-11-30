@@ -9,7 +9,7 @@
 **     Date/Time : 19/06/2005, 15:07
 **     Abstract  :
 **         This bean "AsynchroSerial" implements an asynchronous serial
-**         communication. The bean supports different settings of 
+**         communication. The bean supports different settings of
 **         parity, word width, stop-bit and communication speed,
 **         user can select interrupt or polling handler.
 **         Communication speed can be changed also in runtime.
@@ -40,7 +40,7 @@
 **             Vector name             : INT_SCI0
 **             Priority                : 1
 **
-**         Used pins                   : 
+**         Used pins                   :
 **             ----------------------------------------------------
 **               Function | On package |    Name
 **             ----------------------------------------------------
@@ -198,7 +198,7 @@ void COM0_Init(void)
 /*
 ** ###################################################################
 **
-**     This file was created by UNIS Processor Expert 03.33 for 
+**     This file was created by UNIS Processor Expert 03.33 for
 **     the Motorola HCS12 series of microcontrollers.
 **
 ** ###################################################################

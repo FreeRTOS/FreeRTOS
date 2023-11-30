@@ -5,18 +5,18 @@
   * @version V1.0.0
   * @date    12-May-2015
   * @brief   IWDG HAL module driver.
-  *    
-  *          This file provides firmware functions to manage the following 
+  *
+  *          This file provides firmware functions to manage the following
   *          functionalities of the Independent Watchdog (IWDG) peripheral:
   *           + Initialization and de-initialization functions
   *           + IO operation functions
   *           + Peripheral State functions
-  *         
+  *
   @verbatim
   ==============================================================================
                     ##### IWDG Generic features #####
   ==============================================================================
-    [..] 
+    [..]
     (+) The IWDG can be started by either software or hardware (configurable
          through option byte).
 
@@ -46,7 +46,7 @@
   ==============================================================================
     [..]
     If Window option is disabled
-    
+
       (+) Use IWDG using HAL_IWDG_Init() function to :
          (++) Enable write access to IWDG_PR, IWDG_RLR.
          (++) Configure the IWDG prescaler, counter reload value.
@@ -54,14 +54,14 @@
               is reloaded, then the IWDG will start counting down from this value.
       (+) Use IWDG using HAL_IWDG_Start() function to :
          (++) Reload IWDG counter with value defined in the IWDG_RLR register.
-         (++) Start the IWDG, when the IWDG is used in software mode (no need 
+         (++) Start the IWDG, when the IWDG is used in software mode (no need
               to enable the LSI, it will be enabled by hardware).
       (+) Then the application program must refresh the IWDG counter at regular
           intervals during normal operation to prevent an MCU reset, using
           HAL_IWDG_Refresh() function.
-    [..] 
+    [..]
     if Window option is enabled:
-      
+
       (+) Use IWDG using HAL_IWDG_Start() function to enable IWDG downcounter
       (+) Use IWDG using HAL_IWDG_Init() function to :
          (++) Enable write access to IWDG_PR, IWDG_RLR and IWDG_WINR registers.
@@ -74,13 +74,13 @@
      ====================================
      [..]
        Below the list of most used macros in IWDG HAL driver.
-       
+
       (+) __HAL_IWDG_START: Enable the IWDG peripheral
-      (+) __HAL_IWDG_RELOAD_COUNTER: Reloads IWDG counter with value defined in the reload register    
+      (+) __HAL_IWDG_RELOAD_COUNTER: Reloads IWDG counter with value defined in the reload register
       (+) __HAL_IWDG_GET_FLAG: Get the selected IWDG's flag status
       (+) IWDG_ENABLE_WRITE_ACCESS : Enable write access to IWDG_PR and IWDG_RLR registers
       (+) IWDG_DISABLE_WRITE_ACCESS : Disable write access to IWDG_PR and IWDG_RLR registers
-            
+
   @endverbatim
   ******************************************************************************
   * @attention
@@ -146,7 +146,7 @@
   * @{
   */
 
-/** @defgroup IWDG_Exported_Functions_Group1 Initialization and de-initialization functions 
+/** @defgroup IWDG_Exported_Functions_Group1 Initialization and de-initialization functions
  *  @brief    Initialization and Configuration functions.
  *
 @verbatim
@@ -158,7 +158,7 @@
           in the IWDG_InitTypeDef and create the associated handle
       (+) Manage Window option
       (+) Initialize the IWDG MSP
-      (+) DeInitialize IWDG MSP 
+      (+) DeInitialize IWDG MSP
 
 @endverbatim
   * @{
@@ -258,8 +258,8 @@ __weak void HAL_IWDG_MspInit(IWDG_HandleTypeDef *hiwdg)
   * @}
   */
 
-/** @defgroup IWDG_Exported_Functions_Group2 IO operation functions  
- *  @brief   IO operation functions  
+/** @defgroup IWDG_Exported_Functions_Group2 IO operation functions
+ *  @brief   IO operation functions
  *
 @verbatim
  ===============================================================================
@@ -284,7 +284,7 @@ HAL_StatusTypeDef HAL_IWDG_Start(IWDG_HandleTypeDef *hiwdg)
   uint32_t tickstart = 0;
 
   /* Process locked */
-  __HAL_LOCK(hiwdg); 
+  __HAL_LOCK(hiwdg);
 
     /* Change IWDG peripheral state */
   hiwdg->State = HAL_IWDG_STATE_BUSY;
@@ -305,15 +305,15 @@ HAL_StatusTypeDef HAL_IWDG_Start(IWDG_HandleTypeDef *hiwdg)
          &&(__HAL_IWDG_GET_FLAG(hiwdg, IWDG_FLAG_RVU) != RESET)
          &&(__HAL_IWDG_GET_FLAG(hiwdg, IWDG_FLAG_WVU) != RESET) )
   {
-    
+
     if((HAL_GetTick() - tickstart ) > HAL_IWDG_DEFAULT_TIMEOUT)
     {
       /* Set IWDG state */
       hiwdg->State = HAL_IWDG_STATE_TIMEOUT;
-      
+
       /* Process unlocked */
       __HAL_UNLOCK(hiwdg);
-      
+
       return HAL_TIMEOUT;
     }
   }
@@ -378,7 +378,7 @@ HAL_StatusTypeDef HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg)
   * @}
   */
 
-/** @defgroup IWDG_Exported_Functions_Group3 Peripheral State functions 
+/** @defgroup IWDG_Exported_Functions_Group3 Peripheral State functions
  *  @brief    Peripheral State functions.
  *
 @verbatim

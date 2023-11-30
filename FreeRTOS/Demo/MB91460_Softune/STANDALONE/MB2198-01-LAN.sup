@@ -18,7 +18,7 @@ Monitor Connect Condition0=4
 Monitor Combination0=8/1/2:RealTimeMemory:,8/9/10:RAM Checker:C:48&1
 Core ID=0
 [Device]
-Communication=LAN emu32_lan 
+Communication=LAN emu32_lan
 ProductID=0
 Protocol=3
 [Target]

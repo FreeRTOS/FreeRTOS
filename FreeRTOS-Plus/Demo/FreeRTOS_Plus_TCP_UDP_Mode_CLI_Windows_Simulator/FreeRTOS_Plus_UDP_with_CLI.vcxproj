@@ -44,6 +44,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c" />
     <ClCompile Include="DemoTasks\CLI-commands.c" />

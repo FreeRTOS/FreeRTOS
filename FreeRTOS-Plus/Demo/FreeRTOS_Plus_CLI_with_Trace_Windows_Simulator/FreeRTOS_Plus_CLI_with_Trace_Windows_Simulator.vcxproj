@@ -44,6 +44,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">
       <Project>{c90e6cc5-818b-4c97-8876-0986d989387c}</Project>

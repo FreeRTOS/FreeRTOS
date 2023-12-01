@@ -59,7 +59,10 @@ Run the following command in the AWS CLI to create an IAM role with the precedin
 ```sh
 aws iam create-role --role-name s3-access-role --assume-role-policy-document file://trustpolicyforiot.json
 ```
-The following s3 access policy allows you to perform actions on S3. Put the following policy in a text document and save the document with the name `accesspolicyfors3.json`. Make Sure to replace "BUCKET_NAME" with the name of the S3 bucket you are using for this demo.
+The following s3 access policy allows you to perform actions on S3. Put the
+ following policy in a text document and save the document with the name 
+ `accesspolicyfors3.json`. Make Sure to replace "BUCKET_NAME" with the name
+  of the S3 bucket you are using for this demo.
 ```
 {
    "Version": "2012-10-17",
@@ -118,7 +121,9 @@ RoleArn: This is the [Amazon Resource Name (ARN)](https://docs.aws.amazon.com/ge
 
 CredentialDurationSeconds: This is an optional attribute specifying the validity (in seconds) of the security token. The minimum value is 900 seconds (15 minutes), and the maximum value is 43,200 seconds (12 hours); the default value is 3,600 seconds, if not specified.
 
-**Note**: The credentialDurationSeconds value must be less than or equal to the maximum session duration of the IAM role that the role alias references, otherwise the request will be rejected by the credentials provider.
+**Note**: The credentialDurationSeconds value must be less than or equal to the
+ maximum session duration of the IAM role that the role alias references, 
+ otherwise the request will be rejected by the credentials provider.
 
 Run the following command in the AWS CLI to create a role alias. Use the credentials of the user to whom you have given the iam:PassRole permission.
 ```sh
@@ -150,7 +155,10 @@ aws iot attach-policy --policy-name Thing_Policy_Name --target <certificate-arn>
 
 #### 6. Obtain the Credentials Provider Endpoint
 
-Run the following command in the AWS CLI to obtain your AWS account-specific endpoint for the credentials provider. See the [DescribeEndpoint API documentation](https://docs.aws.amazon.com/iot/latest/apireference/API_DescribeEndpoint.html) for further details.
+Run the following command in the AWS CLI to obtain your AWS account-specific
+ endpoint for the credentials provider. See the 
+ [DescribeEndpoint API documentation](https://docs.aws.amazon.com/iot/latest/apireference/API_DescribeEndpoint.html) 
+ for further details.
 
 ```sh
 aws iot describe-endpoint --endpoint-type iot:CredentialProvider

@@ -59,7 +59,7 @@ Run the following command in the AWS CLI to create an IAM role with the precedin
 ```sh
 aws iam create-role --role-name s3-access-role --assume-role-policy-document file://trustpolicyforiot.json
 ```
-The following s3 access policy allows you to perform actions on S3. Put the following policy in a text document and save the document with the name `accesspolicyfors3.json`.
+The following s3 access policy allows you to perform actions on S3. Put the following policy in a text document and save the document with the name `accesspolicyfors3.json`. Make Sure to replace "BUCKET_NAME" with the name of the S3 bucket you are using for this demo.
 ```
 {
    "Version": "2012-10-17",
@@ -116,7 +116,9 @@ RoleAlias: This is the primary key of the role alias data model and hence a mand
 
 RoleArn: This is the [Amazon Resource Name (ARN)](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of the IAM role you have created. This is also a mandatory attribute.
 
-CredentialDurationSeconds: This is an optional attribute specifying the validity (in seconds) of the security token. The minimum value is 900 seconds (15 minutes), and the maximum value is 3,600 seconds (60 minutes); the default value is 3,600 seconds, if not specified.
+CredentialDurationSeconds: This is an optional attribute specifying the validity (in seconds) of the security token. The minimum value is 900 seconds (15 minutes), and the maximum value is 43,200 seconds (12 hours); the default value is 3,600 seconds, if not specified.
+
+**Note**: The credentialDurationSeconds value must be less than or equal to the maximum session duration of the IAM role that the role alias references, otherwise the request will be rejected by the credentials provider.
 
 Run the following command in the AWS CLI to create a role alias. Use the credentials of the user to whom you have given the iam:PassRole permission.
 ```sh
@@ -146,15 +148,7 @@ Use the following command to attach the policy with the certificate you register
 aws iot attach-policy --policy-name Thing_Policy_Name --target <certificate-arn>
 ```
 
-#### 6. Request a security token:
-
-Make an HTTPS request to the credentials provider to fetch a security token. You have to supply the following information:
-
-Certificate and key pair: Because this is an HTTP request over TLS mutual authentication, you have to provide the certificate and the corresponding key pair to your client while making the request. Use the same certificate and key pair that you used during certificate registration with AWS IoT.
-
-RoleAlias: Provide the role alias (in this example, Thermostat-dynamodb-access-role-alias) to be assumed in the request.
-
-ThingName: Provide the thing name that you created earlier in the AWS IoT thing registry database. This is passed as a header with the name, x-amzn-iot-thingname. Note that the thing name is mandatory only if you have thing attributes as policy variables in AWS IoT or IAM policies.
+#### 6. Obtain the Credentials Provider Endpoint
 
 Run the following command in the AWS CLI to obtain your AWS account-specific endpoint for the credentials provider. See the [DescribeEndpoint API documentation](https://docs.aws.amazon.com/iot/latest/apireference/API_DescribeEndpoint.html) for further details.
 
@@ -168,16 +162,13 @@ The following is sample output of the describe-endpoint command. It contains the
 }
 ```
 
-#### 7. Copy and paste the output to `demo_config.h` for macros `democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT`.
+Next, copy this endpoint to the macro below in `demo_config.h`.
+
 ```c
 #define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT    "<your_aws_account_specific_prefix>.credentials.iot.us-east-1.amazonaws.com"
-
-#define CLIENT_CERT_PATH "path of the client certificate downloaded when setting up the device certificate in AWS IoT Account Setup"
-
-#define CLIENT_PRIVATE_KEY_PATH "path of the private key downloaded when setting up the device certificate in AWS IoT Account Setup"
 ```
 
-#### 8. After the following the above steps, configure the below macros in `demo_config.h`.
+#### 7. After the following the above steps, configure the below macros in `demo_config.h`.
 ```c
 #define democonfigIOT_THING_NAME                  "Name of IOT Thing that you provided in STEP 1"
 #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE    "Name of ROLE ALIAS that you provided in STEP 4"

@@ -56,8 +56,7 @@
     #include <winsock2.h>
 #else
     #include <winsock.h>
-#endif
-
+#endif /* WIN32_LEAN_AND_MEAN */
 
 /* Visual studio intrinsics used so the __debugbreak() function is available
  * should an assert get hit. */

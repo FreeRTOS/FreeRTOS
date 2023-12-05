@@ -115,6 +115,7 @@ extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
+extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
@@ -668,4 +669,71 @@ void test_vTaskStepTick_assert_tick_to_jump_eq_0( void )
 
     /* Test Verifications */
     validate_and_clear_assertions();
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - assert if xCoreID is less than 0
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE );
+ * @endcode
+ * taskVALID_CORE_ID( xCoreID ) is false with xCoreID less than 0.
+ */
+void test_xTaskGetIdleTaskHandleForCore_assert_invalid_core_id_lt( void )
+{
+    /* API Call */
+    EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandleForCore( -1 ) );
+
+    /* Test Verifications */
+    validate_and_clear_assertions();
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - assert if xCoreID is greater or equal
+ * than configNUMBER_OF_CORES
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE );
+ * @endcode
+ * taskVALID_CORE_ID( xCoreID ) is false with xCoreID greater or equal than configNUMBER_OF_CORES
+ */
+void test_xTaskGetIdleTaskHandleForCore_assert_invalid_core_id_ge( void )
+{
+    /* API Call */
+    EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandleForCore( configNUMBER_OF_CORES ) );
+
+    /* Test Verifications */
+    validate_and_clear_assertions();
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - assert if idle task handle is NULL due to
+ * scheduler not started.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( ( xIdleTaskHandles[ xCoreID ] != NULL ) );
+ * @endcode
+ * ( xIdleTaskHandles[ xCoreID ] != NULL ) is false.
+ */
+void test_xTaskGetIdleTaskHandleForCore_assert_null_idle_task_handle( void )
+{
+    BaseType_t xCoreID;
+
+    /* Setup the variables and structure. */
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        xIdleTaskHandles[ xCoreID ] = NULL;
+    }
+
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        /* API Call */
+        EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandleForCore( xCoreID ) );
+
+        /* Test Verifications */
+        validate_and_clear_assertions();
+    }
 }

@@ -242,6 +242,14 @@
     #define INCLUDE_xTaskGetIdleTaskHandle    0
 #endif
 
+#ifndef traceENTER_xTaskGetIdleTaskHandleForCore
+    #define traceENTER_xTaskGetIdleTaskHandleForCore( xCoreID )
+#endif
+
+#ifndef traceRETURN_xTaskGetIdleTaskHandleForCore
+    #define traceRETURN_xTaskGetIdleTaskHandleForCore( xIdleTaskHandle )
+#endif
+
 #ifndef INCLUDE_xTaskAbortDelay
     #define INCLUDE_xTaskAbortDelay    0
 #endif

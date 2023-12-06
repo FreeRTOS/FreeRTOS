@@ -230,7 +230,11 @@ static int32_t privateKeySigningCallback( void * pvContext,
                                 int line,
                                 const char * str )
     {
-        LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        if ((str != NULL) && (file != NULL))
+        {
+            /* LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) ); */
+            printf("%s:%d: [%d] %s", file, line, level, str);
+        }
     }
 #endif /* MBEDTLS_DEBUG_C */
 
@@ -693,7 +697,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     if( ( CKR_OK == xResult ) && ( pxCtx->xP11PrivateKey == CK_INVALID_HANDLE ) )
     {
         xResult = CK_INVALID_HANDLE;
-        LogError( ( "Could not find private key." ) );
+        LogError( ( "Could not find private key: %s", pcLabelName ) );
     }
 
     if( xResult == CKR_OK )

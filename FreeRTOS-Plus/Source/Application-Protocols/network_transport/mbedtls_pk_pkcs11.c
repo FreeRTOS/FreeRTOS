@@ -137,7 +137,7 @@ static void p11_ecdsa_ctx_free( void * pvCtx );
  * @return 0 on success
  * @return A negative number on failure
  */
-static int p11_ecdsa_sign( void * pvCtx,
+static int p11_ecdsa_sign( mbedtls_pk_context* pk,
                            mbedtls_md_type_t xMdAlg,
                            const unsigned char * pucHash,
                            size_t xHashLen,
@@ -674,7 +674,7 @@ static int prvEcdsaSigToASN1InPlace( unsigned char * pucSig,
 
 /*-----------------------------------------------------------*/
 
-static int p11_ecdsa_sign( void * pvCtx,
+static int p11_ecdsa_sign( mbedtls_pk_context * pk,
                            mbedtls_md_type_t xMdAlg,
                            const unsigned char * pucHash,
                            size_t xHashLen,
@@ -708,9 +708,9 @@ static int p11_ecdsa_sign( void * pvCtx,
     configASSERT( pucHash != NULL );
     configASSERT( xHashLen > 0 );
 
-    if( pvCtx != NULL )
+    if( pk != NULL )
     {
-        pxEcDsaCtx = ( P11EcDsaCtx_t * ) pvCtx;
+        pxEcDsaCtx = ( P11EcDsaCtx_t * ) pk->pk_ctx;
         pxP11Ctx = &( pxEcDsaCtx->xP11PkCtx );
     }
     else

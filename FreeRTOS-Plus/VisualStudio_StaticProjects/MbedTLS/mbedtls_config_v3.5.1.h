@@ -2631,7 +2631,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * This module provides debugging functions.
  */
-#define MBEDTLS_DEBUG_C
+/* #define MBEDTLS_DEBUG_C */
 
 /**
  * \def MBEDTLS_DES_C
@@ -3707,7 +3707,9 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-#define MBEDTLS_CONFIG_FILE    "mbedtls_config_v3.5.1.h"
+#ifndef MBEDTLS_CONFIG_FILE
+    #define MBEDTLS_CONFIG_FILE    "mbedtls_config_v3.5.1.h"
+#endif /* MBEDTLS_CONFIG_FILE */
 
 /**
  * \def MBEDTLS_USER_CONFIG_FILE

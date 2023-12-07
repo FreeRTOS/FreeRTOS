@@ -5,12 +5,12 @@ import boto3
 import botocore
 import argparse
 
-KEY_OUT_NAME = f"{os.getcwd()}\\corePKCS11_Claim_Key.dat"
-CERT_OUT_NAME = f"{os.getcwd()}\\corePKCS11_Claim_Certificate.dat"
+KEY_OUT_NAME = os.path.join(os.getcwd(), "corePKCS11_Claim_Key.dat")
+CERT_OUT_NAME = os.path.join(os.getcwd(), "corePKCS11_Claim_Certificate.dat")
 
-THING_PRIVATE_KEY_NAME = f"{os.getcwd()}\\corePKCS11_Key.dat"
-THING_PUBLIC_KEY_NAME = f"{os.getcwd()}\\corePKCS11_PubKey.dat"
-THING_CERT_NAME = f"{os.getcwd()}\\corePKCS11_Certificate.dat"
+THING_PRIVATE_KEY_NAME = os.path.join(os.getcwd(), "corePKCS11_Key.dat")
+THING_PUBLIC_KEY_NAME = os.path.join(os.getcwd(), "corePKCS11_PubKey.dat")
+THING_CERT_NAME = os.path.join(os.getcwd(), "corePKCS11_Certificate.dat")
 
 RESOURCE_STACK_NAME = "FPDemoStack"
 

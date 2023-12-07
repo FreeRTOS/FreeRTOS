@@ -6,8 +6,8 @@ import boto3
 import botocore
 from convert_credentials_to_der import convert_pem_to_der
 
-KEY_OUT_NAME = f"{os.getcwd()}\\corePKCS11_Claim_Key.dat"
-CERT_OUT_NAME = f"{os.getcwd()}\\corePKCS11_Claim_Certificate.dat"
+KEY_OUT_NAME = os.path.join(os.getcwd(), "corePKCS11_Claim_Key.dat")
+CERT_OUT_NAME = os.path.join(os.getcwd(), "corePKCS11_Claim_Certificate.dat")
 
 RESOURCE_STACK_NAME = "FPDemoStack"
 

@@ -524,6 +524,10 @@
     #define portSETUP_TCB( pxTCB )    ( void ) ( pxTCB )
 #endif
 
+#ifndef portTASK_SWITCH_HOOK
+    #define portTASK_SWITCH_HOOK( pxTCB )    ( void ) ( pxTCB )
+#endif
+
 #ifndef configQUEUE_REGISTRY_SIZE
     #define configQUEUE_REGISTRY_SIZE    0U
 #endif

@@ -26,7 +26,7 @@ aws iot create-thing --thing-name device_thing_name
 
 #### 2. Register a certificate:
 
-If your AWS IoT Thing already has a certificate attached to it, then that certificate's ARN can be used in [step 5](#5. attach-a-policy). Otherwise, you can create a certificate and attach it to the thing through IoT Core in the AWS Management Console UI. By doing any of these, you may skip to [step 3](#3-configure-an-iam-role).
+If your AWS IoT Thing already has a certificate attached to it, then that certificate's ARN can be used in [step 5](#5-attach-a-policy). Otherwise, you can create a certificate and attach it to the thing through IoT Core in the AWS Management Console UI. By doing any of these, you may skip to [step 3](#3-configure-an-iam-role).
 
 It is also possible to sign the Thing's certificate using your own Certificate Authority (CA) certificate, and register both certificates with AWS IoT before your device can authenticate to AWS IoT. If you do not already have a CA certificate, you can use OpenSSL to create a CA certificate, as described in [Use Your Own Certificate](https://docs.aws.amazon.com/iot/latest/developerguide/device-certs-your-own.html). To register your CA certificate with AWS IoT, follow the steps on [Registering Your CA Certificate](https://docs.aws.amazon.com/iot/latest/developerguide/device-certs-your-own.html#register-CA-cert).
 

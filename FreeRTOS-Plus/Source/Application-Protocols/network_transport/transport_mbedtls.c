@@ -32,8 +32,13 @@
 
 #include "logging_levels.h"
 
-#define LIBRARY_LOG_NAME     "MbedtlsTransport"
-#define LIBRARY_LOG_LEVEL    LOG_DEBUG
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME     "MbedtlsTransport"
+#endif /* LIBRARY_LOG_NAME */
+
+#ifndef LIBRARY_LOG_LEVEL
+#   define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif /* LIBRARY_LOG_LEVEL*/
 
 #include "logging_stack.h"
 
@@ -50,11 +55,11 @@
     #include MBEDTLS_CONFIG_FILE
 #endif
 
-#ifdef MBEDTLS_SSL_PROTO_TLS1_3
+#ifdef MBEDTLS_PSA_CRYPTO_C
     /* MbedTLS PSA Includes */
     #include "psa/crypto.h"
     #include "psa/crypto_values.h"
-#endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
+#endif /* MBEDTLS_PSA_CRYPTO_C */
 
 #ifdef MBEDTLS_DEBUG_C
     #include "mbedtls/debug.h"
@@ -636,7 +641,7 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
         returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
     }
 
-    #ifdef MBEDTLS_USE_PSA_CRYPTO
+    #ifdef MBEDTLS_PSA_CRYPTO_C
         if( returnStatus == TLS_TRANSPORT_SUCCESS )
         {
             mbedtlsError = psa_crypto_init();
@@ -647,7 +652,7 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                 returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
             }
         }
-    #endif /* MBEDTLS_USE_PSA_CRYPTO */
+    #endif /* MBEDTLS_PSA_CRYPTO_C */
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {

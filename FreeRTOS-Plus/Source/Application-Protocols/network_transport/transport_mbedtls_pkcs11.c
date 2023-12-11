@@ -38,7 +38,7 @@
 #define LIBRARY_LOG_NAME         "PkcsTlsTransport"
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif /* LIBRARY_LOG_LEVEL */
 
 #include "logging_stack.h"
@@ -47,8 +47,6 @@
     #define MBEDTLS_ALLOW_PRIVATE_ACCESS
     #include "mbedtls/private_access.h"
 #endif /* MBEDTLS_ALLOW_PRIVATE_ACCESS */
-
-
 
 /* MBedTLS Includes */
 #if !defined( MBEDTLS_CONFIG_FILE )

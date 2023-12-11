@@ -88,7 +88,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

@@ -51,11 +51,11 @@
     #include MBEDTLS_CONFIG_FILE
 #endif
 
-#ifdef MBEDTLS_SSL_PROTO_TLS1_3
+#ifdef MBEDTLS_PSA_CRYPTO_C
     /* MbedTLS PSA Includes */
     #include "psa/crypto.h"
     #include "psa/crypto_values.h"
-#endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
+#endif /* MBEDTLS_PSA_CRYPTO_C */
 
 #include "mbedtls/pk.h"
 #include "mbedtls/asn1.h"

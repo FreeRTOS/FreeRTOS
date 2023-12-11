@@ -108,7 +108,7 @@
  *
  * See https://docs.aws.amazon.com/iot/latest/apireference/API_CreateThing.html#iot-CreateThing-request-thingName
  */
-#define fpdemoMAX_THING_NAME_LENGTH                256
+#define fpdemoMAX_THING_NAME_LENGTH                128
 
 /**
  * @brief The maximum number of times to run the loop in this demo.
@@ -124,7 +124,7 @@
  * @brief Time in seconds to wait between retries of the demo loop if
  * demo loop fails.
  */
-#define fpdemoDELAY_BETWEEN_DEMO_RETRY_ITERATIONS_SECONDS    ( 5 )
+#define fpdemoDELAY_BETWEEN_DEMO_RETRY_ITERATIONS_SECONDS    ( 10 )
 
 /**
  * @brief Size of buffer in which to hold the certificate signing request (CSR).
@@ -139,9 +139,10 @@
 /**
  * @brief Size of buffer in which to hold the certificate id.
  *
- * See https://docs.aws.amazon.com/iot/latest/apireference/API_Certificate.html#iot-Type-Certificate-certificateId
+ * @note Has a maximum length of 64 for more information see the following link
+ * https://docs.aws.amazon.com/iot/latest/apireference/API_Certificate.html#iot-Type-Certificate-certificateId
  */
-#define fpdemoCERT_ID_BUFFER_LENGTH                          512
+#define fpdemoCERT_ID_BUFFER_LENGTH                          64
 
 /**
  * @brief Size of buffer in which to hold the certificate ownership token.

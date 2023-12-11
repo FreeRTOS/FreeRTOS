@@ -442,6 +442,8 @@ volatile uint32_t ul1 = 0x123, ul2 = 0;
 
 int main( void )
 {
+	TaskHandle_t xRegTest1TaskHandle, xRegTest2TaskHandle, xCheckTaskHandle;
+
 	configASSERT( ul1 == 0x123 );
 	configASSERT( ul2 == 0 );
 	prvSetupHardware();
@@ -455,11 +457,14 @@ int main( void )
 	queue has been created so is set here. */
 	xRegTest2Parameters.pvParameters = xGlobalScopeCheckQueue;
 
-	/* Create three test tasks.  Handles to the created tasks are not required,
-	hence the second parameter is NULL. */
-	xTaskCreateRestrictedStatic( &xRegTest1Parameters, NULL );
-    xTaskCreateRestrictedStatic( &xRegTest2Parameters, NULL );
-	xTaskCreateRestrictedStatic( &xCheckTaskParameters, NULL );
+	/* Create three test tasks. */
+	xTaskCreateRestrictedStatic( &xRegTest1Parameters, &( xRegTest1TaskHandle ) );
+	xTaskCreateRestrictedStatic( &xRegTest2Parameters, &( xRegTest2TaskHandle ) );
+	xTaskCreateRestrictedStatic( &xCheckTaskParameters, &( xCheckTaskHandle ) );
+
+	vGrantAccessToQueue( xRegTest1TaskHandle, xGlobalScopeCheckQueue );
+	vGrantAccessToQueue( xRegTest2TaskHandle, xGlobalScopeCheckQueue );
+	vGrantAccessToQueue( xCheckTaskHandle, xGlobalScopeCheckQueue );
 
 	/* Create a task that does nothing but ensure some of the MPU API functions
 	can be called correctly, then get deleted.  This is done for code coverage

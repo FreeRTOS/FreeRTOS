@@ -464,8 +464,7 @@ int main( void )
 	queue has been created so is set here. */
 	xRegTest2Parameters.pvParameters = xGlobalScopeCheckQueue;
 
-	/* Create three test tasks.  Handles to the created tasks are not required,
-	hence the second parameter is NULL. */
+	/* Create three test tasks. */
 	xTaskCreateRestricted( &xRegTest1Parameters, &( xRegTest1TaskHandle ) );
 	xTaskCreateRestricted( &xRegTest2Parameters, &( xRegTest2TaskHandle ) );
 	xTaskCreateRestricted( &xCheckTaskParameters, &( xCheckTaskHandle ) );

@@ -448,6 +448,8 @@ static TaskParameters_t xTaskToDeleteParameters =
 
 int main( void )
 {
+	TaskHandle_t xRegTest1TaskHandle, xRegTest2TaskHandle, xCheckTaskHandle;
+
 	/* Used to check linker configuration. */
 	configASSERT( ul1 == 0x123 );
 	configASSERT( ul2 == 0 );
@@ -464,9 +466,13 @@ int main( void )
 
 	/* Create three test tasks.  Handles to the created tasks are not required,
 	hence the second parameter is NULL. */
-	xTaskCreateRestricted( &xRegTest1Parameters, NULL );
-	xTaskCreateRestricted( &xRegTest2Parameters, NULL );
-	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
+	xTaskCreateRestricted( &xRegTest1Parameters, &( xRegTest1TaskHandle ) );
+	xTaskCreateRestricted( &xRegTest2Parameters, &( xRegTest2TaskHandle ) );
+	xTaskCreateRestricted( &xCheckTaskParameters, &( xCheckTaskHandle ) );
+
+	vGrantAccessToQueue( xRegTest1TaskHandle, xGlobalScopeCheckQueue );
+	vGrantAccessToQueue( xRegTest2TaskHandle, xGlobalScopeCheckQueue );
+	vGrantAccessToQueue( xCheckTaskHandle, xGlobalScopeCheckQueue );
 
 	/* Create a task that does nothing but ensure some of the MPU API functions
 	can be called correctly, then get deleted.  This is done for code coverage

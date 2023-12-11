@@ -35,13 +35,11 @@
  */
 
 /* Standard includes. */
-#include <ctype.h>
-#include <io.h>
-#include <stdarg.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <tchar.h>
+#include <stdint.h>
+#include <stdarg.h>
+#include <io.h>
+#include <ctype.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -211,7 +209,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
 
             /* Create the Windows event. */
-            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, _T( "StdoutLoggingEvent" ) );
+            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
 
             /* Create the thread itself. */
             Win32Thread = CreateThread(

@@ -27,7 +27,7 @@
 #include "logging_levels.h"
 
 #define LIBRARY_LOG_NAME     "MbedTLSPkP11"
-#define LIBRARY_LOG_LEVEL    LOG_DEBUG
+#define LIBRARY_LOG_LEVEL    LOG_ERROR
 
 #include "logging_stack.h"
 
@@ -888,7 +888,7 @@ static size_t p11_rsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 
 static int p11_rsa_can_do( mbedtls_pk_type_t xType )
 {
-    return( ( xType == MBEDTLS_PK_RSA ) || ( xType == MBEDTLS_PK_RSASSA_PSS ) || ( xType == MBEDTLS_PK_RSA_ALT ) );
+    return( ( xType == MBEDTLS_PK_RSA ) || ( xType == MBEDTLS_PK_RSASSA_PSS ) );
 }
 
 /*-----------------------------------------------------------*/

@@ -33,12 +33,12 @@
 #include <intrin.h>
 
 
-/** Exclude Windows APIs such as Cryptography, DDE, RPC, Shell,
- * and Windows Sockets. */
-#ifndef WIN32_LEAN_AND_MEAN
-    #define WIN32_LEAN_AND_MEAN
-#endif
-#include <winsock2.h>
+#ifdef WIN32_LEAN_AND_MEAN
+    #include <winsock2.h>
+#else
+    #include "winsock.h"
+#endif /* WIN32_LEAN_AND_MEAN */
+
 #include <windows.h>
 
 /* Windows Crypt api for uxRand() */

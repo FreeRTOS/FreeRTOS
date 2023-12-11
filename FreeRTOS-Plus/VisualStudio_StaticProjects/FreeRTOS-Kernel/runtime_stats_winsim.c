@@ -38,11 +38,10 @@
 
 #include <time.h>
 
-
 #ifdef WIN32_LEAN_AND_MEAN
     #include <winsock2.h>
 #else
-    #include "winsock.h"
+    #include <winsock.h>
 #endif /* WIN32_LEAN_AND_MEAN */
 
 #include <windows.h>

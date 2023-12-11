@@ -1802,6 +1802,7 @@ void test_coverage_xTaskRemoveFromEventList_remove_eq_priority_task( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get prvYieldCore. */
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get portGET_CRITICAL_NESTING_COUNT. */
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get xYieldPendings. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* portTASK_SWITCH_HOOK(). */
 
     /* API call. */
     xReturn = xTaskRemoveFromEventList( &xEventList );
@@ -4677,5 +4678,47 @@ void test_coverage_prvCreateIdleTasks_get_static_memory( void )
     {
         TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ], &xIdleTaskTCBs[ xCoreID ] );
         TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ]->pxStack, &uxIdleTaskStacks[ xCoreID ][ 0 ] );
+    }
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - get the idle task handle by core
+ *
+ * Verify idle task handle returned is correct.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * TaskHandle_t xTaskGetIdleTaskHandleForCore( BaseType_t xCoreID )
+ * {
+ *     ...
+ *     return xIdleTaskHandles[ xCoreID ];
+ * }
+ * @endcode
+ * The happy path test to return the idle task handles.
+ */
+void test_coverage_xTaskGetIdleTaskHandleForCore_success( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES ] = { NULL };
+    TaskHandle_t xReturnedIdleTaskHandle;
+    BaseType_t xCoreID;
+
+    /* Setup the variables and structure. */
+    /* Create coreNUMBER_OF_CORES idle tasks. */
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        vCreateStaticTestTask( &xTaskTCBs[ xCoreID ],
+                               tskIDLE_PRIORITY,
+                               xCoreID,
+                               pdTRUE );
+        xIdleTaskHandles[ xCoreID ] = &xTaskTCBs[ xCoreID ];
+    }
+
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        /* API call. */
+        xReturnedIdleTaskHandle = xTaskGetIdleTaskHandleForCore( xCoreID );
+
+        /* Validation. */
+        TEST_ASSERT_EQUAL( xIdleTaskHandles[ xCoreID ], xReturnedIdleTaskHandle );
     }
 }

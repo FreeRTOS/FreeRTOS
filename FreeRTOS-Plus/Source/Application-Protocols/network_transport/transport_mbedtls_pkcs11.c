@@ -35,7 +35,7 @@
 
 #include "logging_levels.h"
 
-#define LIBRARY_LOG_NAME     "PkcsTlsTransport"
+#define LIBRARY_LOG_NAME         "PkcsTlsTransport"
 
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_DEBUG
@@ -235,9 +235,9 @@ static int32_t privateKeySigningCallback( void * pvContext,
                                 int line,
                                 const char * str )
     {
-        if ((str != NULL) && (file != NULL))
+        if( ( str != NULL ) && ( file != NULL ) )
         {
-            LogDebug(("%s:%d: [%d] %s", file, line, level, str));
+            LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
         }
     }
 #endif /* MBEDTLS_DEBUG_C */
@@ -708,11 +708,11 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
         LogError( ( "Could not find private key: %s", pcLabelName ) );
     }
 
-    if (xResult == CKR_OK)
+    if( xResult == CKR_OK )
     {
-        xResult = xPKCS11_initMbedtlsPkContext(&(pxCtx->privKey),
-            pxCtx->xP11Session,
-            pxCtx->xP11PrivateKey);
+        xResult = xPKCS11_initMbedtlsPkContext( &( pxCtx->privKey ),
+                                                pxCtx->xP11Session,
+                                                pxCtx->xP11PrivateKey );
     }
 
     /* Free memory. */
@@ -730,7 +730,6 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                            uint32_t receiveTimeoutMs,
                                            uint32_t sendTimeoutMs )
 {
-
     TlsTransportParams_t * pTlsTransportParams = NULL;
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     BaseType_t socketStatus = 0;
@@ -812,7 +811,6 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
 void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
-
     TlsTransportParams_t * pTlsTransportParams = NULL;
     BaseType_t tlsStatus = 0;
 
@@ -854,7 +852,6 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                            void * pBuffer,
                            size_t bytesToRecv )
 {
-
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 
@@ -921,7 +918,6 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend )
 {
-
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 

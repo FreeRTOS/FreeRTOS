@@ -203,7 +203,7 @@ static size_t xThingNameLength;
  * APIs. When the MQTT publish callback receives an expected Fleet Provisioning
  * accepted payload, it copies it into this buffer.
  */
-static uint8_t pucPayloadBuffer[ democonfigNETWORK_BUFFER_SIZE * 2];
+static uint8_t pucPayloadBuffer[ democonfigNETWORK_BUFFER_SIZE * 2 ];
 
 /**
  * @brief Length of the payload stored in #pucPayloadBuffer. This is set by the
@@ -647,13 +647,11 @@ int prvFleetProvisioningTask( void * pvParameters )
              * so we use the CBOR variants of the topics. */
             xStatus = prvSubscribeToCsrResponseTopics();
 
-
-            if (xStatus == true)
+            if( xStatus == true )
             {
                 /* Subscribe to the RegisterThing response topics. */
                 xStatus = prvSubscribeToRegisterThingResponseTopics();
             }
-
         }
 
         if( xStatus == true )
@@ -756,14 +754,14 @@ int prvFleetProvisioningTask( void * pvParameters )
         {
             /* Extract the Thing name from the response. */
             xThingNameLength = fpdemoMAX_THING_NAME_LENGTH;
-            xStatus = xParseRegisterThingResponse(pucPayloadBuffer,
-                xPayloadLength,
-                pcThingName,
-                &xThingNameLength);
+            xStatus = xParseRegisterThingResponse( pucPayloadBuffer,
+                                                   xPayloadLength,
+                                                   pcThingName,
+                                                   &xThingNameLength );
 
-            if (xStatus == true)
+            if( xStatus == true )
             {
-                LogInfo(("Received AWS IoT Thing name: %.*s", (int)xThingNameLength, pcThingName));
+                LogInfo( ( "Received AWS IoT Thing name: %.*s", ( int ) xThingNameLength, pcThingName ) );
             }
         }
 

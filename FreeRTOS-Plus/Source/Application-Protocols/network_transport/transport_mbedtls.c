@@ -33,11 +33,11 @@
 #include "logging_levels.h"
 
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "MbedtlsTransport"
+    #define LIBRARY_LOG_NAME    "MbedtlsTransport"
 #endif /* LIBRARY_LOG_NAME */
 
 #ifndef LIBRARY_LOG_LEVEL
-#   define LIBRARY_LOG_LEVEL    LOG_INFO
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif /* LIBRARY_LOG_LEVEL*/
 
 #include "logging_stack.h"

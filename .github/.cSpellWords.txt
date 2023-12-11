@@ -99,6 +99,7 @@ AEEVT
 AEIE
 AERR
 AESCCM
+AESCE
 AESCMAC
 AESNI
 AESR
@@ -1566,6 +1567,7 @@ FERR
 FESETERR
 FESR
 FFCR
+FFDH
 FFDHE
 FFDR
 FFER
@@ -2232,6 +2234,7 @@ JKJKJKJK
 JKKKKKKK
 JNCH
 JOFR
+JPAKE
 JSQR
 JSWSTRT
 JTAG
@@ -5270,6 +5273,7 @@ addif
 addiu
 adge
 aeevt
+aesce
 aesni
 alldevs
 ambig
@@ -5591,6 +5595,7 @@ lusecs
 lxip
 macaddrhr
 macaddrlr
+maes
 maxiosz
 maxnpacks
 mbar
@@ -5640,6 +5645,7 @@ movne
 movs
 movw
 movx
+mpclmul
 mpcr
 mqdes
 mqttexample
@@ -5649,6 +5655,7 @@ mret
 mrru
 mrseq
 mrsne
+msse
 mspgcc
 msplim
 msreq

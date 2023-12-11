@@ -304,7 +304,6 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
                                     CK_SESSION_HANDLE xSessionHandle,
                                     CK_OBJECT_HANDLE xPkHandle )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
 
     CK_KEY_TYPE xKeyType = CKK_VENDOR_DEFINED;
@@ -312,30 +311,25 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
 
     if( pxMbedtlsPkCtx == NULL )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CKR_ARGUMENTS_BAD;
     }
     else if( xSessionHandle == CK_INVALID_HANDLE )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CKR_SESSION_HANDLE_INVALID;
     }
     else if( xPkHandle == CK_INVALID_HANDLE )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CKR_KEY_HANDLE_INVALID;
     }
     else if( ( C_GetFunctionList( &pxFunctionList ) != CKR_OK ) ||
              ( pxFunctionList == NULL ) ||
              ( pxFunctionList->C_GetAttributeValue == NULL ) )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CKR_FUNCTION_FAILED;
     }
     /* Determine key type */
     else
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         CK_ATTRIBUTE xAttrTemplate =
         {
             .pValue     = &xKeyType,
@@ -351,13 +345,11 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
 
     if( xResult == CKR_OK )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CKR_FUNCTION_FAILED;
 
         switch( xKeyType )
         {
             case CKK_ECDSA:
-                printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
                 pxMbedtlsPkCtx->pk_ctx = p11_ecdsa_ctx_alloc();
 
                 if( pxMbedtlsPkCtx->pk_ctx != NULL )
@@ -368,12 +360,10 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
 
                 if( xResult == CKR_OK )
                 {
-                    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
                     pxMbedtlsPkCtx->pk_info = &mbedtls_pkcs11_pk_ecdsa;
                 }
                 else
                 {
-                    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
                     p11_ecdsa_ctx_free( pxMbedtlsPkCtx->pk_ctx );
                     pxMbedtlsPkCtx->pk_ctx = NULL;
                     pxMbedtlsPkCtx->pk_info = NULL;
@@ -382,25 +372,20 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
                 break;
 
             case CKK_RSA:
-                printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
                 pxMbedtlsPkCtx->pk_ctx = p11_rsa_ctx_alloc();
 
                 if( pxMbedtlsPkCtx->pk_ctx != NULL )
                 {
-                    printf("%s:%s:%d pxMbedtlsPkCtx = 0x%p\n", __FILE__, __func__, __LINE__, pxMbedtlsPkCtx);
-                    printf("%s:%s:%d pxMbedtlsPkCtx->pk_ctx = 0x%p\n", __FILE__, __func__, __LINE__, pxMbedtlsPkCtx->pk_ctx);
                     xResult = p11_rsa_ctx_init( pxMbedtlsPkCtx->pk_ctx,
                                                 pxFunctionList, xSessionHandle, xPkHandle );
                 }
 
                 if( xResult == CKR_OK )
                 {
-                    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
                     pxMbedtlsPkCtx->pk_info = &mbedtls_pkcs11_pk_rsa;
                 }
                 else
                 {
-                    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
                     p11_rsa_ctx_free( pxMbedtlsPkCtx->pk_ctx );
                     pxMbedtlsPkCtx->pk_ctx = NULL;
                     pxMbedtlsPkCtx->pk_info = NULL;
@@ -415,7 +400,6 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
         }
     }
 
-    printf("\n%s:%s:%d xResult = %d\n\n", __FILE__, __func__, __LINE__, xResult);
     return xResult;
 }
 
@@ -423,7 +407,6 @@ CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
 
 static void * p11_ecdsa_ctx_alloc( void )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     void * pvCtx = NULL;
 
     pvCtx = mbedtls_calloc( 1, sizeof( P11EcDsaCtx_t ) );
@@ -445,7 +428,6 @@ static void * p11_ecdsa_ctx_alloc( void )
 
 static void p11_ecdsa_ctx_free( void * pvCtx )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     if( pvCtx != NULL )
     {
         P11EcDsaCtx_t * pxP11EcDsa = ( P11EcDsaCtx_t * ) pvCtx;
@@ -463,7 +445,6 @@ static CK_RV p11_ecdsa_ctx_init( mbedtls_pk_context * pk,
                                  CK_SESSION_HANDLE xSessionHandle,
                                  CK_OBJECT_HANDLE xPkHandle )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
     P11EcDsaCtx_t * pxP11EcDsaCtx = ( P11EcDsaCtx_t * ) pk;
     mbedtls_ecdsa_context * pxMbedEcDsaCtx = NULL;
@@ -580,7 +561,6 @@ static int prvASN1WriteBigIntFromOctetStr( unsigned char ** ppucPosition,
                                            const unsigned char * pucOctetStr,
                                            size_t uxOctetStrLen )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     size_t uxRequiredLen = 0;
     int lReturn = 0;
 
@@ -636,7 +616,6 @@ static int prvEcdsaSigToASN1InPlace( unsigned char * pucSig,
                                      size_t xSigBufferSize,
                                      size_t * pxSigLen )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     unsigned char pucTempBuf[ MBEDTLS_ECDSA_MAX_LEN ] = { 0 };
     unsigned char * pucPosition = pucTempBuf + sizeof( pucTempBuf );
 
@@ -706,7 +685,6 @@ static int p11_ecdsa_sign( mbedtls_pk_context * pk,
                            int ( * plRng )( void *, unsigned char *, size_t ),
                            void * pvRng )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
     int32_t lFinalResult = 0;
     const P11EcDsaCtx_t * pxEcDsaCtx = ( P11EcDsaCtx_t * ) pk->pk_ctx;;
@@ -781,7 +759,6 @@ static int p11_ecdsa_sign( mbedtls_pk_context * pk,
 
 static size_t p11_ecdsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     configASSERT( mbedtls_ecdsa_info.get_bitlen );
 
@@ -792,7 +769,6 @@ static size_t p11_ecdsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 
 static int p11_ecdsa_can_do( mbedtls_pk_type_t xType )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     return( xType == MBEDTLS_PK_ECDSA );
 }
 
@@ -805,7 +781,6 @@ static int p11_ecdsa_verify( mbedtls_pk_context * pxMbedtlsPkCtx,
                              const unsigned char * pucSig,
                              size_t xSigLen )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     configASSERT( mbedtls_ecdsa_info.verify_func );
 
@@ -822,7 +797,6 @@ static int p11_ecdsa_check_pair( const void * pvPub,
                                  int ( * lFRng )( void *, unsigned char *, size_t ),
                                  void * pvPRng )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     P11EcDsaCtx_t* pxP11PrvKey = (P11EcDsaCtx_t*)pxMbedtlsPkCtx->pk_ctx;
 
@@ -897,7 +871,6 @@ static int p11_ecdsa_check_pair( const void * pvPub,
 static void p11_ecdsa_debug( const mbedtls_pk_context * pxMbedtlsPkCtx ,
                              mbedtls_pk_debug_item * pxItems )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     configASSERT( mbedtls_ecdsa_info.debug_func );
 
@@ -908,14 +881,9 @@ static void p11_ecdsa_debug( const mbedtls_pk_context * pxMbedtlsPkCtx ,
 
 static size_t p11_rsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     mbedtls_rsa_context * pxRsaCtx = ( mbedtls_rsa_context * ) pxMbedtlsPkCtx->pk_ctx;
 
     configASSERT( mbedtls_rsa_info.get_bitlen );
-    printf("\n%s:%s:%d pxMbedtlsPkCtx = 0x%p\n", __FILE__, __func__, __LINE__, pxMbedtlsPkCtx);
-    printf("%s:%s:%d pxP11Rsa = 0x%p\n", __FILE__, __func__, __LINE__, pxRsaCtx);
-    printf("%s:%s:%d &pxP11Rsa->len = 0x%p\n", __FILE__, __func__, __LINE__, &(pxRsaCtx->len));
-    printf("%s:%s:%d pxP11Rsa->len = 0x%x\n", __FILE__, __func__, __LINE__, pxRsaCtx->len);
 
     return mbedtls_rsa_info.get_bitlen( pxMbedtlsPkCtx );
 }
@@ -924,7 +892,6 @@ static size_t p11_rsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 
 static int p11_rsa_can_do( mbedtls_pk_type_t xType )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     return( ( xType == MBEDTLS_PK_RSA ) || (xType == MBEDTLS_PK_RSASSA_PSS ) || ( xType == MBEDTLS_PK_RSA_ALT) );
 }
@@ -938,7 +905,6 @@ static int p11_rsa_verify( mbedtls_pk_context * pxMbedtlsPkCtx,
                            const unsigned char * pucSig,
                            size_t xSigLen )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     configASSERT( mbedtls_rsa_info.verify_func );
 
@@ -960,7 +926,6 @@ static int p11_rsa_sign( mbedtls_pk_context * pk,
                          int ( * plRng )( void *, unsigned char *, size_t ),
                          void * pvRng )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
     int32_t lFinalResult = 0;
 
@@ -1046,7 +1011,6 @@ static int p11_rsa_check_pair( const void * pvPub,
                                int ( * lFRng )( void *, unsigned char *, size_t ),
                                void * pvPRng )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     configASSERT( mbedtls_rsa_info.check_pair_func );
 
@@ -1060,7 +1024,6 @@ static int p11_rsa_check_pair( const void * pvPub,
 
 static void * p11_rsa_ctx_alloc( void )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     void * pvCtx = NULL;
 
     pvCtx = mbedtls_calloc( 1, sizeof( P11RsaCtx_t ) );
@@ -1075,11 +1038,6 @@ static void * p11_rsa_ctx_alloc( void )
         pxRsaCtx->xP11PkCtx.xPkHandle = CK_INVALID_HANDLE;
 
         mbedtls_rsa_init( &( pxRsaCtx->xMbedRsaCtx ) );
-        printf("\n%s:%s:%d pvCtx = 0x%p\n", __FILE__, __func__, __LINE__, pvCtx);
-        printf("%s:%s:%d pxRsaCtx = 0x%p\n", __FILE__, __func__, __LINE__, pxRsaCtx);
-        printf("%s:%s:%d &pxRsaCtx->xMbedRsaCtx = 0x%p\n", __FILE__, __func__, __LINE__, &(pxRsaCtx->xMbedRsaCtx));
-        printf("%s:%s:%d &pxRsaCtx->xMbedRsaCtx.len = 0x%p\n", __FILE__, __func__, __LINE__, &(pxRsaCtx->xMbedRsaCtx.len));
-        printf("%s:%s:%d pxRsaCtx->xMbedRsaCtx.len = 0x%x\n\n", __FILE__, __func__, __LINE__, pxRsaCtx->xMbedRsaCtx.len);
 
     }
 
@@ -1093,7 +1051,6 @@ static CK_RV p11_rsa_ctx_init( mbedtls_pk_context * pk,
                                CK_SESSION_HANDLE xSessionHandle,
                                CK_OBJECT_HANDLE xPkHandle )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
     P11RsaCtx_t * pxP11RsaCtx = ( P11RsaCtx_t * ) pk;
     mbedtls_rsa_context * pxMbedRsaCtx = NULL;
@@ -1104,12 +1061,10 @@ static CK_RV p11_rsa_ctx_init( mbedtls_pk_context * pk,
 
     if( pxP11RsaCtx != NULL )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         pxMbedRsaCtx = &( pxP11RsaCtx->xMbedRsaCtx );
     }
     else
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CKR_FUNCTION_FAILED;
     }
 
@@ -1134,16 +1089,10 @@ static CK_RV p11_rsa_ctx_init( mbedtls_pk_context * pk,
 
     if( xResult == CKR_OK )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         pxP11RsaCtx->xP11PkCtx.pxFunctionList = pxFunctionList;
         pxP11RsaCtx->xP11PkCtx.xSessionHandle = xSessionHandle;
         pxP11RsaCtx->xP11PkCtx.xPkHandle = xPkHandle;
     }
-        printf("\n%s:%s:%d pk = 0x%p\n", __FILE__, __func__, __LINE__, pk);
-        printf("%s:%s:%d pxP11RsaCtx = 0x%p\n", __FILE__, __func__, __LINE__, pxP11RsaCtx);
-        printf("%s:%s:%d &pxP11RsaCtx->xMbedRsaCtx = 0x%p\n", __FILE__, __func__, __LINE__, &(pxP11RsaCtx->xMbedRsaCtx));
-        printf("%s:%s:%d &pxP11RsaCtx->xMbedRsaCtx.len = 0x%p\n", __FILE__, __func__, __LINE__, &(pxP11RsaCtx->xMbedRsaCtx.len));
-        printf("%s:%s:%d pxP11RsaCtx->xMbedRsaCtx.len = 0x%x\n\n", __FILE__, __func__, __LINE__, pxP11RsaCtx->xMbedRsaCtx.len);
 
     return xResult;
 }
@@ -1152,7 +1101,6 @@ static CK_RV p11_rsa_ctx_init( mbedtls_pk_context * pk,
 
 static void p11_rsa_ctx_free( void * pvCtx )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     if( pvCtx != NULL )
     {
         P11RsaCtx_t * pxP11Rsa = ( P11RsaCtx_t * ) pvCtx;
@@ -1168,7 +1116,6 @@ static void p11_rsa_ctx_free( void * pvCtx )
 static void p11_rsa_debug( const mbedtls_pk_context * pxMbedtlsPkCtx,
                            mbedtls_pk_debug_item * pxItems )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
 
     configASSERT( mbedtls_rsa_info.debug_func );
 

@@ -243,8 +243,10 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
                                 int line,
                                 const char * str )
     {
-        /*LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) ); */
-        printf( "%s:%d: [%d] %s", file, line, level, str );
+        if( ( str != NULL ) && ( file != NULL ) )
+        {
+            LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        }
     }
 #endif /* MBEDTLS_DEBUG_C */
 
@@ -260,13 +262,10 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
     #ifdef MBEDTLS_DEBUG_C
-        if( LIBRARY_LOG_LEVEL != 0 )
-        {
             mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
             mbedtls_ssl_conf_dbg( &( pSslContext->config ),
                                   mbedtls_string_printf,
                                   NULL );
-        }
     #endif /* MBEDTLS_DEBUG_C */
 }
 /*-----------------------------------------------------------*/

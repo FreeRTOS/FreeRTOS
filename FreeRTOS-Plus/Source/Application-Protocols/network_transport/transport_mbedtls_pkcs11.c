@@ -37,7 +37,7 @@
 
 #define LIBRARY_LOG_NAME     "PkcsTlsTransport"
 
-#ifndef LIBRARY_LOG_LEVEL 
+#ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_DEBUG
 #endif /* LIBRARY_LOG_LEVEL */
 
@@ -551,7 +551,6 @@ static int32_t generateRandomBytes( void * pvCtx,
                                     unsigned char * pucRandom,
                                     size_t xRandomLength )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     /* Must cast from void pointer to conform to mbed TLS API. */
     SSLContext_t * pxCtx = ( SSLContext_t * ) pvCtx;
     CK_RV xResult;
@@ -573,7 +572,6 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
                                          CK_OBJECT_CLASS xClass,
                                          mbedtls_x509_crt * pxCertificateContext )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
     CK_ATTRIBUTE xTemplate = { 0 };
     CK_OBJECT_HANDLE xCertObj = 0;
@@ -651,7 +649,6 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
 static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
                                    const char * pcLabelName )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
     CK_RV xResult = CKR_OK;
     CK_SLOT_ID * pxSlotIds = NULL;
     CK_ULONG xCount = 0;
@@ -661,7 +658,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     /* Get the PKCS #11 module/token slot count. */
     if( CKR_OK == xResult )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = ( BaseType_t ) pxCtx->pxP11FunctionList->C_GetSlotList( CK_TRUE,
                                                                           NULL,
                                                                           &xCount );
@@ -670,7 +666,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     /* Allocate memory to store the token slots. */
     if( CKR_OK == xResult )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         pxSlotIds = ( CK_SLOT_ID * ) pvPortMalloc( sizeof( CK_SLOT_ID ) * xCount );
 
         if( NULL == pxSlotIds )
@@ -682,7 +677,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     /* Get all of the available private key slot identities. */
     if( CKR_OK == xResult )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = ( BaseType_t ) pxCtx->pxP11FunctionList->C_GetSlotList( CK_TRUE,
                                                                           pxSlotIds,
                                                                           &xCount );
@@ -691,7 +685,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     /* Put the module in authenticated mode. */
     if( CKR_OK == xResult )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = ( BaseType_t ) pxCtx->pxP11FunctionList->C_Login( pxCtx->xP11Session,
                                                                     CKU_USER,
                                                                     ( CK_UTF8CHAR_PTR ) configPKCS11_DEFAULT_USER_PIN,
@@ -700,7 +693,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
 
     if( CKR_OK == xResult )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
                                                 pcLabelName,
@@ -712,23 +704,17 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
 
     if( ( CKR_OK == xResult ) && ( pxCtx->xP11PrivateKey == CK_INVALID_HANDLE ) )
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = CK_INVALID_HANDLE;
         LogError( ( "Could not find private key: %s", pcLabelName ) );
     }
 
     if (xResult == CKR_OK)
     {
-        printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
         xResult = xPKCS11_initMbedtlsPkContext(&(pxCtx->privKey),
             pxCtx->xP11Session,
             pxCtx->xP11PrivateKey);
-        printf("\n%s:%s:%d pxCtx->privKey = 0x%p\n", __FILE__, __func__, __LINE__, &(pxCtx->privKey));
-        printf("%s:%s:%d &pxCtx->privKey->ctx = 0x%p\n", __FILE__, __func__, __LINE__, &pxCtx->privKey.pk_ctx);
-        //configASSERT( 0 == mbedtls_rsa_check_privkey(((mbedtls_rsa_context*)&(pxCtx->privKey.pk_ctx))));
     }
 
-    printf("\n%s:%s:%d xResult=%d\n\n", __FILE__, __func__, __LINE__,xResult);
     /* Free memory. */
     vPortFree( pxSlotIds );
 
@@ -744,7 +730,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                            uint32_t receiveTimeoutMs,
                                            uint32_t sendTimeoutMs )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
+
     TlsTransportParams_t * pTlsTransportParams = NULL;
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     BaseType_t socketStatus = 0;
@@ -826,7 +812,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
 void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
+
     TlsTransportParams_t * pTlsTransportParams = NULL;
     BaseType_t tlsStatus = 0;
 
@@ -868,7 +854,7 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                            void * pBuffer,
                            size_t bytesToRecv )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
+
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 
@@ -935,7 +921,7 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend )
 {
-    printf("%s:%s:%d\n", __FILE__, __func__, __LINE__);
+
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 

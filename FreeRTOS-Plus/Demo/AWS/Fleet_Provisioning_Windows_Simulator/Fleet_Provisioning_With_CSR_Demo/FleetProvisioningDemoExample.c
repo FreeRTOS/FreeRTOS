@@ -725,7 +725,6 @@ int prvFleetProvisioningTask( void * pvParameters )
          * receive device configuration. */
         if( xStatus == true )
         {
-            printf("%s:%d Calling xGenerateRegisterThingRequest\n", __func__, __LINE__);
             /* Create the request payload to publish to the RegisterThing API. */
             xStatus = xGenerateRegisterThingRequest( pucPayloadBuffer,
                                                      democonfigNETWORK_BUFFER_SIZE,
@@ -734,7 +733,6 @@ int prvFleetProvisioningTask( void * pvParameters )
                                                      democonfigFP_DEMO_ID,
                                                      fpdemoFP_DEMO_ID_LENGTH,
                                                      &xPayloadLength );
-            printf("%s:%d xGenerateRegisterThingRequest returned xStatus = %d\n", __func__, __LINE__, xStatus);
         }
 
         if( xStatus == true )
@@ -756,7 +754,6 @@ int prvFleetProvisioningTask( void * pvParameters )
 
         if( xStatus == true )
         {
-            printf("%s:%d Attempt to extract thing name\n", __func__, __LINE__);
             /* Extract the Thing name from the response. */
             xThingNameLength = fpdemoMAX_THING_NAME_LENGTH;
             xStatus = xParseRegisterThingResponse(pucPayloadBuffer,

@@ -235,10 +235,9 @@ static int32_t privateKeySigningCallback( void * pvContext,
                                 int line,
                                 const char * str )
     {
-        //LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
         if ((str != NULL) && (file != NULL))
         {
-            printf("%s:%d: [%d] %s", file, line, level, str);
+            LogDebug(("%s:%d: [%d] %s", file, line, level, str));
         }
     }
 #endif /* MBEDTLS_DEBUG_C */
@@ -256,7 +255,7 @@ static void sslContextInit( SSLContext_t * pSslContext )
     #ifdef MBEDTLS_DEBUG_C
         if( LIBRARY_LOG_LEVEL != 0 )
         {
-            mbedtls_debug_set_threshold( 2U );
+            mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1 );
             mbedtls_ssl_conf_dbg( &( pSslContext->config ),
                                   mbedtls_string_printf,
                                   NULL );

@@ -108,7 +108,7 @@
  *
  * See https://docs.aws.amazon.com/iot/latest/apireference/API_CreateThing.html#iot-CreateThing-request-thingName
  */
-#define fpdemoMAX_THING_NAME_LENGTH                128
+#define fpdemoMAX_THING_NAME_LENGTH                256
 
 /**
  * @brief The maximum number of times to run the loop in this demo.
@@ -129,24 +129,24 @@
 /**
  * @brief Size of buffer in which to hold the certificate signing request (CSR).
  */
-#define fpdemoCSR_BUFFER_LENGTH                              2048
+#define fpdemoCSR_BUFFER_LENGTH                              4096
 
 /**
  * @brief Size of buffer in which to hold the certificate.
  */
-#define fpdemoCERT_BUFFER_LENGTH                             2048
+#define fpdemoCERT_BUFFER_LENGTH                             4096
 
 /**
  * @brief Size of buffer in which to hold the certificate id.
  *
  * See https://docs.aws.amazon.com/iot/latest/apireference/API_Certificate.html#iot-Type-Certificate-certificateId
  */
-#define fpdemoCERT_ID_BUFFER_LENGTH                          64
+#define fpdemoCERT_ID_BUFFER_LENGTH                          512
 
 /**
  * @brief Size of buffer in which to hold the certificate ownership token.
  */
-#define fpdemoOWNERSHIP_TOKEN_BUFFER_LENGTH                  512
+#define fpdemoOWNERSHIP_TOKEN_BUFFER_LENGTH                  1024
 
 /**
  * @brief Milliseconds per second.
@@ -203,7 +203,7 @@ static size_t xThingNameLength;
  * APIs. When the MQTT publish callback receives an expected Fleet Provisioning
  * accepted payload, it copies it into this buffer.
  */
-static uint8_t pucPayloadBuffer[ democonfigNETWORK_BUFFER_SIZE ];
+static uint8_t pucPayloadBuffer[ democonfigNETWORK_BUFFER_SIZE * 2];
 
 /**
  * @brief Length of the payload stored in #pucPayloadBuffer. This is set by the
@@ -646,6 +646,14 @@ int prvFleetProvisioningTask( void * pvParameters )
              * topics. In this demo we use CBOR encoding for the payloads,
              * so we use the CBOR variants of the topics. */
             xStatus = prvSubscribeToCsrResponseTopics();
+
+
+            if (xStatus == true)
+            {
+                /* Subscribe to the RegisterThing response topics. */
+                xStatus = prvSubscribeToRegisterThingResponseTopics();
+            }
+
         }
 
         if( xStatus == true )
@@ -717,6 +725,7 @@ int prvFleetProvisioningTask( void * pvParameters )
          * receive device configuration. */
         if( xStatus == true )
         {
+            printf("%s:%d Calling xGenerateRegisterThingRequest\n", __func__, __LINE__);
             /* Create the request payload to publish to the RegisterThing API. */
             xStatus = xGenerateRegisterThingRequest( pucPayloadBuffer,
                                                      democonfigNETWORK_BUFFER_SIZE,
@@ -725,12 +734,7 @@ int prvFleetProvisioningTask( void * pvParameters )
                                                      democonfigFP_DEMO_ID,
                                                      fpdemoFP_DEMO_ID_LENGTH,
                                                      &xPayloadLength );
-        }
-
-        if( xStatus == true )
-        {
-            /* Subscribe to the RegisterThing response topics. */
-            xStatus = prvSubscribeToRegisterThingResponseTopics();
+            printf("%s:%d xGenerateRegisterThingRequest returned xStatus = %d\n", __func__, __LINE__, xStatus);
         }
 
         if( xStatus == true )
@@ -752,16 +756,17 @@ int prvFleetProvisioningTask( void * pvParameters )
 
         if( xStatus == true )
         {
+            printf("%s:%d Attempt to extract thing name\n", __func__, __LINE__);
             /* Extract the Thing name from the response. */
             xThingNameLength = fpdemoMAX_THING_NAME_LENGTH;
-            xStatus = xParseRegisterThingResponse( pucPayloadBuffer,
-                                                   xPayloadLength,
-                                                   pcThingName,
-                                                   &xThingNameLength );
+            xStatus = xParseRegisterThingResponse(pucPayloadBuffer,
+                xPayloadLength,
+                pcThingName,
+                &xThingNameLength);
 
-            if( xStatus == true )
+            if (xStatus == true)
             {
-                LogInfo( ( "Received AWS IoT Thing name: %.*s", ( int ) xThingNameLength, pcThingName ) );
+                LogInfo(("Received AWS IoT Thing name: %.*s", (int)xThingNameLength, pcThingName));
             }
         }
 

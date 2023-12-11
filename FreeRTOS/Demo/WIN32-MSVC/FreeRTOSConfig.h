@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -127,18 +127,11 @@ extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 	#define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
-/** Exclude Windows APIs such as Cryptography, DDE, RPC, Shell,
- * and Windows Sockets. */
-#ifndef WIN32_LEAN_AND_MEAN
-    #define WIN32_LEAN_AND_MEAN
-#endif
-
- /* Undefine _WINSOCKAPI_ to remove compilation warning winsock.h is not included */
-#ifdef _WINSOCKAPI_
-    #undef _WINSOCKAPI_
-#endif
-
-#include <winsock2.h>
+#ifdef WIN32_LEAN_AND_MEAN
+    #include "winsock2.h"
+#else
+    #include "winsock.h"
+#endif /* WIN32_LEAN_AND_MEAN */
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #include "trcRecorder.h"

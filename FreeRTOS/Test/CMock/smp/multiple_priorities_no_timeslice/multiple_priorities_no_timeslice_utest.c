@@ -80,14 +80,26 @@ int suiteTearDown( int numFailures )
 
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize,
-                                    BaseType_t xCoreId )
+                                    uint32_t * pulIdleTaskStackSize )
 {
-    static StaticTask_t xIdleTaskTCBs[ configNUMBER_OF_CORES ];
-    static StackType_t uxIdleTaskStacks[ configNUMBER_OF_CORES ][ configMINIMAL_STACK_SIZE ];
+    static StaticTask_t xIdleTaskTCB;
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-    *ppxIdleTaskTCBBuffer = &( xIdleTaskTCBs[ xCoreId ] );
-    *ppxIdleTaskStackBuffer = &( uxIdleTaskStacks[ xCoreId ][ 0 ] );
+    *ppxIdleTaskTCBBuffer = &( xIdleTaskTCB );
+    *ppxIdleTaskStackBuffer = &( uxIdleTaskStack[ 0 ] );
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
+
+void vApplicationGetPassiveIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                           StackType_t ** ppxIdleTaskStackBuffer,
+                                           uint32_t * pulIdleTaskStackSize,
+                                           BaseType_t xPassiveIdleTaskIndex )
+{
+    static StaticTask_t xIdleTaskTCBs[ configNUMBER_OF_CORES - 1 ];
+    static StackType_t uxIdleTaskStacks[ configNUMBER_OF_CORES - 1 ][ configMINIMAL_STACK_SIZE ];
+
+    *ppxIdleTaskTCBBuffer = &( xIdleTaskTCBs[ xPassiveIdleTaskIndex ] );
+    *ppxIdleTaskStackBuffer = &( uxIdleTaskStacks[ xPassiveIdleTaskIndex ][ 0 ] );
     *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 

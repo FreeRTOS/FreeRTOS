@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -52,28 +52,21 @@
 #include <stdlib.h>
 #include <conio.h>
 
+#ifdef WIN32_LEAN_AND_MEAN
+    #include "winsock2.h"
+#else
+    #include "winsock.h"
+#endif /* WIN32_LEAN_AND_MEAN */
+
 /* Visual studio intrinsics used so the __debugbreak() function is available
  * should an assert get hit. */
 #include <intrin.h>
-
-/* FreeRTOS+Trace includes. */
-/** Exclude Windows APIs such as Cryptography, DDE, RPC, Shell,
- * and Windows Sockets. */
-#ifndef WIN32_LEAN_AND_MEAN
-    #define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <winsock2.h>
-
- /* Define _WINSOCKAPI_ to ensure that winsock.h is not included */
-#ifndef _WINSOCKAPI_
-    #define _WINSOCKAPI_
-#endif
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* FreeRTOS+Trace includes. */
 #include "trcRecorder.h"
 
 /* This project provides two demo applications.  A simple blinky style demo

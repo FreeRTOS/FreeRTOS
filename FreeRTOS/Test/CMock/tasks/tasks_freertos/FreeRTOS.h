@@ -25,8 +25,8 @@
  */
 
 /*
- * The purpose of this file is to cover configASSERT. struct xSTATIC_TCB is updated to
- * cause configASSERT. The rest of this file should be the same as FreeRTOS.h.
+ * The purpose of this header file is to cover configASSERT. struct xSTATIC_TCB is
+ * updated to cause configASSERT. The rest of this file should be the same as FreeRTOS.h.
  */
 
 #ifndef INC_FREERTOS_H

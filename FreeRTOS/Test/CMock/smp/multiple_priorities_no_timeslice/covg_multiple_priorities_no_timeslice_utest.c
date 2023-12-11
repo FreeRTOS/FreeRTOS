@@ -1802,6 +1802,7 @@ void test_coverage_xTaskRemoveFromEventList_remove_eq_priority_task( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get prvYieldCore. */
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get portGET_CRITICAL_NESTING_COUNT. */
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get xYieldPendings. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* portTASK_SWITCH_HOOK(). */
 
     /* API call. */
     xReturn = xTaskRemoveFromEventList( &xEventList );

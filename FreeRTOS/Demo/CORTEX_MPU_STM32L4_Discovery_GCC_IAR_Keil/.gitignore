@@ -1,0 +1,6 @@
+.settings/
+Debug/
+DebugConfig/
+RTE/
+EventRecorderStub.scvd
+*.uvguix.*

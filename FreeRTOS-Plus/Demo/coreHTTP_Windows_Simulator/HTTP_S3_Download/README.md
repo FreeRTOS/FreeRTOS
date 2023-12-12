@@ -126,7 +126,7 @@ The IAM role that you have created must be passed to AWS IoT to create a role al
 described in Step 4. The IAM user who performs the operation requires `iam:PassRole`
 permission to authorize this action. You also should add permission for the `iam:GetRole`
 action to allow the IAM user to retrieve information about the specified role. Create the
-following policy to grant `iam:PassRole` and `iam:GetRole` permissions. Name this policy 
+following policy to grant `iam:PassRole` and `iam:GetRole` permissions. Name this policy
 `passrolepermission.json`.
 
 ```json

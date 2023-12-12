@@ -6,10 +6,14 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 
-KEY_OUT_NAME = os.path.join(os.getcwd(), 'corePKCS11_Claim_Key.dat')
-CERT_OUT_NAME = os.path.join(os.getcwd(), 'corePKCS11_Claim_Certificate.dat')
-
+# Get the absolute path of this script
 script_file_dir_abs_path = os.path.abspath(os.path.dirname(__file__))
+# Get the parent directory, as that is where the demo expects the keys to be placed
+parent_abs_path = os.path.abspath(os.path.join(script_file_dir_abs_path, os.pardir))
+
+KEY_OUT_NAME = os.path.join(parent_abs_path, 'corePKCS11_Claim_Key.dat')
+CERT_OUT_NAME = os.path.join(parent_abs_path, 'corePKCS11_Claim_Certificate.dat')
+
 
 def convert_pem_to_der(cert_pem, key_pem):
     # Convert certificate from PEM to DER

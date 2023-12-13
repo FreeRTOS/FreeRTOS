@@ -195,9 +195,9 @@ static void prvQueueSendTask( void * pvParameters )
     for( ; ; )
     {
         /* Place this task in the blocked state until it is time to run again.
-        *  The block time is specified in ticks, pdMS_TO_TICKS() was used to
-        *  convert a time specified in milliseconds into a time specified in ticks.
-        *  While in the Blocked state this task will not consume any CPU time. */
+         *  The block time is specified in ticks, pdMS_TO_TICKS() was used to
+         *  convert a time specified in milliseconds into a time specified in ticks.
+         *  While in the Blocked state this task will not consume any CPU time. */
         vTaskDelayUntil( &xNextWakeTime, xBlockTime );
 
         /* Send to the queue - causing the queue receive task to unblock and

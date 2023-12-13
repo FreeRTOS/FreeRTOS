@@ -29,19 +29,19 @@
 #define MESSAGE_BUFFER_AMP_H
 
 /* Enough four 4 8 byte strings, plus the additional 4 bytes per message
-overhead of message buffers. */
-#define mbaTASK_MESSAGE_BUFFER_SIZE ( 60 )
+ * overhead of message buffers. */
+#define mbaTASK_MESSAGE_BUFFER_SIZE       ( 60 )
 
-#define mbaCONTROL_MESSAGE_BUFFER_SIZE ( 24 )
+#define mbaCONTROL_MESSAGE_BUFFER_SIZE    ( 24 )
 
 /* The number of instances of prvM4CoreTasks that are created. */
-#define mbaNUMBER_OF_CORE_2_TASKS	2
+#define mbaNUMBER_OF_CORE_2_TASKS         2
 
 /* A block time of 0 simply means, don't block. */
-#define mbaDONT_BLOCK				0
+#define mbaDONT_BLOCK                     0
 
 /* Place the message buffers at a fixed location so it is the same for both
-cores. */
+ * cores. */
 #pragma location = 0x38000000
 MessageBufferHandle_t xControlMessageBuffer;
 
@@ -56,13 +56,13 @@ static volatile uint32_t ulStartSyncCounters[ mbaNUMBER_OF_CORE_2_TASKS ];
 #pragma location = 0x38000050
 StaticStreamBuffer_t xControlMessageBufferStruct;
 #pragma location = 0x380000A0
-StaticStreamBuffer_t xDataMessageBufferStructs[mbaNUMBER_OF_CORE_2_TASKS];
+StaticStreamBuffer_t xDataMessageBufferStructs[ mbaNUMBER_OF_CORE_2_TASKS ];
 /* Used to dimension the array used to hold the streams.*/
 /* Defines the memory that will actually hold the streams within the stream buffer.*/
 #pragma location = 0x38000100
 static uint8_t ucControlBufferStorage[ mbaCONTROL_MESSAGE_BUFFER_SIZE ];
 #pragma location = 0x38000200
-static uint8_t ucDataBufferStorage[mbaNUMBER_OF_CORE_2_TASKS][ mbaTASK_MESSAGE_BUFFER_SIZE ];
+static uint8_t ucDataBufferStorage[ mbaNUMBER_OF_CORE_2_TASKS ][ mbaTASK_MESSAGE_BUFFER_SIZE ];
 
 
 #endif /* MESSAGE_BUFFER_AMP_H */

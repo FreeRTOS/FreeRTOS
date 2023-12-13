@@ -28,10 +28,9 @@
 #define BASIC_WEB_SERVER_H
 
 /* The function that implements the WEB server task. */
-void vBasicWEBServer( void *pvParameters );
+void vBasicWEBServer( void * pvParameters );
 
 /* Initialisation required by lwIP. */
 void vlwIPInit( void );
 
 #endif
-

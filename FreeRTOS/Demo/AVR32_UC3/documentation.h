@@ -1,16 +1,17 @@
 /*This file is prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
- *
- * \brief FreeRTOS application example for AVR32 UC3.
- *
- * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
- * - Supported devices:  All AVR32 devices can be used.
- * - AppNote:
- *
- * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
- *
- ******************************************************************************/
+*
+* \brief FreeRTOS application example for AVR32 UC3.
+*
+* - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+* - Supported devices:  All AVR32 devices can be used.
+* - AppNote:
+*
+* \author               Atmel Corporation: http://www.atmel.com \n
+*                       Support and FAQ: http://support.atmel.no/
+*
+******************************************************************************/
 
 /*! \mainpage
  * \section intro Introduction

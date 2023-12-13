@@ -40,78 +40,90 @@
 
 void vParTestInitialise( void )
 {
-	/* The port used by the two LEDs is configured from halBoardInit() so
-	nothing needs to be done here. */
+    /* The port used by the two LEDs is configured from halBoardInit() so
+     * nothing needs to be done here. */
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	/* Only two LEDs are provided on the hardware. */
-	taskENTER_CRITICAL();
-	{
-		if( xValue != pdFALSE )
-		{
-			switch( uxLED )
-			{
-				case 0: LED_PORT_OUT |= LED_1;
-						break;
-	
-				case 1: LED_PORT_OUT |= LED_2;
-						break;
-						
-				default: /* Nothing to do here, there are only two LEDs. */
-						break;
-			}
-		}
-		else
-		{
-			switch( uxLED )
-			{
-				case 0: LED_PORT_OUT &= ~LED_1;
-						break;
-	
-				case 1: LED_PORT_OUT &= ~LED_2;
-						break;
-				default: /* Nothing to do here, there are only two LEDs. */
-						break;
-			}
-		}
-	}
-	taskEXIT_CRITICAL();
+    /* Only two LEDs are provided on the hardware. */
+    taskENTER_CRITICAL();
+    {
+        if( xValue != pdFALSE )
+        {
+            switch( uxLED )
+            {
+                case 0:
+                    LED_PORT_OUT |= LED_1;
+                    break;
+
+                case 1:
+                    LED_PORT_OUT |= LED_2;
+                    break;
+
+                default: /* Nothing to do here, there are only two LEDs. */
+                    break;
+            }
+        }
+        else
+        {
+            switch( uxLED )
+            {
+                case 0:
+                    LED_PORT_OUT &= ~LED_1;
+                    break;
+
+                case 1:
+                    LED_PORT_OUT &= ~LED_2;
+                    break;
+
+                default: /* Nothing to do here, there are only two LEDs. */
+                    break;
+            }
+        }
+    }
+    taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	taskENTER_CRITICAL();
-	{
-		switch( uxLED )
-		{
-			case 0: if( ( LED_PORT_OUT & LED_1 ) == 0 )
-					{
-						LED_PORT_OUT |= LED_1;
-					}
-					else
-					{
-						LED_PORT_OUT &= ~LED_1;
-					}
-					break;
+    taskENTER_CRITICAL();
+    {
+        switch( uxLED )
+        {
+            case 0:
 
-			case 1: if( ( LED_PORT_OUT & LED_2 ) == 0 )
-					{
-						LED_PORT_OUT |= LED_2;
-					}
-					else
-					{
-						LED_PORT_OUT &= ~LED_2;
-					}
-					break;
-			default: /* Nothing to do here, there are only two LEDs. */
-					break;
-		}
-	}
-	taskEXIT_CRITICAL();
+                if( ( LED_PORT_OUT & LED_1 ) == 0 )
+                {
+                    LED_PORT_OUT |= LED_1;
+                }
+                else
+                {
+                    LED_PORT_OUT &= ~LED_1;
+                }
+
+                break;
+
+            case 1:
+
+                if( ( LED_PORT_OUT & LED_2 ) == 0 )
+                {
+                    LED_PORT_OUT |= LED_2;
+                }
+                else
+                {
+                    LED_PORT_OUT &= ~LED_2;
+                }
+
+                break;
+
+            default: /* Nothing to do here, there are only two LEDs. */
+                break;
+        }
+    }
+    taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
-

@@ -1,12 +1,12 @@
 /**************************************************
- *
- * This is a template for early application low-level initialization.
- *
- * Copyright 1996-2010 IAR Systems AB.
- *
- * $Revision: 5993 $
- *
- **************************************************/
+*
+* This is a template for early application low-level initialization.
+*
+* Copyright 1996-2010 IAR Systems AB.
+*
+* $Revision: 5993 $
+*
+**************************************************/
 
 /*
  * The function __low_level_init it called by the start-up code before
@@ -37,19 +37,19 @@
 #include <intrinsics.h>
 #include "msp430.h"
 
-int __low_level_init(void)
+int __low_level_init( void )
 {
-  /* Insert your low-level initializations here */
-  _DINT();
-  WDTCTL = WDTPW+WDTHOLD;
+    /* Insert your low-level initializations here */
+    _DINT();
+    WDTCTL = WDTPW + WDTHOLD;
 
 
-  /*
-   * Return value:
-   *
-   *  1 - Perform data segment initialization.
-   *  0 - Skip data segment initialization.
-   */
+    /*
+     * Return value:
+     *
+     *  1 - Perform data segment initialization.
+     *  0 - Skip data segment initialization.
+     */
 
-  return 1;
+    return 1;
 }

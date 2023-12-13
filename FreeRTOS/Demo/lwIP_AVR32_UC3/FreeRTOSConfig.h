@@ -1,16 +1,17 @@
 /*This file is prepared for Doxygen automatic documentation generation.*/
+
 /*! \file *********************************************************************
- *
- * \brief FreeRTOS and lwIP example for AVR32 UC3.
- *
- * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
- * - Supported devices:  All AVR32 devices can be used.
- * - AppNote:
- *
- * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
- *
- ******************************************************************************/
+*
+* \brief FreeRTOS and lwIP example for AVR32 UC3.
+*
+* - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+* - Supported devices:  All AVR32 devices can be used.
+* - AppNote:
+*
+* \author               Atmel Corporation: http://www.atmel.com \n
+*                       Support and FAQ: http://support.atmel.no/
+*
+******************************************************************************/
 
 /* Copyright (c) 2007, Atmel Corporation All rights reserved.
  *
@@ -47,65 +48,65 @@
 
 
 /*-----------------------------------------------------------
- * Application specific definitions.
- *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
- *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
- *
- * See http://www.freertos.org/a00110.html
- *----------------------------------------------------------*/
+* Application specific definitions.
+*
+* These definitions should be adjusted for your particular hardware and
+* application requirements.
+*
+* THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
+* FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+*
+* See http://www.freertos.org/a00110.html
+*----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION      1
-#define configUSE_IDLE_HOOK       0
-#define configUSE_TICK_HOOK       0
-#define configCPU_CLOCK_HZ        ( 48000000 ) /* Hz clk gen */
-#define configPBA_CLOCK_HZ        ( 24000000 )
-#define configTICK_RATE_HZ        ( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES      ( 8 )
-#define configMINIMAL_STACK_SIZE  ( ( unsigned short ) 256 )
+#define configUSE_PREEMPTION               1
+#define configUSE_IDLE_HOOK                0
+#define configUSE_TICK_HOOK                0
+#define configCPU_CLOCK_HZ                 ( 48000000 ) /* Hz clk gen */
+#define configPBA_CLOCK_HZ                 ( 24000000 )
+#define configTICK_RATE_HZ                 ( ( TickType_t ) 1000 )
+#define configMAX_PRIORITIES               ( 8 )
+#define configMINIMAL_STACK_SIZE           ( ( unsigned short ) 256 )
 /* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
-#define configTOTAL_HEAP_SIZE     ( ( size_t ) ( 1024*25 ) )
-#define configMAX_TASK_NAME_LEN   ( 20 )
-#define configUSE_TRACE_FACILITY  1
-#define configUSE_16_BIT_TICKS    0
-#define configIDLE_SHOULD_YIELD   1
+#define configTOTAL_HEAP_SIZE              ( ( size_t ) ( 1024 * 25 ) )
+#define configMAX_TASK_NAME_LEN            ( 20 )
+#define configUSE_TRACE_FACILITY           1
+#define configUSE_16_BIT_TICKS             0
+#define configIDLE_SHOULD_YIELD            1
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES     0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 0 )
+#define configUSE_CO_ROUTINES              0
+#define configMAX_CO_ROUTINE_PRIORITIES    ( 0 )
 
 /* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
+ * to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet            1
-#define INCLUDE_uxTaskPriorityGet           1
-#define INCLUDE_vTaskDelete                 1
-#define INCLUDE_vTaskCleanUpResources       0
-#define INCLUDE_vTaskSuspend                1
-#define INCLUDE_vTaskDelayUntil             1
-#define INCLUDE_vTaskDelay                  1
-#define INCLUDE_xTaskGetCurrentTaskHandle   1
-#define INCLUDE_xTaskGetSchedulerState      0
+#define INCLUDE_vTaskPrioritySet                1
+#define INCLUDE_uxTaskPriorityGet               1
+#define INCLUDE_vTaskDelete                     1
+#define INCLUDE_vTaskCleanUpResources           0
+#define INCLUDE_vTaskSuspend                    1
+#define INCLUDE_vTaskDelayUntil                 1
+#define INCLUDE_vTaskDelay                      1
+#define INCLUDE_xTaskGetCurrentTaskHandle       1
+#define INCLUDE_xTaskGetSchedulerState          0
 
 /* configTICK_USE_TC is a boolean indicating whether to use a Timer Counter
-   for the tick generation. Timer Counter will generate an accurate Tick;
-   otherwise the CPU will generate a tick but with time drift.
-   configTICK_TC_CHANNEL is the TC channel. */
-#define configTICK_USE_TC             1
-#define configTICK_TC_CHANNEL         2
+ * for the tick generation. Timer Counter will generate an accurate Tick;
+ * otherwise the CPU will generate a tick but with time drift.
+ * configTICK_TC_CHANNEL is the TC channel. */
+#define configTICK_USE_TC                       1
+#define configTICK_TC_CHANNEL                   2
 
 /* configHEAP_INIT is a boolean indicating whether to initialize the heap with
-   0xA5 in order to be able to determine the maximal heap consumption. */
-#define configHEAP_INIT               0
+ * 0xA5 in order to be able to determine the maximal heap consumption. */
+#define configHEAP_INIT                         0
 
 /* This demo makes use of one or more example stats formatting functions.  These
-format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
-FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+ * format the raw data provided by the uxTaskGetSystemState() function in to human
+ * readable ASCII form.  See the notes in the implementation of vTaskList() within
+ * FreeRTOS/Source/tasks.c for limitations. */
+#define configUSE_STATS_FORMATTING_FUNCTIONS    1
 
 
 #endif /* FREERTOS_CONFIG_H */

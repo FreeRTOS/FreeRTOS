@@ -31,4 +31,3 @@ void vStartRegTestTasks( void );
 portBASE_TYPE xAreRegTestTasksStillRunning( void );
 
 #endif
-

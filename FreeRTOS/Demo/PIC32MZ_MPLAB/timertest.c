@@ -31,12 +31,12 @@
 #include "FreeRTOS.h"
 
 /* The maximum value the 16bit timer can contain. */
-#define timerMAX_COUNT				0xffff
+#define timerMAX_COUNT    0xffff
 
 /* The timer 2 interrupt handler.  As this interrupt uses the FreeRTOS assembly
-entry point the IPL setting in the following function prototype has no effect.
-The interrupt priority is set by ConfigIntTimer2() in vSetupTimerTest(). */
-void __attribute__( (interrupt(IPL0AUTO), vector(_TIMER_2_VECTOR))) vT2InterruptWrapper( void );
+ * entry point the IPL setting in the following function prototype has no effect.
+ * The interrupt priority is set by ConfigIntTimer2() in vSetupTimerTest(). */
+void __attribute__( ( interrupt( IPL0AUTO ), vector( _TIMER_2_VECTOR ) ) ) vT2InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/
 
@@ -50,49 +50,47 @@ static unsigned long ulFrequencyHz;
 
 void vSetupTimerTest( unsigned short usFrequencyHz )
 {
-	/* Remember the frequency so it can be used from the ISR. */
-	ulFrequencyHz = ( unsigned long ) usFrequencyHz;
+    /* Remember the frequency so it can be used from the ISR. */
+    ulFrequencyHz = ( unsigned long ) usFrequencyHz;
 
-	/* T2 is used to generate interrupts above the kernel and max syscall 
-	interrupt priority. */
-	T2CON = 0;
-	TMR2 = 0;
+    /* T2 is used to generate interrupts above the kernel and max syscall
+     * interrupt priority. */
+    T2CON = 0;
+    TMR2 = 0;
 
-	/* Timer 2 is going to interrupt at usFrequencyHz Hz. */
-	PR2 = ( unsigned short ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned long ) usFrequencyHz ) - 1 );
+    /* Timer 2 is going to interrupt at usFrequencyHz Hz. */
+    PR2 = ( unsigned short ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned long ) usFrequencyHz ) - 1 );
 
-	/* Setup timer 2 interrupt priority to be above the kernel priority so
-	the timer jitter is not effected by the kernel activity. */
-	IPC2bits.T2IP = ( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 );
+    /* Setup timer 2 interrupt priority to be above the kernel priority so
+     * the timer jitter is not effected by the kernel activity. */
+    IPC2bits.T2IP = ( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 );
 
-	/* Clear the interrupt as a starting condition. */
-	IFS0bits.T2IF = 0;
+    /* Clear the interrupt as a starting condition. */
+    IFS0bits.T2IF = 0;
 
-	/* Enable the interrupt. */
-	IEC0bits.T2IE = 1;
+    /* Enable the interrupt. */
+    IEC0bits.T2IE = 1;
 
-	/* Start the timer. */
-	T2CONbits.TON = 1;
+    /* Start the timer. */
+    T2CONbits.TON = 1;
 }
 /*-----------------------------------------------------------*/
 
 void vT2InterruptHandler( void )
 {
-static unsigned long ulMaxNestingDepth = 0;
+    static unsigned long ulMaxNestingDepth = 0;
 
-	/* Keep a count of interrupts so the check timer can ensure they are
-	occurring at the expected rate. */
-	ulHighFrequencyTimerInterrupts++;
+    /* Keep a count of interrupts so the check timer can ensure they are
+     * occurring at the expected rate. */
+    ulHighFrequencyTimerInterrupts++;
 
-	/* Establish the maximum nesting count reached to ensure the test is doing
-	what it is supposed to. */
-	if( uxInterruptNesting > ulMaxNestingDepth )
-	{
-		ulMaxNestingDepth = uxInterruptNesting;
-	}
+    /* Establish the maximum nesting count reached to ensure the test is doing
+     * what it is supposed to. */
+    if( uxInterruptNesting > ulMaxNestingDepth )
+    {
+        ulMaxNestingDepth = uxInterruptNesting;
+    }
 
-	/* Clear the timer interrupt. */
-	IFS0CLR = _IFS0_T2IF_MASK;
+    /* Clear the timer interrupt. */
+    IFS0CLR = _IFS0_T2IF_MASK;
 }
-
-

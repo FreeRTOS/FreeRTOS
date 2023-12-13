@@ -29,7 +29,7 @@
 
 typedef struct
 {
-	char const *pcMessage;
+    char const * pcMessage;
 } xLCDMessage;
 
 #endif /* LCD_MESSAGE_H */

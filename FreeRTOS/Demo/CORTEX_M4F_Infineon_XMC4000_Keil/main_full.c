@@ -83,24 +83,24 @@
 #include "recmutex.h"
 
 /* Priorities for the demo application tasks. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
-#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
-#define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
-#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
+#define mainQUEUE_POLL_PRIORITY            ( tskIDLE_PRIORITY + 2UL )
+#define mainSEM_TEST_PRIORITY              ( tskIDLE_PRIORITY + 1UL )
+#define mainBLOCK_Q_PRIORITY               ( tskIDLE_PRIORITY + 2UL )
+#define mainCREATOR_TASK_PRIORITY          ( tskIDLE_PRIORITY + 3UL )
+#define mainFLOP_TASK_PRIORITY             ( tskIDLE_PRIORITY )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0UL )
+#define mainDONT_BLOCK                     ( 0UL )
 
 /* The period after which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
+ * have been reported by any of the standard demo tasks.  ms are converted to the
+ * equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS          ( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
+ * reported in one of the standard demo tasks.  ms are converted to the equivalent
+ * in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS    ( 200UL / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 
@@ -114,139 +114,142 @@ static void prvCheckTimerCallback( TimerHandle_t xTimer );
  * of the FPU registers, as described at the top of this file.  The nature of
  * these files necessitates that they are written in an assembly file.
  */
-extern void vRegTest1Task( void *pvParameters );
-extern void vRegTest2Task( void *pvParameters );
+extern void vRegTest1Task( void * pvParameters );
+extern void vRegTest2Task( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
-register check tasks to the check software timer.  If the variables keep
-incrementing, then the register check tasks have not discovered any errors.  If
-a variable stops incrementing, then an error has been found. */
+ * register check tasks to the check software timer.  If the variables keep
+ * incrementing, then the register check tasks have not discovered any errors.  If
+ * a variable stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-TimerHandle_t xCheckTimer = NULL;
+    TimerHandle_t xCheckTimer = NULL;
 
-	/* Start all the other standard demo/test tasks.  The have not particular
-	functionality, but do demonstrate how to use the FreeRTOS API and test the
-	kernel port. */
-	vStartDynamicPriorityTasks();
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartMathTasks( mainFLOP_TASK_PRIORITY );
+    /* Start all the other standard demo/test tasks.  The have not particular
+     * functionality, but do demonstrate how to use the FreeRTOS API and test the
+     * kernel port. */
+    vStartDynamicPriorityTasks();
+    vCreateBlockTimeTasks();
+    vStartCountingSemaphoreTasks();
+    vStartGenericQueueTasks( tskIDLE_PRIORITY );
+    vStartRecursiveMutexTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
-	/* Create the register check tasks, as described at the top of this
-	file */
-	xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+    /* Create the register check tasks, as described at the top of this
+     * file */
+    xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 
-	/* Create the software timer that performs the 'check' functionality,
-	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
-								( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,					/* The ID is not used, so can be set to anything. */
-								prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-							  );
+    /* Create the software timer that performs the 'check' functionality,
+     * as described at the top of this file. */
+    xCheckTimer = xTimerCreate( "CheckTimer",                  /* A text name, purely to help debugging. */
+                                ( mainCHECK_TIMER_PERIOD_MS ), /* The timer period, in this case 3000ms (3s). */
+                                pdTRUE,                        /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                                ( void * ) 0,                  /* The ID is not used, so can be set to anything. */
+                                prvCheckTimerCallback          /* The callback function that inspects the status of all the other tasks. */
+                                );
 
-	if( xCheckTimer != NULL )
-	{
-		xTimerStart( xCheckTimer, mainDONT_BLOCK );
-	}
+    if( xCheckTimer != NULL )
+    {
+        xTimerStart( xCheckTimer, mainDONT_BLOCK );
+    }
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following line
-	will never be reached.  If the following line does execute, then there was
-	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
-	to be created.  See the memory management section on the FreeRTOS web site
-	for more details. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following line
+     * will never be reached.  If the following line does execute, then there was
+     * insufficient FreeRTOS heap memory available for the idle and/or timer tasks
+     * to be created.  See the memory management section on the FreeRTOS web site
+     * for more details. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
-static long lChangedTimerPeriodAlready = pdFALSE;
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-unsigned long ulErrorFound = pdFALSE;
+    static long lChangedTimerPeriodAlready = pdFALSE;
+    static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+    unsigned long ulErrorFound = pdFALSE;
 
-	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none have detected an error. */
+    /* Check all the demo tasks (other than the flash tasks) to ensure
+     * that they are all still running, and that none have detected an error. */
 
-	if( xAreMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreMathsTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	/* Check that the register test 1 task is still running. */
-	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
-	{
-		ulErrorFound = pdTRUE;
-	}
-	ulLastRegTest1Value = ulRegTest1LoopCounter;
+    /* Check that the register test 1 task is still running. */
+    if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	/* Check that the register test 2 task is still running. */
-	if( ulLastRegTest2Value == ulRegTest2LoopCounter )
-	{
-		ulErrorFound = pdTRUE;
-	}
-	ulLastRegTest2Value = ulRegTest2LoopCounter;
+    ulLastRegTest1Value = ulRegTest1LoopCounter;
 
-	/* Toggle the check LED to give an indication of the system status.  If
-	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
-	everything is ok.  A faster toggle indicates an error. */
-	configTOGGLE_LED();
+    /* Check that the register test 2 task is still running. */
+    if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	/* Have any errors been latch in ulErrorFound?  If so, shorten the
-	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
-	This will result in an increase in the rate at which mainCHECK_LED
-	toggles. */
-	if( ulErrorFound != pdFALSE )
-	{
-		if( lChangedTimerPeriodAlready == pdFALSE )
-		{
-			lChangedTimerPeriodAlready = pdTRUE;
+    ulLastRegTest2Value = ulRegTest2LoopCounter;
 
-			/* This call to xTimerChangePeriod() uses a zero block time.
-			Functions called from inside of a timer callback function must
-			*never* attempt	to block. */
-			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
-		}
-	}
+    /* Toggle the check LED to give an indication of the system status.  If
+     * the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
+     * everything is ok.  A faster toggle indicates an error. */
+    configTOGGLE_LED();
+
+    /* Have any errors been latch in ulErrorFound?  If so, shorten the
+     * period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
+     * This will result in an increase in the rate at which mainCHECK_LED
+     * toggles. */
+    if( ulErrorFound != pdFALSE )
+    {
+        if( lChangedTimerPeriodAlready == pdFALSE )
+        {
+            lChangedTimerPeriodAlready = pdTRUE;
+
+            /* This call to xTimerChangePeriod() uses a zero block time.
+             * Functions called from inside of a timer callback function must
+             * never* attempt	to block. */
+            xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
-

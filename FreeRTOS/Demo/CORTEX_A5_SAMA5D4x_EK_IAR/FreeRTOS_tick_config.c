@@ -49,8 +49,8 @@ static void System_Handler( void );
 
 static void System_Handler( void )
 {
-	/* See the comments above the function prototype in this file. */
-	FreeRTOS_Tick_Handler();
+    /* See the comments above the function prototype in this file. */
+    FreeRTOS_Tick_Handler();
 }
 /*-----------------------------------------------------------*/
 
@@ -62,40 +62,39 @@ static void System_Handler( void )
  */
 void vConfigureTickInterrupt( void )
 {
-	/* NOTE:  The PIT interrupt is cleared by the configCLEAR_TICK_INTERRUPT()
-	macro in FreeRTOSConfig.h. */
+    /* NOTE:  The PIT interrupt is cleared by the configCLEAR_TICK_INTERRUPT()
+     * macro in FreeRTOSConfig.h. */
 
-	/* Enable the PIT clock. */
-	PMC->PMC_PCER0 = 1 << ID_PIT;
+    /* Enable the PIT clock. */
+    PMC->PMC_PCER0 = 1 << ID_PIT;
 
-	/* Initialize the PIT to the desired frequency - specified in uS. */
-	PIT_Init( 1000000UL / configTICK_RATE_HZ, ( BOARD_MCK / 2 ) / 1000000 );
+    /* Initialize the PIT to the desired frequency - specified in uS. */
+    PIT_Init( 1000000UL / configTICK_RATE_HZ, ( BOARD_MCK / 2 ) / 1000000 );
 
-	/* Enable IRQ / select PIT interrupt. */
-	PMC->PMC_PCER1 = ( 1 << ( ID_IRQ - 32 ) );
-	AIC->AIC_SSR  = ID_PIT;
+    /* Enable IRQ / select PIT interrupt. */
+    PMC->PMC_PCER1 = ( 1 << ( ID_IRQ - 32 ) );
+    AIC->AIC_SSR = ID_PIT;
 
-	/* Ensure interrupt is disabled before setting the mode and installing the
-	handler.  The priority of the tick interrupt should always be set to the
-	lowest possible. */
-	AIC->AIC_IDCR = AIC_IDCR_INTD;
-	AIC->AIC_SMR  = AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE;
-	AIC->AIC_SVR = ( uint32_t ) FreeRTOS_Tick_Handler;
+    /* Ensure interrupt is disabled before setting the mode and installing the
+     * handler.  The priority of the tick interrupt should always be set to the
+     * lowest possible. */
+    AIC->AIC_IDCR = AIC_IDCR_INTD;
+    AIC->AIC_SMR = AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE;
+    AIC->AIC_SVR = ( uint32_t ) FreeRTOS_Tick_Handler;
 
-	/* Start with the interrupt clear. */
-	AIC->AIC_ICCR = AIC_ICCR_INTCLR;
+    /* Start with the interrupt clear. */
+    AIC->AIC_ICCR = AIC_ICCR_INTCLR;
 
-	/* Enable the interrupt in the AIC and peripheral. */
-	AIC_EnableIT( ID_PIT );
-	PIT_EnableIT();
+    /* Enable the interrupt in the AIC and peripheral. */
+    AIC_EnableIT( ID_PIT );
+    PIT_EnableIT();
 
-	/* Enable the peripheral. */
-	PIT_Enable();
+    /* Enable the peripheral. */
+    PIT_Enable();
 
-	/* Prevent compiler warnings in the case where System_Handler() is not used
-	as the handler.  See the comments above the System_Handler() function
-	prototype at the top of this file. */
-	( void ) System_Handler;
+    /* Prevent compiler warnings in the case where System_Handler() is not used
+     * as the handler.  See the comments above the System_Handler() function
+     * prototype at the top of this file. */
+    ( void ) System_Handler;
 }
 /*-----------------------------------------------------------*/
-

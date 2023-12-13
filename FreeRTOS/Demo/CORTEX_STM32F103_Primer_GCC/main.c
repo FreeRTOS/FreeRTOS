@@ -64,7 +64,7 @@
  */
 
 /* CircleOS includes.  Some of the CircleOS peripheral functionality is
-utilised, although CircleOS itself is not used. */
+ * utilised, although CircleOS itself is not used. */
 #include "circle.h"
 
 /* Standard includes. */
@@ -83,68 +83,68 @@ utilised, although CircleOS itself is not used. */
 #include "QPeek.h"
 
 /* The bitmap used to display the FreeRTOS.org logo is stored in 16bit format
-and therefore takes up a large proportion of the Flash space.  Setting this
-parameter to 0 excludes the bitmap from the build, freeing up Flash space for
-extra code. */
-#define mainINCLUDE_BITMAP 					0
+ * and therefore takes up a large proportion of the Flash space.  Setting this
+ * parameter to 0 excludes the bitmap from the build, freeing up Flash space for
+ * extra code. */
+#define mainINCLUDE_BITMAP    0
 
 #if mainINCLUDE_BITMAP == 1
-	#include "bitmap.h"
+    #include "bitmap.h"
 #endif
 
 /* Task priorities. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainGEN_Q_PRIORITY					( tskIDLE_PRIORITY + 0 )
-#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3 )
+#define mainBLOCK_Q_PRIORITY         ( tskIDLE_PRIORITY + 2 )
+#define mainGEN_Q_PRIORITY           ( tskIDLE_PRIORITY + 0 )
+#define mainFLASH_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2 )
 
 /* Splash screen related constants. */
-#define mainBITMAP_Y 						( 38 )
-#define mainBITMAP_X						( 18 )
-#define mainURL_Y							( 8 )
-#define mainURL_X							( 78 )
-#define mainSPLASH_SCREEN_DELAY		( 2000 / portTICK_PERIOD_MS )
+#define mainBITMAP_Y                 ( 38 )
+#define mainBITMAP_X                 ( 18 )
+#define mainURL_Y                    ( 8 )
+#define mainURL_X                    ( 78 )
+#define mainSPLASH_SCREEN_DELAY      ( 2000 / portTICK_PERIOD_MS )
 
 /* Text drawing related constants. */
-#define mainLCD_CHAR_HEIGHT			( 13 )
-#define mainLCD_MAX_Y				( 110 )
+#define mainLCD_CHAR_HEIGHT          ( 13 )
+#define mainLCD_MAX_Y                ( 110 )
 
 /* The maximum number of message that can be waiting for display at any one
-time. */
-#define mainLCD_QUEUE_SIZE					( 3 )
+ * time. */
+#define mainLCD_QUEUE_SIZE           ( 3 )
 
 /* The check task uses the sprintf function so requires a little more stack. */
-#define mainCHECK_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
+#define mainCHECK_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE + 50 )
 
 /* The LCD task calls some of the CircleOS functions (for MEMS and LCD access),
-these can require a larger stack. */
-#define configLCD_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
+ * these can require a larger stack. */
+#define configLCD_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE + 50 )
 
 /* Dimensions the buffer into which the jitter time is written. */
-#define mainMAX_MSG_LEN						25
+#define mainMAX_MSG_LEN              25
 
 /* The time between cycles of the 'check' task. */
-#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
+#define mainCHECK_DELAY              ( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* The period at which the MEMS input should be updated. */
-#define mainMEMS_DELAY						( ( TickType_t ) 100 / portTICK_PERIOD_MS )
+#define mainMEMS_DELAY               ( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* The rate at which the flash task toggles the LED. */
-#define mainFLASH_DELAY						( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define mainFLASH_DELAY              ( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
 
 /* The number of nano seconds between each processor clock. */
-#define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK             ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* The two types of message that can be sent to the LCD task. */
-#define mainUPDATE_BALL_MESSAGE				( 0 )
-#define mainWRITE_STRING_MESSAGE			( 1 )
+#define mainUPDATE_BALL_MESSAGE      ( 0 )
+#define mainWRITE_STRING_MESSAGE     ( 1 )
 
 /* Type of the message sent to the LCD task. */
 typedef struct
 {
-	portBASE_TYPE xMessageType;
-	signed char *pcMessage;
+    portBASE_TYPE xMessageType;
+    signed char * pcMessage;
 } xLCDMessage;
 
 /*-----------------------------------------------------------*/
@@ -160,7 +160,7 @@ static void prvSetupHardware( void );
  * access the LCD directly.  Other tasks wanting to display a message send
  * the message to the gatekeeper.
  */
-static void prvLCDTask( void *pvParameters );
+static void prvLCDTask( void * pvParameters );
 
 /*
  * Checks the status of all the demo tasks then prints a message to the
@@ -175,7 +175,7 @@ static void prvLCDTask( void *pvParameters );
  * The check task also receives instructions to update the MEMS input, which
  * in turn can also lead to the LCD being updated.
  */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /*
  * Configures the timers and interrupts for the fast interrupt test as
@@ -187,12 +187,14 @@ extern void vSetupTimerTest( void );
  * A cut down version of sprintf() used to percent the HUGE GCC library
  * equivalent from being included in the binary image.
  */
-extern int sprintf(char *out, const char *format, ...);
+extern int sprintf( char * out,
+                    const char * format,
+                    ... );
 
 /*
  * Simple toggle the LED periodically for timing verification.
  */
-static void prvFlashTask( void *pvParameters );
+static void prvFlashTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -203,255 +205,257 @@ QueueHandle_t xLCDQueue;
 
 int main( void )
 {
-	#ifdef DEBUG
-		debug();
-	#endif
+    #ifdef DEBUG
+        debug();
+    #endif
 
-	prvSetupHardware();
+    prvSetupHardware();
 
-	/* Create the queue used by the LCD task.  Messages for display on the LCD
-	are received via this queue. */
-	xLCDQueue = xQueueCreate( mainLCD_QUEUE_SIZE, sizeof( xLCDMessage ) );
+    /* Create the queue used by the LCD task.  Messages for display on the LCD
+     * are received via this queue. */
+    xLCDQueue = xQueueCreate( mainLCD_QUEUE_SIZE, sizeof( xLCDMessage ) );
 
-	/* Start the standard demo tasks. */
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    /* Start the standard demo tasks. */
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
     vCreateBlockTimeTasks();
-	vStartGenericQueueTasks( mainGEN_Q_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartGenericQueueTasks( mainGEN_Q_PRIORITY );
+    vStartQueuePeekTasks();
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
-	/* Start the tasks defined within this file/specific to this demo. */
+    /* Start the tasks defined within this file/specific to this demo. */
     xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-	xTaskCreate( prvLCDTask, "LCD", configLCD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvFlashTask, "Flash", configMINIMAL_STACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, NULL );
+    xTaskCreate( prvLCDTask, "LCD", configLCD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( prvFlashTask, "Flash", configMINIMAL_STACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, NULL );
 
-	/* Configure the timers used by the fast interrupt timer test. */
-	vSetupTimerTest();
+    /* Configure the timers used by the fast interrupt timer test. */
+    vSetupTimerTest();
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* Will only get here if there was not enough heap space to create the
-	idle task. */
-	return 0;
+    /* Will only get here if there was not enough heap space to create the
+     * idle task. */
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
-void prvLCDTask( void *pvParameters )
+void prvLCDTask( void * pvParameters )
 {
-xLCDMessage xMessage;
-char cY = mainLCD_CHAR_HEIGHT;
-const char * const pcString = "www.FreeRTOS.org";
-const char * const pcBlankLine = "                  ";
+    xLCDMessage xMessage;
+    char cY = mainLCD_CHAR_HEIGHT;
+    const char * const pcString = "www.FreeRTOS.org";
+    const char * const pcBlankLine = "                  ";
 
-	DRAW_Init();
+    DRAW_Init();
 
-	#if mainINCLUDE_BITMAP == 1
-		DRAW_SetImage( pucImage, mainBITMAP_Y, mainBITMAP_X, bmpBITMAP_HEIGHT, bmpBITMAP_WIDTH );
-	#endif
+    #if mainINCLUDE_BITMAP == 1
+        DRAW_SetImage( pucImage, mainBITMAP_Y, mainBITMAP_X, bmpBITMAP_HEIGHT, bmpBITMAP_WIDTH );
+    #endif
 
-	LCD_SetScreenOrientation( V9 );
-	DRAW_DisplayString( mainURL_Y, mainURL_X, pcString, strlen( pcString ) );
-	vTaskDelay( mainSPLASH_SCREEN_DELAY );
-	LCD_FillRect( 0, 0, CHIP_SCREEN_WIDTH, CHIP_SCREEN_HEIGHT, RGB_WHITE );
+    LCD_SetScreenOrientation( V9 );
+    DRAW_DisplayString( mainURL_Y, mainURL_X, pcString, strlen( pcString ) );
+    vTaskDelay( mainSPLASH_SCREEN_DELAY );
+    LCD_FillRect( 0, 0, CHIP_SCREEN_WIDTH, CHIP_SCREEN_HEIGHT, RGB_WHITE );
 
-	for( ;; )
-	{
-		/* Wait for a message to arrive that requires displaying. */
-		while( xQueueReceive( xLCDQueue, &xMessage, portMAX_DELAY ) != pdPASS );
+    for( ; ; )
+    {
+        /* Wait for a message to arrive that requires displaying. */
+        while( xQueueReceive( xLCDQueue, &xMessage, portMAX_DELAY ) != pdPASS )
+        {
+        }
 
-		/* Check the message type. */
-		if( xMessage.xMessageType == mainUPDATE_BALL_MESSAGE )
-		{
-			/* Read the MEMS and update the ball display on the LCD if required. */
-			MEMS_Handler();
-			POINTER_Handler();
-		}
-		else
-		{
-			/* A text string was sent.  First blank off the old text string, then
-			draw the new text on the next line down. */
-			DRAW_DisplayString( 0, cY, pcBlankLine, strlen( pcBlankLine ) );
+        /* Check the message type. */
+        if( xMessage.xMessageType == mainUPDATE_BALL_MESSAGE )
+        {
+            /* Read the MEMS and update the ball display on the LCD if required. */
+            MEMS_Handler();
+            POINTER_Handler();
+        }
+        else
+        {
+            /* A text string was sent.  First blank off the old text string, then
+             * draw the new text on the next line down. */
+            DRAW_DisplayString( 0, cY, pcBlankLine, strlen( pcBlankLine ) );
 
-			cY -= mainLCD_CHAR_HEIGHT;
-			if( cY <= ( mainLCD_CHAR_HEIGHT - 1 ) )
-			{
-				/* Wrap the line onto which we are going to write the text. */
-				cY = mainLCD_MAX_Y;
-			}
+            cY -= mainLCD_CHAR_HEIGHT;
 
-			/* Display the message. */
-			DRAW_DisplayString( 0, cY, xMessage.pcMessage, strlen( xMessage.pcMessage ) );
-		}
-	}
+            if( cY <= ( mainLCD_CHAR_HEIGHT - 1 ) )
+            {
+                /* Wrap the line onto which we are going to write the text. */
+                cY = mainLCD_MAX_Y;
+            }
+
+            /* Display the message. */
+            DRAW_DisplayString( 0, cY, xMessage.pcMessage, strlen( xMessage.pcMessage ) );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-TickType_t xLastExecutionTime;
-xLCDMessage xMessage;
-static signed char cPassMessage[ mainMAX_MSG_LEN ];
-extern unsigned short usMaxJitter;
+    TickType_t xLastExecutionTime;
+    xLCDMessage xMessage;
+    static signed char cPassMessage[ mainMAX_MSG_LEN ];
+    extern unsigned short usMaxJitter;
 
-	/* Initialise the xLastExecutionTime variable on task entry. */
-	xLastExecutionTime = xTaskGetTickCount();
+    /* Initialise the xLastExecutionTime variable on task entry. */
+    xLastExecutionTime = xTaskGetTickCount();
 
-	/* Setup the message we are going to send to the LCD task. */
-	xMessage.xMessageType = mainWRITE_STRING_MESSAGE;
-	xMessage.pcMessage = cPassMessage;
+    /* Setup the message we are going to send to the LCD task. */
+    xMessage.xMessageType = mainWRITE_STRING_MESSAGE;
+    xMessage.pcMessage = cPassMessage;
 
-    for( ;; )
-	{
-		/* Perform this check every mainCHECK_DELAY milliseconds. */
-		vTaskDelayUntil( &xLastExecutionTime, mainCHECK_DELAY );
+    for( ; ; )
+    {
+        /* Perform this check every mainCHECK_DELAY milliseconds. */
+        vTaskDelayUntil( &xLastExecutionTime, mainCHECK_DELAY );
 
-		/* Has an error been found in any task?   If so then point the text
-		we are going to send to the LCD task to an error message instead of
-		the PASS message. */
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			xMessage.pcMessage = "ERROR IN GEN Q";
-		}
+        /* Has an error been found in any task?   If so then point the text
+         * we are going to send to the LCD task to an error message instead of
+         * the PASS message. */
+        if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+        {
+            xMessage.pcMessage = "ERROR IN GEN Q";
+        }
+
         if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			xMessage.pcMessage = "ERROR IN BLOCK Q";
-		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			xMessage.pcMessage = "ERROR IN BLOCK TIME";
-		}
+        {
+            xMessage.pcMessage = "ERROR IN BLOCK Q";
+        }
+        else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+        {
+            xMessage.pcMessage = "ERROR IN BLOCK TIME";
+        }
         else if( xArePollingQueuesStillRunning() != pdTRUE )
         {
             xMessage.pcMessage = "ERROR IN POLL Q";
         }
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			xMessage.pcMessage = "ERROR IN PEEK Q";
-		}
-		else
-		{
-			/* No errors were found in any task, so send a pass message
-			with the max measured jitter time also included (as per the
-			fast interrupt test described at the top of this file and on
-			the online documentation page for this demo application). */
-			sprintf( ( char * ) cPassMessage, "PASS [%uns]", ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK );
-		}
+        else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+        {
+            xMessage.pcMessage = "ERROR IN PEEK Q";
+        }
+        else
+        {
+            /* No errors were found in any task, so send a pass message
+             * with the max measured jitter time also included (as per the
+             * fast interrupt test described at the top of this file and on
+             * the online documentation page for this demo application). */
+            sprintf( ( char * ) cPassMessage, "PASS [%uns]", ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK );
+        }
 
-		/* Send the message to the LCD gatekeeper for display. */
-		xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
-	}
+        /* Send the message to the LCD gatekeeper for display. */
+        xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-static unsigned long ulCallCount;
-static const xLCDMessage xMemsMessage = { mainUPDATE_BALL_MESSAGE, NULL };
-static portBASE_TYPE xHigherPriorityTaskWoken;
+    static unsigned long ulCallCount;
+    static const xLCDMessage xMemsMessage = { mainUPDATE_BALL_MESSAGE, NULL };
+    static portBASE_TYPE xHigherPriorityTaskWoken;
 
-	/* Periodically send a message to the LCD task telling it to update
-	the MEMS input, and then if necessary the LCD. */
-	ulCallCount++;
-	if( ulCallCount >= mainMEMS_DELAY )
-	{
-		ulCallCount = 0;
-		xHigherPriorityTaskWoken = pdFALSE;
-		xQueueSendFromISR( xLCDQueue, &xMemsMessage, &xHigherPriorityTaskWoken );
-	}
+    /* Periodically send a message to the LCD task telling it to update
+     * the MEMS input, and then if necessary the LCD. */
+    ulCallCount++;
+
+    if( ulCallCount >= mainMEMS_DELAY )
+    {
+        ulCallCount = 0;
+        xHigherPriorityTaskWoken = pdFALSE;
+        xQueueSendFromISR( xLCDQueue, &xMemsMessage, &xHigherPriorityTaskWoken );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	/* Start with the clocks in their expected state. */
-	RCC_DeInit();
+    /* Start with the clocks in their expected state. */
+    RCC_DeInit();
 
-	/* Enable HSE (high speed external clock). */
-	RCC_HSEConfig( RCC_HSE_ON );
+    /* Enable HSE (high speed external clock). */
+    RCC_HSEConfig( RCC_HSE_ON );
 
-	/* Wait till HSE is ready. */
-	while( RCC_GetFlagStatus( RCC_FLAG_HSERDY ) == RESET )
-	{
-	}
+    /* Wait till HSE is ready. */
+    while( RCC_GetFlagStatus( RCC_FLAG_HSERDY ) == RESET )
+    {
+    }
 
-	/* 2 wait states required on the flash. */
-	*( ( unsigned long * ) 0x40022000 ) = 0x02;
+    /* 2 wait states required on the flash. */
+    *( ( unsigned long * ) 0x40022000 ) = 0x02;
 
-	/* HCLK = SYSCLK */
-	RCC_HCLKConfig( RCC_SYSCLK_Div1 );
+    /* HCLK = SYSCLK */
+    RCC_HCLKConfig( RCC_SYSCLK_Div1 );
 
-	/* PCLK2 = HCLK */
-	RCC_PCLK2Config( RCC_HCLK_Div1 );
+    /* PCLK2 = HCLK */
+    RCC_PCLK2Config( RCC_HCLK_Div1 );
 
-	/* PCLK1 = HCLK/2 */
-	RCC_PCLK1Config( RCC_HCLK_Div2 );
+    /* PCLK1 = HCLK/2 */
+    RCC_PCLK1Config( RCC_HCLK_Div2 );
 
-	/* PLLCLK = 12MHz * 6 = 72 MHz. */
-	RCC_PLLConfig( RCC_PLLSource_HSE_Div1, RCC_PLLMul_6 );
+    /* PLLCLK = 12MHz * 6 = 72 MHz. */
+    RCC_PLLConfig( RCC_PLLSource_HSE_Div1, RCC_PLLMul_6 );
 
-	/* Enable PLL. */
-	RCC_PLLCmd( ENABLE );
+    /* Enable PLL. */
+    RCC_PLLCmd( ENABLE );
 
-	/* Wait till PLL is ready. */
-	while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
-	{
-	}
+    /* Wait till PLL is ready. */
+    while( RCC_GetFlagStatus( RCC_FLAG_PLLRDY ) == RESET )
+    {
+    }
 
-	/* Select PLL as system clock source. */
-	RCC_SYSCLKConfig( RCC_SYSCLKSource_PLLCLK );
+    /* Select PLL as system clock source. */
+    RCC_SYSCLKConfig( RCC_SYSCLKSource_PLLCLK );
 
-	/* Wait till PLL is used as system clock source. */
-	while( RCC_GetSYSCLKSource() != 0x08 )
-	{
-	}
+    /* Wait till PLL is used as system clock source. */
+    while( RCC_GetSYSCLKSource() != 0x08 )
+    {
+    }
 
-	/* Enable GPIOA, GPIOB, GPIOC, GPIOD, GPIOE and AFIO clocks */
-	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB |RCC_APB2Periph_GPIOC
-							| RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOE | RCC_APB2Periph_AFIO, ENABLE );
+    /* Enable GPIOA, GPIOB, GPIOC, GPIOD, GPIOE and AFIO clocks */
+    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC
+                            | RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOE | RCC_APB2Periph_AFIO, ENABLE );
 
-	/* SPI2 Periph clock enable */
-	RCC_APB1PeriphClockCmd( RCC_APB1Periph_SPI2, ENABLE );
+    /* SPI2 Periph clock enable */
+    RCC_APB1PeriphClockCmd( RCC_APB1Periph_SPI2, ENABLE );
 
 
-	/* Set the Vector Table base address at 0x08000000 */
-	NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x0 );
+    /* Set the Vector Table base address at 0x08000000 */
+    NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x0 );
 
-	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+    NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 
-	/* Configure HCLK clock as SysTick clock source. */
-	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
+    /* Configure HCLK clock as SysTick clock source. */
+    SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
 
-	/* Misc initialisation, including some of the CircleOS features.  Note
-	that CircleOS itself is not used. */
-	vParTestInitialise();
-	MEMS_Init();
-	POINTER_Init();
-	POINTER_SetMode( POINTER_RESTORE_LESS );
+    /* Misc initialisation, including some of the CircleOS features.  Note
+     * that CircleOS itself is not used. */
+    vParTestInitialise();
+    MEMS_Init();
+    POINTER_Init();
+    POINTER_SetMode( POINTER_RESTORE_LESS );
 }
 /*-----------------------------------------------------------*/
 
-static void prvFlashTask( void *pvParameters )
+static void prvFlashTask( void * pvParameters )
 {
-TickType_t xLastExecutionTime;
+    TickType_t xLastExecutionTime;
 
-	/* Initialise the xLastExecutionTime variable on task entry. */
-	xLastExecutionTime = xTaskGetTickCount();
+    /* Initialise the xLastExecutionTime variable on task entry. */
+    xLastExecutionTime = xTaskGetTickCount();
 
-    for( ;; )
-	{
-		/* Simple toggle the LED periodically.  This just provides some timing
-		verification. */
-		vTaskDelayUntil( &xLastExecutionTime, mainFLASH_DELAY );
-		vParTestToggleLED( 0 );
-	}
+    for( ; ; )
+    {
+        /* Simple toggle the LED periodically.  This just provides some timing
+         * verification. */
+        vTaskDelayUntil( &xLastExecutionTime, mainFLASH_DELAY );
+        vParTestToggleLED( 0 );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void starting_delay( unsigned long ul )
 {
-	vTaskDelay( ( TickType_t ) ul );
+    vTaskDelay( ( TickType_t ) ul );
 }
-
-
-

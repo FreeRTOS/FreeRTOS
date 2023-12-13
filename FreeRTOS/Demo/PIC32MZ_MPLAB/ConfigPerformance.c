@@ -36,42 +36,38 @@
 /* Demo includes. */
 #include "ConfigPerformance.h"
 
-#define hwUNLOCK_KEY_0					( 0xAA996655UL )
-#define hwUNLOCK_KEY_1					( 0x556699AAUL )
+#define hwUNLOCK_KEY_0    ( 0xAA996655UL )
+#define hwUNLOCK_KEY_1    ( 0x556699AAUL )
 
 /*-----------------------------------------------------------*/
 
 void vHardwareConfigurePerformance( void )
 {
-	/* set PBCLK2 to deliver 40Mhz clock for PMP/I2C/UART/SPI. */
-	SYSKEY = hwUNLOCK_KEY_0;
-	SYSKEY = hwUNLOCK_KEY_1;
+    /* set PBCLK2 to deliver 40Mhz clock for PMP/I2C/UART/SPI. */
+    SYSKEY = hwUNLOCK_KEY_0;
+    SYSKEY = hwUNLOCK_KEY_1;
 
-	/* 200MHz / 5 = 40MHz */
-	PB2DIVbits.PBDIV = 0b100;
+    /* 200MHz / 5 = 40MHz */
+    PB2DIVbits.PBDIV = 0b100;
 
-	/* Timers use clock PBCLK3, set this to 40MHz. */
-	PB3DIVbits.PBDIV = 0b100;
+    /* Timers use clock PBCLK3, set this to 40MHz. */
+    PB3DIVbits.PBDIV = 0b100;
 
-	/* Ports use PBCLK4. */
-	PB4DIVbits.PBDIV = 0b000;
+    /* Ports use PBCLK4. */
+    PB4DIVbits.PBDIV = 0b000;
 
-	SYSKEY = 0;
+    SYSKEY = 0;
 
-	/* Disable interrupts - note taskDISABLE_INTERRUPTS() cannot be used here as
-	FreeRTOS does not globally disable interrupt. */
-	__builtin_disable_interrupts();
+    /* Disable interrupts - note taskDISABLE_INTERRUPTS() cannot be used here as
+     * FreeRTOS does not globally disable interrupt. */
+    __builtin_disable_interrupts();
 }
 /*-----------------------------------------------------------*/
 
 void vHardwareUseMultiVectoredInterrupts( void )
 {
-	/* Enable multi-vector interrupts. */
-	_CP0_BIS_CAUSE( 0x00800000U );
-	INTCONSET = _INTCON_MVEC_MASK;
-	__builtin_enable_interrupts();
+    /* Enable multi-vector interrupts. */
+    _CP0_BIS_CAUSE( 0x00800000U );
+    INTCONSET = _INTCON_MVEC_MASK;
+    __builtin_enable_interrupts();
 }
-
-
-
-

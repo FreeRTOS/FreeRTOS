@@ -29,10 +29,12 @@
 
 #include <stdint.h>
 
-struct device {
-	uintptr_t addr;
+struct device
+{
+    uintptr_t addr;
 };
 
-void vOutNS16550( struct device *dev, unsigned char c );
+void vOutNS16550( struct device * dev,
+                  unsigned char c );
 
 #endif /* NS16550_H_ */

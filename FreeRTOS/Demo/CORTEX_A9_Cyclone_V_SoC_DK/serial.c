@@ -25,11 +25,11 @@
  */
 
 /*
-	BASIC SERIAL PORT DRIVER.
-
-	This file just maps generic functions used by FreeRTOS example code to the
-	simple UART drivers provided by Altera.
-*/
+ *  BASIC SERIAL PORT DRIVER.
+ *
+ *  This file just maps generic functions used by FreeRTOS example code to the
+ *  simple UART drivers provided by Altera.
+ */
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
@@ -48,72 +48,78 @@
 /*
  * See the serial2.h header file.
  */
-xComPortHandle xSerialPortInitMinimal( uint32_t ulWantedBaud, UBaseType_t uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( uint32_t ulWantedBaud,
+                                       UBaseType_t uxQueueLength )
 {
-	/* Just call into the Altera support function, which has its own parameters,
-	so the parameters passed in here are not used. */
-	( void ) ulWantedBaud;
-	( void ) uxQueueLength;
-	uart0_init();
+    /* Just call into the Altera support function, which has its own parameters,
+     * so the parameters passed in here are not used. */
+    ( void ) ulWantedBaud;
+    ( void ) uxQueueLength;
+    uart0_init();
 
-	return ( xComPortHandle ) 0;
+    return ( xComPortHandle ) 0;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
+BaseType_t xSerialGetChar( xComPortHandle pxPort,
+                           signed char * pcRxedChar,
+                           TickType_t xBlockTime )
 {
-BaseType_t xReturn;
+    BaseType_t xReturn;
 
-	/* Just call into the Altera support function, which has its own parameters,
-	so the parameters passed in here are not used. */
-	( void ) pxPort;
-	( void ) xBlockTime;
+    /* Just call into the Altera support function, which has its own parameters,
+     * so the parameters passed in here are not used. */
+    ( void ) pxPort;
+    ( void ) xBlockTime;
 
-	*pcRxedChar = uart0_getc();
+    *pcRxedChar = uart0_getc();
 
-	if( *pcRxedChar != -1 )
-	{
-		xReturn = pdPASS;
-	}
-	else
-	{
-		xReturn = pdFAIL;
-	}
+    if( *pcRxedChar != -1 )
+    {
+        xReturn = pdPASS;
+    }
+    else
+    {
+        xReturn = pdFAIL;
+    }
 
-	return xReturn;
+    return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
+void vSerialPutString( xComPortHandle pxPort,
+                       const signed char * const pcString,
+                       unsigned short usStringLength )
 {
-	/* Just call into the Altera support function, which has its own parameters,
-	so the parameters passed in here are not used. */
-	( void ) pxPort;
+    /* Just call into the Altera support function, which has its own parameters,
+     * so the parameters passed in here are not used. */
+    ( void ) pxPort;
 
-	uart0_print( ( char * ) pcString );
+    uart0_print( ( char * ) pcString );
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort,
+                                     signed char cOutChar,
+                                     TickType_t xBlockTime )
 {
-char cOutBytes[ 2 ];
+    char cOutBytes[ 2 ];
 
-	/* Just call into the Altera support function, which has its own parameters,
-	so the parameters passed in here are not used. */
-	( void ) pxPort;
+    /* Just call into the Altera support function, which has its own parameters,
+     * so the parameters passed in here are not used. */
+    ( void ) pxPort;
 
-	cOutBytes[ 0 ] = cOutChar;
-	cOutBytes[ 1 ] = 0x00;
-	uart0_print( cOutBytes );
+    cOutBytes[ 0 ] = cOutChar;
+    cOutBytes[ 1 ] = 0x00;
+    uart0_print( cOutBytes );
 
-	return pdPASS;
+    return pdPASS;
 }
 /*-----------------------------------------------------------*/
 
-void vSerialClose(xComPortHandle xPort)
+void vSerialClose( xComPortHandle xPort )
 {
-	/* Not supported as not required by the demo application. */
-	( void ) xPort;
+    /* Not supported as not required by the demo application. */
+    ( void ) xPort;
 }
 /*-----------------------------------------------------------*/
-

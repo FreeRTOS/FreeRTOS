@@ -24,7 +24,7 @@
  *
  */
 
-/** 
+/**
  * ParTest.c controls bits (LEDs) for GCC/HCS12 version of FreeRTOS Demo
  *
  * Modified from CodeWarrior/HCS12 by Jefferson L Smith, Robotronics Inc.
@@ -39,34 +39,37 @@
 /* Demo application include files. */
 #include "partest.h"
 
-#define LEDIO	PORTIO_8(PORT_LED)
+#define LEDIO    PORTIO_8( PORT_LED )
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED,
+                     signed portBASE_TYPE xValue )
 {
-	/* This function is required as it is called from the standard demo 
-	application files.  It manipulates a bit to control one LED. */
-	portENTER_CRITICAL();
+    /* This function is required as it is called from the standard demo
+     * application files.  It manipulates a bit to control one LED. */
+    portENTER_CRITICAL();
 
-	if (xValue) {                       /* Is it one to be written? */
-		LEDIO |= (1<<uxLED);            /* Set appropriate bit on port */
-	}
-	else {                             /* Is it zero to be written? */
-		LEDIO &= ~(1<<uxLED);          /* Clear appropriate bit on port */
-	}
-	portEXIT_CRITICAL();
+    if( xValue )                 /* Is it one to be written? */
+    {
+        LEDIO |= ( 1 << uxLED ); /* Set appropriate bit on port */
+    }
+    else /* Is it zero to be written? */
+    {
+        LEDIO &= ~( 1 << uxLED ); /* Clear appropriate bit on port */
+    }
+
+    portEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	/* This function is required as it is called from the standard demo
-	application files.  It manipulates a bit to control one LED. */
-	portENTER_CRITICAL();
-		LEDIO ^= (1<<uxLED);           /* Invert appropriate bit on port */
-	portEXIT_CRITICAL();
+    /* This function is required as it is called from the standard demo
+     * application files.  It manipulates a bit to control one LED. */
+    portENTER_CRITICAL();
+    LEDIO ^= ( 1 << uxLED );           /* Invert appropriate bit on port */
+    portEXIT_CRITICAL();
 }
-

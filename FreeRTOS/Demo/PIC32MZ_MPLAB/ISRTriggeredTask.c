@@ -59,11 +59,11 @@
 /*-----------------------------------------------------------*/
 
 /* The LED controlled by the ISR triggered task. */
-#define mainISR_TRIGGERED_LED				( 1 )
+#define mainISR_TRIGGERED_LED    ( 1 )
 
 /* Constants used to configure T5. */
-#define mainT5PRESCALAR						( 6 )
-#define mainT5_SEMAPHORE_RATE				( 31250 )
+#define mainT5PRESCALAR          ( 6 )
+#define mainT5_SEMAPHORE_RATE    ( 31250 )
 
 /*-----------------------------------------------------------*/
 
@@ -71,7 +71,7 @@
  * The task that is periodically triggered by an interrupt, as described at the
  * top of this file.
  */
-static void prvISRTriggeredTask( void* pvParameters );
+static void prvISRTriggeredTask( void * pvParameters );
 
 /*
  * Configures the T5 timer peripheral to generate the interrupts that unblock
@@ -80,96 +80,96 @@ static void prvISRTriggeredTask( void* pvParameters );
 static void prvSetupT5( void );
 
 /* The timer 5 interrupt handler.  As this interrupt uses the FreeRTOS assembly
-entry point the IPL setting in the following function prototype has no effect. */
-void __attribute__( (interrupt(IPL3AUTO), vector(_TIMER_5_VECTOR))) vT5InterruptWrapper( void );
+ * entry point the IPL setting in the following function prototype has no effect. */
+void __attribute__( ( interrupt( IPL3AUTO ), vector( _TIMER_5_VECTOR ) ) ) vT5InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/
 
 /* The semaphore given by the T5 interrupt to unblock the task implemented by
- the prvISRTriggeredTask() function. */
+ * the prvISRTriggeredTask() function. */
 static SemaphoreHandle_t xBlockSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
 void vStartISRTriggeredTask( void )
 {
-	/* Create the task described at the top of this file.  The timer is
-	configured by the task itself. */
-	xTaskCreate( prvISRTriggeredTask, 		/* The function that implements the task. */
-				"ISRt", 					/* Text name to help debugging - not used by the kernel. */
-				configMINIMAL_STACK_SIZE, 	/* The size of the stack to allocate to the task - defined in words, not bytes. */
-				NULL, 						/* The parameter to pass into the task.  Not used in this case. */
-				configMAX_PRIORITIES - 1, 	/* The priority at which the task is created. */
-				NULL );						/* Used to pass a handle to the created task out of the function.  Not used in this case. */
+    /* Create the task described at the top of this file.  The timer is
+     * configured by the task itself. */
+    xTaskCreate( prvISRTriggeredTask,      /* The function that implements the task. */
+                 "ISRt",                   /* Text name to help debugging - not used by the kernel. */
+                 configMINIMAL_STACK_SIZE, /* The size of the stack to allocate to the task - defined in words, not bytes. */
+                 NULL,                     /* The parameter to pass into the task.  Not used in this case. */
+                 configMAX_PRIORITIES - 1, /* The priority at which the task is created. */
+                 NULL );                   /* Used to pass a handle to the created task out of the function.  Not used in this case. */
 }
 /*-----------------------------------------------------------*/
 
 void vT5InterruptHandler( void )
 {
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	/* This function is the handler for the peripheral timer interrupt.
-	The interrupt is initially signalled in a separate assembly file
-	which switches to the system stack and then calls this function.
-	It gives a semaphore which signals the prvISRBlockTask */
+    /* This function is the handler for the peripheral timer interrupt.
+     * The interrupt is initially signalled in a separate assembly file
+     * which switches to the system stack and then calls this function.
+     * It gives a semaphore which signals the prvISRBlockTask */
 
-	/* Give the semaphore.  If giving the semaphore causes the task to leave the
-	Blocked state, and the priority of the task is higher than the priority of
-	the interrupted task, then xHigherPriorityTaskWoken will be set to pdTRUE
-	inside the xSemaphoreGiveFromISR() function.  xHigherPriorityTaskWoken is
-	later passed into portEND_SWITCHING_ISR(), where a context switch is
-	requested if it is pdTRUE.  The context switch ensures the interrupt returns
-	directly to the unblocked task. */
-	xSemaphoreGiveFromISR( xBlockSemaphore, &xHigherPriorityTaskWoken );
+    /* Give the semaphore.  If giving the semaphore causes the task to leave the
+     * Blocked state, and the priority of the task is higher than the priority of
+     * the interrupted task, then xHigherPriorityTaskWoken will be set to pdTRUE
+     * inside the xSemaphoreGiveFromISR() function.  xHigherPriorityTaskWoken is
+     * later passed into portEND_SWITCHING_ISR(), where a context switch is
+     * requested if it is pdTRUE.  The context switch ensures the interrupt returns
+     * directly to the unblocked task. */
+    xSemaphoreGiveFromISR( xBlockSemaphore, &xHigherPriorityTaskWoken );
 
-	/* Clear the interrupt */
-	IFS0CLR = _IFS0_T5IF_MASK;
+    /* Clear the interrupt */
+    IFS0CLR = _IFS0_T5IF_MASK;
 
-	/* See comment above the call to xSemaphoreGiveFromISR(). */
-	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+    /* See comment above the call to xSemaphoreGiveFromISR(). */
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
-static void prvISRTriggeredTask( void* pvParameters )
+static void prvISRTriggeredTask( void * pvParameters )
 {
-	/* Avoid compiler warnings. */
-	( void ) pvParameters;
+    /* Avoid compiler warnings. */
+    ( void ) pvParameters;
 
-	/* Create the semaphore used to signal this task */
-	xBlockSemaphore = xSemaphoreCreateBinary();
+    /* Create the semaphore used to signal this task */
+    xBlockSemaphore = xSemaphoreCreateBinary();
 
-	/* Configure the timer to generate the interrupts. */
-	prvSetupT5();
+    /* Configure the timer to generate the interrupts. */
+    prvSetupT5();
 
-	for( ;; )
-	{
-		/* Block on the binary semaphore given by the T5 interrupt. */
-		xSemaphoreTake( xBlockSemaphore, portMAX_DELAY );
+    for( ; ; )
+    {
+        /* Block on the binary semaphore given by the T5 interrupt. */
+        xSemaphoreTake( xBlockSemaphore, portMAX_DELAY );
 
-		/* Toggle the LED. */
-		vParTestToggleLED( mainISR_TRIGGERED_LED );
-	}
+        /* Toggle the LED. */
+        vParTestToggleLED( mainISR_TRIGGERED_LED );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupT5( void )
 {
-	/* Set up timer 5 to generate an interrupt every 50 ms */
-	T5CON = 0;
-	TMR5 = 0;
-	T5CONbits.TCKPS = mainT5PRESCALAR;
-	PR5 = mainT5_SEMAPHORE_RATE;
+    /* Set up timer 5 to generate an interrupt every 50 ms */
+    T5CON = 0;
+    TMR5 = 0;
+    T5CONbits.TCKPS = mainT5PRESCALAR;
+    PR5 = mainT5_SEMAPHORE_RATE;
 
-	/* Setup timer 5 interrupt priority to be the maximum from which interrupt
-	safe FreeRTOS API functions can be called.  Interrupt safe FreeRTOS API
-	functions are those that end "FromISR". */
-	IPC6bits.T5IP = configMAX_SYSCALL_INTERRUPT_PRIORITY;
+    /* Setup timer 5 interrupt priority to be the maximum from which interrupt
+     * safe FreeRTOS API functions can be called.  Interrupt safe FreeRTOS API
+     * functions are those that end "FromISR". */
+    IPC6bits.T5IP = configMAX_SYSCALL_INTERRUPT_PRIORITY;
 
-	/* Clear the interrupt as a starting condition. */
-	IFS0bits.T5IF = 0;
+    /* Clear the interrupt as a starting condition. */
+    IFS0bits.T5IF = 0;
 
-	/* Enable the interrupt. */
-	IEC0bits.T5IE = 1;
+    /* Enable the interrupt. */
+    IEC0bits.T5IE = 1;
 
-	/* Start the timer. */
-	T5CONbits.TON = 1;
+    /* Start the timer. */
+    T5CONbits.TON = 1;
 }

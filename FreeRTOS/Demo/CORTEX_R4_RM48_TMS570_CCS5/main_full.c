@@ -95,26 +95,26 @@
 #include "comtest.h"
 
 /* Priorities for the demo application tasks. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
-#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
-#define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
-#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
-#define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
+#define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 2UL )
+#define mainSEM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 1UL )
+#define mainBLOCK_Q_PRIORITY         ( tskIDLE_PRIORITY + 2UL )
+#define mainCREATOR_TASK_PRIORITY    ( tskIDLE_PRIORITY + 3UL )
+#define mainFLOP_TASK_PRIORITY       ( tskIDLE_PRIORITY )
+#define mainCOM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 2 )
+#define mainFLOP_TASK_PRIORITY       ( tskIDLE_PRIORITY )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0UL )
+#define mainDONT_BLOCK               ( 0UL )
 
 /* The period after which the check timer will expire, converted to ticks. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
+#define mainCHECK_TIMER_PERIOD_MS    ( 3000UL / portTICK_PERIOD_MS )
 
 /* The period after which the LED timer will expire, converted to ticks. */
-#define mainLED_TIMER_PERIOD_MS				( 75UL / portTICK_PERIOD_MS )
+#define mainLED_TIMER_PERIOD_MS      ( 75UL / portTICK_PERIOD_MS )
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( ( unsigned long ) 19200 )
-#define mainCOM_TEST_LED					( 100 )
+#define mainCOM_TEST_BAUD_RATE       ( ( unsigned long ) 19200 )
+#define mainCOM_TEST_LED             ( 100 )
 
 /*-----------------------------------------------------------*/
 
@@ -131,211 +131,213 @@ static void prvLEDTimerCallback( TimerHandle_t xTimer );
 /*
  * The reg test tasks, as described at the top of this file.
  */
-extern void vRegTestTask1( void *pvParameters );
-extern void vRegTestTask2( void *pvParameters );
+extern void vRegTestTask1( void * pvParameters );
+extern void vRegTestTask2( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* Variables that are incremented on each iteration of the reg test tasks -
-provided the tasks have not reported any errors.  The check task inspects these
-variables to ensure they are still incrementing as expected.  If a variable
-stops incrementing then it is likely that its associate task has stalled. */
+ * provided the tasks have not reported any errors.  The check task inspects these
+ * variables to ensure they are still incrementing as expected.  If a variable
+ * stops incrementing then it is likely that its associate task has stalled. */
 volatile unsigned long ulRegTest1Counter = 0, ulRegTest2Counter = 0;
 
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-TimerHandle_t xTimer = NULL;
+    TimerHandle_t xTimer = NULL;
 
-	/* Start all the standard demo/test tasks.  These have not particular
-	functionality, but do demonstrate how to use the FreeRTOS API, and test the
-	kernel port. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+    /* Start all the standard demo/test tasks.  These have not particular
+     * functionality, but do demonstrate how to use the FreeRTOS API, and test the
+     * kernel port. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vStartDynamicPriorityTasks();
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vCreateBlockTimeTasks();
+    vStartCountingSemaphoreTasks();
+    vStartGenericQueueTasks( tskIDLE_PRIORITY );
+    vStartRecursiveMutexTasks();
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartMathTasks( mainFLOP_TASK_PRIORITY );
+    vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 
-	/* Create the register test tasks, as described at the top of this file. */
-	xTaskCreate( vRegTestTask1, "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTestTask2, "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    /* Create the register test tasks, as described at the top of this file. */
+    xTaskCreate( vRegTestTask1, "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vRegTestTask2, "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 
-	/* Create the software timer that performs the 'check' functionality,
-	as described at the top of this file. */
-	xTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
-							( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-							pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,					/* The ID is not used, so can be set to anything. */
-							prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-						 );
+    /* Create the software timer that performs the 'check' functionality,
+     * as described at the top of this file. */
+    xTimer = xTimerCreate( "CheckTimer",                  /* A text name, purely to help debugging. */
+                           ( mainCHECK_TIMER_PERIOD_MS ), /* The timer period, in this case 3000ms (3s). */
+                           pdTRUE,                        /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                           ( void * ) 0,                  /* The ID is not used, so can be set to anything. */
+                           prvCheckTimerCallback          /* The callback function that inspects the status of all the other tasks. */
+                           );
 
-	if( xTimer != NULL )
-	{
-		xTimerStart( xTimer, mainDONT_BLOCK );
-	}
+    if( xTimer != NULL )
+    {
+        xTimerStart( xTimer, mainDONT_BLOCK );
+    }
 
-	/* Create the software timer that performs the 'LED spin' functionality,
-	as described at the top of this file. */
-	xTimer = xTimerCreate( "LEDTimer",					/* A text name, purely to help debugging. */
-							( mainLED_TIMER_PERIOD_MS ),/* The timer period, in this case 75ms. */
-							pdTRUE,						/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,				/* The ID is not used, so can be set to anything. */
-							prvLEDTimerCallback			/* The callback function that toggles the white LEDs. */
-						 );
+    /* Create the software timer that performs the 'LED spin' functionality,
+     * as described at the top of this file. */
+    xTimer = xTimerCreate( "LEDTimer",                  /* A text name, purely to help debugging. */
+                           ( mainLED_TIMER_PERIOD_MS ), /* The timer period, in this case 75ms. */
+                           pdTRUE,                      /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                           ( void * ) 0,                /* The ID is not used, so can be set to anything. */
+                           prvLEDTimerCallback          /* The callback function that toggles the white LEDs. */
+                           );
 
-	if( xTimer != NULL )
-	{
-		xTimerStart( xTimer, mainDONT_BLOCK );
-	}
+    if( xTimer != NULL )
+    {
+        xTimerStart( xTimer, mainDONT_BLOCK );
+    }
 
-	/* The set of tasks created by the following function call have to be
-	created last as they keep account of the number of tasks they expect to see
-	running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    /* The set of tasks created by the following function call have to be
+     * created last as they keep account of the number of tasks they expect to see
+     * running. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following line
-	will never be reached.  If the following line does execute, then there was
-	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
-	to be created.  See the memory management section on the FreeRTOS web site
-	for more details. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following line
+     * will never be reached.  If the following line does execute, then there was
+     * insufficient FreeRTOS heap memory available for the idle and/or timer tasks
+     * to be created.  See the memory management section on the FreeRTOS web site
+     * for more details. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
-static long lChangeToRedLEDsAlready = pdFALSE;
-static unsigned long ulLastRegTest1Counter = 0, ulLastRegTest2Counter = 0;
-unsigned long ulErrorFound = pdFALSE;
+    static long lChangeToRedLEDsAlready = pdFALSE;
+    static unsigned long ulLastRegTest1Counter = 0, ulLastRegTest2Counter = 0;
+    unsigned long ulErrorFound = pdFALSE;
+
 /* LEDs are defaulted to use the Green LEDs.  The Red LEDs are used if an error
-is found. */
-static unsigned long ulLED1 = 8, ulLED2 = 11;
-const unsigned long ulRedLED1 = 6, ulRedLED2 = 9;
+ * is found. */
+    static unsigned long ulLED1 = 8, ulLED2 = 11;
+    const unsigned long ulRedLED1 = 6, ulRedLED2 = 9;
 
-	/* Check all the demo tasks (other than the flash tasks) to ensure
-	they are all still running, and that none have detected an error. */
+    /* Check all the demo tasks (other than the flash tasks) to ensure
+     * they are all still running, and that none have detected an error. */
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xIsCreateTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xIsCreateTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreMathsTaskStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( xAreComTestTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( xAreComTestTasksStillRunning() != pdTRUE )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	/* Check the reg test tasks are still cycling.  They will stop
-	incrementing their loop counters if they encounter an error. */
-	if( ulRegTest1Counter == ulLastRegTest1Counter )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    /* Check the reg test tasks are still cycling.  They will stop
+     * incrementing their loop counters if they encounter an error. */
+    if( ulRegTest1Counter == ulLastRegTest1Counter )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	if( ulRegTest2Counter == ulLastRegTest2Counter )
-	{
-		ulErrorFound = pdTRUE;
-	}
+    if( ulRegTest2Counter == ulLastRegTest2Counter )
+    {
+        ulErrorFound = pdTRUE;
+    }
 
-	ulLastRegTest1Counter = ulRegTest1Counter;
-	ulLastRegTest2Counter = ulRegTest2Counter;
+    ulLastRegTest1Counter = ulRegTest1Counter;
+    ulLastRegTest2Counter = ulRegTest2Counter;
 
-	/* Toggle the check LEDs to give an indication of the system status.  If
-	the green LEDs are toggling, then no errors have been detected.  If the red
-	LEDs are toggling, then an error has been reported in at least one task. */
-	vParTestToggleLED( ulLED1 );
-	vParTestToggleLED( ulLED2 );
+    /* Toggle the check LEDs to give an indication of the system status.  If
+     * the green LEDs are toggling, then no errors have been detected.  If the red
+     * LEDs are toggling, then an error has been reported in at least one task. */
+    vParTestToggleLED( ulLED1 );
+    vParTestToggleLED( ulLED2 );
 
-	/* Have any errors been latch in ulErrorFound?  If so, ensure the gree LEDs
-	are off, then switch to using the red LEDs. */
-	if( ulErrorFound != pdFALSE )
-	{
-		if( lChangeToRedLEDsAlready == pdFALSE )
-		{
-			lChangeToRedLEDsAlready = pdTRUE;
+    /* Have any errors been latch in ulErrorFound?  If so, ensure the gree LEDs
+     * are off, then switch to using the red LEDs. */
+    if( ulErrorFound != pdFALSE )
+    {
+        if( lChangeToRedLEDsAlready == pdFALSE )
+        {
+            lChangeToRedLEDsAlready = pdTRUE;
 
-			/* An error has been found.  Switch to use the red LEDs. */
-			vParTestSetLED( ulLED1, pdFALSE );
-			vParTestSetLED( ulLED2, pdFALSE );
-			ulLED1 = ulRedLED1;
-			ulLED2 = ulRedLED2;
-		}
-	}
+            /* An error has been found.  Switch to use the red LEDs. */
+            vParTestSetLED( ulLED1, pdFALSE );
+            vParTestSetLED( ulLED2, pdFALSE );
+            ulLED1 = ulRedLED1;
+            ulLED2 = ulRedLED2;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvLEDTimerCallback( TimerHandle_t xTimer )
 {
-const unsigned long ulNumWhiteLEDs = 6;
-static unsigned long ulLit1 = 2, ulLit2 = 1;
+    const unsigned long ulNumWhiteLEDs = 6;
+    static unsigned long ulLit1 = 2, ulLit2 = 1;
 
-	vParTestSetLED( ulLit2, pdFALSE );
+    vParTestSetLED( ulLit2, pdFALSE );
 
-	ulLit2 = ulLit1;
-	ulLit1++;
+    ulLit2 = ulLit1;
+    ulLit1++;
 
-	if( ulLit1 >= ulNumWhiteLEDs )
-	{
-		ulLit1 = 0;
-	}
+    if( ulLit1 >= ulNumWhiteLEDs )
+    {
+        ulLit1 = 0;
+    }
 
-	vParTestSetLED( ulLit1, pdTRUE );
+    vParTestSetLED( ulLit1, pdTRUE );
 }
 /*-----------------------------------------------------------*/
-

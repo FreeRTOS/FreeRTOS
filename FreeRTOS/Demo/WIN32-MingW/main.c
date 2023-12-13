@@ -201,37 +201,37 @@ int main( void )
 
     /* Do not include trace code when performing a code coverage analysis. */
     #if ( projCOVERAGE_TEST != 1 )
-        {
-            /* Initialise the trace recorder.  Use of the trace recorder is optional.
-             * See http://www.FreeRTOS.org/trace for more information. */
-            configASSERT( xTraceInitialize() == TRC_SUCCESS );
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+         * See http://www.FreeRTOS.org/trace for more information. */
+        configASSERT( xTraceInitialize() == TRC_SUCCESS );
 
-            /* Start the trace recording - the recording is written to a file if
-             * configASSERT() is called. */
-            printf(
-                "Trace started.\r\n"
-                "Note that the trace output uses the ring buffer mode, meaning that the output trace\r\n"
-                "will only be the most recent data able to fit within the trace recorder buffer.\r\n\r\n"
-                "The trace will be dumped to the file \"%s\" whenever a call to configASSERT()\r\n"
-                "fails or the \'%c\' key is pressed.\r\n"
-                "Note that key presses cannot be captured in the Eclipse console, so for key presses to work\r\n"
-                "you will have to run this demo in a Windows console.\r\n\r\n",
-                mainTRACE_FILE_NAME, mainOUTPUT_TRACE_KEY );
-            fflush( stdout );
-            configASSERT( xTraceEnable( TRC_START ) == TRC_SUCCESS );
-        }
+        /* Start the trace recording - the recording is written to a file if
+         * configASSERT() is called. */
+        printf(
+            "Trace started.\r\n"
+            "Note that the trace output uses the ring buffer mode, meaning that the output trace\r\n"
+            "will only be the most recent data able to fit within the trace recorder buffer.\r\n\r\n"
+            "The trace will be dumped to the file \"%s\" whenever a call to configASSERT()\r\n"
+            "fails or the \'%c\' key is pressed.\r\n"
+            "Note that key presses cannot be captured in the Eclipse console, so for key presses to work\r\n"
+            "you will have to run this demo in a Windows console.\r\n\r\n",
+            mainTRACE_FILE_NAME, mainOUTPUT_TRACE_KEY );
+        fflush( stdout );
+        configASSERT( xTraceEnable( TRC_START ) == TRC_SUCCESS );
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-        {
-            main_blinky();
-        }
+    {
+        main_blinky();
+    }
     #else
-        {
-            main_full();
-        }
+    {
+        main_full();
+    }
     #endif
 
     return 0;
@@ -269,11 +269,11 @@ void vApplicationIdleHook( void )
      * allocated by the kernel to any task that has since deleted itself. */
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-        {
-            /* Call the idle task processing used by the full demo.  The simple
-             * blinky demo does not use the idle task hook. */
-            vFullDemoIdleFunction();
-        }
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+         * blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -296,15 +296,15 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationTickHook( void )
 {
     /* This function will be called by each tick interrupt if
-     * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-     * added here, but the tick hook is called from an interrupt context, so
-     * code must not attempt to block, and only the interrupt safe FreeRTOS API
-     * functions can be used (those that end in FromISR()). */
+    * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    * added here, but the tick hook is called from an interrupt context, so
+    * code must not attempt to block, and only the interrupt safe FreeRTOS API
+    * functions can be used (those that end in FromISR()). */
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-        {
-            vFullDemoTickHookFunction();
-        }
+    {
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
@@ -337,11 +337,11 @@ void vAssertCalled( unsigned long ulLine,
         fflush( stdout );
 
         #if ( projCOVERAGE_TEST != 1 )
-            {
-                /* Stop the trace recording. */
-                ( void ) xTraceDisable();
-                prvSaveTraceFile();
-            }
+        {
+            /* Stop the trace recording. */
+            ( void ) xTraceDisable();
+            prvSaveTraceFile();
+        }
         #endif
 
         /* You can step out of this function to debug the assertion by using
@@ -354,10 +354,10 @@ void vAssertCalled( unsigned long ulLine,
         }
 
         #if ( projCOVERAGE_TEST != 1 )
-            {
-                /* Re-enable recording */
-                ( void ) xTraceEnable( TRC_START );
-            }
+        {
+            /* Re-enable recording */
+            ( void ) xTraceEnable( TRC_START );
+        }
         #endif
     }
     taskEXIT_CRITICAL();
@@ -368,24 +368,24 @@ static void prvSaveTraceFile( void )
 {
     /* Tracing is not used when code coverage analysis is being performed. */
     #if ( projCOVERAGE_TEST != 1 )
+    {
+        FILE * pxOutputFile;
+
+        pxOutputFile = fopen( mainTRACE_FILE_NAME, "wb" );
+
+        if( pxOutputFile != NULL )
         {
-            FILE * pxOutputFile;
-
-            pxOutputFile = fopen( mainTRACE_FILE_NAME, "wb" );
-
-            if( pxOutputFile != NULL )
-            {
-                fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-                fclose( pxOutputFile );
-                printf( "\r\nTrace output saved to %s\r\n", mainTRACE_FILE_NAME );
-                fflush( stdout );
-            }
-            else
-            {
-                printf( "\r\nFailed to create trace dump file\r\n" );
-                fflush( stdout );
-            }
+            fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+            fclose( pxOutputFile );
+            printf( "\r\nTrace output saved to %s\r\n", mainTRACE_FILE_NAME );
+            fflush( stdout );
         }
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+            fflush( stdout );
+        }
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 }
 /*-----------------------------------------------------------*/
@@ -565,6 +565,7 @@ static uint32_t prvKeyboardInterruptHandler( void )
 
         case mainOUTPUT_TRACE_KEY:
             #if ( projCOVERAGE_TEST != 1 )
+
                 /* Saving the trace file requires Windows system calls, so enter a critical
                  * section to prevent deadlock or errors resulting from calling a Windows
                  * system call from within the FreeRTOS simulator. */

@@ -27,8 +27,6 @@
 #ifndef DICE_TASK_H
 #define DICE_TASK_H
 
-void vDiceTask( void *pvParameters );
+void vDiceTask( void * pvParameters );
 
 #endif
-
-

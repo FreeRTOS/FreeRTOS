@@ -33,7 +33,7 @@
  */
 void vHardwareConfigurePerformance( void );
 
-/* 
+/*
  * Configure the interrupt controller to use a separate vector for each
  * interrupt.
  */

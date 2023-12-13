@@ -139,7 +139,7 @@ void vConfigureTimerForRunTimeStats( void );
  * results in the wired network being used, while setting
  * configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
  * used. */
-#define configNETWORK_INTERFACE_TO_USE      ( 4L )
+#define configNETWORK_INTERFACE_TO_USE      ( 0L )
 
 /* The address to which logging is sent should UDP logging be enabled. */
 #define configUDP_LOGGING_ADDR0             192

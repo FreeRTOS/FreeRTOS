@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives import serialization
 
 # Get the absolute path of this script
 script_file_dir_abs_path = os.path.abspath(os.path.dirname(__file__))
+
 # Get the parent directory, as that is where the demo expects the keys to be placed
 parent_abs_path = os.path.abspath(os.path.join(script_file_dir_abs_path, os.pardir))
 
@@ -26,18 +27,14 @@ def convert_pem_to_der(cert_pem, key_pem):
     )
     with open(f"{KEY_OUT_NAME}", "wb") as key_out:
         key_out.write(key_der)
-    print(
-        f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
-    )
+    print(f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}")
 
     cert = x509.load_pem_x509_certificate(
         bytes(cert_pem, "utf-8"), default_backend())
     with open(f"{CERT_OUT_NAME}", "wb") as cert_out:
         cert_out.write(cert.public_bytes(serialization.Encoding.DER))
 
-    print(
-        f"Successfully converted certificate PEM to DER. Output file named: {CERT_OUT_NAME}"
-    )
+    print(f"Successfully converted certificate PEM to DER. Output file named: {CERT_OUT_NAME}")
 
 
 def main(args):

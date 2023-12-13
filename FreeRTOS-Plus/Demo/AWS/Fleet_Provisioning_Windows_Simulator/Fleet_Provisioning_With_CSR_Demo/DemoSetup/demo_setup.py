@@ -6,6 +6,7 @@ import boto3
 import botocore
 import random
 import datetime
+import subprocess
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.backends import default_backend
@@ -21,13 +22,13 @@ cf = boto3.client("cloudformation")
 iot = boto3.client("iot")
 
 # File names for generated credentials
-ROOT_CA_PRIV_KEY_FILE = "ECDSA_root_priv_key.pem"
-ROOT_CA_PUB_KEY_FILE = "ECDSA_root_pub_key.pem"
-ROOT_CA_CERT_FILE = "ECDSA_root_ca_cert.pem"
+ROOT_CA_PRIV_KEY_FILE = f"{script_file_dir_abs_path}{os.sep}ECDSA_root_priv_key.pem"
+ROOT_CA_PUB_KEY_FILE = f"{script_file_dir_abs_path}{os.sep}ECDSA_root_pub_key.pem"
+ROOT_CA_CERT_FILE = f"{script_file_dir_abs_path}{os.sep}ECDSA_root_ca_cert.pem"
 
-CLAIM_PRIV_KEY_FILE = "ECDSA_claim_priv_key.pem"
-CLAIM_PUB_KEY_FILE = "ECDSA_claim_pub_key.pem"
-CLAIM_CERT_FILE = "ECDSA_claim_device_cert.pem"
+CLAIM_PRIV_KEY_FILE = f"{script_file_dir_abs_path}{os.sep}ECDSA_claim_priv_key.pem"
+CLAIM_PUB_KEY_FILE = f"{script_file_dir_abs_path}{os.sep}ECDSA_claim_pub_key.pem"
+CLAIM_CERT_FILE = f"{script_file_dir_abs_path}{os.sep}ECDSA_claim_device_cert.pem"
 
 # Use the current date and time to create a unique subject name
 now = datetime.datetime.now()
@@ -124,7 +125,6 @@ def generate_priv_keys_and_certs():
     print(f"Wrote PEM Encoded Root Private Key to {ROOT_CA_PRIV_KEY_FILE}")
     print(f"Wrote PEM Encoded Root Public Key to {ROOT_CA_PUB_KEY_FILE}")
     print(f"Wrote PEM Encoded Root CA Cert to {ROOT_CA_CERT_FILE}")
-
 
     # Device credential generation
     print("\n\nGenerating ECDSA Claim Keys\n")
@@ -254,8 +254,6 @@ def create_resources():
             raise
 
 # Generate IoT credentials in DER format and save them in the demo directory
-
-
 def create_credentials():
     print("Creating Certs and Credentials for the Fleet Provisioning Demo...")
     # Verify that the stack exists (create_resources has been ran before somewhere)
@@ -275,11 +273,6 @@ def create_credentials():
     # Read the PEM files that were generated
     root_ca_cert = open(ROOT_CA_CERT_FILE,"r").read()
     claim_cert = open(CLAIM_CERT_FILE,"r").read()
-
-    if ( len(root_ca_cert) == 0 ) or ( len(claim_cert) == 0 ):
-        raise Exception(
-            "Failed to generate the required ECDSA Certs"
-        )
 
     ca_cert_response = iot.register_ca_certificate(
         caCertificate=root_ca_cert,
@@ -303,7 +296,7 @@ def create_credentials():
     claim_cert_response = iot.register_certificate(
         certificatePem=claim_cert,
         caCertificatePem=root_ca_cert,
-        setAsActive=True
+        status='ACTIVE'
     )
 
     if "certificateArn" not in claim_cert_response.keys():
@@ -311,7 +304,7 @@ def create_credentials():
             "Failed to register the generate CA Certificate"
         )
     else:
-        print("Registered CA Cert\n\tARN:{0}\n\tCertID:{1}"
+        print("Registered Claim Cert\n\tARN:{0}\n\tCertID:{1}"
             .format(
                 claim_cert_response["certificateArn"],
                 claim_cert_response["certificateId"]
@@ -355,7 +348,6 @@ def main():
     print("\nThis script will set up the AWS resources required for the Fleet Provisioning demo.")
     print("It may take several minutes for the resources to be provisioned.")
     if args.force or input("Are you sure you want to do this? (y/n) ") == "y":
-        print()
         print("\n---------------------- Start Create Cloud Stack Resources ----------------------")
         create_resources()
         print("----------------------- End Create Cloud Stack Resources -----------------------\n")

@@ -253,8 +253,8 @@ static void sslContextInit( SSLContext_t * pSslContext )
     #ifdef MBEDTLS_DEBUG_C
         mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
         mbedtls_ssl_conf_dbg( &( pSslContext->config ),
-                                mbedtls_string_printf,
-                                NULL );
+                              mbedtls_string_printf,
+                              NULL );
     #endif /* MBEDTLS_DEBUG_C */
 
     xInitializePkcs11Session( &( pSslContext->xP11Session ) );

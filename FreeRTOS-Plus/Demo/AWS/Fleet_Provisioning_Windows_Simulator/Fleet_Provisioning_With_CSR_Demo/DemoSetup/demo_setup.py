@@ -41,7 +41,7 @@ def create_credentials():
 
     if ( root_ca_cert is None ) or ( claim_cert is None ):
         raise Exception(f"Failed to generate needed ECDSA Keypairs and Certificates")
-        
+
     ca_cert_response = iot.register_ca_certificate(
         caCertificate=root_ca_cert,
         setAsActive=True,
@@ -184,7 +184,7 @@ def main():
         print(
             "Fleet Provisioning demo setup complete. Ensure that all generated files " +
             "(key, certificate, demo_config.h) are in the same folder as " +
-            "\"fleet_provisioning_demo.sln\"." 
+            "\"fleet_provisioning_demo.sln\"."
         )
 
 

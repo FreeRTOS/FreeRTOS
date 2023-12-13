@@ -195,5 +195,5 @@ def generate_priv_keys_and_certs(write_der_keys):
             cert_pem = claim_cert_pem.decode("utf-8"),
             key_pem = claim_prv_key_pem.decode("utf-8")
         )
-    
+
     return root_ca_cert_pem.decode("utf-8"), claim_cert_pem.decode("utf-8")

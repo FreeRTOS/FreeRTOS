@@ -151,7 +151,7 @@ jobs:
           retention-days: 2
 
   proof_ci:
-    if: ${{ github.event.repository.owner }} == "FreeRTOS"
+    if: ${{ github.event.pull_request }} || ${{ github.event.workflow }}
     runs-on: cbmc_ubuntu-latest_16-core
     steps:
       - uses: actions/checkout@v3

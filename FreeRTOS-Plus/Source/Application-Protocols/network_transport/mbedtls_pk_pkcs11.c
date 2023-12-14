@@ -459,96 +459,98 @@ static CK_RV p11_ecdsa_ctx_init( mbedtls_pk_context * pk,
     }
     else
     {
+        LogError( ( "Received a NULL mbedtls_pk_context" ) );
         xResult = CKR_FUNCTION_FAILED;
-        return xResult;
     }
-
-    /* Initialize public EC parameter data from attributes */
-
-    CK_ATTRIBUTE pxAttrs[ 2 ] =
-    {
-        { .type = CKA_EC_PARAMS, .ulValueLen = 0, .pValue = NULL },
-        { .type = CKA_EC_POINT,  .ulValueLen = 0, .pValue = NULL }
-    };
-
-    /* Determine necessary size */
-    xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
-                                                   xPkHandle,
-                                                   pxAttrs,
-                                                   sizeof( pxAttrs ) / sizeof( CK_ATTRIBUTE ) );
 
     if( xResult == CKR_OK )
     {
-        if( pxAttrs[ 0 ].ulValueLen > 0 )
+        /* Initialize public EC parameter data from attributes */
+        CK_ATTRIBUTE pxAttrs[ 2 ] =
         {
-            pxAttrs[ 0 ].pValue = pvPortMalloc( pxAttrs[ 0 ].ulValueLen );
-        }
+            { .type = CKA_EC_PARAMS, .ulValueLen = 0, .pValue = NULL },
+            { .type = CKA_EC_POINT,  .ulValueLen = 0, .pValue = NULL }
+        };
 
-        if( pxAttrs[ 1 ].ulValueLen > 0 )
-        {
-            pxAttrs[ 1 ].pValue = pvPortMalloc( pxAttrs[ 1 ].ulValueLen );
-        }
-
+        /* Determine necessary size */
         xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
-                                                       xPkHandle,
-                                                       pxAttrs,
-                                                       2 );
-    }
+                                                    xPkHandle,
+                                                    pxAttrs,
+                                                    sizeof( pxAttrs ) / sizeof( CK_ATTRIBUTE ) );
 
-    /* Parse EC Group */
-    if( xResult == CKR_OK )
-    {
-        /*TODO: Parse the ECParameters object */
-        int lResult = mbedtls_ecp_group_load( &( pxMbedEcDsaCtx->grp ), MBEDTLS_ECP_DP_SECP256R1 );
-
-        if( lResult != 0 )
+        if( xResult == CKR_OK )
         {
-            xResult = CKR_FUNCTION_FAILED;
-        }
-    }
+            if( pxAttrs[ 0 ].ulValueLen > 0 )
+            {
+                pxAttrs[ 0 ].pValue = pvPortMalloc( pxAttrs[ 0 ].ulValueLen );
+            }
 
-    /* Parse ECPoint */
-    if( xResult == CKR_OK )
-    {
-        unsigned char * pucIterator = pxAttrs[ 1 ].pValue;
-        size_t uxLen = pxAttrs[ 1 ].ulValueLen;
-        int lResult = 0;
+            if( pxAttrs[ 1 ].ulValueLen > 0 )
+            {
+                pxAttrs[ 1 ].pValue = pvPortMalloc( pxAttrs[ 1 ].ulValueLen );
+            }
 
-        lResult = mbedtls_asn1_get_tag( &pucIterator, &( pucIterator[ uxLen ] ), &uxLen, MBEDTLS_ASN1_OCTET_STRING );
-
-        if( lResult != 0 )
-        {
-            xResult = CKR_GENERAL_ERROR;
-        }
-        else
-        {
-            lResult = mbedtls_ecp_point_read_binary( &( pxMbedEcDsaCtx->grp ),
-                                                     &( pxMbedEcDsaCtx->Q ),
-                                                     pucIterator,
-                                                     uxLen );
+            xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
+                                                        xPkHandle,
+                                                        pxAttrs,
+                                                        2 );
         }
 
-        if( lResult != 0 )
+        /* Parse EC Group */
+        if( xResult == CKR_OK )
         {
-            xResult = CKR_GENERAL_ERROR;
+            /*TODO: Parse the ECParameters object */
+            int lResult = mbedtls_ecp_group_load( &( pxMbedEcDsaCtx->grp ), MBEDTLS_ECP_DP_SECP256R1 );
+
+            if( lResult != 0 )
+            {
+                xResult = CKR_FUNCTION_FAILED;
+            }
         }
-    }
 
-    if( pxAttrs[ 0 ].pValue != NULL )
-    {
-        vPortFree( pxAttrs[ 0 ].pValue );
-    }
+        /* Parse ECPoint */
+        if( xResult == CKR_OK )
+        {
+            unsigned char * pucIterator = pxAttrs[ 1 ].pValue;
+            size_t uxLen = pxAttrs[ 1 ].ulValueLen;
+            int lResult = 0;
 
-    if( pxAttrs[ 1 ].pValue != NULL )
-    {
-        vPortFree( pxAttrs[ 1 ].pValue );
-    }
+            lResult = mbedtls_asn1_get_tag( &pucIterator, &( pucIterator[ uxLen ] ), &uxLen, MBEDTLS_ASN1_OCTET_STRING );
 
-    if( xResult == CKR_OK )
-    {
-        pxP11EcDsaCtx->xP11PkCtx.pxFunctionList = pxFunctionList;
-        pxP11EcDsaCtx->xP11PkCtx.xSessionHandle = xSessionHandle;
-        pxP11EcDsaCtx->xP11PkCtx.xPkHandle = xPkHandle;
+            if( lResult != 0 )
+            {
+                xResult = CKR_GENERAL_ERROR;
+            }
+            else
+            {
+                lResult = mbedtls_ecp_point_read_binary( &( pxMbedEcDsaCtx->grp ),
+                                                        &( pxMbedEcDsaCtx->Q ),
+                                                        pucIterator,
+                                                        uxLen );
+            }
+
+            if( lResult != 0 )
+            {
+                xResult = CKR_GENERAL_ERROR;
+            }
+        }
+
+        if( pxAttrs[ 0 ].pValue != NULL )
+        {
+            vPortFree( pxAttrs[ 0 ].pValue );
+        }
+
+        if( pxAttrs[ 1 ].pValue != NULL )
+        {
+            vPortFree( pxAttrs[ 1 ].pValue );
+        }
+
+        if( xResult == CKR_OK )
+        {
+            pxP11EcDsaCtx->xP11PkCtx.pxFunctionList = pxFunctionList;
+            pxP11EcDsaCtx->xP11PkCtx.xSessionHandle = xSessionHandle;
+            pxP11EcDsaCtx->xP11PkCtx.xPkHandle = xPkHandle;
+        }
     }
 
     return xResult;

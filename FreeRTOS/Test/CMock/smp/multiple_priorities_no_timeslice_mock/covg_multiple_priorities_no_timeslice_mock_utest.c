@@ -1289,6 +1289,7 @@ void test_coverage_eTaskConfirmSleepModeStatus_no_tasks_waiting_timeout( void )
     xPendedTicks = 0;
     uxSuspendedTask = 3U; /* Assume system has 3 suspended task. */
     xYieldPendings[ 0 ] = 0;
+
     /* System has uxSuspendedTask number of suspended task and configNUMBER_OF_CORES
      * idle tasks. */
     uxCurrentNumberOfTasks = uxSuspendedTask + configNUMBER_OF_CORES;

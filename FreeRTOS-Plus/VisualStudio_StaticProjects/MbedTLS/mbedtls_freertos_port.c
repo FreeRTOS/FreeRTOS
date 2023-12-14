@@ -27,6 +27,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "FreeRTOSConfig.h"
+
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 /* mbed TLS includes. */
 #if defined( MBEDTLS_CONFIG_FILE )
     #include MBEDTLS_CONFIG_FILE
@@ -38,13 +44,6 @@
 #include "entropy_poll.h"
 
 #include "mbedtls_freertos_port.h"
-
-
-#include "FreeRTOSConfig.h"
-
-/* FreeRTOS includes. */
-#include "FreeRTOS.h"
-#include "semphr.h"
 
 /*-----------------------------------------------------------*/
 

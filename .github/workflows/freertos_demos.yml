@@ -108,7 +108,7 @@ jobs:
         name: ${{ env.stepName }}
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-            exe-path: FreeRTOS/Demo/WIN32-MSVC/Debug/RTOSDemo.exe
+            exe-path: FreeRTOS/Demo/WIN32-MSVC/x64/Debug/RTOSDemo.exe
             timeout-seconds: 60
             success-line: "Message received from software timer"
             retry-attempts: 3

@@ -350,7 +350,7 @@
                                  * with the flag 'FREERTOS_ZERO_COPY' */
                                 FreeRTOS_ReleaseTCPPayloadBuffer( xSocket, pucZeroCopyRxBuffPtr, xReturned );
                             }
-                        #else  /* if USE_TCP_ZERO_COPY */
+                        #else /* if USE_TCP_ZERO_COPY */
                             xReturned = FreeRTOS_recv( xSocket,                                 /* The socket being received from. */
                                                        &( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
                                                        lTransmitted - xReceivedBytes,           /* The size of the buffer provided to receive the data. */

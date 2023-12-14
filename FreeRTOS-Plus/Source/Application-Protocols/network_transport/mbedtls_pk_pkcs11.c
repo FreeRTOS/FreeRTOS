@@ -474,9 +474,9 @@ static CK_RV p11_ecdsa_ctx_init( mbedtls_pk_context * pk,
 
         /* Determine necessary size */
         xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
-                                                    xPkHandle,
-                                                    pxAttrs,
-                                                    sizeof( pxAttrs ) / sizeof( CK_ATTRIBUTE ) );
+                                                       xPkHandle,
+                                                       pxAttrs,
+                                                       sizeof( pxAttrs ) / sizeof( CK_ATTRIBUTE ) );
 
         if( xResult == CKR_OK )
         {
@@ -491,9 +491,9 @@ static CK_RV p11_ecdsa_ctx_init( mbedtls_pk_context * pk,
             }
 
             xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
-                                                        xPkHandle,
-                                                        pxAttrs,
-                                                        2 );
+                                                           xPkHandle,
+                                                           pxAttrs,
+                                                           2 );
         }
 
         /* Parse EC Group */
@@ -524,9 +524,9 @@ static CK_RV p11_ecdsa_ctx_init( mbedtls_pk_context * pk,
             else
             {
                 lResult = mbedtls_ecp_point_read_binary( &( pxMbedEcDsaCtx->grp ),
-                                                        &( pxMbedEcDsaCtx->Q ),
-                                                        pucIterator,
-                                                        uxLen );
+                                                         &( pxMbedEcDsaCtx->Q ),
+                                                         pucIterator,
+                                                         uxLen );
             }
 
             if( lResult != 0 )

@@ -1264,7 +1264,7 @@ void test_coverage_xTaskGetSchedulerState_scheduler_not_running_and_suspended( v
 /**
  * @brief eTaskConfirmSleepModeStatus - confirm no task is waiting for timeout.
  *
- * All the tasks excepts idle tasks are in suspended list. The system can stay in
+ * All the tasks except idle tasks are in suspended list. The system can stay in
  * a low power state. This is a regression test for SMP to ensure uxNonApplicationTasks
  * is set to configNUMBER_OF_CORES in the implementation.
  *
@@ -1289,7 +1289,8 @@ void test_coverage_eTaskConfirmSleepModeStatus_no_tasks_waiting_timeout( void )
     xPendedTicks = 0;
     uxSuspendedTask = 3U; /* Assume system has 3 suspended task. */
     xYieldPendings[ 0 ] = 0;
-    /* System has uxSuspendedTask suspended task and configNUMBER_OF_CORES idle tasks. */
+    /* System has uxSuspendedTask number of suspended task and configNUMBER_OF_CORES
+     * idle tasks. */
     uxCurrentNumberOfTasks = uxSuspendedTask + configNUMBER_OF_CORES;
 
     /* Expectations */

@@ -71,7 +71,7 @@
     #define echoNUM_ECHO_CLIENTS          ( 1 )
 
 /* To enable the use of zero copy interface of the TCP sockets */
-    #define USE_TCP_ZERO_COPY             ( 1 )
+    #define USE_TCP_ZERO_COPY             ( 0 )
 
 /*-----------------------------------------------------------*/
 

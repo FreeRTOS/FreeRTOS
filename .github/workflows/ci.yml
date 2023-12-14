@@ -2,7 +2,7 @@ name: CI Checks
 
 env:
   bashPass: \033[32;1mPASSED -
-  bashWarn: \033[33;1mWARNING -
+  bashInfo: \033[33;1mINFO -
   bashFail: \033[31;1mFAILED -
   bashEnd:  \033[0m
 
@@ -158,9 +158,10 @@ jobs:
       - env:
           stepName: Install Dependencies
         run: |
-          echo -e "::group::${{ env.stepName }}"
+          # ${{ env.stepName }}
+          echo -e "::group:: ${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
           git submodule update --init --checkout --recursive --depth 1
-          sudo apt-get update
+          sudo apt-get update -y
           sudo apt-get install --yes --no-install-recommends gcc-multilib
           echo -e "::endgroup::"
           echo -e "${{ env.bashPass }} ${{env.stepName}} ${{ env.bashEnd }}"

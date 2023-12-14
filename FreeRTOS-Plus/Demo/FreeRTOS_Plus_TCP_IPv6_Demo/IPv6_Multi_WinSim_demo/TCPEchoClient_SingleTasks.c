@@ -69,9 +69,9 @@
 
 /* The number of instances of the echo client task to create. */
     #define echoNUM_ECHO_CLIENTS          ( 1 )
-    
+
 /* To enable the use of zero copy interface of the TCP sockets */
-	#define USE_TCP_ZERO_COPY			  ( 1 )
+    #define USE_TCP_ZERO_COPY             ( 1 )
 
 /*-----------------------------------------------------------*/
 
@@ -156,58 +156,60 @@
     }
 /*-----------------------------------------------------------*/
 
-    static BaseType_t vTCPCreateAndSendData(Socket_t xSocket, char * pcTransmitBuffer, volatile uint32_t * pulTxCount, uint32_t ulBufferLength)
+    static BaseType_t vTCPCreateAndSendData( Socket_t xSocket,
+                                             char * pcTransmitBuffer,
+                                             volatile uint32_t * pulTxCount,
+                                             uint32_t ulBufferLength )
     {
-
         BaseType_t lStringLength;
         BaseType_t lTransmitted;
         char * pcDstBuffer;
 
-#if USE_TCP_ZERO_COPY
-        BaseType_t xStreamBufferLength;
-        char * pcBuffer;
-#endif /* USE_TCP_ZERO_COPY */
-        
-        pcDstBuffer = pcTransmitBuffer;
-        
-#if USE_TCP_ZERO_COPY
-        /* Get a direct pointer to the TX head of the circular transmit buffer */
-        pcBuffer = ( char * ) FreeRTOS_get_tx_head( xSocket, &xStreamBufferLength );
+        #if USE_TCP_ZERO_COPY
+            BaseType_t xStreamBufferLength;
+            char * pcBuffer;
+        #endif /* USE_TCP_ZERO_COPY */
 
-        /* Check if sufficient space is there in the stream buffer. If there 
-        isn't enough size use application provided buffer */
-        if(xStreamBufferLength >= ulBufferLength)
-        {
-            /* Use the TCP stream buffer to directly create the TX data */
-            pcDstBuffer = pcBuffer;
-        }
-#endif /* USE_TCP_ZERO_COPY */
+        pcDstBuffer = pcTransmitBuffer;
+
+        #if USE_TCP_ZERO_COPY
+            /* Get a direct pointer to the TX head of the circular transmit buffer */
+            pcBuffer = ( char * ) FreeRTOS_get_tx_head( xSocket, &xStreamBufferLength );
+
+            /* Check if sufficient space is there in the stream buffer. If there
+             * isn't enough size use application provided buffer */
+            if( xStreamBufferLength >= ulBufferLength )
+            {
+                /* Use the TCP stream buffer to directly create the TX data */
+                pcDstBuffer = pcBuffer;
+            }
+        #endif /* USE_TCP_ZERO_COPY */
 
         lStringLength = prvCreateTxData( pcDstBuffer, ulBufferLength );
 
         /* Add in some unique text at the front of the string. */
         sprintf( pcDstBuffer, "TxRx message number %u", ( unsigned ) *pulTxCount );
-        (*pulTxCount)++;
-        
-#if USE_TCP_ZERO_COPY
-        /* Check to see if zero copy is used */
-        if(pcDstBuffer != pcTransmitBuffer)
-        {
-            /* Save a copy of the data in pcTransmitBuffer
-            which can be used to verify the echoed back data */
-            memcpy(pcTransmitBuffer, pcDstBuffer, lStringLength);
+        ( *pulTxCount )++;
 
-            /* Set the buffer pointer as NULL to let the stack know
-            that its a zero copy */
-            pcDstBuffer = NULL;
-        }
-#endif /* USE_TCP_ZERO_COPY */
+        #if USE_TCP_ZERO_COPY
+            /* Check to see if zero copy is used */
+            if( pcDstBuffer != pcTransmitBuffer )
+            {
+                /* Save a copy of the data in pcTransmitBuffer
+                 * which can be used to verify the echoed back data */
+                memcpy( pcTransmitBuffer, pcDstBuffer, lStringLength );
+
+                /* Set the buffer pointer as NULL to let the stack know
+                 * that its a zero copy */
+                pcDstBuffer = NULL;
+            }
+        #endif /* USE_TCP_ZERO_COPY */
 
         /* Send the string to the socket. */
-        lTransmitted = FreeRTOS_send( xSocket,                          /* The socket being sent to. */
-                                        ( void * ) pcDstBuffer,         /* The data being sent. */
-                                        lStringLength,                  /* The length of the data being sent. */
-                                        0 );                            /* No flags. */
+        lTransmitted = FreeRTOS_send( xSocket,                /* The socket being sent to. */
+                                      ( void * ) pcDstBuffer, /* The data being sent. */
+                                      lStringLength,          /* The length of the data being sent. */
+                                      0 );                    /* No flags. */
 
         configPRINTF( ( "FreeRTOS_send: %u/%u\n", ( unsigned ) lTransmitted, ( unsigned ) lStringLength ) );
 
@@ -315,8 +317,7 @@
                 /* Send a number of echo requests. */
                 for( lLoopCount = 0; lLoopCount < lMaxLoopCount; lLoopCount++ )
                 {
-
-                    lTransmitted = vTCPCreateAndSendData(xSocket, pcTransmittedString, &ulTxCount, echoBUFFER_SIZES);
+                    lTransmitted = vTCPCreateAndSendData( xSocket, pcTransmittedString, &ulTxCount, echoBUFFER_SIZES );
 
                     if( xIsFatalError( lTransmitted ) )
                     {
@@ -334,27 +335,27 @@
                     /* Receive data echoed back to the socket. */
                     while( xReceivedBytes < lTransmitted )
                     {
+                        #if USE_TCP_ZERO_COPY
+                            uint8_t * pucZeroCopyRxBuffPtr = NULL;
+                            xReturned = FreeRTOS_recv( xSocket,               /* The socket being received from. */
+                                                       &pucZeroCopyRxBuffPtr, /* While using FREERTOS_ZERO_COPY flag, pvBuffer is taken as a double pointer which will be updated with pointer to TCP RX stream buffer. */
+                                                       ipconfigTCP_MSS,       /* The size of the buffer provided to receive the data. */
+                                                       FREERTOS_ZERO_COPY );  /* Use FREERTOS_ZERO_COPY flag to enable zero copy. */
 
-						#if USE_TCP_ZERO_COPY
-							uint8_t *pucZeroCopyRxBuffPtr = NULL;
-							xReturned = FreeRTOS_recv( xSocket,                              /* The socket being received from. */
-													&pucZeroCopyRxBuffPtr, 				     /* While using FREERTOS_ZERO_COPY flag, pvBuffer is taken as a double pointer which will be updated with pointer to TCP RX stream buffer. */
-													ipconfigTCP_MSS,                         /* The size of the buffer provided to receive the data. */
-													FREERTOS_ZERO_COPY );                    /* Use FREERTOS_ZERO_COPY flag to enable zero copy. */
-							if( pucZeroCopyRxBuffPtr != NULL )
-							{
-								memcpy( &( pcReceivedString[ xReceivedBytes ] ), pucZeroCopyRxBuffPtr, xReturned );
-                                
+                            if( pucZeroCopyRxBuffPtr != NULL )
+                            {
+                                memcpy( &( pcReceivedString[ xReceivedBytes ] ), pucZeroCopyRxBuffPtr, xReturned );
+
                                 /* Release the memory that was previously obtained by calling FreeRTOS_recv()
-                                with the flag 'FREERTOS_ZERO_COPY' */
-								FreeRTOS_ReleaseTCPPayloadBuffer( xSocket, pucZeroCopyRxBuffPtr, xReturned );
-							}
-						#else
-							xReturned = FreeRTOS_recv( xSocket,                              /* The socket being received from. */
-													&( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
-													lTransmitted - xReceivedBytes,           /* The size of the buffer provided to receive the data. */
-													0 );                                     /* No flags. */
-						#endif /* USE_TCP_ZERO_COPY */
+                                 * with the flag 'FREERTOS_ZERO_COPY' */
+                                FreeRTOS_ReleaseTCPPayloadBuffer( xSocket, pucZeroCopyRxBuffPtr, xReturned );
+                            }
+                        #else  /* if USE_TCP_ZERO_COPY */
+                            xReturned = FreeRTOS_recv( xSocket,                                 /* The socket being received from. */
+                                                       &( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
+                                                       lTransmitted - xReceivedBytes,           /* The size of the buffer provided to receive the data. */
+                                                       0 );                                     /* No flags. */
+                        #endif /* USE_TCP_ZERO_COPY */
 
                         if( xIsFatalError( xReturned ) )
                         {

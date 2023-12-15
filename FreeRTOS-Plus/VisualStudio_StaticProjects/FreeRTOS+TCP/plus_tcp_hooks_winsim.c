@@ -53,6 +53,10 @@ extern UBaseType_t uxRand( void );
 
 /*-----------------------------------------------------------*/
 
+extern UBaseType_t uxRand();
+
+/*-----------------------------------------------------------*/
+
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
     const char * pcApplicationHostnameHook( void )

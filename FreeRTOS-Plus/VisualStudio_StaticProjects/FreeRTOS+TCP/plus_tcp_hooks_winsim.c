@@ -35,6 +35,8 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
+/* Function from freertos_hooks_winsim.c */
+extern UBaseType_t uxRand( void );
 /*-----------------------------------------------------------*/
 
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )

@@ -51,6 +51,10 @@
 
 /*-----------------------------------------------------------*/
 
+extern UBaseType_t uxRand();
+
+/*-----------------------------------------------------------*/
+
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
     const char * pcApplicationHostnameHook( void )
@@ -209,6 +213,8 @@ void vPlatformInitIpStack( void )
                                                                             NetworkInterface_t * pxInterface );
             pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
         #else
+            extern NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                                           NetworkInterface_t * pxInterface );
             pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
         #endif
 

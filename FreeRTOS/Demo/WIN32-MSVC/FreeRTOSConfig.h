@@ -127,6 +127,12 @@ extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 	#define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
+#ifdef WIN32_LEAN_AND_MEAN
+    #include "winsock2.h"
+#else
+    #include <winsock.h>
+#endif /* WIN32_LEAN_AND_MEAN */
+
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #include "trcRecorder.h"
 

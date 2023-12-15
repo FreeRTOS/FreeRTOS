@@ -43,11 +43,11 @@
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
     #define LIBRARY_LOG_NAME    "OTADemo"
-#endif
+#endif /* LIBRARY_LOG_NAME */
 
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_DEBUG
-#endif
+#endif /* LIBRARY_LOG_LEVEL */
 
 /* Prototype for the function used to print to console on Windows simulator
  * of FreeRTOS.

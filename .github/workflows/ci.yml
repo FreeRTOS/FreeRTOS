@@ -158,6 +158,7 @@ jobs:
       - env:
           stepName: Install Dependencies
         run: |
+          # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           git submodule update --init --checkout --recursive --depth 1
           sudo apt-get update

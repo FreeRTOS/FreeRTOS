@@ -25,7 +25,7 @@ CFLAGS  = -mabi=ilp32 -mcmodel=medany \
 	-fdata-sections \
 	-fno-builtin-printf
 
-ifeq ($(shell test $(GCC_VERSION) -gt $(GCC_VERSION_NEED_ZICSR) && echo true),true)
+ifeq ($(shell test $(GCC_VERSION) -ge $(GCC_VERSION_NEED_ZICSR) && echo true),true)
     CFLAGS += -march=rv32imac_zicsr
 else
     CFLAGS += -march=rv32imac

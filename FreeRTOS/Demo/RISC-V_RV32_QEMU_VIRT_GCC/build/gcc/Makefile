@@ -17,7 +17,7 @@ CFLAGS += $(INCLUDE_DIRS) -DportasmHANDLE_INTERRUPT=handle_trap -fmessage-length
           -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
           -Wno-unused-parameter -nostartfiles -g3 -Os
 
-ifeq ($(shell test $(GCC_VERSION) -gt $(GCC_VERSION_NEED_ZICSR) && echo true),true)
+ifeq ($(shell test $(GCC_VERSION) -ge $(GCC_VERSION_NEED_ZICSR) && echo true),true)
     CFLAGS += -march=rv32imac_zicsr
 else
     CFLAGS += -march=rv32imac

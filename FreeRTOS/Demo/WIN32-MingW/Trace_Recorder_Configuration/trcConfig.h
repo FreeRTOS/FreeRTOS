@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Trace Recorder for Tracealyzer v4.6.0
  * Copyright 2021 Percepio AB
  * www.percepio.com
@@ -15,6 +15,20 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** Exclude Windows APIs such as Cryptography, DDE, RPC, Shell,
+* and Windows Sockets. */
+#ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+#endif
+
+#include <winsock2.h>
+
+/* Define _WINSOCKAPI_ to ensure that winsock.h is not included */
+#ifndef _WINSOCKAPI_
+    #define _WINSOCKAPI_
+#endif
+
 
 /******************************************************************************
  * Include of processor header file

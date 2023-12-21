@@ -56,9 +56,3 @@ size_t i;
 
 	portEXIT_CRITICAL();
 }
-
-void handle_trap(void)
-{
-	while (1)
-		;
-}

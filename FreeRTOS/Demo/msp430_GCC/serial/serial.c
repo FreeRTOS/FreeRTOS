@@ -60,8 +60,8 @@ static QueueHandle_t xCharsForTx;
 static volatile short sTHREEmpty;
 
 /* Interrupt service routines. */
-interrupt (UART1RX_VECTOR) wakeup vRxISR( void );
-interrupt (UART1TX_VECTOR) wakeup vTxISR( void );
+interrupt (USART1RX_VECTOR) wakeup void vRxISR( void );
+interrupt (USART1TX_VECTOR) wakeup void vTxISR( void );
 
 /*-----------------------------------------------------------*/
 
@@ -185,7 +185,7 @@ signed portBASE_TYPE xReturn;
 /*
  * UART RX interrupt service routine.
  */
-interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
+interrupt (USART1RX_VECTOR) wakeup void vRxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -209,7 +209,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 /*
  * UART Tx interrupt service routine.
  */
-interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
+interrupt (USART1TX_VECTOR) wakeup void vTxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;

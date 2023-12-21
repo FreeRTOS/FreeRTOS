@@ -13,7 +13,7 @@ MAKE = make
 GCC_VERSION = $(shell $(CC) --version | grep ^$(CC) | sed 's/^.* //g' | awk -F. '{ printf("%d%02d%02d"), $$1, $$2, $$3 }')
 GCC_VERSION_NEED_ZICSR = "110100"
 
-CFLAGS += $(INCLUDE_DIRS) -DportasmHANDLE_INTERRUPT=handle_trap -fmessage-length=0 \
+CFLAGS += $(INCLUDE_DIRS) -fmessage-length=0 \
           -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
           -Wno-unused-parameter -nostartfiles -g3 -Os
 

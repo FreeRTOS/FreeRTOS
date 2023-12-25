@@ -314,6 +314,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'FreeRTOS/Demo/CORTEX_R4F_RZ_T_GCC_IAR/System/GCC/inc/.*',
     r'FreeRTOS/Demo/CORTEX_A5_SAMA5D2x_Xplained_IAR/AtmelFiles/drivers/misc/.*',
     r'FreeRTOS/Demo/CORTEX_ATSAM3X_Atmel_Studio/src/.*',
+    r'MSP430X_MSP430FR5969_LaunchPad_IAR_CCS/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/Trace_Recorder_Configuration/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/.*',

@@ -120,30 +120,30 @@
 #include "stm32l_discovery_lcd.h"
 
 /* Priorities at which the Rx and Tx tasks are created. */
-#define configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define configQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define configQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2 )
 
 /* The number of items the queue can hold.  This is 1 as the Rx task will
-remove items as they are added so the Tx task should always find the queue
-empty. */
-#define mainQUEUE_LENGTH					( 1 )
+ * remove items as they are added so the Tx task should always find the queue
+ * empty. */
+#define mainQUEUE_LENGTH                     ( 1 )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0 )
+#define mainDONT_BLOCK                       ( 0 )
 
 /* The value that is sent from the Tx task to the Rx task on the queue. */
-#define mainQUEUED_VALUE					( 100UL )
+#define mainQUEUED_VALUE                     ( 100UL )
 
 /* The length of time the LED will remain on for. */
-#define mainLED_TOGGLE_DELAY				( 10 / portTICK_PERIOD_MS )
+#define mainLED_TOGGLE_DELAY                 ( 10 / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 
 /*
  * The Rx and Tx tasks as described at the top of this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -156,7 +156,7 @@ static QueueHandle_t xQueue = NULL;
 TickType_t xSendBlockTime = ( 100UL / portTICK_PERIOD_MS );
 
 /* The lower an upper limits of the block time.  An infinite block time is used
-if xSendBlockTime is incremented past xMaxBlockTime. */
+ * if xSendBlockTime is incremented past xMaxBlockTime. */
 static const TickType_t xMaxBlockTime = ( 500L / portTICK_PERIOD_MS ), xMinBlockTime = ( 100L / portTICK_PERIOD_MS );
 
 /* The semaphore on which the Tx task blocks. */
@@ -167,131 +167,133 @@ static SemaphoreHandle_t xTxSemaphore = NULL;
 /* See the comments at the top of the file. */
 void main_low_power( void )
 {
-	/* Create the semaphore as described at the top of this file. */
-	xTxSemaphore = xSemaphoreCreateBinary();
-	configASSERT( xTxSemaphore );
+    /* Create the semaphore as described at the top of this file. */
+    xTxSemaphore = xSemaphoreCreateBinary();
+    configASSERT( xTxSemaphore );
 
-	/* Create the queue as described at the top of this file. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
-	configASSERT( xQueue );
+    /* Create the queue as described at the top of this file. */
+    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+    configASSERT( xQueue );
 
-	/* Start the two tasks as described at the top of this file. */
-	xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-	xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
+    /* Start the two tasks as described at the top of this file. */
+    xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+    xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler running running. */
-	vTaskStartScheduler();
+    /* Start the scheduler running running. */
+    vTaskStartScheduler();
 
-	/* If all is well the next line of code will not be reached as the
-	scheduler will be running.  If the next line is reached then it is likely
-	there was insufficient FreeRTOS heap available for the idle task and/or
-	timer task to be created.  See http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well the next line of code will not be reached as the
+     * scheduler will be running.  If the next line is reached then it is likely
+     * there was insufficient FreeRTOS heap available for the idle task and/or
+     * timer task to be created.  See http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-const unsigned long ulValueToSend = mainQUEUED_VALUE;
+    const unsigned long ulValueToSend = mainQUEUED_VALUE;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Enter the Blocked state to wait for the semaphore.  The task will
-		leave the Blocked state if either the semaphore is received or
-		xSendBlockTime ticks pass without the semaphore being received. */
-		xSemaphoreTake( xTxSemaphore, xSendBlockTime );
+    for( ; ; )
+    {
+        /* Enter the Blocked state to wait for the semaphore.  The task will
+        * leave the Blocked state if either the semaphore is received or
+        * xSendBlockTime ticks pass without the semaphore being received. */
+        xSemaphoreTake( xTxSemaphore, xSendBlockTime );
 
-		/* Send to the queue - causing the Tx task to flash its LED. */
-		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
-	}
+        /* Send to the queue - causing the Tx task to flash its LED. */
+        xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
+    unsigned long ulReceivedValue;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+    for( ; ; )
+    {
+        /* Wait until something arrives in the queue. */
+        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have arrived, but is it the expected
-		value?  If it is, turn the LED on for a short while. */
-		if( ulReceivedValue == mainQUEUED_VALUE )
-		{
-			/* LED on... */
-			GPIO_HIGH( LD_GPIO_PORT, LD_GREEN_GPIO_PIN );
+        /*  To get here something must have arrived, but is it the expected
+         * value?  If it is, turn the LED on for a short while. */
+        if( ulReceivedValue == mainQUEUED_VALUE )
+        {
+            /* LED on... */
+            GPIO_HIGH( LD_GPIO_PORT, LD_GREEN_GPIO_PIN );
 
-			/* ... short delay ... */
-			vTaskDelay( mainLED_TOGGLE_DELAY );
+            /* ... short delay ... */
+            vTaskDelay( mainLED_TOGGLE_DELAY );
 
-			/* ... LED off again. */
-			GPIO_LOW( LD_GPIO_PORT, LD_GREEN_GPIO_PIN );
-		}
-	}
+            /* ... LED off again. */
+            GPIO_LOW( LD_GPIO_PORT, LD_GREEN_GPIO_PIN );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 /* Handles interrupts generated by pressing the USER button. */
-void EXTI0_IRQHandler(void)
+void EXTI0_IRQHandler( void )
 {
-static const TickType_t xIncrement = 200UL / portTICK_PERIOD_MS;
+    static const TickType_t xIncrement = 200UL / portTICK_PERIOD_MS;
 
-	/* If xSendBlockTime is already portMAX_DELAY then the Tx task was blocked
-	indefinitely, and this interrupt is bringing the MCU out of STOP low power
-	mode. */
-	if( xSendBlockTime == portMAX_DELAY )
-	{
-		portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    /* If xSendBlockTime is already portMAX_DELAY then the Tx task was blocked
+     * indefinitely, and this interrupt is bringing the MCU out of STOP low power
+     * mode. */
+    if( xSendBlockTime == portMAX_DELAY )
+    {
+        portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-		/* Unblock the Tx task. */
-		xSemaphoreGiveFromISR( xTxSemaphore, &xHigherPriorityTaskWoken );
+        /* Unblock the Tx task. */
+        xSemaphoreGiveFromISR( xTxSemaphore, &xHigherPriorityTaskWoken );
 
-		/* Start over with the 'short' block time as described at the top of
-		this file. */
-		xSendBlockTime = xMinBlockTime;
+        /* Start over with the 'short' block time as described at the top of
+         * this file. */
+        xSendBlockTime = xMinBlockTime;
 
-		/* Request a yield if calling xSemaphoreGiveFromISR() caused a task to
-		leave the Blocked state (which it will have done) and the task that left
-		the Blocked state has a priority higher than the currently running task
-		(which it will have). */
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-	}
-	else
-	{
-		/* Increase the block time used by the Tx task, as described at the top
-		of this file. */
-		xSendBlockTime += xIncrement;
+        /* Request a yield if calling xSemaphoreGiveFromISR() caused a task to
+         * leave the Blocked state (which it will have done) and the task that left
+         * the Blocked state has a priority higher than the currently running task
+         * (which it will have). */
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    }
+    else
+    {
+        /* Increase the block time used by the Tx task, as described at the top
+         * of this file. */
+        xSendBlockTime += xIncrement;
 
-		/* If the block time has gone over the configured maximum then set it to
-		an infinite block time to allow the MCU to go into its STOP low power
-		mode. */
-		if( xSendBlockTime > xMaxBlockTime )
-		{
-			xSendBlockTime = portMAX_DELAY;
-		}
-	}
+        /* If the block time has gone over the configured maximum then set it to
+         * an infinite block time to allow the MCU to go into its STOP low power
+         * mode. */
+        if( xSendBlockTime > xMaxBlockTime )
+        {
+            xSendBlockTime = portMAX_DELAY;
+        }
+    }
 
-	EXTI_ClearITPendingBit( EXTI_Line0 );
+    EXTI_ClearITPendingBit( EXTI_Line0 );
 }
 /*-----------------------------------------------------------*/
 
 /* The configPOST_STOP_PROCESSING() macro is called when the MCU leaves its
-STOP low power mode.  The macro is set in FreeRTOSConfig.h to call
-vMainPostStopProcessing(). */
+ * STOP low power mode.  The macro is set in FreeRTOSConfig.h to call
+ * vMainPostStopProcessing(). */
 void vMainPostStopProcessing( void )
 {
-extern void SetSysClock( void );
+    extern void SetSysClock( void );
 
-	/* The STOP low power mode has been exited.  Reconfigure the system clocks
-	ready for normally running again. */
-	SetSysClock();
+    /* The STOP low power mode has been exited.  Reconfigure the system clocks
+     * ready for normally running again. */
+    SetSysClock();
 }
 /*-----------------------------------------------------------*/

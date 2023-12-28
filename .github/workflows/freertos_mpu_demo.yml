@@ -35,10 +35,10 @@ jobs:
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
       - env:
-          stepName: Build CORTEX R4 MPU Demo
+          stepName: Build CORTEX R5 MPU Demo
         name: ${{ env.stepName }}
         shell: bash
-        working-directory: FreeRTOS/Demo/CORTEX_R4_RM46_HERCULES_MCU_GCC
+        working-directory: FreeRTOS/Demo/CORTEX_R5_RM57_HERCULES_MCU_GCC
         run: |
           # ${{ env.stepName }}
           echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
@@ -56,10 +56,10 @@ jobs:
           fi
 
       - env:
-          stepName: Build CORTEX R5 MPU Demo
+          stepName: Build CORTEX R4 MPU Demo
         name: ${{ env.stepName }}
         shell: bash
-        working-directory: FreeRTOS/Demo/CORTEX_R5_RM57_HERCULES_MCU_GCC
+        working-directory: FreeRTOS/Demo/CORTEX_R4_RM46_HERCULES_MCU_GCC
         run: |
           # ${{ env.stepName }}
           echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"

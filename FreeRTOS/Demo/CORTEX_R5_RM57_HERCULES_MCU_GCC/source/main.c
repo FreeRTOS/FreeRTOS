@@ -37,6 +37,7 @@
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "portmacro.h"
 
 /* Standard includes. */
@@ -73,8 +74,16 @@ typedef void ( *ISRFunction_t )( void );
 #define portVIM_IRQINDEX  ( *( ( volatile uint32_t * ) 0xFFFFFE00 ) )
 #define portVIM_IRQVECREG ( *( ( volatile ISRFunction_t * ) 0xFFFFFE70 ) )
 
-/* Configure the hardware to run the demo. */
-static void prvSetupHardware( void );
+/** @brief Configure the hardware to start the scheduler timer. */
+PRIVILEGED_FUNCTION void vMainSetupTimerInterrupt( void );
+/** @brief Set up necessary hardware registers */
+PRIVILEGED_FUNCTION static void prvSetupHardware( void );
+
+/** @brief Landing point function for any failed configASSERT() check.
+ * @param pcFuncName The function that raised the assert.
+ * @param ulLine The line that the assert was called from.
+ * @note Unprivileged tasks shall pre-fetch abort if their assert fails. */
+FREERTOS_SYSTEM_CALL void vAssertCalled( const char * pcFileName, uint32_t ulLine );
 
 /* --------------------- Static Task Memory Allocation --------------------- */
 
@@ -233,6 +242,7 @@ void vMainSetupTimerInterrupt( void )
     portRTI_SETINTENA_REG = 0x00000001U;
     portRTI_GCTRL_REG |= 0x00000001U;
 }
+
 /*---------------------------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
@@ -265,13 +275,7 @@ void vApplicationIdleHook( void )
 
 /*---------------------------------------------------------------------------*/
 
-/** @brief Landing point function for any failed configASSERT() check.
- * @param pcFuncName The function that raised the assert.
- * @param ulLine The line that the assert was called from.
- * @note Add the vAssertCalled() function to FREERTOS_SYSTEM_CALL to allow it to
- *  enter a critical section, stopping IRQs, and context changes. */
-void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) FREERTOS_SYSTEM_CALL;
-void vAssertCalled( const char * pcFuncName, uint32_t ulLine )
+void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTEM_CALL */
 {
     volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
@@ -311,10 +315,6 @@ void vApplicationIRQHandler( void )
 }
 /*---------------------------------------------------------------------------*/
 
-/** @brief Provide a statically allocated TCB and Stack for the idle task
- * @note configUSE_STATIC_ALLOCATION is set to 1, so the application
- * must provide an implementation of vApplicationGetIdleTaskMemory()
- * to provide the memory that is used by the Idle task. */
 void vApplicationGetIdleTaskMemory(
     StaticTask_t ** ppxIdleTaskTCBBuffer,
     StackType_t ** ppxIdleTaskStackBuffer,
@@ -335,11 +335,6 @@ void vApplicationGetIdleTaskMemory(
 }
 /*---------------------------------------------------------------------------*/
 
-/** @brief Provide a statically allocated TCB and Stack for the timer task
- * @note configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
- * application must provide an implementation of
- * vApplicationGetTimerTaskMemory() to provide the memory that is used by the
- * Timer service task. */
 void vApplicationGetTimerTaskMemory(
     StaticTask_t ** ppxTimerTaskTCBBuffer,
     StackType_t ** ppxTimerTaskStackBuffer,

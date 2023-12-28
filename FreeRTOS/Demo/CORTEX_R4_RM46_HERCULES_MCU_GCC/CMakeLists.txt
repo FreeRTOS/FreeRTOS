@@ -36,10 +36,6 @@ get_filename_component(DEMO_DIR ${DEMO_DIR_REL} ABSOLUTE)
 set(BOARD_FILES_DIR_REL "${DEMO_DIR}/BoardFiles")
 get_filename_component(BOARD_FILES_DIR ${BOARD_FILES_DIR_REL} ABSOLUTE)
 
-# Get the absolute path to the Common Demo Directory
-set(DEMO_TASKS_DIR_REL "${DEMO_DIR}/../DemoTasks")
-get_filename_component(DEMO_TASKS_DIR ${DEMO_TASKS_DIR_REL} ABSOLUTE)
-
 set(FREERTOS_CONFIG_FILE_DIRECTORY "${DEMO_DIR}/include" CACHE STRING "Config File Path")
 set(FREERTOS_PORT "GCC_ARM_CRX_MPU" CACHE STRING "FreeRTOS Port to Use")
 
@@ -62,23 +58,23 @@ set(FREERTOS_KERNEL_DIR_REL "${freertos-kernel_SOURCE_DIR}")
 get_filename_component(FREERTOS_KERNEL_DIR ${FREERTOS_KERNEL_DIR_REL} ABSOLUTE)
 
 # Get the absolute path to the Port Directory
-set(PORT_DIR_REL "${freertos-kernel_SOURCE_DIR}/portable/GCC/ARM_CRx_No_GIC")
+set(PORT_DIR_REL "${freertos-kernel_SOURCE_DIR}/portable/GCC/ARM_CRx_MPU")
 get_filename_component(PORT_DIR ${PORT_DIR_REL} ABSOLUTE)
 
 include_directories(
     ${DEMO_DIR}
-        ${BOARD_FILES_DIR}/include
-    ${DEMO_TASKS_DIR}/include
+    ${DEMO_DIR}/include
+    ${BOARD_FILES_DIR}/include
     ${FREERTOS_KERNEL_DIR}/include
 ${PORT_DIR}
 )
 
 # Source files used for the FreeRTOS Demos
 FILE(GLOB FREERTOS_DEMO_SOURCES
-    ${DEMO_TASKS_DIR}/source/mpu_demo.c
-    ${DEMO_TASKS_DIR}/source/blinky_demo.c
-    ${DEMO_TASKS_DIR}/source/reg_test.c
-    ${DEMO_TASKS_DIR}/source/reg_test_GCC.S
+    ${DEMO_DIR}/source/mpu_demo.c
+    ${DEMO_DIR}/source/blinky_demo.c
+    ${DEMO_DIR}/source/reg_test.c
+    ${DEMO_DIR}/source/reg_test_GCC.S
 )
 
 # Source files used for the Board Support Package

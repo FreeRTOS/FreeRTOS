@@ -26,24 +26,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>DemoTasks</name>
-			<type>2</type>
-			<locationURI>DEMO_TASKS_DIR</locationURI>
-		</link>
-		<link>
 			<name>FreeRTOS-Kernel</name>
 			<type>2</type>
 			<locationURI>FREERTOS_KERNEL_DIR</locationURI>
 		</link>
-		<link>
-			<name>portable</name>
-			<type>2</type>
-			<locationURI>FREERTOS_PORT_DIR</locationURI>
-		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1676949072494</id>
+			<id>1703728340587</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -52,7 +42,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1676949072496</id>
+			<id>1703728340594</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -79,12 +69,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1703267841841</id>
+			<id>1703728468486</id>
 			<name>FreeRTOS-Kernel/portable</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-Common</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1703728468488</id>
+			<name>FreeRTOS-Kernel/portable</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-GCC</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -96,6 +95,15 @@
 				<arguments>1.0-name-matches-false-false-mpu_wrappers.c</arguments>
 			</matcher>
 		</filter>
+		<filter>
+			<id>1703728489501</id>
+			<name>FreeRTOS-Kernel/portable/GCC</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ARM_CRx_MPU</arguments>
+			</matcher>
+		</filter>
 	</filteredResources>
 	<variableList>
 		<variable>
@@ -103,16 +111,12 @@
 			<value>$%7BPROJECT_LOC%7D/BoardFiles</value>
 		</variable>
 		<variable>
-			<name>DEMO_TASKS_DIR</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/DemoTasks</value>
-		</variable>
-		<variable>
 			<name>FREERTOS_KERNEL_DIR</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D/FreeRTOS-Kernel</value>
+			<value>$%7BPARENT-2-PROJECT_LOC%7D/Source</value>
 		</variable>
 		<variable>
 			<name>FREERTOS_PORT_DIR</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D/TI-Hercules-Ports/portable/GCC/ARM_CRx_No_GIC</value>
+			<value>$%7BPARENT-2-PROJECT_LOC%7D/Source/portable/GCC/ARM_CRx_MPU</value>
 		</variable>
 		<variable>
 			<name>REPOSITORY_ROOT</name>

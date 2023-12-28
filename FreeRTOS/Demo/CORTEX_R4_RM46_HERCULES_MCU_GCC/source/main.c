@@ -27,10 +27,10 @@
  *
  */
 
-/******************************************************************************
- *
- * This file implements the code that is not demo specific, including the
- * hardware setup and FreeRTOS hook functions.
+/* ------------------------------------------------------------------------- */
+/**
+ * @file main.c
+ * @brief File implementing RM46L852 specific functions
  */
 
 /* FreeRTOS includes. */
@@ -123,12 +123,12 @@ int main( void )
 
 #if( mainDEMO_TYPE == MPU_DEMO )
     {
-        sci_print( "Selected the MPU Demo\r\n" );
+        sci_print( "Creating the MPU Demo Tasks\r\n" );
         xReturn = xCreateMPUTasks();
     }
 #else  /* ( mainDEMO_TYPE == BLINKY_DEMO ) */
     {
-        sci_print( "Launching Blinky Demo\r\n" );
+        sci_print( "Creating the Blinky Demo Tasks\r\n" );
         xReturn = xCreateBlinkyTasks();
     }
 #endif /* ( mainDEMO_TYPE Check ) */

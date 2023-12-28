@@ -290,14 +290,10 @@ BaseType_t xCreateBlinkyTasks( void )
         &xStaticQueue
     );
 
-    if( xQueue == NULL )
-    {
-        sci_print( "Failed to create the Queue for the tasks\r\n" );
-        xReturn = pdFAIL;
-    }
-    else
+    if( xQueue != NULL )
     {
         sci_print( "Created the Queue for the tasks\r\n" );
+
         /** @brief The debugging text name for the timer */
         const char * pcTimerName = "Timer";
         /** @brief Mark that this is an auto-reload timer. */
@@ -316,43 +312,53 @@ BaseType_t xCreateBlinkyTasks( void )
             pxCallbackFunction,
             &( xStaticTimer )
         );
-
-        if( NULL != xTimer )
-        {
-            sci_print( "Created the Queue Timer\r\n" );
-        }
-        else
-        {
-            sci_print( "Failed to create the Queue Timer\r\n" );
-            xReturn = pdFAIL;
-        }
+    }
+    else
+    {
+        sci_print( "Failed to create the Queue for the tasks\r\n" );
+        xReturn = pdFAIL;
     }
 
-    if( xReturn == pdPASS )
+    if( NULL != xTimer )
+    {
+        sci_print( "Created the Queue Timer\r\n" );
+    }
+    else
+    {
+        sci_print( "Failed to create the Queue Timer\r\n" );
+        xReturn = pdFAIL;
+    }
+
+    if( pdPASS == xReturn )
     {
         xReturn = prvCreateBlinkyTasks();
     }
     else
     {
-        sci_print( "Failed to create all needed objects\r\n" );
+        xReturn = pdFAIL;
     }
 
-    if( xReturn == pdPASS )
+    if( pdPASS == xReturn )
     {
+        /* Use an Access Control List to allow the tasks to use this queue */
+        vGrantAccessToQueue( xReceiveTaskHandle, xQueue );
+        vGrantAccessToQueue( xSendTaskHandle, xQueue );
+
         /* The scheduler has not started so use a block time of 0. */
         xReturn = xTimerStart( xTimer, 0 );
-        if( pdPASS == xReturn )
-        {
-            sci_print( "Started the Timer\r\n" );
-        }
-        else
-        {
-            sci_print( "Failed to start the Queue Timer\r\n" );
-        }
     }
     else
     {
-        sci_print( "Failed to create all needed objects\r\n" );
+        xReturn = pdFAIL;
+    }
+
+    if( pdPASS == xReturn )
+    {
+        sci_print( "Started the Timer\r\n" );
+    }
+    else
+    {
+        sci_print( "Failed to start the Queue Timer\r\n" );
     }
 
     return xReturn;

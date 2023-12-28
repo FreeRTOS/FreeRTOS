@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -30,8 +30,7 @@
         #include <stdint.h>
 /* debug ASSERT The first option calls a function that prints to UART
  * The second one loops for when using a debugger. */
-void vAssertCalled( const char * pcFileName, uint32_t ulLine )
-    __attribute__( ( section( "freertos_system_calls" ) ) );
+extern void vAssertCalled( const char * pcFileName, uint32_t ulLine );
         /* Using __func__ for now to shorten message, as __FILE__ is adding in the full
          * path */
         #define configASSERT( x )                    \
@@ -72,7 +71,7 @@ extern void vMainSetupTimerInterrupt( void );
      * Additionally allow unprivileged tasks to have critical sections. */
     #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY            1U
     #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS             1U
-    #define configENABLE_ACCESS_CONTROL_LIST                       0U
+    #define configENABLE_ACCESS_CONTROL_LIST                       1U
 
     #define configENABLE_MPU                                       1U
     #define configENABLE_FPU                                       1U

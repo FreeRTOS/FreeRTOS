@@ -30,8 +30,7 @@
         #include <stdint.h>
 /* debug ASSERT The first option calls a function that prints to UART
  * The second one loops for when using a debugger. */
-void vAssertCalled( const char * pcFileName, uint32_t ulLine )
-    __attribute__( ( section( "freertos_system_calls" ) ) );
+extern void vAssertCalled( const char * pcFileName, uint32_t ulLine );
         /* Using __func__ for now to shorten message, as __FILE__ is adding in the full
          * path */
         #define configASSERT( x )                    \
@@ -72,7 +71,7 @@ extern void vMainSetupTimerInterrupt( void );
      * Additionally allow unprivileged tasks to have critical sections. */
     #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY            1U
     #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS             1U
-    #define configENABLE_ACCESS_CONTROL_LIST                       0U
+    #define configENABLE_ACCESS_CONTROL_LIST                       1U
 
     #define configENABLE_MPU                                       1U
     #define configENABLE_FPU                                       1U

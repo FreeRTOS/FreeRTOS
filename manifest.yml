@@ -5,7 +5,7 @@ license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "dc09a3dd5"
+    version: "ca907b445"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -54,7 +54,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "6ddc35e"
+    version: "8b5ec3b3e"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
@@ -89,7 +89,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v3.2.1"
+    version: "v3.5.1"
     repository:
       type: "git"
       url:  "https://github.com/Mbed-TLS/mbedtls.git"
@@ -131,7 +131,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
 
   - name: "FreeRTOS-Community-Supported-Demos"
-    version: "1ba24b1"
+    version: "db9704f"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"
@@ -145,28 +145,28 @@ dependencies:
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
   - name: "FreeRTOS-Cellular-Interface"
-    version: "e5862bd"
+    version: "4675955"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96"
-    version: "c33a362"
+    version: "6761849"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802"
-    version: "6893670"
+    version: "7d6393a"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4"
-    version: "a2d84ff"
+    version: "f536afe"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git"

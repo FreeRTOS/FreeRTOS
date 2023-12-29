@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -51,6 +51,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+
+#ifdef WIN32_LEAN_AND_MEAN
+    #include "winsock2.h"
+#else
+    #include <winsock.h>
+#endif /* WIN32_LEAN_AND_MEAN */
 
 /* Visual studio intrinsics used so the __debugbreak() function is available
  * should an assert get hit. */

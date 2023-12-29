@@ -258,7 +258,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
 
 FREERTOS_IGNORED_PATTERNS = [
     r'.*\.git.*',
-    r'.*mbedtls_config\.h.*',
+    r'.*mbedtls_config*',
     r'.*CMSIS.*',
     r'.*/Nordic_Code/*',
     r'.*/Nuvoton_Code/*',
@@ -328,9 +328,6 @@ FREERTOS_IGNORED_FILES = [
     'cspell.config.yaml',
     '.cproject',
     '.project',
-    'fyi-another-way-to-ignore-file.txt',
-    'mbedtls_config.h',
-    'mbedtls_config_v3.2.1.h',
     'requirements.txt',
     'run-cbmc-proofs.py',
     '.editorconfig',

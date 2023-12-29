@@ -48,41 +48,41 @@
  * @brief Sample size in bytes of the stream buffer used for test.
  * The size is kept short enough so that the buffer can be allocated on stack.
  */
-#define TEST_STREAM_BUFFER_SIZE             ( 64U )
+#define TEST_STREAM_BUFFER_SIZE                  ( 64U )
 
 /**
  * @brief Sample trigger level in bytes used for stream buffer tests.
  * When a receiver task is blocked waiting for data, trigger level determines how much bytes should
  * be available before which receiver task can be unblocked.
  */
-#define TEST_STREAM_BUFFER_TRIGGER_LEVEL    ( 32U )
+#define TEST_STREAM_BUFFER_TRIGGER_LEVEL         ( 32U )
 
 /**
  * @brief Maximum unsigned long value that can be passed as a stream buffer size so as to
  * trigger an integer overflow.
  */
-#define TEST_STREAM_BUFFER_MAX_UINT_SIZE    ( ~( size_t ) ( 0UL ) )
+#define TEST_STREAM_BUFFER_MAX_UINT_SIZE         ( ~( size_t ) ( 0UL ) )
 
 /**
  * @brief A value used to test setting and getting stream buffer number.
  */
-#define TEST_STREAM_BUFFER_NUMBER           ( 0xFFU )
+#define TEST_STREAM_BUFFER_NUMBER                ( 0xFFU )
 
 /**
  * @brief A value used to test setting and getting stream buffer notification index.
  */
-#define TEST_STREAM_BUFFER_NOTIFICATION_INDEX           ( 0x2 )
+#define TEST_STREAM_BUFFER_NOTIFICATION_INDEX    ( 0x2 )
 
 /**
  * @brief Wait ticks passed into from tests if the stream buffer is full while sending data or
  * empty while receiving data.
  */
-#define TEST_STREAM_BUFFER_WAIT_TICKS       ( 1000U )
+#define TEST_STREAM_BUFFER_WAIT_TICKS            ( 1000U )
 
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                      0xAA101
+#define configASSERT_E                           0xAA101
 
 /**
  * @brief Expect a configASSERT from the function called.
@@ -276,10 +276,12 @@ static BaseType_t senderTaskNotificationCallback( TaskHandle_t xTaskToNotify,
                                                   int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( senderTask, xTaskToNotify );
-    if (uxIndexToNotify == notificationIndex)
+
+    if( uxIndexToNotify == notificationIndex )
     {
         senderTaskWoken++;
     }
+
     return pdTRUE;
 }
 
@@ -292,10 +294,12 @@ static BaseType_t senderTaskNotificationFromISRCallback( TaskHandle_t xTaskToNot
                                                          int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( senderTask, xTaskToNotify );
-    if (uxIndexToNotify == notificationIndex)
+
+    if( uxIndexToNotify == notificationIndex )
     {
         senderTaskWoken++;
     }
+
     *pxHigherPriorityTaskWoken = pdTRUE;
 
     return pdTRUE;
@@ -382,10 +386,12 @@ static BaseType_t receiverTaskNotificationFromISRCallback( TaskHandle_t xTaskToN
                                                            int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( receiverTask, xTaskToNotify );
-    if (uxIndexToNotify == notificationIndex)
+
+    if( uxIndexToNotify == notificationIndex )
     {
         receiverTaskWoken++;
     }
+
     *pxHigherPriorityTaskWoken = pdTRUE;
 
     return pdTRUE;
@@ -399,10 +405,12 @@ static BaseType_t receiverTaskNotificationCallback( TaskHandle_t xTaskToNotify,
                                                     int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( receiverTask, xTaskToNotify );
-    if (uxIndexToNotify == notificationIndex)
+
+    if( uxIndexToNotify == notificationIndex )
     {
         receiverTaskWoken++;
     }
+
     return pdTRUE;
 }
 

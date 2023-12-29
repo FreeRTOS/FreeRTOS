@@ -78,10 +78,20 @@ static void prvSetupHardware( void )
  * hook, uncomment it, and set configCHECK_FOR_STACK_OVERFLOW to 1 in
  * "FreeRTOSConfig.h" header file. */
 
-/* void vApplicationStackOverflowHook(TaskHandle_t *pxTask, char *pcTaskName ) */
-/* { */
-/*     for( ;; ); */
-/* } */
+#if ( portHAS_STACK_OVERFLOW_CHECKING != 0 ) && ( configCHECK_FOR_STACK_OVERFLOW != 0 )
+    void vApplicationStackOverflowHook( void )
+    {
+        volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+        taskENTER_CRITICAL();
+        /* To debug this failure set ulSetToNonZeroInDebuggerToContinue
+         * to a non-zero value using a debugger. */
+        while( ulSetToNonZeroInDebuggerToContinue == 0 )
+        {
+            portNOP();
+        }
+        taskEXIT_CRITICAL();
+    }
+#endif /* ( portHAS_STACK_OVERFLOW_CHECKING != 0 ) && ( configCHECK_FOR_STACK_OVERFLOW != 0 ) */
 
 /* vApplicationMallocFailedHook is called when memorry allocation fails.
  * This is usefull in application development, for debugging.  To use this

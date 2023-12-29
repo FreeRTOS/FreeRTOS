@@ -98,7 +98,18 @@ static void prvSetupHardware( void )
  * hook, uncomment it, and set configUSE_MALLOC_FAILED_HOOK to 1 in
  * "FreeRTOSConfig.h" header file. */
 
-/* void vApplicationMallocFailedHook( void ) */
-/* { */
-/*     for( ;; ); */
-/* } */
+#if ( configUSE_MALLOC_FAILED_HOOK != 0 )
+    void vApplicationMallocFailedHook( void )
+    {
+        volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+        taskENTER_CRITICAL();
+        /* To debug this failure set ulSetToNonZeroInDebuggerToContinue
+         * to a non-zero value using a debugger. */
+        while( ulSetToNonZeroInDebuggerToContinue == 0 )
+        {
+            /* No-Op */
+            portNOP();
+        }
+        taskEXIT_CRITICAL();
+    }
+#endif /* configUSE_MALLOC_FAILED_HOOK */

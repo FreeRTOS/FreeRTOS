@@ -26,7 +26,7 @@
 
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 
-/*! \file *********************************************************************
+/* \file *********************************************************************
  *
  * \brief FreeRTOS Real Time Kernel example.
  *
@@ -80,10 +80,9 @@
 #include "death.h"
 #include "flop.h"
 
-/*! \name Priority definitions for most of the tasks in the demo application.
+/* Priority definitions for most of the tasks in the demo application.
  * Some tasks just use the idle priority.
  */
-/*! @{ */
 #define mainLED_TASK_PRIORITY        ( tskIDLE_PRIORITY + 1 )
 #define mainCOM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 2 )
@@ -91,45 +90,38 @@
 #define mainBLOCK_Q_PRIORITY         ( tskIDLE_PRIORITY + 3 )
 #define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 4 )
 #define mainCREATOR_TASK_PRIORITY    ( tskIDLE_PRIORITY + 3 )
-/*! @} */
 
-/*! Baud rate used by the serial port tasks. */
-#define mainCOM_TEST_BAUD_RATE    ( ( unsigned long ) 57600 )
+/* Baud rate used by the serial port tasks. */
+#define mainCOM_TEST_BAUD_RATE       ( ( unsigned long ) 57600 )
 
-/*! LED used by the serial port tasks.  This is toggled on each character Tx, */
-/*! and mainCOM_TEST_LED + 1 is toggled on each character Rx. */
-#define mainCOM_TEST_LED    ( 3 )
+/* LED used by the serial port tasks.  This is toggled on each character Tx,
+ * and mainCOM_TEST_LED + 1 is toggled on each character Rx. */
+#define mainCOM_TEST_LED             ( 3 )
 
-/*! LED that is toggled by the check task.  The check task periodically checks */
-/*! that all the other tasks are operating without error.  If no errors are found */
-/*! the LED is toggled.  If an error is found at any time the LED toggles faster. */
-#define mainCHECK_TASK_LED    ( 6 )
-
-/*! LED that is set upon error. */
-#define mainERROR_LED         ( 7 )
-
-/*! The period between executions of the check task. */
-#define mainCHECK_PERIOD      ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
-
-/*! If an error is detected in a task, the vErrorChecks task will enter in an */
-/*! infinite loop flashing the LED at this rate. */
-#define mainERROR_FLASH_RATE    ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
-
-/*! \name Constants used by the vMemCheckTask() task.
+/* LED that is toggled by the check task.  The check task periodically checks
+ * that all the other tasks are operating without error.  If no errors are found
+ * the LED is toggled.  If an error is found at any time the LED toggles faster.
  */
-/*! @{ */
-#define mainCOUNT_INITIAL_VALUE    ( ( unsigned long ) 0 )
-#define mainNO_TASK                ( 0 )
-/*! @} */
+#define mainCHECK_TASK_LED           ( 6 )
 
-/*! \name The size of the memory blocks allocated by the vMemCheckTask() task.
- */
-/*! @{ */
-#define mainMEM_CHECK_SIZE_1    ( ( size_t ) 51 )
-#define mainMEM_CHECK_SIZE_2    ( ( size_t ) 52 )
-#define mainMEM_CHECK_SIZE_3    ( ( size_t ) 15 )
-/*! @} */
+/* LED that is set upon error. */
+#define mainERROR_LED                ( 7 )
 
+/* The period between executions of the check task. */
+#define mainCHECK_PERIOD             ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
+
+/* If an error is detected in a task, the vErrorChecks task will enter in an
+ * infinite loop flashing the LED at this rate. */
+#define mainERROR_FLASH_RATE         ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
+
+/* Constants used by the vMemCheckTask() task. */
+#define mainCOUNT_INITIAL_VALUE      ( ( unsigned long ) 0 )
+#define mainNO_TASK                  ( 0 )
+
+/* The size of the memory blocks allocated by the vMemCheckTask() task. */
+#define mainMEM_CHECK_SIZE_1         ( ( size_t ) 51 )
+#define mainMEM_CHECK_SIZE_2         ( ( size_t ) 52 )
+#define mainMEM_CHECK_SIZE_3         ( ( size_t ) 15 )
 
 /*-----------------------------------------------------------*/
 
@@ -200,8 +192,8 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-/*!
- * \brief The task function for the "Check" task.
+/*
+ * @brief The task function for the "Check" task.
  */
 static void vErrorChecks( void * pvParameters )
 {
@@ -294,8 +286,8 @@ static void vErrorChecks( void * pvParameters )
 /*-----------------------------------------------------------*/
 
 
-/*!
- * \brief Checks that all the demo application tasks are still executing without error.
+/*
+ * @brief Checks that all the demo application tasks are still executing without error.
  */
 static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void )
 {
@@ -346,12 +338,12 @@ static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void )
 /*-----------------------------------------------------------*/
 
 
-/*!
- * \brief Dynamically created and deleted during each cycle of the vErrorChecks()
- * task.  This is done to check the operation of the memory allocator.
+/*
+ * @brief Dynamically created and deleted during each cycle of the vErrorChecks()
+ * task. This is done to check the operation of the memory allocator.
  * See the top of vErrorChecks for more details.
  *
- * \param *pvParameters Parameters for the task (can be of any kind)
+ * @param pvParameters Parameters for the task (can be of any kind)
  */
 static void vMemCheckTask( void * pvParameters )
 {

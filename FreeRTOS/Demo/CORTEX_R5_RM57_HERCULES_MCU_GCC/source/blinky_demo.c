@@ -59,7 +59,7 @@
 /* Demo Specific Includes */
 #include "demo_tasks.h"
 
-#if mainDEMO_TYPE == BLINKY_DEMO
+#if ( mainDEMO_TYPE & BLINKY_DEMO )
 
     /* ------------------------- Demo Task Configs ------------------------- */
 
@@ -449,4 +449,4 @@ static void prvQueueReceiveTask( void * pvParameters )
 }
 /* --------------------------------------------------------------------- */
 
-#endif /* mainDEMO_TYPE == BLINKY_DEMO */
+#endif /* ( mainDEMO_TYPE & BLINKY_DEMO ) */

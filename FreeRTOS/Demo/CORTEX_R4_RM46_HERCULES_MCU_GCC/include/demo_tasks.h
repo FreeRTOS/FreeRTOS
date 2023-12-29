@@ -43,9 +43,11 @@
  *
  * If mainDEMO_TYPE is 2 then the MPU demo from mpu_demo.c will be built.
  *
+ * If mainDEMO_TYPE is 3 then both of the above demos will be built.
+ *
  */
 #ifndef mainDEMO_TYPE
-    #define mainDEMO_TYPE BLINKY_DEMO
+    #define mainDEMO_TYPE ( BLINKY_DEMO | MPU_DEMO )
 #endif /* mainDEMO_TYPE */
 
 /* FreeRTOS includes. */
@@ -66,8 +68,6 @@ BaseType_t xCreateRegisterTestTasks( void );
 
 /* ------------------------ Demo Tasks Declarations ------------------------ */
 
-#if( mainDEMO_TYPE == BLINKY_DEMO )
-
 /** @brief Create two tasks, a queue, and a timer, which are used to blink an LED.
  *
  * @return
@@ -75,8 +75,6 @@ BaseType_t xCreateRegisterTestTasks( void );
  * pdFAIL if any object cannot be created.
  */
 BaseType_t xCreateBlinkyTasks( void );
-
-#elif( mainDEMO_TYPE == MPU_DEMO )
 
 /** @brief Create the MPU Tasks that trigger data aborts.
  *
@@ -91,9 +89,7 @@ BaseType_t xCreateBlinkyTasks( void );
  */
 BaseType_t xCreateMPUTasks( void );
 
-#endif /* mainDEMO_TYPE */
-
-/* ---------------------- Shared Function Decleration ---------------------- */
+/* ---------------------- Shared Function Deceleration ---------------------- */
 
 /** @brief Function to toggle LEDs on the RM57-XL2 Launchpad
  * @param ulLED Which LED to flicker

@@ -52,7 +52,7 @@
 static volatile uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) ) = { 0 };
 
-#if mainDEMO_TYPE == MPU_DEMO
+#if ( mainDEMO_TYPE & MPU_DEMO )
 
 /* --------------------- Static Task Memory Allocation --------------------- */
 
@@ -416,7 +416,7 @@ BaseType_t xCreateMPUTasks( void )
     return xReturn;
 }
 /*-----------------------------------------------------------*/
-#endif /* mainDEMO_TYPE == MPU_DEMO */
+#endif /* ( mainDEMO_TYPE & MPU_DEMO ) */
 
 PRIVILEGED_FUNCTION portDONT_DISCARD void vHandleMemoryFault(
     uint32_t * pulFaultStackAddress

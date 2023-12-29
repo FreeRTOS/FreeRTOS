@@ -44,8 +44,8 @@ peripheral. */
 
 /* The queues used to communicate between the task code and the interrupt
 service routines. */
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /* Hardware specific constants. */
 #define serTX_INTERRUPT				( ( unsigned char ) 0x80 )
@@ -54,18 +54,18 @@ static QueueHandle_t xCharsForTx;
 #define serRX_ENABLE				( ( unsigned char ) 0x10 )
 
 /* Macros to turn on and off the serial port THRE interrupt while leaving the
-other register bits in their correct state.   The Rx interrupt is always
+other register bits in their correct state.   The Rx interrupt is always 
 enabled. */
-#define serTX_INTERRUPT_ON()		SCR1 = serTX_INTERRUPT | serRX_INTERRUPT | serTX_ENABLE | serRX_ENABLE;
+#define serTX_INTERRUPT_ON()		SCR1 = serTX_INTERRUPT | serRX_INTERRUPT | serTX_ENABLE | serRX_ENABLE;									
 #define serTX_INTERRUPT_OFF()		SCR1 = 					 serRX_INTERRUPT | serTX_ENABLE | serRX_ENABLE;
 
-/* Bit used to switch on the channel 1 serial port in the module stop
+/* Bit used to switch on the channel 1 serial port in the module stop 
 register. */
 #define serMSTP6					( ( unsigned short ) 0x0040 )
 
-/* Interrupt service routines.  Note that the Rx and Tx service routines can
+/* Interrupt service routines.  Note that the Rx and Tx service routines can 
 cause a context switch and are therefore defined with the saveall attribute in
-addition to the interrupt_handler attribute.  See the FreeRTOS.org WEB site
+addition to the interrupt_handler attribute.  See the FreeRTOS.org WEB site 
 documentation for a full explanation.*/
 void vCOM_1_Rx_ISR( void ) __attribute__ ( ( saveall, interrupt_handler ) );
 void vCOM_1_Tx_ISR( void ) __attribute__ ( ( saveall, interrupt_handler ) );
@@ -83,14 +83,14 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
-	/* No parity, 8 data bits and 1 stop bit is the default so does not require
+	/* No parity, 8 data bits and 1 stop bit is the default so does not require 
 	configuration - setup the remains of the hardware. */
 	portENTER_CRITICAL();
 	{
 		/* Turn channel 1 on. */
 		MSTPCR &= ~serMSTP6;
 
-		/* Enable the channels and the Rx interrupt.  The Tx interrupt is only
+		/* Enable the channels and the Rx interrupt.  The Tx interrupt is only 
 		enabled when data is being transmitted. */
 		SCR1 = serRX_INTERRUPT | serTX_ENABLE | serRX_ENABLE;
 
@@ -113,7 +113,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 							break;
 		}
 	}
-	portEXIT_CRITICAL();
+	portEXIT_CRITICAL();	
 
 	/* Unlike some ports, this driver code does not allow for more than one
 	com port.  We therefore don't return a pointer to a port structure and can
@@ -166,7 +166,7 @@ signed portBASE_TYPE xReturn = pdPASS;
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
-{
+{	
 	/* Not supported. */
 	( void ) xPort;
 }
@@ -178,7 +178,7 @@ void vCOM_1_Rx_ISR( void )
 	in the function. */
 	portENTER_SWITCHING_ISR();
 
-	/* As this is a switching ISR the local variables must be declared as
+	/* As this is a switching ISR the local variables must be declared as 
 	static. */
 	static char cRxByte;
 	static portBASE_TYPE xHigherPriorityTaskWoken;
@@ -195,7 +195,7 @@ void vCOM_1_Rx_ISR( void )
 		/* Clear the interrupt. */
 		SSR1 &= ~serRX_INTERRUPT;
 
-	/* This must be the last line in the function.  We pass cTaskWokenByPost so
+	/* This must be the last line in the function.  We pass cTaskWokenByPost so 
 	a context switch will occur if the received character woke a task that has
 	a priority higher than the task we interrupted. */
 	portEXIT_SWITCHING_ISR( xHigherPriorityTaskWoken );
@@ -208,7 +208,7 @@ void vCOM_1_Tx_ISR( void )
 	in the function. */
 	portENTER_SWITCHING_ISR();
 
-	/* As this is a switching ISR the local variables must be declared as
+	/* As this is a switching ISR the local variables must be declared as 
 	static. */
 	static char cTxByte;
 	static signed portBASE_TYPE xTaskWokenByTx;
@@ -223,7 +223,7 @@ void vCOM_1_Tx_ISR( void )
 		if( xQueueReceiveFromISR( xCharsForTx, &cTxByte, &xTaskWokenByTx ) == pdTRUE )
 		{
 			/* A character was retrieved from the queue so can be sent to the
-			THR now. */
+			THR now. */							
 			TDR1 = cTxByte;
 
 			/* Clear the interrupt. */
@@ -233,9 +233,9 @@ void vCOM_1_Tx_ISR( void )
 		{
 			/* Queue empty, nothing to send so turn off the Tx interrupt. */
 			serTX_INTERRUPT_OFF();
-		}
+		}		
 
-	/* This must be the last line in the function.  We pass cTaskWokenByTx so
+	/* This must be the last line in the function.  We pass cTaskWokenByTx so 
 	a context switch will occur if the Tx'ed character woke a task that has
 	a priority higher than the task we interrupted. */
 	portEXIT_SWITCHING_ISR( xTaskWokenByTx );
@@ -243,8 +243,8 @@ void vCOM_1_Tx_ISR( void )
 /*-----------------------------------------------------------*/
 
 /*
- * This ISR cannot cause a context switch so requires no special
- * considerations.
+ * This ISR cannot cause a context switch so requires no special 
+ * considerations. 
  */
 void vCOM_1_Error_ISR( void )
 {

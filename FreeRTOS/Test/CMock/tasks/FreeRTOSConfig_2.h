@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,8 @@
 
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
+
+#include "fake_assert.h"
 
 /* XXX: this file will be processed by unifdef  to generate new header files
  * that can be mocked according to the configurations desired
@@ -93,6 +95,10 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portHAS_STACK_OVERFLOW_CHECKING              1
 #define portCRITICAL_NESTING_IN_TCB                  1
 
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                        0
+#define configMAX_CO_ROUTINE_PRIORITIES              ( 2 )
+
 /* This demo makes use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within
@@ -122,7 +128,10 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
-#define configASSERT( x )
+/* *INDENT-OFF* */
+#define configASSERT( x ) do {  if( x ) { vFakeAssert( true, __FILE__, __LINE__ );  } else { vFakeAssert( false, __FILE__, __LINE__ ); } } while( 0 )
+/* *INDENT-ON* */
+
 #define portREMOVE_STATIC_QUALIFIER                  1
 #define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES    0
 

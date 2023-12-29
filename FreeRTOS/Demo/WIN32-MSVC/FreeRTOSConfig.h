@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -82,6 +82,10 @@ void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initi
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
 
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES 					1
+#define configMAX_CO_ROUTINE_PRIORITIES			( 2 )
+
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
@@ -122,6 +126,12 @@ extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 	extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
 	#define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+#ifdef WIN32_LEAN_AND_MEAN
+    #include "winsock2.h"
+#else
+    #include <winsock.h>
+#endif /* WIN32_LEAN_AND_MEAN */
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #include "trcRecorder.h"

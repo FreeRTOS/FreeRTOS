@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -35,9 +35,11 @@
 #include "mock_list_macros.h"
 #include "mock_timers.h"
 #include "mock_portable.h"
+#include "mock_fake_assert.h"
 
 /* Test includes. */
 #include "unity.h"
+#include "CException.h"
 #include "global_vars.h"
 
 /* C runtime includes. */
@@ -64,12 +66,28 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-extern volatile BaseType_t xYieldPending;
+#ifdef configNUMBER_OF_CORES
+    extern volatile BaseType_t xYieldPendings[];
+    #define xYieldPending    xYieldPendings[ 0 ]
+#else
+    extern volatile BaseType_t xYieldPending;
+#endif
+
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-extern TaskHandle_t xIdleTaskHandle;
+#ifdef configNUMBER_OF_CORES
+    extern TaskHandle_t xIdleTaskHandles[];
+    #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
+#else
+    extern TaskHandle_t xIdleTaskHandle;
+#endif
 extern volatile UBaseType_t uxSchedulerSuspended;
+
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E    0xAA101
 
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
@@ -79,14 +97,14 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 static TCB_t * ptcb;
 static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
 static TCB_t tcb[ 10 ]; /* simulate up to 10 tasks: add more if needed */
-static bool getIddleTaskMemoryValid = false;
+static bool getIdleTaskMemoryValid = false;
 static uint32_t critical_section_counter = 0;
 static bool is_first_task = true;
 static uint32_t created_tasks = 0;
 static uint32_t create_task_priority = 3;
 static port_yield_operation py_operation;
 static bool vTaskDeletePre_called = false;
-static bool getIddleTaskMemory_called = false;
+static bool getIdleTaskMemory_called = false;
 static bool vApplicationTickHook_called = false;
 static bool port_yield_called = false;
 static bool port_enable_interrupts_called = false;
@@ -104,6 +122,16 @@ static bool port_allocate_secure_context_called = false;
 static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
+
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
+static int assertionFailed = 0;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion = pdFALSE;
 
 /* ===========================  Static Functions  =========================== */
 static void start_scheduler()
@@ -141,7 +169,7 @@ static void start_scheduler()
 
     xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
     xPortStartScheduler_ExpectAndReturn( pdTRUE );
-    getIddleTaskMemoryValid = true;
+    getIdleTaskMemoryValid = true;
     vTaskStartScheduler();
     ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
     TEST_ASSERT_TRUE( xSchedulerRunning );
@@ -239,7 +267,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
 {
     HOOK_DIAG();
 
-    if( getIddleTaskMemoryValid == true )
+    if( getIdleTaskMemoryValid == true )
     {
         /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
          * state will be stored. */
@@ -260,7 +288,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
         *pulIdleTaskStackSize = 0;
     }
 
-    getIddleTaskMemory_called = true;
+    getIdleTaskMemory_called = true;
 }
 
 void vConfigureTimerForRunTimeStats( void )
@@ -311,10 +339,11 @@ void vFakePortYieldFromISR()
     HOOK_DIAG();
 }
 
-void vFakePortDisableInterrupts()
+uint32_t vFakePortDisableInterrupts()
 {
     port_disable_interrupts_called = true;
     HOOK_DIAG();
+    return 0;
 }
 
 void vFakePortEnableInterrupts()
@@ -375,6 +404,48 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
     vApplicationStackOverflowHook_called = true;
 }
 
+unsigned int vFakePortGetCoreID( void )
+{
+    HOOK_DIAG();
+    return 0;
+}
+
+void vFakePortReleaseTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortReleaseISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
+{
+    if( !x )
+    {
+        assertionFailed++;
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            Throw( configASSERT_E );
+        }
+    }
+}
+
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
@@ -413,8 +484,9 @@ void setUp( void )
     /*ulTotalRunTime = 0UL; */
     is_first_task = true;
     created_tasks = 0;
-
     py_operation = dummy_operation;
+
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
 }
 
 /*! called after each testcase */
@@ -627,7 +699,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0 );
     listSET_LIST_ITEM_VALUE_Expect( &( ptcb->xEventListItem ),
                                     configMAX_PRIORITIES - 5 );
-    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 5 ],
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 4 ],
                                              &( ptcb->xStateListItem ),
                                              pdTRUE );
     uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );
@@ -647,7 +719,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
 void vTaskEnterCritical( void );
 void vTaskExitCritical( void );
 
-void test_vTaskExitCritical_succes( void )
+void test_vTaskExitCritical_success( void )
 {
     TaskHandle_t task_handle;
 
@@ -711,7 +783,7 @@ void test_vTaskExitCritical_scheduler_off( void )
     ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
 }
 
-void test_vTaskEnterCritical_succes( void )
+void test_vTaskEnterCritical_success( void )
 {
     TaskHandle_t task_handle;
 
@@ -726,7 +798,7 @@ void test_vTaskEnterCritical_succes( void )
     ASSERT_IF_IN_ISR_CALLED();
 }
 
-void test_vTaskEnterCritical_succes_twice( void )
+void test_vTaskEnterCritical_success_twice( void )
 {
     TaskHandle_t task_handle;
 

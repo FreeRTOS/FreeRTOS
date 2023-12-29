@@ -1,0 +1,298 @@
+/*
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ */
+
+/*
+ * "Reg tests" - These tests fill the registers with known values, then check
+ * that each register maintains its expected value for the lifetime of the
+ * task.  Each task uses a different set of values.  The reg test tasks execute
+ * with a very low priority, so get preempted very frequently.  A register
+ * containing an unexpected value is indicative of an error in the context
+ * switching mechanism.
+ */
+
+    SECTION .text:CODE:NOROOT(2)
+    THUMB
+
+    EXTERN ulRegTest1LoopCounter
+    EXTERN ulRegTest2LoopCounter
+
+    PUBLIC vRegTest1Asm_NonSecure
+    PUBLIC vRegTest2Asm_NonSecure
+    PUBLIC vRegTestAsm_NonSecureCallback
+/*-----------------------------------------------------------*/
+
+vRegTest1Asm_NonSecure:
+    /* Fill the core registers with known values. */
+    movs r1, #101
+    movs r2, #102
+    movs r3, #103
+    movs r4, #104
+    movs r5, #105
+    movs r6, #106
+    movs r7, #107
+    movs r0, #108
+    mov  r8, r0
+    movs r0, #109
+    mov  r9, r0
+    movs r0, #110
+    mov  r10, r0
+    movs r0, #111
+    mov  r11, r0
+    movs r0, #112
+    mov  r12, r0
+    movs r0, #100
+
+    reg1_loop:
+        /* Verify that core registers contain correct values. */
+        cmp  r0, #100
+        bne  reg1_error_loop
+        cmp  r1, #101
+        bne  reg1_error_loop
+        cmp  r2, #102
+        bne  reg1_error_loop
+        cmp  r3, #103
+        bne  reg1_error_loop
+        cmp  r4, #104
+        bne  reg1_error_loop
+        cmp  r5, #105
+        bne  reg1_error_loop
+        cmp  r6, #106
+        bne  reg1_error_loop
+        cmp  r7, #107
+        bne  reg1_error_loop
+        movs r0, #108
+        cmp  r8, r0
+        bne  reg1_error_loop
+        movs r0, #109
+        cmp  r9, r0
+        bne  reg1_error_loop
+        movs r0, #110
+        cmp  r10, r0
+        bne  reg1_error_loop
+        movs r0, #111
+        cmp  r11, r0
+        bne  reg1_error_loop
+        movs r0, #112
+        cmp  r12, r0
+        bne  reg1_error_loop
+
+        /* Everything passed, inc the loop counter. */
+        push { r1 }
+        ldr  r0, =ulRegTest1LoopCounter
+        ldr  r1, [r0]
+        adds r1, r1, #1
+        str  r1, [r0]
+
+        /* Yield to increase test coverage. */
+        movs r0, #0x01
+        ldr  r1, =0xe000ed04    /* NVIC_ICSR. */
+        lsls r0, r0, #28        /* Shift to PendSV bit. */
+        str  r0, [r1]
+        dsb
+        pop  { r1 }
+
+        /* Start again. */
+        movs r0, #100
+        b reg1_loop
+
+    reg1_error_loop:
+        /* If this line is hit then there was an error in
+         * a core register value. The loop ensures the
+         * loop counter stops incrementing. */
+        b reg1_error_loop
+        nop
+/*-----------------------------------------------------------*/
+
+vRegTest2Asm_NonSecure:
+    /* Fill the core registers with known values. */
+    movs r1, #1
+    movs r2, #2
+    movs r3, #3
+    movs r4, #4
+    movs r5, #5
+    movs r6, #6
+    movs r7, #7
+    movs r0, #8
+    mov  r8, r0
+    movs r0, #9
+    mov  r9, r0
+    movs r0, #10
+    mov  r10, r0
+    movs r0, #11
+    mov  r11, r0
+    movs r0, #12
+    mov  r12, r0
+    movs r0, #10
+
+    reg2_loop:
+        /* Verify that core registers contain correct values. */
+        cmp  r0, #10
+        bne  reg2_error_loop
+        cmp  r1, #1
+        bne  reg2_error_loop
+        cmp  r2, #2
+        bne  reg2_error_loop
+        cmp  r3, #3
+        bne  reg2_error_loop
+        cmp  r4, #4
+        bne  reg2_error_loop
+        cmp  r5, #5
+        bne  reg2_error_loop
+        cmp  r6, #6
+        bne  reg2_error_loop
+        cmp  r7, #7
+        bne  reg2_error_loop
+        movs r0, #8
+        cmp  r8, r0
+        bne  reg2_error_loop
+        movs r0, #9
+        cmp  r9, r0
+        bne  reg2_error_loop
+        movs r0, #10
+        cmp  r10, r0
+        bne  reg2_error_loop
+        movs r0, #11
+        cmp  r11, r0
+        bne  reg2_error_loop
+        movs r0, #12
+        cmp  r12, r0
+        bne  reg2_error_loop
+
+        /* Everything passed, inc the loop counter. */
+        push { r1 }
+        ldr  r0, =ulRegTest2LoopCounter
+        ldr  r1, [r0]
+        adds r1, r1, #1
+        str  r1, [r0]
+        pop  { r1 }
+
+        /* Start again. */
+        movs r0, #10
+        b reg2_loop
+
+    reg2_error_loop:
+        /* If this line is hit then there was an error in
+         * a core register value. The loop ensures the
+         * loop counter stops incrementing. */
+        b reg2_error_loop
+        nop
+/*-----------------------------------------------------------*/
+
+vRegTestAsm_NonSecureCallback:
+    /* Store callee saved registers. */
+    push { r4-r7 }
+    mov r0, r8
+    mov r1, r9
+    mov r2, r10
+    mov r3, r11
+    mov r4, r12
+    push { r0-r4 }
+
+    /* Fill the core registers with known values. */
+    movs r1, #151
+    movs r2, #152
+    movs r3, #153
+    movs r4, #154
+    movs r5, #155
+    movs r6, #156
+    movs r7, #157
+    movs r0, #158
+    mov  r8, r0
+    movs r0, #159
+    mov  r9, r0
+    movs r0, #160
+    mov  r10, r0
+    movs r0, #161
+    mov  r11, r0
+    movs r0, #162
+    mov  r12, r0
+    movs r0, #150
+
+    /* Force a context switch by pending non-secure sv. */
+    push { r0, r1 }
+    movs r0, #0x01
+    ldr  r1, =0xe000ed04    /* NVIC_ICSR. */
+    lsls r0, r0, #28        /* Shift to PendSV bit. */
+    str  r0, [r1]
+    dsb
+    pop  { r0, r1 }
+
+    /* Verify that core registers contain correct values. */
+    cmp  r0, #150
+    bne  reg_nscb_error_loop
+    cmp  r1, #151
+    bne  reg_nscb_error_loop
+    cmp  r2, #152
+    bne  reg_nscb_error_loop
+    cmp  r3, #153
+    bne  reg_nscb_error_loop
+    cmp  r4, #154
+    bne  reg_nscb_error_loop
+    cmp  r5, #155
+    bne  reg_nscb_error_loop
+    cmp  r6, #156
+    bne  reg_nscb_error_loop
+    cmp  r7, #157
+    bne  reg_nscb_error_loop
+    movs r0, #158
+    cmp  r8, r0
+    bne  reg_nscb_error_loop
+    movs r0, #159
+    cmp  r9, r0
+    bne  reg_nscb_error_loop
+    movs r0, #160
+    cmp  r10, r0
+    bne  reg_nscb_error_loop
+    movs r0, #161
+    cmp  r11, r0
+    bne  reg_nscb_error_loop
+    movs r0, #162
+    cmp  r12, r0
+    bne  reg_nscb_error_loop
+
+    /* Everything passed, finish. */
+    b reg_nscb_success
+
+    reg_nscb_error_loop:
+        /* If this line is hit then there was an error in
+         * a core register value. The loop ensures the
+         * loop counter stops incrementing. */
+        b reg_nscb_error_loop
+        nop
+
+    reg_nscb_success:
+        /* Restore callee saved registers. */
+        pop { r0-r4 }
+        mov r8, r0
+        mov r9, r1
+        mov r10, r2
+        mov r11, r3
+        mov r12, r4
+        pop { r4-r7 }
+        bx lr
+/*-----------------------------------------------------------*/
+
+    END

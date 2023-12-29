@@ -63,11 +63,12 @@ AFLAGS=-mthumb         \
 #
 # The flags passed to the compiler.
 #
-CFLAGS=-mthumb         \
-       -mcpu=cortex-m3 \
-	   -fdata-sections -ffunction-sections \
-       -MD \
-	   -g
+CFLAGS=-mthumb             \
+       -mcpu=cortex-m3     \
+       -O2                 \
+	   -fdata-sections     \
+	   -ffunction-sections \
+       -MD
 
 #
 # The command for calling the library archiver.

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -68,17 +68,17 @@ int suiteTearDown( int numFailures )
 static void test_long_queue( QueueHandle_t xQueue,
                              uint32_t maxItems )
 {
-    /* Veify that queue is empty */
+    /* Verify that queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
     queue_common_add_sequential_to_queue( xQueue, maxItems );
 
-    /* Veify that queue is full */
+    /* Verify that queue is full */
     TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
 
     queue_common_receive_sequential_from_queue( xQueue, maxItems, maxItems, 0 );
 
-    /* Veify that queue is empty */
+    /* Verify that queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 }
 
@@ -154,10 +154,16 @@ void test_macro_xQueueCreate_oneItem_zeroLength( void )
 
     TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
 
-    /* Veify that new queue is empty */
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
+    /* Verify that Queue ItemSize is zero */
+    TEST_ASSERT_EQUAL( 0, uxQueueGetQueueItemSize( xQueue ) );
+
+    /* Verify that new queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Valdiate that the queue has 1 space remaining */
+    /* Validate that the queue has 1 space remaining */
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueue ) );
 
     vQueueDelete( xQueue );
@@ -177,14 +183,20 @@ void test_macro_xQueueCreate_oneItem_oneLength( void )
 
     TEST_ASSERT_EQUAL( QUEUE_T_SIZE + 1, getLastMallocSize() );
 
-    /* Veify that new queue is empty */
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
+    /* Verify that Queue ItemSize is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueItemSize( xQueue ) );
+
+    /* Verify that new queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
     uint8_t testval = ( uint8_t ) getNextMonotonicTestValue();
 
     TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testval, 0 ) );
 
-    /* Veify that queue is full */
+    /* Verify that queue is full */
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
     TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
 
@@ -194,7 +206,7 @@ void test_macro_xQueueCreate_oneItem_oneLength( void )
     TEST_ASSERT_EQUAL( pdTRUE, xQueueReceive( xQueue, &testVal2, 0 ) );
     TEST_ASSERT_EQUAL( testval, testVal2 );
 
-    /* Veify that queue is empty */
+    /* Verify that queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueue ) );
 
@@ -222,7 +234,13 @@ void test_macro_xQueueCreate_oneItem_multiLength( void )
 
         TEST_ASSERT_EQUAL( QUEUE_T_SIZE + i, getLastMallocSize() );
 
-        /* Veify that queue is empty */
+        /* Verify that Queue Length is one */
+        TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
+        /* Verify that Queue ItemSize is equal to the mailbox size */
+        TEST_ASSERT_EQUAL( i, uxQueueGetQueueItemSize( xQueue ) );
+
+        /* Verify that queue is empty */
         TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
         /* Mask off the bytes we won't use */
@@ -242,7 +260,7 @@ void test_macro_xQueueCreate_oneItem_multiLength( void )
 
         TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testVal, 0 ) );
 
-        /* Veify that queue is also full */
+        /* Verify that queue is also full */
         TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
 
         uint8_t testValCheck[ MAX_MULTI_LEN ];
@@ -252,7 +270,7 @@ void test_macro_xQueueCreate_oneItem_multiLength( void )
         TEST_ASSERT_EQUAL( pdTRUE, xQueueReceive( xQueue, &testValCheck, 0 ) );
         TEST_ASSERT_EQUAL_MEMORY( testValCompare, testValCheck, MAX_MULTI_LEN );
 
-        /* Veify that queue is empty */
+        /* Verify that queue is empty */
         TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
         vQueueDelete( xQueue );
@@ -296,7 +314,7 @@ void test_macro_xQueueCreate_multiplication_overflow( void )
  *  ( xQueueSizeInBytes + sizeof(StaticQueue_t) ) > MAX(size_t)
  * @coverage xQueueGenericCreate
  */
-void test_macro_xQueueCreate_addiiton_overflow( void )
+void test_macro_xQueueCreate_addition_overflow( void )
 {
     /* Based on the formula:
      *  ( 2^x - 1 ) == ( 2^( x/2 ) + 1 ) * ( 2^( x/2 ) - 1 ) */

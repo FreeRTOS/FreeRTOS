@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -118,8 +118,9 @@
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
+ * Refer to FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/readme.txt for more details.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS           ( 500U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS           ( 2000U )
 
 /**
  * @brief Keep alive time reported to the broker while establishing an MQTT connection.
@@ -145,14 +146,16 @@
 /**
  * @brief The length of the outgoing publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for outgoing publishes.
+ * This length depends on the Number of publishes & can be updated accordingly.
  */
-#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN       ( 10U )
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN       ( 15U )
 
 /**
  * @brief The length of the incoming publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for incoming publishes.
+ * This length depends on the Number of publishes & can be updated accordingly.
  */
-#define mqttexampleINCOMING_PUBLISH_RECORD_LEN       ( 10U )
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN       ( 15U )
 
 /**
  * @brief Maximum number of outgoing publishes maintained in the application
@@ -376,26 +379,28 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
     uint16_t usNextRetryBackOff = 0U;
 
     #if defined( democonfigCLIENT_USERNAME )
-        /*
-         * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-         * to AWS IoT Core with Custom Authentication on port 443.
-         *
-         * Custom Authentication uses the contents of the username and password
-         * fields of the MQTT CONNECT packet to authenticate the client.
-         *
-         * For more information, refer to the documentation at:
-         * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-         */
-        static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
-        #if democonfigMQTT_BROKER_PORT != 443U
-        #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
-        #endif /* democonfigMQTT_BROKER_PORT != 443U */
+
+    /*
+     * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+     * to AWS IoT Core with Custom Authentication on port 443.
+     *
+     * Custom Authentication uses the contents of the username and password
+     * fields of the MQTT CONNECT packet to authenticate the client.
+     *
+     * For more information, refer to the documentation at:
+     * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+     */
+    static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
+    #if democonfigMQTT_BROKER_PORT != 443U
+    #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+    #endif /* democonfigMQTT_BROKER_PORT != 443U */
     #else /* if !defined( democonfigCLIENT_USERNAME ) */
-        /*
-         * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-         * x509 Certificate Authentication.
-         */
-        static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
+
+    /*
+     * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+     * x509 Certificate Authentication.
+     */
+    static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
     #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
     /*

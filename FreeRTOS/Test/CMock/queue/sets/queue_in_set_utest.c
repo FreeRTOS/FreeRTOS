@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -71,6 +71,18 @@ int suiteTearDown( int numFailures )
 }
 
 /* ===========================  Helper functions ============================ */
+
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
 
 /* ==============================  Test Cases =============================== */
 
@@ -429,6 +441,7 @@ void test_macro_xQueueSendFromISR_in_set_locked_and_low_priority_pending( void )
     xQueueAddToSet( xQueue, xQueueSet );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Insert an item into the event list. */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
@@ -463,7 +476,7 @@ void test_macro_xQueueSendFromISR_in_set_locked_and_low_priority_pending( void )
 
 /**
  * @brief Test xQueueSendFromISR with a lower priority task waiting on a queue in a Queue Set
- * @details Test xQueueSendFromISR on a Queeu in a Queue Set with a lower priority task waiting and
+ * @details Test xQueueSendFromISR on a Queue in a Queue Set with a lower priority task waiting and
  *  verify that xHigherPriorityTaskWoken is not modified.
  * @coverage xQueueGenericSendFromISR
  */
@@ -555,6 +568,8 @@ void test_macro_xQueueSend_in_set_high_priority_pending( void )
     /* Insert an item into the event list */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueueSet );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t testVal = getNextMonotonicTestValue();
 
@@ -795,6 +810,8 @@ void test_macro_xQueueSend_in_set_blocking_success_locked_no_pending( void )
 
     uint32_t testVal = getNextMonotonicTestValue();
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testVal, 0 ) );
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
@@ -848,6 +865,8 @@ void test_macro_xQueueSend_in_set_blocking_fail_locked_high_prio_pending( void )
 
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     xQueueAddToSet( xQueue, xQueueSet );
 
     /* Export for callbacks */
@@ -895,6 +914,8 @@ void test_macro_xQueueSend_in_set_blocking_success_locked_low_prio_pending( void
     QueueSetHandle_t xQueueSet = xQueueCreateSet( 1 );
 
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xQueueAddToSet( xQueue, xQueueSet );
 
@@ -968,6 +989,8 @@ void test_xQueueReceive_in_set_blocking_success_locked_no_pending( void )
 
     uint32_t checkVal = INVALID_UINT32;
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     QueueHandle_t xQueueFromSet = xQueueSelectFromSet( xQueueSet, TICKS_TO_WAIT );
 
     TEST_ASSERT_NOT_NULL( xQueueFromSet );
@@ -1035,6 +1058,8 @@ void test_xQueueReceive_in_set_blocking_fail_locked_high_prio_pending( void )
 
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueueSet );
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     QueueHandle_t xQueueFromSet = xQueueSelectFromSet( xQueueSet, TICKS_TO_WAIT );
 
     TEST_ASSERT_EQUAL( NULL, xQueueFromSet );
@@ -1079,6 +1104,8 @@ void test_xQueueReceive_in_set_blocking_success_locked_low_prio_pending( void )
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueueSet );
 
     uint32_t checkVal = INVALID_UINT32;
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     QueueHandle_t xQueueFromSet = xQueueSelectFromSet( xQueueSet, NUM_CALLS_TO_INTERCEPT );
 

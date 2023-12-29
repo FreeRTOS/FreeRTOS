@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -60,7 +60,7 @@ static uint8_t ucSharedMemory[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32
  * @note We are declaring a region of 32 bytes even though we need only one. The
  * reason is that the size of an MPU region must be a multiple of 32 bytes.
  */
-static uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) ) = { 0 };
+static volatile uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) ) = { 0 };
 /*-----------------------------------------------------------*/
 
 /**
@@ -234,19 +234,19 @@ void vStartMPUDemo( void )
         .puxStackBuffer = xROAccessTaskStack,
         .xRegions       =
         {
-            { ucSharedMemory,       32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory,       32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
             #if ( configTOTAL_MPU_REGIONS == 16 )
-            { ucSharedMemory1,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory2,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory3,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory4,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory5,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory6,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory7,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory8,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory1,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory2,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory3,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory4,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory5,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory6,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory7,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory8,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
             #endif /* configTOTAL_MPU_REGIONS == 16 */
-            { ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { 0,                    0,  0                                                      },
+            { ( void * ) ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { 0,                               0,  0                                                      },
         }
     };
     TaskParameters_t xRWAccessTaskParameters =
@@ -259,19 +259,19 @@ void vStartMPUDemo( void )
         .puxStackBuffer = xRWAccessTaskStack,
         .xRegions       =
         {
-            { ucSharedMemory,  32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory,  32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
             #if ( configTOTAL_MPU_REGIONS == 16 )
-            { ucSharedMemory1, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory2, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory3, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory4, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory5, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory6, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory7, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory8, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory1, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory2, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory3, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory4, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory5, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory6, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory7, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory8, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
             #endif /* configTOTAL_MPU_REGIONS == 16 */
-            { 0,               0,  0                                                      },
-            { 0,               0,  0                                                      },
+            { 0,                          0,  0                                                      },
+            { 0,                          0,  0                                                      },
         }
     };
 

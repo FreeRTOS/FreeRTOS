@@ -69,10 +69,10 @@ int main(void)
 	prvSetupHardware();
 
 	/* Print banner. */
-	printf( "\n" );
-	printf( "+---------------------------------------------+\n" );
-	printf( "|            Secure is running ...            |\n" );
-	printf( "+---------------------------------------------+\n" );
+	printf( "\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
+	printf( "|            Secure is running ...            |\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
 
 	/* Do not generate Systick interrupt on secure side. */
 	SysTick_Config( 1 );

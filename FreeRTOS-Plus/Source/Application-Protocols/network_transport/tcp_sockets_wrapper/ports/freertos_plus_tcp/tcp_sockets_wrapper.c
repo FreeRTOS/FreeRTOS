@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -32,6 +32,14 @@
 /* Include header that defines log levels. */
 #include "logging_levels.h"
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
+#include "FreeRTOS_DNS.h"
+
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
     #define LIBRARY_LOG_NAME     "SocketsWrapper"
@@ -47,14 +55,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /* Standard includes. */
 #include <string.h>
-
-/* FreeRTOS includes. */
-#include "FreeRTOS.h"
-
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-#include "FreeRTOS_DNS.h"
 
 /* TCP Sockets Wrapper include.*/
 /* Let sockets wrapper know that Socket_t is defined already. */
@@ -115,11 +115,20 @@ BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
         /* Connection parameters. */
         serverAddress.sin_family = FREERTOS_AF_INET;
         serverAddress.sin_port = FreeRTOS_htons( port );
-        serverAddress.sin_addr = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
         serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
 
-        /* Check for errors from DNS lookup. */
-        if( serverAddress.sin_addr == 0U )
+        #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            serverAddress.sin_address.ulIP_IPv4 = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
+
+            /* Check for errors from DNS lookup. */
+            if( serverAddress.sin_address.ulIP_IPv4 == 0U )
+        #else
+            serverAddress.sin_addr = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
+
+            /* Check for errors from DNS lookup. */
+            if( serverAddress.sin_addr == 0U )
+        #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
         {
             LogError( ( "Failed to connect to server: DNS resolution failed: Hostname=%s.",
                         pHostName ) );

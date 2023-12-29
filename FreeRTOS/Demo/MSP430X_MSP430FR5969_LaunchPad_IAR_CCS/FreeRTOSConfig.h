@@ -50,6 +50,7 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
 #define configIDLE_SHOULD_YIELD					1
+#define configUSE_CO_ROUTINES 					0
 #define configUSE_MUTEXES						1
 #define configUSE_RECURSIVE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE				0
@@ -80,6 +81,9 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 /* Return the current timer counter value + the overflow counter. */
 #define portGET_RUN_TIME_COUNTER_VALUE() 	( ( ( uint32_t ) TA1R ) + ulRunTimeCounterOverflows )
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES 			0
+#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function.  The IAR linker will remove unused functions

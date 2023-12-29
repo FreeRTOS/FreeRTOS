@@ -72,7 +72,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		}
 	}
 	taskEXIT_CRITICAL();
-
+	
 	/* Record the output for the sake of toggling. */
 	if( uxLED < partstMAX_LED )
 	{

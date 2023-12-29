@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -25,15 +25,20 @@
  */
 
 /**
- * @file tls_freertos.c
+ * @file transport_mbedtls.c
  * @brief TLS transport interface implementations. This implementation uses
  * mbedTLS.
  */
 
 #include "logging_levels.h"
 
-#define LIBRARY_LOG_NAME     "MbedtlsTransport"
-#define LIBRARY_LOG_LEVEL    LOG_INFO
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME    "MbedtlsTransport"
+#endif /* LIBRARY_LOG_NAME */
+
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif /* LIBRARY_LOG_LEVEL*/
 
 #include "logging_stack.h"
 
@@ -43,7 +48,24 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* MbedTLS Bio TCP sockets wrapper include. */
+/* MBedTLS Includes */
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
+#ifdef MBEDTLS_PSA_CRYPTO_C
+    /* MbedTLS PSA Includes */
+    #include "psa/crypto.h"
+    #include "psa/crypto_values.h"
+#endif /* MBEDTLS_PSA_CRYPTO_C */
+
+#ifdef MBEDTLS_DEBUG_C
+    #include "mbedtls/debug.h"
+#endif /* MBEDTLS_DEBUG_C */
+
+/* MBedTLS Bio TCP sockets wrapper include. */
 #include "mbedtls_bio_tcp_sockets_wrapper.h"
 
 /* TLS transport header. */
@@ -210,12 +232,28 @@ static TlsTransportStatus_t tlsHandshake( NetworkContext_t * pNetworkContext,
  * @brief Initialize mbedTLS.
  *
  * @param[out] entropyContext mbed TLS entropy context for generation of random numbers.
- * @param[out] ctrDrgbContext mbed TLS CTR DRBG context for generation of random numbers.
+ * @param[out] ctrDrbgContext mbed TLS CTR DRBG context for generation of random numbers.
  *
  * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_INTERNAL_ERROR.
  */
 static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyContext,
-                                         mbedtls_ctr_drbg_context * pCtrDrgbContext );
+                                         mbedtls_ctr_drbg_context * pCtrDrbgContext );
+
+/*-----------------------------------------------------------*/
+
+#ifdef MBEDTLS_DEBUG_C
+    void mbedtls_string_printf( void * sslContext,
+                                int level,
+                                const char * file,
+                                int line,
+                                const char * str )
+    {
+        if( ( str != NULL ) && ( file != NULL ) )
+        {
+            LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        }
+    }
+#endif /* MBEDTLS_DEBUG_C */
 
 /*-----------------------------------------------------------*/
 
@@ -228,6 +266,12 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_pk_init( &( pSslContext->privKey ) );
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
+    #ifdef MBEDTLS_DEBUG_C
+        mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
+        mbedtls_ssl_conf_dbg( &( pSslContext->config ),
+                              mbedtls_string_printf,
+                              NULL );
+    #endif /* MBEDTLS_DEBUG_C */
 }
 /*-----------------------------------------------------------*/
 
@@ -240,7 +284,7 @@ static void sslContextFree( SSLContext_t * pSslContext )
     mbedtls_x509_crt_free( &( pSslContext->clientCert ) );
     mbedtls_pk_free( &( pSslContext->privKey ) );
     mbedtls_entropy_free( &( pSslContext->entropyContext ) );
-    mbedtls_ctr_drbg_free( &( pSslContext->ctrDrgbContext ) );
+    mbedtls_ctr_drbg_free( &( pSslContext->ctrDrbgContext ) );
     mbedtls_ssl_config_free( &( pSslContext->config ) );
 }
 /*-----------------------------------------------------------*/
@@ -321,7 +365,7 @@ static int32_t setPrivateKey( SSLContext_t * pSslContext,
                                              privateKeySize,
                                              NULL, 0,
                                              mbedtls_ctr_drbg_random,
-                                             &( pSslContext->ctrDrgbContext ) );
+                                             &( pSslContext->ctrDrbgContext ) );
     #endif /* if MBEDTLS_VERSION_NUMBER < 0x03000000 */
 
     if( mbedtlsError != 0 )
@@ -351,7 +395,7 @@ static int32_t setCredentials( SSLContext_t * pSslContext,
                                MBEDTLS_SSL_VERIFY_REQUIRED );
     mbedtls_ssl_conf_rng( &( pSslContext->config ),
                           mbedtls_ctr_drbg_random,
-                          &( pSslContext->ctrDrgbContext ) );
+                          &( pSslContext->ctrDrbgContext ) );
     mbedtls_ssl_conf_cert_profile( &( pSslContext->config ),
                                    &( pSslContext->certProfile ) );
 
@@ -429,6 +473,7 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
 
     /* Set Maximum Fragment Length if enabled. */
     #ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
+
         /* Enable the max fragment extension. 4096 bytes is currently the largest fragment size permitted.
          * See RFC 8449 https://tools.ietf.org/html/rfc8449 for more information.
          *
@@ -574,7 +619,7 @@ static TlsTransportStatus_t tlsHandshake( NetworkContext_t * pNetworkContext,
 /*-----------------------------------------------------------*/
 
 static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyContext,
-                                         mbedtls_ctr_drbg_context * pCtrDrgbContext )
+                                         mbedtls_ctr_drbg_context * pCtrDrbgContext )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     int32_t mbedtlsError = 0;
@@ -586,7 +631,7 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
 
     /* Initialize contexts for random number generation. */
     mbedtls_entropy_init( pEntropyContext );
-    mbedtls_ctr_drbg_init( pCtrDrgbContext );
+    mbedtls_ctr_drbg_init( pCtrDrbgContext );
 
     if( mbedtlsError != 0 )
     {
@@ -596,10 +641,23 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
         returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
     }
 
+    #ifdef MBEDTLS_PSA_CRYPTO_C
+        if( returnStatus == TLS_TRANSPORT_SUCCESS )
+        {
+            mbedtlsError = psa_crypto_init();
+
+            if( mbedtlsError != PSA_SUCCESS )
+            {
+                LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
+                returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
+            }
+        }
+    #endif /* MBEDTLS_PSA_CRYPTO_C */
+
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Seed the random number generator. */
-        mbedtlsError = mbedtls_ctr_drbg_seed( pCtrDrgbContext,
+        mbedtlsError = mbedtls_ctr_drbg_seed( pCtrDrbgContext,
                                               mbedtls_entropy_func,
                                               pEntropyContext,
                                               NULL,
@@ -686,7 +744,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         isSocketConnected = pdTRUE;
 
         returnStatus = initMbedtls( &( pTlsTransportParams->sslContext.entropyContext ),
-                                    &( pTlsTransportParams->sslContext.ctrDrgbContext ) );
+                                    &( pTlsTransportParams->sslContext.ctrDrbgContext ) );
     }
 
     /* Initialize TLS contexts and set credentials. */
@@ -808,8 +866,14 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_read." ) );
+            }
+
             LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),
@@ -867,8 +931,14 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_write." ) );
+            }
+
             LogDebug( ( "Failed to send data. However, send can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),

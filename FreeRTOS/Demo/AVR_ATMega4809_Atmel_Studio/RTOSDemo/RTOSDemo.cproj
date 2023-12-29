@@ -118,7 +118,7 @@
             <Value>../../../../Source</Value>
             <Value>../../../../Source/include</Value>
             <Value>../../../../Source/portable/MemMang</Value>
-            <Value>../../../../Source/portable/GCC/AVR_Mega0</Value>
+            <Value>../../../../Source/portable/ThirdParty/Partner-Supported-Ports/GCC/AVR_Mega0</Value>
             <Value>../../../Common/include</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
@@ -155,6 +155,10 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="..\..\..\Source\croutine.c">
+      <SubType>compile</SubType>
+      <Link>Source\croutine.c</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\event_groups.c">
       <SubType>compile</SubType>
       <Link>Source\event_groups.c</Link>
@@ -183,21 +187,25 @@
       <SubType>compile</SubType>
       <Link>Source\portable\MemMang\heap_1.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_Mega0\port.c">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\port.c">
       <SubType>compile</SubType>
-      <Link>Source\portable\GCC\AVR_Mega0\port.c</Link>
+      <Link>Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\port.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_Mega0\portmacro.h">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\portmacro.h">
       <SubType>compile</SubType>
-      <Link>Source\portable\GCC\AVR_Mega0\portmacro.h</Link>
+      <Link>Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\portmacro.h</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\AVR_Mega0\porthardware.h">
+    <Compile Include="..\..\..\Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\porthardware.h">
       <SubType>compile</SubType>
-      <Link>Source\portable\GCC\AVR_Mega0\porthardware.h</Link>
+      <Link>Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\porthardware.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\include\atomic.h">
       <SubType>compile</SubType>
       <Link>Source\include\atomic.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\include\croutine.h">
+      <SubType>compile</SubType>
+      <Link>Source\include\croutine.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\include\deprecated_definitions.h">
       <SubType>compile</SubType>
@@ -304,6 +312,14 @@
       <SubType>compile</SubType>
       <Link>Common\Minimal\PollQ.c</Link>
     </Compile>
+    <Compile Include="..\..\..\Demo\Common\include\crflash.h">
+      <SubType>compile</SubType>
+      <Link>Common\include\crflash.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\Demo\Common\Minimal\crflash.c">
+      <SubType>compile</SubType>
+      <Link>Common\Minimal\crflash.c</Link>
+    </Compile>
     <Compile Include="..\..\..\Demo\Common\include\recmutex.h">
       <SubType>compile</SubType>
       <Link>Common\include\recmutex.h</Link>
@@ -341,9 +357,10 @@
     <Folder Include="Source" />
     <Folder Include="Source\include" />
     <Folder Include="Source\portable" />
-    <Folder Include="Source\portable\GCC" />
-    <Folder Include="Source\portable\GCC\AVR_Mega0" />
-    <Folder Include="Source\portable\GCC\AVR_Mega0\" />
+    <Folder Include="Source\portable\ThirdParty\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\" />
+    <Folder Include="Source\portable\ThirdParty\Partner-Supported-Ports\GCC\AVR_Mega0\" />
     <Folder Include="Source\portable\MemMang" />
     <Folder Include="ParTest\" />
     <Folder Include="serial\" />

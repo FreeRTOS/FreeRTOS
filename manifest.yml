@@ -1,17 +1,18 @@
 name : "FreeRTOS"
 version: "202212.00"
 description: "This is the standard distribution of FreeRTOS."
+license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "1b8a4244b"
+    version: "ca907b445"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
       path: "FreeRTOS/Source"
 
   - name: "FreeRTOS-Plus-TCP"
-    version: "a3f418a"
+    version: "40c16fe"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git"
@@ -53,7 +54,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "6ddc35e"
+    version: "8b5ec3b3e"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
@@ -88,11 +89,25 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v3.2.1"
+    version: "v3.5.1"
     repository:
       type: "git"
       url:  "https://github.com/Mbed-TLS/mbedtls.git"
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
+
+  - name: "glib"
+    version: "2.76.3"
+    repository:
+      type: "git"
+      url:  "https://gitlab.gnome.org/GNOME/glib.git"
+      path: "FreeRTOS-Plus/ThirdParty/glib"
+
+  - name: "libslirp"
+    version: "177da3d"
+    repository:
+      type: "git"
+      url:  "https://gitlab.freedesktop.org/slirp/libslirp.git"
+      path: "FreeRTOS-Plus/ThirdParty/libslirp"
 
   - name: "backoffAlgorithm"
     version: "f4b3fcf"
@@ -116,42 +131,42 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
 
   - name: "FreeRTOS-Community-Supported-Demos"
-    version: "e21b617"
+    version: "db9704f"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"
       path: "FreeRTOS/Demo/ThirdParty/Community-Supported-Demos"
 
   - name: "FreeRTOS-Partner-Supported-Demos"
-    version: "109ef4d"
+    version: "44b242"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos"
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
   - name: "FreeRTOS-Cellular-Interface"
-    version: "e5862bd"
+    version: "4675955"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96"
-    version: "c33a362"
+    version: "6761849"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802"
-    version: "6893670"
+    version: "7d6393a"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4"
-    version: "a2d84ff"
+    version: "f536afe"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git"
@@ -171,4 +186,23 @@ dependencies:
       url: "https://github.com/intel/tinycbor.git"
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
-license: "MIT"
+  - name: "TraceRecorder"
+    version: "3aa0355"
+    repository:
+      type: "git"
+      url: "https://github.com/percepio/TraceRecorderSource.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace"
+
+  - name: "CMock"
+    version: "afa2949"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS/Test/CMock/CMock"
+
+  - name: "CMock"
+    version: "150573c"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS-Plus/Test/CMock"

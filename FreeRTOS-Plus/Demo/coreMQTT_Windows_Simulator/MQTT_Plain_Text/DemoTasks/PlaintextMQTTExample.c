@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -151,8 +151,9 @@
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
+ * Refer to FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/readme.txt for more details.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 500U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 2000U )
 
 /**
  * @brief The keep-alive timeout period reported to the broker while establishing
@@ -182,14 +183,18 @@
 /**
  * @brief The length of the outgoing publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for outgoing publishes.
+ * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT
+ * Update in ulMaxPublishCount needs updating mqttexampleOUTGOING_PUBLISH_RECORD_LEN.
  */
-#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 10U )
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 15U )
 
 /**
  * @brief The length of the incoming publish records array used by the coreMQTT
  * library to track QoS > 0 packet ACKS for incoming publishes.
+ * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT
+ * Update in ulMaxPublishCount needs updating mqttexampleINCOMING_PUBLISH_RECORD_LEN.
  */
-#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 10U )
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 15U )
 
 /**
  * @brief Milliseconds per second.
@@ -729,7 +734,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
     /* Populate subscription list. */
-    for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         xMQTTSubscription[ ulTopicCount ].qos = MQTTQoS2;
         xMQTTSubscription[ ulTopicCount ].pTopicFilter = xTopicFilterContext[ ulTopicCount ].pcTopicFilter;
@@ -757,7 +762,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                                   usSubscribePacketIdentifier );
         configASSERT( xResult == MQTTSuccess );
 
-        for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {
             LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n",
                        xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
@@ -860,7 +865,7 @@ static void prvMQTTUnsubscribeFromTopics( MQTTContext_t * pxMQTTContext )
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
 
     /* Populate subscription list. */
-    for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         xMQTTSubscription[ ulTopicCount ].qos = MQTTQoS2;
         xMQTTSubscription[ ulTopicCount ].pTopicFilter = xTopicFilterContext[ ulTopicCount ].pcTopicFilter;
@@ -974,7 +979,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
     LogInfo( ( "Incoming QoS : %d\n", pxPublishInfo->qos ) );
 
     /* Verify the received publish is for one of the topics that's been subscribed to. */
-    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         if( ( pxPublishInfo->topicNameLength == strlen( xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) ) &&
             ( strncmp( xTopicFilterContext[ ulTopicCount ].pcTopicFilter, pxPublishInfo->pTopicName, pxPublishInfo->topicNameLength ) == 0 ) )
@@ -1085,7 +1090,7 @@ static void prvInitializeTopicBuffers( void )
     int xCharactersWritten;
 
 
-    for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         /* Write topic strings into buffers. */
         xCharactersWritten = snprintf( xTopicFilterContext[ ulTopicCount ].pcTopicFilter,

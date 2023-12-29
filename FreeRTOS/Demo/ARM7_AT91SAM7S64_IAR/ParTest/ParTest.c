@@ -35,9 +35,9 @@
 const unsigned long led_mask[ NB_LED ]= { LED1, LED2, LED3, LED4 };
 
 void vParTestInitialise( void )
-{
+{	
 	/* Start with all LED's off. */
-	AT91F_PIO_SetOutput( AT91C_BASE_PIOA, LED_MASK );
+	AT91F_PIO_SetOutput( AT91C_BASE_PIOA, LED_MASK );	
 }
 /*-----------------------------------------------------------*/
 
@@ -67,7 +67,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		}
 		else
 		{
-			AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );
+			AT91F_PIO_SetOutput( AT91C_BASE_PIOA, led_mask[ uxLED ] );					
 		}
 	}
 }

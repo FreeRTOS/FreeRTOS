@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,9 @@
 
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
+
+#include "fake_assert.h"
+#include "fake_infiniteloop.h"
 
 /* XXX: this file will be processed by unifdef  to generate new header files
  * that can be mocked according to the configurations desired
@@ -56,6 +59,7 @@
 #define configTICK_RATE_HZ                               ( 1000 )                  /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
+#define configIDLE_TASK_NAME                             "IdleTaskLongerThanMax"
 #define configMAX_TASK_NAME_LEN                          ( 12 )
 #define configUSE_TRACE_FACILITY                         0
 #define configUSE_16_BIT_TICKS                           0
@@ -94,6 +98,10 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portHAS_STACK_OVERFLOW_CHECKING              0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS      5
 
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                        0
+#define configMAX_CO_ROUTINE_PRIORITIES              ( 2 )
+
 #define portSTACK_GROWTH                             ( -1 )
 #define configRECORD_STACK_HIGH_ADDRESS              1
 
@@ -126,10 +134,18 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
-#define configASSERT( x )
+/* *INDENT-OFF* */
+#define configASSERT( x ) do {  if( x ) { vFakeAssert( true, __FILE__, __LINE__ );  } else { vFakeAssert( false, __FILE__, __LINE__ ); } } while( 0 )
+/* *INDENT-ON* */
+
 #define portREMOVE_STATIC_QUALIFIER                  1
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO        0
 #define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES    0
+
+#define configMINIMAL_SECURE_STACK_SIZE              ( 1024 )
+#define portALLOCATE_SECURE_CONTEXT                  vFakePortAllocateSecureContext
+
+#define configCONTROL_INFINITE_LOOP                  vFakeInfiniteLoop
 
 #endif /* FREERTOS_CONFIG_H */

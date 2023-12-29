@@ -1,0 +1,11 @@
+# Auto generated files.
+*.uvgui*
+settings/
+Nu_Link_Driver.ini
+EventRecorderStub.scvd
+*.ewt
+*.dep
+
+# Build artifacts.
+Objects/
+Listings/

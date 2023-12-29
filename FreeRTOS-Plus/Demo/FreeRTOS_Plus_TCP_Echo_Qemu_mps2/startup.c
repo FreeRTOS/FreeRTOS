@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -69,7 +69,7 @@ void Reset_Handler( void )
 
 void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
 {
-/* These are volatile to try and prevent the compiler/linker optimising them
+/* These are volatile to try and prevent the compiler/linker optimizing them
  * away as the variables never actually get used.  If the debugger won't show the
  * values of the variables, make them global my moving their declaration outside
  * of this function. */

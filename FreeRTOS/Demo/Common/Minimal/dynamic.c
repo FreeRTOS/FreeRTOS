@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -279,7 +279,16 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
 
             #if ( INCLUDE_eTaskGetState == 1 )
             {
-                configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+                #if ( configNUMBER_OF_CORES > 1 )
+                {
+                    eTaskState eState = eTaskGetState( xContinuousIncrementHandle );
+                    configASSERT( ( eState == eReady ) || ( eState == eRunning ) );
+                }
+                #else
+                {
+                    configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+                }
+                #endif
             }
             #endif /* INCLUDE_eTaskGetState */
 

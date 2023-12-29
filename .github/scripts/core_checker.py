@@ -119,6 +119,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.ipcf',
     '.ise',
     '.jlink',
+    '.js',
     '.json',
     '.la',
     '.launch',
@@ -172,6 +173,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.pl',
     '.plg',
     '.png',
+    '.props',
     '.prc',
     '.pref',
     '.prefs',
@@ -216,6 +218,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.tags',
     '.tcl',
     '.tdt',
+    '.templ',
     '.template',
     '.tgt',
     '.tps',
@@ -250,17 +253,17 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.xmsgs',
     '.xsl',
     '.yml',
-    '.md',
     '.zip'
 ]
 
 FREERTOS_IGNORED_PATTERNS = [
     r'.*\.git.*',
-    r'.*mbedtls_config\.h.*',
-    r'.*mbedtls_config\.h.*',
+    r'.*mbedtls_config*',
     r'.*CMSIS.*',
     r'.*/Nordic_Code/*',
+    r'.*/Nuvoton_Code/*',
     r'.*/ST_Code/*',
+    r'.*/NXP_Code/*',
     r'.*/makefile',
     r'.*/Makefile',
     r'.*/printf-stdarg\.c.*',
@@ -273,9 +276,45 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcKernelPortSnapshotConfig\.h.*',
     r'.*/MicroZed_hw_platform.*',
     r'.*/ThirdParty/.*',
-    r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*',
-    r'FreeRTOS\-Plus/Source/FreeRTOS-Plus-Trace/.*',
+    r'.*/WinPCap/.*',
+    r'.*/DRIVERS/.*',
+    r'.*/FreeRTOS-Plus-Trace/.*',
+    r'.*/Reliance-Edge/.*',
+    r'.*/HCS12_CodeWarrior_banked/.*',
+    r'.*/ARM7_STR75x_GCC/.*',
+    r'.*/ARM7_STR75x_IAR/.*',
+    r'.*/lwip-1.4.0/.*',
+    r'.*/lwip-1.1.0/.*',
+    r'.*/MSP430X_MSP430F5438_CCS/.*',
+    r'.*/Atmel/.*',
+    r'.*/drivers/.*',
+    r'.*/lwIP/.*',
+    r'.*/ARM7_AT91FR40008_GCC/.*',
+    r'.*/ARM7_AT91SAM7S64_IAR/.*',
+    r'.*/ARM7_LPC2106_GCC/.*',
+    r'.*/CORTEX_A9_Cyclone_V_SoC_DK/.*',
+    r'.*/CORTEX_A9_Zynq_ZC702/.*',
+    r'.*/FreeRTOS-Plus/Demo/FreeRTOS_Plus_Reliance_Edge_and_CLI_Windows_Simulator/ConfigurationFiles//.*',
+    r'.*/ARM7_AT91FR40008_GCC/.*',
+    r'.*/ARM7_STR71x_IAR/.*',
+    r'FreeRTOS/Demo/HCS12_GCC_banked/.*',
+    r'FreeRTOS/Demo/CORTEX_LM3S102_GCC/hw_include/.*',
+    r'FreeRTOS/Demo/CORTEX_LM3S102_GCC/hw_include/.*',
+    r'FreeRTOS/Demo/CORTEX_STM32L152_Discovery_IAR/include/.*',
+    r'FreeRTOS/Demo/CORTEX_M0_Infineon_XMC1000_IAR_Keil_GCC/.*',
+    r'FreeRTOS/Demo/CORTEX_M4F_Infineon_XMC4000_Keil/.*',
+    r'FreeRTOS/Demo/AVR_ATMega4809_Atmel_Studio/RTOSDemo/.*',
+    r'FreeRTOS/Demo/AVR32_UC3/.*',
+    r'FreeRTOS/Demo/ARM7_STR75x_GCC/STLibrary/inc/.*',
+    r'FreeRTOS/Demo/ARM7_STR75x_IAR/STLibrary/inc/.*',
+    r'FreeRTOS/Demo/CORTEX_R4F_RZ_T_GCC_IAR/System/GCC/inc/.*',
+    r'FreeRTOS/Demo/CORTEX_A5_SAMA5D2x_Xplained_IAR/AtmelFiles/drivers/misc/.*',
+    r'FreeRTOS/Demo/CORTEX_ATSAM3X_Atmel_Studio/src/.*',
     r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*',
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix/Trace_Recorder_Configuration/.*',
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/.*',
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/common/WinPCap/pcap/.*',
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_IPv6_Demo/IPv6_Multi_WinSim_demo/FreeRTOS_Plus_TCP_IPv6_Multi.props',
     r'FreeRTOS/Demo/lwIP_AVR32_UC3/.*',
     r'FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC/.*',
     r'FreeRTOS/Demo/CORTEX_LM3S102_GCC/makedefs',
@@ -286,11 +325,9 @@ FREERTOS_IGNORED_PATTERNS = [
 ]
 
 FREERTOS_IGNORED_FILES = [
+    'cspell.config.yaml',
     '.cproject',
     '.project',
-    'fyi-another-way-to-ignore-file.txt',
-    'mbedtls_config.h',
-    'mbedtls_config_v3.2.1.h',
     'requirements.txt',
     'run-cbmc-proofs.py',
     '.editorconfig',
@@ -304,13 +341,29 @@ FREERTOS_IGNORED_FILES = [
     'interrupt_vector.s',
     'reg_test.S',
     'gdbinit',
-
+    'libslirp-version.h',
+    'LPC21xx.h',
+    'lpc221x.h',
+    'winbase.h',
+    'windows.h',
+    'direct.h',
+    'stm32f10x_conf.h',
+    'lwipopts.h',
+    'lwipopts.h',
+    'xil_assert.h',
+    'alt_i2c.h',
+    'alt_clkmgr.h',
+    'hal_lcd.c',
+    'adc.h',
+    'redconf.c',
+    'redconf.h',
+    'redtypes.h',
 ]
 
 FREERTOS_HEADER = [
     '/*\n',
     ' * FreeRTOS V202212.00\n',
-    ' * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.\n',
+    ' * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.\n',
     ' *\n',
     ' * Permission is hereby granted, free of charge, to any person obtaining a copy of\n',
     ' * this software and associated documentation files (the "Software"), to deal in\n',
@@ -335,7 +388,7 @@ FREERTOS_HEADER = [
     ' */\n',
 ]
 
-FREERTOS_COPYRIGHT_REGEX = r"^( *(\/\*|\*|#|\/\/))? Copyright \(C\) 20\d\d Amazon.com, Inc. or its affiliates.  All Rights Reserved\.( \*\/)?$"
+FREERTOS_COPYRIGHT_REGEX = r"^( *(\/\*|\*|#|\/\/))? Copyright \(C\) 20\d\d Amazon.com, Inc. or its affiliates. All Rights Reserved\.( \*\/)?$"
 
 def main():
     parser = HeaderChecker.configArgParser()
@@ -356,4 +409,3 @@ def main():
 
 if __name__ == '__main__':
     exit(main())
-

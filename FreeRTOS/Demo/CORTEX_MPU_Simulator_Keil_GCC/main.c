@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -137,9 +137,9 @@ static void prvCheckTask( void *pvParameters );
  *
  * It is not possible to use xTaskCreate() to create an unprivileged task since
  * heap moved to the privileged data section, so the access tests implemented by
- * this function are now called from an unprivileged register check task created 
- * using the xTaskCreateRestricted() API. 
- */ 
+ * this function are now called from an unprivileged register check task created
+ * using the xTaskCreateRestricted() API.
+ */
 static void prvOldStyleUserModeTask( void );
 
 /*
@@ -240,15 +240,20 @@ volatile uint32_t ul1 = 0x123, ul2 = 0;
 	extern uint32_t __privileged_functions_actual_end__[];
 	extern uint32_t __privileged_data_actual_end__[];
 #else
+	extern uint32_t Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Base;
+	extern uint32_t Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Limit;
+
 	/* Must be set manually to match memory map. */
-	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x00UL;
+	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x00000000UL;
 	const uint32_t * __FLASH_segment_end__ = ( uint32_t * ) 0x00080000UL;
 	const uint32_t * __SRAM_segment_start__ = ( uint32_t * ) 0x20000000UL;
 	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x20008000UL;
-	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00UL;
-	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x8000UL;
+	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00000000UL;
+	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x00010000UL;
+	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) &( Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Base );
+	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) &( Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Limit );
 	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000UL;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20000200UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20004000UL;
 #endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/
@@ -263,7 +268,7 @@ stack size is defined in words, not bytes. */
  automatically create an MPU region for the stack.  The stack alignment must
  match its size, so if 128 words are reserved for the stack then it must be
  aligned to ( 128 * 4 ) bytes. */
-PRIVILEGED_DATA static portSTACK_TYPE xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainCHECK_TASK_STACK_ALIGNMENT );
+static portSTACK_TYPE xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainCHECK_TASK_STACK_ALIGNMENT );
 
 /* Declare three arrays - an MPU region will be created for each array
 using the TaskParameters_t structure below.  THIS IS JUST TO DEMONSTRATE THE
@@ -429,7 +434,7 @@ static TaskParameters_t xTaskToDeleteParameters =
 	mainTASK_TO_DELETE_NAME,			/* pcName */
 	mainDELETE_TASK_STACK_SIZE_WORDS,	/* usStackDepth */
 	( void * ) NULL,					/* pvParameters - this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
-	tskIDLE_PRIORITY + 1,				/* uxPriority */
+	( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT,	/* uxPriority - this task is privileged because it creates and deletes kernel objects. */
 	xDeleteTaskStack,					/* puxStackBuffer - the array to use as the task stack, as declared above. */
 	{									/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
@@ -443,6 +448,8 @@ static TaskParameters_t xTaskToDeleteParameters =
 
 int main( void )
 {
+	TaskHandle_t xRegTest1TaskHandle, xRegTest2TaskHandle, xCheckTaskHandle;
+
 	/* Used to check linker configuration. */
 	configASSERT( ul1 == 0x123 );
 	configASSERT( ul2 == 0 );
@@ -457,11 +464,14 @@ int main( void )
 	queue has been created so is set here. */
 	xRegTest2Parameters.pvParameters = xGlobalScopeCheckQueue;
 
-	/* Create three test tasks.  Handles to the created tasks are not required,
-	hence the second parameter is NULL. */
-	xTaskCreateRestricted( &xRegTest1Parameters, NULL );
-	xTaskCreateRestricted( &xRegTest2Parameters, NULL );
-	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
+	/* Create three test tasks. */
+	xTaskCreateRestricted( &xRegTest1Parameters, &( xRegTest1TaskHandle ) );
+	xTaskCreateRestricted( &xRegTest2Parameters, &( xRegTest2TaskHandle ) );
+	xTaskCreateRestricted( &xCheckTaskParameters, &( xCheckTaskHandle ) );
+
+	vGrantAccessToQueue( xRegTest1TaskHandle, xGlobalScopeCheckQueue );
+	vGrantAccessToQueue( xRegTest2TaskHandle, xGlobalScopeCheckQueue );
+	vGrantAccessToQueue( xCheckTaskHandle, xGlobalScopeCheckQueue );
 
 	/* Create a task that does nothing but ensure some of the MPU API functions
 	can be called correctly, then get deleted.  This is done for code coverage
@@ -812,7 +822,7 @@ static void prvTaskToDelete( void *pvParameters )
 	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
 	/* Run time stats are not being gathered - this is just to exercise
 	API. */
-	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 ); 
+	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 );
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/
@@ -1232,7 +1242,7 @@ static void prvRegTest3Task( void *pvParameters )
 		Since the heap moved to the privileged data section xTaskCreate() can
 		no longer be used to create unprivileged tasks. */
 		prvOldStyleUserModeTask();
-		
+
 		/* Start the part of the test that is written in assembler. */
 		vRegTest3Implementation();
 	}

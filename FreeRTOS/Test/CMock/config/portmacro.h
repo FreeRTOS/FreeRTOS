@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -81,6 +81,7 @@ typedef portSTACK_TYPE   StackType_t;
 typedef long             BaseType_t;
 typedef unsigned long    UBaseType_t;
 
+
 #if ( configUSE_16_BIT_TICKS == 1 )
     typedef uint16_t     TickType_t;
     #define portMAX_DELAY        ( TickType_t ) 0xffff
@@ -93,6 +94,7 @@ typedef unsigned long    UBaseType_t;
 
 /* Requires definition of UBaseType_t */
 #include "fake_port.h"
+#include <FreeRTOS.h>
 
 /* Hardware specifics. */
 #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
@@ -123,46 +125,79 @@ typedef unsigned long    UBaseType_t;
 /*-----------------------------------------------------------*/
 
 #define portSAVE_CONTEXT()
-#define portYIELD()                            vFakePortYield()
-#define portYIELD_WITHIN_API()                 vFakePortYieldWithinAPI()
-#define portYIELD_FROM_ISR()                   vFakePortYieldFromISR()
+#define portYIELD()                      vFakePortYield()
+#define portYIELD_WITHIN_API()           vFakePortYieldWithinAPI()
+#define portYIELD_FROM_ISR()             vFakePortYieldFromISR()
 
 /* Critical section handling. */
-#define portDISABLE_INTERRUPTS()               vFakePortDisableInterrupts()
-#define portENABLE_INTERRUPTS()                vFakePortEnableInterrupts()
+#define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
+#define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
     vFakePortClearInterruptMaskFromISR( x )
 #define portSET_INTERRUPT_MASK_FROM_ISR() \
     ulFakePortSetInterruptMaskFromISR()
-#define portSET_INTERRUPT_MASK()               ulFakePortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK( x )          vFakePortClearInterruptMask( x )
+#define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
 #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
     vFakePortAssertIfInterruptPriorityInvalid()
-#define portENTER_CRITICAL()                   vFakePortEnterCriticalSection()
-#define portEXIT_CRITICAL()                    vFakePortExitCriticalSection()
+#define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
+#define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
+#define portGET_ISR_LOCK()               vFakePortGetISRLock()
+#define portRELEASE_ISR_LOCK()           vFakePortReleaseISRLock()
+#define portGET_TASK_LOCK()              vFakePortGetTaskLock()
+#define portRELEASE_TASK_LOCK()          vFakePortReleaseTaskLock()
 
+#define portCHECK_IF_IN_ISR()            vFakePortCheckIfInISR()
+#define portRESTORE_INTERRUPTS( x )      vFakePortRestoreInterrupts( x )
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) \
     vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
-#define portSETUP_TCB( pxTCB )                 portSetupTCB_CB( pxTCB );
-#define  portASSERT_IF_IN_ISR()                vFakePortAssertIfISR();
+#define portSETUP_TCB( pxTCB )           portSetupTCB_CB( pxTCB );
+#define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
 
-#define ucPortCountLeadingZeros( ulBitmap )    ( ( uint8_t ) __builtin_clz( ulBitmap ) )
+#define portGET_CORE_ID()                vFakePortGetCoreID()
+#define portYIELD_CORE( x )              vFakePortYieldCore( x )
 
-#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
+#define portENTER_CRITICAL_FROM_ISR    vFakePortEnterCriticalFromISR
+#define portEXIT_CRITICAL_FROM_ISR     vFakePortExitCriticalFromISR
+
+#if ( configNUMBER_OF_CORES > 1 )
+    #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
+    #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
+#else
+    #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
+    volatile int fool_static = 0;                              \
+    void vFunction( void * ( pvParameters ) )
+
+    #define portTASK_FUNCTION( vFunction, pvParameters ) \
+    volatile int fool_static2 = 0;                       \
+    void vFunction( void * ( pvParameters ) )
+#endif
+
+#if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 )
+    static uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
+    {
+        uint8_t ucReturn;
+
+        ucReturn = __builtin_clz( ulBitmap );
+        return ucReturn;
+    }
+
+    #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
     ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
-#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
+    #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
     ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
-#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
+    #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
     uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+#endif /* if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 ) */
 
-/* Task function macros as described on the FreeRTOS.org WEB site. */
-#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
-    volatile int fool_static = 0;                          \
-    void vFunction( void * ( pvParameters ) )
-
-#define portTASK_FUNCTION( vFunction, pvParameters ) \
-    volatile int fool_static2 = 0;                   \
-    void vFunction( void * ( pvParameters ) )
+/* We need to define it here because CMock does not recognize the
+ * #if ( portUSING_MPU_WRAPPERS == 1 ) guard around xTaskGetMPUSettings
+ * and then complains about the missing xMPU_SETTINGS type in the
+ * generated mocks. */
+typedef struct MPU_SETTINGS
+{
+    uint32_t ulDummy;
+} xMPU_SETTINGS;
 
 /*-----------------------------------------------------------*/
 

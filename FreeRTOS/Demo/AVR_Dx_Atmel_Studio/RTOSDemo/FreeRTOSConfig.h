@@ -39,12 +39,12 @@
 /*
  * Timer instance  |  Value
  * ----------------|---------
- *     TCB0        |    0
- *     TCB1        |    1
- *     TCB2        |    2
- *     TCB3        |    3
+ *     TCB0        |    0  
+ *     TCB1        |    1  
+ *     TCB2        |    2  
+ *     TCB3        |    3  
  *     TCB4        |    4
- *     RTC         |    5
+ *     RTC         |    5  
  */
 
 #define configUSE_TIMER_INSTANCE 0
@@ -90,6 +90,10 @@ For other frequency values, update clock_config.h with your own settings */
 #define configGENERATE_RUN_TIME_STATS 0
 #define configUSE_TRACE_FACILITY 0
 #define configUSE_STATS_FORMATTING_FUNCTIONS 0
+
+/* Co-routine related definitions. */
+#define configUSE_CO_ROUTINES 1
+#define configMAX_CO_ROUTINE_PRIORITIES 2
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS 1

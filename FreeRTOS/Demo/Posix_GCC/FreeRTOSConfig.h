@@ -59,6 +59,7 @@
 #define configUSE_QUEUE_SETS                       1
 #define configUSE_TASK_NOTIFICATIONS               1
 #define configSUPPORT_STATIC_ALLOCATION            1
+#define configRECORD_STACK_HIGH_ADDRESS            1
 
 /* Software timer related configuration options.  The maximum possible task
  * priority is configMAX_PRIORITIES - 1.  The priority of the timer task is
@@ -75,6 +76,10 @@
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
 #define configGENERATE_RUN_TIME_STATS             1
+
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                     0
+#define configMAX_CO_ROUTINE_PRIORITIES           ( 2 )
 
 /* This demo can use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human

@@ -11,6 +11,7 @@ FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
 FREERTOS_PLUS_DIR := $(abspath $(FREERTOS_PLUS_DIR_REL))
 
 KERNEL_DIR            := ${FREERTOS_DIR}/Source
+FREERTOS_PLUS_TCP_DIR := ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source
 
 INCLUDE_DIRS := -I.
 INCLUDE_DIRS += -I./Trace_Recorder_Configuration
@@ -18,13 +19,13 @@ INCLUDE_DIRS += -I${KERNEL_DIR}/include
 INCLUDE_DIRS += -I${KERNEL_DIR}/portable/ThirdParty/GCC/Posix
 INCLUDE_DIRS += -I${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/utils
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/include/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Compiler/GCC/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/config
+INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/linux/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/include/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_TCP_DIR}/portable/Compiler/GCC/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/RingBuffer/include
+
 
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
@@ -50,36 +51,24 @@ SOURCE_FILES += runtime_stats_hooks.c
 # Memory manager (use malloc() / free() )
 SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/MemMang/heap_3.c
 
-
 # FreeRTOS TCP
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ARP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DHCP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Cache.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Callback.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Networking.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Parser.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ICMP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP_Timers.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP_Utils.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Sockets.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Stream_Buffer.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_IP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_Reception.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_State_Handling.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_Transmission.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_Utils.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_WIN.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Tiny_TCP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
-
+SOURCE_FILES += $(wildcard ${FREERTOS_PLUS_TCP_DIR}/*.c )
+SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/BufferManagement/BufferAllocation_2.c
+SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetifBackendLibslirp.c
+SOURCE_FILES += ${FREERTOS_PLUS_TCP_DIR}/portable/NetworkInterface/libslirp/MBuffNetworkInterface.c
 
 CFLAGS 			:= -ggdb3
-LDFLAGS			:= -ggdb3 -pthread -lpcap
-CPPFLAGS		:=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+LDFLAGS			:= -ggdb3 -pthread
+
+# Get libslirp package configuration (header and library paths)
+CFLAGS += $(shell pkg-config --cflags slirp)
+LDFLAGS += $(shell pkg-config --libs slirp)
+
+CPPFLAGS		=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+
+ifndef TRACE_ON_ENTER
+  TRACE_ON_ENTER = 1
+endif
 
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS		+= -DTRACE_ON_ENTER=1
@@ -92,7 +81,8 @@ ifeq ($(COVERAGE_TEST),1)
 else
   CPPFLAGS		+= -DprojCOVERAGE_TEST=0
 # Trace library.
-  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
+  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/trcKernelPort.c
+  SOURCE_FILES	+= ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/RingBuffer/trcStreamPort.c
   SOURCE_FILES	+= $(wildcard ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/*.c )
 endif
 

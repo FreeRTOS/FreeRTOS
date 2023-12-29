@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -54,13 +54,15 @@ extern void vAssertCalled( void );
 #define configCPU_CLOCK_HZ                               ( ( unsigned long ) 20000000 )
 #define configTICK_RATE_HZ                               ( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 256 )
-#define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 1024 ) )
+#define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 10 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 10 )
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
+#define configUSE_CO_ROUTINES                            0
 
 #define configMAX_PRIORITIES                             ( 10 )
+#define configMAX_CO_ROUTINE_PRIORITIES                  ( 2 )
 #define configTIMER_QUEUE_LENGTH                         5
 #define configTIMER_TASK_PRIORITY                        ( configMAX_PRIORITIES - 1 )
 #define configUSE_COUNTING_SEMAPHORES                    1
@@ -106,10 +108,21 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
 
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
  * See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY           191 /* equivalent to 0xa0, or priority 5. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY           4
 #define configMAC_INTERRUPT_PRIORITY                   5
 
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY    ( 1 )
+
+/* Set configUSE_MPU_WRAPPERS_V1 to 0 to use new MPU wrapper.
+ * See https://freertos.org/a00110.html#configUSE_MPU_WRAPPERS_V1 for details. */
+#define configUSE_MPU_WRAPPERS_V1                      ( 0 )
+/* Set configENABLE_ACCESS_CONTROL_LIST to 1 to use access control list.
+ * See https://freertos.org/a00110.html#configENABLE_ACCESS_CONTROL_LIST for details. */
+#define configENABLE_ACCESS_CONTROL_LIST               ( 1 )
+/* See https://freertos.org/a00110.html#configPROTECTED_KERNEL_OBJECT_POOL_SIZE for details. */
+#define configPROTECTED_KERNEL_OBJECT_POOL_SIZE        ( 150 )
+/* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */
+#define configSYSTEM_CALL_STACK_SIZE                   ( 128 )
 
 /* Prototype for the function used to print out.  In this case it prints to the
  |     10 console before the network is connected then a UDP port after the network has

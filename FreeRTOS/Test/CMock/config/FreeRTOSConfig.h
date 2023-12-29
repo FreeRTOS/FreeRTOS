@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -86,6 +86,10 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           1
 #define configENABLE_MPU                          0
+
+/* Co-routine related configuration options. */
+#define configUSE_CO_ROUTINES                     0
+#define configMAX_CO_ROUTINE_PRIORITIES           ( 2 )
 
 /* This demo makes use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human

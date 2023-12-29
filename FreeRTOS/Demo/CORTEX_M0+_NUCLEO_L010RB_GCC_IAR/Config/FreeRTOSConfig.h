@@ -70,6 +70,9 @@
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES       3
 #define configMESSAGE_BUFFER_LENGTH_TYPE            size_t
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES                       0
+#define configMAX_CO_ROUTINE_PRIORITIES             ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS                            1

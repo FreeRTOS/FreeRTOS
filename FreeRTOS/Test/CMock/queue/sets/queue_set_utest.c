@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -115,10 +115,10 @@ void test_xQueueCreateSet_oneLength( void )
 
     TEST_ASSERT_EQUAL( QUEUE_T_SIZE + sizeof( void * ), getLastMallocSize() );
 
-    /* Veify that QueueSet is not full */
+    /* Verify that QueueSet is not full */
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueueSet ) );
 
-    /* Veify that QueueSet is empty */
+    /* Verify that QueueSet is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueueSet ) );
 
     vQueueDelete( xQueueSet );

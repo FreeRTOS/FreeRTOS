@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -157,36 +157,36 @@ int main( void )
 
     /* Do not include trace code when performing a code coverage analysis. */
     #if ( projCOVERAGE_TEST != 1 )
-        {
-            /* Initialise the trace recorder.  Use of the trace recorder is optional.
-             * See http://www.FreeRTOS.org/trace for more information. */
-            vTraceEnable( TRC_START );
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+         * See http://www.FreeRTOS.org/trace for more information. */
+        vTraceEnable( TRC_START );
 
-            /* Start the trace recording - the recording is written to a file if
-             * configASSERT() is called. */
-            printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+        /* Start the trace recording - the recording is written to a file if
+         * configASSERT() is called. */
+        printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
 
-            #if ( TRACE_ON_ENTER == 1 )
-                printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-            #endif
-        }
+        #if ( TRACE_ON_ENTER == 1 )
+            printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+        #endif
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 
     console_init();
     #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
-        {
-            console_print( "Starting echo blinky demo\n" );
-            main_blinky();
-        }
+    {
+        console_print( "Starting echo blinky demo\n" );
+        main_blinky();
+    }
     #elif ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            console_print( "Starting full demo\n" );
-            main_full();
-        }
+    {
+        console_print( "Starting full demo\n" );
+        main_full();
+    }
     #else
-        {
-            #error "The selected demo is not valid"
-        }
+    {
+        #error "The selected demo is not valid"
+    }
     #endif /* if ( mainSELECTED_APPLICATION ) */
 
     return 0;
@@ -228,11 +228,11 @@ void vApplicationIdleHook( void )
     traceOnEnter();
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            /* Call the idle task processing used by the full demo.  The simple
-             * blinky demo does not use the idle task hook. */
-            vFullDemoIdleFunction();
-        }
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+         * blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -261,9 +261,9 @@ void vApplicationTickHook( void )
     * functions can be used (those that end in FromISR()). */
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            vFullDemoTickHookFunction();
-        }
+    {
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainSELECTED_APPLICATION */
 }
 
@@ -357,24 +357,24 @@ static void prvSaveTraceFile( void )
 {
     /* Tracing is not used when code coverage analysis is being performed. */
     #if ( projCOVERAGE_TEST != 1 )
+    {
+        FILE * pxOutputFile;
+
+        vTraceStop();
+
+        pxOutputFile = fopen( "Trace.dump", "wb" );
+
+        if( pxOutputFile != NULL )
         {
-            FILE * pxOutputFile;
-
-            vTraceStop();
-
-            pxOutputFile = fopen( "Trace.dump", "wb" );
-
-            if( pxOutputFile != NULL )
-            {
-                fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-                fclose( pxOutputFile );
-                printf( "\r\nTrace output saved to Trace.dump\r\n" );
-            }
-            else
-            {
-                printf( "\r\nFailed to create trace dump file\r\n" );
-            }
+            fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+            fclose( pxOutputFile );
+            printf( "\r\nTrace output saved to Trace.dump\r\n" );
         }
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+        }
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 }
 /*-----------------------------------------------------------*/

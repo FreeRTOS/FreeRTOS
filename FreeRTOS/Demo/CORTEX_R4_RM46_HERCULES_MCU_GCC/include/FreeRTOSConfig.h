@@ -70,7 +70,7 @@ extern void vMainSetupTimerInterrupt( void );
     /* Ensure that all system calls are coming from the kernel
      * Additionally allow unprivileged tasks to have critical sections. */
     #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY            1U
-    #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS             1U
+    #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS             0U
     #define configENABLE_ACCESS_CONTROL_LIST                       1U
 
     #define configENABLE_MPU                                       1U

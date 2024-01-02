@@ -29,6 +29,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "mpu_wrappers.h"
 
 /* Board Includes */
 #include "sci.h"

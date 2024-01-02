@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -59,11 +59,11 @@
  */
 
 /*
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
-*/
+ * Changes from V2.0.0
+ *
+ + Delay periods are now specified using variables and constants of
+ +    TickType_t rather than unsigned long.
+ */
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -76,29 +76,29 @@ Changes from V2.0.0
 #include "serial.h"
 
 /* The period between executions of the check task before and after an error
-has been discovered.  If an error has been discovered the check task runs
-more frequently - increasing the LED flash rate. */
-#define mainNO_ERROR_CHECK_PERIOD		( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
-#define mainERROR_CHECK_PERIOD			( ( TickType_t ) 100 / portTICK_PERIOD_MS )
+ * has been discovered.  If an error has been discovered the check task runs
+ * more frequently - increasing the LED flash rate. */
+#define mainNO_ERROR_CHECK_PERIOD    ( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_PERIOD       ( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* Priority definitions for some of the tasks.  Other tasks just use the idle
-priority. */
-#define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
+ * priority. */
+#define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3 )
 
 /* The LED that is flashed by the check task. */
-#define mainCHECK_TASK_LED				( 0 )
+#define mainCHECK_TASK_LED           ( 0 )
 
 /* Constants required for the communications.  Only one character is ever
-transmitted. */
-#define mainCOMMS_QUEUE_LENGTH			( 5 )
-#define mainNO_BLOCK					( ( TickType_t ) 0 )
-#define mainBAUD_RATE					( ( unsigned long ) 9600 )
+ * transmitted. */
+#define mainCOMMS_QUEUE_LENGTH       ( 5 )
+#define mainNO_BLOCK                 ( ( TickType_t ) 0 )
+#define mainBAUD_RATE                ( ( unsigned long ) 9600 )
 
 /*
  * The task function for the "Check" task.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 /*
  * Checks the unique counts of other tasks to ensure they are still operational.
@@ -111,70 +111,68 @@ static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void );
 /* Creates the tasks, then starts the scheduler. */
 void main( void )
 {
-	/* Initialise the required hardware. */
-	vParTestInitialise();
-	vPortInitialiseBlocks();
+    /* Initialise the required hardware. */
+    vParTestInitialise();
+    vPortInitialiseBlocks();
 
-	/* Send a character so we have some visible feedback of a reset. */
-	xSerialPortInitMinimal( mainBAUD_RATE, mainCOMMS_QUEUE_LENGTH );
-	xSerialPutChar( NULL, 'X', mainNO_BLOCK );
+    /* Send a character so we have some visible feedback of a reset. */
+    xSerialPortInitMinimal( mainBAUD_RATE, mainCOMMS_QUEUE_LENGTH );
+    xSerialPutChar( NULL, 'X', mainNO_BLOCK );
 
-	/* Start the standard demo tasks found in the demo\common directory. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    /* Start the standard demo tasks found in the demo\common directory. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
-	/* Start the check task defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Start the check task defined in this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler.  Will never return here. */
-	vTaskStartScheduler();
+    /* Start the scheduler.  Will never return here. */
+    vTaskStartScheduler();
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
-portBASE_TYPE xErrorOccurred;
+    TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
+    portBASE_TYPE xErrorOccurred;
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error. */
-	for( ;; )
-	{
-		/* Wait until it is time to check the other tasks. */
-		vTaskDelay( xDelayTime );
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error. */
+    for( ; ; )
+    {
+        /* Wait until it is time to check the other tasks. */
+        vTaskDelay( xDelayTime );
 
-		/* Check all the other tasks are running, and running without ever
-		having an error. */
-		xErrorOccurred = prvCheckOtherTasksAreStillRunning();
+        /* Check all the other tasks are running, and running without ever
+         * having an error. */
+        xErrorOccurred = prvCheckOtherTasksAreStillRunning();
 
-		/* If an error was detected increase the frequency of the LED flash. */
-		if( xErrorOccurred == pdTRUE )
-		{
-			xDelayTime = mainERROR_CHECK_PERIOD;
-		}
+        /* If an error was detected increase the frequency of the LED flash. */
+        if( xErrorOccurred == pdTRUE )
+        {
+            xDelayTime = mainERROR_CHECK_PERIOD;
+        }
 
-		/* Flash the LED for visual feedback. */
-		vParTestToggleLED( mainCHECK_TASK_LED );
-	}
+        /* Flash the LED for visual feedback. */
+        vParTestToggleLED( mainCHECK_TASK_LED );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void )
 {
-portBASE_TYPE xErrorHasOccurred = pdFALSE;
+    portBASE_TYPE xErrorHasOccurred = pdFALSE;
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		xErrorHasOccurred = pdTRUE;
-	}
+    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    {
+        xErrorHasOccurred = pdTRUE;
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		xErrorHasOccurred = pdTRUE;
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        xErrorHasOccurred = pdTRUE;
+    }
 
-	return xErrorHasOccurred;
+    return xErrorHasOccurred;
 }
 /*-----------------------------------------------------------*/
-
-

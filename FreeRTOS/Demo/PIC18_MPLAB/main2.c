@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -55,11 +55,11 @@
  */
 
 /*
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
-*/
+ * Changes from V2.0.0
+ *
+ + Delay periods are now specified using variables and constants of
+ +    TickType_t rather than unsigned long.
+ */
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -71,85 +71,85 @@ Changes from V2.0.0
 #include "serial.h"
 
 /* Priority definitions for the LED tasks.  Other tasks just use the idle
-priority. */
-#define mainLED_FLASH_PRIORITY			( tskIDLE_PRIORITY + ( unsigned portBASE_TYPE ) 1 )
+ * priority. */
+#define mainLED_FLASH_PRIORITY    ( tskIDLE_PRIORITY + ( unsigned portBASE_TYPE ) 1 )
 
 /* The LED that is lit when should the calculation fail. */
-#define mainCHECK_TASK_LED				( ( unsigned portBASE_TYPE ) 3 )
+#define mainCHECK_TASK_LED        ( ( unsigned portBASE_TYPE ) 3 )
 
 /* Constants required for the communications.  Only one character is ever
-transmitted. */
-#define mainCOMMS_QUEUE_LENGTH			( ( unsigned portBASE_TYPE ) 5 )
-#define mainNO_BLOCK					( ( TickType_t ) 0 )
-#define mainBAUD_RATE					( ( unsigned long ) 9600 )
+ * transmitted. */
+#define mainCOMMS_QUEUE_LENGTH    ( ( unsigned portBASE_TYPE ) 5 )
+#define mainNO_BLOCK              ( ( TickType_t ) 0 )
+#define mainBAUD_RATE             ( ( unsigned long ) 9600 )
 
 /*
  * The task that performs the 32 bit calculation at the idle priority.
  */
-static void vCalculationTask( void *pvParameters );
+static void vCalculationTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* Creates the tasks, then starts the scheduler. */
 void main( void )
 {
-	/* Initialise the required hardware. */
-	vParTestInitialise();
-	vPortInitialiseBlocks();
+    /* Initialise the required hardware. */
+    vParTestInitialise();
+    vPortInitialiseBlocks();
 
-	/* Send a character so we have some visible feedback of a reset. */
-	xSerialPortInitMinimal( mainBAUD_RATE, mainCOMMS_QUEUE_LENGTH );
-	xSerialPutChar( NULL, 'X', mainNO_BLOCK );
+    /* Send a character so we have some visible feedback of a reset. */
+    xSerialPortInitMinimal( mainBAUD_RATE, mainCOMMS_QUEUE_LENGTH );
+    xSerialPutChar( NULL, 'X', mainNO_BLOCK );
 
-	/* Start the standard LED flash tasks as defined in demo/common/minimal. */
-	vStartLEDFlashTasks( mainLED_FLASH_PRIORITY );
+    /* Start the standard LED flash tasks as defined in demo/common/minimal. */
+    vStartLEDFlashTasks( mainLED_FLASH_PRIORITY );
 
-	/* Start the check task defined in this file. */
-	xTaskCreate( vCalculationTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    /* Start the check task defined in this file. */
+    xTaskCreate( vCalculationTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 }
 /*-----------------------------------------------------------*/
 
-static void vCalculationTask( void *pvParameters )
+static void vCalculationTask( void * pvParameters )
 {
-volatile unsigned long ulCalculatedValue; /* Volatile to ensure optimisation is minimal. */
+    volatile unsigned long ulCalculatedValue; /* Volatile to ensure optimisation is minimal. */
 
-	/* Continuously perform a calculation.  If the calculation result is ever
-	incorrect turn the LED on. */
-	for( ;; )
-	{
-		/* A good optimising compiler would just remove all this! */
-		ulCalculatedValue = 1234UL;
-		ulCalculatedValue *= 99UL;
+    /* Continuously perform a calculation.  If the calculation result is ever
+     * incorrect turn the LED on. */
 
-		if( ulCalculatedValue != 122166UL )
-		{
-			vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
-		}
+    for( ; ; )
+    {
+        /* A good optimising compiler would just remove all this! */
+        ulCalculatedValue = 1234UL;
+        ulCalculatedValue *= 99UL;
 
-		ulCalculatedValue *= 9876UL;
+        if( ulCalculatedValue != 122166UL )
+        {
+            vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
+        }
 
-		if( ulCalculatedValue != 1206511416UL )
-		{
-			vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
-		}
+        ulCalculatedValue *= 9876UL;
 
-		ulCalculatedValue /= 15UL;
+        if( ulCalculatedValue != 1206511416UL )
+        {
+            vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
+        }
 
-		if( ulCalculatedValue != 80434094UL )
-		{
-			vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
-		}
+        ulCalculatedValue /= 15UL;
 
-		ulCalculatedValue += 918273UL;
+        if( ulCalculatedValue != 80434094UL )
+        {
+            vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
+        }
 
-		if( ulCalculatedValue != 81352367UL )
-		{
-			vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
-		}
-	}
+        ulCalculatedValue += 918273UL;
+
+        if( ulCalculatedValue != 81352367UL )
+        {
+            vParTestSetLED( mainCHECK_TASK_LED, pdTRUE );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
-

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -70,8 +70,8 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationMallocFailedHook( void )
 {
     /* If configUSE_MALLOC_FAILED_HOOK is set to 1 then this function will
-    *  be called automatically if a call to pvPortMalloc() fails.  pvPortMalloc()
-    *  is called automatically when a task, queue or semaphore is created. */
+     *  be called automatically if a call to pvPortMalloc() fails.  pvPortMalloc()
+     *  is called automatically when a task, queue or semaphore is created. */
     printf( "Application Malloc Failed Hook called\n" );
 
     for( ; ; )

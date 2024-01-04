@@ -62,31 +62,29 @@ noRAMerror:
         tst     r0, #0x80           @ check if bit 7 is set, this indicates uncorrectable ECC error on ATCM
         bne     flashErrorFound
 
-        MRC p15,0,R0,c5,c0,0    /* Read CP15 Data Fault Status Register */
-        AND R0, R0, #0xF        /* Drop all bits but the last 4 */
-        TST R0, #0xD            /* Means we have a Dabort Section fault */
-        bne MemManage_Handler
-        bl      custom_dabort       @ custom data abort handler required
-                                    @ If this custom handler is written in assembly, all registers used in the routine
-                                    @ and the link register must be saved on to the stack upon entry, and restored before
-                                    @ return from the routine.
-        ldmfd   r13!, {r0 - r12, lr}@ pop registers and link register from stack
-        subs    pc, lr, #8          @ restore state of CPU when abort occurred, and branch back to instruction that was aborted
-
-/* So currently this fault handler expects the LR to be the instruction that failed. */
-/* If this is hit pop off all the registers that got pushed, move the LR to be the instruction that caused the abort */
-/* Save the return state, push the registers, then call the vHandleMemoryFault handler */
-/* Once we return from it, the LR will be updated on the stack, so pop the other registers off and leave the handler */
+/* So currently this fault handler expects the LR to be the instruction that failed.
+ * If this is hit pop off all the registers that got pushed, move the LR to be the
+ * instruction that caused the abort. Save the return state, push the registers,
+ * then call the vHandleMemoryFault. Once we return from it, the LR will be updated
+ * on the stack, so pop the other registers off and leave the handler */
 MemManage_Handler:
-        LDMFD   R13!, {R0 - R12, LR}    /* Pop the pushed values so we can re-do the stack the way we need it to be */
-        SUB     LR, #0x8                /* By default ABORT_MODE increases the LR to be 0x8 after the instruction that caused the fault */
-        SRSDB   sp!, #0x17              /* Save the return state onto the stack, this pushes the LR and the CPSR */
-        STMFD   SP!, {R0-R12}           /* Push R0-R12 onto the abort mode stack */
-        MOV     R0, SP                  /* Need the SP in R0 */
-        BLX     vHandleMemoryFault      /* Branch to vHandleMemoryFault - This will swap the LR to be the following instruction if needed */
+        /* Pop the pushed values so we can re-do the stack the way we need it to be */
+        LDMFD   R13!, {R0 - R12, LR}
+        /* Abort exceptions increment the LR to be 0x8 after the fault-inducing instruction */
+        SUB     LR, #0x8
+        /* Save the return state onto the stack, this pushes the LR and the CPSR */
+        SRSDB   sp!, #0x17
+        /* Push R0-R12 onto the abort mode stack */
+        STMFD   SP!, {R0-R12}
+        /* Need the SP in R0 */
+        MOV     R0, SP
+        /* Call vHandleMemoryFault - This will modify the return state if necessary */
+        BLX     vHandleMemoryFault
         /* Come back to here */
-        POP {R0-R12}                    /* Pop the original values off the stack */
-        RFEIA SP!                       /* Return to the next instruction after the fault was generated */
+        /* Pop the original values off the stack */
+        POP     { R0-R12 }
+        /* Return to the next instruction after the fault was generated */
+        RFEIA   SP!
 
 ramErrorFound:
         ldr     r1, ramctrl         @ RAM control register for B0TCM TCRAMW

@@ -58,7 +58,7 @@ static volatile uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ]
 /* --------------------- Static Task Memory Allocation --------------------- */
 
 /** @brief static variable that will be placed in privileged data */
-PRIVILEGED_DATA static volatile uint8_t ucProtectedData = 0x99;
+static volatile uint32_t ulStaticUnprotectedData = 0xFEED;
 
 /** @brief Memory regions shared between the two MPU Tasks. */
 static volatile uint8_t ucSharedMemory[ SHARED_MEMORY_SIZE ]
@@ -127,7 +127,7 @@ static void prvRWAccessTask( void * pvParameters );
 
 static void prvROAccessTask( void * pvParameters )
 {
-    volatile uint8_t ucVal;
+    volatile uint8_t ucVal = 0x0;
 
     /* Unused parameters. */
     ( void ) pvParameters;
@@ -230,14 +230,12 @@ static void prvROAccessTask( void * pvParameters )
 
 static void prvRWAccessTask( void * pvParameters )
 {
-    /* Unused parameters. */
-    ( void ) pvParameters;
-    volatile uint8_t ucVal;
+    volatile uint32_t ulVal = ( uint32_t ) pvParameters;
 
     for( ;; )
     {
         /* This task has RW access to ucSharedMemory */
-        ucSharedMemory[ 0 ]++;
+        ucSharedMemory[ 0 ] += 2U;
         ucSharedMemory1[ 0 ]++;
         ucSharedMemory2[ 0 ]++;
         ucSharedMemory3[ 0 ]++;
@@ -252,18 +250,20 @@ static void prvRWAccessTask( void * pvParameters )
     #endif /* configTOTAL_MPU_REGIONS == 16 */
 
         /* Set ucVal to 0 */
-        ucVal = ucSharedMemory[ 0 ];
+        ulVal = ucSharedMemory[ 0 ];
 
-        /** Attempt to set ucVal to the stored value of 1U in ucROTaskFaultTracker.
-         * This will trigger a data abort as this task only has privileged read/write
+        /* Mark that we will trigger a data abort */
+        ucROTaskFaultTracker[ 1 ] = 1U;
+        /* Attempt to set ucVal to ucProtectedData.
+         * This will trigger a data abort as this task did not grant itself
          * access to this variable. The Data abort handler at the bottom of this
          * file will then see this raised value, mark it low, and return this task
          * to the following instruction.
          */
-        ucVal = ucProtectedData;
+        ulVal = ulStaticUnprotectedData;
 
         /* The value of ucVal should not have changed */
-        configASSERT( ucVal != ucSharedMemory[ 0 ] );
+        configASSERT( ulVal != ucSharedMemory[ 0 ] );
 
         /* Wait for a second. */
         sci_print( "Read/Write task did a loop\r\n" );
@@ -288,6 +288,8 @@ BaseType_t xCreateMPUTasks( void )
 
     uint32_t writeMemoryPermissions =
         portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED;
+
+    ulStaticUnprotectedData = 0xC3;
 
     TaskParameters_t
         xROAccessTaskParameters = { .pvTaskCode = prvROAccessTask,
@@ -346,7 +348,7 @@ BaseType_t xCreateMPUTasks( void )
         xRWAccessTaskParameters = { .pvTaskCode = prvRWAccessTask,
                                     .pcName = "RWAccess",
                                     .usStackDepth = configMINIMAL_STACK_SIZE,
-                                    .pvParameters = NULL,
+                                    .pvParameters = ( void * ) (0xFF),
                                     .uxPriority = tskIDLE_PRIORITY + 0x3,
                                     .puxStackBuffer = xRWAccessTaskStack,
                                     .pxTaskBuffer = &xRWAccessTaskTCB,

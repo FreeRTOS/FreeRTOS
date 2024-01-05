@@ -116,6 +116,9 @@ extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
+extern List_t xSuspendedTaskList;
+extern List_t xPendingReadyList;
+extern volatile TickType_t xPendedTicks;
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 
@@ -1256,4 +1259,52 @@ void test_coverage_xTaskGetSchedulerState_scheduler_not_running_and_suspended( v
     xRet = xTaskGetSchedulerState();
 
     TEST_ASSERT_EQUAL( taskSCHEDULER_SUSPENDED, xRet );
+}
+
+/**
+ * @brief eTaskConfirmSleepModeStatus - confirm no task is waiting for timeout.
+ *
+ * All the tasks except idle tasks are in suspended list. The system can stay in
+ * a low power state. This is a regression test for SMP to ensure uxNonApplicationTasks
+ * is set to configNUMBER_OF_CORES in the implementation.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( INCLUDE_vTaskSuspend == 1 )
+ *     else if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
+ *     {
+ *         ...
+ *         eReturn = eNoTasksWaitingTimeout;
+ *     }
+ * #endif
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) ) is true.
+ */
+void test_coverage_eTaskConfirmSleepModeStatus_no_tasks_waiting_timeout( void )
+{
+    eSleepModeStatus eRetStatus;
+    UBaseType_t uxSuspendedTask;
+
+    /* Setup */
+    xPendedTicks = 0;
+    uxSuspendedTask = 3U; /* Assume system has 3 suspended task. */
+    xYieldPendings[ 0 ] = 0;
+
+    /* System has uxSuspendedTask number of suspended task and configNUMBER_OF_CORES
+     * idle tasks. */
+    uxCurrentNumberOfTasks = uxSuspendedTask + configNUMBER_OF_CORES;
+
+    /* Expectations */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xPendingReadyList, 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList, uxSuspendedTask );
+
+    /* API Call */
+    eRetStatus = eTaskConfirmSleepModeStatus();
+
+    /* Validations */
+
+    /* If the implementation sets uxNonApplicationTasks to a fixed number 1 instead of
+     * configNUMBER_OF_CORES, the following assertion will be violated. */
+    TEST_ASSERT_EQUAL( eNoTasksWaitingTimeout, eRetStatus );
 }

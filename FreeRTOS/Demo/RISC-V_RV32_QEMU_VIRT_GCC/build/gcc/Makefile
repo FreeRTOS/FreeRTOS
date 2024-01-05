@@ -9,9 +9,19 @@ LD = riscv64-unknown-elf-gcc
 SIZE = riscv64-unknown-elf-size
 MAKE = make
 
-CFLAGS += $(INCLUDE_DIRS) -DportasmHANDLE_INTERRUPT=handle_trap -fmessage-length=0 \
-          -march=rv32imac_zicsr -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
+# Generate GCC_VERSION in number format
+GCC_VERSION = $(shell $(CC) --version | grep ^$(CC) | sed 's/^.* //g' | awk -F. '{ printf("%d%02d%02d"), $$1, $$2, $$3 }')
+GCC_VERSION_NEED_ZICSR = "110100"
+
+CFLAGS += $(INCLUDE_DIRS) -fmessage-length=0 \
+          -mabi=ilp32 -mcmodel=medlow -ffunction-sections -fdata-sections \
           -Wno-unused-parameter -nostartfiles -g3 -Os
+
+ifeq ($(shell test $(GCC_VERSION) -ge $(GCC_VERSION_NEED_ZICSR) && echo true),true)
+    CFLAGS += -march=rv32imac_zicsr
+else
+    CFLAGS += -march=rv32imac
+endif
           
 ifeq ($(PICOLIBC),1)
 CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF 

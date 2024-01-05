@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -136,77 +136,77 @@
 #include "dynamic.h"
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
-converted to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS	( 200 / portTICK_PERIOD_MS )
+ * converted to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS          ( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
-will remove items as they are added, meaning the send task should always find
-the queue empty. */
-#define mainQUEUE_LENGTH			( 1 )
+ * will remove items as they are added, meaning the send task should always find
+ * the queue empty. */
+#define mainQUEUE_LENGTH                     ( 1 )
 
 /* The LED toggled by the check timer callback function.  This is an LED in the
-second digit of the two digit 7 segment display.  See the documentation page
-for this demo on the FreeRTOS.org web site to see which LED this relates to. */
-#define mainCHECK_LED				0x07UL
+ *  second digit of the two digit 7 segment display.  See the documentation page
+ *  for this demo on the FreeRTOS.org web site to see which LED this relates to. */
+#define mainCHECK_LED                        0x07UL
 
 /* The LED toggle by the queue receive task.  This is an LED in the second digit
-of the two digit 7 segment display.  See the documentation page for this demo on
-the FreeRTOS.org web site to see which LED this relates to. */
-#define mainTASK_CONTROLLED_LED		0x06UL
+ * of the two digit 7 segment display.  See the documentation page for this demo on
+ * the FreeRTOS.org web site to see which LED this relates to. */
+#define mainTASK_CONTROLLED_LED              0x06UL
 
 /* The LED turned on by the button interrupt, and turned off by the LED timer.
-This is an LED in the second digit of the two digit 7 segment display.  See the
-documentation page for this demo on the FreeRTOS.org web site to see which LED
-this relates to. */
-#define mainTIMER_CONTROLLED_LED	0x05UL
+ * This is an LED in the second digit of the two digit 7 segment display.  See the
+ * documentation page for this demo on the FreeRTOS.org web site to see which LED
+ * this relates to. */
+#define mainTIMER_CONTROLLED_LED             0x05UL
 
 /* The LED used by the comtest tasks. See the comtest.c file for more
-information.  The LEDs used by the comtest task are in the second digit of the
-two digit 7 segment display.  See the documentation page for this demo on the
-FreeRTOS.org web site to see which LEDs this relates to. */
-#define mainCOM_TEST_LED			( 3 )
+ * information.  The LEDs used by the comtest task are in the second digit of the
+ * two digit 7 segment display.  See the documentation page for this demo on the
+ * FreeRTOS.org web site to see which LEDs this relates to. */
+#define mainCOM_TEST_LED                     ( 3 )
 
 /* Constant used by the standard timer test functions. */
-#define mainTIMER_TEST_PERIOD		( 50 )
+#define mainTIMER_TEST_PERIOD                ( 50 )
 
 /* Priorities used by the various different standard demo tasks. */
-#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
-#define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
-#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY              ( configMAX_PRIORITIES - 1 )
+#define mainQUEUE_POLL_PRIORITY              ( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY                ( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY                 ( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY            ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY              ( tskIDLE_PRIORITY + 1 )
+#define mainINTEGER_TASK_PRIORITY            ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY          ( tskIDLE_PRIORITY )
+#define mainCOM_TEST_PRIORITY                ( tskIDLE_PRIORITY + 2 )
 
 /* Priorities defined in this main-full.c file. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_RECEIVE_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_SEND_TASK_PRIORITY         ( tskIDLE_PRIORITY + 1 )
 
 /* The period at which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
+ * have been reported by any of the standard demo tasks.  ms are converted to the
+ * equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS            ( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 500UL / portTICK_PERIOD_MS )
+ * reported in one of the standard demo tasks.  ms are converted to the equivalent
+ * in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS      ( 500UL / portTICK_PERIOD_MS )
 
 /* The period at which the digit counter timer will expire, in ms, and converted
-to ticks using the portTICK_PERIOD_MS constant. */
-#define mainDIGIT_COUNTER_TIMER_PERIOD_MS 	( 250UL / portTICK_PERIOD_MS )
+ * to ticks using the portTICK_PERIOD_MS constant. */
+#define mainDIGIT_COUNTER_TIMER_PERIOD_MS    ( 250UL / portTICK_PERIOD_MS )
 
 /* The LED will remain on until the button has not been pushed for a full
-5000ms. */
-#define mainLED_TIMER_PERIOD_MS				( 5000UL / portTICK_PERIOD_MS )
+ * 5000ms. */
+#define mainLED_TIMER_PERIOD_MS              ( 5000UL / portTICK_PERIOD_MS )
 
 /* A zero block time. */
-#define mainDONT_BLOCK						( 0UL )
+#define mainDONT_BLOCK                       ( 0UL )
 
 /* Baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( 115200UL )
+#define mainCOM_TEST_BAUD_RATE               ( 115200UL )
 
 /*-----------------------------------------------------------*/
 
@@ -219,8 +219,8 @@ static void prvSetupHardware( void );
  * The application specific (not common demo) tasks as described in the comments
  * at the top of this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*
  * The LED timer callback function.  This does nothing but switch an LED off.
@@ -241,7 +241,8 @@ static void prvDigitCounterTimerCallback( TimerHandle_t xTimer );
  * This is not a 'standard' partest function, so the prototype is not in
  * partest.h, and is instead included here.
  */
-void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
+void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED,
+                            signed portBASE_TYPE xValue );
 
 /*-----------------------------------------------------------*/
 
@@ -249,377 +250,384 @@ void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE x
 static QueueHandle_t xQueue = NULL;
 
 /* The LED software timer.  This uses prvLEDTimerCallback() as it's callback
-function. */
+ * function. */
 static TimerHandle_t xLEDTimer = NULL;
 
 /* The digit counter software timer.  This displays a counting digit on one half
-of the seven segment displays. */
+ * of the seven segment displays. */
 static TimerHandle_t xDigitCounterTimer = NULL;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
-function. */
+ * function. */
 static TimerHandle_t xCheckTimer = NULL;
 
 /* If an error is detected in a standard demo task, then pcStatusMessage will
-be set to point to a string that identifies the offending task.  This is just
-to make debugging easier. */
-static const char *pcStatusMessage = NULL;
+ * be set to point to a string that identifies the offending task.  This is just
+ * to make debugging easier. */
+static const char * pcStatusMessage = NULL;
 
 /*-----------------------------------------------------------*/
 
-int main(void)
+int main( void )
 {
-	/* Configure the NVIC, LED outputs and button inputs. */
-	prvSetupHardware();
+    /* Configure the NVIC, LED outputs and button inputs. */
+    prvSetupHardware();
 
-	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+    /* Create the queue. */
+    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
-	if( xQueue != NULL )
-	{
-		/* Start the two application specific demo tasks, as described in the
-		comments at the top of this	file. */
-		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+    if( xQueue != NULL )
+    {
+        /* Start the two application specific demo tasks, as described in the
+         * comments at the top of this	file. */
+        xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+        xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Create the software timer that is responsible for turning off the LED
-		if the button is not pushed within 5000ms, as described at the top of
-		this file. */
-		xLEDTimer = xTimerCreate( 	"LEDTimer", 				/* A text name, purely to help debugging. */
-									( mainLED_TIMER_PERIOD_MS ),/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,					/* This is a one-shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,				/* The ID is not used, so can be set to anything. */
-									prvLEDTimerCallback			/* The callback function that switches the LED off. */
-								);
+        /* Create the software timer that is responsible for turning off the LED
+         * if the button is not pushed within 5000ms, as described at the top of
+         * this file. */
+        xLEDTimer = xTimerCreate( "LEDTimer",                  /* A text name, purely to help debugging. */
+                                  ( mainLED_TIMER_PERIOD_MS ), /* The timer period, in this case 5000ms (5s). */
+                                  pdFALSE,                     /* This is a one-shot timer, so xAutoReload is set to pdFALSE. */
+                                  ( void * ) 0,                /* The ID is not used, so can be set to anything. */
+                                  prvLEDTimerCallback          /* The callback function that switches the LED off. */
+                                  );
 
-		/* Create the software timer that performs the 'check' functionality,
-		as described at the top of this file. */
-		xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
-									( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,					/* The ID is not used, so can be set to anything. */
-									prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-								  );
+        /* Create the software timer that performs the 'check' functionality,
+         * as described at the top of this file. */
+        xCheckTimer = xTimerCreate( "CheckTimer",                  /* A text name, purely to help debugging. */
+                                    ( mainCHECK_TIMER_PERIOD_MS ), /* The timer period, in this case 3000ms (3s). */
+                                    pdTRUE,                        /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                                    ( void * ) 0,                  /* The ID is not used, so can be set to anything. */
+                                    prvCheckTimerCallback          /* The callback function that inspects the status of all the other tasks. */
+                                    );
 
-		/* Create the software timer that performs the 'digit counting'
-		functionality, as described at the top of this file. */
-		xDigitCounterTimer = xTimerCreate( "DigitCounter",					/* A text name, purely to help debugging. */
-									( mainDIGIT_COUNTER_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,							/* The ID is not used, so can be set to anything. */
-									prvDigitCounterTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-								  );
+        /* Create the software timer that performs the 'digit counting'
+         * functionality, as described at the top of this file. */
+        xDigitCounterTimer = xTimerCreate( "DigitCounter",                        /* A text name, purely to help debugging. */
+                                           ( mainDIGIT_COUNTER_TIMER_PERIOD_MS ), /* The timer period, in this case 3000ms (3s). */
+                                           pdTRUE,                                /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                                           ( void * ) 0,                          /* The ID is not used, so can be set to anything. */
+                                           prvDigitCounterTimerCallback           /* The callback function that inspects the status of all the other tasks. */
+                                           );
 
-		/* Create a lot of 'standard demo' tasks.  Over 40 tasks are created in
-		this demo.  For a much simpler demo, select the 'blinky' build
-		configuration. */
-		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vCreateBlockTimeTasks();
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-		vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-		vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
-		vStartQueuePeekTasks();
-		vStartRecursiveMutexTasks();
-		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartCountingSemaphoreTasks();
-		vStartDynamicPriorityTasks();
+        /* Create a lot of 'standard demo' tasks.  Over 40 tasks are created in
+         * this demo.  For a much simpler demo, select the 'blinky' build
+         * configuration. */
+        vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+        vCreateBlockTimeTasks();
+        vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+        vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+        vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+        vStartQueuePeekTasks();
+        vStartRecursiveMutexTasks();
+        vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+        vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+        vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+        vStartCountingSemaphoreTasks();
+        vStartDynamicPriorityTasks();
 
-		/* The suicide tasks must be created last, as they need to know how many
-		tasks were running prior to their creation in order to ascertain whether
-		or not the correct/expected number of tasks are running at any given
-		time. */
-		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+        /* The suicide tasks must be created last, as they need to know how many
+         * tasks were running prior to their creation in order to ascertain whether
+         * or not the correct/expected number of tasks are running at any given
+         * time. */
+        vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-		/* Start the tasks and timer running. */
-		vTaskStartScheduler();
-	}
+        /* Start the tasks and timer running. */
+        vTaskStartScheduler();
+    }
 
-	/* If all is well, the scheduler will now be running, and the following line
-	will never be reached.  If the following line does execute, then there was
-	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
-	to be created.  See the memory management section on the FreeRTOS web site
-	for more details. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following line
+     * will never be reached.  If the following line does execute, then there was
+     * insufficient FreeRTOS heap memory available for the idle and/or timer tasks
+     * to be created.  See the memory management section on the FreeRTOS web site
+     * for more details. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
-	/* Check the standard demo tasks are running without error.   Latch the
-	latest reported error in the pcStatusMessage character pointer. */
-	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: GenQueue";
-	}
+    /* Check the standard demo tasks are running without error.   Latch the
+     * latest reported error in the pcStatusMessage character pointer. */
+    if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: GenQueue";
+    }
 
-	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: QueuePeek\r\n";
-	}
+    if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: QueuePeek\r\n";
+    }
 
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: BlockQueue\r\n";
-	}
+    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: BlockQueue\r\n";
+    }
 
-	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: BlockTime\r\n";
-	}
+    if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: BlockTime\r\n";
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: SemTest\r\n";
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: SemTest\r\n";
+    }
 
-	if( xIsCreateTaskStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: Death\r\n";
-	}
+    if( xIsCreateTaskStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: Death\r\n";
+    }
 
-	if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: RecMutex\r\n";
-	}
+    if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: RecMutex\r\n";
+    }
 
-	if( xAreComTestTasksStillRunning() != pdPASS )
-	{
-		pcStatusMessage = "Error: ComTest\r\n";
-	}
+    if( xAreComTestTasksStillRunning() != pdPASS )
+    {
+        pcStatusMessage = "Error: ComTest\r\n";
+    }
 
-	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_MS ) ) != pdTRUE )
-	{
-		pcStatusMessage = "Error: TimerDemo";
-	}
+    if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_MS ) ) != pdTRUE )
+    {
+        pcStatusMessage = "Error: TimerDemo";
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: PollQueue";
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: PollQueue";
+    }
 
-	if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: CountSem";
-	}
+    if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: CountSem";
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: DynamicPriority";
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        pcStatusMessage = "Error: DynamicPriority";
+    }
 
-	/* Toggle the check LED to give an indication of the system status.  If
-	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
-	everything is ok.  A faster toggle indicates an error. */
-	vParTestToggleLED( mainCHECK_LED );
+    /* Toggle the check LED to give an indication of the system status.  If
+     * the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
+     * everything is ok.  A faster toggle indicates an error. */
+    vParTestToggleLED( mainCHECK_LED );
 
-	/* Have any errors been latch in pcStatusMessage?  If so, shorten the
-	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
-	This will result in an increase in the rate at which mainCHECK_LED
-	toggles. */
-	if( pcStatusMessage != NULL )
-	{
-		/* This call to xTimerChangePeriod() uses a zero block time.  Functions
-		called from inside of a timer callback function must *never* attempt
-		to block. */
-		xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
-	}
+    /* Have any errors been latch in pcStatusMessage?  If so, shorten the
+     * period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
+     * This will result in an increase in the rate at which mainCHECK_LED
+     * toggles. */
+    if( pcStatusMessage != NULL )
+    {
+        /* This call to xTimerChangePeriod() uses a zero block time.  Functions
+         * called from inside of a timer callback function must *never* attempt
+         * to block. */
+        xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvLEDTimerCallback( TimerHandle_t xTimer )
 {
-	/* The timer has expired - so no button pushes have occurred in the last
-	five seconds - turn the LED off. */
-	vParTestSetLED( mainTIMER_CONTROLLED_LED, pdFALSE );
+    /* The timer has expired - so no button pushes have occurred in the last
+     * five seconds - turn the LED off. */
+    vParTestSetLED( mainTIMER_CONTROLLED_LED, pdFALSE );
 }
 /*-----------------------------------------------------------*/
 
 static void prvDigitCounterTimerCallback( TimerHandle_t xTimer )
 {
 /* Define the bit patterns that display numbers on the seven segment display. */
-static const unsigned short usNumbersPatterns[] = { 0xC000U, 0xF900U, 0xA400U, 0xB000U, 0x9900U, 0x9200U, 0x8200U, 0xF800U, 0x8000U, 0x9000U };
-static long lCounter = 0L;
-const long lNumberOfDigits = 10L;
+    static const unsigned short usNumbersPatterns[] = { 0xC000U, 0xF900U, 0xA400U, 0xB000U, 0x9900U, 0x9200U, 0x8200U, 0xF800U, 0x8000U, 0x9000U };
+    static long lCounter = 0L;
+    const long lNumberOfDigits = 10L;
 
-	/* Display the next number, counting up. */
-	FM3_GPIO->PDOR1 = usNumbersPatterns[ lCounter ];
+    /* Display the next number, counting up. */
+    FM3_GPIO->PDOR1 = usNumbersPatterns[ lCounter ];
 
-	/* Move onto the next digit. */
-	lCounter++;
+    /* Move onto the next digit. */
+    lCounter++;
 
-	/* Ensure the counter does not go off the end of the array. */
-	if( lCounter >= lNumberOfDigits )
-	{
-		lCounter = 0L;
-	}
+    /* Ensure the counter does not go off the end of the array. */
+    if( lCounter >= lNumberOfDigits )
+    {
+        lCounter = 0L;
+    }
 }
 /*-----------------------------------------------------------*/
 
 /* The ISR executed when the user button is pushed. */
 void INT0_7_Handler( void )
 {
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	/* The button was pushed, so ensure the LED is on before resetting the
-	LED timer.  The LED timer will turn the LED off if the button is not
-	pushed within 5000ms. */
-	vParTestSetLEDFromISR( mainTIMER_CONTROLLED_LED, pdTRUE );
+    /* The button was pushed, so ensure the LED is on before resetting the
+     * LED timer.  The LED timer will turn the LED off if the button is not
+     * pushed within 5000ms. */
+    vParTestSetLEDFromISR( mainTIMER_CONTROLLED_LED, pdTRUE );
 
-	/* This interrupt safe FreeRTOS function can be called from this interrupt
-	because the interrupt priority is below the
-	configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
-	xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
+    /* This interrupt safe FreeRTOS function can be called from this interrupt
+     * because the interrupt priority is below the
+     * configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
+    xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
 
-	/* Clear the interrupt before leaving.  This just clears all the interrupts
-	for simplicity, as only one is actually used in this simple demo anyway. */
-	FM3_EXTI->EICL = 0x0000;
+    /* Clear the interrupt before leaving.  This just clears all the interrupts
+     *  for simplicity, as only one is actually used in this simple demo anyway. */
+    FM3_EXTI->EICL = 0x0000;
 
-	/* If calling xTimerResetFromISR() caused a task (in this case the timer
-	service/daemon task) to unblock, and the unblocked task has a priority
-	higher than or equal to the task that was interrupted, then
-	xHigherPriorityTaskWoken will now be set to pdTRUE, and calling
-	portEND_SWITCHING_ISR() will ensure the unblocked task runs next. */
-	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+    /* If calling xTimerResetFromISR() caused a task (in this case the timer
+     * service/daemon task) to unblock, and the unblocked task has a priority
+     * higher than or equal to the task that was interrupted, then
+     * xHigherPriorityTaskWoken will now be set to pdTRUE, and calling
+     * portEND_SWITCHING_ISR() will ensure the unblocked task runs next. */
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
+    TickType_t xNextWakeTime;
+    const unsigned long ulValueToSend = 100UL;
 
-	/* The timer command queue will have been filled when the timer test tasks
-	were created in main() (this is part of the test they perform).  Therefore,
-	while the check and digit counter timers can be created in main(), they
-	cannot be started from main().  Once the scheduler has started, the timer
-	service	task will drain the command queue, and now the check and digit
-	counter timers can be started successfully. */
-	xTimerStart( xCheckTimer, portMAX_DELAY );
-	xTimerStart( xDigitCounterTimer, portMAX_DELAY );
+    /* The timer command queue will have been filled when the timer test tasks
+     * were created in main() (this is part of the test they perform).  Therefore,
+     * while the check and digit counter timers can be created in main(), they
+     * cannot be started from main().  Once the scheduler has started, the timer
+     * service	task will drain the command queue, and now the check and digit
+     * counter timers can be started successfully. */
+    xTimerStart( xCheckTimer, portMAX_DELAY );
+    xTimerStart( xDigitCounterTimer, portMAX_DELAY );
 
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again.
-		The block time is specified in ticks, the constant used converts ticks
-		to ms.  While in the Blocked state this task will not consume any CPU
-		time. */
-		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
+    for( ; ; )
+    {
+        /* Place this task in the blocked state until it is time to run again.
+         * The block time is specified in ticks, the constant used converts ticks
+         * to ms.  While in the Blocked state this task will not consume any CPU
+         * time. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
 
-		/* Send to the queue - causing the queue receive task to unblock and
-		toggle an LED.  0 is used as the block time so the sending operation
-		will not block - it shouldn't need to block as the queue should always
-		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
-	}
+        /* Send to the queue - causing the queue receive task to unblock and
+         * toggle an LED.  0 is used as the block time so the sending operation
+         * will not block - it shouldn't need to block as the queue should always
+         * be empty at this point in the code. */
+        xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
+    unsigned long ulReceivedValue;
 
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue - this task will block
-		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-		FreeRTOSConfig.h. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+    for( ; ; )
+    {
+        /* Wait until something arrives in the queue - this task will block
+         * indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
+         * FreeRTOSConfig.h. */
+        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, toggle the LED. */
-		if( ulReceivedValue == 100UL )
-		{
-			vParTestToggleLED( mainTASK_CONTROLLED_LED );
-		}
-	}
+        /*  To get here something must have been received from the queue, but
+         * is it the expected value?  If it is, toggle the LED. */
+        if( ulReceivedValue == 100UL )
+        {
+            vParTestToggleLED( mainTASK_CONTROLLED_LED );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-const unsigned short usButtonInputBit = 0x01U;
+    const unsigned short usButtonInputBit = 0x01U;
 
-	SystemInit();
-	SystemCoreClockUpdate();
+    SystemInit();
+    SystemCoreClockUpdate();
 
-	/* Initialise the IO used for the LEDs on the 7 segment displays. */
-	vParTestInitialise();
+    /* Initialise the IO used for the LEDs on the 7 segment displays. */
+    vParTestInitialise();
 
-	/* Set the switches to input (P18->P1F). */
-	FM3_GPIO->DDR5 = 0x0000;
-	FM3_GPIO->PFR5 = 0x0000;
+    /* Set the switches to input (P18->P1F). */
+    FM3_GPIO->DDR5 = 0x0000;
+    FM3_GPIO->PFR5 = 0x0000;
 
-	/* Assign the button input as GPIO. */
-	FM3_GPIO->PFR1 |= usButtonInputBit;
+    /* Assign the button input as GPIO. */
+    FM3_GPIO->PFR1 |= usButtonInputBit;
 
-	/* Button interrupt on falling edge. */
-	FM3_EXTI->ELVR  = 0x0003;
+    /* Button interrupt on falling edge. */
+    FM3_EXTI->ELVR = 0x0003;
 
-	/* Clear all external interrupts. */
-	FM3_EXTI->EICL  = 0x0000;
+    /* Clear all external interrupts. */
+    FM3_EXTI->EICL = 0x0000;
 
-	/* Enable the button interrupt. */
-	FM3_EXTI->ENIR |= usButtonInputBit;
+    /* Enable the button interrupt. */
+    FM3_EXTI->ENIR |= usButtonInputBit;
 
-	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
-	NVIC_SetPriority( EXINT0_7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+    /* Setup the GPIO and the NVIC for the switch used in this simple demo. */
+    NVIC_SetPriority( EXINT0_7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
     NVIC_EnableIRQ( EXINT0_7_IRQn );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-	for( ;; );
+    /* Called if a call to pvPortMalloc() fails because there is insufficient
+     * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     * internally by FreeRTOS API functions that create tasks, queues, software
+     * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+     * configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeStackSpace;
+    volatile size_t xFreeStackSpace;
 
-	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amount of FreeRTOS heap that
-	remains unallocated. */
-	xFreeStackSpace = xPortGetFreeHeapSize();
+    /* This function is called on each cycle of the idle task.  In this case it
+     * does nothing useful, other than report the amount of FreeRTOS heap that
+     * remains unallocated. */
+    xFreeStackSpace = xPortGetFreeHeapSize();
 
-	if( xFreeStackSpace > 100 )
-	{
-		/* By now, the kernel has allocated everything it is going to, so
-		if there is a lot of heap remaining unallocated then
-		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
-		reduced accordingly. */
-	}
+    if( xFreeStackSpace > 100 )
+    {
+        /* By now, the kernel has allocated everything it is going to, so
+         * if there is a lot of heap remaining unallocated then
+         * the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
+         * reduced accordingly. */
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* Call the periodic timer test, which tests the timer API functions that
-	can be called from an ISR. */
-	vTimerPeriodicISRTests();
+    /* Call the periodic timer test, which tests the timer API functions that
+     * can be called from an ISR. */
+    vTimerPeriodicISRTests();
 }
 /*-----------------------------------------------------------*/
-

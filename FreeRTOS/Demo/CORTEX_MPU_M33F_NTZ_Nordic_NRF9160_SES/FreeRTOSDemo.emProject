@@ -55,10 +55,10 @@
     </folder>
     <folder Name="FreeRTOS">
       <folder Name="include">
-        <file file_name="../../Source/include/FreeRTOS.h" />
         <file file_name="../../Source/include/atomic.h" />
         <file file_name="../../Source/include/deprecated_definitions.h" />
         <file file_name="../../Source/include/event_groups.h" />
+        <file file_name="../../Source/include/FreeRTOS.h" />
         <file file_name="../../Source/include/list.h" />
         <file file_name="../../Source/include/message_buffer.h" />
         <file file_name="../../Source/include/mpu_prototypes.h" />
@@ -106,7 +106,8 @@
           <configuration
             Name="Common"
             default_code_section=".init"
-            default_const_section=".init_rodata" />
+            default_const_section=".init_rodata"
+            gcc_strict_prototypes_warning="No" />
         </file>
       </folder>
       <folder Name="Script Files">
@@ -115,10 +116,10 @@
         </file>
       </folder>
       <folder Name="System Files">
-        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
         <file file_name="Nordic_Code/nRF/Source/nrf9160_Vectors.s">
           <configuration Name="Common" file_type="Assembly" />
         </file>
+        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
         <file file_name="Nordic_Code/nRF/Source/thumb_crt0.s" />
       </folder>
     </folder>

@@ -3,6 +3,10 @@ CC      = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 ARCH    = $(CROSS)ar
 
+# Generate GCC_VERSION in number format
+GCC_VERSION = $(shell $(CC) --version | grep ^$(CC) | sed 's/^.* //g' | awk -F. '{ printf("%d%02d%02d"), $$1, $$2, $$3 }')
+GCC_VERSION_NEED_ZICSR = "110100"
+
 BUILD_DIR       = build
 RTOS_SOURCE_DIR = $(abspath ../../Source)
 DEMO_SOURCE_DIR = $(abspath ../Common/Minimal)
@@ -14,12 +18,19 @@ CPPFLAGS = \
 	-I $(RTOS_SOURCE_DIR)/include \
 	-I $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V \
 	-I $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/chip_specific_extensions/RV32I_CLINT_no_extensions
-CFLAGS  = -march=rv32imac -mabi=ilp32 -mcmodel=medany \
+CFLAGS  = -mabi=ilp32 -mcmodel=medany \
 	-Wall \
 	-fmessage-length=0 \
 	-ffunction-sections \
 	-fdata-sections \
 	-fno-builtin-printf
+
+ifeq ($(shell test $(GCC_VERSION) -ge $(GCC_VERSION_NEED_ZICSR) && echo true),true)
+    CFLAGS += -march=rv32imac_zicsr
+else
+    CFLAGS += -march=rv32imac
+endif
+
 LDFLAGS = -nostartfiles -Tfake_rom.lds \
 	-march=rv32imac -mabi=ilp32 -mcmodel=medany \
 	-Xlinker --gc-sections \

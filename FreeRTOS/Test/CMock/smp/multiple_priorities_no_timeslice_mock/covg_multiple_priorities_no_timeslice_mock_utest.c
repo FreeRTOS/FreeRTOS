@@ -113,6 +113,10 @@ extern volatile UBaseType_t uxCurrentNumberOfTasks;
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern List_t xDelayedTaskList1;
+extern List_t xDelayedTaskList2;
+extern List_t xTasksWaitingTermination;
+extern List_t xSuspendedTaskList;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
@@ -1151,15 +1155,15 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
         {
             for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
             {
-                vListInitialise_ExpectAnyArgs();
+                vListInitialise_Expect( &pxReadyTasksLists[ uxPriority ] );
             }
 
-            vListInitialise_ExpectAnyArgs();
-            vListInitialise_ExpectAnyArgs();
-            vListInitialise_ExpectAnyArgs();
+            vListInitialise_Expect( &xDelayedTaskList1 );
+            vListInitialise_Expect( &xDelayedTaskList2 );
+            vListInitialise_Expect( &xPendingReadyList );
 
-            vListInitialise_ExpectAnyArgs();
-            vListInitialise_ExpectAnyArgs();
+            vListInitialise_Expect( &xTasksWaitingTermination );
+            vListInitialise_Expect( &xSuspendedTaskList );
         }
 
         listINSERT_END_ExpectAnyArgs();

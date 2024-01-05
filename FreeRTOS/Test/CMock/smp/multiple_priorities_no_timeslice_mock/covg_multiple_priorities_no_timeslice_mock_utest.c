@@ -1125,8 +1125,10 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
     TCB_t * xIdleTask;
     TCB_t xTask = { 0 };
     int i;
+    UBaseType_t uxPriority;
 
     pcIdleTaskName = "IDLE longXX";
+    xSchedulerRunning = pdFALSE;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -1141,10 +1143,27 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
         listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
         pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
 
+        /* prvAddNewTaskToReadyList. */
         vFakePortEnterCriticalSection_Expect();
+
+        /* prvInitialiseTaskLists call when first task is initialised. */
+        if( i == 0 )
+        {
+            for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+            {
+                vListInitialise_ExpectAnyArgs();
+            }
+
+            vListInitialise_ExpectAnyArgs();
+            vListInitialise_ExpectAnyArgs();
+            vListInitialise_ExpectAnyArgs();
+
+            vListInitialise_ExpectAnyArgs();
+            vListInitialise_ExpectAnyArgs();
+        }
+
         listINSERT_END_ExpectAnyArgs();
         portSetupTCB_CB_ExpectAnyArgs();
-        vFakePortGetCoreID_ExpectAndReturn( 0 );
         vFakePortExitCriticalSection_Expect();
     }
 
@@ -1190,6 +1209,7 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
     pcIdleTaskName = "IDLE long name";
 
     uxCurrentNumberOfTasks = 2;
+    xSchedulerRunning = pdFALSE;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -1203,10 +1223,10 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
         vListInitialiseItem_ExpectAnyArgs();
         listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
         pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
+
         vFakePortEnterCriticalSection_Expect();
         listINSERT_END_ExpectAnyArgs();
         portSetupTCB_CB_ExpectAnyArgs();
-        vFakePortGetCoreID_ExpectAndReturn( 0 );
         vFakePortExitCriticalSection_Expect();
     }
 

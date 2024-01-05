@@ -1105,6 +1105,9 @@ DEBUGEN
 DEBUGF
 decf
 decfsz
+decihours
+Decihours
+DECIHOURS
 DECNT
 DECURRH
 DECURRL
@@ -3246,6 +3249,9 @@ NOGIC
 noheap
 noint
 NONBASETHRDENA
+nondet
+Nondet
+NONDET
 NONOVR
 NOPEN
 NOPIDEVAD
@@ -5618,6 +5624,9 @@ uninitializing
 UNIONAB
 UNIONCD
 UNKN
+unpadded
+Unpadded
+UNPADDED
 UNRE
 UNSEC
 UNSTKERR
@@ -5792,6 +5801,7 @@ vdnssearch
 VDSIZ
 VDTO
 vect
+Vect
 VECT
 VECTACTIVE
 VECTCLRACTIVE

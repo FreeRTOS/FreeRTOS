@@ -117,8 +117,9 @@ void EMACTxIntPulseDisable(
 {
     HWREG( emacBase + EMAC_TXINTMASKCLEAR ) |= ( ( uint32 ) 1U << channel );
 
-    HWREG( emacCtrlBase + EMAC_CTRL_CnTXEN( ctrlCore ) ) &=
-        ( ~( ( uint32 ) 1U << channel ) );
+    HWREG(
+        emacCtrlBase + EMAC_CTRL_CnTXEN( ctrlCore )
+    ) &= ( ~( ( uint32 ) 1U << channel ) );
 }
 
 /**
@@ -171,8 +172,9 @@ void EMACRxIntPulseDisable(
 {
     HWREG( emacBase + EMAC_RXINTMASKCLEAR ) |= ( ( uint32 ) 1U << channel );
 
-    HWREG( emacCtrlBase + EMAC_CTRL_CnRXEN( ctrlCore ) ) &=
-        ( ~( ( uint32 ) 1U << channel ) );
+    HWREG(
+        emacCtrlBase + EMAC_CTRL_CnRXEN( ctrlCore )
+    ) &= ( ~( ( uint32 ) 1U << channel ) );
 }
 
 /**
@@ -444,8 +446,9 @@ void EMACMACSrcAddrSet( uint32 emacBase, uint8 macAddr[ 6 ] )
     HWREG( emacBase + EMAC_MACSRCADDRHI ) =
         ( ( uint32 ) macAddr[ 5U ] | ( ( uint32 ) macAddr[ 4U ] << 8U ) |
           ( ( uint32 ) macAddr[ 3U ] << 16U ) | ( ( uint32 ) macAddr[ 2U ] << 24U ) );
-    HWREG( emacBase + EMAC_MACSRCADDRLO ) =
-        ( ( uint32 ) macAddr[ 1U ] | ( ( uint32 ) macAddr[ 0U ] << 8U ) );
+    HWREG(
+        emacBase + EMAC_MACSRCADDRLO
+    ) = ( ( uint32 ) macAddr[ 1U ] | ( ( uint32 ) macAddr[ 0U ] << 8U ) );
 }
 
 /**
@@ -598,8 +601,9 @@ void EMACRxMultiCastEnable( uint32 emacBase, uint32 channel )
 {
     HWREG( emacBase + EMAC_RXMBPENABLE ) &= ( ~( uint32 ) EMAC_RXMBPENABLE_RXMULTCH );
 
-    HWREG( emacBase + EMAC_RXMBPENABLE ) |=
-        ( ( uint32 ) EMAC_RXMBPENABLE_RXMULTEN | ( channel ) );
+    HWREG(
+        emacBase + EMAC_RXMBPENABLE
+    ) |= ( ( uint32 ) EMAC_RXMBPENABLE_RXMULTEN | ( channel ) );
 }
 
 /**

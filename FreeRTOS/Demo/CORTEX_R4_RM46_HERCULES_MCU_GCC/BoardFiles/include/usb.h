@@ -66,12 +66,13 @@
  *
  *****************************************************************************/
 #define USB_FIFO_SIZE_DB_FLAG 0x10U
-#define USB_FIFO_SZ_TO_BYTES( x )                                                          \
-    ( uint16_t )(                                                                          \
-        ( uint8_t ) 8U                                                                     \
-        << ( ( ( uint8_t ) ( x ) & ( uint8_t ) ( ~( uint8_t ) USB_FIFO_SIZE_DB_FLAG ) ) +  \
-             ( uint8_t ) ( ( ( uint8_t ) ( x ) & ( uint8_t ) USB_FIFO_SIZE_DB_FLAG ) >> 4U \
-             ) )                                                                           \
+#define USB_FIFO_SZ_TO_BYTES( x )                                                       \
+    ( uint16_t )(                                                                       \
+        ( uint8_t ) 8U                                                                  \
+        << ( ( ( uint8_t ) ( x ) & ( uint8_t ) ( ~( uint8_t ) USB_FIFO_SIZE_DB_FLAG )   \
+             ) +                                                                        \
+             ( uint8_t ) ( ( ( uint8_t ) ( x ) & ( uint8_t ) USB_FIFO_SIZE_DB_FLAG ) >> \
+                           4U ) )                                                       \
     )
 
 /******************************************************************************

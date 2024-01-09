@@ -121,19 +121,19 @@ int main( void )
         configASSERT( pdFAIL );
     }
 
-    #if( mainDEMO_TYPE & MPU_DEMO )
+#if( mainDEMO_TYPE & MPU_DEMO )
     {
         sci_print( "Creating the MPU Demo Tasks\r\n" );
         xReturn = xCreateMPUTasks();
     }
-    #endif
+#endif
 
-    #if( mainDEMO_TYPE & BLINKY_DEMO )
+#if( mainDEMO_TYPE & BLINKY_DEMO )
     {
         sci_print( "Creating the Blinky Demo Tasks\r\n" );
         xReturn = xCreateBlinkyTasks();
     }
-    #endif /* ( mainDEMO_TYPE & BLINKY_DEMO ) */
+#endif /* ( mainDEMO_TYPE & BLINKY_DEMO ) */
 
     if( pdPASS == xReturn )
     {
@@ -266,10 +266,8 @@ void vApplicationIdleHook( void )
 
     else if( ( TickType_t ) 0xFFFFFFFF == ulIdleTickHookCount )
     {
-        sci_print(
-            "vApplicationIdleHook has run 0xFFFFFFFF times! "
-            "Setting it to 0x0!\r\n"
-        );
+        sci_print( "vApplicationIdleHook has run 0xFFFFFFFF times! "
+                   "Setting it to 0x0!\r\n" );
         ulIdleTickHookCount = 0x0;
     }
 }

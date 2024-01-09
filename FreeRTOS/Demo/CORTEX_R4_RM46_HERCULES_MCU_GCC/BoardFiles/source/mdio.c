@@ -227,8 +227,8 @@ void MDIOInit( uint32 baseAddr, uint32 mdioInputFreq, uint32 mdioOutputFreq )
 /* Requirements : HL_ETH_SR40 */
 void MDIOEnable( uint32 baseAddr )
 {
-    HWREG( baseAddr + MDIO_CONTROL ) =
-        HWREG( baseAddr + MDIO_CONTROL ) | MDIO_CONTROL_ENABLE;
+    HWREG( baseAddr + MDIO_CONTROL ) = HWREG( baseAddr + MDIO_CONTROL ) |
+                                       MDIO_CONTROL_ENABLE;
 }
 
 /**
@@ -244,8 +244,8 @@ void MDIOEnable( uint32 baseAddr )
 /* Requirements : HL_ETH_SR40 */
 void MDIODisable( uint32 baseAddr )
 {
-    HWREG( baseAddr + MDIO_CONTROL ) =
-        HWREG( baseAddr + MDIO_CONTROL ) & ( ~MDIO_CONTROL_ENABLE );
+    HWREG( baseAddr + MDIO_CONTROL ) = HWREG( baseAddr + MDIO_CONTROL ) &
+                                       ( ~MDIO_CONTROL_ENABLE );
 }
 
 /* USER CODE BEGIN (2) */

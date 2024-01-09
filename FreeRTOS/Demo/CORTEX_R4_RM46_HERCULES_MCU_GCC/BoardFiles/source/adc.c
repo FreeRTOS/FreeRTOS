@@ -92,8 +92,8 @@ void adcInit( void )
      *     - Enable/Disable channel id in conversion result
      *     - Enable/Disable continuous conversion
      */
-    adcREG1->GxMODECR[ 0U ] =
-        ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    adcREG1->GxMODECR[ 0U ] = ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U |
+                              ( uint32 ) 0x00000000U;
 
     /** - Setup event group hardware trigger
      *     - Setup hardware trigger edge
@@ -115,9 +115,8 @@ void adcInit( void )
      *     - Enable/Disable channel id in conversion result
      *     - Enable/Disable continuous conversion
      */
-    adcREG1->GxMODECR[ 1U ] =
-        ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-        ( uint32 ) 0x00000000U;
+    adcREG1->GxMODECR[ 1U ] = ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U |
+                              ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup group 1 hardware trigger
      *     - Setup hardware trigger edge
@@ -139,9 +138,8 @@ void adcInit( void )
      *     - Enable/Disable channel id in conversion result
      *     - Enable/Disable continuous conversion
      */
-    adcREG1->GxMODECR[ 2U ] =
-        ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-        ( uint32 ) 0x00000000U;
+    adcREG1->GxMODECR[ 2U ] = ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U |
+                              ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup group 2 hardware trigger
      *     - Setup hardware trigger edge
@@ -206,8 +204,8 @@ void adcInit( void )
      *     - Enable/Disable channel id in conversion result
      *     - Enable/Disable continuous conversion
      */
-    adcREG2->GxMODECR[ 0U ] =
-        ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    adcREG2->GxMODECR[ 0U ] = ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U |
+                              ( uint32 ) 0x00000000U;
 
     /** - Setup event group hardware trigger
      *     - Setup hardware trigger edge
@@ -229,9 +227,8 @@ void adcInit( void )
      *     - Enable/Disable channel id in conversion result
      *     - Enable/Disable continuous conversion
      */
-    adcREG2->GxMODECR[ 1U ] =
-        ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-        ( uint32 ) 0x00000000U;
+    adcREG2->GxMODECR[ 1U ] = ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U |
+                              ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup group 1 hardware trigger
      *     - Setup hardware trigger edge
@@ -253,9 +250,8 @@ void adcInit( void )
      *     - Enable/Disable channel id in conversion result
      *     - Enable/Disable continuous conversion
      */
-    adcREG2->GxMODECR[ 2U ] =
-        ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-        ( uint32 ) 0x00000000U;
+    adcREG2->GxMODECR[ 2U ] = ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U |
+                              ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup group 2 hardware trigger
      *     - Setup hardware trigger edge
@@ -476,10 +472,9 @@ uint32 adcGetData( adcBASE_t * adc, uint32 group, adcData_t * data )
     uint32 index = ( adc == adcREG1 ) ? 0U : 1U;
 
     uint32 intcr_reg = adc->GxINTCR[ group ];
-    uint32 count =
-        ( intcr_reg >= 256U )
-            ? s_adcFiFoSize[ index ][ group ]
-            : ( s_adcFiFoSize[ index ][ group ] - ( uint32 ) ( intcr_reg & 0xFFU ) );
+    uint32 count = ( intcr_reg >= 256U ) ? s_adcFiFoSize[ index ][ group ]
+                                         : ( s_adcFiFoSize[ index ][ group ] -
+                                             ( uint32 ) ( intcr_reg & 0xFFU ) );
     adcData_t * ptr = data;
 
     /* USER CODE BEGIN (16) */

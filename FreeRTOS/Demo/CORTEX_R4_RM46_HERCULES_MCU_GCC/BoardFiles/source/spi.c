@@ -81,150 +81,137 @@ void spiInit( void )
     spiREG2->GCR0 = 1U;
 
     /** SPI2 master mode and clock configuration */
-    spiREG2->GCR1 =
-        ( spiREG2->GCR1 & 0xFFFFFFFCU ) |
-        ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
-          | 1U );                            /* MASTER */
+    spiREG2->GCR1 = ( spiREG2->GCR1 & 0xFFFFFFFCU ) |
+                    ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+                      | 1U );                            /* MASTER */
 
     /** SPI2 enable pin configuration */
-    spiREG2->INT0 =
-        ( spiREG2->INT0 & 0xFEFFFFFFU ) | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
-                                                                                  HIGHZ */
+    spiREG2->INT0 = ( spiREG2->INT0 & 0xFEFFFFFFU ) |
+                    ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+                                                            HIGHZ */
 
     /** - Delays */
-    spiREG2->DELAY =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )   /* C2TDELAY */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U ) /* T2CDELAY */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* T2EDELAY */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* C2EDELAY */
+    spiREG2->DELAY = ( uint32 ) ( ( uint32 ) 0U << 24U ) /* C2TDELAY */
+                   | ( uint32 ) ( ( uint32 ) 0U << 16U ) /* T2CDELAY */
+                   | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* T2EDELAY */
+                   | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* C2EDELAY */
 
     /** - Data Format 0 */
-    spiREG2->FMT0 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG2->FMT0 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
     /** - Data Format 1 */
-    spiREG2->FMT1 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG2->FMT1 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - Data Format 2 */
-    spiREG2->FMT2 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG2->FMT2 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - Data Format 3 */
-    spiREG2->FMT3 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG2->FMT3 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - set interrupt levels */
-    spiREG2->LVL =
-        ( uint32 ) ( ( uint32 ) 0U << 9U )    /* TXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* DESYNC */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* PARERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* TIMEOUT */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* DLENERR */
+    spiREG2->LVL = ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* DESYNC */
+                 | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* PARERR */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* TIMEOUT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* DLENERR */
 
     /** - clear any pending interrupts */
     spiREG2->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    spiREG2->INT0 =
-        ( spiREG2->INT0 & 0xFFFF0000U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) /* TXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )                                 /* RXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 6U )                                 /* OVRNINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U )                                 /* BITERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )                                 /* DESYNC */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U )                                 /* PARERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )                                 /* TIMEOUT */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U );                                /* DLENERR */
+    spiREG2->INT0 = ( spiREG2->INT0 & 0xFFFF0000U ) |
+                    ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
+                  | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* DESYNC */
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* PARERR */
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* TIMEOUT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* DLENERR */
 
     /** @b initialize @b SPI2 @b Port */
 
     /** - SPI2 Port output values */
-    spiREG2->PC3 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG2->PC3 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /** - SPI2 Port direction */
-    spiREG2->PC1 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG2->PC1 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /** - SPI2 Port open drain enable */
-    spiREG2->PC6 =
-        ( uint32 ) ( ( uint32 ) 0U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )   /* SCS[1] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG2->PC6 = ( uint32 ) ( ( uint32 ) 0U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U )   /* SCS[1] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /** - SPI2 Port pullup / pulldown selection */
-    spiREG2->PC8 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
-        | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
+    spiREG2->PC8 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
 
     /** - SPI2 Port pullup / pulldown enable*/
-    spiREG2->PC7 =
-        ( uint32 ) ( ( uint32 ) 0U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )   /* SCS[1] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG2->PC7 = ( uint32 ) ( ( uint32 ) 0U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U )   /* SCS[1] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /* SPI2 set all pins to functional */
-    spiREG2->PC0 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
-        | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
+    spiREG2->PC0 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U )   /* SCS[1] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
 
     /** - Initialize TX and RX data buffer Status */
     g_spiPacket_t[ 1U ].tx_data_status = SPI_READY;
@@ -240,145 +227,132 @@ void spiInit( void )
     spiREG4->GCR0 = 1U;
 
     /** SPI4 master mode and clock configuration */
-    spiREG4->GCR1 =
-        ( spiREG4->GCR1 & 0xFFFFFFFCU ) |
-        ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
-          | 1U );                            /* MASTER */
+    spiREG4->GCR1 = ( spiREG4->GCR1 & 0xFFFFFFFCU ) |
+                    ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+                      | 1U );                            /* MASTER */
 
     /** SPI4 enable pin configuration */
-    spiREG4->INT0 =
-        ( spiREG4->INT0 & 0xFEFFFFFFU ) | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
-                                                                                  HIGHZ */
+    spiREG4->INT0 = ( spiREG4->INT0 & 0xFEFFFFFFU ) |
+                    ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+                                                            HIGHZ */
 
     /** - Delays */
-    spiREG4->DELAY =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )   /* C2TDELAY */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U ) /* T2CDELAY */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* T2EDELAY */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* C2EDELAY */
+    spiREG4->DELAY = ( uint32 ) ( ( uint32 ) 0U << 24U ) /* C2TDELAY */
+                   | ( uint32 ) ( ( uint32 ) 0U << 16U ) /* T2CDELAY */
+                   | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* T2EDELAY */
+                   | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* C2EDELAY */
 
     /** - Data Format 0 */
-    spiREG4->FMT0 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG4->FMT0 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - Data Format 1 */
-    spiREG4->FMT1 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG4->FMT1 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - Data Format 2 */
-    spiREG4->FMT2 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG4->FMT2 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - Data Format 3 */
-    spiREG4->FMT3 =
-        ( uint32 ) ( ( uint32 ) 0U << 24U )    /* wdelay */
-        | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
-        | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
-        | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
-        | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
-        | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
-        | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
+    spiREG4->FMT3 = ( uint32 ) ( ( uint32 ) 0U << 24U )  /* wdelay */
+                  | ( uint32 ) ( ( uint32 ) 0U << 23U )  /* parity Polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 22U )  /* parity enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 21U )  /* wait on enable */
+                  | ( uint32 ) ( ( uint32 ) 0U << 20U )  /* shift direction */
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )  /* clock polarity */
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )  /* clock phase */
+                  | ( uint32 ) ( ( uint32 ) 109U << 8U ) /* baudrate prescale */
+                  | ( uint32 ) ( ( uint32 ) 16U << 0U ); /* data word length */
 
     /** - set interrupt levels */
-    spiREG4->LVL =
-        ( uint32 ) ( ( uint32 ) 0U << 9U )    /* TXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* DESYNC */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* PARERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* TIMEOUT */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* DLENERR */
+    spiREG4->LVL = ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* DESYNC */
+                 | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* PARERR */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* TIMEOUT */
+                 | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* DLENERR */
 
     /** - clear any pending interrupts */
     spiREG4->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    spiREG4->INT0 =
-        ( spiREG4->INT0 & 0xFFFF0000U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) /* TXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )                                 /* RXINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 6U )                                 /* OVRNINT */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U )                                 /* BITERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )                                 /* DESYNC */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U )                                 /* PARERR */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )                                 /* TIMEOUT */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U );                                /* DLENERR */
+    spiREG4->INT0 = ( spiREG4->INT0 & 0xFFFF0000U ) |
+                    ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
+                  | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* DESYNC */
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* PARERR */
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* TIMEOUT */
+                  | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* DLENERR */
 
     /** @b initialize @b SPI4 @b Port */
 
     /** - SPI4 Port output values */
-    spiREG4->PC3 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG4->PC3 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /** - SPI4 Port direction */
-    spiREG4->PC1 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG4->PC1 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /** - SPI4 Port open drain enable */
-    spiREG4->PC6 =
-        ( uint32 ) ( ( uint32 ) 0U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG4->PC6 = ( uint32 ) ( ( uint32 ) 0U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /** - SPI4 Port pullup / pulldown selection */
-    spiREG4->PC8 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
+    spiREG4->PC8 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
 
     /** - SPI4 Port pullup / pulldown enable*/
-    spiREG4->PC7 =
-        ( uint32 ) ( ( uint32 ) 0U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
+    spiREG4->PC7 = ( uint32 ) ( ( uint32 ) 0U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 0U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 0U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 0U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 0U << 11U ); /* SOMI */
 
     /* SPI4 set all pins to functional */
-    spiREG4->PC0 =
-        ( uint32 ) ( ( uint32 ) 1U << 0U )     /* SCS[0] */
-        | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
-        | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
-        | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
+    spiREG4->PC0 = ( uint32 ) ( ( uint32 ) 1U << 0U )   /* SCS[0] */
+                 | ( uint32 ) ( ( uint32 ) 1U << 8U )   /* ENA */
+                 | ( uint32 ) ( ( uint32 ) 1U << 9U )   /* CLK */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U )  /* SIMO */
+                 | ( uint32 ) ( ( uint32 ) 1U << 11U ); /* SOMI */
 
     /** - Initialize TX and RX data buffer Status */
     g_spiPacket_t[ 3U ].tx_data_status = SPI_READY;
@@ -457,9 +431,8 @@ uint32 spiReceiveData(
         }
 
         /*SAFETYMCUSW 51 S MR:12.3 <APPROVED> "Needs shifting for 32-bit value" */
-        spi->DAT1 =
-            ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
-            ( WDelay ) | ( Chip_Select_Hold ) | ( 0x00000000U );
+        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
+                    ( WDelay ) | ( Chip_Select_Hold ) | ( 0x00000000U );
 
         /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
         while( ( spi->FLG & 0x00000100U ) != 0x00000100U )
@@ -503,12 +476,13 @@ void spiGetData(
     uint16 * destbuff
 )
 {
-    uint32 index =
-        ( spi == spiREG1 )
-            ? 0U
-            : ( ( spi == spiREG2 )
-                    ? 1U
-                    : ( ( spi == spiREG3 ) ? 2U : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
+    uint32 index = ( spi == spiREG1 )
+                     ? 0U
+                     : ( ( spi == spiREG2 )
+                             ? 1U
+                             : ( ( spi == spiREG3 ) ? 2U
+                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
+                       );
 
     /* USER CODE BEGIN (8) */
     /* USER CODE END */
@@ -572,9 +546,8 @@ uint32 spiTransmitData(
          * allowed in this driver" */
         Tx_Data = *srcbuff;
 
-        spi->DAT1 =
-            ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
-            ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
+        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
+                    ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
         /*SAFETYMCUSW 567 S MR:17.1,17.4 <APPROVED> "Pointer increment needed" */
         srcbuff++;
 
@@ -618,12 +591,13 @@ void spiSendData(
     uint16 * srcbuff
 )
 {
-    uint32 index =
-        ( spi == spiREG1 )
-            ? 0U
-            : ( ( spi == spiREG2 )
-                    ? 1U
-                    : ( ( spi == spiREG3 ) ? 2U : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
+    uint32 index = ( spi == spiREG1 )
+                     ? 0U
+                     : ( ( spi == spiREG2 )
+                             ? 1U
+                             : ( ( spi == spiREG3 ) ? 2U
+                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
+                       );
 
     /* USER CODE BEGIN (12) */
     /* USER CODE END */
@@ -688,9 +662,8 @@ uint32 spiTransmitAndReceiveData(
          * allowed in this driver" */
         Tx_Data = *srcbuff;
 
-        spi->DAT1 =
-            ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
-            ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
+        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
+                    ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
         /*SAFETYMCUSW 567 S MR:17.1,17.4 <APPROVED> "Pointer increment needed" */
         srcbuff++;
 
@@ -742,12 +715,13 @@ void spiSendAndGetData(
     /* USER CODE BEGIN (17) */
     /* USER CODE END */
 
-    uint32 index =
-        ( spi == spiREG1 )
-            ? 0U
-            : ( ( spi == spiREG2 )
-                    ? 1U
-                    : ( ( spi == spiREG3 ) ? 2U : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
+    uint32 index = ( spi == spiREG1 )
+                     ? 0U
+                     : ( ( spi == spiREG2 )
+                             ? 1U
+                             : ( ( spi == spiREG3 ) ? 2U
+                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
+                       );
 
     g_spiPacket_t[ index ].tx_length = blocksize;
     g_spiPacket_t[ index ].rx_length = blocksize;
@@ -779,12 +753,13 @@ SpiDataStatus_t SpiTxStatus( spiBASE_t * spi )
     /* USER CODE BEGIN (19) */
     /* USER CODE END */
 
-    uint32 index =
-        ( spi == spiREG1 )
-            ? 0U
-            : ( ( spi == spiREG2 )
-                    ? 1U
-                    : ( ( spi == spiREG3 ) ? 2U : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
+    uint32 index = ( spi == spiREG1 )
+                     ? 0U
+                     : ( ( spi == spiREG2 )
+                             ? 1U
+                             : ( ( spi == spiREG3 ) ? 2U
+                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
+                       );
 
     return ( g_spiPacket_t[ index ].tx_data_status );
 }
@@ -808,12 +783,13 @@ SpiDataStatus_t SpiRxStatus( spiBASE_t * spi )
     /* USER CODE BEGIN (21) */
     /* USER CODE END */
 
-    uint32 index =
-        ( spi == spiREG1 )
-            ? 0U
-            : ( ( spi == spiREG2 )
-                    ? 1U
-                    : ( ( spi == spiREG3 ) ? 2U : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
+    uint32 index = ( spi == spiREG1 )
+                     ? 0U
+                     : ( ( spi == spiREG2 )
+                             ? 1U
+                             : ( ( spi == spiREG3 ) ? 2U
+                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
+                       );
 
     return ( g_spiPacket_t[ index ].rx_data_status );
 }
@@ -840,8 +816,8 @@ void spiEnableLoopback( spiBASE_t * spi, loopBackType_t Loopbacktype )
     spi->IOLPKTSTCR = 0U;
 
     /* Enable Loopback either in Analog or Digital Mode */
-    spi->IOLPKTSTCR =
-        ( uint32 ) 0x00000A00U | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
+    spi->IOLPKTSTCR = ( uint32 ) 0x00000A00U |
+                      ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
 
     /* USER CODE BEGIN (24) */
     /* USER CODE END */

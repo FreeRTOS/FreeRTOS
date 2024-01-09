@@ -65,9 +65,8 @@ void peripheral_Frame_Protection_Set( peripheral_Frame_Select_t peripheral_Frame
     uint32 Quarant_selct;
 
     chip_select_grp = ( peripheral_Frame.Peripheral_CS >> 3U );
-    Quarant_selct =
-        ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
-                     << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
+    Quarant_selct = ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
+                                 << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
 
     if( chip_select_grp >= 3U )
     {
@@ -111,9 +110,8 @@ void peripheral_Frame_Protection_Clr( peripheral_Frame_Select_t peripheral_Frame
     uint32 Quarant_selct;
 
     chip_select_grp = ( peripheral_Frame.Peripheral_CS >> 3U );
-    Quarant_selct =
-        ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
-                     << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
+    Quarant_selct = ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
+                                 << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
 
     if( chip_select_grp >= 3U )
     {
@@ -157,9 +155,8 @@ void peripheral_Frame_Powerdown_Set( peripheral_Frame_Select_t peripheral_Frame 
     uint32 Quarant_selct;
 
     chip_select_grp = ( peripheral_Frame.Peripheral_CS >> 3U );
-    Quarant_selct =
-        ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
-                     << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
+    Quarant_selct = ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
+                                 << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
 
     if( chip_select_grp >= 3U )
     {
@@ -203,9 +200,8 @@ void peripheral_Frame_Powerdown_Clr( peripheral_Frame_Select_t peripheral_Frame 
     uint32 Quarant_selct;
 
     chip_select_grp = ( peripheral_Frame.Peripheral_CS >> 3U );
-    Quarant_selct =
-        ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
-                     << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
+    Quarant_selct = ( uint32 ) ( peripheral_Frame.Peripheral_Quadrant
+                                 << ( ( peripheral_Frame.Peripheral_CS & 7U ) << 2U ) );
 
     if( chip_select_grp >= 3U )
     {

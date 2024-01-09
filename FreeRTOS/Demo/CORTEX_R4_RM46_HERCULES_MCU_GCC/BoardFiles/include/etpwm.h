@@ -519,11 +519,11 @@ typedef struct etpwm_config_reg
 #define ETPWM1_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM1_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM1_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM1_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM1_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )
@@ -564,11 +564,11 @@ typedef struct etpwm_config_reg
 #define ETPWM2_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM2_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM2_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM2_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM2_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )
@@ -609,11 +609,11 @@ typedef struct etpwm_config_reg
 #define ETPWM3_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM3_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM3_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM3_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM3_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )
@@ -654,11 +654,11 @@ typedef struct etpwm_config_reg
 #define ETPWM4_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM4_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM4_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM4_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM4_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )
@@ -699,11 +699,11 @@ typedef struct etpwm_config_reg
 #define ETPWM5_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM5_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM5_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM5_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM5_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )
@@ -744,11 +744,11 @@ typedef struct etpwm_config_reg
 #define ETPWM6_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM6_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM6_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM6_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM6_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )
@@ -789,11 +789,11 @@ typedef struct etpwm_config_reg
 #define ETPWM7_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM7_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM7_ETSEL_CONFIGVALUE                                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) |                 \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |                    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) \
-    )
+#define ETPWM7_ETSEL_CONFIGVALUE                                         \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
+      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
+      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
+      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
 #define ETPWM7_ETPS_CONFIGVALUE                            \
     ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
       ( uint16 ) ( ( uint16 ) 1U << 12U ) )

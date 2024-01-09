@@ -87,9 +87,9 @@ void linInit( void )
      *     - Enable/Disable parity
      *     - Disable data length control in ID4 and ID5
      */
-    linREG->GCR1 |=
-        0x03000C40U | ( uint32 ) ( ( uint32 ) 1U << 12U ) |
-        ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 5U );
+    linREG->GCR1 |= 0x03000C40U | ( uint32 ) ( ( uint32 ) 1U << 12U ) |
+                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
+                    ( uint32 ) ( ( uint32 ) 1U << 5U );
 
     /** - Setup maximum baud rate prescaler */
     linREG->MBRSR = ( uint32 ) 4954U;
@@ -104,8 +104,8 @@ void linInit( void )
      *     - Sync delimiter
      *     - Sync break extension
      */
-    linREG->COMP =
-        ( ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 8U ) | ( ( uint32 ) 13U - 13U ) );
+    linREG
+        ->COMP = ( ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 8U ) | ( ( uint32 ) 13U - 13U ) );
 
     /** - Setup response length */
     linREG->FORMAT =
@@ -436,14 +436,13 @@ uint32 linIsRxReady( linBASE_t * lin )
 /* Requirements : HL_SR263 */
 uint32 linTxRxError( linBASE_t * lin )
 {
-    uint32 status =
-        lin->FLR &
-        ( LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT | LIN_NRE_INT | LIN_FE_INT |
-          LIN_OE_INT | LIN_PE_INT | LIN_TOA3WUS_INT | LIN_TOAWUS_INT | LIN_TO_INT );
+    uint32 status = lin->FLR & ( LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT |
+                                 LIN_NRE_INT | LIN_FE_INT | LIN_OE_INT | LIN_PE_INT |
+                                 LIN_TOA3WUS_INT | LIN_TOAWUS_INT | LIN_TO_INT );
 
-    lin->FLR =
-        LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT | LIN_NRE_INT | LIN_FE_INT |
-        LIN_OE_INT | LIN_PE_INT | LIN_TOA3WUS_INT | LIN_TOAWUS_INT | LIN_TO_INT;
+    lin->FLR = LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT | LIN_NRE_INT |
+               LIN_FE_INT | LIN_OE_INT | LIN_PE_INT | LIN_TOA3WUS_INT | LIN_TOAWUS_INT |
+               LIN_TO_INT;
 
     /* USER CODE BEGIN (20) */
     /* USER CODE END */

@@ -210,17 +210,17 @@ typedef struct lin_config_reg
     ( 0x03000CC0U | ( uint32 ) ( ( uint32 ) 1U << 12U ) | \
       ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) )
 #define LIN_GCR2_CONFIGVALUE 0x00000000U
-#define LIN_SETINTLVL_CONFIGVALUE                                                       \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U |             \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U |             \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
-    )
+#define LIN_SETINTLVL_CONFIGVALUE                                           \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
+      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
+      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
+      0x00000000U )
 
-#define LIN_SETINT_CONFIGVALUE                                                          \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U |             \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U |             \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
-    )
+#define LIN_SETINT_CONFIGVALUE                                              \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
+      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
+      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
+      0x00000000U )
 
 #define LIN_FORMAT_CONFIGVALUE ( ( uint32 ) ( ( uint32 ) ( 8U - 1U ) << 16U ) )
 #define LIN_BRSR_CONFIGVALUE   ( 343U )

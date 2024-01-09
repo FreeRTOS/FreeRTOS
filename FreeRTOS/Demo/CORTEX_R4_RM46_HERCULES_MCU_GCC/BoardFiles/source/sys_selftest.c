@@ -664,9 +664,8 @@ boolean efcStuckZeroTest( void )
     uint32 ESM_ESTATUS4, ESM_ESTATUS1;
 
     boolean result = FALSE;
-    uint32 error_checks =
-        EFC_INSTRUCTION_INFO_EN | EFC_INSTRUCTION_ERROR_EN | EFC_AUTOLOAD_ERROR_EN |
-        EFC_SELF_TEST_ERROR_EN;
+    uint32 error_checks = EFC_INSTRUCTION_INFO_EN | EFC_INSTRUCTION_ERROR_EN |
+                          EFC_AUTOLOAD_ERROR_EN | EFC_SELF_TEST_ERROR_EN;
 
     /* configure the output enable for auto load error , instruction info,
      *   instruction error, and self test error using boundary register
@@ -2235,8 +2234,8 @@ void fmcBus1ParityCheck( void )
     flashWREG->FEDACSTATUS = 0x400U;
 
     /* Enable Parity Error */
-    flashWREG->FPAROVR =
-        ( uint32 ) ( ( uint32 ) 0x5U << 9U ) | ( uint32 ) ( ( uint32 ) 0x5U << 12U );
+    flashWREG->FPAROVR = ( uint32 ) ( ( uint32 ) 0x5U << 9U ) |
+                         ( uint32 ) ( ( uint32 ) 0x5U << 12U );
 
     /* set Diag test mode */
     flashWREG->FDIAGCTRL = 0x00050000U | 0x00000007U;

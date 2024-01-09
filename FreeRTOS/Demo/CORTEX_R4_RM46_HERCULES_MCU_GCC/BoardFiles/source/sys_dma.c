@@ -137,20 +137,23 @@ void dmaSetCtrlPacket( uint32 channel, g_dmaCTRL g_dmaCTRLPKT )
 
     dmaRAMREG->PCP[ channel ].IDADDR = g_dmaCTRLPKT.DADD;
 
-    dmaRAMREG->PCP[ channel ].ITCOUNT = ( g_dmaCTRLPKT.FRCNT << 16U ) | g_dmaCTRLPKT.ELCNT;
+    dmaRAMREG->PCP[ channel ].ITCOUNT = ( g_dmaCTRLPKT.FRCNT << 16U ) |
+                                        g_dmaCTRLPKT.ELCNT;
 
-    dmaRAMREG->PCP[ channel ].CHCTRL =
-        ( g_dmaCTRLPKT.RDSIZE << 14U ) | ( g_dmaCTRLPKT.WRSIZE << 12U ) |
-        ( g_dmaCTRLPKT.TTYPE << 8U ) | ( g_dmaCTRLPKT.ADDMODERD << 3U ) |
-        ( g_dmaCTRLPKT.ADDMODEWR << 1U ) | ( g_dmaCTRLPKT.AUTOINIT );
+    dmaRAMREG->PCP[ channel ].CHCTRL = ( g_dmaCTRLPKT.RDSIZE << 14U ) |
+                                       ( g_dmaCTRLPKT.WRSIZE << 12U ) |
+                                       ( g_dmaCTRLPKT.TTYPE << 8U ) |
+                                       ( g_dmaCTRLPKT.ADDMODERD << 3U ) |
+                                       ( g_dmaCTRLPKT.ADDMODEWR << 1U ) |
+                                       ( g_dmaCTRLPKT.AUTOINIT );
 
     dmaRAMREG->PCP[ channel ].CHCTRL |= ( g_dmaCTRLPKT.CHCTRL << 16U );
 
-    dmaRAMREG->PCP[ channel ].EIOFF =
-        ( g_dmaCTRLPKT.ELDOFFSET << 16U ) | ( g_dmaCTRLPKT.ELSOFFSET );
+    dmaRAMREG->PCP[ channel ].EIOFF = ( g_dmaCTRLPKT.ELDOFFSET << 16U ) |
+                                      ( g_dmaCTRLPKT.ELSOFFSET );
 
-    dmaRAMREG->PCP[ channel ].FIOFF =
-        ( g_dmaCTRLPKT.FRDOFFSET << 16U ) | ( g_dmaCTRLPKT.FRSOFFSET );
+    dmaRAMREG->PCP[ channel ].FIOFF = ( g_dmaCTRLPKT.FRDOFFSET << 16U ) |
+                                      ( g_dmaCTRLPKT.FRSOFFSET );
 
     i = channel >> 3U;         /* Find the register to write                    */
     j = channel - ( i << 3U ); /* Find the offset of the 4th bit                */

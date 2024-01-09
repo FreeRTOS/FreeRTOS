@@ -258,8 +258,10 @@ BaseType_t prvCreateBlinkyTasks( void )
     {
         sci_print( "Created the Queue Receive Task\r\n" );
         /* Create an unprivileged task with RW access to ucSharedMemory. */
-        xReturn =
-            xTaskCreateRestrictedStatic( &( xQueueSendTaskParameters ), &xSendTaskHandle );
+        xReturn = xTaskCreateRestrictedStatic(
+            &( xQueueSendTaskParameters ),
+            &xSendTaskHandle
+        );
         if( pdPASS == xReturn )
         {
             sci_print( "Created the Queue Send Task\r\n" );

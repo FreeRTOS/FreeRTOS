@@ -87,15 +87,14 @@ void sciInit( void )
     sciREG->CLEARINTLVL = 0xFFFFFFFFU;
 
     /** - global control 1 */
-    sciREG->GCR1 =
-        ( uint32 ) ( ( uint32 ) 1U << 25U )           /* enable transmit */
-        | ( uint32 ) ( ( uint32 ) 1U << 24U )         /* enable receive */
-        | ( uint32 ) ( ( uint32 ) 1U << 5U )          /* internal clock (device has no
-                                                         clock pin) */
-        | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) /* number of stop bits */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )          /* even parity, otherwise odd */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U )          /* enable parity */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U );         /* asynchronous timing mode */
+    sciREG->GCR1 = ( uint32 ) ( ( uint32 ) 1U << 25U ) /* enable transmit */
+                 | ( uint32 ) ( ( uint32 ) 1U << 24U ) /* enable receive */
+                 | ( uint32 ) ( ( uint32 ) 1U << 5U )  /* internal clock (device has no
+                                                          clock pin) */
+                 | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) /* number of stop bits */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* even parity, otherwise odd */
+                 | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* enable parity */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* asynchronous timing mode */
 
     /** - set baudrate */
     sciREG->BRS = 59U; /* baudrate */
@@ -104,53 +103,45 @@ void sciInit( void )
     sciREG->FORMAT = 8U - 1U; /* length */
 
     /** - set SCI pins functional mode */
-    sciREG->PIO0 =
-        ( uint32 ) ( ( uint32 ) 1U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
+    sciREG->PIO0 = ( uint32 ) ( ( uint32 ) 1U << 2U )  /* tx pin */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
 
     /** - set SCI pins default output value */
-    sciREG->PIO3 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    sciREG->PIO3 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins output direction */
-    sciREG->PIO1 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    sciREG->PIO1 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins open drain enable */
-    sciREG->PIO6 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    sciREG->PIO6 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins pullup/pulldown enable */
-    sciREG->PIO7 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    sciREG->PIO7 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins pullup/pulldown select */
-    sciREG->PIO8 =
-        ( uint32 ) ( ( uint32 ) 1U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
+    sciREG->PIO8 = ( uint32 ) ( ( uint32 ) 1U << 2U )  /* tx pin */
+                 | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
 
     /** - set interrupt level */
-    sciREG->SETINTLVL =
-        ( uint32 ) ( ( uint32 ) 0U << 26U )   /* Framing error */
-        | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
-        | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* Transmit */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* Break detect */
+    sciREG->SETINTLVL = ( uint32 ) ( ( uint32 ) 0U << 26U ) /* Framing error */
+                      | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
+                      | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
+                      | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
+                      | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* Transmit */
+                      | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
+                      | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* Break detect */
 
     /** - set interrupt enable */
-    sciREG->SETINT =
-        ( uint32 ) ( ( uint32 ) 0U << 26U )   /* Framing error */
-        | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
-        | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
-        | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* Break detect */
+    sciREG->SETINT = ( uint32 ) ( ( uint32 ) 0U << 26U ) /* Framing error */
+                   | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
+                   | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
+                   | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
+                   | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
+                   | ( uint32 ) ( ( uint32 ) 0U << 0U ); /* Break detect */
 
     /** - initialize global transfer variables */
     g_sciTransfer_t[ 0U ].mode = ( uint32 ) 0U << 8U;
@@ -171,16 +162,15 @@ void sciInit( void )
     scilinREG->CLEARINTLVL = 0xFFFFFFFFU;
 
     /** - global control 1 */
-    scilinREG->GCR1 =
-        ( uint32 ) ( ( uint32 ) 1U << 25U )           /* enable transmit */
-        | ( uint32 ) ( ( uint32 ) 1U << 24U )         /* enable receive */
-        | ( uint32 ) ( ( uint32 ) 1U << 5U )          /* internal clock (device has
-                                                         no clock pin) */
-        | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) /* number of stop bits
-                                                       */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )          /* even parity, otherwise odd */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U )          /* enable parity */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U );         /* asynchronous timing mode */
+    scilinREG->GCR1 = ( uint32 ) ( ( uint32 ) 1U << 25U ) /* enable transmit */
+                    | ( uint32 ) ( ( uint32 ) 1U << 24U ) /* enable receive */
+                    | ( uint32 ) ( ( uint32 ) 1U << 5U )  /* internal clock (device has
+                                                             no clock pin) */
+                    | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) /* number of stop bits
+                                                                   */
+                    | ( uint32 ) ( ( uint32 ) 0U << 3U )  /* even parity, otherwise odd */
+                    | ( uint32 ) ( ( uint32 ) 0U << 2U )  /* enable parity */
+                    | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* asynchronous timing mode */
 
     /** - set baudrate */
     scilinREG->BRS = 59U; /* baudrate */
@@ -189,53 +179,45 @@ void sciInit( void )
     scilinREG->FORMAT = 8U - 1U; /* length */
 
     /** - set SCI pins functional mode */
-    scilinREG->PIO0 =
-        ( uint32 ) ( ( uint32 ) 1U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
+    scilinREG->PIO0 = ( uint32 ) ( ( uint32 ) 1U << 2U )  /* tx pin */
+                    | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
 
     /** - set SCI pins default output value */
-    scilinREG->PIO3 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    scilinREG->PIO3 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                    | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins output direction */
-    scilinREG->PIO1 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    scilinREG->PIO1 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                    | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins open drain enable */
-    scilinREG->PIO6 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    scilinREG->PIO6 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                    | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins pullup/pulldown enable */
-    scilinREG->PIO7 =
-        ( uint32 ) ( ( uint32 ) 0U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
+    scilinREG->PIO7 = ( uint32 ) ( ( uint32 ) 0U << 2U )  /* tx pin */
+                    | ( uint32 ) ( ( uint32 ) 0U << 1U ); /* rx pin */
 
     /** - set SCI pins pullup/pulldown select */
-    scilinREG->PIO8 =
-        ( uint32 ) ( ( uint32 ) 1U << 2U )    /* tx pin */
-        | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
+    scilinREG->PIO8 = ( uint32 ) ( ( uint32 ) 1U << 2U )  /* tx pin */
+                    | ( uint32 ) ( ( uint32 ) 1U << 1U ); /* rx pin */
 
     /** - set interrupt level */
-    scilinREG->SETINTLVL =
-        ( uint32 ) ( ( uint32 ) 0U << 26U )   /* Framing error */
-        | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
-        | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
-        | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* Transmit */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
-        | ( uint32 ) ( ( uint32 ) 0U );       /* Break detect */
+    scilinREG->SETINTLVL = ( uint32 ) ( ( uint32 ) 0U << 26U ) /* Framing error */
+                         | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
+                         | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
+                         | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
+                         | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* Transmit */
+                         | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
+                         | ( uint32 ) ( ( uint32 ) 0U );       /* Break detect */
 
     /** - set interrupt enable */
-    scilinREG->SETINT =
-        ( uint32 ) ( ( uint32 ) 0U << 26U )   /* Framing error */
-        | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
-        | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
-        | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
-        | ( uint32 ) ( ( uint32 ) 0U );       /* Break detect */
+    scilinREG->SETINT = ( uint32 ) ( ( uint32 ) 0U << 26U ) /* Framing error */
+                      | ( uint32 ) ( ( uint32 ) 0U << 25U ) /* Overrun error */
+                      | ( uint32 ) ( ( uint32 ) 0U << 24U ) /* Parity error */
+                      | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* Receive */
+                      | ( uint32 ) ( ( uint32 ) 0U << 1U )  /* Wakeup */
+                      | ( uint32 ) ( ( uint32 ) 0U );       /* Break detect */
 
     /** - initialize global transfer variables */
     g_sciTransfer_t[ 1U ].mode = ( uint32 ) 0U << 8U;
@@ -554,8 +536,7 @@ void sciReceive( sciBASE_t * sci, uint32 length, uint8 * data )
         uint32 index = ( sci == sciREG ) ? 0U : 1U;
 
         /* clear error flags */
-        sci->FLR =
-            ( ( uint32 ) SCI_FE_INT | ( uint32 ) SCI_OE_INT | ( uint32 ) SCI_PE_INT );
+        sci->FLR = ( ( uint32 ) SCI_FE_INT | ( uint32 ) SCI_OE_INT | ( uint32 ) SCI_PE_INT );
 
         g_sciTransfer_t[ index ].rx_length = length;
         /*SAFETYMCUSW 45 D MR:21.1 <APPROVED> "Valid non NULL input parameters are only
@@ -606,7 +587,8 @@ void sciEnableLoopback( sciBASE_t * sci, loopBackType_t Loopbacktype )
     sci->IODFTCTRL = 0U;
 
     /* Enable Loopback either in Analog or Digital Mode */
-    sci->IODFTCTRL = ( uint32 ) 0x00000A00U | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
+    sci->IODFTCTRL = ( uint32 ) 0x00000A00U |
+                     ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
 
     /* USER CODE BEGIN (20) */
     /* USER CODE END */

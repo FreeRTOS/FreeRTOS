@@ -283,10 +283,10 @@ BaseType_t xCreateMPUTasks( void )
         xReturn = pdFAIL;
     }
 
-    uint32_t readMemoryPermissions =
+    uint32_t ulReadMemoryPermissions =
         portMPU_PRIV_RW_USER_RO_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED;
 
-    uint32_t writeMemoryPermissions =
+    uint32_t ulWriteMemoryPermissions =
         portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED;
 
     ulStaticUnprotectedData = 0xC3;
@@ -303,45 +303,45 @@ BaseType_t xCreateMPUTasks( void )
                                         /* First Configurable Region 0 */
                                         { ( void * ) ucSharedMemory,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 1 */
                                         { ( void * ) ucSharedMemory1,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 2 */
                                         { ( void * ) ucSharedMemory2,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 3 */
                                         { ( void * ) ucSharedMemory3,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 4 */
                                         { ( void * ) ucSharedMemory4,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
     #if( configTOTAL_MPU_REGIONS == 16 )
                                         /* Region 5 */
                                         { ( void * ) ucSharedMemory5,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 6 */
                                         { ( void * ) ucSharedMemory6,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 7 */
                                         { ( void * ) ucSharedMemory7,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
                                         /* Region 8 */
                                         { ( void * ) ucSharedMemory8,
                                           SHARED_MEMORY_SIZE,
-                                          readMemoryPermissions },
+                                          ulReadMemoryPermissions },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
                                         /* Last Configurable Region */
                                         { ( void * ) ucROTaskFaultTracker,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                     } };
 
     TaskParameters_t
@@ -356,45 +356,45 @@ BaseType_t xCreateMPUTasks( void )
                                         /* First Configurable Region 5 */
                                         { ( void * ) ucSharedMemory,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 6 */
                                         { ( void * ) ucSharedMemory1,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 7 */
                                         { ( void * ) ucSharedMemory2,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 8 */
                                         { ( void * ) ucSharedMemory3,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 9 */
                                         { ( void * ) ucSharedMemory4,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
     #if( configTOTAL_MPU_REGIONS == 16 )
                                         /* Region 10 */
                                         { ( void * ) ucSharedMemory5,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 11 */
                                         { ( void * ) ucSharedMemory6,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 12 */
                                         { ( void * ) ucSharedMemory7,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                         /* Region 13 */
                                         { ( void * ) ucSharedMemory8,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
                                         /* Last Configurable Region */
                                         { ( void * ) ucROTaskFaultTracker,
                                           SHARED_MEMORY_SIZE,
-                                          writeMemoryPermissions },
+                                          ulWriteMemoryPermissions },
                                     } };
 
     if( pdPASS == xReturn )

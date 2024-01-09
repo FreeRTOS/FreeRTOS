@@ -92,12 +92,10 @@ uint32 _errata_SSWF021_45_both_plls( uint32 count )
         systemREG2->PLLCTL3 = 0x20001A00U;
         systemREG1->CSDISCLR = SYS_CLKSRC_PLL1 | SYS_CLKSRC_PLL2;
         /* Check for (PLL1 valid or PLL1 slip) and (PLL2 valid or PLL2 slip) */
-        while(
-            ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL1 ) == 0U ) &&
-              ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) == 0U ) ) ||
-            ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL2 ) == 0U ) &&
-              ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) == 0U ) )
-        )
+        while( ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL1 ) == 0U ) &&
+                 ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) == 0U ) ) ||
+               ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL2 ) == 0U ) &&
+                 ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) == 0U ) ) )
         {
             /* Wait */
         }
@@ -297,11 +295,10 @@ static uint32 check_frequency( uint32 cnt1_clksrc )
 {
     /* Setup DCC1 */
     /** DCC1 Global Control register configuration */
-    dccREG1->GCTRL =
-        ( uint32 ) 0x5U |                      /** Disable  DCC1 */
-        ( uint32 ) ( ( uint32 ) 0x5U << 4U ) | /** No Error Interrupt */
-        ( uint32 ) ( ( uint32 ) 0xAU << 8U ) | /** Single Shot mode */
-        ( uint32 ) ( ( uint32 ) 0x5U << 12U ); /** No Done Interrupt */
+    dccREG1->GCTRL = ( uint32 ) 0x5U |                      /** Disable  DCC1 */
+                     ( uint32 ) ( ( uint32 ) 0x5U << 4U ) | /** No Error Interrupt */
+                     ( uint32 ) ( ( uint32 ) 0xAU << 8U ) | /** Single Shot mode */
+                     ( uint32 ) ( ( uint32 ) 0x5U << 12U ); /** No Done Interrupt */
     /* Clear ERR and DONE bits */
     dccREG1->STAT = 3U;
     /** DCC1 Clock0 Counter Seed value configuration */
@@ -311,19 +308,17 @@ static uint32 check_frequency( uint32 cnt1_clksrc )
     /** DCC1 Clock1 Counter Seed value configuration */
     dccREG1->CNT1SEED = 972U;
     /** DCC1 Clock1 Source 1 Select */
-    dccREG1->CNT1CLKSRC =
-        ( uint32 ) ( ( uint32 ) 10U << 12U ) | /** DCC Enable / Disable
-                                                  Key */
-        ( uint32 ) cnt1_clksrc;                /** DCC1 Clock Source 1 */
+    dccREG1->CNT1CLKSRC = ( uint32 ) ( ( uint32 ) 10U << 12U ) | /** DCC Enable / Disable
+                                                                    Key */
+                          ( uint32 ) cnt1_clksrc; /** DCC1 Clock Source 1 */
 
     dccREG1->CNT0CLKSRC = ( uint32 ) DCC1_CNT0_OSCIN; /** DCC1 Clock Source 0 */
 
     /** DCC1 Global Control register configuration */
-    dccREG1->GCTRL =
-        ( uint32 ) 0xAU |                      /** Enable  DCC1 */
-        ( uint32 ) ( ( uint32 ) 0x5U << 4U ) | /** No Error Interrupt */
-        ( uint32 ) ( ( uint32 ) 0xAU << 8U ) | /** Single Shot mode */
-        ( uint32 ) ( ( uint32 ) 0x5U << 12U ); /** No Done Interrupt */
+    dccREG1->GCTRL = ( uint32 ) 0xAU |                      /** Enable  DCC1 */
+                     ( uint32 ) ( ( uint32 ) 0x5U << 4U ) | /** No Error Interrupt */
+                     ( uint32 ) ( ( uint32 ) 0xAU << 8U ) | /** Single Shot mode */
+                     ( uint32 ) ( ( uint32 ) 0x5U << 12U ); /** No Done Interrupt */
     while( dccREG1->STAT == 0U )
     {
         /* Wait */

@@ -110,20 +110,23 @@ void dmaSetCtrlPacket( dmaChannel_t channel, g_dmaCTRL g_dmaCTRLPKT )
 
     dmaRAMREG->PCP[ channel ].IDADDR = g_dmaCTRLPKT.DADD;
 
-    dmaRAMREG->PCP[ channel ].ITCOUNT = ( g_dmaCTRLPKT.FRCNT << 16U ) | g_dmaCTRLPKT.ELCNT;
+    dmaRAMREG->PCP[ channel ].ITCOUNT = ( g_dmaCTRLPKT.FRCNT << 16U ) |
+                                        g_dmaCTRLPKT.ELCNT;
 
-    dmaRAMREG->PCP[ channel ].CHCTRL =
-        ( g_dmaCTRLPKT.RDSIZE << 14U ) | ( g_dmaCTRLPKT.WRSIZE << 12U ) |
-        ( g_dmaCTRLPKT.TTYPE << 8U ) | ( g_dmaCTRLPKT.ADDMODERD << 3U ) |
-        ( g_dmaCTRLPKT.ADDMODEWR << 1U ) | ( g_dmaCTRLPKT.AUTOINIT );
+    dmaRAMREG->PCP[ channel ].CHCTRL = ( g_dmaCTRLPKT.RDSIZE << 14U ) |
+                                       ( g_dmaCTRLPKT.WRSIZE << 12U ) |
+                                       ( g_dmaCTRLPKT.TTYPE << 8U ) |
+                                       ( g_dmaCTRLPKT.ADDMODERD << 3U ) |
+                                       ( g_dmaCTRLPKT.ADDMODEWR << 1U ) |
+                                       ( g_dmaCTRLPKT.AUTOINIT );
 
     dmaRAMREG->PCP[ channel ].CHCTRL |= ( g_dmaCTRLPKT.CHCTRL << 16U );
 
-    dmaRAMREG->PCP[ channel ].EIOFF =
-        ( g_dmaCTRLPKT.ELDOFFSET << 16U ) | ( g_dmaCTRLPKT.ELSOFFSET );
+    dmaRAMREG->PCP[ channel ].EIOFF = ( g_dmaCTRLPKT.ELDOFFSET << 16U ) |
+                                      ( g_dmaCTRLPKT.ELSOFFSET );
 
-    dmaRAMREG->PCP[ channel ].FIOFF =
-        ( g_dmaCTRLPKT.FRDOFFSET << 16U ) | ( g_dmaCTRLPKT.FRSOFFSET );
+    dmaRAMREG->PCP[ channel ].FIOFF = ( g_dmaCTRLPKT.FRDOFFSET << 16U ) |
+                                      ( g_dmaCTRLPKT.FRSOFFSET );
 
     i = channel / 8U;     /* Find the register to write */
     j = channel % 8U;     /* Find the offset            */
@@ -265,27 +268,23 @@ void dmaEnableInterrupt( dmaChannel_t channel, dmaInterrupt_t inttype, dmaIntGro
     {
         case FTC:
             dmaREG->FTCINTENAS = ( uint32 ) 1U << channel;
-            dmaREG->FTCMAP =
-                ( dmaREG->FTCMAP & ~( ( uint32 ) 1U << channel ) ) |
-                ( ( uint32 ) group << channel );
+            dmaREG->FTCMAP = ( dmaREG->FTCMAP & ~( ( uint32 ) 1U << channel ) ) |
+                             ( ( uint32 ) group << channel );
             break;
         case LFS:
             dmaREG->LFSINTENAS = ( uint32 ) 1U << channel;
-            dmaREG->LFSMAP =
-                ( dmaREG->LFSMAP & ~( ( uint32 ) 1U << channel ) ) |
-                ( ( uint32 ) group << channel );
+            dmaREG->LFSMAP = ( dmaREG->LFSMAP & ~( ( uint32 ) 1U << channel ) ) |
+                             ( ( uint32 ) group << channel );
             break;
         case HBC:
             dmaREG->HBCINTENAS = ( uint32 ) 1U << channel;
-            dmaREG->HBCMAP =
-                ( dmaREG->HBCMAP & ~( ( uint32 ) 1U << channel ) ) |
-                ( ( uint32 ) group << channel );
+            dmaREG->HBCMAP = ( dmaREG->HBCMAP & ~( ( uint32 ) 1U << channel ) ) |
+                             ( ( uint32 ) group << channel );
             break;
         case BTC:
             dmaREG->BTCINTENAS = ( uint32 ) 1U << channel;
-            dmaREG->BTCMAP =
-                ( dmaREG->BTCMAP & ~( ( uint32 ) 1U << channel ) ) |
-                ( ( uint32 ) group << channel );
+            dmaREG->BTCMAP = ( dmaREG->BTCMAP & ~( ( uint32 ) 1U << channel ) ) |
+                             ( ( uint32 ) group << channel );
             break;
         default:
             break;
@@ -425,26 +424,26 @@ void dmaEnableRegion(
         bitpos = region * 8U;
         dmaREG->DMAMPCTRL1 &= ~( uint32 ) ( ( uint32 ) 0xFFU << bitpos );
 
-        dmaREG->DMAMPCTRL1 |=
-            ( ( uint32 ) 1U << bitpos )                    /* Enable the region */
-            | ( ( uint32 ) access << ( bitpos + 1U ) )     /* Set access
-                                                              permission for
-                                                              the region */
-            | ( ( uint32 ) intenable << ( bitpos + 3U ) ); /* Enable or Disable interrupt
-                                                            */
+        dmaREG->DMAMPCTRL1 |= ( ( uint32 ) 1U << bitpos ) /* Enable the region */
+                            | ( ( uint32 ) access << ( bitpos + 1U ) ) /* Set access
+                                                                          permission for
+                                                                          the region */
+                            | ( ( uint32 ) intenable
+                                << ( bitpos + 3U ) ); /* Enable or Disable interrupt
+                                                       */
     }
     else
     {
         bitpos = ( region - 4U ) * 8U;
         dmaREG->DMAMPCTRL2 &= ~( ( uint32 ) 0xFFU << bitpos );
 
-        dmaREG->DMAMPCTRL2 |=
-            ( ( uint32 ) 1U << bitpos )                    /* Enable the region */
-            | ( ( uint32 ) access << ( bitpos + 1U ) )     /* Set access
-                                                              permission for
-                                                              the region */
-            | ( ( uint32 ) intenable << ( bitpos + 3U ) ); /* Enable or Disable interrupt
-                                                            */
+        dmaREG->DMAMPCTRL2 |= ( ( uint32 ) 1U << bitpos ) /* Enable the region */
+                            | ( ( uint32 ) access << ( bitpos + 1U ) ) /* Set access
+                                                                          permission for
+                                                                          the region */
+                            | ( ( uint32 ) intenable
+                                << ( bitpos + 3U ) ); /* Enable or Disable interrupt
+                                                       */
     }
 
     /* USER CODE BEGIN (19) */

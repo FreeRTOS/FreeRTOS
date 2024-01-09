@@ -220,11 +220,9 @@ boolean Dp83640AutoNegotiate( uint32 mdioBaseAddr, uint32 phyAddr, uint16 advVal
     /* Wait till auto negotiation is complete */
     /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
-    while(
-        ( ( ( uint16 ) ( PHY_AUTONEG_INCOMPLETE ) ) ==
-          ( data & ( uint16 ) ( PHY_AUTONEG_STATUS ) ) ) &&
-        ( retVal == TRUE ) && ( phyNegTries > 0U )
-    )
+    while( ( ( ( uint16 ) ( PHY_AUTONEG_INCOMPLETE ) ) ==
+             ( data & ( uint16 ) ( PHY_AUTONEG_STATUS ) ) ) &&
+           ( retVal == TRUE ) && ( phyNegTries > 0U ) )
     {
         ( void ) MDIOPhyRegRead( mdioBaseAddr, phyAddr, ( uint32 ) PHY_BSR, &data );
         phyNegTries--;

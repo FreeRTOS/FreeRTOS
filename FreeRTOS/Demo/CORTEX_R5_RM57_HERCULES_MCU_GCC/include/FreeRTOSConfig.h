@@ -166,35 +166,35 @@ extern void vMainSetupTimerInterrupt( void );
     #define configRTI_CLEAR_VALUE                                  0x1
 
     /** @brief Address of MCU Register used to trigger Pending Context Swaps */
-    #define configPEND_YIELD_REG_ADDR        0xFFFFFFB0
+    #define configPEND_YIELD_REG_ADDR                              0xFFFFFFB0
 
     /** @brief Value to write to @configPEND_YIELD_REG_ADDR to raise a pending yield */
-    #define configPEND_YIELD_KEY_VAL         0x7500UL
+    #define configPEND_YIELD_KEY_VAL                               0x7500UL
 
     /** @brief Address of MCU Register used to trigger Pending Context Swaps */
-    #define configCLEAR_YIELD_REG_ADDR      0xFFFFFFF4
+    #define configCLEAR_YIELD_REG_ADDR                             0xFFFFFFF4
 
     /** @brief Value to write to @configPEND_YIELD_REG_ADDR to clear a pending yield */
-    #define configCLEAR_YIELD_CLR_VAL       0x0
+    #define configCLEAR_YIELD_CLR_VAL                              0x0
 
     /** @brief Address of MCU Register used to trigger Hardware Interrupts */
-    #define configPEND_YIELD_REG     ( *( ( volatile uint32_t * ) configPEND_YIELD_REG_ADDR ) )
+    #define configPEND_YIELD_REG \
+        ( *( ( volatile uint32_t * ) configPEND_YIELD_REG_ADDR ) )
 
     /** @brief Trigger a pending context swap from inside the FreeRTOS-Kernel */
-    #define portYIELD_WITHIN_API()                              \
-        {                                                       \
-            configPEND_YIELD_REG = configPEND_YIELD_KEY_VAL;    \
-            asm( " DSB " );                                     \
-            asm( " ISB " );                                     \
+    #define portYIELD_WITHIN_API()                           \
+        {                                                    \
+            configPEND_YIELD_REG = configPEND_YIELD_KEY_VAL; \
+            asm( " DSB " );                                  \
+            asm( " ISB " );                                  \
         }
 
     /** @brief Trigger a pending context swap from inside an ISR */
-    #define portYIELD_FROM_ISR( x )                             \
-        if( x != pdFALSE )                                      \
-        {                                                       \
-            configPEND_YIELD_REG = configPEND_YIELD_KEY_VAL;    \
-            ( void ) configPEND_YIELD_REG;                      \
+    #define portYIELD_FROM_ISR( x )                          \
+        if( x != pdFALSE )                                   \
+        {                                                    \
+            configPEND_YIELD_REG = configPEND_YIELD_KEY_VAL; \
+            ( void ) configPEND_YIELD_REG;                   \
         }
-
 
 #endif /* FREERTOS_CONFIG_H */

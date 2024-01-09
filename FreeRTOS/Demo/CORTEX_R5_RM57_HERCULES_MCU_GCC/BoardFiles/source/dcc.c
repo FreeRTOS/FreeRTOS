@@ -73,19 +73,17 @@ void dccInit( void )
     dccREG1->CNT1SEED = 742500U;
 
     /** DCC1 Clock1 Source 1 Select */
-    dccREG1->CNT1CLKSRC =
-        ( uint32 ) ( ( uint32 ) 10U << 12U ) | /** DCC Enable / Disable
-                                                  Key */
-        ( uint32 ) DCC1_CNT1_PLL1;             /** DCC1 Clock Source 1 */
+    dccREG1->CNT1CLKSRC = ( uint32 ) ( ( uint32 ) 10U << 12U ) | /** DCC Enable / Disable
+                                                                    Key */
+                          ( uint32 ) DCC1_CNT1_PLL1; /** DCC1 Clock Source 1 */
 
     dccREG1->CNT0CLKSRC = ( uint32 ) DCC1_CNT0_OSCIN; /** DCC1 Clock Source 0 */
 
     /** DCC1 Global Control register configuration */
-    dccREG1->GCTRL =
-        ( uint32 ) 0xAU |                      /** Enable / Disable DCC1 */
-        ( uint32 ) ( ( uint32 ) 0xAU << 4U ) | /** Error Interrupt */
-        ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | /** Single Shot mode */
-        ( uint32 ) ( ( uint32 ) 0xAU << 12U ); /** Done Interrupt */
+    dccREG1->GCTRL = ( uint32 ) 0xAU |                      /** Enable / Disable DCC1 */
+                     ( uint32 ) ( ( uint32 ) 0xAU << 4U ) | /** Error Interrupt */
+                     ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | /** Single Shot mode */
+                     ( uint32 ) ( ( uint32 ) 0xAU << 12U ); /** Done Interrupt */
 
     /** @b initialize @b DCC2 */
 
@@ -99,18 +97,16 @@ void dccInit( void )
     dccREG2->CNT1SEED = 0U;
 
     /** DCC2 Clock1 Source 1 Select */
-    dccREG2->CNT1CLKSRC =
-        ( uint32 ) ( ( uint32 ) 0xAU << 12U ) | /** DCC Enable Key */
-        ( uint32 ) DCC2_CNT1_VCLK;              /** DCC2 Clock Source 1 */
+    dccREG2->CNT1CLKSRC = ( uint32 ) ( ( uint32 ) 0xAU << 12U ) | /** DCC Enable Key */
+                          ( uint32 ) DCC2_CNT1_VCLK; /** DCC2 Clock Source 1 */
 
     dccREG2->CNT0CLKSRC = ( uint32 ) DCC2_CNT0_OSCIN; /** DCC2 Clock Source 0 */
 
     /** DCC2 Global Control register configuration */
-    dccREG2->GCTRL =
-        ( uint32 ) 0xAU |                      /** Enable DCC2 */
-        ( uint32 ) ( ( uint32 ) 0xAU << 4U ) | /** Error Interrupt */
-        ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | /** Single Shot mode */
-        ( uint32 ) ( ( uint32 ) 0xAU << 12U ); /** Done Interrupt */
+    dccREG2->GCTRL = ( uint32 ) 0xAU |                      /** Enable DCC2 */
+                     ( uint32 ) ( ( uint32 ) 0xAU << 4U ) | /** Error Interrupt */
+                     ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | /** Single Shot mode */
+                     ( uint32 ) ( ( uint32 ) 0xAU << 12U ); /** Done Interrupt */
 
     /* USER CODE BEGIN (3) */
     /* USER CODE END */

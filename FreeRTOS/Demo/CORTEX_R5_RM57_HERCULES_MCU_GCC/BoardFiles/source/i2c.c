@@ -80,20 +80,19 @@ void i2cInit( void )
     i2cREG1->MDR = ( uint32 ) ( ( uint32 ) 0U << 5U );
 
     /** - set i2c mode */
-    i2cREG1->MDR =
-        ( uint32 ) ( ( uint32 ) 0U << 15U )         /* nack mode  */
-        | ( uint32 ) ( ( uint32 ) 0U << 14U )       /* free running */
-        | ( uint32 ) ( ( uint32 ) 0U << 13U )       /* start condition - master mode
-                                                       only */
-        | ( uint32 ) ( ( uint32 ) 1U << 11U )       /* stop condition   */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )       /* Master/Slave mode  */
-        | ( uint32 ) ( ( uint32 ) I2C_TRANSMITTER ) /* Transmitter/receiver */
-        | ( uint32 ) ( ( uint32 ) I2C_7BIT_AMODE )  /* xpanded address */
-        | ( uint32 ) ( ( uint32 ) 0U << 7U )        /* repeat mode */
-        | ( uint32 ) ( ( uint32 ) 0U << 6U )        /* digital loopback */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U )        /* start byte - master only */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )        /* free data format */
-        | ( uint32 ) ( ( uint32 ) I2C_8_BIT );      /* bit count */
+    i2cREG1->MDR = ( uint32 ) ( ( uint32 ) 0U << 15U ) /* nack mode  */
+                 | ( uint32 ) ( ( uint32 ) 0U << 14U ) /* free running */
+                 | ( uint32 ) ( ( uint32 ) 0U << 13U ) /* start condition - master mode
+                                                          only */
+                 | ( uint32 ) ( ( uint32 ) 1U << 11U ) /* stop condition   */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U ) /* Master/Slave mode  */
+                 | ( uint32 ) ( ( uint32 ) I2C_TRANSMITTER ) /* Transmitter/receiver */
+                 | ( uint32 ) ( ( uint32 ) I2C_7BIT_AMODE )  /* xpanded address */
+                 | ( uint32 ) ( ( uint32 ) 0U << 7U )        /* repeat mode */
+                 | ( uint32 ) ( ( uint32 ) 0U << 6U )        /* digital loopback */
+                 | ( uint32 ) ( ( uint32 ) 0U << 4U )   /* start byte - master only */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U )   /* free data format */
+                 | ( uint32 ) ( ( uint32 ) I2C_8_BIT ); /* bit count */
 
     /** - set i2c extended mode */
     i2cREG1->EMDR = ( uint32 ) 0U << 1U; /* Ignore Nack Enable/Disable */
@@ -121,41 +120,35 @@ void i2cInit( void )
     i2cREG1->PFNC = ( 0U );
 
     /** - set i2c pins default output value */
-    i2cREG1->DOUT =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG1->DOUT = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                  | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins output direction */
-    i2cREG1->DIR =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG1->DIR = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                 | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins open drain enable */
-    i2cREG1->PDR =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG1->PDR = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                 | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins pullup/pulldown enable */
-    i2cREG1->PDIS =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG1->PDIS = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                  | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins pullup/pulldown select */
-    i2cREG1->PSEL =
-        ( uint32 ) ( ( uint32 ) 1U << 1U ) /* sda pin */
-        | ( uint32 ) ( 1U );               /* scl pin */
+    i2cREG1->PSEL = ( uint32 ) ( ( uint32 ) 1U << 1U ) /* sda pin */
+                  | ( uint32 ) ( 1U );                 /* scl pin */
 
     /** - set interrupt enable */
-    i2cREG1->IMR =
-        ( uint32 ) ( ( uint32 ) 0U << 6U )   /* Address as slave interrupt   */
-        | ( uint32 ) ( ( uint32 ) 0U << 5U ) /* Stop Condition detect interrupt
-                                              */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U ) /* Transmit data ready interrupt */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U ) /* Receive data ready interrupt */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U ) /* Register Access ready interrupt
-                                              */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ) /* No Acknowledgment interrupt */
-        | ( uint32 ) ( ( uint32 ) 0U );      /* Arbitration Lost interrupt      */
+    i2cREG1->IMR = ( uint32 ) ( ( uint32 ) 0U << 6U ) /* Address as slave interrupt   */
+                 | ( uint32 ) ( ( uint32 ) 0U << 5U ) /* Stop Condition detect interrupt
+                                                       */
+                 | ( uint32 ) ( ( uint32 ) 0U << 4U ) /* Transmit data ready interrupt */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U ) /* Receive data ready interrupt */
+                 | ( uint32 ) ( ( uint32 ) 0U << 2U ) /* Register Access ready interrupt
+                                                       */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U ) /* No Acknowledgment interrupt */
+                 | ( uint32 ) ( ( uint32 ) 0U ); /* Arbitration Lost interrupt      */
 
     i2cREG1->MDR |= ( uint32 ) I2C_RESET_OUT; /* i2c out of reset */
 
@@ -169,20 +162,19 @@ void i2cInit( void )
     i2cREG2->MDR = ( uint32 ) ( ( uint32 ) 0U << 5U );
 
     /** - set i2c mode */
-    i2cREG2->MDR =
-        ( uint32 ) ( ( uint32 ) 0U << 15U )         /* nack mode  */
-        | ( uint32 ) ( ( uint32 ) 0U << 14U )       /* free running */
-        | ( uint32 ) ( ( uint32 ) 0U << 13U )       /* start condition - master mode
-                                                       only */
-        | ( uint32 ) ( ( uint32 ) 1U << 11U )       /* stop condition   */
-        | ( uint32 ) ( ( uint32 ) 1U << 10U )       /* Master/Slave mode  */
-        | ( uint32 ) ( ( uint32 ) I2C_TRANSMITTER ) /* Transmitter/receiver */
-        | ( uint32 ) ( ( uint32 ) I2C_7BIT_AMODE )  /* Expanded address */
-        | ( uint32 ) ( ( uint32 ) 0 << 7U )         /* repeat mode */
-        | ( uint32 ) ( ( uint32 ) 0U << 6U )        /* digital loopback */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U )        /* start byte - master only */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U )        /* free data format */
-        | ( uint32 ) ( I2C_2_BIT );                 /* bit count */
+    i2cREG2->MDR = ( uint32 ) ( ( uint32 ) 0U << 15U ) /* nack mode  */
+                 | ( uint32 ) ( ( uint32 ) 0U << 14U ) /* free running */
+                 | ( uint32 ) ( ( uint32 ) 0U << 13U ) /* start condition - master mode
+                                                          only */
+                 | ( uint32 ) ( ( uint32 ) 1U << 11U ) /* stop condition   */
+                 | ( uint32 ) ( ( uint32 ) 1U << 10U ) /* Master/Slave mode  */
+                 | ( uint32 ) ( ( uint32 ) I2C_TRANSMITTER ) /* Transmitter/receiver */
+                 | ( uint32 ) ( ( uint32 ) I2C_7BIT_AMODE )  /* Expanded address */
+                 | ( uint32 ) ( ( uint32 ) 0 << 7U )         /* repeat mode */
+                 | ( uint32 ) ( ( uint32 ) 0U << 6U )        /* digital loopback */
+                 | ( uint32 ) ( ( uint32 ) 0U << 4U ) /* start byte - master only */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U ) /* free data format */
+                 | ( uint32 ) ( I2C_2_BIT );          /* bit count */
 
     /** - set i2c extended mode */
     i2cREG2->EMDR = ( uint32 ) 0U << 1U; /* Ignore Nack Enable/Disable */
@@ -210,41 +202,35 @@ void i2cInit( void )
     i2cREG2->PFNC = ( 0U );
 
     /** - set i2c pins default output value */
-    i2cREG2->DOUT =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG2->DOUT = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                  | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins output direction */
-    i2cREG2->DIR =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG2->DIR = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                 | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins open drain enable */
-    i2cREG2->PDR =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG2->PDR = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                 | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins pullup/pulldown enable */
-    i2cREG2->PDIS =
-        ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
-        | ( uint32 ) ( 0U );               /* scl pin */
+    i2cREG2->PDIS = ( uint32 ) ( ( uint32 ) 0U << 1U ) /* sda pin */
+                  | ( uint32 ) ( 0U );                 /* scl pin */
 
     /** - set i2c pins pullup/pulldown select */
-    i2cREG2->PSEL =
-        ( uint32 ) ( ( uint32 ) 1U << 1U ) /* sda pin */
-        | ( uint32 ) ( 1U );               /* scl pin */
+    i2cREG2->PSEL = ( uint32 ) ( ( uint32 ) 1U << 1U ) /* sda pin */
+                  | ( uint32 ) ( 1U );                 /* scl pin */
 
     /** - set interrupt enable */
-    i2cREG2->IMR =
-        ( uint32 ) ( ( uint32 ) 0U << 6U )   /* Address as slave interrupt   */
-        | ( uint32 ) ( ( uint32 ) 0U << 5U ) /* Stop Condition detect interrupt
-                                              */
-        | ( uint32 ) ( ( uint32 ) 0U << 4U ) /* Transmit data ready interrupt */
-        | ( uint32 ) ( ( uint32 ) 0U << 3U ) /* Receive data ready interrupt */
-        | ( uint32 ) ( ( uint32 ) 0U << 2U ) /* Register Access ready interrupt
-                                              */
-        | ( uint32 ) ( ( uint32 ) 0U << 1U ) /* No Acknowledgment interrupt */
-        | ( uint32 ) ( 0U );                 /* Arbitration Lost interrupt      */
+    i2cREG2->IMR = ( uint32 ) ( ( uint32 ) 0U << 6U ) /* Address as slave interrupt   */
+                 | ( uint32 ) ( ( uint32 ) 0U << 5U ) /* Stop Condition detect interrupt
+                                                       */
+                 | ( uint32 ) ( ( uint32 ) 0U << 4U ) /* Transmit data ready interrupt */
+                 | ( uint32 ) ( ( uint32 ) 0U << 3U ) /* Receive data ready interrupt */
+                 | ( uint32 ) ( ( uint32 ) 0U << 2U ) /* Register Access ready interrupt
+                                                       */
+                 | ( uint32 ) ( ( uint32 ) 0U << 1U ) /* No Acknowledgment interrupt */
+                 | ( uint32 ) ( 0U ); /* Arbitration Lost interrupt      */
 
     i2cREG2->MDR |= ( uint32 ) I2C_RESET_OUT; /* i2c out of reset */
 

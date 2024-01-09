@@ -139,28 +139,27 @@ void etpwmInit( void )
                                                      Frequency */
 
     /** - Set trip source enable */
-    etpwmREG1->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source      */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG1->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source      */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG1->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
+    etpwmREG1
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
 
     /** - Sets up the event for interrupt */
     etpwmREG1->ETSEL = ( uint16 ) NO_EVENT;
@@ -251,28 +250,27 @@ void etpwmInit( void )
                                                      Frequency */
 
     /** - Set trip source enable */
-    etpwmREG2->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source      */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG2->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source      */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG2->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
+    etpwmREG2
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
 
     /** - Sets up the event for interrupt */
     etpwmREG2->ETSEL = ( uint16 ) NO_EVENT;
@@ -363,28 +361,27 @@ void etpwmInit( void )
                                                      Frequency */
 
     /** - Set trip source enable */
-    etpwmREG3->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source     */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG3->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source     */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG3->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation       */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation */
+    etpwmREG3
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation       */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation */
 
     /** - Sets up the event for interrupt */
     etpwmREG3->ETSEL = ( uint16 ) NO_EVENT;
@@ -440,19 +437,18 @@ void etpwmInit( void )
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG4->DBCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 5U )    /* Source for Falling edge
-                                                 delay(0-PWMA, 1-PWMB) */
-        | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
-                                                 delay(0-PWMA, 1-PWMB)  */
-        | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
-                                                 Delay   */
-        | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
-                                                 Edge Delay  */
+    etpwmREG4->DBCTL = ( uint16 ) ( ( uint16 ) 0U << 5U )  /* Source for Falling edge
+                                                              delay(0-PWMA, 1-PWMB) */
+                     | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
+                                                              delay(0-PWMA, 1-PWMB)  */
+                     | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
+                                                              Delay   */
+                     | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
+                                                              Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG4->DBRED = 1U;
@@ -465,36 +461,34 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG4->PCCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 0U )    /* Enable/Disable chopper module
-                                               */
-        | ( uint16 ) ( ( uint16 ) 1U << 1U )  /* One-shot Pulse Width */
-        | ( uint16 ) ( ( uint16 ) 3U << 8U )  /* Chopping Clock Duty Cycle */
-        | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
+    etpwmREG4->PCCTL = ( uint16 ) ( ( uint16 ) 0U << 0U ) /* Enable/Disable chopper module
+                                                           */
+                     | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                     | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle */
+                     | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
 
     /** - Set trip source enable */
-    etpwmREG4->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source        */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG4->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source        */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG4->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
+    etpwmREG4
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
 
     /** - Sets up the event for interrupt */
     etpwmREG4->ETSEL = ( uint16 ) NO_EVENT;
@@ -507,9 +501,9 @@ void etpwmInit( void )
     etpwmREG4->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG4->ETSEL |=
-        ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG4->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
+                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
+                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
     etpwmREG4->ETPS |=
@@ -549,19 +543,18 @@ void etpwmInit( void )
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG5->DBCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 5U )    /* Source for Falling edge
-                                                 delay(0-PWMA, 1-PWMB) */
-        | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
-                                                 delay(0-PWMA, 1-PWMB)  */
-        | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
-                                                 Delay   */
-        | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
-                                                 Edge Delay  */
+    etpwmREG5->DBCTL = ( uint16 ) ( ( uint16 ) 0U << 5U )  /* Source for Falling edge
+                                                              delay(0-PWMA, 1-PWMB) */
+                     | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
+                                                              delay(0-PWMA, 1-PWMB)  */
+                     | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
+                                                              Delay   */
+                     | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
+                                                              Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG5->DBRED = 1U;
@@ -574,36 +567,34 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG5->PCCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 0U )    /* Enable/Disable chopper module
-                                               */
-        | ( uint16 ) ( ( uint16 ) 1U << 1U )  /* One-shot Pulse Width */
-        | ( uint16 ) ( ( uint16 ) 3U << 8U )  /* Chopping Clock Duty Cycle */
-        | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
+    etpwmREG5->PCCTL = ( uint16 ) ( ( uint16 ) 0U << 0U ) /* Enable/Disable chopper module
+                                                           */
+                     | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                     | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle */
+                     | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
 
     /** - Set trip source enable */
-    etpwmREG5->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source        */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG5->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source        */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG5->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation       */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation */
+    etpwmREG5
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation       */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation */
 
     /** - Sets up the event for interrupt */
     etpwmREG5->ETSEL = ( uint16 ) NO_EVENT;
@@ -616,9 +607,9 @@ void etpwmInit( void )
     etpwmREG5->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG5->ETSEL |=
-        ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG5->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
+                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
+                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
     etpwmREG5->ETPS |=
@@ -658,19 +649,18 @@ void etpwmInit( void )
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG6->DBCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 5U )    /* Source for Falling edge
-                                                 delay(0-PWMA, 1-PWMB) */
-        | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
-                                                 delay(0-PWMA, 1-PWMB)  */
-        | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
-                                                 Delay   */
-        | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
-                                                 Edge Delay  */
+    etpwmREG6->DBCTL = ( uint16 ) ( ( uint16 ) 0U << 5U )  /* Source for Falling edge
+                                                              delay(0-PWMA, 1-PWMB) */
+                     | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
+                                                              delay(0-PWMA, 1-PWMB)  */
+                     | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
+                                                              Delay   */
+                     | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
+                                                              Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG6->DBRED = 1U;
@@ -683,36 +673,34 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG6->PCCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 0U )    /* Enable/Disable chopper module
-                                               */
-        | ( uint16 ) ( ( uint16 ) 1U << 1U )  /* One-shot Pulse Width */
-        | ( uint16 ) ( ( uint16 ) 3U << 8U )  /* Chopping Clock Duty Cycle */
-        | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
+    etpwmREG6->PCCTL = ( uint16 ) ( ( uint16 ) 0U << 0U ) /* Enable/Disable chopper module
+                                                           */
+                     | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                     | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle */
+                     | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
 
     /** - Set trip source enable */
-    etpwmREG6->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source      */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG6->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source      */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG6->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation       */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation */
+    etpwmREG6
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1 */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2 */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation       */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation */
 
     /** - Sets up the event for interrupt */
     etpwmREG6->ETSEL = ( uint16 ) NO_EVENT;
@@ -725,9 +713,9 @@ void etpwmInit( void )
     etpwmREG6->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG6->ETSEL |=
-        ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG6->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
+                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
+                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
     etpwmREG6->ETPS |=
@@ -767,19 +755,18 @@ void etpwmInit( void )
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG7->DBCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 5U )    /* Source for Falling edge
-                                                 delay(0-PWMA, 1-PWMB) */
-        | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
-                                                 delay(0-PWMA, 1-PWMB)  */
-        | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
-                                                 invert       */
-        | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
-                                                 Delay   */
-        | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
-                                                 Edge Delay  */
+    etpwmREG7->DBCTL = ( uint16 ) ( ( uint16 ) 0U << 5U )  /* Source for Falling edge
+                                                              delay(0-PWMA, 1-PWMB) */
+                     | ( uint16 ) ( ( uint16 ) 0U << 4U )  /* Source for Rising edge
+                                                              delay(0-PWMA, 1-PWMB)  */
+                     | ( uint16 ) ( ( uint16 ) 0U << 3U )  /* Enable/Disable EPWMxB
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 2U )  /* Enable/Disable EPWMxA
+                                                              invert       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 1U )  /* Enable/Disable Rising Edge
+                                                              Delay   */
+                     | ( uint16 ) ( ( uint16 ) 0U << 0U ); /* Enable/Disable Falling
+                                                              Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG7->DBRED = 1U;
@@ -792,36 +779,34 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG7->PCCTL =
-        ( uint16 ) ( ( uint16 ) 0U << 0U )    /* Enable/Disable chopper module
-                                               */
-        | ( uint16 ) ( ( uint16 ) 1U << 1U )  /* One-shot Pulse Width */
-        | ( uint16 ) ( ( uint16 ) 3U << 8U )  /* Chopping Clock Duty Cycle */
-        | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
+    etpwmREG7->PCCTL = ( uint16 ) ( ( uint16 ) 0U << 0U ) /* Enable/Disable chopper module
+                                                           */
+                     | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                     | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle */
+                     | ( uint16 ) ( ( uint16 ) 0U << 5U ); /* Chopping Clock Frequency */
 
     /** - Set trip source enable */
-    etpwmREG7->TZSEL =
-        0x0000U    /** - Enable/Disable TZ1 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
-        | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source  */
-        | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
-        | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source       */
-        | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
+    etpwmREG7->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a one-shot trip source */
+                     | 0x0000U  /** - Enable/Disable TZ6 as a one-shot trip source  */
+                     | 0x0000U  /** - Enable/Disable TZ1 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ2 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ3 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ4 as a CBC trip source      */
+                     | 0x0000U  /** - Enable/Disable TZ5 as a CBC trip source       */
+                     | 0x0000U; /** - Enable/Disable TZ6 as a CBC trip source      */
 
     /** - Set interrupt enable */
-    etpwmREG7->TZEINT =
-        0x0000U    /** - Enable/Disable Digital Comparator Output A Event 1  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
-        | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
-        | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
-        | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
+    etpwmREG7
+        ->TZEINT = 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 1  */
+                 | 0x0000U  /** - Enable/Disable Digital Comparator Output A Event 2  */
+                 | 0x0000U  /** - Enable/Disable one-shot interrupt generation        */
+                 | 0x0000U; /** - Enable/Disable cycle-by-cycle interrupt generation  */
 
     /** - Sets up the event for interrupt */
     etpwmREG7->ETSEL = ( uint16 ) NO_EVENT;
@@ -834,9 +819,9 @@ void etpwmInit( void )
     etpwmREG7->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG7->ETSEL |=
-        ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG7->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
+                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
+                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
     etpwmREG7->ETPS |=
@@ -860,9 +845,9 @@ void etpwmStartTBCLK( void )
     pinMuxReg->KICKER0 = 0x83E70B13U;
     pinMuxReg->KICKER1 = 0x95A4F1E0U;
 
-    pinMuxReg->PINMUX[ 166U ] =
-        ( pinMuxReg->PINMUX[ 166U ] & PINMUX_ETPWM_TBCLK_SYNC_MASK ) |
-        ( PINMUX_ETPWM_TBCLK_SYNC_ON );
+    pinMuxReg->PINMUX[ 166U ] = ( pinMuxReg->PINMUX[ 166U ] & PINMUX_ETPWM_TBCLK_SYNC_MASK
+                                ) |
+                                ( PINMUX_ETPWM_TBCLK_SYNC_ON );
 
     /* Disable Pin Muxing */
     pinMuxReg->KICKER0 = 0x00000000U;
@@ -883,9 +868,9 @@ void etpwmStopTBCLK( void )
     pinMuxReg->KICKER0 = 0x83E70B13U;
     pinMuxReg->KICKER1 = 0x95A4F1E0U;
 
-    pinMuxReg->PINMUX[ 166U ] =
-        ( pinMuxReg->PINMUX[ 166U ] & PINMUX_ETPWM_TBCLK_SYNC_MASK ) |
-        ( PINMUX_ETPWM_TBCLK_SYNC_OFF );
+    pinMuxReg->PINMUX[ 166U ] = ( pinMuxReg->PINMUX[ 166U ] & PINMUX_ETPWM_TBCLK_SYNC_MASK
+                                ) |
+                                ( PINMUX_ETPWM_TBCLK_SYNC_OFF );
 
     /* Disable Pin Muxing */
     pinMuxReg->KICKER0 = 0x00000000U;
@@ -1619,8 +1604,8 @@ void etpwmEnableSOCA(
 )
 {
     etpwm->ETSEL &= 0xF0FFU;
-    etpwm->ETSEL |=
-        ( uint16 ) ( ( uint16 ) 1U << 11U ) | ( uint16 ) ( ( uint16 ) eventsource << 8U );
+    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 11U ) |
+                    ( uint16 ) ( ( uint16 ) eventsource << 8U );
 
     etpwm->ETPS &= 0xF0FFU;
     etpwm->ETPS |= ( uint16 ) ( ( uint16 ) eventperiod << 8U );
@@ -1679,8 +1664,8 @@ void etpwmEnableSOCB(
 )
 {
     etpwm->ETSEL &= 0x0FFFU;
-    etpwm->ETSEL |=
-        ( uint16 ) ( ( uint16 ) 1U << 15U ) | ( uint16 ) ( ( uint16 ) eventsource << 12U );
+    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 15U ) |
+                    ( uint16 ) ( ( uint16 ) eventsource << 12U );
 
     etpwm->ETPS &= 0x0FFFU;
     etpwm->ETPS |= ( uint16 ) ( ( uint16 ) eventperiod << 12U );
@@ -1738,8 +1723,8 @@ void etpwmEnableInterrupt(
 )
 {
     etpwm->ETSEL &= 0xFFF0U;
-    etpwm->ETSEL |=
-        ( uint16 ) ( ( uint16 ) 1U << 3U ) | ( uint16 ) ( ( uint16 ) eventsource << 0U );
+    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 3U ) |
+                    ( uint16 ) ( ( uint16 ) eventsource << 0U );
 
     etpwm->ETPS &= 0xFFF0U;
     etpwm->ETPS |= ( uint16 ) ( ( uint16 ) eventperiod << 0U );

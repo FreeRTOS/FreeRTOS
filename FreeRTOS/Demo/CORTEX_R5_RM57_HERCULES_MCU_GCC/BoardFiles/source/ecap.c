@@ -96,22 +96,20 @@ void ecapInit( void )
      *     - Set operating mode
      *     - Set Stop/Wrap after capture
      */
-    ecapREG1->ECCTL2 =
-        ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         /* Capture Mode */
-        | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
-                                                          */
-        | ( uint16 ) ( ( uint16 ) 0U << 9U )             /* Enable/Disable APWM mode */
-        | ( uint16 ) 0x00000010U;                        /* Start counter */
+    ecapREG1->ECCTL2 = ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )       /* Capture Mode */
+                     | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
+                                                                       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) /* Enable/Disable APWM mode */
+                     | ( uint16 ) 0x00000010U;            /* Start counter */
 
     /** - Set interrupt enable */
-    ecapREG1->ECEINT =
-        0x0000U    /* Enable/Disable Capture Event 1 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
-        | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
-        | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
-        | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
+    ecapREG1->ECEINT = 0x0000U  /* Enable/Disable Capture Event 1 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
+                     | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
+                     | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
+                     | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
 
     /** @b initialize @b ECAP2 */
 
@@ -146,22 +144,20 @@ void ecapInit( void )
      *     - Set operating mode
      *     - Set Stop/Wrap after capture
      */
-    ecapREG2->ECCTL2 =
-        ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         /* Capture Mode */
-        | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
-                                                          */
-        | ( uint16 ) ( ( uint16 ) 0U << 9U )             /* Enable/Disable APWM mode */
-        | ( uint16 ) 0x00000010U;                        /* Start counter */
+    ecapREG2->ECCTL2 = ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )       /* Capture Mode */
+                     | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
+                                                                       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) /* Enable/Disable APWM mode */
+                     | ( uint16 ) 0x00000010U;            /* Start counter */
 
     /** - Set interrupt enable */
-    ecapREG2->ECEINT =
-        0x0000U    /* Enable/Disable Capture Event 1 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
-        | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
-        | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
-        | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
+    ecapREG2->ECEINT = 0x0000U  /* Enable/Disable Capture Event 1 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
+                     | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
+                     | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
+                     | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
 
     /** @b initialize @b ECAP3 */
 
@@ -196,22 +192,20 @@ void ecapInit( void )
      *     - Set operating mode
      *     - Set Stop/Wrap after capture
      */
-    ecapREG3->ECCTL2 =
-        ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         /* Capture Mode */
-        | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
-                                                          */
-        | ( uint16 ) ( ( uint16 ) 0U << 9U )             /* Enable/Disable APWM mode */
-        | ( uint16 ) 0x00000010U;                        /* Start counter */
+    ecapREG3->ECCTL2 = ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )       /* Capture Mode */
+                     | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
+                                                                       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) /* Enable/Disable APWM mode */
+                     | ( uint16 ) 0x00000010U;            /* Start counter */
 
     /** - Set interrupt enable */
-    ecapREG3->ECEINT =
-        0x0000U    /* Enable/Disable Capture Event 1 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
-        | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
-        | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
-        | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
+    ecapREG3->ECEINT = 0x0000U  /* Enable/Disable Capture Event 1 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
+                     | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
+                     | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
+                     | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
 
     /** @b initialize @b ECAP4 */
 
@@ -246,22 +240,20 @@ void ecapInit( void )
      *     - Set operating mode
      *     - Set Stop/Wrap after capture
      */
-    ecapREG4->ECCTL2 =
-        ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         /* Capture Mode */
-        | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
-                                                          */
-        | ( uint16 ) ( ( uint16 ) 0U << 9U )             /* Enable/Disable APWM mode */
-        | ( uint16 ) 0x00000010U;                        /* Start counter */
+    ecapREG4->ECCTL2 = ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )       /* Capture Mode */
+                     | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
+                                                                       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) /* Enable/Disable APWM mode */
+                     | ( uint16 ) 0x00000010U;            /* Start counter */
 
     /** - Set interrupt enable */
-    ecapREG4->ECEINT =
-        0x0000U    /* Enable/Disable Capture Event 1 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
-        | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
-        | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
-        | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
+    ecapREG4->ECEINT = 0x0000U  /* Enable/Disable Capture Event 1 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
+                     | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
+                     | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
+                     | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
 
     /** @b initialize @b ECAP5 */
 
@@ -296,22 +288,20 @@ void ecapInit( void )
      *     - Set operating mode
      *     - Set Stop/Wrap after capture
      */
-    ecapREG5->ECCTL2 =
-        ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         /* Capture Mode */
-        | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
-                                                          */
-        | ( uint16 ) ( ( uint16 ) 0U << 9U )             /* Enable/Disable APWM mode */
-        | ( uint16 ) 0x00000010U;                        /* Start counter */
+    ecapREG5->ECCTL2 = ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )       /* Capture Mode */
+                     | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
+                                                                       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) /* Enable/Disable APWM mode */
+                     | ( uint16 ) 0x00000010U;            /* Start counter */
 
     /** - Set interrupt enable */
-    ecapREG5->ECEINT =
-        0x0000U    /* Enable/Disable Capture Event 1 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
-        | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
-        | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
-        | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
+    ecapREG5->ECEINT = 0x0000U  /* Enable/Disable Capture Event 1 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
+                     | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
+                     | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
+                     | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
 
     /** @b initialize @b ECAP6 */
 
@@ -346,22 +336,20 @@ void ecapInit( void )
      *     - Set operating mode
      *     - Set Stop/Wrap after capture
      */
-    ecapREG6->ECCTL2 =
-        ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         /* Capture Mode */
-        | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
-                                                          */
-        | ( uint16 ) ( ( uint16 ) 0U << 9U )             /* Enable/Disable APWM mode */
-        | ( uint16 ) 0x00000010U;                        /* Start counter */
+    ecapREG6->ECCTL2 = ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )       /* Capture Mode */
+                     | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) /* Stop/Wrap value
+                                                                       */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) /* Enable/Disable APWM mode */
+                     | ( uint16 ) 0x00000010U;            /* Start counter */
 
     /** - Set interrupt enable */
-    ecapREG6->ECEINT =
-        0x0000U    /* Enable/Disable Capture Event 1 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
-        | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
-        | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
-        | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
-        | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
+    ecapREG6->ECEINT = 0x0000U  /* Enable/Disable Capture Event 1 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 2 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 3 Interrupt  */
+                     | 0x0000U  /* Enable/Disable Capture Event 4 Interrupt  */
+                     | 0x0000U  /* Enable/Disable counter Overflow Interrupt */
+                     | 0x0000U  /* Enable/Disable Period Equal Interrupt     */
+                     | 0x0000U; /* Enable/Disable Compare Equal Interrupt    */
 }
 
 /** @fn void ecapSetCounter(ecapBASE_t *ecap, uint32 value)
@@ -457,10 +445,9 @@ void ecapSetCaptureEvent1(
 )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 0U );
-    ecap->ECCTL1 |=
-        ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                       ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
-                     << 0U );
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
+                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+                                 << 0U );
 }
 
 /** @fn void ecapSetCaptureEvent2(ecapBASE_t *ecap, ecapEdgePolarity_t edgePolarity,
@@ -487,10 +474,9 @@ void ecapSetCaptureEvent2(
 )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 2U );
-    ecap->ECCTL1 |=
-        ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                       ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
-                     << 2U );
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
+                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+                                 << 2U );
 }
 
 /** @fn void ecapSetCaptureEvent3(ecapBASE_t *ecap, ecapEdgePolarity_t edgePolarity,
@@ -517,10 +503,9 @@ void ecapSetCaptureEvent3(
 )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 4U );
-    ecap->ECCTL1 |=
-        ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                       ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
-                     << 4U );
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
+                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+                                 << 4U );
 }
 
 /** @fn void ecapSetCaptureEvent4(ecapBASE_t *ecap, ecapEdgePolarity_t edgePolarity,
@@ -547,10 +532,9 @@ void ecapSetCaptureEvent4(
 )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 6U );
-    ecap->ECCTL1 |=
-        ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                       ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
-                     << 6U );
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
+                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+                                 << 6U );
 }
 
 /** @fn void ecapSetCaptureMode(ecapBASE_t *ecap, ecapMode_t mode, ecapEvent_t event)
@@ -685,8 +669,8 @@ void ecapEnableAPWMmode(
 )
 {
     ecap->ECCTL2 &= ( uint16 ) ~( uint16 ) 0x0400U;
-    ecap->ECCTL2 |=
-        ( uint16 ) ( ( uint16 ) pwmPolarity << 10U ) | ( uint16 ) ( ( uint16 ) 1U << 9U );
+    ecap->ECCTL2 |= ( uint16 ) ( ( uint16 ) pwmPolarity << 10U ) |
+                    ( uint16 ) ( ( uint16 ) 1U << 9U );
     ecap->CAP1 = period - 1U;
     ecap->CAP2 = duty;
 }

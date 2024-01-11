@@ -42,11 +42,19 @@
 /* Demo include */
 #include "demo_tasks.h"
 
+/* ----------------------------------------------------------------------------------- */
+
+/** @brief TCB used by Register Test Task One */
 PRIVILEGED_DATA static StaticTask_t xRegTestOneTaskTCB;
+
+/** @brief Small MPU Region Aligned Stack used by Register Test Task One */
 PRIVILEGED_DATA static StackType_t uxRegTestOneTaskStack[ configMINIMAL_STACK_SIZE / 2U ]
     __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x2U ) ) );
 
+/** @brief TCB used by Register Test Two Task */
 PRIVILEGED_DATA static StaticTask_t xRegTestTwoTaskTCB;
+
+/** @brief Small MPU Region Aligned Stack used by Register Test Task Two */
 static StackType_t uxRegTestTwoTaskStack[ configMINIMAL_STACK_SIZE / 2U ]
     __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x2U ) ) );
 
@@ -55,7 +63,7 @@ static StackType_t uxRegTestTwoTaskStack[ configMINIMAL_STACK_SIZE / 2U ]
 #define mainREG_TEST_TASK_1_PARAMETER ( ( void * ) 0x12345678 )
 #define mainREG_TEST_TASK_2_PARAMETER ( ( void * ) 0x87654321 )
 
-/*---------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 
 /** @brief Array to track the number of loops the register test tasks have run.
  *
@@ -65,7 +73,7 @@ static StackType_t uxRegTestTwoTaskStack[ configMINIMAL_STACK_SIZE / 2U ]
  */
 uint32_t loopCounter[ 0x8 ] __attribute__( ( aligned( 0x20 ) ) );
 
-/*---------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 
 /** @brief Entry point for the Privileged Register Test Task.
  * @param pvParameters A test value to ensure the task's arguments are correctly set.
@@ -91,7 +99,8 @@ static void prvRegTestTaskEntry1( void * pvParameters )
         vTaskDelete( NULL );
     }
 }
-/*---------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------------------------- */
 
 /** @brief Entry point for the Unprivileged Register Test Task.
  * @param pvParameters A test value to ensure the task's arguments are correctly set.
@@ -117,7 +126,8 @@ static void prvRegTestTaskEntry2( void * pvParameters )
         vTaskDelete( NULL );
     }
 }
-/*---------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------------------------- */
 
 BaseType_t xCreateRegisterTestTasks( void )
 {

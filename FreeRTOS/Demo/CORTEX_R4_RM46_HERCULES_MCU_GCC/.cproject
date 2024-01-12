@@ -81,7 +81,13 @@
 						<toolChain id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.DebugToolchain.745009090" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.DebugToolchain" unusedChildren="">
 							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.914748107.808794004" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.914748107"/>
 							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.101566863.1457591472" name="Compiler version" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.101566863"/>
-							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.compilerDebug.1409861672" name="GNU Compiler" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.compilerDebug.784282967"/>
+							<targetPlatform id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.targetPlatformDebug" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.targetPlatformDebug"/>
+							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.compilerDebug.1409861672" name="GNU Compiler" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.compilerDebug.784282967">
+								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__C_SRCS.1010743173" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__C_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__CPP_SRCS.47910471" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__CPP_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__ASM_SRCS.1023139396" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__ASM_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__ASM2_SRCS.1604844827" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.compiler.inputType__ASM2_SRCS"/>
+							</tool>
 							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.linkerDebug.1904470788" name="GNU Linker" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.exe.linkerDebug.376703893"/>
 							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.hex.1944705044" name="GNU Objcopy Utility" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_9.0.hex.855715963"/>
 						</toolChain>

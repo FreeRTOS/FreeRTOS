@@ -193,31 +193,6 @@ static void prvSetupHardware( void )
     hetREG1->DIR = 0xAA178035;
     hetREG1->DOUT = 0x0;
 
-#if 0
-    volatile uint32_t ulRegisterRead;
-    /* Read IRQ/FIRQ index to clear pending interrupt vector */
-    ulRegisterRead = vimREG->IRQINDEX;
-    ulRegisterRead = vimREG->FIQINDEX;
-    ( void ) ulRegisterRead;
-
-    /* Clear IRQ/FIQ interrupts */
-    vimREG->INTREQ0 = 0xFFFFFFFFU;
-    vimREG->INTREQ1 = 0xFFFFFFFFU;
-    vimREG->INTREQ2 = 0xFFFFFFFFU;
-    vimREG->INTREQ3 = 0xFFFFFFFFU;
-
-    /* Clear IRQ/FIQ interrupt Masks */
-    vimREG->REQMASKCLR0 = 0xFFFFFFFFU;
-    vimREG->REQMASKCLR1 = 0xFFFFFFFFU;
-    vimREG->REQMASKCLR2 = 0xFFFFFFFFU;
-    vimREG->REQMASKCLR3 = 0xFFFFFFFFU;
-
-    /* Enable VIM interrupts */
-    vimREG->REQMASKSET0 = (uint32_t)0U;
-    vimREG->REQMASKSET1 = (uint32_t)0U;
-    vimREG->REQMASKSET2 = (uint32_t)0U;
-    vimREG->REQMASKSET3 = (uint32_t)0U;
-#endif
     /* Enable notifications for the SCI register */
     /* Use a BAUD rate of 115200, 1 stop bit, and None Parity */
     sciEnableNotification( scilinREG, SCI_RX_INT );
@@ -322,18 +297,23 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 
     /* Called if an assertion passed to configASSERT() fails. See
      * http://www.freertos.org/a00110.html#configASSERT for more information. */
-    // char errorMessage[ 0x100 ];
     volatile const char * callingFunc = pcFuncName;
     volatile uint32_t callingLine = ulLine;
 
+    /* These variables can be inspected in a debugger. */
+    if( callingFunc != (char *) callingLine)
+    {
+        __asm volatile( "NOP" );
+    }
+
+    /* NOTE: Unprivileged tasks cannot enter critical sections on the ARM_CRx_MPU port.
+     * Meaning unprivileged tasks will cause a pre-fetch abort if they fail an assert. */
     taskENTER_CRITICAL();
     {
         if( callingFunc != ( char * ) callingLine )
         {
             __asm volatile( "NOP" );
         }
-        // snprintf( errorMessage, 0x100, "Assert Called at %s:%ld\r\n", pcFuncName,
-        // ulLine ); sci_print( errorMessage );
 
         /* You can step out of this function to debug the assertion by using
          * the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
@@ -350,9 +330,9 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 /*---------------------------------------------------------------------------*/
 
 /** @brief Default IRQ Handler used in the ARM_Cortex_RX ports.
- * @note This Handler is directly tied to the Texas Instrument's
- * RM57 Vectored Interrupt Manager (VIM). For more information about what this
- * is and how it operates please refer to their document:
+ * @note This Handler is directly tied to the Texas Instrument's Hercules
+ * Vectored Interrupt Manager (VIM). For more information about what
+ * this is and how it operates please refer to their document:
  * https://www.ti.com/lit/pdf/spna218
  */
 void vApplicationIRQHandler( void )

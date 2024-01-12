@@ -27,19 +27,9 @@
  *
  */
 
-/******************************************************************************
- * This project provides three demo applications. A simple blinky style demo
- * application, a MPU demo that triggers and clears data aborts, and a more
- * comprehensive test and demo application. The mainDEMO_TYPE setting is used to
- * select between them in main.c.
- * This file implements the simply blinky version.
- *
- * This file only contains the source code that is specific to the basic demo.
- * Generic functions, such FreeRTOS hook functions, are defined in main.c.
- ******************************************************************************
- *
- * vCreateBlinkyTasks() creates one queue, one software timer, and two tasks.
- *
+/**
+ * @file queue_demo.c
+ * @brief Use the Queue APIs to send data from a sender task to a receiver task.
  */
 
 /* Standard includes. */
@@ -59,32 +49,26 @@
 /* Demo Specific Includes */
 #include "demo_tasks.h"
 
-#if( mainDEMO_TYPE & BLINKY_DEMO )
+#if( mainDEMO_TYPE & QUEUE_DEMO )
 
-    /* ------------------------- Demo Task Configs ------------------------- */
-
-    /** @brief Priority at which the prvQueueReceiveTask is created. */
-    #define blinkyQUEUE_RECEIVE_TASK_PRIORITY ( tskIDLE_PRIORITY + 2 )
-
-    /** @brief Priority at which the prvQueueSendTask is created. */
-    #define blinkyQUEUE_SEND_TASK_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+    /* ------------------------------ Demo Task Configs ------------------------------ */
 
     /** @brief The rate at which data is sent to the queue from the send task.
      * @note Ticks are converted to milliseconds using pdMS_TO_TICKS(). */
-    #define blinkyTASK_SEND_FREQUENCY_MS      pdMS_TO_TICKS( 200UL )
+    #define queueTASK_SEND_FREQUENCY_MS      pdMS_TO_TICKS( 200UL )
 
     /** @brief The rate at which data is sent to the queue from the timer.
      * @note Ticks are converted to milliseconds using pdMS_TO_TICKS(). */
-    #define blinkyTIMER_SEND_FREQUENCY_MS     pdMS_TO_TICKS( 2000UL )
+    #define queueTIMER_SEND_FREQUENCY_MS     pdMS_TO_TICKS( 2000UL )
 
     /** @brief The number of items the queue can hold at once. */
-    #define blinkyQUEUE_LENGTH                ( 2 )
+    #define queueQUEUE_LENGTH                ( 2 )
 
     /** @brief Value sent from the send task to the receive task */
-    #define blinkyVALUE_SENT_FROM_TASK        ( 0x1234UL )
+    #define queueVALUE_SENT_FROM_TASK        ( 0x1234UL )
 
     /** @brief Value sent from the timer to the receive task */
-    #define blinkyVALUE_SENT_FROM_TIMER       ( 0x4321UL )
+    #define queueVALUE_SENT_FROM_TIMER       ( 0x4321UL )
 
 /* --------------------- Task Function Decleration --------------------- */
 
@@ -101,13 +85,13 @@ static void prvQueueReceiveTask( void * pvParameters );
  * @note
  * The queue send task is implemented by the prvQueueSendTask() function in
  * this file. It uses vTaskDelayUntil() to create a periodic task that
- * sends blinkyVALUE_SENT_FROM_TASK to the queue every 200 milliseconds. */
+ * sends queueVALUE_SENT_FROM_TASK to the queue every 200 milliseconds. */
 static void prvQueueSendTask( void * pvParameters );
 
 /** @brief The callback function executed when the timer expires.
  * @note
  * The timer is an auto-reload timer with a period of two seconds. Its
- * callback function sends the value blinkyVALUE_SENT_FROM_TIMER to the
+ * callback function sends the value queueVALUE_SENT_FROM_TIMER to the
  * queue. The callback function is implemented by prvQueueSendTimerCallback().
  */
 static void prvQueueSendTimerCallback( TimerHandle_t xTimerHandle );
@@ -158,18 +142,19 @@ static TaskHandle_t xReceiveTaskHandle;
 /** @brief Statically allocated task handle for the queue send task. */
 static TaskHandle_t xSendTaskHandle;
 
-/* --------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------ */
 
-BaseType_t prvCreateBlinkyTasks( void )
+BaseType_t prvCreateQueueTasks( void )
 {
     BaseType_t xReturn = pdPASS;
+
     /* Start the two tasks as described in the comments at the top of this file. */
     TaskParameters_t
         xQueueReceiveTaskParameters = { .pvTaskCode = prvQueueReceiveTask,
                                         .pcName = pcReceiveTaskName,
                                         .usStackDepth = configMINIMAL_STACK_SIZE / 2U,
                                         .pvParameters = NULL,
-                                        .uxPriority = blinkyQUEUE_RECEIVE_TASK_PRIORITY,
+                                        .uxPriority = demoQUEUE_RECEIVE_TASK_PRIORITY,
                                         .puxStackBuffer = xQueueReceiveTaskStack,
                                         .pxTaskBuffer = &xQueueReceiveTaskTCB,
                                         .xRegions = {
@@ -211,7 +196,7 @@ BaseType_t prvCreateBlinkyTasks( void )
                                      .pcName = pcSendTaskName,
                                      .usStackDepth = configMINIMAL_STACK_SIZE / 2U,
                                      .pvParameters = NULL,
-                                     .uxPriority = blinkyQUEUE_SEND_TASK_PRIORITY,
+                                     .uxPriority = demoQUEUE_SEND_TASK_PRIORITY,
                                      .puxStackBuffer = xQueueSendTaskStack,
                                      .pxTaskBuffer = &xQueueSendTaskTCB,
                                      .xRegions = {
@@ -280,13 +265,16 @@ BaseType_t prvCreateBlinkyTasks( void )
     return xReturn;
 }
 
-BaseType_t xCreateBlinkyTasks( void )
+BaseType_t xCreateQueueTasks( void )
 {
     BaseType_t xReturn = pdPASS;
 
-    /* Create the queue used by the blinky tasks . */
+    /* The Receive Task MUST be a higher priority than the send task. */
+    configASSERT( demoQUEUE_RECEIVE_TASK_PRIORITY > demoQUEUE_SEND_TASK_PRIORITY );
+
+    /* Create the queue used by the queue tasks . */
     xQueue = xQueueCreateStatic(
-        blinkyQUEUE_LENGTH,
+        queueQUEUE_LENGTH,
         sizeof( uint32_t ),
         xQueueStorage,
         &xStaticQueue
@@ -308,7 +296,7 @@ BaseType_t xCreateBlinkyTasks( void )
         /* Create a statically allocated timer */
         xTimer = xTimerCreateStatic(
             pcTimerName,
-            ( const TickType_t ) blinkyTIMER_SEND_FREQUENCY_MS,
+            ( const TickType_t ) queueTIMER_SEND_FREQUENCY_MS,
             xAutoReload,
             pvTimerID,
             pxCallbackFunction,
@@ -333,7 +321,7 @@ BaseType_t xCreateBlinkyTasks( void )
 
     if( pdPASS == xReturn )
     {
-        xReturn = prvCreateBlinkyTasks();
+        xReturn = prvCreateQueueTasks();
     }
     else
     {
@@ -371,8 +359,8 @@ BaseType_t xCreateBlinkyTasks( void )
 static void prvQueueSendTask( void * pvParameters )
 {
     TickType_t xNextWakeTime;
-    const TickType_t xBlockTime = blinkyTASK_SEND_FREQUENCY_MS;
-    const uint32_t ulValueToSend = blinkyVALUE_SENT_FROM_TASK;
+    const TickType_t xBlockTime = queueTASK_SEND_FREQUENCY_MS;
+    const uint32_t ulValueToSend = queueVALUE_SENT_FROM_TASK;
     /* Prevent the compiler warning about the unused parameter. */
     ( void ) pvParameters;
 
@@ -401,7 +389,7 @@ static void prvQueueSendTask( void * pvParameters )
 
 static void prvQueueSendTimerCallback( TimerHandle_t xTimerHandle )
 {
-    const uint32_t ulValueToSend = blinkyVALUE_SENT_FROM_TIMER;
+    const uint32_t ulValueToSend = queueVALUE_SENT_FROM_TIMER;
 
     /* This is the software timer callback function. The software timer has
      * a period of two seconds. This callback function will execute if the
@@ -434,11 +422,11 @@ static void prvQueueReceiveTask( void * pvParameters )
 
         /* To get here something must have been received from the queue,
          * but is it an expected value? */
-        if( ulReceivedValue == blinkyVALUE_SENT_FROM_TASK )
+        if( ulReceivedValue == queueVALUE_SENT_FROM_TASK )
         {
             vToggleLED( 0x0 );
         }
-        else if( ulReceivedValue == blinkyVALUE_SENT_FROM_TIMER )
+        else if( ulReceivedValue == queueVALUE_SENT_FROM_TIMER )
         {
             vToggleLED( 0x1 );
         }
@@ -451,4 +439,4 @@ static void prvQueueReceiveTask( void * pvParameters )
 }
 /* --------------------------------------------------------------------- */
 
-#endif /* ( mainDEMO_TYPE & BLINKY_DEMO ) */
+#endif /* ( mainDEMO_TYPE & QUEUE_DEMO ) */

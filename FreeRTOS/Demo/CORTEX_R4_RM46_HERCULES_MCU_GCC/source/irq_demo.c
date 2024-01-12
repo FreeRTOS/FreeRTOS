@@ -108,7 +108,7 @@ static void prvIRQTestTask( void * pvParameters )
             }
         }
 
-        if(0x1UL == ulIntNestTestVal)
+        if(0x4UL == ulIntNestTestVal)
         {
             sci_print("IRQ Test Task reported correct unwinding!\r\n");
             vToggleLED( 0x1 );
@@ -131,6 +131,7 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
 {
     //sci_print("SWI IRQ Raised\r\n");
     //volatile uint32_t * xSSIIntRegBase = portSSI_INT_REG_BASE;
+    //volatile uint32_t ulDelayLoop = 0x0UL;
     volatile uint32_t ulSSIRegisterValue;
     //volatile uint32_t ulSSIVecValue;
     volatile uint32_t ulSSIIntFlagValue;
@@ -142,70 +143,80 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
         ulSSIIntFlagValue = portSSI_INTFLAG_REG;
         if( 0x1UL & ulSSIIntFlagValue )
         {
-            sci_print("\tSoftware Interrupt Channel One Raised!\r\n");
             xSoftwareInterruptRegister = portSSI_INT_REG_ONE;
-            /* Mark this interrupt channel as read and acknowledged */
             ulSSIRegisterValue = *xSoftwareInterruptRegister;
             if( ulSSIRegisterValue & 0x11UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\tSWI Channel #1 Raised with Data Value 0x11, unwinding nested stack!\r\n");
+                sci_print("\tSWI Channel #1 Raised with Data Value 0x11, clearing the IRQs...\r\n");
+                /* Read to mark this IRQ as cleared */
+                /* Mark the Nested Channel 1 IRQ as cleared */
+                ulSSIIntFlagValue = portSSI_VEC_REG;
+                configASSERT(0x1101UL == ulSSIIntFlagValue);
+
+                /* Mark the Nested Channel 2 IRQ as cleared */
+                ulSSIIntFlagValue = portSSI_VEC_REG;
+                configASSERT(0x2202UL == ulSSIIntFlagValue);
+
+                /* Mark the Nested Channel 3 IRQ as cleared */
+                ulSSIIntFlagValue = portSSI_VEC_REG;
+                configASSERT(0x3303UL == ulSSIIntFlagValue);
+
+                /* Mark the Nested Channel 4 IRQ as cleared */
+                ulSSIIntFlagValue = portSSI_VEC_REG;
+                configASSERT(0x4404UL == ulSSIIntFlagValue);
+
+                /* Should be no other IRQs raised, mask out the data */
+                ulSSIIntFlagValue = ( portSSI_VEC_REG ) & 0XFFUL;
+                configASSERT(0x0UL == ulSSIIntFlagValue);
             }
-            ulSSIIntFlagValue ^= 0x1UL;
         }
 
         else if( 0x2UL & ulSSIIntFlagValue )
         {
-            sci_print("\tSoftware Interrupt Channel Two Raised!\r\n");
-
             xSoftwareInterruptRegister = portSSI_INT_REG_TWO;
             ulSSIRegisterValue = *xSoftwareInterruptRegister;
             if( ulSSIRegisterValue & 0x22UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\tSWI Channel #2 Raised with Data Value 0x22!\r\n");
+                sci_print("\tSWI Channel #2 triggering nested Channel #1 IRQ!\r\n");
                 xSoftwareInterruptRegister = portSSI_INT_REG_ONE;
                 *xSoftwareInterruptRegister = portSSI_ONE_KEY | 0x11UL;
-                //__asm volatile("CPSIE I");
-
+                __asm volatile("CPSIE I");
+                sci_print("\tSWI Channel #2 unwinding...\r\n");
             }
-
-            ulSSIIntFlagValue ^= 0x2UL;
         }
 
         else if( 0x4UL & ulSSIIntFlagValue )
         {
-            sci_print("\tSoftware Interrupt Channel Three Raised!\r\n");
-
             xSoftwareInterruptRegister = portSSI_INT_REG_THREE;
             ulSSIRegisterValue = *xSoftwareInterruptRegister;
             if( ulSSIRegisterValue & 0x33UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\tSWI Channel #3 Raised with Data Value 0x33!\r\n");
+                sci_print("\tSWI Channel #3 triggering nested Channel #2 IRQ!\r\n");
                 xSoftwareInterruptRegister = portSSI_INT_REG_TWO;
                 *xSoftwareInterruptRegister = portSSI_TWO_KEY | 0x22UL;
-                //__asm volatile("CPSIE I");
+                __asm volatile("CPSIE I");
+                sci_print("\tSWI Channel #3 unwinding...\r\n");
 
             }
-            ulSSIIntFlagValue ^= 0x4UL;
         }
 
         else /* if( 0x8UL & ulSSIIntFlagValue ) */
         {
-            sci_print("\tSoftware Interrupt Channel Four Raised!\r\n");
-
             xSoftwareInterruptRegister = portSSI_INT_REG_FOUR;
             ulSSIRegisterValue = *xSoftwareInterruptRegister;
             if( ulSSIRegisterValue & 0x44UL )
             {
                 ulIntNestTestVal = 0x1UL;
-                sci_print("\tSWI Channel #4 Raised with Data Value 0x44!\r\n");
-                // xSoftwareInterruptRegister = portSSI_INT_REG_THREE;
-                // *xSoftwareInterruptRegister = portSSI_THREE_KEY | 0x33UL;
-                //__asm volatile("CPSIE I");
+                sci_print("\tSWI Channel #4 triggering nested Channel #3 IRQ!\r\n");
+                xSoftwareInterruptRegister = portSSI_INT_REG_THREE;
+                *xSoftwareInterruptRegister = portSSI_THREE_KEY | 0x33UL;
+                __asm volatile("CPSIE I");
+                while()
+                sci_print("\tSWI Channel #4 unwinding...\r\n");
             }
-            ulSSIIntFlagValue ^= 0x8UL;
         }
 
         /* Read the SSI Vec reg to clear corresponding bits and flags
@@ -213,7 +224,7 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
          * TODO: FInd the right doc
          * Joshua said it was page 184
          *  */
-        ulSSIIntFlagValue = portSSI_VEC_REG;
+
 
     }
     /* while( 0x0UL != ulSSIIntFlagValue); */

@@ -44,6 +44,9 @@
 /** @brief Demo that uses the Task Notification APIs */
 #define NOTIFICATION_DEMO   0x10
 
+/** @brief Build Register, Queue, MPU, IRQ, and Notification demos */
+#define FULL_DEMO ( REGISTER_DEMO | QUEUE_DEMO | MPU_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
+
 /** @brief Bitfield used to select the Demo Tasks to build and run
  *
  * @note This project contains multiple demo and test tasks. A bitfield is used
@@ -63,7 +66,7 @@
  *
  */
 #ifndef mainDEMO_TYPE
-    #define mainDEMO_TYPE ( REGISTER_DEMO | QUEUE_DEMO | MPU_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
+    #define mainDEMO_TYPE ( FULL_DEMO )
 #endif /* mainDEMO_TYPE */
 
 /* FreeRTOS includes. */
@@ -71,7 +74,14 @@
 #include "portmacro.h"
 #include "mpu_wrappers.h"
 
+/* These tasks have been given pseudo random priority values for testing.
+ * Except for the queue send and receive task any of these tasks priorites
+ * should be able to be set to any valid priority without issue. */
+
+/** @brief Priority at which the Privileged Register Task is created. */
 #define demoREG_PRIVILEGED_TASK_PRIORITY        ( configMAX_PRIORITIES - 2UL )
+
+/** @brief Priority at which the Unprivileged Register Task is created. */
 #define demoREG_UNPRIVILEGED_TASK_PRIORITY      ( configMAX_PRIORITIES - 1UL )
 
 /** @brief Priority at which the prvQueueSendTask is created. */
@@ -80,11 +90,16 @@
 /** @brief Priority at which the prvQueueReceiveTask is created. */
 #define demoQUEUE_RECEIVE_TASK_PRIORITY         ( demoQUEUE_SEND_TASK_PRIORITY + 1UL )
 
+/** @brief Priority at which the MPU Read & Write Task is created. */
 #define demoMPU_READ_WRITE_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3UL )
+
+/** @brief Priority at which the MPU Read Only Task is created. */
 #define demoMPU_READ_ONLY_TASK_PRIORITY         ( tskIDLE_PRIORITY + 4UL )
 
+/** @brief Priority at which the Nested IRQ Test Task is created. */
 #define demoIRQ_TASK_PRIORITY                   ( configTIMER_TASK_PRIORITY + 2UL )
 
+/** @brief Priority at which the Notification Demo Task is created. */
 #define demoNOTIFICATION_TASK_PRIORITY          ( configTIMER_TASK_PRIORITY + 1UL )
 
 /* -------------------------- Register Test Tasks -------------------------- */

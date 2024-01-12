@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        ".cSpellWords.txt": "magic",
+        "freertos.h": "c",
+        "portable.h": "c",
+        "portmacro.h": "c"
+    }
+}

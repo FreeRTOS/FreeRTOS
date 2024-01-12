@@ -49,32 +49,18 @@ PRIVILEGED_DATA static StaticTask_t xIRQTestTaskTCB;
 
 /** @brief MPU Region Aligned Stack used by the IRQ Test Task */
 
-PRIVILEGED_DATA static StackType_t uxIRQTestTaskStack[ demoIRQ_STACK_SIZE ]
-    __attribute__( ( aligned( demoIRQ_STACK_SIZE * 0x4UL ) ) );
+PRIVILEGED_DATA static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ]
+    __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x4UL ) ) );
 
 /** @brief Parameters that are passed into the IRQ test task solely for
  * the purpose of ensuring parameters are passed into tasks correctly. */
 #define irqTASK_PARAMETER ( 0xFEEDBEEFUL )
 
-extern PRIVILEGED_DATA volatile uint32_t ulPortYieldRequired;
 /** @brief Statically allocated task handle for the IRQ Test task. */
 PRIVILEGED_DATA static TaskHandle_t xIRQTaskHandle;
 
 PRIVILEGED_DATA volatile static uint32_t ulIntNestTestVal;
 /* ----------------------------------------------------------------------------------- */
-
-static void prvNotifyCheck(BaseType_t ulRetVal)
-{
-    if( pdPASS == ulRetVal )
-    {
-        sci_print("Sent a notification!\r\n");
-    }
-    else
-    {
-        sci_print("Notification did not return pdPASS.\r\n");
-        configASSERT( 0x0 );
-    }
-}
 
 /** @brief Entry point for the Unprivileged IRQ Test Task.
  * @param pvParameters A test value to ensure the task's arguments are correctly set.
@@ -87,44 +73,55 @@ static void prvNotifyCheck(BaseType_t ulRetVal)
  */
 static void prvIRQTestTask( void * pvParameters )
 {
-    BaseType_t xReturned;
-    uint32_t ulNotificationValue;
-
     /* Ensure that the correct parameter was passed to the task */
     configASSERT( ( uint32_t ) pvParameters == irqTASK_PARAMETER );
+    volatile uint32_t * xSoftwareInterruptRegister;
+    volatile TickType_t ulLoopCount;
+    volatile TickType_t xPreIRQTickCount;
     for( ;; )
     {
         /* Disable IRQs to raise a Software Based IRQ */
         //portDISABLE_INTERRUPTS();
         sci_print("IRQ Test Task Starting IRQ Nesting Test!\r\n");
         ulIntNestTestVal = 0xFFFFUL;
+
+        /* Get the tick count before raising the SWI */
+        xPreIRQTickCount = xTaskGetTickCount();
+
         /* Trigger an IRQ by writing to the SSI Register with a data value */
-        volatile uint32_t * xSoftwareInterruptRegister = portSSI_INT_REG_FOUR;
+        xSoftwareInterruptRegister = portSSI_INT_REG_FOUR;
         *xSoftwareInterruptRegister = portSSI_FOUR_KEY | 0x44UL;
 
         /* When using a debugger IRQs can be paused/delayed.
-         * Lazy loop to wait for it to trigger. */
-        volatile uint32_t ulLoopCount = 0x0;
-        while( ulLoopCount++ < 0x20)
+         * This loop exists to keep the compiler from optimizing it out
+         * while also giving the debugger time to trigger the IRQ. */
+        ulLoopCount = xPreIRQTickCount;
+        while( ( ulLoopCount + xPreIRQTickCount ) < ( xPreIRQTickCount + 0x20UL) )
         {
-            if( ulIntNestTestVal >= 0x10UL )
+            if( 0xFFFFUL != ulIntNestTestVal )
             {
-                ulIntNestTestVal = xTaskGetTickCount();
+                ulLoopCount++;
             }
             else
             {
-                ulLoopCount = 0x30;
+                ulLoopCount = 0xFFFF0000UL;
             }
         }
 
-        if(0x0UL == ulIntNestTestVal)
+        if(0x1UL == ulIntNestTestVal)
         {
-            sci_print("IRQ Test Did not get the expected value!\r\n");
+            sci_print("IRQ Test Task reported correct unwinding!\r\n");
+            vToggleLED( 0x1 );
         }
         else
         {
-            sci_print("IRQ Test Got the expected value!\r\n");
+            sci_print("IRQ Test Task did not receive the correct nesting value!\r\n");
+            configASSERT(0x0);
         }
+
+        sci_print("IRQ Test Task sleeping before next loop!\r\n\r\n");
+        /* Sleep for odd number of seconds to schedule at different real-times */
+        vTaskDelay( pdMS_TO_TICKS( 3150UL ) );
     }
 }
 
@@ -244,7 +241,7 @@ BaseType_t xCreateIRQTestTask( void )
         /* The name of the task. */
         .pcName = "IRQTestTask",
         /* Size of stack to allocate for the task - in words not bytes!. */
-        .usStackDepth = demoIRQ_STACK_SIZE,
+        .usStackDepth = configMINIMAL_STACK_SIZE,
         /* Parameter passed into the task. */
         .pvParameters = ( void * ) irqTASK_PARAMETER,
         /* Priority of the task. */

@@ -42,7 +42,7 @@
 /* Demo include */
 #include "demo_tasks.h"
 
-#if ( mainDEMO_TYPE & IRQ_DEMO )
+#if( mainDEMO_TYPE & IRQ_DEMO )
 
 /** @brief TCB used by the IRQ Test Task */
 PRIVILEGED_DATA static StaticTask_t xIRQTestTaskTCB;
@@ -52,9 +52,9 @@ PRIVILEGED_DATA static StaticTask_t xIRQTestTaskTCB;
 PRIVILEGED_DATA static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ]
     __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x4UL ) ) );
 
-/** @brief Parameters that are passed into the IRQ test task solely for
- * the purpose of ensuring parameters are passed into tasks correctly. */
-#define irqTASK_PARAMETER ( 0xFEEDBEEFUL )
+    /** @brief Parameters that are passed into the IRQ test task solely for
+     * the purpose of ensuring parameters are passed into tasks correctly. */
+    #define irqTASK_PARAMETER ( 0xFEEDBEEFUL )
 
 /** @brief Statically allocated task handle for the IRQ Test task. */
 PRIVILEGED_DATA static TaskHandle_t xIRQTaskHandle;
@@ -81,8 +81,8 @@ static void prvIRQTestTask( void * pvParameters )
     for( ;; )
     {
         /* Disable IRQs to raise a Software Based IRQ */
-        //portDISABLE_INTERRUPTS();
-        sci_print("IRQ Test Task Starting IRQ Nesting Test!\r\n");
+        // portDISABLE_INTERRUPTS();
+        sci_print( "IRQ Test Task Starting IRQ Nesting Test!\r\n" );
         ulIntNestTestVal = 0xFFFFUL;
 
         /* Get the tick count before raising the SWI */
@@ -96,7 +96,7 @@ static void prvIRQTestTask( void * pvParameters )
          * This loop exists to keep the compiler from optimizing it out
          * while also giving the debugger time to trigger the IRQ. */
         ulLoopCount = xPreIRQTickCount;
-        while( ( ulLoopCount + xPreIRQTickCount ) < ( xPreIRQTickCount + 0x20UL) )
+        while( ( ulLoopCount + xPreIRQTickCount ) < ( xPreIRQTickCount + 0x20UL ) )
         {
             if( 0xFFFFUL != ulIntNestTestVal )
             {
@@ -108,18 +108,18 @@ static void prvIRQTestTask( void * pvParameters )
             }
         }
 
-        if(0x4UL == ulIntNestTestVal)
+        if( 0x4UL == ulIntNestTestVal )
         {
-            sci_print("IRQ Test Task reported correct unwinding!\r\n");
+            sci_print( "IRQ Test Task reported correct unwinding!\r\n" );
             vToggleLED( 0x1 );
         }
         else
         {
-            sci_print("IRQ Test Task did not receive the correct nesting value!\r\n");
-            configASSERT(0x0);
+            sci_print( "IRQ Test Task did not receive the correct nesting value!\r\n" );
+            configASSERT( 0x0 );
         }
 
-        sci_print("IRQ Test Task sleeping before next loop!\r\n\r\n");
+        sci_print( "IRQ Test Task sleeping before next loop!\r\n\r\n" );
         /* Sleep for odd number of seconds to schedule at different real-times */
         vTaskDelay( pdMS_TO_TICKS( 3150UL ) );
     }
@@ -129,12 +129,12 @@ static void prvIRQTestTask( void * pvParameters )
 
 void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
 {
-    sci_print("\tSWI Based IRQ was raised!\r\n");
-    //sci_print("SWI IRQ Raised\r\n");
-    //volatile uint32_t * xSSIIntRegBase = portSSI_INT_REG_BASE;
-    //volatile uint32_t ulDelayLoop = 0x0UL;
+    sci_print( "\tSWI Based IRQ was raised!\r\n" );
+    // sci_print("SWI IRQ Raised\r\n");
+    // volatile uint32_t * xSSIIntRegBase = portSSI_INT_REG_BASE;
+    // volatile uint32_t ulDelayLoop = 0x0UL;
     volatile uint32_t ulSSIRegisterValue;
-    //volatile uint32_t ulSSIVecValue;
+    // volatile uint32_t ulSSIVecValue;
     volatile uint32_t ulSSIIntFlagValue;
     volatile uint32_t * xSoftwareInterruptRegister;
     /* The 4 different SWI Registers use a bitfield to mark that they where raised */
@@ -149,27 +149,28 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x11UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\t\tSWI Channel #1 Raised with Data Value 0x11, clearing the IRQs...\r\n");
+                sci_print( "\t\tSWI Channel #1 Raised with Data Value 0x11, clearing the "
+                           "IRQs...\r\n" );
                 /* Read to mark this IRQ as cleared */
                 /* Mark the Nested Channel 1 IRQ as cleared */
                 ulSSIIntFlagValue = portSSI_VEC_REG;
-                configASSERT(0x1101UL == ulSSIIntFlagValue);
+                configASSERT( 0x1101UL == ulSSIIntFlagValue );
 
                 /* Mark the Nested Channel 2 IRQ as cleared */
                 ulSSIIntFlagValue = portSSI_VEC_REG;
-                configASSERT(0x2202UL == ulSSIIntFlagValue);
+                configASSERT( 0x2202UL == ulSSIIntFlagValue );
 
                 /* Mark the Nested Channel 3 IRQ as cleared */
                 ulSSIIntFlagValue = portSSI_VEC_REG;
-                configASSERT(0x3303UL == ulSSIIntFlagValue);
+                configASSERT( 0x3303UL == ulSSIIntFlagValue );
 
                 /* Mark the Nested Channel 4 IRQ as cleared */
                 ulSSIIntFlagValue = portSSI_VEC_REG;
-                configASSERT(0x4404UL == ulSSIIntFlagValue);
+                configASSERT( 0x4404UL == ulSSIIntFlagValue );
 
                 /* Should be no other IRQs raised, mask out the data */
                 ulSSIIntFlagValue = ( portSSI_VEC_REG ) & 0XFFUL;
-                configASSERT(0x0UL == ulSSIIntFlagValue);
+                configASSERT( 0x0UL == ulSSIIntFlagValue );
             }
         }
 
@@ -180,10 +181,10 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x22UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\t\tSWI Channel #2 triggering nested Channel #1 IRQ!\r\n");
+                sci_print( "\t\tSWI Channel #2 triggering nested Channel #1 IRQ!\r\n" );
                 xSoftwareInterruptRegister = portSSI_INT_REG_ONE;
                 *xSoftwareInterruptRegister = portSSI_ONE_KEY | 0x11UL;
-                __asm volatile("CPSIE I");
+                __asm volatile( "CPSIE I" );
                 // sci_print("\tSWI Channel #2 unwinding...\r\n");
             }
         }
@@ -195,12 +196,11 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x33UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\t\tSWI Channel #3 triggering nested Channel #2 IRQ!\r\n");
+                sci_print( "\t\tSWI Channel #3 triggering nested Channel #2 IRQ!\r\n" );
                 xSoftwareInterruptRegister = portSSI_INT_REG_TWO;
                 *xSoftwareInterruptRegister = portSSI_TWO_KEY | 0x22UL;
-                __asm volatile("CPSIE I");
+                __asm volatile( "CPSIE I" );
                 // sci_print("\tSWI Channel #3 unwinding...\r\n");
-
             }
         }
 
@@ -211,11 +211,11 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x44UL )
             {
                 ulIntNestTestVal = 0x1UL;
-                sci_print("\t\tSWI Channel #4 triggering nested Channel #3 IRQ!\r\n");
+                sci_print( "\t\tSWI Channel #4 triggering nested Channel #3 IRQ!\r\n" );
                 xSoftwareInterruptRegister = portSSI_INT_REG_THREE;
                 *xSoftwareInterruptRegister = portSSI_THREE_KEY | 0x33UL;
-                __asm volatile("CPSIE I");
-                //while()
+                __asm volatile( "CPSIE I" );
+                // while()
             }
         }
 
@@ -224,7 +224,7 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
          * TODO: FInd the right doc
          * Joshua said it was page 184
          *  */
-#if 0
+    #if 0
         if(ulSSIRegisterValue == 0x44)
         {
             while(ulSSIRegisterValue != 0x0 )
@@ -257,11 +257,10 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             }
             sci_print("\tSWI Channel #1 Finished reading\r\n");
         }
-#endif
+    #endif
     }
 
     /* while( 0x0UL != ulSSIIntFlagValue); */
-
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -305,7 +304,7 @@ BaseType_t xCreateIRQTestTask( void )
                     { 0, 0, 0 },
                     /* MPU Region 5 */
                     { 0, 0, 0 },
-#if( configTOTAL_MPU_REGIONS == 16 )
+    #if( configTOTAL_MPU_REGIONS == 16 )
                         /* MPU Region 6 */
                         { 0, 0, 0 },
                         /* MPU Region 7 */
@@ -314,12 +313,15 @@ BaseType_t xCreateIRQTestTask( void )
                         { 0, 0, 0 },
                         /* MPU Region 9 */
                         { 0, 0, 0 },
-#endif
+    #endif
         }
     };
 
     /* Create the first register test task as a privileged task */
-    xReturn = xTaskCreateRestrictedStatic( &( xIRQTestTaskParameters ), &( xIRQTaskHandle ) );
+    xReturn = xTaskCreateRestrictedStatic(
+        &( xIRQTestTaskParameters ),
+        &( xIRQTaskHandle )
+    );
     if( pdPASS == xReturn )
     {
         sci_print( "Created the IRQ Test Task\r\n" );

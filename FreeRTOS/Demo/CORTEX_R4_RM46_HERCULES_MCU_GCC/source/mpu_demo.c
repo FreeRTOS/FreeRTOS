@@ -293,109 +293,111 @@ BaseType_t xCreateMPUTasks( void )
 
     ulStaticUnprotectedData = 0xC3;
 
-    TaskParameters_t xROAccessTaskParameters = { .pvTaskCode = prvROAccessTask,
-                                                 .pcName = "ROAccess",
-                                                 .usStackDepth = configMINIMAL_STACK_SIZE,
-                                                 .pvParameters = NULL,
-                                                 .uxPriority = demoMPU_READ_ONLY_TASK_PRIORITY,
-                                                 .puxStackBuffer = xROAccessTaskStack,
-                                                 .pxTaskBuffer = &xROAccessTaskTCB,
-                                                 .xRegions = {
-                                                     /* First Configurable Region 0 */
-                                                     { ( void * ) ucSharedMemory,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 1 */
-                                                     { ( void * ) ucSharedMemory1,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 2 */
-                                                     { ( void * ) ucSharedMemory2,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 3 */
-                                                     { ( void * ) ucSharedMemory3,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 4 */
-                                                     { ( void * ) ucSharedMemory4,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
+    TaskParameters_t
+        xROAccessTaskParameters = { .pvTaskCode = prvROAccessTask,
+                                    .pcName = "ROAccess",
+                                    .usStackDepth = configMINIMAL_STACK_SIZE,
+                                    .pvParameters = NULL,
+                                    .uxPriority = demoMPU_READ_ONLY_TASK_PRIORITY,
+                                    .puxStackBuffer = xROAccessTaskStack,
+                                    .pxTaskBuffer = &xROAccessTaskTCB,
+                                    .xRegions = {
+                                        /* First Configurable Region 0 */
+                                        { ( void * ) ucSharedMemory,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 1 */
+                                        { ( void * ) ucSharedMemory1,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 2 */
+                                        { ( void * ) ucSharedMemory2,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 3 */
+                                        { ( void * ) ucSharedMemory3,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 4 */
+                                        { ( void * ) ucSharedMemory4,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
     #if( configTOTAL_MPU_REGIONS == 16 )
-                                                     /* Region 5 */
-                                                     { ( void * ) ucSharedMemory5,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 6 */
-                                                     { ( void * ) ucSharedMemory6,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 7 */
-                                                     { ( void * ) ucSharedMemory7,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
-                                                     /* Region 8 */
-                                                     { ( void * ) ucSharedMemory8,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulReadMemoryPermissions },
+                                        /* Region 5 */
+                                        { ( void * ) ucSharedMemory5,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 6 */
+                                        { ( void * ) ucSharedMemory6,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 7 */
+                                        { ( void * ) ucSharedMemory7,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
+                                        /* Region 8 */
+                                        { ( void * ) ucSharedMemory8,
+                                          SHARED_MEMORY_SIZE,
+                                          ulReadMemoryPermissions },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                                                     /* Last Configurable Region */
-                                                     { ( void * ) ucROTaskFaultTracker,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                 } };
+                                        /* Last Configurable Region */
+                                        { ( void * ) ucROTaskFaultTracker,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                    } };
 
-    TaskParameters_t xRWAccessTaskParameters = { .pvTaskCode = prvRWAccessTask,
-                                                 .pcName = "RWAccess",
-                                                 .usStackDepth = configMINIMAL_STACK_SIZE,
-                                                 .pvParameters = ( void * ) ( 0xFF ),
-                                                 .uxPriority = demoMPU_READ_WRITE_TASK_PRIORITY,
-                                                 .puxStackBuffer = xRWAccessTaskStack,
-                                                 .pxTaskBuffer = &xRWAccessTaskTCB,
-                                                 .xRegions = {
-                                                     /* First Configurable Region 5 */
-                                                     { ( void * ) ucSharedMemory,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 6 */
-                                                     { ( void * ) ucSharedMemory1,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 7 */
-                                                     { ( void * ) ucSharedMemory2,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 8 */
-                                                     { ( void * ) ucSharedMemory3,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 9 */
-                                                     { ( void * ) ucSharedMemory4,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
+    TaskParameters_t
+        xRWAccessTaskParameters = { .pvTaskCode = prvRWAccessTask,
+                                    .pcName = "RWAccess",
+                                    .usStackDepth = configMINIMAL_STACK_SIZE,
+                                    .pvParameters = ( void * ) ( 0xFF ),
+                                    .uxPriority = demoMPU_READ_WRITE_TASK_PRIORITY,
+                                    .puxStackBuffer = xRWAccessTaskStack,
+                                    .pxTaskBuffer = &xRWAccessTaskTCB,
+                                    .xRegions = {
+                                        /* First Configurable Region 5 */
+                                        { ( void * ) ucSharedMemory,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 6 */
+                                        { ( void * ) ucSharedMemory1,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 7 */
+                                        { ( void * ) ucSharedMemory2,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 8 */
+                                        { ( void * ) ucSharedMemory3,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 9 */
+                                        { ( void * ) ucSharedMemory4,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
     #if( configTOTAL_MPU_REGIONS == 16 )
-                                                     /* Region 10 */
-                                                     { ( void * ) ucSharedMemory5,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 11 */
-                                                     { ( void * ) ucSharedMemory6,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 12 */
-                                                     { ( void * ) ucSharedMemory7,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                     /* Region 13 */
-                                                     { ( void * ) ucSharedMemory8,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
+                                        /* Region 10 */
+                                        { ( void * ) ucSharedMemory5,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 11 */
+                                        { ( void * ) ucSharedMemory6,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 12 */
+                                        { ( void * ) ucSharedMemory7,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                        /* Region 13 */
+                                        { ( void * ) ucSharedMemory8,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                                                     /* Last Configurable Region */
-                                                     { ( void * ) ucROTaskFaultTracker,
-                                                       SHARED_MEMORY_SIZE,
-                                                       ulWriteMemoryPermissions },
-                                                 } };
+                                        /* Last Configurable Region */
+                                        { ( void * ) ucROTaskFaultTracker,
+                                          SHARED_MEMORY_SIZE,
+                                          ulWriteMemoryPermissions },
+                                    } };
 
     if( pdPASS == xReturn )
     {

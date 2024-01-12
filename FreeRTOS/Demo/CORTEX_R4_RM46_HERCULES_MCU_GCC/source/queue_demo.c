@@ -55,20 +55,20 @@
 
     /** @brief The rate at which data is sent to the queue from the send task.
      * @note Ticks are converted to milliseconds using pdMS_TO_TICKS(). */
-    #define queueTASK_SEND_FREQUENCY_MS      pdMS_TO_TICKS( 200UL )
+    #define queueTASK_SEND_FREQUENCY_MS  pdMS_TO_TICKS( 200UL )
 
     /** @brief The rate at which data is sent to the queue from the timer.
      * @note Ticks are converted to milliseconds using pdMS_TO_TICKS(). */
-    #define queueTIMER_SEND_FREQUENCY_MS     pdMS_TO_TICKS( 2000UL )
+    #define queueTIMER_SEND_FREQUENCY_MS pdMS_TO_TICKS( 2000UL )
 
     /** @brief The number of items the queue can hold at once. */
-    #define queueQUEUE_LENGTH                ( 2 )
+    #define queueQUEUE_LENGTH            ( 2 )
 
     /** @brief Value sent from the send task to the receive task */
-    #define queueVALUE_SENT_FROM_TASK        ( 0x1234UL )
+    #define queueVALUE_SENT_FROM_TASK    ( 0x1234UL )
 
     /** @brief Value sent from the timer to the receive task */
-    #define queueVALUE_SENT_FROM_TIMER       ( 0x4321UL )
+    #define queueVALUE_SENT_FROM_TIMER   ( 0x4321UL )
 
 /* --------------------- Task Function Decleration --------------------- */
 

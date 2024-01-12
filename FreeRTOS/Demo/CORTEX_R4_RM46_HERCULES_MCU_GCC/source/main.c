@@ -100,8 +100,8 @@ int main( void )
     ulIdleTickHookCount = 0x0;
     prvSetupHardware();
 
-    sci_print( "\r\n---------------------------- Create FreeRTOS Tasks" \
-            "----------------------------\r\n\r\n" );
+    sci_print( "\r\n---------------------------- Create FreeRTOS Tasks"
+               "----------------------------\r\n\r\n" );
 
 #if( mainDEMO_TYPE & REGISTER_DEMO )
     {
@@ -155,8 +155,8 @@ int main( void )
 
     if( pdPASS == xReturn )
     {
-        sci_print( "\r\n--------------------------- Start of FreeRTOS Demos" \
-                "---------------------------\r\n\r\n" );
+        sci_print( "\r\n--------------------------- Start of FreeRTOS Demos"
+                   "---------------------------\r\n\r\n" );
         vTaskStartScheduler();
     }
     else
@@ -328,12 +328,12 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 
     taskENTER_CRITICAL();
     {
-        if( callingFunc != (char *) callingLine)
+        if( callingFunc != ( char * ) callingLine )
         {
             __asm volatile( "NOP" );
         }
-        //snprintf( errorMessage, 0x100, "Assert Called at %s:%ld\r\n", pcFuncName, ulLine );
-        //sci_print( errorMessage );
+        // snprintf( errorMessage, 0x100, "Assert Called at %s:%ld\r\n", pcFuncName,
+        // ulLine ); sci_print( errorMessage );
 
         /* You can step out of this function to debug the assertion by using
          * the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
@@ -365,9 +365,9 @@ void vApplicationIRQHandler( void )
     volatile uint32_t ulPendingIRQMask;
 
     volatile uint32_t ulPendISRReg0 = vimREG->REQMASKCLR0;
-	volatile uint32_t ulPendISRReg1 = vimREG->REQMASKCLR1;
-	volatile uint32_t ulPendISRReg2 = vimREG->REQMASKCLR2;
-	volatile uint32_t ulPendISRReg3 = vimREG->REQMASKCLR3;
+    volatile uint32_t ulPendISRReg1 = vimREG->REQMASKCLR1;
+    volatile uint32_t ulPendISRReg2 = vimREG->REQMASKCLR2;
+    volatile uint32_t ulPendISRReg3 = vimREG->REQMASKCLR3;
 
     if( NULL == xIRQFncPtr )
     {
@@ -416,14 +416,14 @@ void vApplicationIRQHandler( void )
 
     if( 0UL == ulIRQChannelIndex )
     {
-        sci_print("Phantom interrupt?\r\n");
-        configASSERT(pdFALSE);
+        sci_print( "Phantom interrupt?\r\n" );
+        configASSERT( pdFALSE );
         ( *xIRQFncPtr )();
     }
-    else if( ( phantomInterrupt == xIRQFncPtr) )
+    else if( ( phantomInterrupt == xIRQFncPtr ) )
     {
-        sci_print("IRQ With no registered function in sys_vim.c has been raised\r\n");
-        configASSERT(pdFALSE);
+        sci_print( "IRQ With no registered function in sys_vim.c has been raised\r\n" );
+        configASSERT( pdFALSE );
     }
     else
     {
@@ -431,7 +431,7 @@ void vApplicationIRQHandler( void )
          * causes can be found in the RM48L852 Data Sheet:
          * https://www.ti.com/lit/ds/symlink/rm46l852.pdf?ts=1704878833799 */
         /* An IRQ Raised by Channel Two of the VIM is RTI Compare Interrupt 0. */
-        if( 2UL == ulIRQChannelIndex)
+        if( 2UL == ulIRQChannelIndex )
         {
             /* This is the System Tick Timer Interrupt */
             ulPortYieldRequired = xTaskIncrementTick();
@@ -439,15 +439,15 @@ void vApplicationIRQHandler( void )
             portRTI_INTFLAG_REG = 0x1UL;
         }
         /* An IRQ Raised by Channel 21 of the VIM is a Software Interrupt (SSI). */
-        else if( 21UL == ulIRQChannelIndex)
+        else if( 21UL == ulIRQChannelIndex )
         {
-            #if( mainDEMO_TYPE & IRQ_DEMO )
-                /* This is an interrupt raised by Software */
-                vIRQDemoHandler();
-            #else
-                sci_print("SWI of unknown cause was raised!\r\n");
-                configASSERT(0x0);
-            #endif
+#if( mainDEMO_TYPE & IRQ_DEMO )
+            /* This is an interrupt raised by Software */
+            vIRQDemoHandler();
+#else
+            sci_print( "SWI of unknown cause was raised!\r\n" );
+            configASSERT( 0x0 );
+#endif
 
             /* Register read is needed to mark the end of the IRQ */
             volatile uint32_t ulEndOfIntRegVal = *portEND_OF_INTERRUPT_REG;
@@ -455,8 +455,7 @@ void vApplicationIRQHandler( void )
         }
         else
         {
-            sci_print("Unmapped IRQ Channel Number Raised\r\n");
-
+            sci_print( "Unmapped IRQ Channel Number Raised\r\n" );
         }
     }
 
@@ -464,7 +463,6 @@ void vApplicationIRQHandler( void )
     vimREG->REQMASKSET1 = ulPendISRReg1;
     vimREG->REQMASKSET2 = ulPendISRReg2;
     vimREG->REQMASKSET3 = ulPendISRReg3;
-
 }
 /*---------------------------------------------------------------------------*/
 

@@ -30,22 +30,22 @@
 /* ------------------------------ Demo Option ------------------------------ */
 
 /** @brief Create Tasks that are written in assembly to test context swaps */
-#define REGISTER_DEMO       0x1
+#define REGISTER_DEMO     0x1
 
 /** @brief Demo that uses timers, timer callbacks, and Queues */
-#define QUEUE_DEMO          0x2
+#define QUEUE_DEMO        0x2
 
 /** @brief Demo that causes data aborts and clears them to show MPU usage */
-#define MPU_DEMO            0x4
+#define MPU_DEMO          0x4
 
 /** @brief Demo that causes and unwinds a Nested IRQ */
-#define IRQ_DEMO            0x8
+#define IRQ_DEMO          0x8
 
 /** @brief Demo that uses the Task Notification APIs */
-#define NOTIFICATION_DEMO   0x10
+#define NOTIFICATION_DEMO 0x10
 
 /** @brief Build Register, Queue, MPU, IRQ, and Notification demos */
-#define FULL_DEMO ( REGISTER_DEMO | QUEUE_DEMO | MPU_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
+#define FULL_DEMO         ( REGISTER_DEMO | QUEUE_DEMO | MPU_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
 
 /** @brief Bitfield used to select the Demo Tasks to build and run
  *
@@ -79,28 +79,28 @@
  * should be able to be set to any valid priority without issue. */
 
 /** @brief Priority at which the Privileged Register Task is created. */
-#define demoREG_PRIVILEGED_TASK_PRIORITY        ( configMAX_PRIORITIES - 2UL )
+#define demoREG_PRIVILEGED_TASK_PRIORITY   ( configMAX_PRIORITIES - 2UL )
 
 /** @brief Priority at which the Unprivileged Register Task is created. */
-#define demoREG_UNPRIVILEGED_TASK_PRIORITY      ( configMAX_PRIORITIES - 1UL )
+#define demoREG_UNPRIVILEGED_TASK_PRIORITY ( configMAX_PRIORITIES - 1UL )
 
 /** @brief Priority at which the prvQueueSendTask is created. */
-#define demoQUEUE_SEND_TASK_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
+#define demoQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1UL )
 
 /** @brief Priority at which the prvQueueReceiveTask is created. */
-#define demoQUEUE_RECEIVE_TASK_PRIORITY         ( demoQUEUE_SEND_TASK_PRIORITY + 1UL )
+#define demoQUEUE_RECEIVE_TASK_PRIORITY    ( demoQUEUE_SEND_TASK_PRIORITY + 1UL )
 
 /** @brief Priority at which the MPU Read & Write Task is created. */
-#define demoMPU_READ_WRITE_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3UL )
+#define demoMPU_READ_WRITE_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3UL )
 
 /** @brief Priority at which the MPU Read Only Task is created. */
-#define demoMPU_READ_ONLY_TASK_PRIORITY         ( tskIDLE_PRIORITY + 4UL )
+#define demoMPU_READ_ONLY_TASK_PRIORITY    ( tskIDLE_PRIORITY + 4UL )
 
 /** @brief Priority at which the Nested IRQ Test Task is created. */
-#define demoIRQ_TASK_PRIORITY                   ( configTIMER_TASK_PRIORITY + 2UL )
+#define demoIRQ_TASK_PRIORITY              ( configTIMER_TASK_PRIORITY + 2UL )
 
 /** @brief Priority at which the Notification Demo Task is created. */
-#define demoNOTIFICATION_TASK_PRIORITY          ( configTIMER_TASK_PRIORITY + 1UL )
+#define demoNOTIFICATION_TASK_PRIORITY     ( configTIMER_TASK_PRIORITY + 1UL )
 
 /* -------------------------- Register Test Tasks -------------------------- */
 
@@ -153,45 +153,43 @@ BaseType_t xCreateIRQTestTask( void );
 BaseType_t xCreateNotificationTestTask( void );
 
 /** @brief Interrupt Handler used for Software Raised Interrupts */
-PRIVILEGED_FUNCTION void vIRQDemoHandler ( void );
+PRIVILEGED_FUNCTION void vIRQDemoHandler( void );
 
 /* Registers required to configure the Real Time Interrupt (RTI). */
-#define portRTI_GCTRL_REG       ( *( ( volatile uint32_t * ) 0xFFFFFC00UL ) )
-#define portRTI_TBCTRL_REG      ( *( ( volatile uint32_t * ) 0xFFFFFC04UL ) )
-#define portRTI_COMPCTRL_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC0CUL ) )
-#define portRTI_CNT0_FRC0_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC10UL ) )
-#define portRTI_CNT0_UC0_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC14UL ) )
-#define portRTI_CNT0_CPUC0_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC18UL ) )
-#define portRTI_CNT0_COMP0_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC50UL ) )
-#define portRTI_CNT0_UDCP0_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC54UL ) )
-#define portRTI_SETINTENA_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC80UL ) )
-#define portRTI_CLEARINTENA_REG ( *( ( volatile uint32_t * ) 0xFFFFFC84UL ) )
-#define portRTI_INTFLAG_REG     ( *( ( volatile uint32_t * ) 0xFFFFFC88UL ) )
-
+#define portRTI_GCTRL_REG        ( *( ( volatile uint32_t * ) 0xFFFFFC00UL ) )
+#define portRTI_TBCTRL_REG       ( *( ( volatile uint32_t * ) 0xFFFFFC04UL ) )
+#define portRTI_COMPCTRL_REG     ( *( ( volatile uint32_t * ) 0xFFFFFC0CUL ) )
+#define portRTI_CNT0_FRC0_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC10UL ) )
+#define portRTI_CNT0_UC0_REG     ( *( ( volatile uint32_t * ) 0xFFFFFC14UL ) )
+#define portRTI_CNT0_CPUC0_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC18UL ) )
+#define portRTI_CNT0_COMP0_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC50UL ) )
+#define portRTI_CNT0_UDCP0_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC54UL ) )
+#define portRTI_SETINTENA_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC80UL ) )
+#define portRTI_CLEARINTENA_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC84UL ) )
+#define portRTI_INTFLAG_REG      ( *( ( volatile uint32_t * ) 0xFFFFFC88UL ) )
 
 #define portEND_OF_INTERRUPT_REG ( ( ( volatile uint32_t * ) configEOI_ADDRESS ) )
 /* Registers used by the Vectored Interrupt Manager */
 typedef void ( *ISRFunction_t )( void );
-#define mainVIM_IRQ_INDEX   ( *( ( volatile uint32_t * ) 0xFFFFFE00 ) )
-#define mainVIM_IRQ_VEC_REG ( *( ( volatile ISRFunction_t * ) 0xFFFFFE70 ) )
+#define mainVIM_IRQ_INDEX     ( *( ( volatile uint32_t * ) 0xFFFFFE00 ) )
+#define mainVIM_IRQ_VEC_REG   ( *( ( volatile ISRFunction_t * ) 0xFFFFFE70 ) )
 
+#define portSSI_INT_REG_BASE  ( ( ( volatile uint32_t * ) 0xFFFFFFB0 ) )
 
-#define portSSI_INT_REG_BASE    ( ( ( volatile uint32_t * ) 0xFFFFFFB0 ) )
+#define portSSI_INT_REG_ONE   ( ( ( volatile uint32_t * ) 0xFFFFFFB0 ) )
+#define portSSI_ONE_KEY       0x7500UL
 
-#define portSSI_INT_REG_ONE     ( ( ( volatile uint32_t * ) 0xFFFFFFB0 ) )
-#define portSSI_ONE_KEY         0x7500UL
+#define portSSI_INT_REG_TWO   ( ( ( volatile uint32_t * ) 0xFFFFFFB4 ) )
+#define portSSI_TWO_KEY       0x8400UL
 
-#define portSSI_INT_REG_TWO     ( ( ( volatile uint32_t * ) 0xFFFFFFB4 ) )
-#define portSSI_TWO_KEY         0x8400UL
+#define portSSI_INT_REG_THREE ( ( ( volatile uint32_t * ) 0xFFFFFFB8 ) )
+#define portSSI_THREE_KEY     0x9300UL
 
-#define portSSI_INT_REG_THREE   ( ( ( volatile uint32_t * ) 0xFFFFFFB8 ) )
-#define portSSI_THREE_KEY       0x9300UL
+#define portSSI_INT_REG_FOUR  ( ( ( volatile uint32_t * ) 0xFFFFFFBC ) )
+#define portSSI_FOUR_KEY      0xA200UL
 
-#define portSSI_INT_REG_FOUR    ( ( ( volatile uint32_t * ) 0xFFFFFFBC ) )
-#define portSSI_FOUR_KEY        0xA200UL
-
-#define portSSI_VEC_REG         ( *( ( volatile uint32_t * ) 0xFFFFFFF4 ) )
-#define portSSI_INTFLAG_REG     ( *( ( volatile uint32_t * ) 0xFFFFFFF8 ) )
+#define portSSI_VEC_REG       ( *( ( volatile uint32_t * ) 0xFFFFFFF4 ) )
+#define portSSI_INTFLAG_REG   ( *( ( volatile uint32_t * ) 0xFFFFFFF8 ) )
 
 /* ---------------------- Shared Function Deceleration ---------------------- */
 

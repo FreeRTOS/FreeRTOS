@@ -42,14 +42,14 @@
 /* Demo include */
 #include "demo_tasks.h"
 
-#if ( mainDEMO_TYPE & NOTIFICATION_DEMO )
+#if( mainDEMO_TYPE & NOTIFICATION_DEMO )
 
-/** @brief Parameters that are passed into the notification test task solely
- * for the purpose of ensuring parameters are passed into tasks correctly. */
-#define notificationTASK_PARAMETER ( 0xFEEDBEEFUL )
+    /** @brief Parameters that are passed into the notification test task solely
+     * for the purpose of ensuring parameters are passed into tasks correctly. */
+    #define notificationTASK_PARAMETER ( 0xFEEDBEEFUL )
 
-/** @brief Value sent back and forth between the tasks */
-#define notificationTEST_VALUE  0x1234UL
+    /** @brief Value sent back and forth between the tasks */
+    #define notificationTEST_VALUE     0x1234UL
 
 /** @brief TCB used by the Notification Test Task */
 PRIVILEGED_DATA static StaticTask_t xNotificationTestTaskTCB;
@@ -63,15 +63,15 @@ static TaskHandle_t xNotificationTaskOneHandle;
 
 /* ----------------------------------------------------------------------------------- */
 
-static void prvNotifyCheck(BaseType_t ulRetVal)
+static void prvNotifyCheck( BaseType_t ulRetVal )
 {
     if( pdPASS == ulRetVal )
     {
-        sci_print("Notification API Returned a passing value!\r\n");
+        sci_print( "Notification API Returned a passing value!\r\n" );
     }
     else
     {
-        sci_print("Notification API did not return pdPASS.\r\n");
+        sci_print( "Notification API did not return pdPASS.\r\n" );
         configASSERT( ulRetVal );
     }
 }
@@ -100,36 +100,45 @@ static void prvNotificationTestTask( void * pvParameters )
 
         /* Tell the task to notify itself twice */
         xReturned = xTaskNotifyGive( xTaskGetCurrentTaskHandle() );
-        prvNotifyCheck(xReturned);
+        prvNotifyCheck( xReturned );
 
         xReturned = xTaskNotifyGive( xTaskGetCurrentTaskHandle() );
-        prvNotifyCheck(xReturned);
+        prvNotifyCheck( xReturned );
 
         /* Perform a non-blocking notification read, should see two "gives" */
         ulNotificationValue = ulTaskNotifyTake( pdTRUE, 0x0 );
 
         /* Two notifications have been sent to this task by itself */
         configASSERT( 0x2UL == ulNotificationValue );
-        sci_print("Notification Task correctly sent itself two notifications!\r\n");
+        sci_print( "Notification Task correctly sent itself two notifications!\r\n" );
 
         /* Now make the task send itself a notification with a value */
-        xReturned = xTaskNotify( xTaskGetCurrentTaskHandle(), notificationTEST_VALUE, eSetValueWithOverwrite );
-        prvNotifyCheck(xReturned);
+        xReturned = xTaskNotify(
+            xTaskGetCurrentTaskHandle(),
+            notificationTEST_VALUE,
+            eSetValueWithOverwrite
+        );
+        prvNotifyCheck( xReturned );
 
         /* Clear ulNotificationValue before using it */
         ulNotificationValue = 0x0UL;
 
         /* Receive the value sent using xTaskNotify */
-        xReturned = xTaskNotifyWait( 0, ( uint32_t ) 0xFFFFFFFFUL, &ulNotificationValue, ( TickType_t ) 0x50UL );
-        prvNotifyCheck(xReturned);
+        xReturned = xTaskNotifyWait(
+            0,
+            ( uint32_t ) 0xFFFFFFFFUL,
+            &ulNotificationValue,
+            ( TickType_t ) 0x50UL
+        );
+        prvNotifyCheck( xReturned );
 
         if( notificationTEST_VALUE == ulNotificationValue )
         {
-            sci_print("Notification Task got the expected value!\r\n");
+            sci_print( "Notification Task got the expected value!\r\n" );
         }
         else
         {
-            sci_print("Notification Task did NOT get the expected value!\r\n");
+            sci_print( "Notification Task did NOT get the expected value!\r\n" );
             configASSERT( 0x0UL );
         }
 
@@ -140,11 +149,16 @@ static void prvNotificationTestTask( void * pvParameters )
         xReturned = xTaskNotifyWait( 0, 0, &ulNotificationValue, ( TickType_t ) 0x0UL );
         if( ( pdPASS == xReturned ) || ( 0x0 != ulNotificationValue ) )
         {
-            sci_print("Notification Task received a value when there should have been none");
+            sci_print( "Notification Task received a value when there should have been "
+                       "none" );
             configASSERT( 0x0UL );
         }
 
-        xTaskNotify( xTaskGetCurrentTaskHandle(), ulNotificationValue, eSetValueWithOverwrite );
+        xTaskNotify(
+            xTaskGetCurrentTaskHandle(),
+            ulNotificationValue,
+            eSetValueWithOverwrite
+        );
         xReturned = xTaskNotifyStateClear( NULL );
 
         /* First time a notification was pending. */
@@ -154,10 +168,9 @@ static void prvNotificationTestTask( void * pvParameters )
         /* Second time the notification was already clear. */
         configASSERT( xReturned == pdFALSE );
 
-        sci_print("Notification Task sleeping before next loop!\r\n\r\n");
+        sci_print( "Notification Task sleeping before next loop!\r\n\r\n" );
         /* Sleep for odd number of seconds to schedule at different real-times */
         vTaskDelay( pdMS_TO_TICKS( 2750UL ) );
-
     }
 }
 
@@ -208,7 +221,7 @@ BaseType_t xCreateNotificationTestTask( void )
                     { 0, 0, 0 },
                     /* MPU Region 5 */
                     { 0, 0, 0 },
-#if( configTOTAL_MPU_REGIONS == 16 )
+    #if( configTOTAL_MPU_REGIONS == 16 )
                         /* MPU Region 6 */
                         { 0, 0, 0 },
                         /* MPU Region 7 */
@@ -217,12 +230,15 @@ BaseType_t xCreateNotificationTestTask( void )
                         { 0, 0, 0 },
                         /* MPU Region 9 */
                         { 0, 0, 0 },
-#endif
+    #endif
         }
     };
 
     /* Create the first register test task as a privileged task */
-    xReturn = xTaskCreateRestrictedStatic( &( xNotificationTestTaskParameters ), &( xNotificationTaskOneHandle ) );
+    xReturn = xTaskCreateRestrictedStatic(
+        &( xNotificationTestTaskParameters ),
+        &( xNotificationTaskOneHandle )
+    );
     if( pdPASS == xReturn )
     {
         sci_print( "Created the Notification Test Task\r\n" );

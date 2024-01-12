@@ -90,6 +90,7 @@ extern void esmHighInterrupt( void ) __attribute__( ( weak, interrupt( "FIQ" ) )
 extern void phantomInterrupt( void ) __attribute__( ( weak, interrupt( "IRQ" ) ) );
 extern void FreeRTOS_Tick_Handler( void ) __attribute__( ( weak, interrupt( "IRQ" ) ) );
 extern void vPortYieldWithinAPI( void ) __attribute__( ( weak, interrupt( "IRQ" ) ) );
+extern void FreeRTOS_IRQ_Handler( void ) __attribute__( ( weak, interrupt( "IRQ" ) ) );
 
 /* USER CODE BEGIN (3) */
 /* USER CODE END */

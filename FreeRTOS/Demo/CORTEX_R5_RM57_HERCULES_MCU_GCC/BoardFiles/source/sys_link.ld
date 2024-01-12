@@ -69,7 +69,7 @@ __privileged_functions_start__        = ORIGIN( FLASH );
 __privileged_functions_end__          = __privileged_functions_start__ + __privileged_functions_region_size__;
 
 /* All variables marked as "PRIVILEGED_DATA" get placed in this section, including the heap */
-__privileged_data_region_size__ = 16K;
+__privileged_data_region_size__ = 32K;
 __privileged_data_start__       = ORIGIN( RAM );
 __privileged_data_end__         = ORIGIN( RAM ) + __privileged_data_region_size__;
 

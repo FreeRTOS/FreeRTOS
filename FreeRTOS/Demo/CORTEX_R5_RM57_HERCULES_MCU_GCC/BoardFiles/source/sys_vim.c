@@ -67,7 +67,7 @@ typedef volatile struct vimRam
 static const t_isrFuncPTR s_vim_init[ 128U ] = {
     &phantomInterrupt,      &esmHighInterrupt, /* Channel 0   */
     &phantomInterrupt,                         /* Channel 1   */
-    &FreeRTOS_Tick_Handler,                    /* Channel 2   */
+    &FreeRTOS_IRQ_Handler,                    /* Channel 2   */
     &phantomInterrupt,                         /* Channel 3   */
     &phantomInterrupt,                         /* Channel 4   */
     &phantomInterrupt,                         /* Channel 5   */
@@ -86,7 +86,7 @@ static const t_isrFuncPTR s_vim_init[ 128U ] = {
     &phantomInterrupt,                         /* Channel 18  */
     &phantomInterrupt,                         /* Channel 19  */
     &phantomInterrupt,                         /* Channel 20  */
-    &vPortYieldWithinAPI,                      /* Channel 21  */
+    &FreeRTOS_IRQ_Handler,                      /* Channel 21  */
     &phantomInterrupt,                         /* Channel 22  */
     &phantomInterrupt,                         /* Channel 23  */
     &phantomInterrupt,                         /* Channel 24  */

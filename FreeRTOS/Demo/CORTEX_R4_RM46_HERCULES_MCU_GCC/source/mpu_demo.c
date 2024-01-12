@@ -220,10 +220,11 @@ static void prvROAccessTask( void * pvParameters )
         }
     #endif /* configTOTAL_MPU_REGIONS == 16 */
 
-        /* Wait for a bit. */
-        sci_print( "Read only task did a loop\r\n" );
         vToggleLED( 0x0 );
-        vTaskDelay( pdMS_TO_TICKS( 4400 ) );
+        sci_print( "Read Only MPU Task sleeping before next loop!\r\n\r\n" );
+
+        /* Sleep for odd number of seconds to schedule at different real-times */
+        vTaskDelay( pdMS_TO_TICKS( 4004UL ) );
     }
 }
 /*-----------------------------------------------------------*/
@@ -250,25 +251,26 @@ static void prvRWAccessTask( void * pvParameters )
     #endif /* configTOTAL_MPU_REGIONS == 16 */
 
         /* Set ucVal to 0 */
-        ulVal = ucSharedMemory[ 0 ];
+        ulVal = ( uint32_t ) ucSharedMemory[ 0 ];
 
         /* Mark that we will trigger a data abort */
         ucROTaskFaultTracker[ 1 ] = 1U;
-        /* Attempt to set ucVal to ucProtectedData.
+        /* Attempt to set ulVal to ulStaticUnprotectedData.
          * This will trigger a data abort as this task did not grant itself
          * access to this variable. The Data abort handler at the bottom of this
-         * file will then see this raised value, mark it low, and return this task
-         * to the following instruction.
+         * file will then see the raised value in the fault tracker, mark it low,
+         * and cause this  task to resume from the following instruction.
          */
         ulVal = ulStaticUnprotectedData;
 
         /* The value of ucVal should not have changed */
         configASSERT( ulVal != ucSharedMemory[ 0 ] );
 
-        /* Wait for a second. */
-        sci_print( "Read/Write task did a loop\r\n" );
         vToggleLED( 0x1 );
-        vTaskDelay( pdMS_TO_TICKS( 9500 ) );
+        sci_print( "Read & Write MPU Task sleeping before next loop!\r\n\r\n" );
+
+        /* Sleep for odd number of seconds to schedule at different real-times */
+        vTaskDelay( pdMS_TO_TICKS( 4321UL ) );
     }
 }
 /*-----------------------------------------------------------*/
@@ -295,7 +297,7 @@ BaseType_t xCreateMPUTasks( void )
                                                  .pcName = "ROAccess",
                                                  .usStackDepth = configMINIMAL_STACK_SIZE,
                                                  .pvParameters = NULL,
-                                                 .uxPriority = tskIDLE_PRIORITY + 0x4,
+                                                 .uxPriority = demoMPU_READ_ONLY_TASK_PRIORITY,
                                                  .puxStackBuffer = xROAccessTaskStack,
                                                  .pxTaskBuffer = &xROAccessTaskTCB,
                                                  .xRegions = {
@@ -347,7 +349,7 @@ BaseType_t xCreateMPUTasks( void )
                                                  .pcName = "RWAccess",
                                                  .usStackDepth = configMINIMAL_STACK_SIZE,
                                                  .pvParameters = ( void * ) ( 0xFF ),
-                                                 .uxPriority = tskIDLE_PRIORITY + 0x3,
+                                                 .uxPriority = demoMPU_READ_WRITE_TASK_PRIORITY,
                                                  .puxStackBuffer = xRWAccessTaskStack,
                                                  .pxTaskBuffer = &xRWAccessTaskTCB,
                                                  .xRegions = {
@@ -405,12 +407,12 @@ BaseType_t xCreateMPUTasks( void )
             xReturn = xTaskCreateRestrictedStatic( &( xRWAccessTaskParameters ), NULL );
             if( pdPASS != xReturn )
             {
-                sci_print( "Failed to create the Read Write MPU Task" );
+                sci_print( "Failed to create the Read Write MPU Task\r\n" );
             }
         }
         else
         {
-            sci_print( "Failed to create the Read Write MPU Task" );
+            sci_print( "Failed to create the Read Write MPU Task\r\n" );
         }
     }
 

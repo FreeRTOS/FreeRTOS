@@ -129,6 +129,7 @@ static void prvIRQTestTask( void * pvParameters )
 
 void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
 {
+    sci_print("\tSWI Based IRQ was raised!\r\n");
     //sci_print("SWI IRQ Raised\r\n");
     //volatile uint32_t * xSSIIntRegBase = portSSI_INT_REG_BASE;
     //volatile uint32_t ulDelayLoop = 0x0UL;
@@ -148,7 +149,7 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x11UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\tSWI Channel #1 Raised with Data Value 0x11, clearing the IRQs...\r\n");
+                sci_print("\t\tSWI Channel #1 Raised with Data Value 0x11, clearing the IRQs...\r\n");
                 /* Read to mark this IRQ as cleared */
                 /* Mark the Nested Channel 1 IRQ as cleared */
                 ulSSIIntFlagValue = portSSI_VEC_REG;
@@ -179,11 +180,11 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x22UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\tSWI Channel #2 triggering nested Channel #1 IRQ!\r\n");
+                sci_print("\t\tSWI Channel #2 triggering nested Channel #1 IRQ!\r\n");
                 xSoftwareInterruptRegister = portSSI_INT_REG_ONE;
                 *xSoftwareInterruptRegister = portSSI_ONE_KEY | 0x11UL;
                 __asm volatile("CPSIE I");
-                sci_print("\tSWI Channel #2 unwinding...\r\n");
+                // sci_print("\tSWI Channel #2 unwinding...\r\n");
             }
         }
 
@@ -194,11 +195,11 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x33UL )
             {
                 ulIntNestTestVal++;
-                sci_print("\tSWI Channel #3 triggering nested Channel #2 IRQ!\r\n");
+                sci_print("\t\tSWI Channel #3 triggering nested Channel #2 IRQ!\r\n");
                 xSoftwareInterruptRegister = portSSI_INT_REG_TWO;
                 *xSoftwareInterruptRegister = portSSI_TWO_KEY | 0x22UL;
                 __asm volatile("CPSIE I");
-                sci_print("\tSWI Channel #3 unwinding...\r\n");
+                // sci_print("\tSWI Channel #3 unwinding...\r\n");
 
             }
         }
@@ -210,12 +211,11 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
             if( ulSSIRegisterValue & 0x44UL )
             {
                 ulIntNestTestVal = 0x1UL;
-                sci_print("\tSWI Channel #4 triggering nested Channel #3 IRQ!\r\n");
+                sci_print("\t\tSWI Channel #4 triggering nested Channel #3 IRQ!\r\n");
                 xSoftwareInterruptRegister = portSSI_INT_REG_THREE;
                 *xSoftwareInterruptRegister = portSSI_THREE_KEY | 0x33UL;
                 __asm volatile("CPSIE I");
-                while()
-                sci_print("\tSWI Channel #4 unwinding...\r\n");
+                //while()
             }
         }
 
@@ -224,9 +224,42 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
          * TODO: FInd the right doc
          * Joshua said it was page 184
          *  */
-
-
+#if 0
+        if(ulSSIRegisterValue == 0x44)
+        {
+            while(ulSSIRegisterValue != 0x0 )
+            {
+                ulSSIRegisterValue--;
+            }
+            sci_print("\tSWI Channel #4 unwinding...\r\n");
+        }
+        else if(ulSSIRegisterValue == 0x33)
+        {
+            while(ulSSIRegisterValue != 0x0 )
+            {
+                ulSSIRegisterValue--;
+            }
+            sci_print("\tSWI Channel #3 unwinding...\r\n");
+        }
+        else if(ulSSIRegisterValue == 0x22)
+        {
+            while(ulSSIRegisterValue != 0x0 )
+            {
+                ulSSIRegisterValue--;
+            }
+            sci_print("\tSWI Channel #2 unwinding...\r\n");
+        }
+        else if(ulSSIRegisterValue == 0x11)
+        {
+            while(ulSSIRegisterValue != 0x0 )
+            {
+                ulSSIRegisterValue--;
+            }
+            sci_print("\tSWI Channel #1 Finished reading\r\n");
+        }
+#endif
     }
+
     /* while( 0x0UL != ulSSIIntFlagValue); */
 
 }

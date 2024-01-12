@@ -64,10 +64,6 @@
  */
 #ifndef mainDEMO_TYPE
     #define mainDEMO_TYPE ( REGISTER_DEMO | QUEUE_DEMO | MPU_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
-    //#define mainDEMO_TYPE ( REGISTER_DEMO | QUEUE_DEMO | MPU_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
-    //#define mainDEMO_TYPE ( REGISTER_DEMO | QUEUE_DEMO | IRQ_DEMO | NOTIFICATION_DEMO )
-    //#define mainDEMO_TYPE ( REGISTER_DEMO | IRQ_DEMO )
-    //#define mainDEMO_TYPE ( NOTIFICATION_DEMO )
 #endif /* mainDEMO_TYPE */
 
 /* FreeRTOS includes. */

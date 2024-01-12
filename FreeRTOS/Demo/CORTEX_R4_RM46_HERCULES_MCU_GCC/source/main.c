@@ -441,7 +441,6 @@ void vApplicationIRQHandler( void )
         /* An IRQ Raised by Channel 21 of the VIM is a Software Interrupt (SSI). */
         else if( 21UL == ulIRQChannelIndex)
         {
-            sci_print("SWI Based IRQ was raised!\r\n");
             #if( mainDEMO_TYPE & IRQ_DEMO )
                 /* This is an interrupt raised by Software */
                 vIRQDemoHandler();

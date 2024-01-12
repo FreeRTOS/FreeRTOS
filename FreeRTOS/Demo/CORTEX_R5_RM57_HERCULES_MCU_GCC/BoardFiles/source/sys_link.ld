@@ -88,7 +88,6 @@ __privileged_system_start__   = 0xFFF80000;
 __privileged_system_length__  = 512K;
 __privileged_system_end__     = __privileged_system_start__ + __privileged_system_length__;
 
-
 /* The first 2K of space in RAM is used for different processor mode stacks */
 __privileged_stack_region_size = 0x800;
 
@@ -121,11 +120,13 @@ SECTIONS
     __syscalls_flash_start__ = .;
     *(freertos_system_calls)
     __syscalls_flash_end__ = .;
-    __syscalls_flash_length__ = __syscalls_flash_end__ - __syscalls_flash_start__;
-
     . = ALIGN(4);
 
   } >FLASH
+
+  /* This variable is used in portASM.S to determine if a FreeRTOS System Call
+   * was raised from this specific section of flash */
+  __syscalls_flash_length__ = __syscalls_flash_end__ - __syscalls_flash_start__;
 
   /* The program code and other data goes into RAM */
   .text :

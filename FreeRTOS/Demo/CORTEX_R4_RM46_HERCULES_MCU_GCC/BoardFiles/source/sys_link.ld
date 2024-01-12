@@ -121,11 +121,13 @@ SECTIONS
     __syscalls_flash_start__ = .;
     *(freertos_system_calls)
     __syscalls_flash_end__ = .;
-    __syscalls_flash_length__ = __syscalls_flash_end__ - __syscalls_flash_start__;
-
     . = ALIGN(4);
 
   } >FLASH
+
+  /* This variable is used in portASM.S to determine if a FreeRTOS System Call
+   * was raised from this specific section of flash */
+  __syscalls_flash_length__ = __syscalls_flash_end__ - __syscalls_flash_start__;
 
   /* The program code and other data goes into RAM */
   .text :

@@ -143,7 +143,7 @@ BaseType_t xCreateRegisterTestTasks( void )
         /* Parameter passed into the task. */
         .pvParameters = mainREG_TEST_TASK_1_PARAMETER,
         /* Priority of the task. */
-        .uxPriority = ( configTIMER_TASK_PRIORITY + 0x1 ) | portPRIVILEGE_BIT,
+        .uxPriority = demoREG_PRIVILEGED_TASK_PRIORITY | portPRIVILEGE_BIT,
         .puxStackBuffer = uxRegTestOneTaskStack,
         .pxTaskBuffer = &xRegTestOneTaskTCB,
         .xRegions = {
@@ -185,7 +185,7 @@ BaseType_t xCreateRegisterTestTasks( void )
         /* Parameter passed into the task. */
         .pvParameters = mainREG_TEST_TASK_2_PARAMETER,
         /* Priority of the task. */
-        .uxPriority = configTIMER_TASK_PRIORITY + 0x2,
+        .uxPriority = demoREG_UNPRIVILEGED_TASK_PRIORITY,
         .puxStackBuffer = uxRegTestTwoTaskStack,
         .pxTaskBuffer = &xRegTestTwoTaskTCB,
         .xRegions = {

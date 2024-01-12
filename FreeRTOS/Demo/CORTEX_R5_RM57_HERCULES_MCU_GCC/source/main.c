@@ -36,9 +36,9 @@
 /* FreeRTOS includes. */
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
+#include "portmacro.h"
 #include "task.h"
 #include "timers.h"
-#include "portmacro.h"
 
 /* Standard includes. */
 #include <stdint.h>
@@ -46,33 +46,17 @@
 
 /* HalCoGen includes. */
 #include "system.h"
-#include "het.h"
-#include "sys_vim.h"
-#include "sci.h"
 #include "gio.h"
+#include "het.h"
+#include "reg_vim.h"
+#include "sci.h"
+#include "sys_vim.h"
+#include "system.h"
 
 /* Demo Tasks include */
 #include "demo_tasks.h"
 
 /* ----------------------- Microcontroller Registers ----------------------- */
-
-/* Registers required to configure the Real Time Interrupt (RTI). */
-#define portRTI_GCTRL_REG       ( *( ( volatile uint32_t * ) 0xFFFFFC00 ) )
-#define portRTI_TBCTRL_REG      ( *( ( volatile uint32_t * ) 0xFFFFFC04 ) )
-#define portRTI_COMPCTRL_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC0C ) )
-#define portRTI_CNT0_FRC0_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC10 ) )
-#define portRTI_CNT0_UC0_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC14 ) )
-#define portRTI_CNT0_CPUC0_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC18 ) )
-#define portRTI_CNT0_COMP0_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC50 ) )
-#define portRTI_CNT0_UDCP0_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC54 ) )
-#define portRTI_SETINTENA_REG   ( *( ( volatile uint32_t * ) 0xFFFFFC80 ) )
-#define portRTI_CLEARINTENA_REG ( *( ( volatile uint32_t * ) 0xFFFFFC84 ) )
-#define portRTI_INTFLAG_REG     ( *( ( volatile uint32_t * ) 0xFFFFFC88 ) )
-
-/* Registers used by the Vectored Interrupt Manager */
-typedef void ( *ISRFunction_t )( void );
-#define portVIM_IRQINDEX  ( *( ( volatile uint32_t * ) 0xFFFFFE00 ) )
-#define portVIM_IRQVECREG ( *( ( volatile ISRFunction_t * ) 0xFFFFFE70 ) )
 
 /** @brief Configure the hardware to start the scheduler timer. */
 PRIVILEGED_FUNCTION void vMainSetupTimerInterrupt( void );
@@ -86,6 +70,7 @@ PRIVILEGED_FUNCTION static void prvSetupHardware( void );
  * @note Unprivileged tasks shall pre-fetch abort if their assert fails. */
 FREERTOS_SYSTEM_CALL void vAssertCalled( const char * pcFileName, uint32_t ulLine );
 
+PRIVILEGED_FUNCTION void vApplicationIRQHandler( void );
 /* --------------------- Static Task Memory Allocation --------------------- */
 
 /** @brief Statically declared TCB Used by the Idle Task */
@@ -105,39 +90,73 @@ PRIVILEGED_DATA static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ]
 /** @brief Simple variable to show how the idle tick hook can be used */
 PRIVILEGED_DATA static volatile TickType_t ulIdleTickHookCount = 0x0;
 
-/*---------------------------------------------------------------------------*/
+extern PRIVILEGED_DATA volatile uint32_t ulPortYieldRequired;
+
+/* ------------------------------------------------------------------------- */
 
 int main( void )
 {
-    UBaseType_t xReturn = pdFAIL;
+    UBaseType_t xReturn = pdPASS;
     ulIdleTickHookCount = 0x0;
     prvSetupHardware();
-    sci_print( "Set up hardware for the RM57 Launchpad\r\n" );
 
-    xReturn = xCreateRegisterTestTasks();
-    if( pdPASS != xReturn )
+    sci_print( "\r\n---------------------------- Create FreeRTOS Tasks" \
+            "----------------------------\r\n\r\n" );
+
+#if( mainDEMO_TYPE & REGISTER_DEMO )
     {
-        sci_print( "Failed to create the Register test tasks\r\n" );
-        configASSERT( pdFAIL );
+        if( pdPASS == xReturn )
+        {
+            sci_print( "Creating the Register test tasks\r\n" );
+            xReturn = xCreateRegisterTestTasks();
+        }
     }
+#endif /* ( mainDEMO_TYPE & REGISTER_DEMO ) */
+
+#if( mainDEMO_TYPE & QUEUE_DEMO )
+    {
+        if( pdPASS == xReturn )
+        {
+            sci_print( "Creating the Queue Demo Tasks\r\n" );
+            xReturn = xCreateQueueTasks();
+        }
+    }
+#endif /* ( mainDEMO_TYPE & QUEUE_DEMO ) */
 
 #if( mainDEMO_TYPE & MPU_DEMO )
     {
-        sci_print( "Creating the MPU Demo Tasks\r\n" );
-        xReturn = xCreateMPUTasks();
+        if( pdPASS == xReturn )
+        {
+            sci_print( "Creating the MPU Demo Tasks\r\n" );
+            xReturn = xCreateMPUTasks();
+        }
     }
-#endif /* ( mainDEMO_TYPE & MPU_DEMO ) */
+#endif
 
-#if( mainDEMO_TYPE & BLINKY_DEMO )
+#if( mainDEMO_TYPE & IRQ_DEMO )
     {
-        sci_print( "Creating the Blinky Demo Tasks\r\n" );
-        xReturn = xCreateBlinkyTasks();
+        if( pdPASS == xReturn )
+        {
+            sci_print( "Creating the IRQ Demo Tasks\r\n" );
+            xReturn = xCreateIRQTestTask();
+        }
     }
-#endif /* ( mainDEMO_TYPE & BLINKY_DEMO ) */
+#endif /* ( mainDEMO_TYPE & IRQ_DEMO ) */
+
+#if( mainDEMO_TYPE & NOTIFICATION_DEMO )
+    {
+        if( pdPASS == xReturn )
+        {
+            sci_print( "Creating the Notification Demo Tasks\r\n" );
+            xReturn = xCreateNotificationTestTask();
+        }
+    }
+#endif /* ( mainDEMO_TYPE & NOTIFICATION_DEMO ) */
 
     if( pdPASS == xReturn )
     {
-        sci_print( "Created the Demo Tasks, starting the scheduler!\r\n" );
+        sci_print( "\r\n--------------------------- Start of FreeRTOS Demos" \
+                "---------------------------\r\n\r\n" );
         vTaskStartScheduler();
     }
     else
@@ -183,22 +202,18 @@ static void prvSetupHardware( void )
 
 void vToggleLED( uint32_t ulLEDNum )
 {
-    /* RM57 TMDX Dev Kit LED1 use NHET[27]; LED2 uasdjknaskldhsajkghkses NHET[5] */
     uint32_t ulLEDVal;
-    /* RM57 Launchpad LED2 uses GIOB[6] LED3 uses GIOB[7] */
     uint32_t ulGIOVal;
 
     if( 0x0 == ulLEDNum )
     {
         /* RM57 TMDX Dev Kit LED1 use NHET[27], Launchpad LED2 uses GIOB[6] */
-        sci_print( "Toggling LED 0\r\n" );
         ulLEDVal = 1UL << 27UL;
         ulGIOVal = 1UL << 6UL;
     }
     else
     {
         /* RM57 TMDX Dev Kit LED2 use NHET[5], Launchpad LED3 uses GIOB[7] */
-        sci_print( "Toggling LED 1\r\n" );
         ulLEDVal = 1UL << 5UL;
         ulGIOVal = 1UL << 7UL;
     }
@@ -282,13 +297,19 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 
     /* Called if an assertion passed to configASSERT() fails. See
      * http://www.freertos.org/a00110.html#configASSERT for more information. */
-    char errorMessage[ 0x100 ];
+    volatile const char * callingFunc = pcFuncName;
+    volatile uint32_t callingLine = ulLine;
 
+    /* These variables can be inspected in a debugger. */
+    if( callingFunc != (char *) callingLine)
+    {
+        __asm volatile( "NOP" );
+    }
+
+    /* NOTE: Unprivileged tasks cannot enter critical sections on the ARM_CRx_MPU port.
+     * Meaning unprivileged tasks will cause a pre-fetch abort if they fail an assert. */
     taskENTER_CRITICAL();
     {
-        snprintf( errorMessage, 0x100, "Assert Called at %s:%ld\r\n", pcFuncName, ulLine );
-        sci_print( errorMessage );
-
         /* You can step out of this function to debug the assertion by using
          * the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
          * value. */
@@ -304,15 +325,121 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 /*---------------------------------------------------------------------------*/
 
 /** @brief Default IRQ Handler used in the ARM_Cortex_RX ports.
- * @note This demo, and function, is meant for use with the RM57, which
- * has a Vectored Interrupt Manager. Using this provides performance increases
- * over using the single entry point FreeRTOS_IRQ_Handler, which would call
- * this function.
+ * @note This Handler is directly tied to the Texas Instrument's Hercules
+ * Vectored Interrupt Manager (VIM). For more information about what
+ * this is and how it operates please refer to their document:
+ * https://www.ti.com/lit/pdf/spna218
  */
 void vApplicationIRQHandler( void )
 {
-    /* Not used on the RM57 as it contains a Vectored Interrupt Manager. */
-    configASSERT( 0 );
+    /* Load the IRQ Channel Number and Function PTR from the VIM */
+    volatile uint32_t ulIRQChannelIndex = mainVIM_IRQ_INDEX;
+    volatile ISRFunction_t xIRQFncPtr = mainVIM_IRQ_VEC_REG;
+
+    /* Setup Bit Mask Clear Values */
+    volatile uint32_t ulPendingIRQMask;
+
+    volatile uint32_t ulPendISRReg0 = vimREG->REQMASKCLR0;
+	volatile uint32_t ulPendISRReg1 = vimREG->REQMASKCLR1;
+	volatile uint32_t ulPendISRReg2 = vimREG->REQMASKCLR2;
+	volatile uint32_t ulPendISRReg3 = vimREG->REQMASKCLR3;
+
+    if( NULL == xIRQFncPtr )
+    {
+        sci_print( "Received a NULL Function Pointer from the IRQ VIM\r\n" );
+        configASSERT( pdFALSE );
+    }
+    else
+    {
+        if( 0U != ulIRQChannelIndex )
+        {
+            ulIRQChannelIndex--;
+        }
+
+        if( ulIRQChannelIndex <= 31U )
+        {
+            ulPendingIRQMask = 0xFFFFFFFFU << ulIRQChannelIndex;
+            vimREG->REQMASKCLR0 = ulPendingIRQMask;
+            vimREG->REQMASKCLR1 = 0xFFFFFFFFU;
+            vimREG->REQMASKCLR2 = 0xFFFFFFFFU;
+            vimREG->REQMASKCLR3 = 0xFFFFFFFFU;
+        }
+        else if( ulIRQChannelIndex <= 63U )
+        {
+            ulPendingIRQMask = 0xFFFFFFFFU << ( ulIRQChannelIndex - 32U );
+            vimREG->REQMASKCLR1 = ulPendingIRQMask;
+            vimREG->REQMASKCLR2 = 0xFFFFFFFFU;
+            vimREG->REQMASKCLR3 = 0xFFFFFFFFU;
+        }
+        else if( ulIRQChannelIndex <= 95U )
+        {
+            ulPendingIRQMask = 0xFFFFFFFFU << ( ulIRQChannelIndex - 64U );
+            vimREG->REQMASKCLR2 = ulPendingIRQMask;
+            vimREG->REQMASKCLR3 = 0xFFFFFFFFU;
+        }
+        else
+        {
+            ulPendingIRQMask = 0xFFFFFFFFU << ( ulIRQChannelIndex - 96U );
+            vimREG->REQMASKCLR3 = ulPendingIRQMask;
+        }
+    }
+    /*
+     * Channel 0 is the ESM handler, treat this as a special case.
+     * phantomInterrupt()
+     * Keep interrupts disabled, this function does not return
+     */
+
+    if( 0UL == ulIRQChannelIndex )
+    {
+        sci_print("Phantom interrupt?\r\n");
+        configASSERT(pdFALSE);
+        ( *xIRQFncPtr )();
+    }
+    else if( ( phantomInterrupt == xIRQFncPtr) )
+    {
+        sci_print("IRQ With no registered function in sys_vim.c has been raised\r\n");
+        configASSERT(pdFALSE);
+    }
+    else
+    {
+        /* Information about the mapping of Interrupts in the VIM to their
+         * causes can be found in the RM48L852 Data Sheet:
+         * https://www.ti.com/lit/ds/symlink/rm46l852.pdf?ts=1704878833799 */
+        /* An IRQ Raised by Channel Two of the VIM is RTI Compare Interrupt 0. */
+        if( 2UL == ulIRQChannelIndex)
+        {
+            /* This is the System Tick Timer Interrupt */
+            ulPortYieldRequired = xTaskIncrementTick();
+            /* Acknowledge the System Tick Timer Interrupt */
+            portRTI_INTFLAG_REG = 0x1UL;
+        }
+        /* An IRQ Raised by Channel 21 of the VIM is a Software Interrupt (SSI). */
+        else if( 21UL == ulIRQChannelIndex)
+        {
+            #if( mainDEMO_TYPE & IRQ_DEMO )
+                /* This is an interrupt raised by Software */
+                vIRQDemoHandler();
+            #else
+                sci_print("SWI of unknown cause was raised!\r\n");
+                configASSERT(0x0);
+            #endif
+
+            /* Register read is needed to mark the end of the IRQ */
+            volatile uint32_t ulEndOfIntRegVal = *portEND_OF_INTERRUPT_REG;
+            *portEND_OF_INTERRUPT_REG = ulEndOfIntRegVal;
+        }
+        else
+        {
+            sci_print("Unmapped IRQ Channel Number Raised\r\n");
+
+        }
+    }
+
+    vimREG->REQMASKSET0 = ulPendISRReg0;
+    vimREG->REQMASKSET1 = ulPendISRReg1;
+    vimREG->REQMASKSET2 = ulPendISRReg2;
+    vimREG->REQMASKSET3 = ulPendISRReg3;
+
 }
 /*---------------------------------------------------------------------------*/
 

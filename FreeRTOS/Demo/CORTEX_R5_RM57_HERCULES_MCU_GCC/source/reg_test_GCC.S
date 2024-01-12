@@ -226,7 +226,7 @@ reg1_loopf_pass:
     STR     R1, [R0]
     POP     { R0-R1 }
 
-    /* Delay for a bit before running again */
+    /* Delay for 0x100 ticks before running again */
     PUSH    { R0-R4, R12, R14 }
     MOV     R0, #0x100
     /* As this is a privileged task, it can directly call vTaskDelay */
@@ -426,9 +426,11 @@ reg2_loopf_pass:
     STR     R1, [R0, #+0x4]
     POP     { R0-R1 }
 
-    /* Delay for a bit before running again */
+    /* Delay for 0x200 ticks before running again */
     PUSH    { R0-R4, R12, R14 }
     MOV     R0, #0x200
+    /* Unprivileged tasks need to use the MPU wrapped functions.
+     * Change this to be BLX vTaskDelay to trigger a pre-fetch abort. */
     BLX     MPU_vTaskDelay
     POP     { R0-R4, R12, R14 }
 

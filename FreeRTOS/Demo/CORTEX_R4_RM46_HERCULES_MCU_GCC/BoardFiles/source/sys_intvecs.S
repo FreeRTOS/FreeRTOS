@@ -47,6 +47,7 @@
 
     .extern     _c_int00
     .extern     FreeRTOS_SVC_Handler
+    .extern     FreeRTOS_IRQ_Handler
     .extern     _dabort
     .extern     phantomInterrupt
     .weak       resetEntry
@@ -67,7 +68,7 @@ dataAbortEntry:
     b   phantomInterrupt
     /** This LDR loads the memory at ‘PC - 0x1B0’, which is the address of
      * IRQVECREG: 0x18 - 0x1B0 = 0xFFFFFE70. */
-    ldr pc,[pc,#-0x1b0]
+    b   FreeRTOS_IRQ_Handler
     /** This LDR loads the memory at ‘PC - 0x1B0’, which is the address of
      * FIQVECREG: 0x1C - 0x1B0 = 0xFFFFFE70. */
     ldr pc,[pc,#-0x1b0]

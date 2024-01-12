@@ -83,8 +83,7 @@ extern void vMainSetupTimerInterrupt( void );
     #define configUSE_IDLE_HOOK                                    1U
     #define configUSE_DAEMON_TASK_STARTUP_HOOK                     0
     #define configUSE_TICK_HOOK                                    0
-    #define configMAX_PRIORITIES                                   ( 9UL )
-    #define configMAX_CO_ROUTINE_PRIORITIES                        ( 2U )
+    #define configMAX_PRIORITIES                                   ( 30UL )
     #define configQUEUE_REGISTRY_SIZE                              10U
     #define configSUPPORT_STATIC_ALLOCATION                        1U
     #define configSUPPORT_DYNAMIC_ALLOCATION                       0U
@@ -120,11 +119,11 @@ extern void vMainSetupTimerInterrupt( void );
     #define configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING          0
     #define configNUM_THREAD_LOCAL_STORAGE_POINTERS                0
     #define configUSE_MINI_LIST_ITEM                               0
-    #define configPROTECTED_KERNEL_OBJECT_POOL_SIZE                20U
+    #define configPROTECTED_KERNEL_OBJECT_POOL_SIZE                0x20UL
 
     /* Timer related defines. */
     #define configUSE_TIMERS                                       1
-    #define configTIMER_TASK_PRIORITY                              ( configMAX_PRIORITIES - 3 )
+    #define configTIMER_TASK_PRIORITY                              ( configMAX_PRIORITIES - 6UL )
     #define configTIMER_QUEUE_LENGTH                               20
     #define configTIMER_TASK_STACK_DEPTH                           ( configMINIMAL_STACK_SIZE * 2 )
     #define INCLUDE_xTimerGetTimerDaemonTaskHandle                 1
@@ -156,38 +155,26 @@ extern void vMainSetupTimerInterrupt( void );
      * and keys exclusive to the board that this demo was written for.
      */
 
-    /** @brief Address of MCU Register that clears the end of a systick interrupt */
-    #define configEOI_ADDRESS                                      0xFFFFFC88
+    /** @brief Address of MCU Register used to mark the end of an IRQ */
+    #define configEOI_ADDRESS                                      0xFFFFFE70UL
 
-    /** @brief Address of MCU Register used to trigger System Clock Interrupts */
-    #define configRTI_ADDRESS                                      0xFFFFFC88
+    /** @brief Address of Real Time Interrupt (RTI) used for the system clock */
+    #define configRTI_ADDRESS                                      0xFFFFFC88UL
 
     /** @brief Value used to clear a RTI Interrupt */
     #define configRTI_CLEAR_VALUE                                  0x1
 
-    /** @brief Address of MCU Register used to trigger Pending Context Swaps */
-    #define configPEND_YIELD_REG_ADDR                              0xFFFFFFB0
+    /** @brief Address of Register used to trigger Software Interrupts (SWI) */
+    #define configSWI_ADDRESS                                      0xFFFFFFB0UL
 
-    /** @brief Value to write to @configPEND_YIELD_REG_ADDR to raise a pending yield */
-    #define configPEND_YIELD_KEY_VAL                               0x7500UL
+    /** @brief Key value that is written to the SWI Interrupt Register */
+    #define configSWI_KEY_VAL                                      0x7500UL
 
-    /** @brief Address of MCU Register used to trigger Pending Context Swaps */
-    #define configCLEAR_YIELD_REG_ADDR                             0xFFFFFFF4
+    /** @brief Address of Register used to clear SWI Interrupts */
+    #define configSWI_CLEAR_ADDRESS                                0xFFFFFFF4UL
 
-    /** @brief Value to write to @configPEND_YIELD_REG_ADDR to clear a pending yield */
-    #define configCLEAR_YIELD_CLR_VAL                              0x0
-
-    /** @brief Address of MCU Register used to trigger Hardware Interrupts */
-    #define configPEND_YIELD_REG \
-        ( *( ( volatile uint32_t * ) configPEND_YIELD_REG_ADDR ) )
-
-    /** @brief Trigger a pending context swap from inside the FreeRTOS-Kernel */
-    #define portYIELD_WITHIN_API()                           \
-        {                                                    \
-            configPEND_YIELD_REG = configPEND_YIELD_KEY_VAL; \
-            asm( " DSB " );                                  \
-            asm( " ISB " );                                  \
-        }
+    /** @brief Value to write to clear a Software Interrupt (SWI) */
+    #define configSWI_CLEAR_VAL                                    0x0
 
     /** @brief Trigger a pending context swap from inside an ISR */
     #define portYIELD_FROM_ISR( x )                          \

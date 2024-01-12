@@ -91,14 +91,17 @@ PRIVILEGED_DATA static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ]
 PRIVILEGED_DATA static volatile TickType_t ulIdleTickHookCount = 0x0;
 
 extern PRIVILEGED_DATA volatile uint32_t ulPortYieldRequired;
-/*---------------------------------------------------------------------------*/
+
+/* ------------------------------------------------------------------------- */
 
 int main( void )
 {
     UBaseType_t xReturn = pdPASS;
     ulIdleTickHookCount = 0x0;
     prvSetupHardware();
-    sci_print( "Set up hardware for the RM46 Launchpad\r\n" );
+
+    sci_print( "\r\n---------------------------- Create FreeRTOS Tasks" \
+            "----------------------------\r\n\r\n" );
 
 #if( mainDEMO_TYPE & REGISTER_DEMO )
     {
@@ -152,7 +155,8 @@ int main( void )
 
     if( pdPASS == xReturn )
     {
-        sci_print( "Created the Demo Tasks, starting the scheduler!\r\n" );
+        sci_print( "\r\n--------------------------- Start of FreeRTOS Demos" \
+                "---------------------------\r\n\r\n" );
         vTaskStartScheduler();
     }
     else

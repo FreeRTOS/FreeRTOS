@@ -75,7 +75,7 @@
 #include "mpu_wrappers.h"
 
 /* These tasks have been given pseudo random priority values for testing.
- * Except for the queue send and receive task any of these tasks priorites
+ * Except for the queue send and receive task any of these tasks priorities
  * should be able to be set to any valid priority without issue. */
 
 /** @brief Priority at which the Privileged Register Task is created. */

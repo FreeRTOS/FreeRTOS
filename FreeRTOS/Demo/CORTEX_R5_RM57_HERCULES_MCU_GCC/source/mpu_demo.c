@@ -38,8 +38,11 @@
 #include "demo_tasks.h"
 
 /** @brief Size of the smallest valid MPU region, 32 bytes. */
-#define SHARED_MEMORY_SIZE 0x20
+#define SHARED_MEMORY_SIZE 0x20UL
 
+#if( ( ( SHARED_MEMORY_SIZE % 2UL ) != 0UL ) || ( SHARED_MEMORY_SIZE < 32UL ) )
+    #error SHARED_MEMORY_SIZE Must be a power of 2 that is larger than 32
+#endif /* ( ( SHARED_MEMORY_SIZE % 2UL ) != 0UL ) || ( SHARED_MEMORY_SIZE < 32UL ) */
 /**
  * @brief Memory region used to track Memory Fault intentionally caused by the
  * RO Access task.
@@ -278,12 +281,6 @@ static void prvRWAccessTask( void * pvParameters )
 BaseType_t xCreateMPUTasks( void )
 {
     BaseType_t xReturn = pdPASS;
-    /* Make sure that SHARED_MEMORY_SIZE is a valid MPU region size */
-    if( ( SHARED_MEMORY_SIZE < 0x20 ) || ( ( SHARED_MEMORY_SIZE % 2 ) != 0 ) )
-    {
-        sci_print( "SHARED_MEMORY_SIZE must be a power of 2 larger than 32\r\n" );
-        xReturn = pdFAIL;
-    }
 
     uint32_t ulReadMemoryPermissions = portMPU_PRIV_RW_USER_RO_NOEXEC |
                                        portMPU_NORMAL_OIWTNOWA_SHARED;
@@ -399,23 +396,25 @@ BaseType_t xCreateMPUTasks( void )
                                           ulWriteMemoryPermissions },
                                     } };
 
+
+    /* Create an unprivileged task with RO access to ucSharedMemory. */
+    xReturn = xTaskCreateRestrictedStatic( &( xROAccessTaskParameters ), NULL );
     if( pdPASS == xReturn )
     {
-        /* Create an unprivileged task with RO access to ucSharedMemory. */
-        xReturn = xTaskCreateRestrictedStatic( &( xROAccessTaskParameters ), NULL );
+        /* Create an unprivileged task with RW access to ucSharedMemory. */
+        xReturn = xTaskCreateRestrictedStatic( &( xRWAccessTaskParameters ), NULL );
         if( pdPASS == xReturn )
         {
-            /* Create an unprivileged task with RW access to ucSharedMemory. */
-            xReturn = xTaskCreateRestrictedStatic( &( xRWAccessTaskParameters ), NULL );
-            if( pdPASS != xReturn )
-            {
-                sci_print( "Failed to create the Read Write MPU Task\r\n" );
-            }
+            sci_print( "Created the MPU Tasks\r\n" );
         }
         else
         {
             sci_print( "Failed to create the Read Write MPU Task\r\n" );
         }
+    }
+    else
+    {
+        sci_print( "Failed to create the Read Write MPU Task\r\n" );
     }
 
     return xReturn;

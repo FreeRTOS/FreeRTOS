@@ -273,7 +273,7 @@ static void prvCreateDemoTasks( void )
     {
         .pvTaskCode     = vInterruptHandlerTask,
         .pcName         = "InterruptHandlerTask",
-        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .uxStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = xUserIrqQueueHandle,
         .uxPriority     = configMAX_PRIORITIES - 1, /* Run the interrupt handler task at the highest priority. */
         .puxStackBuffer = xInterruptHandlerTaskStack,
@@ -288,7 +288,7 @@ static void prvCreateDemoTasks( void )
     {
         .pvTaskCode     = vLedDemoTask,
         .pcName         = "LedDemoTask",
-        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .uxStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = NULL,
         .uxPriority     = tskIDLE_PRIORITY,
         .puxStackBuffer = xLedDemoTaskStack,
@@ -303,7 +303,7 @@ static void prvCreateDemoTasks( void )
     {
         .pvTaskCode     = vUartDemoTask,
         .pcName         = "UartDemoTask",
-        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .uxStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = NULL,
         .uxPriority     = tskIDLE_PRIORITY,
         .puxStackBuffer = xUartDemoTaskStack,

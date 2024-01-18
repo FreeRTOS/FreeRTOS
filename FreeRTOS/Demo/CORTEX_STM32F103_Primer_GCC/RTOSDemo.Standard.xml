@@ -1746,7 +1746,7 @@
    <type Family="typedef" Name="pdTASK_CODE" Line="56" ID="25905" toTI="25916"/>
     <parameter Name="pvTaskCode" TI="25905" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x0" Param="Yes"/>
     <parameter Name="pcName" TI="28231" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x1" Param="Yes"/>
-    <parameter Name="usStackDepth" TI="25853" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x2" Param="Yes"/>
+    <parameter Name="uxStackDepth" TI="25853" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x2" Param="Yes"/>
    <type Family="Pointer" TI="25830" toTI="0"/>
     <parameter Name="pvParameters" TI="25830" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x3" Param="Yes"/>
     <parameter Name="uxPriority" TI="25891" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x34000028" Param="Yes"/>

@@ -181,13 +181,13 @@ static TaskHandle_t create_task()
 {
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
-    const uint32_t usStackDepth = 300;
+    const uint32_t uxStackDepth = 300;
     void * const pvParameters = NULL;
     UBaseType_t uxPriority = create_task_priority;
     TaskHandle_t taskHandle;
     BaseType_t ret;
 
-    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
+    pvPortMalloc_ExpectAndReturn( uxStackDepth * sizeof( StackType_t ), stack );
     pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ created_tasks ] );
 
     vListInitialiseItem_Expect( &( tcb[ created_tasks ].xStateListItem ) );
@@ -220,7 +220,7 @@ static TaskHandle_t create_task()
 
     ret = xTaskCreate( pxTaskCode,
                        pcName,
-                       usStackDepth,
+                       uxStackDepth,
                        pvParameters,
                        uxPriority,
                        &taskHandle );

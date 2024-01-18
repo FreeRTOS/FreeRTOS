@@ -203,7 +203,7 @@ TaskParameters_t xROAccessTaskParameters =
 {
 	.pvTaskCode		= prvROAccessTask,
 	.pcName			= "ROAccess",
-	.usStackDepth	= configMINIMAL_STACK_SIZE,
+	.uxStackDepth	= configMINIMAL_STACK_SIZE,
 	.pvParameters	= NULL,
 	.uxPriority		= tskIDLE_PRIORITY,
 	.puxStackBuffer	= xROAccessTaskStack,
@@ -217,7 +217,7 @@ TaskParameters_t xRWAccessTaskParameters =
 {
 	.pvTaskCode		= prvRWAccessTask,
 	.pcName			= "RWAccess",
-	.usStackDepth	= configMINIMAL_STACK_SIZE,
+	.uxStackDepth	= configMINIMAL_STACK_SIZE,
 	.pvParameters	= NULL,
 	.uxPriority		= tskIDLE_PRIORITY,
 	.puxStackBuffer	= xRWAccessTaskStack,

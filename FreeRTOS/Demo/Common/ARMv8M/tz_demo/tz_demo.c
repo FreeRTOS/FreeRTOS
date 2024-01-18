@@ -72,7 +72,7 @@ void vStartTZDemo( void )
     {
         .pvTaskCode     = prvSecureCallingTask,
         .pcName         = "SecCalling",
-        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .uxStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = NULL,
         .uxPriority     = tskIDLE_PRIORITY,
         .puxStackBuffer = xSecureCallingTaskStack,

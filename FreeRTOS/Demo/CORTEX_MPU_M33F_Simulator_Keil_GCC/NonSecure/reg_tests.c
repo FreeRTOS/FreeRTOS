@@ -104,7 +104,7 @@ TaskParameters_t xRegTest1TaskParameters =
 {
     .pvTaskCode      = prvRegTest1_Task,
     .pcName          = "RegTest1",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = REG_TEST_1_TASK_PARAMETER,
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest1TaskStack,
@@ -118,7 +118,7 @@ TaskParameters_t xRegTest2TaskParameters =
 {
     .pvTaskCode      = prvRegTest2_Task,
     .pcName          = "RegTest2",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = REG_TEST_2_TASK_PARAMETER,
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest2TaskStack,
@@ -132,7 +132,7 @@ TaskParameters_t xRegTest3TaskParameters =
 {
     .pvTaskCode      = prvRegTest3_Task,
     .pcName          = "RegTest3",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = REG_TEST_3_TASK_PARAMETER,
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest3TaskStack,
@@ -146,7 +146,7 @@ TaskParameters_t xRegTest4TaskParameters =
 {
     .pvTaskCode      = prvRegTest4_Task,
     .pcName          = "RegTest4",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = REG_TEST_4_TASK_PARAMETER,
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTest4TaskStack,
@@ -160,7 +160,7 @@ TaskParameters_t xRegTestSecureTaskParameters =
 {
     .pvTaskCode      = prvRegTest_Secure_Task,
     .pcName          = "RegTestSecure",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = REG_TEST_SECURE_TASK_PARAMETER,
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTestSecureTaskStack,
@@ -174,7 +174,7 @@ TaskParameters_t xRegTestNonSecureCallbackTaskParameters =
 {
     .pvTaskCode      = prvRegTest_NonSecureCallback_Task,
     .pcName          = "RegTestNonSecureCallback",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = REG_TEST_NON_SECURE_CALLBACK_TASK_PARAMETER,
     .uxPriority      = tskIDLE_PRIORITY | portPRIVILEGE_BIT,
     .puxStackBuffer  = xRegTestNonSecureCallbackTaskStack,
@@ -189,7 +189,7 @@ TaskParameters_t xCheckTaskParameters =
 {
     .pvTaskCode      = prvCheckTask,
     .pcName          = "Check",
-    .usStackDepth    = configMINIMAL_STACK_SIZE,
+    .uxStackDepth    = configMINIMAL_STACK_SIZE,
     .pvParameters    = NULL,
     .uxPriority      = ( CHECK_TASK_PRIORITY | portPRIVILEGE_BIT ),
     .puxStackBuffer  = xCheckTaskStack,

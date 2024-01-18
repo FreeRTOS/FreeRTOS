@@ -40,7 +40,7 @@ void harness()
 {
     TaskFunction_t pxTaskCode;
     char * pcName;
-    configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
+    configSTACK_DEPTH_TYPE uxStackDepth = STACK_DEPTH;
     void * pvParameters;
     TaskHandle_t * pxCreatedTask;
 
@@ -57,7 +57,7 @@ void harness()
 
     xTaskCreate( pxTaskCode,
                  pcName,
-                 usStackDepth,
+                 uxStackDepth,
                  pvParameters,
                  uxPriority,
                  pxCreatedTask );

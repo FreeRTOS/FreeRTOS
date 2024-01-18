@@ -94,11 +94,11 @@ UBaseType_t uxDummy = 10;
 	passed in place of a required buffer.  Hence if all passes then none of the
 	|= will be against 0, and ulReturned will still be zero at the end of this
 	function. */
-	ulReturned |= ( uint32_t ) xEventGroupCreateStatic( NULL );
+	ulReturned |= ( uint32_t ) ( uintptr_t ) xEventGroupCreateStatic( NULL );
 
 	/* Try creating a task twice, once with puxStackBuffer NULL, and once with
 	pxTaskBuffer NULL. */
-	ulReturned |= ( uint32_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
+	ulReturned |= ( uint32_t ) ( uintptr_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
 											   	  "Dummy", /* Task name. */
 												  configMINIMAL_STACK_SIZE,
 												  NULL,
@@ -106,7 +106,7 @@ UBaseType_t uxDummy = 10;
 												  NULL,
 												  ( StaticTask_t * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
 
-	ulReturned |= ( uint32_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
+	ulReturned |= ( uint32_t ) ( uintptr_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
 											   	  "Dummy", /* Task name. */
 												  configMINIMAL_STACK_SIZE,
 												  NULL,
@@ -114,19 +114,19 @@ UBaseType_t uxDummy = 10;
 												  ( StackType_t  * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
 												  NULL );
 
-	ulReturned |= ( uint32_t ) xQueueCreateStatic( uxDummy,
+	ulReturned |= ( uint32_t ) ( uintptr_t ) xQueueCreateStatic( uxDummy,
 												   uxDummy,
 												   ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
 												   NULL );
 
 	/* Try creating a stream buffer twice, once with pucStreamBufferStorageArea
 	set to NULL, and once with pxStaticStreamBuffer set to NULL. */
-	ulReturned |= ( uint32_t ) xStreamBufferCreateStatic( uxDummy,
+	ulReturned |= ( uint32_t ) ( uintptr_t ) xStreamBufferCreateStatic( uxDummy,
 														  uxDummy,
 														  NULL,
 														  ( StaticStreamBuffer_t  * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
 
-	ulReturned |= ( uint32_t ) xStreamBufferCreateStatic( uxDummy,
+	ulReturned |= ( uint32_t ) ( uintptr_t ) xStreamBufferCreateStatic( uxDummy,
 														  uxDummy,
 														  ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
 														  NULL );
@@ -375,12 +375,12 @@ const uint32_t ulRunTimeTollerance = ( uint32_t ) 0xfff;
 	state. */
 	vTaskGetInfo( NULL, &xStatus, pdTRUE, eRunning );
 
-	if( uxTaskGetStackHighWaterMark( NULL ) != xStatus.usStackHighWaterMark )
+	if( uxTaskGetStackHighWaterMark( NULL ) != xStatus.uxStackHighWaterMark )
 	{
 		xReturn = pdFAIL;
 	}
 
-	if( uxTaskGetStackHighWaterMark2( NULL ) != ( configSTACK_DEPTH_TYPE ) xStatus.usStackHighWaterMark )
+	if( uxTaskGetStackHighWaterMark2( NULL ) != ( configSTACK_DEPTH_TYPE ) xStatus.uxStackHighWaterMark )
 	{
 		xReturn = pdFAIL;
 	}
@@ -408,11 +408,11 @@ const uint32_t ulRunTimeTollerance = ( uint32_t ) 0xfff;
 	{
 		xReturn = pdFAIL;
 	}
-	if( uxTaskGetStackHighWaterMark( xTimerTask ) != xStatus.usStackHighWaterMark )
-	{
+	if( uxTaskGetStackHighWaterMark( xTimerTask ) != xStatus.uxStackHighWaterMark )
+	{   
 		xReturn = pdFAIL;
 	}
-	if( uxTaskGetStackHighWaterMark2( xTimerTask ) != ( configSTACK_DEPTH_TYPE ) xStatus.usStackHighWaterMark )
+	if( uxTaskGetStackHighWaterMark2( xTimerTask ) != ( configSTACK_DEPTH_TYPE ) xStatus.uxStackHighWaterMark )
 	{
 		xReturn = pdFAIL;
 	}

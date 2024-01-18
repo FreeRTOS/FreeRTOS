@@ -180,14 +180,14 @@ static TaskHandle_t create_task()
 {
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
-    const uint32_t usStackDepth = 300;
+    const uint32_t uxStackDepth = 300;
     void * const pvParameters = NULL;
     UBaseType_t uxPriority = create_task_priority;
     TaskHandle_t taskHandle;
     BaseType_t ret;
 
     pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ created_tasks ] );
-    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
+    pvPortMalloc_ExpectAndReturn( uxStackDepth * sizeof( StackType_t ), stack );
 
     vListInitialiseItem_Expect( &( tcb[ created_tasks ].xStateListItem ) );
     vListInitialiseItem_Expect( &( tcb[ created_tasks ].xEventListItem ) );
@@ -222,7 +222,7 @@ static TaskHandle_t create_task()
     listINSERT_END_ExpectAnyArgs();
     ret = xTaskCreate( pxTaskCode,
                        pcName,
-                       usStackDepth,
+                       uxStackDepth,
                        pvParameters,
                        uxPriority,
                        &taskHandle );
@@ -583,17 +583,17 @@ void test_xTaskCreate_success( void )
 {
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = NULL;
-    const uint32_t usStackDepth = 300;
+    const uint32_t uxStackDepth = 300;
     void * const pvParameters = NULL;
     UBaseType_t uxPriority = configMAX_PRIORITIES;
     TaskHandle_t taskHandle;
     BaseType_t ret;
-    StackType_t stack[ ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ];
+    StackType_t stack[ ( ( size_t ) uxStackDepth ) * sizeof( StackType_t ) ];
 
     /* Setup */
     /* Expectations */
     pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ 0 ] );
-    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
+    pvPortMalloc_ExpectAndReturn( uxStackDepth * sizeof( StackType_t ), stack );
 
     vListInitialiseItem_Expect( &( tcb[ 0 ].xStateListItem ) );
     vListInitialiseItem_Expect( &( tcb[ 0 ].xEventListItem ) );
@@ -621,7 +621,7 @@ void test_xTaskCreate_success( void )
     /* API Call */
     ret = xTaskCreate( pxTaskCode,
                        pcName,
-                       usStackDepth,
+                       uxStackDepth,
                        pvParameters,
                        uxPriority,
                        &taskHandle );
@@ -641,7 +641,7 @@ void test_xTaskCreate_fail_stack_malloc( void )
 {
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
-    const uint32_t usStackDepth = 300;
+    const uint32_t uxStackDepth = 300;
     void * const pvParameters = NULL;
     UBaseType_t uxPriority = 3;
     TaskHandle_t taskHandle;
@@ -651,7 +651,7 @@ void test_xTaskCreate_fail_stack_malloc( void )
 
     ret = xTaskCreate( pxTaskCode,
                        pcName,
-                       usStackDepth,
+                       uxStackDepth,
                        pvParameters,
                        uxPriority,
                        &taskHandle );
@@ -664,19 +664,19 @@ void test_xTaskCreate_fail_tcb_malloc( void )
 {
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
-    const uint32_t usStackDepth = 300;
+    const uint32_t uxStackDepth = 300;
     void * const pvParameters = NULL;
     UBaseType_t uxPriority = 3;
     TaskHandle_t taskHandle;
     BaseType_t ret;
 
     pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ 0 ] );
-    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), NULL );
+    pvPortMalloc_ExpectAndReturn( uxStackDepth * sizeof( StackType_t ), NULL );
     vPortFree_Expect( &tcb[ 0 ] );
 
     ret = xTaskCreate( pxTaskCode,
                        pcName,
-                       usStackDepth,
+                       uxStackDepth,
                        pvParameters,
                        uxPriority,
                        &taskHandle );

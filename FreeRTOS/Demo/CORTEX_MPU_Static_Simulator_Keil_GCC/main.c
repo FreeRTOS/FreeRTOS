@@ -319,7 +319,7 @@ static const TaskParameters_t xCheckTaskParameters =
 {
     prvCheckTask,                                 /* pvTaskCode - the function that implements the task. */
     "Check",                                      /* pcName */
-    mainCHECK_TASK_STACK_SIZE_WORDS,              /* usStackDepth - defined in words, not bytes. */
+    mainCHECK_TASK_STACK_SIZE_WORDS,              /* uxStackDepth - defined in words, not bytes. */
     ( void * ) 0x12121212,                        /* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
     ( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT, /* uxPriority - this is the highest priority task in the system.  The task is created in privileged mode to demonstrate accessing the privileged only data. */
     xCheckTaskStack,                              /* puxStackBuffer - the array to use as the task stack, as declared above. */
@@ -366,7 +366,7 @@ static const TaskParameters_t xRegTest1Parameters =
 {
     vRegTest1Implementation,                    /* pvTaskCode - the function that implements the task. */
     "RegTest1",                                 /* pcName			*/
-    mainREG_TEST_STACK_SIZE_WORDS,              /* usStackDepth		*/
+    mainREG_TEST_STACK_SIZE_WORDS,              /* uxStackDepth		*/
     ( void * ) configREG_TEST_TASK_1_PARAMETER, /* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
     tskIDLE_PRIORITY | portPRIVILEGE_BIT,       /* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
     xRegTest1Stack,                             /* puxStackBuffer - the array to use as the task stack, as declared above. */
@@ -385,7 +385,7 @@ static TaskParameters_t xRegTest2Parameters =
 {
     vRegTest2Implementation,       /* pvTaskCode - the function that implements the task. */
     "RegTest2",                    /* pcName			*/
-    mainREG_TEST_STACK_SIZE_WORDS, /* usStackDepth		*/
+    mainREG_TEST_STACK_SIZE_WORDS, /* uxStackDepth		*/
     ( void * ) NULL,               /* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
     tskIDLE_PRIORITY,              /* uxPriority		*/
     xRegTest2Stack,                /* puxStackBuffer - the array to use as the task stack, as declared above. */
@@ -423,7 +423,7 @@ static TaskParameters_t xTaskToDeleteParameters =
 {
     prvTaskToDelete,                              /* pvTaskCode - the function that implements the task. */
     mainTASK_TO_DELETE_NAME,                      /* pcName */
-    mainDELETE_TASK_STACK_SIZE_WORDS,             /* usStackDepth */
+    mainDELETE_TASK_STACK_SIZE_WORDS,             /* uxStackDepth */
     ( void * ) NULL,                              /* pvParameters - this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
     ( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT, /* uxPriority - this task is privileged because it creates and deletes kernel objects. */
     xDeleteTaskStack,                             /* puxStackBuffer - the array to use as the task stack, as declared above. */

@@ -3653,7 +3653,7 @@ void test_coverage_vTaskGetInfo_implicit_task( void )
     TEST_ASSERT_EQUAL( ( BaseType_t ) 0, pxTaskStatus.uxBasePriority );
     TEST_ASSERT_EQUAL( ( StackType_t * ) 0x1234, pxTaskStatus.pxStackBase );
     TEST_ASSERT_EQUAL( ( ( 1U << ( configNUMBER_OF_CORES ) ) - 1U ), pxTaskStatus.uxCoreAffinityMask );
-    TEST_ASSERT_EQUAL( 0, pxTaskStatus.usStackHighWaterMark );
+    TEST_ASSERT_EQUAL( 0, pxTaskStatus.uxStackHighWaterMark );
 }
 
 /**
@@ -3692,7 +3692,7 @@ void test_coverage_vTaskGetInfo_oob_xTaskRunState( void )
     TEST_ASSERT_EQUAL( eSuspended, pxTaskStatus.eCurrentState );
     TEST_ASSERT_EQUAL( ( UBaseType_t ) 1, pxTaskStatus.uxCurrentPriority );
     TEST_ASSERT_EQUAL( ( UBaseType_t ) 0, pxTaskStatus.uxBasePriority );
-    TEST_ASSERT_EQUAL( 0, pxTaskStatus.usStackHighWaterMark );
+    TEST_ASSERT_EQUAL( 0, pxTaskStatus.uxStackHighWaterMark );
 }
 
 /**
@@ -3736,7 +3736,7 @@ void test_coverage_vTaskGetInfo_blocked_task( void )
     TEST_ASSERT_EQUAL( eBlocked, pxTaskStatus.eCurrentState );
     TEST_ASSERT_EQUAL( ( UBaseType_t ) 2, pxTaskStatus.uxCurrentPriority );
     TEST_ASSERT_EQUAL( ( UBaseType_t ) 0, pxTaskStatus.uxBasePriority );
-    TEST_ASSERT_EQUAL( 0, pxTaskStatus.usStackHighWaterMark );
+    TEST_ASSERT_EQUAL( 0, pxTaskStatus.uxStackHighWaterMark );
 }
 
 /**
@@ -3780,7 +3780,7 @@ void test_coverage_vTaskGetInfo_get_free_stack_space( void )
     TEST_ASSERT_EQUAL( ( UBaseType_t ) 1, pxTaskStatus.uxCurrentPriority );
     TEST_ASSERT_EQUAL( ( UBaseType_t ) 0, pxTaskStatus.uxBasePriority );
     /* The stack is not used in this test. The high water mark is the index of the stack. */
-    TEST_ASSERT_EQUAL( ( configMINIMAL_STACK_SIZE - 1 ), pxTaskStatus.usStackHighWaterMark );
+    TEST_ASSERT_EQUAL( ( configMINIMAL_STACK_SIZE - 1 ), pxTaskStatus.uxStackHighWaterMark );
 }
 
 /**

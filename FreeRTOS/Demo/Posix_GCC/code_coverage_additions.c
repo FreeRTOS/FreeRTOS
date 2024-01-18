@@ -383,12 +383,12 @@ static BaseType_t prvTaskQueryFunctions( void )
      * state. */
     vTaskGetInfo( NULL, &xStatus, pdTRUE, eRunning );
 
-    if( uxTaskGetStackHighWaterMark( NULL ) != xStatus.usStackHighWaterMark )
+    if( uxTaskGetStackHighWaterMark( NULL ) != xStatus.uxStackHighWaterMark )
     {
         xReturn = pdFAIL;
     }
 
-    if( uxTaskGetStackHighWaterMark2( NULL ) != ( configSTACK_DEPTH_TYPE ) xStatus.usStackHighWaterMark )
+    if( uxTaskGetStackHighWaterMark2( NULL ) != ( configSTACK_DEPTH_TYPE ) xStatus.uxStackHighWaterMark )
     {
         xReturn = pdFAIL;
     }
@@ -422,12 +422,12 @@ static BaseType_t prvTaskQueryFunctions( void )
         xReturn = pdFAIL;
     }
 
-    if( uxTaskGetStackHighWaterMark( xTimerTask ) != xStatus.usStackHighWaterMark )
+    if( uxTaskGetStackHighWaterMark( xTimerTask ) != xStatus.uxStackHighWaterMark )
     {
         xReturn = pdFAIL;
     }
 
-    if( uxTaskGetStackHighWaterMark2( xTimerTask ) != ( configSTACK_DEPTH_TYPE ) xStatus.usStackHighWaterMark )
+    if( uxTaskGetStackHighWaterMark2( xTimerTask ) != ( configSTACK_DEPTH_TYPE ) xStatus.uxStackHighWaterMark )
     {
         xReturn = pdFAIL;
     }

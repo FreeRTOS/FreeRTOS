@@ -533,7 +533,7 @@ static bool prvCollectDeviceMetrics( void )
      * numbers type custom metric. */
     if( eStatus == eMetricsCollectorSuccess )
     {
-        /* Get the current task's status information. The usStackHighWaterMark
+        /* Get the current task's status information. The uxStackHighWaterMark
          * field of the task status will be included in the report as a "number"
          * custom metric. */
         vTaskGetInfo(
@@ -572,7 +572,7 @@ static bool prvCollectDeviceMetrics( void )
         xDeviceMetrics.xOpenUdpPortsArrayLength = uxNumOpenUdpPorts;
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
         xDeviceMetrics.xEstablishedConnectionsArrayLength = uxNumEstablishedConnections;
-        xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
+        xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.uxStackHighWaterMark;
         xDeviceMetrics.pxTaskStatusArray = pxTaskStatusArray;
         xDeviceMetrics.xTaskStatusArrayLength = uxTasksWritten;
     }

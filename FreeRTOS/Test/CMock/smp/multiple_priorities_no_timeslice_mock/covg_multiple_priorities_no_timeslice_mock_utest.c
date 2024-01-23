@@ -584,6 +584,10 @@ void test_coverage_vTaskDelete_task_not_running( void )
 
     vFakePortExitCriticalSection_Expect();
 
+    /* Critical section for check task is running. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
     /* API Call */
     vTaskDelete( xTaskToDelete );
 

@@ -395,6 +395,10 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
     vPortCurrentTaskDying_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* Critical section for check task is running. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskDelete( xTaskToDelete ) );

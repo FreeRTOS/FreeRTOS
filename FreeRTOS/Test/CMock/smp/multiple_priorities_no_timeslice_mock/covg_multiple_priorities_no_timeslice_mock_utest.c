@@ -113,6 +113,10 @@ extern volatile UBaseType_t uxCurrentNumberOfTasks;
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern List_t xDelayedTaskList1;
+extern List_t xDelayedTaskList2;
+extern List_t xTasksWaitingTermination;
+extern List_t xSuspendedTaskList;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
@@ -578,6 +582,10 @@ void test_coverage_vTaskDelete_task_not_running( void )
     vListInsertEnd_ExpectAnyArgs();
     vPortCurrentTaskDying_ExpectAnyArgs();
 
+    vFakePortExitCriticalSection_Expect();
+
+    /* Critical section for check task is running. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
 
     /* API Call */
@@ -1125,8 +1133,10 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
     TCB_t * xIdleTask;
     TCB_t xTask = { 0 };
     int i;
+    UBaseType_t uxPriority;
 
     pcIdleTaskName = "IDLE longXX";
+    xSchedulerRunning = pdFALSE;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -1141,10 +1151,27 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
         listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
         pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
 
+        /* prvAddNewTaskToReadyList. */
         vFakePortEnterCriticalSection_Expect();
+
+        /* prvInitialiseTaskLists call when first task is initialised. */
+        if( i == 0 )
+        {
+            for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+            {
+                vListInitialise_Expect( &pxReadyTasksLists[ uxPriority ] );
+            }
+
+            vListInitialise_Expect( &xDelayedTaskList1 );
+            vListInitialise_Expect( &xDelayedTaskList2 );
+            vListInitialise_Expect( &xPendingReadyList );
+
+            vListInitialise_Expect( &xTasksWaitingTermination );
+            vListInitialise_Expect( &xSuspendedTaskList );
+        }
+
         listINSERT_END_ExpectAnyArgs();
         portSetupTCB_CB_ExpectAnyArgs();
-        vFakePortGetCoreID_ExpectAndReturn( 0 );
         vFakePortExitCriticalSection_Expect();
     }
 
@@ -1190,6 +1217,7 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
     pcIdleTaskName = "IDLE long name";
 
     uxCurrentNumberOfTasks = 2;
+    xSchedulerRunning = pdFALSE;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -1203,10 +1231,10 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
         vListInitialiseItem_ExpectAnyArgs();
         listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
         pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
+
         vFakePortEnterCriticalSection_Expect();
         listINSERT_END_ExpectAnyArgs();
         portSetupTCB_CB_ExpectAnyArgs();
-        vFakePortGetCoreID_ExpectAndReturn( 0 );
         vFakePortExitCriticalSection_Expect();
     }
 

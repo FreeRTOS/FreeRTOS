@@ -409,7 +409,7 @@ void vLoggingPrintf( const char * pcFormat,
 
                 uxStreamBufferAdd( xLogStreamBuffer, 0, ( const uint8_t * ) &( xLength ), sizeof( xLength ) );
                 uxStreamBufferAdd( xLogStreamBuffer, 0, ( const uint8_t * ) cOutputString, xLength );
-                
+
                 taskEXIT_CRITICAL();
             }
 

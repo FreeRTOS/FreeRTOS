@@ -501,56 +501,6 @@ void test_coverage_prvYieldCore_runstate_eq_yielding( void )
 }
 
 /**
- * @brief vTaskDelete - scheduler not running.
- *
- * This test ensures that if vTaskDelete is called and the scheduler is
- * not running, the core is not yielded, but it is removed from the
- * stateList, the eventList and inserted in the taskwaitingtermination
- * list, the uxdeletedtaskwaiting for cleanup is increased and the
- * uxtasknumber is increased
- *
- * <b>Coverage</b>
- * @code{c}
- * if( ( xSchedulerRunning != pdFALSE ) &&
- *     ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) )
- * ...
- * @endcode
- * ( xSchedulerRunning != pdFALSE ) is false.
- */
-void test_coverage_vTaskDelete_scheduler_not_running( void )
-{
-    TCB_t * pxTask = NULL;
-    TaskHandle_t xTaskToDelete;
-
-    pxTask = pvPortMalloc( sizeof( TCB_t ) );
-
-    pxTask->xTaskRunState = 1; /* running on core 1 */
-    xTaskToDelete = pxTask;
-    pxCurrentTCBs[ 0 ] = pxTask;
-    pxTask->pxStack = pvPortMalloc( 100 );
-
-    xSchedulerRunning = pdFALSE;
-
-    uxTaskNumber = 1;
-    uxCurrentNumberOfTasks = 1;
-
-    /* Test Expectations */
-    vFakePortEnterCriticalSection_Expect();
-    uxListRemove_ExpectAnyArgsAndReturn( 0 );
-    listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
-    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
-
-    vFakePortExitCriticalSection_Expect();
-
-    /* API Call */
-    vTaskDelete( xTaskToDelete );
-
-    /* Test Verifications */
-    TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
-    TEST_ASSERT_EQUAL( 2, uxTaskNumber );
-}
-
-/**
  * @brief This test ensures that if xTask Delete is called and the scheuler is
  *        running while the task runstate is more that the configNUMBER_OF_CORES,
  *        the core is not yielded, but it is removed from the

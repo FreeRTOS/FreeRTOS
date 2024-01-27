@@ -474,7 +474,7 @@ static void validate_stream_buffer_init_state( StreamBufferHandle_t xStreamBuffe
     TEST_ASSERT_EQUAL( 0U, xStreamBufferBytesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 0U, xStreamBufferNextMessageLengthBytes( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 0, ucStreamBufferGetStreamBufferType( xStreamBuffer ) );
-    TEST_ASSERT_EQUAL( tskDEFAULT_INDEX_TO_NOTIFY, uxStreamBufferGetStreamBufferNumber( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( tskDEFAULT_INDEX_TO_NOTIFY, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
 }
 
 static void validate_and_clear_assertions( void )
@@ -787,6 +787,7 @@ void test_xStreamBufferSend_blocking( void )
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 4, senderTaskWoken );
+
     vStreamBufferDelete( xStreamBuffer );
 }
 

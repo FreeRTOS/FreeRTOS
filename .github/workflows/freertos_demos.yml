@@ -88,7 +88,7 @@ jobs:
         name: ${{ env.stepName }}
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS/Demo/WIN32-MSVC/Win32/x64/RTOSDemo.exe
+          exe-path: FreeRTOS/Demo/WIN32-MSVC/x64/Debug/RTOSDemo.exe
           timeout-seconds: 60
           success-line: "No errors - tick count"
           retry-attempts: 3

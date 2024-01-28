@@ -205,22 +205,22 @@ extern void vAssertCalled( const char * const pcFileName,
  * 208.67.220.220. Used in ipconfigUSE_DNS is set to 0, or ipconfigUSE_DNS is set
  * to 1 but a DNS server cannot be contacted.*/
 
-#define configDNS_SERVER_ADDR0    10
-#define configDNS_SERVER_ADDR1    4
-#define configDNS_SERVER_ADDR2    4
-#define configDNS_SERVER_ADDR3    10
+#define configDNS_SERVER_ADDR0                 10
+#define configDNS_SERVER_ADDR1                 4
+#define configDNS_SERVER_ADDR2                 4
+#define configDNS_SERVER_ADDR3                 10
 
 /* Default netmask configuration. Used in ipconfigUSE_DNS is set to 0, or
  * ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
-#define configNET_MASK0           255
-#define configNET_MASK1           255
-#define configNET_MASK2           240
-#define configNET_MASK3           0
+#define configNET_MASK0                        255
+#define configNET_MASK1                        255
+#define configNET_MASK2                        240
+#define configNET_MASK3                        0
 
 /* The UDP port to which print messages are sent. */
-#define configPRINT_PORT          ( 15000 )
+#define configPRINT_PORT                       ( 15000 )
 
 /* Use kernel provided static memory for timer and idle tasks. */
-#define configKERNEL_PROVIDED_STATIC_MEMORY  1
+#define configKERNEL_PROVIDED_STATIC_MEMORY    1
 
 #endif /* FREERTOS_CONFIG_H */

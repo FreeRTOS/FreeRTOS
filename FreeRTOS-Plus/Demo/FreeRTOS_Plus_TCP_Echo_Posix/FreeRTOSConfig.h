@@ -220,4 +220,7 @@ extern void vAssertCalled( const char * const pcFileName,
 /* The UDP port to which print messages are sent. */
 #define configPRINT_PORT          ( 15000 )
 
+/* Use kernel provided static memory for timer and idle tasks. */
+#define configKERNEL_PROVIDED_STATIC_MEMORY  1
+
 #endif /* FREERTOS_CONFIG_H */

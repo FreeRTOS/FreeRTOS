@@ -239,6 +239,10 @@ void test_coverage_vTaskSuspend_scheduler_running_false( void )
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
 
+    /* Enter critical section to check task run state. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
     /* API call. */
     vTaskSuspend( &xTaskTCBs[ 0 ] );
 
@@ -277,6 +281,10 @@ void test_coverage_vTaskSuspend_running_state_below_range( void )
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
 
+    /* Enter critical section to check task run state. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
     /* API call. */
     vTaskSuspend( &xTaskTCBs[ 0 ] );
 
@@ -312,6 +320,10 @@ void test_coverage_vTaskSuspend_running_state_above_range( void )
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* Enter critical section to check task run state. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */

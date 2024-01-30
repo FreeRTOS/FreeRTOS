@@ -148,6 +148,8 @@ BaseType_t prvCreateQueueTasks( void )
 {
     BaseType_t xReturn = pdPASS;
 
+    uint32_t ulRegionAttr;
+    ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED;
     /* Start the two tasks as described in the comments at the top of this file. */
     TaskParameters_t
         xQueueReceiveTaskParameters = { .pvTaskCode = prvQueueReceiveTask,
@@ -161,18 +163,15 @@ BaseType_t prvCreateQueueTasks( void )
                                             /* First Configurable Region 5 */
                                             { ( void * ) &xStaticQueue,
                                               ( uint32_t ) sizeof( StaticQueue_t ),
-                                              portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                                  portMPU_NORMAL_OIWTNOWA_SHARED },
+                                              ulRegionAttr },
                                             /* Region 6 */
                                             { ( void * ) &xQueueStorage,
                                               ( uint32_t ) sizeof( xQueueStorage ),
-                                              portMPU_PRIV_RW_USER_RO_NOEXEC |
-                                                  portMPU_NORMAL_OIWTNOWA_SHARED },
+                                              ulRegionAttr },
                                             /* Region 7 */
                                             { ( void * ) &xQueue,
                                               ( uint32_t ) sizeof( QueueHandle_t ),
-                                              portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                                  portMPU_NORMAL_OIWTNOWA_SHARED },
+                                              ulRegionAttr },
                                             /* Region 8 */
                                             { 0, 0, 0 },
                                             /* Region 9 */
@@ -200,37 +199,34 @@ BaseType_t prvCreateQueueTasks( void )
                                      .puxStackBuffer = xQueueSendTaskStack,
                                      .pxTaskBuffer = &xQueueSendTaskTCB,
                                      .xRegions = {
-                                         /* First Configurable Region 5 */
+                                         /* First Configurable Region 0 */
                                          { ( void * ) &xStaticQueue,
                                            ( uint32_t ) sizeof( StaticQueue_t ),
-                                           portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                               portMPU_NORMAL_OIWTNOWA_SHARED },
-                                         /* Region 6 */
+                                           ulRegionAttr },
+                                         /* Region 1 */
                                          { ( void * ) &xQueueStorage,
                                            ( uint32_t ) sizeof( xQueueStorage ),
-                                           portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                               portMPU_NORMAL_OIWTNOWA_SHARED },
+                                           ulRegionAttr },
+                                         /* Region 2 */
+                                           { 0, 0, 0 },
+                                         /* Region 3 */
+                                         { 0, 0, 0 },
+                                         /* Region 4 */
+                                         { 0, 0, 5 },
+    #if( configTOTAL_MPU_REGIONS == 16 )
+                                         /* Region 6 */
+                                         { 0, 0, 0 },
                                          /* Region 7 */
-                                         { ( void * ) &xQueue,
-                                           ( uint32_t ) sizeof( QueueHandle_t ),
-                                           portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                               portMPU_NORMAL_OIWTNOWA_SHARED },
+                                         { 0, 0, 0 },
                                          /* Region 8 */
                                          { 0, 0, 0 },
                                          /* Region 9 */
                                          { 0, 0, 0 },
-    #if( configTOTAL_MPU_REGIONS == 16 )
-                                         /* Region 10 */
-                                         { 0, 0, 0 },
-                                         /* Region 11 */
-                                         { 0, 0, 0 },
-                                         /* Region 12 */
-                                         { 0, 0, 0 },
-                                         /* Region 13 */
-                                         { 0, 0, 0 },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
                                          /* Last Configurable Region */
-                                         { 0, 0, 0 },
+                                         { ( void * ) &xQueue,
+                                           ( uint32_t ) sizeof( QueueHandle_t ),
+                                           ulRegionAttr },
                                      } };
 
     /* Create an unprivileged task with RO access to ucSharedMemory. */

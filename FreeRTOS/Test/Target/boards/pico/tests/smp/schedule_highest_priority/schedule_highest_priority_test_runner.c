@@ -46,7 +46,6 @@
 
 static void prvTestRunnerTask( void * pvParameters );
 
-extern void vRunScheduleHighestPriorityTest( void );
 /*-----------------------------------------------------------*/
 
 static void prvTestRunnerTask( void * pvParameters )
@@ -69,3 +68,4 @@ void vRunTest( void )
                  configMAX_PRIORITIES - 1,
                  NULL );
 }
+/*-----------------------------------------------------------*/

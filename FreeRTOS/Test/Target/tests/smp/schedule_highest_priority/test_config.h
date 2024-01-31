@@ -54,8 +54,8 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test case "scheduler highest priority task".
+ * @brief A start entry for test runner to run highest priority test.
  */
-void Test_ScheduleHighestPriority( void );
+void vRunScheduleHighestPriorityTest( void );
 
 #endif /* ifndef TEST_CONFIG_H */

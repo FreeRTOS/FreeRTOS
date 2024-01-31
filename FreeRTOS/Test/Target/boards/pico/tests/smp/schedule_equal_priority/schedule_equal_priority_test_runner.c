@@ -24,38 +24,48 @@
  *
  */
 
-#ifndef TEST_CONFIG_H
-#define TEST_CONFIG_H
+/**
+ * @file schedule_equal_priority_test_runner.c
+ * @brief The implementation of main function to start test runner task.
+ *
+ * Procedure:
+ *   - Initialize environment
+ *   - Run the test case
+ */
 
-/* This file must be included at the end of the FreeRTOSConfig.h. It contains
- * any FreeRTOS specific configurations that the test requires. */
+/* Kernel includes. */
+#include "FreeRTOS.h" /* Must come first. */
+#include "task.h"     /* RTOS task related API prototypes. */
 
-#ifdef configRUN_MULTIPLE_PRIORITIES
-    #undef configRUN_MULTIPLE_PRIORITIES
-#endif /* #ifdef configRUN_MULTIPLE_PRIORITIES */
+#include "unity.h"    /* unit testing support functions */
 
-#ifdef configUSE_TIME_SLICING
-    #undef configUSE_TIME_SLICING
-#endif /* #ifdef configUSE_TIME_SLICING */
-
-#ifdef configUSE_PREEMPTION
-    #undef configUSE_PREEMPTION
-#endif /* #ifdef configUSE_PREEMPTION */
-
-#ifdef configUSE_TASK_NOTIFICATIONS
-    #undef configUSE_TASK_NOTIFICATIONS
-#endif /* #ifdef configUSE_TASK_NOTIFICATIONS */
-
-#define configRUN_MULTIPLE_PRIORITIES    1
-#define configUSE_TIME_SLICING           1
-#define configUSE_PREEMPTION             1
-#define configUSE_TASK_NOTIFICATIONS     1
+#include "pico/multicore.h"
+#include "pico/stdlib.h"
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Test case "scheduler highest priority task".
- */
-void Test_ScheduleHighestPriority( void );
+static void prvTestRunnerTask( void * pvParameters );
 
-#endif /* ifndef TEST_CONFIG_H */
+extern void vRunScheduleEqualPriorityTest( void );
+/*-----------------------------------------------------------*/
+
+static void prvTestRunnerTask( void * pvParameters )
+{
+    ( void ) pvParameters;
+
+    /* Run test case. */
+    vRunScheduleEqualPriorityTest();
+
+    vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+void vRunTest( void )
+{
+    xTaskCreate( prvTestRunnerTask,
+                 "testRunner",
+                 configMINIMAL_STACK_SIZE,
+                 NULL,
+                 configMAX_PRIORITIES - 1,
+                 NULL );
+}

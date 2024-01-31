@@ -29,9 +29,12 @@
  * @brief The scheduler shall correctly schedule the highest priority ready tasks.
  *
  * Procedure:
- *   - Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
+ *   1. Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
+ *   2. Each task checks if higher priority task is of running state. If not, notify
+ *      test runner with error.
+ *   3. Notify test runner when the lowest priority task Tn-1 finishs the test.
  * Expected:
- *   - When a task runs, all tasks have higher priority are running.
+ *   - When a task runs, all tasks have higher priority are of running state.
  */
 
 /* Standard includes. */
@@ -44,13 +47,22 @@
 #include "unity.h"    /* unit testing support functions */
 /*-----------------------------------------------------------*/
 
+#if ( configNUMBER_OF_CORES < 2 )
+    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
+#endif /* #if ( configNUMBER_OF_CORES < 2 ) */
+
+#if ( configMAX_PRIORITIES <= configNUMBER_OF_CORES )
+    #error This test creates tasks with different priority, requires configMAX_PRIORITIES to be larger than configNUMBER_OF_CORES.
+#endif /* #if ( configMAX_PRIORITIES <= configNUMBER_OF_CORES ) */
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Timeout value to stop test.
  */
-#define TEST_TIMEOUT_MS    ( 10000 )
+#define TEST_TIMEOUT_MS    ( 10000U )
 
 /**
- * @brief Nop operation for busy looping
+ * @brief Nop operation for busy looping.
  */
 #ifdef portNOP
     #define TEST_NOP       portNOP
@@ -58,15 +70,6 @@
     #define TEST_NOP()      __asm volatile ( "nop" )
 #endif
 
-/*-----------------------------------------------------------*/
-
-#if ( configNUMBER_OF_CORES < 2 )
-    #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
-#endif /* if configNUMBER_OF_CORES != 2 */
-
-#if ( configMAX_PRIORITIES <= configNUMBER_OF_CORES )
-    #error This test creates tasks with different priority, requires configMAX_PRIORITIES to be larger than configNUMBER_OF_CORES.
-#endif /* if configNUMBER_OF_CORES != 2 */
 /*-----------------------------------------------------------*/
 
 /**
@@ -96,9 +99,16 @@ static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
 static uint32_t xTaskIndexes[ configNUMBER_OF_CORES ];
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Ever running task function.
+ *
+ * Test runner will be notified with the following values:
+ * 0 ~ ( configNUMBER_OF_CORES -1 ) : task Tx encounters error during the test.
+ * configNUMBER_OF_CORES : test finish without error.
+ */
 static void prvEverRunningTask( void * pvParameters )
 {
-    uint32_t i = 0;
+    uint32_t i;
     uint32_t uxCurrentTaskIdx = *( ( uint32_t * ) pvParameters );
     eTaskState xTaskState;
 
@@ -136,12 +146,15 @@ static void prvEverRunningTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Test running task to wait for notification from ever running task.
+ */
 void Test_ScheduleHighestPirority( void )
 {
     uint32_t ulNotifiedValue;
     BaseType_t xReturn;
 
-    xReturn = xTaskNotifyWait( 0x00, ULONG_MAX, &ulNotifiedValue, pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
+    xReturn = xTaskNotifyWait( 0U, ULONG_MAX, &ulNotifiedValue, pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
 
     /* Test runner thread is notified within TEST_TIMEOUT_MS. */
     TEST_ASSERT_EQUAL( pdTRUE, xReturn );
@@ -151,7 +164,9 @@ void Test_ScheduleHighestPirority( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Runs before every test, put init calls here. */
+/**
+ * @brief Runs before every test, put init calls here.
+ */
 void setUp( void )
 {
     uint32_t i;
@@ -177,7 +192,9 @@ void setUp( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Runs after every test, put clean-up calls here. */
+/**
+ * @brief Runs after every test, put clean-up calls here.
+ */
 void tearDown( void )
 {
     uint32_t i;

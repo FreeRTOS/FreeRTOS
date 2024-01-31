@@ -113,9 +113,16 @@ extern volatile UBaseType_t uxCurrentNumberOfTasks;
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
+extern List_t xDelayedTaskList1;
+extern List_t xDelayedTaskList2;
+extern List_t xTasksWaitingTermination;
+extern List_t xSuspendedTaskList;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
+extern List_t xSuspendedTaskList;
+extern List_t xPendingReadyList;
+extern volatile TickType_t xPendedTicks;
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */
 
@@ -232,6 +239,10 @@ void test_coverage_vTaskSuspend_scheduler_running_false( void )
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
 
+    /* Enter critical section to check task run state. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
     /* API call. */
     vTaskSuspend( &xTaskTCBs[ 0 ] );
 
@@ -270,6 +281,10 @@ void test_coverage_vTaskSuspend_running_state_below_range( void )
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
 
+    /* Enter critical section to check task run state. */
+    vFakePortEnterCriticalSection_Expect();
+    vFakePortExitCriticalSection_Expect();
+
     /* API call. */
     vTaskSuspend( &xTaskTCBs[ 0 ] );
 
@@ -305,6 +320,10 @@ void test_coverage_vTaskSuspend_running_state_above_range( void )
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* Enter critical section to check task run state. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */
@@ -575,6 +594,10 @@ void test_coverage_vTaskDelete_task_not_running( void )
     vListInsertEnd_ExpectAnyArgs();
     vPortCurrentTaskDying_ExpectAnyArgs();
 
+    vFakePortExitCriticalSection_Expect();
+
+    /* Critical section for check task is running. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
 
     /* API Call */
@@ -1122,8 +1145,10 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
     TCB_t * xIdleTask;
     TCB_t xTask = { 0 };
     int i;
+    UBaseType_t uxPriority;
 
     pcIdleTaskName = "IDLE longXX";
+    xSchedulerRunning = pdFALSE;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -1138,10 +1163,27 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
         listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
         pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
 
+        /* prvAddNewTaskToReadyList. */
         vFakePortEnterCriticalSection_Expect();
+
+        /* prvInitialiseTaskLists call when first task is initialised. */
+        if( i == 0 )
+        {
+            for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+            {
+                vListInitialise_Expect( &pxReadyTasksLists[ uxPriority ] );
+            }
+
+            vListInitialise_Expect( &xDelayedTaskList1 );
+            vListInitialise_Expect( &xDelayedTaskList2 );
+            vListInitialise_Expect( &xPendingReadyList );
+
+            vListInitialise_Expect( &xTasksWaitingTermination );
+            vListInitialise_Expect( &xSuspendedTaskList );
+        }
+
         listINSERT_END_ExpectAnyArgs();
         portSetupTCB_CB_ExpectAnyArgs();
-        vFakePortGetCoreID_ExpectAndReturn( 0 );
         vFakePortExitCriticalSection_Expect();
     }
 
@@ -1187,6 +1229,7 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
     pcIdleTaskName = "IDLE long name";
 
     uxCurrentNumberOfTasks = 2;
+    xSchedulerRunning = pdFALSE;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -1200,10 +1243,10 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
         vListInitialiseItem_ExpectAnyArgs();
         listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
         pxPortInitialiseStack_ExpectAnyArgsAndReturn( NULL );
+
         vFakePortEnterCriticalSection_Expect();
         listINSERT_END_ExpectAnyArgs();
         portSetupTCB_CB_ExpectAnyArgs();
-        vFakePortGetCoreID_ExpectAndReturn( 0 );
         vFakePortExitCriticalSection_Expect();
     }
 
@@ -1256,4 +1299,52 @@ void test_coverage_xTaskGetSchedulerState_scheduler_not_running_and_suspended( v
     xRet = xTaskGetSchedulerState();
 
     TEST_ASSERT_EQUAL( taskSCHEDULER_SUSPENDED, xRet );
+}
+
+/**
+ * @brief eTaskConfirmSleepModeStatus - confirm no task is waiting for timeout.
+ *
+ * All the tasks except idle tasks are in suspended list. The system can stay in
+ * a low power state. This is a regression test for SMP to ensure uxNonApplicationTasks
+ * is set to configNUMBER_OF_CORES in the implementation.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( INCLUDE_vTaskSuspend == 1 )
+ *     else if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
+ *     {
+ *         ...
+ *         eReturn = eNoTasksWaitingTimeout;
+ *     }
+ * #endif
+ * @endcode
+ * ( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) ) is true.
+ */
+void test_coverage_eTaskConfirmSleepModeStatus_no_tasks_waiting_timeout( void )
+{
+    eSleepModeStatus eRetStatus;
+    UBaseType_t uxSuspendedTask;
+
+    /* Setup */
+    xPendedTicks = 0;
+    uxSuspendedTask = 3U; /* Assume system has 3 suspended task. */
+    xYieldPendings[ 0 ] = 0;
+
+    /* System has uxSuspendedTask number of suspended task and configNUMBER_OF_CORES
+     * idle tasks. */
+    uxCurrentNumberOfTasks = uxSuspendedTask + configNUMBER_OF_CORES;
+
+    /* Expectations */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xPendingReadyList, 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList, uxSuspendedTask );
+
+    /* API Call */
+    eRetStatus = eTaskConfirmSleepModeStatus();
+
+    /* Validations */
+
+    /* If the implementation sets uxNonApplicationTasks to a fixed number 1 instead of
+     * configNUMBER_OF_CORES, the following assertion will be violated. */
+    TEST_ASSERT_EQUAL( eNoTasksWaitingTimeout, eRetStatus );
 }

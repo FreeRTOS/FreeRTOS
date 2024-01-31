@@ -201,7 +201,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 5000 )
+#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 10000 )
 
 /**
  * @brief The length in bytes of the user buffer.

@@ -1,5 +1,5 @@
 Deprecated
-GitPython
+GitPython>=3.1.41
 PyGithub
 PyJWT
 PyYAML

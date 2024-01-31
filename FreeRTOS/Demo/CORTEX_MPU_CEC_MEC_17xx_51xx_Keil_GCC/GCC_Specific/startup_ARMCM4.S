@@ -1,10 +1,11 @@
 /* File: startup_ARMCM4.S
  * Purpose: startup file for Cortex-M4 devices. Should use with
  *   GCC for ARM Embedded Processors
- * Version: V2.0
- * Date: 16 August 2013
+ * Version: V2.01
+ * Date: 12 June 2014
  *
-/* Copyright (c) 2011 - 2013 ARM LIMITED
+ */
+/* Copyright (c) 2011 - 2014 ARM LIMITED
 
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
@@ -30,6 +31,7 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
+
 	.syntax	unified
 	.arch	armv7e-m
 

@@ -115,6 +115,7 @@ extern volatile UBaseType_t uxTopReadyPriority;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern volatile TickType_t xTickCount;
 extern volatile TickType_t xNextTaskUnblockTime;
+extern TaskHandle_t xIdleTaskHandles[ configNUMBER_OF_CORES ];
 
 /* ==========================  STATIC FUNCTIONS  ========================== */
 static void vFakeAssertStub( bool x,
@@ -394,6 +395,10 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
     vPortCurrentTaskDying_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* Critical section for check task is running. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskDelete( xTaskToDelete ) );
@@ -405,19 +410,27 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
 }
 
 /**
- * @brief This test ensures that the code asserts when a task is suspended while
- *        the scheduler is suspended
+ * @brief vTaskSuspend - scheduler suspended assertion.
+ *
+ * This test ensures that the code asserts when a task is suspended while
+ * the scheduler is suspended
  *
  * <b>Coverage</b>
  * @code{c}
- * vTaskDelete( xTaskToDelete );
- *
- * configASSERT( uxSchedulerSuspended == 0 );
- *
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *     if( pxTCB->xTaskRunState == ( BaseType_t ) portGET_CORE_ID() )
+ *     {
+ *         configASSERT( uxSchedulerSuspended == 0 );
+ *         vTaskYieldWithinAPI();
+ *     }
+ *     else
+ *     {
+ *         prvYieldCore( pxTCB->xTaskRunState );
+ *     }
+ * }
  * @endcode
- *
- * configNUMBER_OF_CORES > 1
- * INCLUDE_vTaskSuspend
+ * configASSERT( uxSchedulerSuspended == 0 ) is triggered.
  */
 void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
 {
@@ -433,7 +446,15 @@ void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
+    vFakePortExitCriticalSection_Expect();
+
+    /* Reset the next expected unblock time if scheduler is running. */
+    vFakePortEnterCriticalSection_Expect();
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vFakePortExitCriticalSection_Expect();
+
+    /* Check task run state in critical section. */
+    vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSuspend( xTaskToSuspend ) );
@@ -668,4 +689,71 @@ void test_vTaskStepTick_assert_tick_to_jump_eq_0( void )
 
     /* Test Verifications */
     validate_and_clear_assertions();
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - assert if xCoreID is less than 0
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE );
+ * @endcode
+ * taskVALID_CORE_ID( xCoreID ) is false with xCoreID less than 0.
+ */
+void test_xTaskGetIdleTaskHandleForCore_assert_invalid_core_id_lt( void )
+{
+    /* API Call */
+    EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandleForCore( -1 ) );
+
+    /* Test Verifications */
+    validate_and_clear_assertions();
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - assert if xCoreID is greater or equal
+ * than configNUMBER_OF_CORES
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE );
+ * @endcode
+ * taskVALID_CORE_ID( xCoreID ) is false with xCoreID greater or equal than configNUMBER_OF_CORES
+ */
+void test_xTaskGetIdleTaskHandleForCore_assert_invalid_core_id_ge( void )
+{
+    /* API Call */
+    EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandleForCore( configNUMBER_OF_CORES ) );
+
+    /* Test Verifications */
+    validate_and_clear_assertions();
+}
+
+/**
+ * @brief xTaskGetIdleTaskHandleForCore - assert if idle task handle is NULL due to
+ * scheduler not started.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * configASSERT( ( xIdleTaskHandles[ xCoreID ] != NULL ) );
+ * @endcode
+ * ( xIdleTaskHandles[ xCoreID ] != NULL ) is false.
+ */
+void test_xTaskGetIdleTaskHandleForCore_assert_null_idle_task_handle( void )
+{
+    BaseType_t xCoreID;
+
+    /* Setup the variables and structure. */
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        xIdleTaskHandles[ xCoreID ] = NULL;
+    }
+
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        /* API Call */
+        EXPECT_ASSERT_BREAK( xTaskGetIdleTaskHandleForCore( xCoreID ) );
+
+        /* Test Verifications */
+        validate_and_clear_assertions();
+    }
 }

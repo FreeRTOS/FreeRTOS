@@ -32,7 +32,7 @@
  *   1. Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
  *   2. Each task checks if higher priority task is of running state. If not, notify
  *      test runner with error.
- *   3. Notify test runner when the lowest priority task Tn-1 finishs the test.
+ *   3. Notify test runner when the lowest priority task Tn-1 completes the test.
  * Expected:
  *   - When a task runs, all tasks have higher priority are of running state.
  */
@@ -65,17 +65,12 @@
  * @brief Nop operation for busy looping.
  */
 #ifdef portNOP
-    #define TEST_NOP       portNOP
+    #define TEST_NOP    portNOP
 #else
-    #define TEST_NOP()      __asm volatile ( "nop" )
+    #define TEST_NOP()    __asm volatile ( "nop" )
 #endif
 
 /*-----------------------------------------------------------*/
-
-/**
- * @brief Test case "scheduler highest priority task".
- */
-void Test_ScheduleHighestPirority( void );
 
 /**
  * @brief Function that implements a never blocking FreeRTOS task.
@@ -91,7 +86,7 @@ static TaskHandle_t xTestRunnerTaskHandle;
 /**
  * @brief Handles of the tasks created in this test.
  */
-static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES ];
+static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ];
 
 /**
  * @brief Indexes of the tasks created in this test.
@@ -114,7 +109,7 @@ static void prvEverRunningTask( void * pvParameters )
 
     for( i = 0; i < uxCurrentTaskIdx; i++ )
     {
-        xTaskState = eTaskGetState( xTaskHanldes[ i ] );
+        xTaskState = eTaskGetState( xTaskHandles[ i ] );
 
         /* Tasks created in this test are of descending priority order. For example,
          * priority of T0 is higher than priority of T1. A lower priority task is able
@@ -149,7 +144,7 @@ static void prvEverRunningTask( void * pvParameters )
 /**
  * @brief Test running task to wait for notification from ever running task.
  */
-void Test_ScheduleHighestPirority( void )
+void Test_ScheduleHighestPriority( void )
 {
     uint32_t ulNotifiedValue;
     BaseType_t xReturn;
@@ -185,7 +180,7 @@ void setUp( void )
                                            configMINIMAL_STACK_SIZE * 2,
                                            &xTaskIndexes[ i ],
                                            configMAX_PRIORITIES - 1 - i,
-                                           &xTaskHanldes[ i ] );
+                                           &xTaskHandles[ i ] );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -202,9 +197,9 @@ void tearDown( void )
     /* Delete all the tasks. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        if( xTaskHanldes[ i ] != NULL )
+        if( xTaskHandles[ i ] != NULL )
         {
-            vTaskDelete( xTaskHanldes[ i ] );
+            vTaskDelete( xTaskHandles[ i ] );
         }
     }
 }
@@ -217,7 +212,7 @@ void vRunScheduleHighestPriorityTest( void )
 {
     UNITY_BEGIN();
 
-    RUN_TEST( Test_ScheduleHighestPirority );
+    RUN_TEST( Test_ScheduleHighestPriority );
 
     UNITY_END();
 }

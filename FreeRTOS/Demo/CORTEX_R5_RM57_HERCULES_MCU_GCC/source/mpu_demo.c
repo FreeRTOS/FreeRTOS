@@ -384,11 +384,11 @@ BaseType_t xCreateMPUTasks( void )
                                         { ( void * ) ucSharedMemory4,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
+    #if( configTOTAL_MPU_REGIONS == 16 )
                                         /* MPU Region 5 */
                                         { ( void * ) ucSharedMemory5,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-    #if( configTOTAL_MPU_REGIONS == 16 )
                                         /* MPU Region 6 */
                                         { ( void * ) ucSharedMemory6,
                                           SHARED_MEMORY_SIZE,

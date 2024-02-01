@@ -80,6 +80,7 @@ static volatile uint8_t ucSharedMemory4[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) );
 
     #if( configTOTAL_MPU_REGIONS == 16 )
+
 static volatile uint8_t ucSharedMemory5[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) );
 
@@ -91,6 +92,7 @@ static volatile uint8_t ucSharedMemory7[ SHARED_MEMORY_SIZE ]
 
 static volatile uint8_t ucSharedMemory8[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) );
+
     #endif /* configTOTAL_MPU_REGIONS == 16 */
 
 /* These tasks will use over 288 bytes as of time of writing.
@@ -384,11 +386,11 @@ BaseType_t xCreateMPUTasks( void )
                                         { ( void * ) ucSharedMemory4,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
+    #if( configTOTAL_MPU_REGIONS == 16 )
                                         /* MPU Region 5 */
                                         { ( void * ) ucSharedMemory5,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-    #if( configTOTAL_MPU_REGIONS == 16 )
                                         /* MPU Region 6 */
                                         { ( void * ) ucSharedMemory6,
                                           SHARED_MEMORY_SIZE,

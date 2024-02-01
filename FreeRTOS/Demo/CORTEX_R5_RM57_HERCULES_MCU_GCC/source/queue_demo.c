@@ -152,57 +152,58 @@ BaseType_t prvCreateQueueTasks( void )
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                            portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
 
     BaseType_t xReturn = pdPASS;
 
-    uint32_t ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
+                            portMPU_NORMAL_OIWTNOWA_SHARED;
 
     /* Start the two tasks as described in the comments at the top of this file. */
-    TaskParameters_t xQueueReceiveTaskParameters =  {
-            .pvTaskCode = prvQueueReceiveTask,
-            .pcName = pcReceiveTaskName,
-            .usStackDepth = configMINIMAL_STACK_SIZE / 2U,
-            .pvParameters = NULL,
-            .uxPriority = demoQUEUE_RECEIVE_TASK_PRIORITY,
-            .puxStackBuffer = xQueueReceiveTaskStack,
-            .pxTaskBuffer = &xQueueReceiveTaskTCB,
-            .xRegions = {
-                /* First Configurable Region 0 */
-                { ( void * ) &xStaticQueue,
-                    ( uint32_t ) sizeof( StaticQueue_t ),
-                    ulRegionAttr },
-                /* Region 1 */
-                { ( void * ) &xQueueStorage,
-                    ( uint32_t ) sizeof( xQueueStorage ),
-                    ulRegionAttr },
-                /* Region 2 */
-                { ( void * ) &xQueue,
-                    ( uint32_t ) sizeof( QueueHandle_t ),
-                    ulRegionAttr },
-                /* Region 3 */
-                { 0, 0, 0 },
-                /* Region 4 */
-                { 0, 0, 0 },
-                /* Region 5 */
-                { 0, 0, 0 },
-                /* Region 6 */
-                { 0, 0, 0 },
+    TaskParameters_t
+        xQueueReceiveTaskParameters = { .pvTaskCode = prvQueueReceiveTask,
+                                        .pcName = pcReceiveTaskName,
+                                        .usStackDepth = configMINIMAL_STACK_SIZE / 2U,
+                                        .pvParameters = NULL,
+                                        .uxPriority = demoQUEUE_RECEIVE_TASK_PRIORITY,
+                                        .puxStackBuffer = xQueueReceiveTaskStack,
+                                        .pxTaskBuffer = &xQueueReceiveTaskTCB,
+                                        .xRegions = {
+                                            /* First Configurable Region 0 */
+                                            { ( void * ) &xStaticQueue,
+                                              ( uint32_t ) sizeof( StaticQueue_t ),
+                                              ulRegionAttr },
+                                            /* Region 1 */
+                                            { ( void * ) &xQueueStorage,
+                                              ( uint32_t ) sizeof( xQueueStorage ),
+                                              ulRegionAttr },
+                                            /* Region 2 */
+                                            { ( void * ) &xQueue,
+                                              ( uint32_t ) sizeof( QueueHandle_t ),
+                                              ulRegionAttr },
+                                            /* Region 3 */
+                                            { 0, 0, 0 },
+                                            /* Region 4 */
+                                            { 0, 0, 0 },
+                                            /* Region 5 */
+                                            { 0, 0, 0 },
+                                            /* Region 6 */
+                                            { 0, 0, 0 },
     #if( configTOTAL_MPU_REGIONS == 16 )
-                /* Region 7 */
-                { 0, 0, 0 },
-                /* Region 8 */
-                { 0, 0, 0 },
-                /* Region 9 */
-                { 0, 0, 0 },
-                /* Region 10 */
-                { 0, 0, 0 },
+                                            /* Region 7 */
+                                            { 0, 0, 0 },
+                                            /* Region 8 */
+                                            { 0, 0, 0 },
+                                            /* Region 9 */
+                                            { 0, 0, 0 },
+                                            /* Region 10 */
+                                            { 0, 0, 0 },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                /* Last Configurable MPU Region */
-                { ( void * ) ulPeriphRegionStart, ulPeriphRegionSize, ulPeriphRegionAttr },
-            }
-        };
+                                            /* Last Configurable MPU Region */
+                                            { ( void * ) ulPeriphRegionStart,
+                                              ulPeriphRegionSize,
+                                              ulPeriphRegionAttr },
+                                        } };
 
     TaskParameters_t
         xQueueSendTaskParameters = { .pvTaskCode = prvQueueSendTask,
@@ -229,10 +230,10 @@ BaseType_t prvCreateQueueTasks( void )
                                          { 0, 0, 0 },
                                          /* Region 4 */
                                          { 0, 0, 5 },
-                                        /* Region 5 */
-                                        { 0, 0, 0 },
-                                        /* Region 6 */
-                                        { 0, 0, 0 },
+                                         /* Region 5 */
+                                         { 0, 0, 0 },
+                                         /* Region 6 */
+                                         { 0, 0, 0 },
     #if( configTOTAL_MPU_REGIONS == 16 )
                                          /* Region 7 */
                                          { 0, 0, 0 },
@@ -243,8 +244,10 @@ BaseType_t prvCreateQueueTasks( void )
                                          /* Region 10 */
                                          { 0, 0, 0 },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                    /* Last Configurable MPU Region */
-                { ( void * ) ulPeriphRegionStart, ulPeriphRegionSize, ulPeriphRegionAttr },
+                                         /* Last Configurable MPU Region */
+                                         { ( void * ) ulPeriphRegionStart,
+                                           ulPeriphRegionSize,
+                                           ulPeriphRegionAttr },
                                      } };
 
     /* Create an unprivileged task with RO access to ucSharedMemory. */

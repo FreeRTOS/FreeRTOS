@@ -280,15 +280,13 @@ static void prvRWAccessTask( void * pvParameters )
 
 BaseType_t xCreateMPUTasks( void )
 {
-
     /* Declaration when these variable are exported from linker scripts. */
     extern uint32_t __peripherals_start__[];
     extern uint32_t __peripherals_end__[];
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                            portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
 
     BaseType_t xReturn = pdPASS;
 
@@ -352,7 +350,9 @@ BaseType_t xCreateMPUTasks( void )
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
                                         /* Last Configurable MPU Region */
-                                        { ( void * ) ulPeriphRegionStart, ulPeriphRegionSize, ulPeriphRegionAttr },
+                                        { ( void * ) ulPeriphRegionStart,
+                                          ulPeriphRegionSize,
+                                          ulPeriphRegionAttr },
                                     } };
 
     TaskParameters_t
@@ -407,9 +407,10 @@ BaseType_t xCreateMPUTasks( void )
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
                                         /* Last Configurable MPU Region */
-                                        { ( void * ) ulPeriphRegionStart, ulPeriphRegionSize, ulPeriphRegionAttr },
+                                        { ( void * ) ulPeriphRegionStart,
+                                          ulPeriphRegionSize,
+                                          ulPeriphRegionAttr },
                                     } };
-
 
     /* Create an unprivileged task with RO access to ucSharedMemory. */
     xReturn = xTaskCreateRestrictedStatic( &( xROAccessTaskParameters ), NULL );

@@ -438,7 +438,6 @@ void vApplicationIRQHandler( void )
     vimREG->REQMASKSET1 = ulPendISRReg1;
     vimREG->REQMASKSET2 = ulPendISRReg2;
     vimREG->REQMASKSET3 = ulPendISRReg3;
-
 }
 /*---------------------------------------------------------------------------*/
 

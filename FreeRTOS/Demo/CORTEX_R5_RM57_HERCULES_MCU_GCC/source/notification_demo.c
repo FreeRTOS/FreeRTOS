@@ -184,8 +184,7 @@ BaseType_t xCreateNotificationTestTask( void )
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                            portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
 
     BaseType_t xReturn = pdFAIL;
     /* Create the register check tasks, as described at the top of this file. */

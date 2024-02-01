@@ -146,7 +146,18 @@ static TaskHandle_t xSendTaskHandle;
 
 BaseType_t prvCreateQueueTasks( void )
 {
+    /* Declaration when these variable are exported from linker scripts. */
+    extern uint32_t __peripherals_start__[];
+    extern uint32_t __peripherals_end__[];
+
+    uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
+    uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+
     BaseType_t xReturn = pdPASS;
+
+    uint32_t ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
+                            portMPU_NORMAL_OIWTNOWA_SHARED;
 
     /* Start the two tasks as described in the comments at the top of this file. */
     TaskParameters_t
@@ -158,37 +169,40 @@ BaseType_t prvCreateQueueTasks( void )
                                         .puxStackBuffer = xQueueReceiveTaskStack,
                                         .pxTaskBuffer = &xQueueReceiveTaskTCB,
                                         .xRegions = {
-                                            /* First Configurable Region 5 */
+                                            /* First Configurable Region 0 */
                                             { ( void * ) &xStaticQueue,
                                               ( uint32_t ) sizeof( StaticQueue_t ),
-                                              portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                                  portMPU_NORMAL_OIWTNOWA_SHARED },
-                                            /* Region 6 */
+                                              ulRegionAttr },
+                                            /* Region 1 */
                                             { ( void * ) &xQueueStorage,
                                               ( uint32_t ) sizeof( xQueueStorage ),
-                                              portMPU_PRIV_RW_USER_RO_NOEXEC |
-                                                  portMPU_NORMAL_OIWTNOWA_SHARED },
-                                            /* Region 7 */
+                                              ulRegionAttr },
+                                            /* Region 2 */
                                             { ( void * ) &xQueue,
                                               ( uint32_t ) sizeof( QueueHandle_t ),
-                                              portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                                  portMPU_NORMAL_OIWTNOWA_SHARED },
+                                              ulRegionAttr },
+                                            /* Region 3 */
+                                            { 0, 0, 0 },
+                                            /* Region 4 */
+                                            { 0, 0, 0 },
+                                            /* Region 5 */
+                                            { 0, 0, 0 },
+                                            /* Region 6 */
+                                            { 0, 0, 0 },
+    #if( configTOTAL_MPU_REGIONS == 16 )
+                                            /* Region 7 */
+                                            { 0, 0, 0 },
                                             /* Region 8 */
                                             { 0, 0, 0 },
                                             /* Region 9 */
                                             { 0, 0, 0 },
-    #if( configTOTAL_MPU_REGIONS == 16 )
                                             /* Region 10 */
                                             { 0, 0, 0 },
-                                            /* Region 11 */
-                                            { 0, 0, 0 },
-                                            /* Region 12 */
-                                            { 0, 0, 0 },
-                                            /* Region 13 */
-                                            { 0, 0, 0 },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                                            /* Last Configurable Region */
-                                            { 0, 0, 0 },
+                                            /* Last Configurable MPU Region */
+                                            { ( void * ) ulPeriphRegionStart,
+                                              ulPeriphRegionSize,
+                                              ulPeriphRegionAttr },
                                         } };
 
     TaskParameters_t
@@ -200,37 +214,40 @@ BaseType_t prvCreateQueueTasks( void )
                                      .puxStackBuffer = xQueueSendTaskStack,
                                      .pxTaskBuffer = &xQueueSendTaskTCB,
                                      .xRegions = {
-                                         /* First Configurable Region 5 */
+                                         /* First Configurable Region 0 */
                                          { ( void * ) &xStaticQueue,
                                            ( uint32_t ) sizeof( StaticQueue_t ),
-                                           portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                               portMPU_NORMAL_OIWTNOWA_SHARED },
-                                         /* Region 6 */
+                                           ulRegionAttr },
+                                         /* Region 1 */
                                          { ( void * ) &xQueueStorage,
                                            ( uint32_t ) sizeof( xQueueStorage ),
-                                           portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                               portMPU_NORMAL_OIWTNOWA_SHARED },
-                                         /* Region 7 */
+                                           ulRegionAttr },
+                                         /* Region 2 */
                                          { ( void * ) &xQueue,
                                            ( uint32_t ) sizeof( QueueHandle_t ),
-                                           portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                               portMPU_NORMAL_OIWTNOWA_SHARED },
+                                           ulRegionAttr },
+                                         /* Region 3 */
+                                         { 0, 0, 0 },
+                                         /* Region 4 */
+                                         { 0, 0, 5 },
+                                         /* Region 5 */
+                                         { 0, 0, 0 },
+                                         /* Region 6 */
+                                         { 0, 0, 0 },
+    #if( configTOTAL_MPU_REGIONS == 16 )
+                                         /* Region 7 */
+                                         { 0, 0, 0 },
                                          /* Region 8 */
                                          { 0, 0, 0 },
                                          /* Region 9 */
                                          { 0, 0, 0 },
-    #if( configTOTAL_MPU_REGIONS == 16 )
                                          /* Region 10 */
                                          { 0, 0, 0 },
-                                         /* Region 11 */
-                                         { 0, 0, 0 },
-                                         /* Region 12 */
-                                         { 0, 0, 0 },
-                                         /* Region 13 */
-                                         { 0, 0, 0 },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                                         /* Last Configurable Region */
-                                         { 0, 0, 0 },
+                                         /* Last Configurable MPU Region */
+                                         { ( void * ) ulPeriphRegionStart,
+                                           ulPeriphRegionSize,
+                                           ulPeriphRegionAttr },
                                      } };
 
     /* Create an unprivileged task with RO access to ucSharedMemory. */

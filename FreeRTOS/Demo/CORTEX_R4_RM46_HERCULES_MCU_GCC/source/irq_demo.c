@@ -130,15 +130,10 @@ static void prvIRQTestTask( void * pvParameters )
 void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
 {
     sci_print( "\tSWI Based IRQ was raised!\r\n" );
-    // sci_print("SWI IRQ Raised\r\n");
-    // volatile uint32_t * xSSIIntRegBase = portSSI_INT_REG_BASE;
-    // volatile uint32_t ulDelayLoop = 0x0UL;
     volatile uint32_t ulSSIRegisterValue;
-    // volatile uint32_t ulSSIVecValue;
     volatile uint32_t ulSSIIntFlagValue;
     volatile uint32_t * xSoftwareInterruptRegister;
     /* The 4 different SWI Registers use a bitfield to mark that they where raised */
-    /* do */
     {
         /* Determine what channel raised the IRQ without clearing the interrupt */
         ulSSIIntFlagValue = portSSI_INTFLAG_REG;
@@ -185,7 +180,6 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
                 xSoftwareInterruptRegister = portSSI_INT_REG_ONE;
                 *xSoftwareInterruptRegister = portSSI_ONE_KEY | 0x11UL;
                 __asm volatile( "CPSIE I" );
-                // sci_print("\tSWI Channel #2 unwinding...\r\n");
             }
         }
 
@@ -200,7 +194,6 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
                 xSoftwareInterruptRegister = portSSI_INT_REG_TWO;
                 *xSoftwareInterruptRegister = portSSI_TWO_KEY | 0x22UL;
                 __asm volatile( "CPSIE I" );
-                // sci_print("\tSWI Channel #3 unwinding...\r\n");
             }
         }
 
@@ -215,52 +208,9 @@ void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
                 xSoftwareInterruptRegister = portSSI_INT_REG_THREE;
                 *xSoftwareInterruptRegister = portSSI_THREE_KEY | 0x33UL;
                 __asm volatile( "CPSIE I" );
-                // while()
             }
         }
-
-        /* Read the SSI Vec reg to clear corresponding bits and flags
-         * For more info refer to
-         * TODO: FInd the right doc
-         * Joshua said it was page 184
-         *  */
-    #if 0
-        if(ulSSIRegisterValue == 0x44)
-        {
-            while(ulSSIRegisterValue != 0x0 )
-            {
-                ulSSIRegisterValue--;
-            }
-            sci_print("\tSWI Channel #4 unwinding...\r\n");
-        }
-        else if(ulSSIRegisterValue == 0x33)
-        {
-            while(ulSSIRegisterValue != 0x0 )
-            {
-                ulSSIRegisterValue--;
-            }
-            sci_print("\tSWI Channel #3 unwinding...\r\n");
-        }
-        else if(ulSSIRegisterValue == 0x22)
-        {
-            while(ulSSIRegisterValue != 0x0 )
-            {
-                ulSSIRegisterValue--;
-            }
-            sci_print("\tSWI Channel #2 unwinding...\r\n");
-        }
-        else if(ulSSIRegisterValue == 0x11)
-        {
-            while(ulSSIRegisterValue != 0x0 )
-            {
-                ulSSIRegisterValue--;
-            }
-            sci_print("\tSWI Channel #1 Finished reading\r\n");
-        }
-    #endif
     }
-
-    /* while( 0x0UL != ulSSIIntFlagValue); */
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -269,12 +219,18 @@ BaseType_t xCreateIRQTestTask( void )
 {
     /* Declaration when these variable are exported from linker scripts. */
     extern uint32_t __SRAM_segment_start__[];
-    // extern uint32_t __SRAM_segment_end__[];
-    uint32_t ulSRAMBaseAddress = ( uint32_t ) __SRAM_segment_start__;
-    uint32_t ulSRAMRegionSize = portMPU_SIZE_128KB | portMPU_REGION_ENABLE;
+    extern uint32_t __SRAM_segment_end__[];
+    extern uint32_t __peripherals_start__[];
+    extern uint32_t __peripherals_end__[];
 
-    uint32_t ulWriteMemoryPermissions = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                        portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
+    uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+
+    uint32_t ulSRAMBaseAddress = ( uint32_t ) __SRAM_segment_start__;
+    uint32_t ulSRAMRegionSize = ( uint32_t ) __SRAM_segment_end__ - ulSRAMBaseAddress;
+    uint32_t ulSRAMRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
+                                portMPU_NORMAL_OIWTNOWA_SHARED;
 
     BaseType_t xReturn = pdFAIL;
     /* Create the register check tasks, as described at the top of this file. */
@@ -293,7 +249,7 @@ BaseType_t xCreateIRQTestTask( void )
         .pxTaskBuffer = &xIRQTestTaskTCB,
         .xRegions = {
                     /* MPU Region 0 */
-                    { ( void * ) ulSRAMBaseAddress, ulSRAMRegionSize, ulWriteMemoryPermissions },
+                    { ( void * ) ulSRAMBaseAddress, ulSRAMRegionSize, ulSRAMRegionAttr },
                     /* MPU Region 1 */
                     { 0, 0, 0 },
                     /* MPU Region 2 */
@@ -304,16 +260,20 @@ BaseType_t xCreateIRQTestTask( void )
                     { 0, 0, 0 },
                     /* MPU Region 5 */
                     { 0, 0, 0 },
+                    /* MPU Region 6 */
+                    { 0, 0, 0 },
     #if( configTOTAL_MPU_REGIONS == 16 )
-                        /* MPU Region 6 */
-                        { 0, 0, 0 },
                         /* MPU Region 7 */
                         { 0, 0, 0 },
                         /* MPU Region 8 */
                         { 0, 0, 0 },
                         /* MPU Region 9 */
                         { 0, 0, 0 },
+                        /* MPU Region 10 */
+                        { 0, 0, 0 },
     #endif
+                    /* Last Configurable MPU Region */
+                    { ( void * ) ulPeriphRegionStart, ulPeriphRegionSize, ulPeriphRegionAttr },
         }
     };
 

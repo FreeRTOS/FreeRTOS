@@ -301,7 +301,7 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
     volatile uint32_t callingLine = ulLine;
 
     /* These variables can be inspected in a debugger. */
-    if( callingFunc != (char *) callingLine)
+    if( callingFunc != ( char * ) callingLine )
     {
         __asm volatile( "NOP" );
     }

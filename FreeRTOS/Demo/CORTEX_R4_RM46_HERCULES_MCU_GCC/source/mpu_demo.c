@@ -280,6 +280,14 @@ static void prvRWAccessTask( void * pvParameters )
 
 BaseType_t xCreateMPUTasks( void )
 {
+    /* Declaration when these variable are exported from linker scripts. */
+    extern uint32_t __peripherals_start__[];
+    extern uint32_t __peripherals_end__[];
+
+    uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
+    uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+
     BaseType_t xReturn = pdPASS;
 
     uint32_t ulReadMemoryPermissions = portMPU_PRIV_RW_USER_RO_NOEXEC |
@@ -299,7 +307,7 @@ BaseType_t xCreateMPUTasks( void )
                                     .puxStackBuffer = xROAccessTaskStack,
                                     .pxTaskBuffer = &xROAccessTaskTCB,
                                     .xRegions = {
-                                        /* First Configurable Region 0 */
+                                        /* Region 0 */
                                         { ( void * ) ucSharedMemory,
                                           SHARED_MEMORY_SIZE,
                                           ulReadMemoryPermissions },
@@ -337,10 +345,14 @@ BaseType_t xCreateMPUTasks( void )
                                           SHARED_MEMORY_SIZE,
                                           ulReadMemoryPermissions },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                                        /* Last Configurable Region */
+                                        /* Second to last Configurable Region */
                                         { ( void * ) ucROTaskFaultTracker,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
+                                        /* Last Configurable MPU Region */
+                                        { ( void * ) ulPeriphRegionStart,
+                                          ulPeriphRegionSize,
+                                          ulPeriphRegionAttr },
                                     } };
 
     TaskParameters_t
@@ -352,50 +364,53 @@ BaseType_t xCreateMPUTasks( void )
                                     .puxStackBuffer = xRWAccessTaskStack,
                                     .pxTaskBuffer = &xRWAccessTaskTCB,
                                     .xRegions = {
-                                        /* First Configurable Region 5 */
+                                        /* First Configurable Region 0 */
                                         { ( void * ) ucSharedMemory,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 6 */
+                                        /* MPU Region 1 */
                                         { ( void * ) ucSharedMemory1,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 7 */
+                                        /* MPU Region 2 */
                                         { ( void * ) ucSharedMemory2,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 8 */
+                                        /* MPU Region 3 */
                                         { ( void * ) ucSharedMemory3,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 9 */
+                                        /* MPU Region 4 */
                                         { ( void * ) ucSharedMemory4,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-    #if( configTOTAL_MPU_REGIONS == 16 )
-                                        /* Region 10 */
+                                        /* MPU Region 5 */
                                         { ( void * ) ucSharedMemory5,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 11 */
+    #if( configTOTAL_MPU_REGIONS == 16 )
+                                        /* MPU Region 6 */
                                         { ( void * ) ucSharedMemory6,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 12 */
+                                        /* MPU Region 7 */
                                         { ( void * ) ucSharedMemory7,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
-                                        /* Region 13 */
+                                        /* MPU Region 8 */
                                         { ( void * ) ucSharedMemory8,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
     #endif /* configTOTAL_MPU_REGIONS == 16 */
-                                        /* Last Configurable Region */
+                                        /* Second to Last MPU Region */
                                         { ( void * ) ucROTaskFaultTracker,
                                           SHARED_MEMORY_SIZE,
                                           ulWriteMemoryPermissions },
+                                        /* Last Configurable MPU Region */
+                                        { ( void * ) ulPeriphRegionStart,
+                                          ulPeriphRegionSize,
+                                          ulPeriphRegionAttr },
                                     } };
-
 
     /* Create an unprivileged task with RO access to ucSharedMemory. */
     xReturn = xTaskCreateRestrictedStatic( &( xROAccessTaskParameters ), NULL );

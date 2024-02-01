@@ -315,4 +315,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
     #define ipconfigBUFFER_PADDING    ( 14U )
 #endif /* INTPTR_MAX == INT64_MAX */
 
+#define ipconfigETHERNET_DRIVER_FILTERS_PACKETS     ( 1 )
+
 #endif /* FREERTOS_IP_CONFIG_H */

@@ -179,15 +179,13 @@ static void prvNotificationTestTask( void * pvParameters )
 BaseType_t xCreateNotificationTestTask( void )
 {
     /* Declaration when these variable are exported from linker scripts. */
-    #if 0
-        extern uint32_t __SRAM_segment_start__[];
-        // extern uint32_t __SRAM_segment_end__[];
-        uint32_t ulSRAMBaseAddress = ( uint32_t ) __SRAM_segment_start__;
-        uint32_t ulSRAMRegionSize = portMPU_SIZE_128KB | portMPU_REGION_ENABLE;
+    extern uint32_t __peripherals_start__[];
+    extern uint32_t __peripherals_end__[];
 
-        uint32_t ulWriteMemoryPermissions = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                            portMPU_NORMAL_OIWTNOWA_SHARED;
-    #endif
+    uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
+    uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
+    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
+                                            portMPU_REGION_DEVICE;
 
     BaseType_t xReturn = pdFAIL;
     /* Create the register check tasks, as described at the top of this file. */
@@ -210,7 +208,6 @@ BaseType_t xCreateNotificationTestTask( void )
                       ( uint32_t ) sizeof( TaskHandle_t ),
                         portMPU_PRIV_RW_USER_RW_NOEXEC |
                         portMPU_NORMAL_OIWTNOWA_SHARED },
-                    { 0, 0, 0 },
                     /* MPU Region 1 */
                     { 0, 0, 0 },
                     /* MPU Region 2 */
@@ -221,16 +218,20 @@ BaseType_t xCreateNotificationTestTask( void )
                     { 0, 0, 0 },
                     /* MPU Region 5 */
                     { 0, 0, 0 },
+                    /* MPU Region 6 */
+                    { 0, 0, 0 },
     #if( configTOTAL_MPU_REGIONS == 16 )
-                        /* MPU Region 6 */
-                        { 0, 0, 0 },
                         /* MPU Region 7 */
                         { 0, 0, 0 },
                         /* MPU Region 8 */
                         { 0, 0, 0 },
                         /* MPU Region 9 */
                         { 0, 0, 0 },
+                        /* MPU Region 10 */
+                        { 0, 0, 0 },
     #endif
+                    /* Last Configurable MPU Region */
+                    { ( void * ) ulPeriphRegionStart, ulPeriphRegionSize, ulPeriphRegionAttr },
         }
     };
 

@@ -162,16 +162,20 @@ BaseType_t xCreateRegisterTestTasks( void )
                     { 0, 0, 0 },
                     /* MPU Region 5 */
                     { 0, 0, 0 },
+                    /* MPU Region 6 */
+                    { 0, 0, 0 },
 #if( configTOTAL_MPU_REGIONS == 16 )
-                        /* MPU Region 6 */
-                        { 0, 0, 0 },
                         /* MPU Region 7 */
                         { 0, 0, 0 },
                         /* MPU Region 8 */
                         { 0, 0, 0 },
                         /* MPU Region 9 */
                         { 0, 0, 0 },
+                        /* MPU Region 10 */
+                        { 0, 0, 0 },
 #endif
+                    /* Final MPU Region */
+                    { 0, 0, 0 },
         }
     };
 
@@ -204,16 +208,20 @@ BaseType_t xCreateRegisterTestTasks( void )
                     { 0, 0, 0 },
                     /* MPU Region 5 */
                     { 0, 0, 0 },
-#if( configTOTAL_MPU_REGIONS == 16 )
                     /* MPU Region 6 */
                     { 0, 0, 0 },
+#if( configTOTAL_MPU_REGIONS == 16 )
                     /* MPU Region 7 */
                     { 0, 0, 0 },
                     /* MPU Region 8 */
                     { 0, 0, 0 },
                     /* MPU Region 9 */
                     { 0, 0, 0 },
+                    /* MPU Region 10 */
+                    { 0, 0, 0 },
 #endif
+                    /* Final MPU Region */
+                    { 0, 0, 0 },
         }
     };
 

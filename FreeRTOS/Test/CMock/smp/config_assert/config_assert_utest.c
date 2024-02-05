@@ -595,6 +595,7 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();

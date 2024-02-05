@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -57,7 +57,7 @@
 #ifndef portNOP
     #define TEST_NOP()    __asm volatile ( "nop" )
 #else
-    #define TEST_NOP      portNOP
+    #define TEST_NOP    portNOP
 #endif
 /*-----------------------------------------------------------*/
 
@@ -70,14 +70,14 @@
 #endif /* if configUSE_TIME_SLICING != 1 */
 
 #if ( configMAX_PRIORITIES <= 2 )
-    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectly.
+    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectedly.
 #endif /* if ( configMAX_PRIORITIES <= 2 ) */
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test case "Only One Task Enter Critical".
+ * @brief Test case "schedule equal priority tasks.".
  */
-void Test_ScheduleHighestPirority( void );
+void Test_ScheduleEqualPriority( void );
 
 /**
  * @brief Function that implements a never blocking FreeRTOS task.
@@ -88,7 +88,7 @@ static void prvEverRunningTask( void * pvParameters );
 /**
  * @brief Handles of the tasks created in this test.
  */
-static TaskHandle_t xTaskHanldes[ configNUMBER_OF_CORES + 1 ];
+static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ];
 
 /**
  * @brief Flags to indicate that ever running task is scheduled to run.
@@ -127,7 +127,7 @@ void Test_ScheduleEqualPriority( void )
                                            configMINIMAL_STACK_SIZE,
                                            &xTaskRun[ i ],
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHanldes[ i ] );
+                                           &xTaskHandles[ i ] );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -151,7 +151,7 @@ void setUp( void )
     for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
         xTaskRun[ i ] = pdFALSE;
-        xTaskHanldes[ i ] = NULL;
+        xTaskHandles[ i ] = NULL;
     }
 }
 /*-----------------------------------------------------------*/
@@ -164,10 +164,10 @@ void tearDown( void )
     /* Delete all the tasks. */
     for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
-        if( xTaskHanldes[ i ] != NULL )
+        if( xTaskHandles[ i ] != NULL )
         {
-            vTaskDelete( xTaskHanldes[ i ] );
-            xTaskHanldes[ i ] = NULL;
+            vTaskDelete( xTaskHandles[ i ] );
+            xTaskHandles[ i ] = NULL;
         }
     }
 }

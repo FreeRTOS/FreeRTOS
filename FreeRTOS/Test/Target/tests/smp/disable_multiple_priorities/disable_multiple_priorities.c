@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -32,9 +32,9 @@
  * Procedure:
  *   - Create ( num of cores ) test tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
  *   - Verify the following conditions in the test tasks:
- *     - Verfy the task is of eSuspend state if task index smaller the than current running task index.
- *     - Verfy the task is of eRunning state if task index is the current running task index.
- *     - Verfy the task is of eReady state if task index is greater than the current running task index.
+ *     - Verify the task is of eSuspend state if task index smaller the than current running task index.
+ *     - Verify the task is of eRunning state if task index is the current running task index.
+ *     - Verify the task is of eReady state if task index is greater than the current running task index.
  *   - Suspend the test tasks.
  * Expected:
  *   - Only one test is running at the same time since test tasks are of different priorities.
@@ -151,6 +151,7 @@ static void prvCheckRunningTask( void * pvParameters )
             break;
         }
     }
+
     xTaskTestResults[ currentTaskIdx ] = xTestResult;
 
     /* Suspend the test task itself. */

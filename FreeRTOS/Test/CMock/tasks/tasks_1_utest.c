@@ -886,9 +886,11 @@ void test_xTaskCreate_fail_tcb_malloc( void )
 /* -------------------------- INCLUDE_vTaskDelete --------------------------- */
 void test_vTaskDelete_success_current_task( void )
 {
+    /* Setup */
     ptcb = ( TCB_t * ) create_task();
-
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+
+    xSchedulerRunning = pdTRUE;
 
     /* Expectations */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
@@ -908,6 +910,8 @@ void test_vTaskDelete_success_current_task_ready_empty( void )
     ptcb = ( TCB_t * ) create_task();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
+    xSchedulerRunning = pdTRUE;
+
     /* Expectations */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ], 0 );
@@ -923,9 +927,11 @@ void test_vTaskDelete_success_current_task_ready_empty( void )
 
 void test_vTaskDelete_success_current_task_ready_empty_null_task( void )
 {
+    /* Setup */
     ptcb = ( TCB_t * ) create_task();
-
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+
+    xSchedulerRunning = pdTRUE;
 
     /* Expectations */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
@@ -1122,8 +1128,44 @@ void test_vTaskStartScheduler_idle_fail( void )
 
 void test_vTaskEndScheduler_success()
 {
+    /* Setup. */
+    TCB_t * pIdleTaskTCB = ( TCB_t * ) create_task();
+    TCB_t * pTimerTaskTCB = ( TCB_t * ) create_task();
+
+    uxCurrentNumberOfTasks = 0;
+    pIdleTaskTCB = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+    xIdleTaskHandles[ 0 ] = ( TaskHandle_t ) pIdleTaskTCB;
+    pTimerTaskTCB = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 2, uxCurrentNumberOfTasks );
+    ptcb = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 3, uxCurrentNumberOfTasks );
+
+    xSchedulerRunning = pdTRUE;
+    uxDeletedTasksWaitingCleanUp = 0U; /* prvCheckTasksWaitingTermination function call. */
+
+    /* Expectations. */
+    /* Delete the timer task. */
+    xTimerGetTimerDaemonTaskHandle_ExpectAndReturn( pTimerTaskTCB );
+    uxListRemove_ExpectAndReturn( &pTimerTaskTCB->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &pTimerTaskTCB->xEventListItem, NULL );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vPortFree_ExpectAnyArgs();
+    vPortFree_ExpectAnyArgs();
+
+    /* Delete the idle task. */
+    uxListRemove_ExpectAndReturn( &pIdleTaskTCB->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &pIdleTaskTCB->xEventListItem, NULL );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vPortFree_ExpectAnyArgs();
+    vPortFree_ExpectAnyArgs();
+
     vPortEndScheduler_Expect();
+
+    /* API call. */
     vTaskEndScheduler();
+
+    /* Verification. */
     TEST_ASSERT_EQUAL( pdFALSE, xSchedulerRunning );
 }
 
@@ -4429,8 +4471,8 @@ void test_xTaskGetSchedulerState_not_running( void )
 {
     BaseType_t ret_sched_state;
 
-    vPortEndScheduler_Expect();
-    vTaskEndScheduler();
+    xSchedulerRunning = pdFALSE;
+
     ret_sched_state = xTaskGetSchedulerState();
     TEST_ASSERT_EQUAL( taskSCHEDULER_NOT_STARTED, ret_sched_state );
 }

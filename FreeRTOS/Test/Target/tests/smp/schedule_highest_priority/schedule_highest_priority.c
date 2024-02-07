@@ -68,9 +68,9 @@
  * @brief Nop operation for busy looping.
  */
 #ifdef portNOP
-    #define TEST_NOP        portNOP
+    #define TEST_NOP    portNOP
 #else
-    #define TEST_NOP()      __asm volatile ( "nop" )
+    #define TEST_NOP()    __asm volatile ( "nop" )
 #endif
 
 /*-----------------------------------------------------------*/

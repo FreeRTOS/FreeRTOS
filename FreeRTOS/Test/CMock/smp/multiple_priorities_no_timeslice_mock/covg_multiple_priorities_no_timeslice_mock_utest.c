@@ -239,10 +239,6 @@ void test_coverage_vTaskSuspend_scheduler_running_false( void )
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
 
-    /* Enter critical section to check task run state. */
-    vFakePortEnterCriticalSection_Expect();
-    vFakePortExitCriticalSection_Expect();
-
     /* API call. */
     vTaskSuspend( &xTaskTCBs[ 0 ] );
 
@@ -281,10 +277,6 @@ void test_coverage_vTaskSuspend_running_state_below_range( void )
     vListInsertEnd_ExpectAnyArgs();
     vFakePortExitCriticalSection_Expect();
 
-    /* Enter critical section to check task run state. */
-    vFakePortEnterCriticalSection_Expect();
-    vFakePortExitCriticalSection_Expect();
-
     /* API call. */
     vTaskSuspend( &xTaskTCBs[ 0 ] );
 
@@ -320,10 +312,6 @@ void test_coverage_vTaskSuspend_running_state_above_range( void )
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
-    vFakePortExitCriticalSection_Expect();
-
-    /* Enter critical section to check task run state. */
-    vFakePortEnterCriticalSection_Expect();
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */
@@ -545,10 +533,6 @@ void test_coverage_vTaskDelete_task_not_running( void )
 
     vFakePortExitCriticalSection_Expect();
 
-    /* Critical section for check task is running. */
-    vFakePortEnterCriticalSection_Expect();
-    vFakePortExitCriticalSection_Expect();
-
     /* API Call */
     vTaskDelete( xTaskToDelete );
 
@@ -633,46 +617,6 @@ void test_coverage_vTaskPreemptionDisable_null_handle( void )
 
     /* Test Verifications */
     TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[ 0 ]->xPreemptionDisable );
-}
-
-/**
- * @brief This test ensures that when we call vTaskSuspendAll and we task of the
- *        current core has a critical nesting count of 1 only the scheduler is
- *        suspended
- *
- * <b>Coverage</b>
- * @code{c}
- * vTaskSuspendAll();
- *
- * if( portGET_CRITICAL_NESTING_COUNT() == 0U )
- *
- * @endcode
- *
- * configNUMBER_OF_CORES > 1
- */
-void test_coverage_vTaskSuspendAll_critical_nesting_ne_zero( void )
-{
-    TCB_t xTask = { 0 };
-
-    xTask.uxCriticalNesting = 1;
-    pxCurrentTCBs[ 0 ] = &xTask;
-    xSchedulerRunning = pdTRUE;
-    uxSchedulerSuspended = 0U;
-
-    /* Test Expectations */
-    vFakePortAssertIfISR_Expect();
-    ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
-    vFakePortClearInterruptMask_Expect( 0 );
-
-    /* API Call */
-    vTaskSuspendAll();
-
-    /* Test Verifications */
-    TEST_ASSERT_EQUAL( 1, uxSchedulerSuspended );
 }
 
 /**
@@ -856,12 +800,17 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
+    /* prvCheckForRunStateChange */
+    vFakePortAssertIfISR_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    /* End of prvCheckForRunStateChange */
     vFakePortGetISRLock_Expect();
     vFakePortReleaseISRLock_Expect();
     vFakePortClearInterruptMask_Expect( 0 );
-
+    /* End of vTaskSuspendAll */
 
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
@@ -957,11 +906,16 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Stub( port_assert_if_isr_cb );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
+    /* prvCheckForRunStateChange */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    /* End of prvCheckForRunStateChange */
     vFakePortGetISRLock_Expect();
     vFakePortReleaseISRLock_Expect();
     vFakePortClearInterruptMask_Expect( 0 );
+    /* End of vTaskSuspendAll */
 
 
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );

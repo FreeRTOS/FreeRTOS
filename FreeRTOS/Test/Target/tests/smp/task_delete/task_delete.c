@@ -62,7 +62,7 @@
 #endif /* if ( configNUMBER_OF_CORES < 2 ) */
 
 #if ( configMAX_PRIORITIES <= 2 )
-    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectly.
+    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectedly.
 #endif /* if ( configMAX_PRIORITIES <= 2 ) */
 /*-----------------------------------------------------------*/
 
@@ -112,7 +112,7 @@ static void prvSelfDeleteTask( void * pvParameters )
 {
     BaseType_t * pxTaskRunStatus = ( BaseType_t * ) pvParameters;
 
-    /* Setup the flag to indicate the taks has run. */
+    /* Setup the flag to indicate the task has run. */
     *pxTaskRunStatus = pdTRUE;
 
     vTaskDelete( NULL );
@@ -126,7 +126,7 @@ static void prvDelayTask( void * pvParameters )
 {
     BaseType_t * pxTaskRunStatus = ( BaseType_t * ) pvParameters;
 
-    /* Setup the flag to indicate the taks has run. */
+    /* Setup the flag to indicate the task has run. */
     *pxTaskRunStatus = pdTRUE;
 
     /* Block this task then it can be deleted. */

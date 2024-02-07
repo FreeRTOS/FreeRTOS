@@ -42,9 +42,9 @@
     #undef configUSE_PREEMPTION
 #endif /* ifdef configUSE_PREEMPTION */
 
-#define configRUN_MULTIPLE_PRIORITIES        1
-#define configUSE_TIME_SLICING               1
-#define configUSE_PREEMPTION                 1
+#define configRUN_MULTIPLE_PRIORITIES    1
+#define configUSE_TIME_SLICING           1
+#define configUSE_PREEMPTION             1
 
 /*-----------------------------------------------------------*/
 

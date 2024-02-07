@@ -49,8 +49,10 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run suspend scheduler test.
+ * @brief Entry point for test runner to run suspend scheduler test.
  */
 void vRunSuspendSchedulerTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

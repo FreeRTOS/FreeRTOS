@@ -30,24 +30,27 @@
  *
  * Procedure:
  *   - Create 1 low priority task, T0.
- *   - Create n - 1 medium priority task, T1 ~ T(n - 1).
- *   - Suspend the scheduler in testRunner.
+ *   - Create n - 1 medium priority tasks, T1 ~ T(n - 1).
+ *   - Suspend the scheduler in test runner task.
  *   - Increase T0's priority to high priority.
  *   - Verify that T0 is not running.
- *   - Resume the scheduler in testRunner.
+ *   - Resume the scheduler in test runner.
  *   - Verify that T0 is running.
  * Expected:
- *   - T0 won't run even set higher priority when scheduler is suspended.
+ *   - T0 must not run even when its priority is raised when the scheduler is
+ *     suspended.
  */
 
 /* Standard includes. */
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -67,12 +70,12 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Task function for T0.
+ * @brief Task function for task T0.
  */
 static void prvPriorityChangeTask( void * pvParameters );
 
 /**
- * @brief Task function for other tasks to occupy the core.
+ * @brief Task function for tasks T1~Tn-1 to occupy cores.
  */
 static void prvBusyRunningTask( void * pvParameters );
 
@@ -101,9 +104,9 @@ void Test_SuspendScheduler( void );
 static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ];
 
 /**
- * @brief A flag to indicate if T0 run.
+ * @brief A flag to indicate that the task T0 got a chance to run.
  */
-static volatile BaseType_t xTaskIsRunning = pdFALSE;
+static volatile BaseType_t xTaskT0IsRunning = pdFALSE;
 /*-----------------------------------------------------------*/
 
 static void prvPriorityChangeTask( void * pvParameters )
@@ -112,7 +115,7 @@ static void prvPriorityChangeTask( void * pvParameters )
     ( void ) pvParameters;
 
     /* Set the flag to indicate that the test task is running. */
-    xTaskIsRunning = pdTRUE;
+    xTaskT0IsRunning = pdTRUE;
 
     /* Busy looping here to occupy the core. */
     for( ; ; )
@@ -138,10 +141,11 @@ static void prvBusyRunningTask( void * pvParameters )
 void Test_SuspendScheduler( void )
 {
     uint32_t i;
-    BaseType_t xTestTaskRunningStatus;
+    BaseType_t xTaskT0RunningStatus;
     BaseType_t xTaskCreationResult;
 
-    /* Create configNUMBER_OF_CORES - 1 busy running tasks with medium priority. */
+    /* Create ( configNUMBER_OF_CORES - 1 ) busy running tasks with medium
+     * priority. */
     for( i = 0; i < ( configNUMBER_OF_CORES - 1 ); i++ )
     {
         xTaskCreationResult = xTaskCreate( prvBusyRunningTask,
@@ -149,18 +153,18 @@ void Test_SuspendScheduler( void )
                                            configMINIMAL_STACK_SIZE,
                                            NULL,
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
 
-    /* Create the test task with lower priority. */
+    /* Create the task T0 with lower priority. */
     xTaskCreationResult = xTaskCreate( prvPriorityChangeTask,
                                        "TestTask",
                                        configMINIMAL_STACK_SIZE,
                                        NULL,
                                        configMAX_PRIORITIES - 3,
-                                       &xTaskHandles[ configNUMBER_OF_CORES - 1 ] );
+                                       &( xTaskHandles[ configNUMBER_OF_CORES - 1 ] ) );
 
     TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
 
@@ -170,16 +174,17 @@ void Test_SuspendScheduler( void )
         TEST_NOP();
     }
 
-    /* Verify that the test task is not running. TestRunner and T1 ~ T(n - 1)
-     * has higher priority than T0. Scheduler won't select T0 to run. */
-    TEST_ASSERT_EQUAL( pdFALSE, xTaskIsRunning );
+    /* Verify that the task T0 is not running. The TestRunner task and tasks
+     * T1 ~ T(n - 1) have higher priority than T0 and therefore, the scheduler
+     * won't select T0 to run. */
+    TEST_ASSERT_EQUAL( pdFALSE, xTaskT0IsRunning );
 
-    /* Raise the priority of T0 when scheduler suspended. T0 has higher priority than
-     * other busy running tasks. However, the scheduler is suspended. T0 should not preempt
-     * any busy running task. */
+    /* Raise the priority of task T0 when the scheduler is suspended. T0 now has
+     * higher priority than other running tasks. However, T0 should not start
+     * running until the scheduler is resumed. */
     vTaskSuspendAll();
     {
-        /* Raise the test task priority. */
+        /* Raise the task T0's priority. */
         vTaskPrioritySet( xTaskHandles[ configNUMBER_OF_CORES - 1 ], configMAX_PRIORITIES - 1 );
 
         /* Busy looping here to wait for other cores. */
@@ -189,12 +194,13 @@ void Test_SuspendScheduler( void )
         }
 
         /* Verify the status later to prevent test framework jump to tearDown function. */
-        xTestTaskRunningStatus = xTaskIsRunning;
+        xTaskT0RunningStatus = xTaskT0IsRunning;
     }
     ( void ) xTaskResumeAll();
 
-    /* Verify that the test task is not scheduled when scheduler is suspended. */
-    TEST_ASSERT_EQUAL( pdFALSE, xTestTaskRunningStatus );
+    /* Verify that the task T0 was not scheduled when the scheduler was
+     * suspended. */
+    TEST_ASSERT_EQUAL( pdFALSE, xTaskT0RunningStatus );
 
     /* Busy looping here to wait for other cores. */
     for( i = 0; i < TEST_BUSY_LOOPING_COUNT; i++ )
@@ -202,8 +208,8 @@ void Test_SuspendScheduler( void )
         TEST_NOP();
     }
 
-    /* Verify that the test task is scheduled after resuming the scheduler. */
-    TEST_ASSERT_EQUAL( pdTRUE, xTaskIsRunning );
+    /* Verify that the task T0 is scheduled after resuming the scheduler. */
+    TEST_ASSERT_EQUAL( pdTRUE, xTaskT0IsRunning );
 }
 /*-----------------------------------------------------------*/
 
@@ -212,9 +218,8 @@ void setUp( void )
 {
     uint32_t i;
 
-    xTaskIsRunning = pdFALSE;
+    xTaskT0IsRunning = pdFALSE;
 
-    /* Create configNUMBER_OF_CORES - 1 busy running tasks with medium priority. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         xTaskHandles[ i ] = NULL;
@@ -240,7 +245,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run suspend scheduler test.
+ * @brief Entry point for test runner to run suspend scheduler test.
  */
 void vRunSuspendSchedulerTest( void )
 {

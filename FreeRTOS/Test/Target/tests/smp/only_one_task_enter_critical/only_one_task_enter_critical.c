@@ -72,7 +72,7 @@ static void prvTaskIncCounter( void * pvParameters );
 #endif /* if ( configNUMBER_OF_CORES < 2 ) */
 
 #if ( configMAX_PRIORITIES <= 2 )
-    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectly.
+    #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectedly.
 #endif /* if ( configMAX_PRIORITIES <= 2 ) */
 /*-----------------------------------------------------------*/
 

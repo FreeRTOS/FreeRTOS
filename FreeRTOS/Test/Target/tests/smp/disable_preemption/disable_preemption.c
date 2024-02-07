@@ -32,22 +32,24 @@
  *   - Create ( num of cores + 1 ) tasks ( T0~Tn ) with priorities T0 > T1 > ... Tn.
  *     T0 has the highest priority and Tn has the lowest priority.
  *   - T0~Tn-1 suspend themselves.
- *   - Tn disables preemption then resumes ( T0~Tn-1 ). Test runner verifies the result.
- *   - Test runner enables preemption of Tn. Test runner verifies the result.
+ *   - Tn disables preemption for itself and then resumes ( T0~Tn-1 ). Test
+ *     runner validates that Tn is still running.
+ *   - Test runner enables preemption of Tn. Test runner validates that Tn is
+ *     no longer running.
  * Expected:
- *   - Tn will not be interrupted for the TEST_T0_BUSY_TIME_MS that it has preemption
- *     disabled.
- *   - Tn will be preempted when test runner enables preemption of it.
+ *   - Tn will not be switched out when it has disabled preemption for itself.
+ *   - Tn will be preempted when the test runner enables preemption for it.
  */
 
 /* Standard includes. */
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 /**
@@ -91,48 +93,50 @@ static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ];
 static uint32_t xTaskIndexes[ configNUMBER_OF_CORES + 1 ];
 
 /**
- * @brief Flags to indicate if test task result.
+ * @brief Flags to indicate the test result.
  */
-static BaseType_t xTaskTestResult = pdFAIL;
+static BaseType_t xTestResult = pdFAIL;
 /*-----------------------------------------------------------*/
 
 static void prvTestPreemptionDisableTask( void * pvParameters )
 {
-    uint32_t currentTaskIdx = *( ( int * ) pvParameters );
+    uint32_t currentTaskIdx = *( ( uint32_t * ) pvParameters );
     uint32_t taskIndex;
     eTaskState taskState;
-    BaseType_t xHighPriorityTasksSuspended = pdFALSE;
+    BaseType_t xAllHighPriorityTasksSuspended = pdFALSE;
 
     if( currentTaskIdx < configNUMBER_OF_CORES )
     {
-        /* Tasks with smaller index has higher priority. Higher priority tasks
-         * suspend themselves and will be resumed by the lowest priority task with
-         * preemption disabled later. */
+        /* Tasks with smaller index have higher priority. Higher priority tasks
+         * suspend themselves and are resumed later by the lowest priority task
+         * after the lower priority task disables preemption for itself. */
         vTaskSuspend( NULL );
     }
     else
     {
-        /* Wait for all the other higher priority tasks suspend themselves. */
-        while( xHighPriorityTasksSuspended == pdFALSE )
+        /* Wait for all the other higher priority tasks to suspend themselves. */
+        while( xAllHighPriorityTasksSuspended == pdFALSE )
         {
-            xHighPriorityTasksSuspended = pdTRUE;
-
             for( taskIndex = 0; taskIndex < configNUMBER_OF_CORES; taskIndex++ )
             {
                 taskState = eTaskGetState( xTaskHandles[ taskIndex ] );
 
                 if( taskState != eSuspended )
                 {
-                    xHighPriorityTasksSuspended = pdFALSE;
                     break;
                 }
             }
+
+            if( taskIndex == configNUMBER_OF_CORES )
+            {
+                xAllHighPriorityTasksSuspended = pdTRUE;
+            }
         }
 
-        /* Disable preemption and wake up all the other higher priority tasks.
-         * There are equal core number higher priority tasks. The scheduler should
-         * not request the lower priority task to yield for a higher priority task
-         * when this task disables preemption. */
+        /* Disable preemption and resume all the other higher priority tasks.
+         * At this point, the number of higher priority ready tasks is equal
+         * to the number of cores. Still this lower priority must not be
+         * switched out because it has disabled preemption for itself. */
         vTaskPreemptionDisable( NULL );
 
         for( taskIndex = 0; taskIndex < configNUMBER_OF_CORES; taskIndex++ )
@@ -140,10 +144,12 @@ static void prvTestPreemptionDisableTask( void * pvParameters )
             vTaskResume( xTaskHandles[ taskIndex ] );
         }
 
-        /* This task will not be switched out for other higher priority task when
-         * preemption disabled. The xTaskTestResult should be set pdPASS by the lowest
-         * priority task. This variable is checked at test runner. */
-        xTaskTestResult = pdPASS;
+        /* This task must not be switched out for any other higher priority
+         * ready task because it has disabled preemption for itself. The
+         * execution of the next line ensures that this task is not switched out
+         * even though a higher priority ready task is available. This variable
+         * is checked in the test runner. */
+        xTestResult = pdPASS;
     }
 
     /* Busy looping here to occupy this core. */
@@ -162,15 +168,15 @@ void Test_DisablePreemption( void )
     uint32_t i;
     BaseType_t xTaskCreationResult;
 
-    /* Create configNUMBER_OF_CORES + 1 tasks with desending priorities. */
+    /* Create ( configNUMBER_OF_CORES + 1 ) tasks with desending priorities. */
     for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
         xTaskCreationResult = xTaskCreate( prvTestPreemptionDisableTask,
                                            "TestPreemptionDisable",
                                            configMINIMAL_STACK_SIZE * 2,
-                                           &xTaskIndexes[ i ],
+                                           &( xTaskIndexes[ i ] ),
                                            configMAX_PRIORITIES - 2 - i,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -179,13 +185,13 @@ void Test_DisablePreemption( void )
     vTaskDelay( pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
 
     /* Verify the lowest priority task runs after resuming all test tasks. */
-    TEST_ASSERT_EQUAL( pdPASS, xTaskTestResult );
+    TEST_ASSERT_EQUAL( pdPASS, xTestResult );
 
-    /* Enable preemption of the lowest priority task. The scheduler will request this
-     * task to yield for a higher priority task. */
+    /* Enable preemption of the lowest priority task. The scheduler must switch
+     * out this task now as there is a higher priority ready task available. */
     vTaskPreemptionEnable( xTaskHandles[ configNUMBER_OF_CORES ] );
 
-    /* Verify that the task is of ready state now. */
+    /* Verify that the lowest priority task is not running anymore. */
     taskState = eTaskGetState( xTaskHandles[ configNUMBER_OF_CORES ] );
     TEST_ASSERT_EQUAL( eReady, taskState );
 }
@@ -196,7 +202,6 @@ void setUp( void )
 {
     uint32_t i;
 
-    /* Create configNUMBER_OF_CORES + 1 tasks with desending priorities. */
     for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
         xTaskIndexes[ i ] = i;
@@ -223,7 +228,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run disable preemption test.
+ * @brief Entry point for test runner to run disable preemption test.
  */
 void vRunDisablePreemptionTest( void )
 {

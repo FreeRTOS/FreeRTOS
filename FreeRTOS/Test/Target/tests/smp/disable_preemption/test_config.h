@@ -54,8 +54,10 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run schedule affinity test.
+ * @brief Entry point for test runner to run disable preemption test.
  */
 void vRunDisablePreemptionTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

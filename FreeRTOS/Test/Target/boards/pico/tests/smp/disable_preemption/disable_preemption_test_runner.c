@@ -34,11 +34,13 @@
  */
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 
+/* Pico includes. */
 #include "pico/multicore.h"
 #include "pico/stdlib.h"
 
@@ -57,6 +59,7 @@ static void prvTestRunnerTask( void * pvParameters )
 
     vTaskDelete( NULL );
 }
+
 /*-----------------------------------------------------------*/
 
 void vRunTest( void )
@@ -68,3 +71,5 @@ void vRunTest( void )
                  configMAX_PRIORITIES - 1,
                  NULL );
 }
+
+/*-----------------------------------------------------------*/

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -42,9 +42,9 @@
     #undef configUSE_PREEMPTION
 #endif /* ifdef configUSE_PREEMPTION */
 
-#define configRUN_MULTIPLE_PRIORITIES        1
-#define configUSE_TIME_SLICING               1
-#define configUSE_PREEMPTION                 1
+#define configRUN_MULTIPLE_PRIORITIES    1
+#define configUSE_TIME_SLICING           1
+#define configUSE_PREEMPTION             1
 
 /*-----------------------------------------------------------*/
 

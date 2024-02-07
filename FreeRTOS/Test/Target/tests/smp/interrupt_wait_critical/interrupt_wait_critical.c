@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2022 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -67,7 +67,7 @@
 /**
  * @brief Timeout value to stop test.
  */
-#define TEST_TIMEOUT_MS            ( 1000 )
+#define TEST_TIMEOUT_MS    ( 1000 )
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -79,7 +79,7 @@
 #endif /* if ( configRUN_MULTIPLE_PRIORITIES != 1 ) */
 
 #if ( configMAX_PRIORITIES <= 3 )
-    #error configMAX_PRIORITIES must be larger than 3 to avoid scheduling idle tasks unexpectly.
+    #error configMAX_PRIORITIES must be larger than 3 to avoid scheduling idle tasks unexpectedly.
 #endif /* if ( configMAX_PRIORITIES <= 3 ) */
 /*-----------------------------------------------------------*/
 
@@ -286,7 +286,7 @@ void Test_InterruptWaitCritical( void )
 void setUp( void )
 {
     uint32_t i;
-    
+
     for( i = 0U; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
         xTaskHandles[ i ] = NULL;

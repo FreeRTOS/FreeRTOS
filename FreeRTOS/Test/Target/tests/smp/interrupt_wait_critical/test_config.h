@@ -49,8 +49,10 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run interrupt task wait critical section test.
+ * @brief Entry point for test runner to run interrupt task wait critical section test.
  */
 void vRunInterruptWaitCriticalTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

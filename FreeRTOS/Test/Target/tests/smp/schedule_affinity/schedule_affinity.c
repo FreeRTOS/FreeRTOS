@@ -31,7 +31,8 @@
  * Procedure:
  *   - Create 2 * ( num of cores ) tasks ( T0, ..., Tn-1, Tn, ..., T2n-1 ).
  *   - Pin T0 to core 0, T1 to core 1, and so on.
- *   - Pin Tn to core 0, Tn+1 to core 1, and so on. Tx and Tn+x will be pinned to the same core.
+ *   - Pin Tn to core 0, Tn+1 to core 1, and so on. Note that this way Tx and
+ *     Tn+x are pinned to the same core.
  *   - Verify the following conditions:
  *     - Tx+n is not running when Tx is running.
  *     - Tx is not running when Tx+n is running.
@@ -44,10 +45,11 @@
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 /**
@@ -71,7 +73,7 @@
 void Test_ScheduleAffinity( void );
 
 /**
- * @brief Function that checks if it's pinned to correct core.
+ * @brief The task function that verifies that tasks are pinned to correct core.
  */
 static void prvTaskCheckPinCore( void * pvParameters );
 /*-----------------------------------------------------------*/
@@ -87,31 +89,31 @@ static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES * 2 ];
 static uint32_t xTaskIndexes[ configNUMBER_OF_CORES * 2 ];
 
 /**
- * @brief Flags to indicate if task T0~Tn-1 finish or not.
+ * @brief Test results for tasks T0~T2n-1.
  */
-static BaseType_t xTaskTestResults[ configNUMBER_OF_CORES * 2 ] = { pdFAIL };
+static BaseType_t xTestResults[ configNUMBER_OF_CORES * 2 ] = { pdFAIL };
 
 /**
- * @brief Flag to indicate test started.
+ * @brief Flag to indicate that all tasks in this test are created.
  */
-static volatile BaseType_t xTestStarted = pdFALSE;
+static volatile BaseType_t xAllTasksCreated = pdFALSE;
 /*-----------------------------------------------------------*/
 
 static void prvTaskCheckPinCore( void * pvParameters )
 {
-    uint32_t currentTaskIdx = *( ( int * ) pvParameters );
+    uint32_t currentTaskIdx = *( ( uint32_t * ) pvParameters );
     uint32_t pinToSameCoreTaskIdx;
     eTaskState taskState;
     BaseType_t testResult = pdPASS;
     BaseType_t xCore;
 
-    /* Busy looping here to wait for test runner creating all the test tasks.
+    /* Busy looping here to wait for test runner to create all the test tasks.
      * Test runner has timeout to prevent infinite blocking here. */
-    while( xTestStarted == pdFALSE )
+    while( xAllTasksCreated == pdFALSE )
     {
     }
 
-    /* Find out the task index which pin to the same core. */
+    /* Find out the task index which is pinned to the same core. */
     if( currentTaskIdx >= configNUMBER_OF_CORES )
     {
         pinToSameCoreTaskIdx = currentTaskIdx - configNUMBER_OF_CORES;
@@ -123,9 +125,7 @@ static void prvTaskCheckPinCore( void * pvParameters )
         xCore = currentTaskIdx;
     }
 
-    /* Verify the current running task state. The task should be of running state.
-     * The core index on which this task is running must consistent with affinity
-     * mask. */
+    /* Verify that the task is running on the core it is pinned to. */
     taskState = eTaskGetState( xTaskHandles[ currentTaskIdx ] );
 
     if( taskState != eRunning )
@@ -138,7 +138,7 @@ static void prvTaskCheckPinCore( void * pvParameters )
         testResult = pdFAIL;
     }
 
-    /* Verify that the other task pin to the same core should not of running state. */
+    /* Verify that the other task pinned to the same core is not running. */
     taskState = eTaskGetState( xTaskHandles[ pinToSameCoreTaskIdx ] );
 
     if( taskState == eRunning )
@@ -146,7 +146,7 @@ static void prvTaskCheckPinCore( void * pvParameters )
         testResult = pdFAIL;
     }
 
-    xTaskTestResults[ currentTaskIdx ] = testResult;
+    xTestResults[ currentTaskIdx ] = testResult;
 
     /* Suspend the test task. */
     vTaskSuspend( NULL );
@@ -158,28 +158,28 @@ void Test_ScheduleAffinity( void )
     uint32_t i;
     BaseType_t xTaskCreationResult;
 
-    /* Create configNUMBER_OF_CORES low priority tasks. */
+    /* Create ( configNUMBER_OF_CORES * 2 ) low priority tasks. */
     for( i = 0; i < ( configNUMBER_OF_CORES * 2 ); i++ )
     {
         xTaskCreationResult = xTaskCreateAffinitySet( prvTaskCheckPinCore,
                                                       "CheckPinCore",
                                                       configMINIMAL_STACK_SIZE,
-                                                      &xTaskIndexes[ i ],
+                                                      &( xTaskIndexes[ i ] ),
                                                       configMAX_PRIORITIES - 2 - ( i % configNUMBER_OF_CORES ),
                                                       ( 1U << ( i % configNUMBER_OF_CORES ) ),
-                                                      &xTaskHandles[ i ] );
+                                                      &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
 
     /* Wait for test tasks finish test. */
-    xTestStarted = pdTRUE;
+    xAllTasksCreated = pdTRUE;
     vTaskDelay( pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
 
     /* Verify the test result. */
     for( i = 0; i < ( configNUMBER_OF_CORES * 2 ); i++ )
     {
-        TEST_ASSERT_TRUE( xTaskTestResults[ i ] == pdPASS );
+        TEST_ASSERT_TRUE( xTestResults[ i ] == pdPASS );
     }
 }
 /*-----------------------------------------------------------*/
@@ -189,13 +189,13 @@ void setUp( void )
 {
     uint32_t i;
 
-    xTestStarted = pdFALSE;
+    xAllTasksCreated = pdFALSE;
 
     for( i = 0; i < ( configNUMBER_OF_CORES * 2 ); i++ )
     {
         xTaskIndexes[ i ] = i;
         xTaskHandles[ i ] = NULL;
-        xTaskTestResults[ i ] = pdFAIL;
+        xTestResults[ i ] = pdFAIL;
     }
 }
 /*-----------------------------------------------------------*/
@@ -218,7 +218,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run schedule affinity test.
+ * @brief Entry point for test runner to run schedule affinity test.
  */
 void vRunScheduleAffinityTest( void )
 {

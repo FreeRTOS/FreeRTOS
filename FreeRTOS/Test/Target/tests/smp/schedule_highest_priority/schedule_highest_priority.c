@@ -29,22 +29,25 @@
  * @brief The scheduler shall correctly schedule the highest priority ready tasks.
  *
  * Procedure:
- *   1. Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
- *   2. Each task checks if higher priority task is of running state. If not, notify
- *      test runner with error.
- *   3. Notify test runner when the lowest priority task Tn-1 completes the test.
+ *   - Create ( num of cores ) tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
+ *   - for each task Ti in [T0..Tn-1]:
+ *      - Tasks T0..Ti-1 are running. If any of the task in T0..Ti-1 is not
+ *        running notify the test runner task about error.
+ *      - If i == n -1:
+ *          - Notify test runner task about success.
  * Expected:
- *   - When a task runs, all tasks have higher priority are of running state.
+ *   - When a task runs, all tasks of higher priority are running.
  */
 
 /* Standard includes. */
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -65,9 +68,9 @@
  * @brief Nop operation for busy looping.
  */
 #ifdef portNOP
-    #define TEST_NOP    portNOP
+    #define TEST_NOP        portNOP
 #else
-    #define TEST_NOP()    __asm volatile ( "nop" )
+    #define TEST_NOP()      __asm volatile ( "nop" )
 #endif
 
 /*-----------------------------------------------------------*/
@@ -79,7 +82,7 @@ static void prvEverRunningTask( void * pvParameters );
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Handle of the testRunner task.
+ * @brief Handle of the test runner task.
  */
 static TaskHandle_t xTestRunnerTaskHandle;
 
@@ -97,9 +100,10 @@ static uint32_t xTaskIndexes[ configNUMBER_OF_CORES ];
 /**
  * @brief Ever running task function.
  *
- * Test runner will be notified with the following values:
- * 0 ~ ( configNUMBER_OF_CORES -1 ) : task Tx encounters error during the test.
- * configNUMBER_OF_CORES : test finish without error.
+ * Test runner task is notified with the following values:
+ * - A value between 0 and ( configNUMBER_OF_CORES -1 ) : Task with the index
+ *   equal to value encountered an error during the test.
+ * - configNUMBER_OF_CORES : The test finished without any error.
  */
 static void prvEverRunningTask( void * pvParameters )
 {
@@ -107,29 +111,24 @@ static void prvEverRunningTask( void * pvParameters )
     uint32_t uxCurrentTaskIdx = *( ( uint32_t * ) pvParameters );
     eTaskState xTaskState;
 
+    /* Tasks with index smaller than the current task are of higher priority and
+     * must be running when this task is running. */
     for( i = 0; i < uxCurrentTaskIdx; i++ )
     {
         xTaskState = eTaskGetState( xTaskHandles[ i ] );
 
-        /* Tasks created in this test are of descending priority order. For example,
-         * priority of T0 is higher than priority of T1. A lower priority task is able
-         * to run only when the higher priority tasks are running. Verify that higher
-         * priority tasks are of running state. */
         if( eRunning != xTaskState )
         {
-            /* Notify with eSetValueWithoutOverwrite. The return value can be pdTRUE
-             * or pdFALSE. Either case, the test runner is notified with error by
-             * this task or other task. */
+            /* Notify the test runner task about the error.  */
             ( void ) xTaskNotify( xTestRunnerTaskHandle, uxCurrentTaskIdx, eSetValueWithoutOverwrite );
         }
     }
 
-    /* If the task is the last task, then we finish the check because all tasks are checked. */
+    /* If current task is the last task, then we finish the check because all
+     * tasks are checked. */
     if( uxCurrentTaskIdx == ( configNUMBER_OF_CORES - 1 ) )
     {
-        /* Notify with eSetValueWithoutOverwrite. The return value can be pdTRUE or
-         * pdFALSE. Either case, the test runner is notified by this task or other
-         * task. */
+        /* Notify the test runner task about success.  */
         ( void ) xTaskNotify( xTestRunnerTaskHandle, configNUMBER_OF_CORES, eSetValueWithoutOverwrite );
     }
 
@@ -142,7 +141,9 @@ static void prvEverRunningTask( void * pvParameters )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test running task to wait for notification from ever running task.
+ * @brief Test running task.
+ *
+ * It waits for a notification from one of the ever running tasks.
  */
 void Test_ScheduleHighestPriority( void )
 {
@@ -151,7 +152,7 @@ void Test_ScheduleHighestPriority( void )
 
     xReturn = xTaskNotifyWait( 0U, ULONG_MAX, &ulNotifiedValue, pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
 
-    /* Test runner thread is notified within TEST_TIMEOUT_MS. */
+    /* Test runner task is notified within TEST_TIMEOUT_MS. */
     TEST_ASSERT_EQUAL( pdTRUE, xReturn );
 
     /* The notified value indicates that no error occurred during the test. */
@@ -167,8 +168,8 @@ void setUp( void )
     uint32_t i;
     BaseType_t xTaskCreationResult;
 
-    /* Save the test runner task handle here. Test runner will be notified when test
-     * finish or timeout. */
+    /* Save the test runner task handle here. It is used to notify test runner
+     * from ever running tasks. */
     xTestRunnerTaskHandle = xTaskGetCurrentTaskHandle();
 
     /* Create configNUMBER_OF_CORES tasks with decending priority. */
@@ -178,9 +179,9 @@ void setUp( void )
         xTaskCreationResult = xTaskCreate( prvEverRunningTask,
                                            "EverRun",
                                            configMINIMAL_STACK_SIZE * 2,
-                                           &xTaskIndexes[ i ],
+                                           &( xTaskIndexes[ i ] ),
                                            configMAX_PRIORITIES - 1 - i,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -206,7 +207,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run highest priority test.
+ * @brief Entry point for test runner to run highest priority test.
  */
 void vRunScheduleHighestPriorityTest( void )
 {

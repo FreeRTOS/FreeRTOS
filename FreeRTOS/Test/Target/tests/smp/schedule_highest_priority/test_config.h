@@ -54,8 +54,10 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run highest priority test.
+ * @brief Entry point for test runner to run highest priority test.
  */
 void vRunScheduleHighestPriorityTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

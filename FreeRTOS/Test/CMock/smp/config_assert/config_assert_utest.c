@@ -395,10 +395,6 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
     vPortCurrentTaskDying_ExpectAnyArgs();
-    vFakePortExitCriticalSection_Expect();
-
-    /* Critical section for check task is running. */
-    vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskDelete( xTaskToDelete ) );
@@ -446,15 +442,7 @@ void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
-    vFakePortExitCriticalSection_Expect();
-
-    /* Reset the next expected unblock time if scheduler is running. */
-    vFakePortEnterCriticalSection_Expect();
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
-    vFakePortExitCriticalSection_Expect();
-
-    /* Check task run state in critical section. */
-    vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSuspend( xTaskToSuspend ) );
@@ -595,6 +583,7 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();

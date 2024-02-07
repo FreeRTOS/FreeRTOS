@@ -33,7 +33,7 @@
  *   - Create 1 low priority task, T0, to enter the critical section.
  *   - Create n - 1 high priority tasks, T1 ~ T(n - 1), to occupy the core.
  *   - Create 1 high priority task, Tn, to enter the critical section.
- *   - Tn enters the critical section. T0 is waitng to enter the critical section.
+ *   - Tn enters the critical section. T0 is waiting to enter the critical section.
  *   - T1 ~ T(n - 1) suspend themselves.
  *   - Tn resume T1 ~ T(n - 1) in the critical section then leave the critical section.
  * Expected:
@@ -148,7 +148,7 @@ static void prvLowPriorityEnterCriticalTask( void * pvParameters )
     taskENTER_CRITICAL();
     {
         /* This line should not be run if other higher priority tasks are waken
-         * up. This task should reqlinquish this core instead of entering the critical
+         * up. This task should relinquish this core instead of entering the critical
          * section. */
         xLowPriorityTaskEnterCriticalSection = pdTRUE;
     }
@@ -268,7 +268,7 @@ void Test_InterruptWaitCritical( void )
     /* Verify the high priority task has entered the critical section. */
     TEST_ASSERT_EQUAL_MESSAGE( pdTRUE, xHighPriorityTaskEnterCriticalSection, "High priority task not enter the critical section." );
 
-    /* Verify the low priority task relinquishes the core for higer priority tasks. */
+    /* Verify the low priority task relinquishes the core for higher priority tasks. */
     TEST_ASSERT_EQUAL_MESSAGE( pdFALSE, xLowPriorityTaskEnterCriticalSection, "Low priority task should relinquish the core." );
 
     /* Suspend the high priority task and block the test runner. The low priority task

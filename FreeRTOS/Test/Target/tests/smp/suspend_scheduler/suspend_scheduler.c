@@ -175,7 +175,7 @@ void Test_SuspendScheduler( void )
     TEST_ASSERT_EQUAL( pdFALSE, xTaskIsRunning );
 
     /* Raise the priority of T0 when scheduler suspended. T0 has higher priority than
-     * other busy running tasks. However, the schduler is suspended. T0 should not preempt
+     * other busy running tasks. However, the scheduler is suspended. T0 should not preempt
      * any busy running task. */
     vTaskSuspendAll();
     {

@@ -29,16 +29,18 @@
  * @brief The implementation of main function to start test runner task.
  *
  * Procedure:
- *   - Initialize environment
- *   - Run the test case
+ *   - Initialize environment.
+ *   - Run the test case.
  */
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 
+/* Pico includes. */
 #include "pico/multicore.h"
 #include "pico/stdlib.h"
 
@@ -68,3 +70,4 @@ void vRunTest( void )
                  configMAX_PRIORITIES - 1,
                  NULL );
 }
+/*-----------------------------------------------------------*/

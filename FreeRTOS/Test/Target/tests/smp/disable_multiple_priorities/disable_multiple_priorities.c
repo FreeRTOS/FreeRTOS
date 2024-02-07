@@ -31,23 +31,26 @@
  *
  * Procedure:
  *   - Create ( num of cores ) test tasks ( T0~Tn-1 ). Priority T0 > T1 > ... > Tn-2 > Tn-1.
- *   - Verify the following conditions in the test tasks:
- *     - Verify the task is of eSuspend state if task index smaller the than current running task index.
- *     - Verify the task is of eRunning state if task index is the current running task index.
- *     - Verify the task is of eReady state if task index is greater than the current running task index.
- *   - Suspend the test tasks.
+ *   - Verify the following conditions:
+ *      - for each task Ti in [T0..Tn-1]:
+ *          - Tasks T0~Ti-1 are in suspended state.
+ *          - Task Ti is running.
+ *          - Tasks Ti+1~Tn-1 are in ready state.
+ *          - Suspend task Ti.
  * Expected:
- *   - Only one test is running at the same time since test tasks are of different priorities.
+ *   - Only one task is running at the same time since all the test test tasks
+ *     are of different priorities.
  */
 
 /* Standard includes. */
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 /**
@@ -79,7 +82,7 @@
 void Test_DisableMultiplePriorities( void );
 
 /**
- * @brief Function that checks if itself is the only task runs.
+ * @brief Task function that verifies that it is the only running task.
  */
 static void prvCheckRunningTask( void * pvParameters );
 /*-----------------------------------------------------------*/
@@ -95,23 +98,27 @@ static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ];
 static uint32_t xTaskIndexes[ configNUMBER_OF_CORES ];
 
 /**
- * @brief Flags to indicate if task T0~Tn-1 test result.
+ * @brief Test results.
  */
-static BaseType_t xTaskTestResults[ configNUMBER_OF_CORES ] = { pdFAIL };
+static BaseType_t xTestResults[ configNUMBER_OF_CORES ] = { pdFAIL };
 /*-----------------------------------------------------------*/
 
 static void prvCheckRunningTask( void * pvParameters )
 {
     uint32_t i = 0;
-    uint32_t currentTaskIdx = *( ( int * ) pvParameters );
+    uint32_t currentTaskIdx = *( ( uint32_t * ) pvParameters );
     eTaskState taskState;
     BaseType_t xTestResult = pdPASS;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        /* All the test tasks are created by test runner thread. The test runs with
-         * multiple priorities disabled. Therefore, xTaskHandles should not be NULL.
-         * Return pdFAIL in xTaskTestResults to indicate test fail. */
+        /* All the test tasks are created by the test runner task which runs
+         * at the highest priority. The test runs with multiple priorities
+         * disabled. Therefore, xTaskHandles[ i ] can not be NULL because none
+         * of the test tasks can run until the test runner task has created all
+         * the tasks and then blocked itself by calling vTaskDelay. Return
+         * pdFAIL in xTestResults to indicate test failure if any of the test
+         * task is not created yet. */
         if( xTaskHandles[ i ] == NULL )
         {
             xTestResult = pdFAIL;
@@ -122,7 +129,9 @@ static void prvCheckRunningTask( void * pvParameters )
 
             if( i > currentTaskIdx )
             {
-                /* Task index greater than current task should be of ready state. */
+                /* Tasks with index greater than current task are of lower
+                 * priority than the current task and must be in the ready
+                 * state. */
                 if( taskState != eReady )
                 {
                     xTestResult = pdFAIL;
@@ -130,7 +139,7 @@ static void prvCheckRunningTask( void * pvParameters )
             }
             else if( i == currentTaskIdx )
             {
-                /* Current task is of running state. */
+                /* Current task must be running. */
                 if( taskState != eRunning )
                 {
                     xTestResult = pdFAIL;
@@ -138,7 +147,9 @@ static void prvCheckRunningTask( void * pvParameters )
             }
             else
             {
-                /* Task index smaller than current task should be of suspended state. */
+                /* Tasks with index smaller than current task are of higher
+                 * priority than the current task and must be in the suspended
+                 * state. */
                 if( taskState != eSuspended )
                 {
                     xTestResult = pdFAIL;
@@ -152,7 +163,7 @@ static void prvCheckRunningTask( void * pvParameters )
         }
     }
 
-    xTaskTestResults[ currentTaskIdx ] = xTestResult;
+    xTestResults[ currentTaskIdx ] = xTestResult;
 
     /* Suspend the test task itself. */
     vTaskSuspend( NULL );
@@ -180,10 +191,10 @@ void Test_DisableMultiplePriorities( void )
     /* Waiting for all the test tasks. */
     vTaskDelay( pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
 
-    /* Verify all the test result. */
+    /* Verify test results for all the tasks. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskTestResults[ i ], "Task test result is pdFAIL" );
+        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTestResults[ i ], "Task test result is pdFAIL" );
     }
 }
 /*-----------------------------------------------------------*/
@@ -220,7 +231,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run disable multiple priorties test.
+ * @brief Entry point for test runner to run disable multiple priorities test.
  */
 void vRunDisableMultiplePrioritiesTest( void )
 {

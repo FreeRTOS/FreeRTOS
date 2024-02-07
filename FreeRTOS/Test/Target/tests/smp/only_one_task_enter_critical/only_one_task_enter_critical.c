@@ -128,7 +128,7 @@ static void prvTaskIncCounter( void * pvParameters )
     }
 
     /* Increase the test counter in the loop. The test expects only one task can increase
-     * the shared variable xTaskCounter protected by critical section at the same time. */
+    * the shared variable xTaskCounter protected by critical section at the same time. */
     taskENTER_CRITICAL();
     {
         xTempTaskCounter = xTaskCounter;

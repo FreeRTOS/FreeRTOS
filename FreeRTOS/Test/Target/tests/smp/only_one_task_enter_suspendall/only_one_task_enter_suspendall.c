@@ -26,28 +26,30 @@
 
 /**
  * @file only_one_task_enter_suspendall.c
- * @brief Only one task/ISR shall be able to enter critical section at a time.
+ * @brief Only one task shall be able to enter the section protected by
+ * vTaskSuspendAll/xTaskResumeAll
  *
  * Procedure:
  *   - Create ( num of cores ) tasks.
- *   - All tasks increase the counter for TASK_INCREASE_COUNTER_TIMES times in section
- *     protected by scheduler suspended.
+ *   - All tasks increment a shared counter for TASK_INCREASE_COUNTER_TIMES
+ *     times in the section protected by vTaskSuspendAll/xTaskResumeAll.
  * Expected:
- *   - All tasks have correct value of counter after increasing.
+ *   - All tasks have correct value of counter after incrementing.
  */
 
 /* Standard includes. */
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 /**
- * @brief As time of loop for task to increase counter.
+ * @brief Number of times each task increments the shared counter.
  */
 #define TASK_INCREASE_COUNTER_TIMES    ( 10000 )
 
@@ -58,12 +60,13 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Test case "Only One Task Suspend scheduler".
+ * @brief Test case "Only one task enters the section protected by
+ * vTaskSuspendAll/xTaskResumeAll".
  */
 void Test_OnlyOneTaskEnterSuspendAll( void );
 
 /**
- * @brief Task function to increase counter then keep delaying.
+ * @brief Task function to increment the shared counter and then block.
  */
 static void prvTaskIncCounter( void * pvParameters );
 /*-----------------------------------------------------------*/
@@ -88,63 +91,69 @@ static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ];
 static uint32_t xTaskIndexes[ configNUMBER_OF_CORES ];
 
 /**
- * @brief Flags to indicate if task T0~Tn-1 finish or not.
+ * @brief Flags to indicate if tasks T0~Tn-1 detect an error or not.
  */
-static BaseType_t xTaskTestResults[ configNUMBER_OF_CORES ] = { pdFAIL };
+static BaseType_t xTestResults[ configNUMBER_OF_CORES ] = { pdFAIL };
 
 /**
- * @brief Variables to indicate task is ready for testing.
+ * @brief Flags to indicate tasks T0~Tn-1 started running.
  */
-static volatile BaseType_t xTaskReady[ configNUMBER_OF_CORES ] = { pdFALSE };
+static volatile BaseType_t xTaskRunning[ configNUMBER_OF_CORES ] = { pdFALSE };
 
 /**
- * @brief Counter for all tasks to increase.
+ * @brief Shared counter for all tasks to increment.
  */
-static volatile uint32_t xTaskCounter = 0;
+static volatile uint32_t xSharedCounter = 0;
 /*-----------------------------------------------------------*/
 
 static void prvTaskIncCounter( void * pvParameters )
 {
-    uint32_t currentTaskIdx = *( ( int * ) pvParameters );
+    uint32_t currentTaskIdx = *( ( uint32_t * ) pvParameters );
     BaseType_t xAllTaskReady = pdFALSE;
     BaseType_t xTestResult = pdPASS;
-    uint32_t xTempTaskCounter = 0;
+    uint32_t xLocalCounter = 0;
     uint32_t i;
 
-    /* Ensure all test tasks are running in the task function. */
-    xTaskReady[ currentTaskIdx ] = pdTRUE;
+    /* Wait for all tasks to start running. */
+    xTaskRunning[ currentTaskIdx ] = pdTRUE;
 
     while( xAllTaskReady == pdFALSE )
     {
-        xAllTaskReady = pdTRUE;
-
         for( i = 0; i < configNUMBER_OF_CORES; i++ )
         {
-            if( xTaskReady[ i ] != pdTRUE )
+            if( xTaskRunning[ i ] != pdTRUE )
             {
-                xAllTaskReady = pdFALSE;
                 break;
             }
         }
+
+        if( i == configNUMBER_OF_CORES )
+        {
+            xAllTaskReady = pdTRUE;
+        }
     }
 
-    /* Increase the test counter in the loop. The test expects only one task can increase
-     * the shared variable xTaskCounter protected by suspending scheduler at the same time. */
+    /* Increment the shared counter in a loop. The expectation is that only one
+     * task increments the counter at a time as it is incremented in the section
+     * protected by vTaskSuspendAll/xTaskResumeAll. */
     vTaskSuspendAll();
     {
-        xTempTaskCounter = xTaskCounter;
+        xLocalCounter = xSharedCounter;
 
         for( i = 0; i < TASK_INCREASE_COUNTER_TIMES; i++ )
         {
-            /* Increase the local variable xTempTaskCounter and shared variable xTaskCounter.
-             * They should have the same value when scheduler suspended. */
-            xTaskCounter++;
-            xTempTaskCounter++;
+            /* Increment the local variable xLocalCounter and shared variable
+             * xSharedCounter. */
+            xSharedCounter++;
+            xLocalCounter++;
 
-            /* If multiple tasks run in the section protected by scheduler suspended, shared
-             * variable will be increased by multiple tasks. Local variable xTempTaskCounter
-             * won't be equal to xTaskCounter. */
-            if( xTaskCounter != xTempTaskCounter )
+            /* If the implementation of vTaskSuspendAll is not correct and
+             * multiple tasks are able to enter the section protected by
+             * vTaskSuspendAll/xTaskResumeAll, shared counter will be
+             * incremented by multiple tasks and as a result, local counter
+             * xLocalCounterwon't be equal to the shared counter
+             * xSharedCounter. */
+            if( xSharedCounter != xLocalCounter )
             {
                 xTestResult = pdFAIL;
                 break;
@@ -153,7 +162,7 @@ static void prvTaskIncCounter( void * pvParameters )
     }
     ( void ) xTaskResumeAll();
 
-    xTaskTestResults[ currentTaskIdx ] = xTestResult;
+    xTestResults[ currentTaskIdx ] = xTestResult;
 
     /* Blocking the test task. */
     vTaskDelay( portMAX_DELAY );
@@ -173,9 +182,9 @@ void Test_OnlyOneTaskEnterSuspendAll( void )
         xTaskCreationResult = xTaskCreate( prvTaskIncCounter,
                                            "IncCounter",
                                            configMINIMAL_STACK_SIZE,
-                                           &xTaskIndexes[ i ],
+                                           &( xTaskIndexes[ i ] ),
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -183,14 +192,14 @@ void Test_OnlyOneTaskEnterSuspendAll( void )
     /* Delay for other cores to run tasks. */
     vTaskDelay( pdMS_TO_TICKS( TEST_TIMEOUT_MS ) );
 
-    /* Verify each test task result. */
+    /* Validate that none of the test tasks detected error. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskTestResults[ i ], "Critical section test task failed." );
+        TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTestResults[ i ], "Critical section test task failed." );
     }
 
-    /* Verify the shared variable counter value. */
-    TEST_ASSERT_EQUAL_UINT32( configNUMBER_OF_CORES * TASK_INCREASE_COUNTER_TIMES, xTaskCounter );
+    /* Verify the shared counter value. */
+    TEST_ASSERT_EQUAL_UINT32( configNUMBER_OF_CORES * TASK_INCREASE_COUNTER_TIMES, xSharedCounter );
 }
 /*-----------------------------------------------------------*/
 
@@ -199,7 +208,7 @@ void setUp( void )
 {
     uint32_t i;
 
-    xTaskCounter = 0;
+    xSharedCounter = 0;
 
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
@@ -227,7 +236,8 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run scheduler suspended test.
+ * @brief Entry point for test runner to run "only one task enter suspend all"
+ * test.
  */
 void vRunOnlyOneTaskEnterSuspendAll( void )
 {

@@ -49,8 +49,11 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run scheduler suspended test.
+ * @brief Entry point for test runner to run "only one task enter suspend all"
+ * test.
  */
 void vRunOnlyOneTaskEnterSuspendAll( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

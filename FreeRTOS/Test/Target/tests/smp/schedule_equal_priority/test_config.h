@@ -44,8 +44,10 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run schedule equal priority test.
+ * @brief Entry point for test runner to run schedule equal priority test.
  */
 void vRunScheduleEqualPriorityTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

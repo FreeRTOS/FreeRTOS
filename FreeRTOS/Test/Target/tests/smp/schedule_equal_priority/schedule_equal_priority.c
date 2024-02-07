@@ -33,17 +33,18 @@
  *   - All tasks are running in busy loop.
  * Expected:
  *   - Equal priority tasks are scheduled in a round robin fashion when configUSE_TIME_SLICING
- *     is set to 1. Verify that all the created equal priority tasks get chance to run.
+ *     is set to 1. Verify that all the test tasks get chance to run.
  */
 
 /* Standard includes. */
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 /**
@@ -91,7 +92,7 @@ static void prvEverRunningTask( void * pvParameters );
 static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ];
 
 /**
- * @brief Flags to indicate that ever running task is scheduled to run.
+ * @brief Flags to indicate that all ever running tasks get a chance to run.
  */
 static BaseType_t xTaskRun[ configNUMBER_OF_CORES + 1 ];
 /*-----------------------------------------------------------*/
@@ -119,15 +120,15 @@ void Test_ScheduleEqualPriority( void )
     uint32_t i;
     BaseType_t xTaskCreationResult;
 
-    /* Create configNUMBER_OF_CORES + 1 low priority tasks. */
+    /* Create ( configNUMBER_OF_CORES + 1 ) low priority tasks. */
     for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
         xTaskCreationResult = xTaskCreate( prvEverRunningTask,
                                            "EverRun",
                                            configMINIMAL_STACK_SIZE,
-                                           &xTaskRun[ i ],
+                                           &( xTaskRun[ i ] ),
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -137,7 +138,8 @@ void Test_ScheduleEqualPriority( void )
 
     for( i = 0; i < ( configNUMBER_OF_CORES + 1 ); i++ )
     {
-        /* After timeout, all tasks should be scheduled at least once and set the flag to pdTRUE. */
+        /* After timeout, all tasks must have been scheduled at least once and
+         * have set their corresponding flag to pdTRUE. */
         TEST_ASSERT_EQUAL( pdTRUE, xTaskRun[ i ] );
     }
 }
@@ -174,7 +176,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run schedule equal priority test.
+ * @brief Entry point for test runner to run schedule equal priority test.
  */
 void vRunScheduleEqualPriorityTest( void )
 {

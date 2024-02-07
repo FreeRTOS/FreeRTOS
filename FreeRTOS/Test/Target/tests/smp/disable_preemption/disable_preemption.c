@@ -56,6 +56,15 @@
  * @brief Timeout value to stop test.
  */
 #define TEST_TIMEOUT_MS    ( 1000 )
+
+/**
+ * @brief Nop operation for busy looping.
+ */
+#ifndef portNOP
+    #define TEST_NOP()    __asm volatile ( "nop" )
+#else
+    #define TEST_NOP    portNOP
+#endif
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -155,8 +164,8 @@ static void prvTestPreemptionDisableTask( void * pvParameters )
     /* Busy looping here to occupy this core. */
     for( ; ; )
     {
-        /* Always running, put asm here to avoid optimization by compiler. */
-        __asm volatile ( "nop" );
+        /* Always running, put nop operation here to avoid optimization by compiler. */
+        TEST_NOP();
     }
 }
 /*-----------------------------------------------------------*/

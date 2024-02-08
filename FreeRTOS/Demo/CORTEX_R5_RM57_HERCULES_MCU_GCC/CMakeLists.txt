@@ -36,12 +36,29 @@ GET_FILENAME_COMPONENT(DEMO_DIR ${DEMO_DIR_REL} ABSOLUTE)
 SET(BOARD_FILES_DIR_REL "${DEMO_DIR}/BoardFiles")
 GET_FILENAME_COMPONENT(BOARD_FILES_DIR ${BOARD_FILES_DIR_REL} ABSOLUTE)
 
+SET(FREERTOS_CONFIG_FILE_DIRECTORY "${DEMO_DIR}/include" CACHE STRING "Config File Path")
+SET(FREERTOS_PORT "GCC_ARM_CRX_MPU" CACHE STRING "FreeRTOS Port to Use")
+
+# Clone the tag of the FreeRTOS-Kernel last tested with this project.
+INCLUDE(FetchContent)
+
+FetchContent_Declare(
+    FreeRTOS-Kernel
+    GIT_REPOSITORY https://github.com/Skptak/FreeRTOS-Kernel.git
+    GIT_TAG ARM_CRx_MPU
+    SOURCE_DIR "FreeRTOS-Kernel"
+    USES_TERMINAL_DOWNLOAD YES
+    USES_TERMINAL_UPDATE   YES
+    BUILD_COMMAND "")
+
+FetchContent_MakeAvailable(FreeRTOS-Kernel)
+
 # Get the absolute path to the FreeRTOS-Kernel Directory
-SET(FREERTOS_KERNEL_DIR_REL "${DEMO_DIR}/../../../FreeRTOS/Source")
+SET(FREERTOS_KERNEL_DIR_REL "${freertos-kernel_SOURCE_DIR}")
 GET_FILENAME_COMPONENT(FREERTOS_KERNEL_DIR ${FREERTOS_KERNEL_DIR_REL} ABSOLUTE)
 
 # Get the absolute path to the Port Directory
-SET(PORT_DIR_REL "${FREERTOS_KERNEL_DIR}/portable/GCC/ARM_CRx_MPU")
+SET(PORT_DIR_REL "${freertos-kernel_SOURCE_DIR}/portable/GCC/ARM_CRx_MPU")
 GET_FILENAME_COMPONENT(PORT_DIR ${PORT_DIR_REL} ABSOLUTE)
 
 # Debug

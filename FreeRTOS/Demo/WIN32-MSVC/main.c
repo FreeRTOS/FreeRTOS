@@ -86,9 +86,9 @@
  * as this demo could easily create one large heap region instead of multiple
  * smaller heap regions - in which case heap_4.c would be the more appropriate
  * choice.  See http://www.freertos.org/a00111.html for an explanation. */
-#define mainREGION_1_SIZE                     8201
-#define mainREGION_2_SIZE                     23905
-#define mainREGION_3_SIZE                     16807
+#define mainREGION_1_SIZE                     82010
+#define mainREGION_2_SIZE                     239050
+#define mainREGION_3_SIZE                     168070
 
 /* This demo allows for users to perform actions with the keyboard. */
 #define mainNO_KEY_PRESS_VALUE                -1
@@ -149,7 +149,7 @@ static void prvSaveTraceFile( void );
  * FreeRTOS simulator. This thread passes data safely into the FreeRTOS
  * simulator using a stream buffer.
  */
-static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam );
+static int32_t WINAPI prvWindowsKeyboardInputThread( void * pvParam );
 
 /*
  * Interrupt handler for when keyboard input is received.
@@ -349,12 +349,7 @@ void vAssertCalled( unsigned long ulLine,
          * value. */
         while( ulSetToNonZeroInDebuggerToContinue == 0 )
         {
-            __asm {
-                NOP
-            };
-            __asm {
-                NOP
-            };
+             __nop();
         }
 
         /* Re-enable the trace recording. */
@@ -422,7 +417,7 @@ static void prvInitialiseHeap( void )
  * used by the Idle task. */
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize )
+                                    configSTACK_DEPTH_TYPE * pulIdleTaskStackSize )
 {
 /* If the buffers to be provided to the Idle task are declared inside this
  * function then they must be declared static - otherwise they will be allocated on
@@ -514,7 +509,7 @@ static uint32_t prvKeyboardInterruptHandler( void )
  * FreeRTOS simulator. This thread passes data into the simulator using
  * an integer.
  */
-static DWORD WINAPI prvWindowsKeyboardInputThread( void * pvParam )
+static int32_t WINAPI prvWindowsKeyboardInputThread( void * pvParam )
 {
     ( void ) pvParam;
 

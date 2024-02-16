@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -68,6 +68,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 /* Jobs library header. */
 #include "jobs.h"
@@ -224,6 +225,11 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
+/**
+ * @brief Length of the queue to pass Jobs messages to the job handling task.
+ */
+#define JOBS_MESSAGE_QUEUE_LEN                       ( 10U )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -311,6 +317,11 @@ static BaseType_t xExitActionJobReceived = pdFALSE;
  */
 static BaseType_t xDemoEncounteredError = pdFALSE;
 
+/**
+ * @brief Queue used to pass incoming Jobs messages to a task to handle them.
+ */
+static QueueHandle_t xJobMessageQueue;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -385,7 +396,7 @@ static void prvProcessJobDocument( char * pcJobId,
  * @param[in] pvParameters Parameters as passed at the time of task creation.
  * Not used in this example.
  */
-static void prvJobsDemoTask( void * pvParameters );
+void prvJobsDemoTask( void * pvParameters );
 
 
 /*-----------------------------------------------------------*/
@@ -715,8 +726,52 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
             /* Upon successful return, the messageType has been filled in. */
             if( ( topicType == JobsDescribeSuccess ) || ( topicType == JobsNextJobChanged ) )
             {
-                /* Handler function to process payload. */
-                prvNextJobHandler( pxDeserializedInfo->pPublishInfo );
+                MQTTPublishInfo_t * pxJobMessagePublishInfo = NULL;
+                char * pcTopicName = NULL;
+                char * pcPayload = NULL;
+
+                /* Copy message to pass into queue. */
+                pxJobMessagePublishInfo = ( MQTTPublishInfo_t * ) pvPortMalloc( sizeof( MQTTPublishInfo_t ) );
+                pcTopicName = ( char * ) pvPortMalloc( pxDeserializedInfo->pPublishInfo->topicNameLength );
+                pcPayload = ( char * ) pvPortMalloc( pxDeserializedInfo->pPublishInfo->payloadLength );
+
+                if( ( pxJobMessagePublishInfo == NULL ) || ( pcTopicName == NULL ) || ( pcPayload == NULL ) )
+                {
+                    LogError( ( "Malloc failed for copying job publish info." ) );
+
+                    if( pxJobMessagePublishInfo != NULL )
+                    {
+                        vPortFree( pxJobMessagePublishInfo );
+                    }
+
+                    if( pcTopicName != NULL )
+                    {
+                        vPortFree( pcTopicName );
+                    }
+
+                    if( pcPayload != NULL )
+                    {
+                        vPortFree( pcPayload );
+                    }
+                }
+                else
+                {
+                    memcpy( pxJobMessagePublishInfo, pxDeserializedInfo->pPublishInfo, sizeof( MQTTPublishInfo_t ) );
+                    memcpy( pcTopicName, pxDeserializedInfo->pPublishInfo->pTopicName, pxDeserializedInfo->pPublishInfo->topicNameLength );
+                    memcpy( pcPayload, pxDeserializedInfo->pPublishInfo->pPayload, pxDeserializedInfo->pPublishInfo->payloadLength );
+
+                    pxJobMessagePublishInfo->pTopicName = pcTopicName;
+                    pxJobMessagePublishInfo->pPayload = pcPayload;
+
+                    if( xQueueSend( xJobMessageQueue, &pxJobMessagePublishInfo, 0 ) == errQUEUE_FULL )
+                    {
+                        LogError( ( "Could not enqueue Jobs message." ) );
+
+                        vPortFree( pxJobMessagePublishInfo );
+                        vPortFree( pcTopicName );
+                        vPortFree( pcPayload );
+                    }
+                }
             }
             else if( topicType == JobsUpdateSuccess )
             {
@@ -768,25 +823,6 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 
 /*-----------------------------------------------------------*/
 
-/*
- * @brief Create the task that demonstrates the Jobs library API via a
- * MQTT mutually authenticated network connection with the AWS IoT broker.
- */
-void vStartJobsDemo( void )
-{
-    /* This example uses a single application task, which shows that how to
-    * use Jobs library to generate and validate AWS IoT Jobs service MQTT topics
-    * via coreMQTT library to communicate with the AWS IoT Jobs service. */
-    xTaskCreate( prvJobsDemoTask,          /* Function that implements the task. */
-                 "DemoTask",               /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
-}
-
-/*-----------------------------------------------------------*/
-
 /**
  * @brief Entry point of the Jobs demo.
  *
@@ -816,11 +852,27 @@ void prvJobsDemoTask( void * pvParameters )
     /* Set the pParams member of the network context with desired transport. */
     xNetworkContext.pParams = &xTlsTransportParams;
 
+    /* Initialize Jobs message queue. */
+    xJobMessageQueue = xQueueCreate( JOBS_MESSAGE_QUEUE_LEN, sizeof( MQTTPublishInfo_t * ) );
+    configASSERT( xJobMessageQueue != NULL );
+
     /* This demo runs a single loop unless there are failures in the demo execution.
      * In case of failures in the demo execution, demo loop will be retried for up to
      * JOBS_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /* Establish an MQTT connection with AWS IoT over a mutually authenticated TLS session. */
         xDemoStatus = xEstablishMqttSession( &xMqttContext,
                                              &xNetworkContext,
@@ -904,11 +956,22 @@ void prvJobsDemoTask( void * pvParameters )
                ( xDemoEncounteredError == pdFALSE ) &&
                ( xDemoStatus == pdPASS ) )
         {
+            MQTTPublishInfo_t * pxJobMessagePublishInfo;
             MQTTStatus_t xMqttStatus = MQTTSuccess;
 
             /* Check if we have notification for the next pending job in the queue from the
              * NextJobExecutionChanged API of the AWS IoT Jobs service. */
-            xMqttStatus = MQTT_ProcessLoop( &xMqttContext, 300U );
+            xMqttStatus = MQTT_ProcessLoop( &xMqttContext );
+
+            /* Receive any incoming Jobs message. */
+            if( xQueueReceive( xJobMessageQueue, &pxJobMessagePublishInfo, 0 ) == pdTRUE )
+            {
+                /* Handler function to process Jobs message payload. */
+                prvNextJobHandler( pxJobMessagePublishInfo );
+                vPortFree( pxJobMessagePublishInfo->pTopicName );
+                vPortFree( pxJobMessagePublishInfo->pPayload );
+                vPortFree( pxJobMessagePublishInfo );
+            }
 
             if( xMqttStatus != MQTTSuccess )
             {
@@ -978,6 +1041,8 @@ void prvJobsDemoTask( void * pvParameters )
     {
         LogInfo( ( "Demo completed successfully." ) );
     }
+
+    LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
 
     /* Delete this demo task. */
     LogInfo( ( "Deleting Jobs Demo task." ) );

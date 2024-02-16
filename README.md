@@ -1,9 +1,4 @@
-The [FreeRTOS 202111.00](https://github.com/FreeRTOS/FreeRTOS/tree/202111.00) release
-adds [examples](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator)
-demonstrating the use of [FreeRTOS Cellular Interface](https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface).
-The release also adds an [example](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/Safer_Interrupts_M33F_NXP_LPC55S69_MCUXpresso)
-that demonstrates a method of minimizing the time an application spends in privileged mode
-in FreeRTOS ports on microcontrollers (MCU) with Memory Protection Unit (MPU) support.
+The [FreeRTOS 202212.00](https://github.com/FreeRTOS/FreeRTOS/tree/202212.00) release updates FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11, coreHTTP, coreJSON, AWS IoT Over-the-air-Updates (OTA), AWS IoT Device Shadow, AWS IoT Jobs, AWS IoT Device Defender, Backoff Algorithm, AWS IoT Fleet Provisioning, coreSNTP, SigV4, and FreeRTOS Cellular Interface libraries to their [LTS 2.0](https://github.com/FreeRTOS/FreeRTOS-LTS/blob/202210-LTS/CHANGELOG.md) versions. It also updates coreMQTT Agent to v1.2.0 to be compatible with coreMQTT v2.X.X, and updates MbedTLS to v3.2.1. This release also adds Visual Studio static library projects for the FreeRTOS Kernel, FreeRTOS+TCP, Logging, MbedTLS, coreHTTP, and corePKCS11. With the addition of the static library projects, all Visual Studio projects have been updated to use them. Additionally, all demos dependent on coreMQTT have been updated to work with coreMQTT v2.X.X.
 
 ## Getting started
 The [FreeRTOS.org](https://www.freertos.org) website contains a [FreeRTOS Kernel Quick Start Guide](https://www.freertos.org/FreeRTOS-quick-start-guide.html), a [list of supported devices and compilers](https://www.freertos.org/RTOS_ports.html), the [API reference](https://www.freertos.org/a00106.html), and many other resources.
@@ -65,3 +60,10 @@ The [FreeRTOS/coreMQTT-Agent-Demos](https://github.com/FreeRTOS/coreMQTT-Agent-D
 
 The demos show a single MQTT connection usage between multiple application tasks for interacting with AWS services (including [Over-the-air-Updates](https://docs.aws.amazon.com/freertos/latest/userguide/freertos-ota-dev.html), [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html),
  [Device Defender](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender.html)) alongside performing simple Publish-Subscribe operations.
+## CBMC
+
+The `FreeRTOS/Test/CBMC/proofs` directory contains CBMC proofs.
+
+To learn more about CBMC and proofs specifically, review the training material [here](https://model-checking.github.io/cbmc-training).
+
+In order to run these proofs you will need to install CBMC and other tools by following the instructions [here](https://model-checking.github.io/cbmc-training/installation.html).

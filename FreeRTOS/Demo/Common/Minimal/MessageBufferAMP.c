@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -52,7 +52,7 @@
  * same design pattern described on the link below for queues, but using message
  * buffers instead.  It is actually simpler with a message buffer as variable
  * length data can be written into the message buffer directly:
- * http://www.freertos.org/Pend-on-multiple-rtos-objects.html#alternative_design_pattern
+ * https://www.FreeRTOS.org/Pend-on-multiple-rtos-objects.html#alternative_design_pattern
  */
 
 /* Standard includes. */
@@ -248,7 +248,7 @@ static void prvCoreBTasks( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-/* Called by the reimplementation of sbSEND_COMPLETED(), which can be defined
+/* Called by the re-implementation of sbSEND_COMPLETED(), which can be defined
  * as follows in FreeRTOSConfig.h:
  #define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
  */

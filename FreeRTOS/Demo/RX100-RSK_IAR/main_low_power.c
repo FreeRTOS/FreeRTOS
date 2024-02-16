@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* ****************************************************************************
@@ -123,43 +122,43 @@
 #include "partest.h"
 
 /* Priorities at which the Rx and Tx tasks are created. */
-#define configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define configQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 1 )
+#define configQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2 )
 
 /* The number of items the queue can hold.  This is 1 as the Rx task will
-remove items as they are added so the Tx task should always find the queue
-empty. */
-#define mainQUEUE_LENGTH					( 1 )
+ * remove items as they are added so the Tx task should always find the queue
+ * empty. */
+#define mainQUEUE_LENGTH                     ( 1 )
 
 /* The LED used to indicate that a value has been received on the queue. */
-#define mainQUEUE_LED						( 0 )
+#define mainQUEUE_LED                        ( 0 )
 
 /* The LED used to indicate that full power is being used (the MCU is not in
-deep sleep or software standby mode). */
-#define mainFULL_POWER_LED					( 1 )
+ * deep sleep or software standby mode). */
+#define mainFULL_POWER_LED                   ( 1 )
 
 /* The LED used to indicate that deep sleep mode is being used. */
-#define mainDEEP_SLEEP_LED					( 2 )
+#define mainDEEP_SLEEP_LED                   ( 2 )
 
 /* The Tx task sends to the queue with a frequency that is set by the value
-read from the potentiometer until the value goes above that set by the
-mainSOFTWARE_STANDBY_DELAY constant - at which time the Tx task instead blocks
-indefinitely on a semaphore. */
-#define mainSOFTWARE_STANDBY_DELAY			( 3000UL )
+ * read from the potentiometer until the value goes above that set by the
+ * mainSOFTWARE_STANDBY_DELAY constant - at which time the Tx task instead blocks
+ * indefinitely on a semaphore. */
+#define mainSOFTWARE_STANDBY_DELAY           ( 3000UL )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0 )
+#define mainDONT_BLOCK                       ( 0 )
 
 /* The value that is sent from the Tx task to the Rx task on the queue. */
-#define mainQUEUED_VALUE					( 100UL )
+#define mainQUEUED_VALUE                     ( 100UL )
 
 /*-----------------------------------------------------------*/
 
 /*
  * The Rx and Tx tasks as described at the top of this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*
  * Reads and returns the value of the ADC connected to the potentiometer built
@@ -184,207 +183,209 @@ static SemaphoreHandle_t xSemaphore = NULL;
 
 void main_low_power( void )
 {
-	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
-	configASSERT( xQueue );
+    /* Create the queue. */
+    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+    configASSERT( xQueue );
 
-	/* Create the semaphore that is 'given' by an interrupt generated from a
-	button push. */
-	vSemaphoreCreateBinary( xSemaphore );
-	configASSERT( xSemaphore );
+    /* Create the semaphore that is 'given' by an interrupt generated from a
+     * button push. */
+    vSemaphoreCreateBinary( xSemaphore );
+    configASSERT( xSemaphore );
 
-	/* Make sure the semaphore starts in the expected state - no button pushes
-	have yet occurred.  A block time of zero can be used as it is guaranteed
-	that the semaphore will be available because it has just been created. */
-	xSemaphoreTake( xSemaphore, mainDONT_BLOCK );
+    /* Make sure the semaphore starts in the expected state - no button pushes
+     * have yet occurred.  A block time of zero can be used as it is guaranteed
+     * that the semaphore will be available because it has just been created. */
+    xSemaphoreTake( xSemaphore, mainDONT_BLOCK );
 
-	/* Start the two tasks as described at the top of this file. */
-	xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-	xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
+    /* Start the two tasks as described at the top of this file. */
+    xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+    xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
 
-	/* The CPU is currently running, not sleeping, so turn on the LED that
-	shows the CPU is not in a sleep mode. */
-	vParTestSetLED( mainFULL_POWER_LED, pdTRUE );
+    /* The CPU is currently running, not sleeping, so turn on the LED that
+     * shows the CPU is not in a sleep mode. */
+    vParTestSetLED( mainFULL_POWER_LED, pdTRUE );
 
-	/* Start the scheduler running running. */
-	vTaskStartScheduler();
+    /* Start the scheduler running running. */
+    vTaskStartScheduler();
 
-	/* If all is well the next line of code will not be reached as the
-	scheduler will be running.  If the next line is reached then it is likely
-	there was insufficient FreeRTOS heap available for the idle task and/or
-	timer task to be created.  See http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well the next line of code will not be reached as the
+     * scheduler will be running.  If the next line is reached then it is likely
+     * there was insufficient FreeRTOS heap available for the idle task and/or
+     * timer task to be created.  See http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-TickType_t xDelay;
-const unsigned long ulValueToSend = mainQUEUED_VALUE;
+    TickType_t xDelay;
+    const unsigned long ulValueToSend = mainQUEUED_VALUE;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* The delay period between successive sends to the queue is set by
-		the potentiometer reading. */
-		xDelay = ( TickType_t ) prvReadPOT();
+    for( ; ; )
+    {
+        /* The delay period between successive sends to the queue is set by
+         * the potentiometer reading. */
+        xDelay = ( TickType_t ) prvReadPOT();
 
-		/* If the block time is greater than 3000 milliseconds then block
-		indefinitely waiting for a button push. */
-		if( xDelay > mainSOFTWARE_STANDBY_DELAY )
-		{
-			/* As this is an indefinite delay the kernel will place the CPU
-			into software standby mode the next time the idle task runs. */
-			xSemaphoreTake( xSemaphore, portMAX_DELAY );
-		}
-		else
-		{
-			/* Convert a time in milliseconds to a time in ticks. */
-			xDelay /= portTICK_PERIOD_MS;
+        /* If the block time is greater than 3000 milliseconds then block
+         * indefinitely waiting for a button push. */
+        if( xDelay > mainSOFTWARE_STANDBY_DELAY )
+        {
+            /* As this is an indefinite delay the kernel will place the CPU
+             *  into software standby mode the next time the idle task runs. */
+            xSemaphoreTake( xSemaphore, portMAX_DELAY );
+        }
+        else
+        {
+            /* Convert a time in milliseconds to a time in ticks. */
+            xDelay /= portTICK_PERIOD_MS;
 
-			/* Place this task in the blocked state until it is time to run
-			again.  As this is not an indefinite sleep the kernel will place
-			the CPU into the deep sleep state when the idle task next runs. */
-			vTaskDelay( xDelay );
-		}
+            /* Place this task in the blocked state until it is time to run
+             * again.  As this is not an indefinite sleep the kernel will place
+             * the CPU into the deep sleep state when the idle task next runs. */
+            vTaskDelay( xDelay );
+        }
 
-		/* Send to the queue - causing the queue receive task to flash its LED.
-		It should not be necessary to block on the queue send because the Rx
-		task will have removed the last queued item. */
-		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
-	}
+        /* Send to the queue - causing the queue receive task to flash its LED.
+         * It should not be necessary to block on the queue send because the Rx
+         * task will have removed the last queued item. */
+        xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
+    unsigned long ulReceivedValue;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue - this will block
-		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-		FreeRTOSConfig.h. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+    for( ; ; )
+    {
+        /* Wait until something arrives in the queue - this will block
+         * indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
+         * FreeRTOSConfig.h. */
+        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have arrived, but is it the expected
-		value?  If it is, toggle the LED. */
-		if( ulReceivedValue == mainQUEUED_VALUE )
-		{
-			vParTestToggleLED( mainQUEUE_LED );
-		}
-	}
+        /*  To get here something must have arrived, but is it the expected
+         * value?  If it is, toggle the LED. */
+        if( ulReceivedValue == mainQUEUED_VALUE )
+        {
+            vParTestToggleLED( mainQUEUE_LED );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vPreSleepProcessing( unsigned long ulExpectedIdleTime )
 {
-	/* Called by the kernel before it places the MCU into a sleep mode because
-	configPRE_SLEEP_PROCESSING() is #defined to vPreSleepProcessing().
+    /* Called by the kernel before it places the MCU into a sleep mode because
+     * configPRE_SLEEP_PROCESSING() is #defined to vPreSleepProcessing().
+     *
+     * NOTE:  Additional actions can be taken here to get the power consumption
+     * even lower.  For example, the ADC input used by this demo could be turned
+     * off here, and then back on again in the post sleep processing function.
+     * For maximum power saving ensure all unused pins are in their lowest power
+     * state. */
 
-	NOTE:  Additional actions can be taken here to get the power consumption
-	even lower.  For example, the ADC input used by this demo could be turned
-	off here, and then back on again in the post sleep processing function.
-	For maximum power saving ensure all unused pins are in their lowest power
-	state. */
+    /* Avoid compiler warnings about the unused parameter. */
+    ( void ) ulExpectedIdleTime;
 
-	/* Avoid compiler warnings about the unused parameter. */
-	( void ) ulExpectedIdleTime;
+    /* Is the MCU about to enter deep sleep mode or software standby mode? */
+    if( SYSTEM.SBYCR.BIT.SSBY == 0 )
+    {
+        /* Turn on the LED that indicates deep sleep mode is being entered. */
+        vParTestSetLED( mainDEEP_SLEEP_LED, pdTRUE );
+    }
+    else
+    {
+        /* Software standby mode is being used, so no LEDs are illuminated to
+         * ensure minimum power readings are obtained.  Ensure the Queue LED is
+         * also off. */
+        vParTestSetLED( mainQUEUE_LED, pdFALSE );
+    }
 
-	/* Is the MCU about to enter deep sleep mode or software standby mode? */
-	if( SYSTEM.SBYCR.BIT.SSBY == 0 )
-	{
-		/* Turn on the LED that indicates deep sleep mode is being entered. */
-		vParTestSetLED( mainDEEP_SLEEP_LED, pdTRUE );
-	}
-	else
-	{
-		/* Software standby mode is being used, so no LEDs are illuminated to
-		ensure minimum power readings are obtained.  Ensure the Queue LED is
-		also off. */
-		vParTestSetLED( mainQUEUE_LED, pdFALSE );
-	}
-
-	/* Turn off the LED that indicates full power is being used. */
-	vParTestSetLED( mainFULL_POWER_LED, pdFALSE );
+    /* Turn off the LED that indicates full power is being used. */
+    vParTestSetLED( mainFULL_POWER_LED, pdFALSE );
 }
 /*-----------------------------------------------------------*/
 
 void vPostSleepProcessing( unsigned long ulExpectedIdleTime )
 {
-	/* Called by the kernel when the MCU exits a sleep mode because
-	configPOST_SLEEP_PROCESSING is #defined to vPostSleepProcessing(). */
+    /* Called by the kernel when the MCU exits a sleep mode because
+     * configPOST_SLEEP_PROCESSING is #defined to vPostSleepProcessing(). */
 
-	/* Avoid compiler warnings about the unused parameter. */
-	( void ) ulExpectedIdleTime;
+    /* Avoid compiler warnings about the unused parameter. */
+    ( void ) ulExpectedIdleTime;
 
-	/* Turn off the LED that indicates deep sleep mode, and turn on the LED
-	that indicates full power is being used. */
-	vParTestSetLED( mainDEEP_SLEEP_LED, pdFALSE );
-	vParTestSetLED( mainFULL_POWER_LED, pdTRUE );
+    /* Turn off the LED that indicates deep sleep mode, and turn on the LED
+     * that indicates full power is being used. */
+    vParTestSetLED( mainDEEP_SLEEP_LED, pdFALSE );
+    vParTestSetLED( mainFULL_POWER_LED, pdTRUE );
 }
 /*-----------------------------------------------------------*/
 
 static unsigned short prvReadPOT( void )
 {
-unsigned short usADCValue;
-const unsigned short usMinADCValue = 128;
+    unsigned short usADCValue;
+    const unsigned short usMinADCValue = 128;
 
-	/* Start an ADC scan. */
-	S12AD.ADCSR.BIT.ADST = 1;
-	while( S12AD.ADCSR.BIT.ADST == 1 )
-	{
-		/* Just waiting for the ADC scan to complete.  Inefficient
-		polling! */
-	}
+    /* Start an ADC scan. */
+    S12AD.ADCSR.BIT.ADST = 1;
 
-	usADCValue = S12AD.ADDR4;
+    while( S12AD.ADCSR.BIT.ADST == 1 )
+    {
+        /* Just waiting for the ADC scan to complete.  Inefficient
+         * polling! */
+    }
 
-	/* Don't let the ADC value get too small as the LED behaviour will look
-	erratic. */
-	if( usADCValue < usMinADCValue )
-	{
-		usADCValue = usMinADCValue;
-	}
+    usADCValue = S12AD.ADDR4;
 
-	return usADCValue;
+    /* Don't let the ADC value get too small as the LED behaviour will look
+     * erratic. */
+    if( usADCValue < usMinADCValue )
+    {
+        usADCValue = usMinADCValue;
+    }
+
+    return usADCValue;
 }
 /*-----------------------------------------------------------*/
 
 #pragma vector = VECT_ICU_IRQ0, VECT_ICU_IRQ1, VECT_ICU_IRQ4
 __interrupt void vButtonInterrupt1( void )
 {
-long lHigherPriorityTaskWoken = pdFALSE;
+    long lHigherPriorityTaskWoken = pdFALSE;
 
-	/* The semaphore is only created when the build is configured to create the
-	low power demo. */
-	if( xSemaphore != NULL )
-	{
-		/* This interrupt will bring the CPU out of deep sleep and software
-		standby	modes.  Give the semaphore that was used to place the Tx task
-		into an indefinite sleep. */
-		if( uxQueueMessagesWaitingFromISR( xSemaphore ) == 0 )
-		{
-			xSemaphoreGiveFromISR( xSemaphore, &lHigherPriorityTaskWoken );
-		}
-		else
-		{
-			/* The semaphore was already available, so the task is not blocked
-			on it and there is no point giving it. */
-		}
+    /* The semaphore is only created when the build is configured to create the
+     * low power demo. */
+    if( xSemaphore != NULL )
+    {
+        /* This interrupt will bring the CPU out of deep sleep and software
+         * standby	modes.  Give the semaphore that was used to place the Tx task
+         * into an indefinite sleep. */
+        if( uxQueueMessagesWaitingFromISR( xSemaphore ) == 0 )
+        {
+            xSemaphoreGiveFromISR( xSemaphore, &lHigherPriorityTaskWoken );
+        }
+        else
+        {
+            /* The semaphore was already available, so the task is not blocked
+             * on it and there is no point giving it. */
+        }
 
-		/* If giving the semaphore caused a task to leave the Blocked state,
-		and the task that left the Blocked state has a priority equal to or
-		above the priority of the task that this interrupt interrupted, then
-		lHigherPriorityTaskWoken will have been set to pdTRUE inside the call
-		to xSemaphoreGiveFromISR(), and calling portYIELD_FROM_ISR() will cause
-		a context switch to the unblocked task. */
-		portYIELD_FROM_ISR( lHigherPriorityTaskWoken );
-	}
+        /* If giving the semaphore caused a task to leave the Blocked state,
+         * and the task that left the Blocked state has a priority equal to or
+         * above the priority of the task that this interrupt interrupted, then
+         * lHigherPriorityTaskWoken will have been set to pdTRUE inside the call
+         * to xSemaphoreGiveFromISR(), and calling portYIELD_FROM_ISR() will cause
+         * a context switch to the unblocked task. */
+        portYIELD_FROM_ISR( lHigherPriorityTaskWoken );
+    }
 }
-

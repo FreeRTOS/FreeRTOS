@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -104,5 +104,11 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * The value should be longer than the length of democonfigMQTT_BROKER_ENDPOINT in demo_config.h.
  */
 #define CELLULAR_IP_ADDRESS_MAX_SIZE    ( 64U )
+
+/*
+ * BG96 supports different URC port. Define this macro if "usbat" port is URC output port.
+ * Otherwise, "uart1" will be configured to URC output port.
+ */
+#define CELLULAR_BG96_URC_PORT_USBAT
 
 #endif /* __CELLULAR_CONFIG_H__ */

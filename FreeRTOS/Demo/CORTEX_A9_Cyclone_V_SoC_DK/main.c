@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -76,7 +75,7 @@
  * When mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0 the comprehensive test
  * and demo application will be run.
  */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
 
 /*-----------------------------------------------------------*/
 
@@ -90,240 +89,250 @@ static void prvSetupHardware( void );
  * mainSELECTED_APPLICATION definition.
  */
 #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	extern void main_blinky( void );
+    extern void main_blinky( void );
 #else
-	extern void main_full( void );
+    extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file. */
+ * within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
 /* configAPPLICATION_ALLOCATED_HEAP is set to 1 in FreeRTOSConfig.h so the
-application can define the array used as the FreeRTOS heap.  This is done so the
-heap can be forced into fast internal RAM - useful because the stacks used by
-the tasks come from this space. */
-uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] __attribute__ ( ( section( ".oc_ram" ) ) );
+ * application can define the array used as the FreeRTOS heap.  This is done so the
+ * heap can be forced into fast internal RAM - useful because the stacks used by
+ * the tasks come from this space. */
+uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] __attribute__( ( section( ".oc_ram" ) ) );
 
 /* FreeRTOS uses its own interrupt handler code.  This code cannot use the array
-of handlers defined by the Altera drivers because the array is declared static,
-and so not accessible outside of the dirver's source file.  Instead declare an
-array for use by the FreeRTOS handler.  See:
-http://www.freertos.org/Using-FreeRTOS-on-Cortex-A-Embedded-Processors.html. */
+ * of handlers defined by the Altera drivers because the array is declared static,
+ * and so not accessible outside of the dirver's source file.  Instead declare an
+ * array for use by the FreeRTOS handler.  See:
+ * http://www.freertos.org/Using-FreeRTOS-on-Cortex-A-Embedded-Processors.html. */
 static INT_DISPATCH_t xISRHandlers[ ALT_INT_PROVISION_INT_COUNT ];
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-	/* Configure the hardware ready to run the demo. */
-	prvSetupHardware();
+    /* Configure the hardware ready to run the demo. */
+    prvSetupHardware();
 
-	/* The mainSELECTED_APPLICATION setting is described at the top
-	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainSELECTED_APPLICATION setting is described at the top
+     * of this file. */
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 
-	/* Don't expect to reach here. */
-	return 0;
+    /* Don't expect to reach here. */
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-extern uint8_t __cs3_interrupt_vector;
-uint32_t ulSCTLR, ulVectorTable = ( uint32_t ) &__cs3_interrupt_vector;
-const uint32_t ulVBit = 13U;
+    extern uint8_t __cs3_interrupt_vector;
+    uint32_t ulSCTLR, ulVectorTable = ( uint32_t ) &__cs3_interrupt_vector;
+    const uint32_t ulVBit = 13U;
 
-	alt_int_global_init();
-	alt_int_cpu_binary_point_set( 0 );
+    alt_int_global_init();
+    alt_int_cpu_binary_point_set( 0 );
 
-	/* Clear SCTLR.V for low vectors and map the vector table to the beginning
-	of the code. */
-	__asm( "MRC p15, 0, %0, c1, c0, 0" : "=r" ( ulSCTLR ) );
-	ulSCTLR &= ~( 1 << ulVBit );
-	__asm( "MCR p15, 0, %0, c1, c0, 0" : : "r" ( ulSCTLR ) );
-	__asm( "MCR p15, 0, %0, c12, c0, 0" : : "r" ( ulVectorTable ) );
+    /* Clear SCTLR.V for low vectors and map the vector table to the beginning
+     * of the code. */
+    __asm( "MRC p15, 0, %0, c1, c0, 0" : "=r" ( ulSCTLR ) );
+    ulSCTLR &= ~( 1 << ulVBit );
+    __asm( "MCR p15, 0, %0, c1, c0, 0" : : "r" ( ulSCTLR ) );
+    __asm( "MCR p15, 0, %0, c12, c0, 0" : : "r" ( ulVectorTable ) );
 
-	cache_init();
-	mmu_init();
+    cache_init();
+    mmu_init();
 
-	/* GPIO for LEDs.  ParTest is a historic name which used to stand for
-	parallel port test. */
-	vParTestInitialise();
+    /* GPIO for LEDs.  ParTest is a historic name which used to stand for
+     * parallel port test. */
+    vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Called if a call to pvPortMalloc() fails because there is insufficient
+     * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     * internally by FreeRTOS API functions that create tasks, queues, software
+     * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeHeapSpace;
+    volatile size_t xFreeHeapSpace;
 
-	/* This is just a trivial example of an idle hook.  It is called on each
-	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-	idle task just queries the amount of FreeRTOS heap that remains.  See the
-	memory management section on the http://www.FreeRTOS.org web site for memory
-	management options.  If there is a lot of heap memory free then the
-	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();
+    /* This is just a trivial example of an idle hook.  It is called on each
+     * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+     * idle task just queries the amount of FreeRTOS heap that remains.  See the
+     * memory management section on the http://www.FreeRTOS.org web site for memory
+     * management options.  If there is a lot of heap memory free then the
+     * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+     * RAM. */
+    xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
-	( void ) xFreeHeapSpace;
+    /* Remove compiler warning about xFreeHeapSpace being set but never used. */
+    ( void ) xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char * pcFile, unsigned long ulLine )
+void vAssertCalled( const char * pcFile,
+                    unsigned long ulLine )
 {
-volatile unsigned long ul = 0;
+    volatile unsigned long ul = 0;
 
-	( void ) pcFile;
-	( void ) ulLine;
+    ( void ) pcFile;
+    ( void ) ulLine;
 
-	taskENTER_CRITICAL();
-	{
-		/* Set ul to a non-zero value using the debugger to step out of this
-		function. */
-		while( ul == 0 )
-		{
-			portNOP();
-		}
-	}
-	taskEXIT_CRITICAL();
+    taskENTER_CRITICAL();
+    {
+        /* Set ul to a non-zero value using the debugger to step out of this
+         * function. */
+        while( ul == 0 )
+        {
+            portNOP();
+        }
+    }
+    taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
-	{
-		/* The full demo includes a software timer demo/test that requires
-		prodding periodically from the tick interrupt. */
-		vTimerPeriodicISRTests();
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+    {
+        /* The full demo includes a software timer demo/test that requires
+         * prodding periodically from the tick interrupt. */
+        vTimerPeriodicISRTests();
 
-		/* Call the periodic queue overwrite from ISR demo. */
-		vQueueOverwritePeriodicISRDemo();
+        /* Call the periodic queue overwrite from ISR demo. */
+        vQueueOverwritePeriodicISRDemo();
 
-		/* Call the periodic event group from ISR demo. */
-		vPeriodicEventGroupsProcessing();
+        /* Call the periodic event group from ISR demo. */
+        vPeriodicEventGroupsProcessing();
 
-		/* Call the periodic test that uses mutexes form an interrupt. */
-		vInterruptSemaphorePeriodicTest();
-	}
-	#endif
+        /* Call the periodic test that uses mutexes form an interrupt. */
+        vInterruptSemaphorePeriodicTest();
+    }
+    #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 ) */
 }
 /*-----------------------------------------------------------*/
 
 void vConfigureTickInterrupt( void )
 {
-alt_freq_t ulTempFrequency;
-const alt_freq_t ulMicroSecondsPerSecond = 1000000UL;
-void FreeRTOS_Tick_Handler( void );
+    alt_freq_t ulTempFrequency;
+    const alt_freq_t ulMicroSecondsPerSecond = 1000000UL;
 
-	/* Interrupts are disabled when this function is called. */
+    void FreeRTOS_Tick_Handler( void );
 
-	/* Initialise the general purpose timer modules. */
-	alt_gpt_all_tmr_init();
+    /* Interrupts are disabled when this function is called. */
 
-	/* ALT_CLK_MPU_PERIPH = mpu_periph_clk */
-	alt_clk_freq_get( ALT_CLK_MPU_PERIPH, &ulTempFrequency );
+    /* Initialise the general purpose timer modules. */
+    alt_gpt_all_tmr_init();
 
-	/* Use the local private timer. */
-	alt_gpt_counter_set( ALT_GPT_CPU_PRIVATE_TMR, ulTempFrequency / configTICK_RATE_HZ );
+    /* ALT_CLK_MPU_PERIPH = mpu_periph_clk */
+    alt_clk_freq_get( ALT_CLK_MPU_PERIPH, &ulTempFrequency );
 
-	/* Sanity check. */
-	configASSERT( alt_gpt_time_microsecs_get( ALT_GPT_CPU_PRIVATE_TMR ) == ( ulMicroSecondsPerSecond / configTICK_RATE_HZ ) );
+    /* Use the local private timer. */
+    alt_gpt_counter_set( ALT_GPT_CPU_PRIVATE_TMR, ulTempFrequency / configTICK_RATE_HZ );
 
-	/* Set to periodic mode. */
-	alt_gpt_mode_set( ALT_GPT_CPU_PRIVATE_TMR, ALT_GPT_RESTART_MODE_PERIODIC );
+    /* Sanity check. */
+    configASSERT( alt_gpt_time_microsecs_get( ALT_GPT_CPU_PRIVATE_TMR ) == ( ulMicroSecondsPerSecond / configTICK_RATE_HZ ) );
 
-	/* The timer can be started here as interrupts are disabled. */
-	alt_gpt_tmr_start( ALT_GPT_CPU_PRIVATE_TMR );
+    /* Set to periodic mode. */
+    alt_gpt_mode_set( ALT_GPT_CPU_PRIVATE_TMR, ALT_GPT_RESTART_MODE_PERIODIC );
 
-	/* Register the standard FreeRTOS Cortex-A tick handler as the timer's
-	interrupt handler.  The handler clears the interrupt using the
-	configCLEAR_TICK_INTERRUPT() macro, which is defined in FreeRTOSConfig.h. */
-	vRegisterIRQHandler( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE, ( alt_int_callback_t ) FreeRTOS_Tick_Handler, NULL );
+    /* The timer can be started here as interrupts are disabled. */
+    alt_gpt_tmr_start( ALT_GPT_CPU_PRIVATE_TMR );
 
-	/* This tick interrupt must run at the lowest priority. */
-	alt_int_dist_priority_set( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE, portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
+    /* Register the standard FreeRTOS Cortex-A tick handler as the timer's
+     * interrupt handler.  The handler clears the interrupt using the
+     * configCLEAR_TICK_INTERRUPT() macro, which is defined in FreeRTOSConfig.h. */
+    vRegisterIRQHandler( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE, ( alt_int_callback_t ) FreeRTOS_Tick_Handler, NULL );
 
-	/* Ensure the interrupt is forwarded to the CPU. */
+    /* This tick interrupt must run at the lowest priority. */
+    alt_int_dist_priority_set( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE, portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
+
+    /* Ensure the interrupt is forwarded to the CPU. */
     alt_int_dist_enable( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE );
 
     /* Finally, enable the interrupt. */
-	alt_gpt_int_clear_pending( ALT_GPT_CPU_PRIVATE_TMR );
-	alt_gpt_int_enable( ALT_GPT_CPU_PRIVATE_TMR );
-
+    alt_gpt_int_clear_pending( ALT_GPT_CPU_PRIVATE_TMR );
+    alt_gpt_int_enable( ALT_GPT_CPU_PRIVATE_TMR );
 }
 /*-----------------------------------------------------------*/
 
-void vRegisterIRQHandler( uint32_t ulID, alt_int_callback_t pxHandlerFunction, void *pvContext )
+void vRegisterIRQHandler( uint32_t ulID,
+                          alt_int_callback_t pxHandlerFunction,
+                          void * pvContext )
 {
-	if( ulID < ALT_INT_PROVISION_INT_COUNT )
-	{
-		xISRHandlers[ ulID ].pxISR = pxHandlerFunction;
-		xISRHandlers[ ulID ].pvContext = pvContext;
-	}
+    if( ulID < ALT_INT_PROVISION_INT_COUNT )
+    {
+        xISRHandlers[ ulID ].pxISR = pxHandlerFunction;
+        xISRHandlers[ ulID ].pvContext = pvContext;
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIRQHandler( uint32_t ulICCIAR )
 {
-uint32_t ulInterruptID;
-void *pvContext;
-alt_int_callback_t pxISR;
+    uint32_t ulInterruptID;
+    void * pvContext;
+    alt_int_callback_t pxISR;
 
-	/* Re-enable interrupts. */
-    __asm ( "cpsie i" );
+    /* Re-enable interrupts. */
+    __asm( "cpsie i" );
 
-	/* The ID of the interrupt is obtained by bitwise anding the ICCIAR value
-	with 0x3FF. */
-	ulInterruptID = ulICCIAR & 0x3FFUL;
+    /* The ID of the interrupt is obtained by bitwise anding the ICCIAR value
+     * with 0x3FF. */
+    ulInterruptID = ulICCIAR & 0x3FFUL;
 
-	if( ulInterruptID < ALT_INT_PROVISION_INT_COUNT )
-	{
-		/* Call the function installed in the array of installed handler
-		functions. */
-		pxISR = xISRHandlers[ ulInterruptID ].pxISR;
-		pvContext = xISRHandlers[ ulInterruptID ].pvContext;
-		pxISR( ulICCIAR, pvContext );
-	}
+    if( ulInterruptID < ALT_INT_PROVISION_INT_COUNT )
+    {
+        /* Call the function installed in the array of installed handler
+         * functions. */
+        pxISR = xISRHandlers[ ulInterruptID ].pxISR;
+        pvContext = xISRHandlers[ ulInterruptID ].pvContext;
+        pxISR( ulICCIAR, pvContext );
+    }
 }
-

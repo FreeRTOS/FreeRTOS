@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -39,6 +39,18 @@
 static SemaphoreHandle_t xSemaphoreHandleStatic;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
+
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
 
 /* ============================= Unity Fixtures ============================= */
 
@@ -163,7 +175,7 @@ void test_macro_xSemaphoreGive_CountingSemaphore_100_50( void )
     /* Check the count */
     TEST_ASSERT_EQUAL( 100, uxSemaphoreGetCount( xSemaphore ) );
 
-    /* Veirfy that a subsequent call to xSemaphoreGive fails */
+    /* Verify that a subsequent call to xSemaphoreGive fails */
     TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGive( xSemaphore ) );
 
     /* Verify that an xSemaphoreTake operation succeeds */
@@ -199,7 +211,7 @@ void test_macro_xSemaphoreTake_CountingSemaphore_100_50( void )
     /* Check the count */
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
-    /* Veirfy that a subsequent call to xSemaphoreGive fails */
+    /* Verify that a subsequent call to xSemaphoreGive fails */
     TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreTake( xSemaphore, 0 ) );
 
     /* Verify that an xSemaphoreGive operation succeeds */
@@ -349,6 +361,7 @@ void test_xSemaphoreTake_blocking_suspended_assert( void )
     fakeAssertExpectFail();
 
     vTaskSuspendAll_Stub( td_task_vTaskSuspendAllStubNoCheck );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setSchedulerState( taskSCHEDULER_SUSPENDED );
 
@@ -417,8 +430,10 @@ void test_xSemaphoreTake_blocking_success( void )
     xSemaphoreHandleStatic = xSemaphore;
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xTaskCheckForTimeOut_Stub( &blocking_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
@@ -466,8 +481,10 @@ void test_xSemaphoreTake_blocking_success_last_chance( void )
     xSemaphoreHandleStatic = xSemaphore;
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xTaskCheckForTimeOut_Stub( &blocking_last_chance_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
@@ -490,6 +507,8 @@ void test_xSemaphoreTake_blocking_timeout( void )
 {
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
     TEST_ASSERT_EQUAL( TICKS_TO_WAIT, td_task_getYieldCount() );
@@ -509,6 +528,8 @@ void test_xSemaphoreTake_blocking_locked( void )
 {
     /* Create a new binary semaphore */
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Set private lock counters */
     vSetQueueRxLock( xSemaphore, queueLOCKED_UNMODIFIED );
@@ -558,12 +579,14 @@ void test_xSemaphoreTake_blocking_success_locked_no_pending( void )
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Export for callbacks */
     xSemaphoreHandleStatic = xSemaphore;
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
@@ -610,12 +633,14 @@ void test_xSemaphoreTake_blocking_timeout_locked_high_prio_pending( void )
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Export for callbacks */
     xSemaphoreHandleStatic = xSemaphore;
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -647,12 +672,14 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Export for callbacks */
     xSemaphoreHandleStatic = xSemaphore;
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 
@@ -667,4 +694,33 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
     TEST_ASSERT_EQUAL( NUM_CALLS_TO_INTERCEPT, td_task_getCount_vPortYieldWithinAPI() );
 
     vQueueDelete( xSemaphore );
+}
+
+/**
+ * @brief Test xSemaphoreGiveFromISR on a semaphore that is locked
+ * @coverage xQueueGiveFromISR
+ */
+void test_macro_xSemaphoreGiveFromISR_locked( void )
+{
+    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
+
+    /* Set private lock counters */
+    vSetQueueRxLock( xSemaphore, queueLOCKED_UNMODIFIED );
+    vSetQueueTxLock( xSemaphore, queueLOCKED_UNMODIFIED );
+
+    vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
+
+    /* Verify that the cRxLock counter has not changed */
+    TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED, cGetQueueRxLock( xSemaphore ) );
+
+    /* Verify that the cTxLock counter has only been incremented by one
+     * even after 2 calls to xQueueSendFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
+    TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueTxLock( xSemaphore ) );
+
+    vSemaphoreDelete( xSemaphore );
 }

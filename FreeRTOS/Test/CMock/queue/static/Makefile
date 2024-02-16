@@ -18,6 +18,7 @@ PROJECT_HEADER_DEPS +=  FreeRTOS.h
 # SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
 SUITE_UT_SRC        +=  queue_create_static_utest.c
 SUITE_UT_SRC        +=  queue_delete_static_utest.c
+SUITE_UT_SRC		+=  queue_get_static_buffers_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR
@@ -30,10 +31,10 @@ MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/task.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_assert.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_port.h
 
-# List any addiitonal flags needed by the preprocessor
+# List any additional flags needed by the preprocessor
 CPPFLAGS        +=  -DportUSING_MPU_WRAPPERS=0
 
-# List any addiitonal flags needed by the compiler
+# List any additional flags needed by the compiler
 CFLAGS          +=
 
 # Try not to edit beyond this line unless necessary.

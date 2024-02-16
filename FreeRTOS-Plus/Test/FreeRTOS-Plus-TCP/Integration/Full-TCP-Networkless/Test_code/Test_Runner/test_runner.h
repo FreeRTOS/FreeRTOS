@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,42 +19,43 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
- /**
-  * @file aws_test_runner.h
-  * @brief The function to be called to run all the tests.
-  */
+/**
+ * @file aws_test_runner.h
+ * @brief The function to be called to run all the tests.
+ */
 
 #ifndef _TEST_RUNNER_H_
 #define _TEST_RUNNER_H_
 
 #include "test_runner_config.h"
 
-  /*
-   * @brief If set to 1, will run DQP_FR tests only.
-   */
+/*
+ * @brief If set to 1, will run DQP_FR tests only.
+ */
 #ifdef testrunnerAFQP_ENABLED
-#define testrunnerTEST_FILTER    "AFQP"
+    #define testrunnerTEST_FILTER    "AFQP"
 #else
-#define testrunnerTEST_FILTER    0
+    #define testrunnerTEST_FILTER    0
 #endif
 
-   /**
-    * @brief Size of shared array.
-    *
-    */
+/**
+ * @brief Size of shared array.
+ *
+ */
 #define testrunnerBUFFER_SIZE    ( 4000 )
 
-    /**
-     * @brief Buffer used for all tests.
-     *
-     * Since tests are run in series, they can use the same memory array.
-     * This makes significant heap savings.
-     */
-extern char cBuffer[testrunnerBUFFER_SIZE];
+/**
+ * @brief Buffer used for all tests.
+ *
+ * Since tests are run in series, they can use the same memory array.
+ * This makes significant heap savings.
+ */
+extern char cBuffer[ testrunnerBUFFER_SIZE ];
 
 /**
  * @brief FreeRTOS heap measurement taken before tests are run.
@@ -70,7 +71,7 @@ extern unsigned int xHeapAfter;
 /**
  * @brief Runs all the tests.
  */
-void TEST_RUNNER_RunTests_task(void* pvParameters);
+void TEST_RUNNER_RunTests_task( void * pvParameters );
 
 
 

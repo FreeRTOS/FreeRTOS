@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -364,7 +364,7 @@ static void prvTest2_CheckTaskAndTimersInitialState( void )
 {
     uint8_t ucTimer;
 
-    /* Ensure all the timers are in their expected initial state.  This	depends
+    /* Ensure all the timers are in their expected initial state.  This depends
      * on the timer service task having a higher priority than this task.
      *
      * auto-reload timers 0 to ( configTIMER_QUEUE_LENGTH - 1 ) should now be active,
@@ -691,6 +691,8 @@ static void prvTest6_CheckAutoReloadResetBehaviour( void )
 
 static void prvTest7_CheckBacklogBehaviour( void )
 {
+    UBaseType_t uxOriginalPriority;
+
     /* Use the first auto-reload timer to test stopping a timer from a
      * backlogged callback. */
 
@@ -738,6 +740,55 @@ static void prvTest7_CheckBacklogBehaviour( void )
 
     /* Clear the reload count for the timer used in this test. */
     ucAutoReloadTimerCounters[ 0 ] = ( uint8_t ) 0;
+
+
+    /* Verify a one-shot timer is marked as inactive if the timer task processes
+     * the start or reset request after the expiration time has passed. */
+
+    /* The timer has not been started yet! */
+    if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
+    {
+        xTestStatus = pdFAIL;
+        configASSERT( xTestStatus );
+    }
+
+    /* Use the timer period specific to backlogged timers because it reduces
+     * the impact on other tests that might be running when xTaskCatchUpTicks()
+     * creates the backlog, below. */
+    xTimerChangePeriod( xOneShotTimer, tmrdemoBACKLOG_TIMER_PERIOD, tmrdemoDONT_BLOCK );
+
+    /* Temporarily give this task maximum priority so it can cause the timer
+     * task to delay its processing of the reset request below. */
+    uxOriginalPriority = uxTaskPriorityGet( NULL );
+    vTaskPrioritySet( NULL, ( configMAX_PRIORITIES - 1 ) );
+
+    /* Reset the timer.  The timer service won't process this request right
+     * away as noted above. */
+    xTimerReset( xOneShotTimer, tmrdemoDONT_BLOCK );
+
+    /* Cause the timer period to elapse without giving an opportunity for the
+     * timer service task to process the reset request. */
+    xTaskCatchUpTicks( tmrdemoBACKLOG_TIMER_PERIOD );
+
+    /* Return this task to its original priority.  The timer service task will
+     * process the reset request immediately.  The timer task must handle the reset
+     * request as if it were processed at the time of the request even though in
+     * this test the processing occurs after the intended expiration time. */
+    vTaskPrioritySet( NULL, uxOriginalPriority );
+
+    /* The timer should now be inactive. */
+    if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
+    {
+        xTestStatus = pdFAIL;
+        configASSERT( xTestStatus );
+    }
+
+    /* Restore the standard timer period, and leave the timer inactive. */
+    xTimerChangePeriod( xOneShotTimer, tmrdemoONE_SHOT_TIMER_PERIOD, tmrdemoDONT_BLOCK );
+    xTimerStop( xOneShotTimer, tmrdemoDONT_BLOCK );
+
+    /* Clear the counter for the timer used in this test. */
+    ucOneShotTimerCounter = ( uint8_t ) 0;
 
     if( xTestStatus == pdPASS )
     {
@@ -931,7 +982,7 @@ void vTimerPeriodicISRTests( void )
     else if( uxTick == ( ( 3 * xBasePeriod ) + xMargin ) )
     {
         /* The auto-reload timer and one-shot timer will be active.  At
-         * this time the auto-reload timer should have	expired again, but the one
+         * this time the auto-reload timer should have expired again, but the one
          * shot timer count should not have changed yet. */
         if( ucISRAutoReloadTimerCounter != 3 )
         {
@@ -1063,8 +1114,8 @@ void vTimerPeriodicISRTests( void )
     else if( uxTick == ( ( 12 * xBasePeriod ) - ( 2 * xMargin ) ) )
     {
         /* Only the one-shot timer should have been running and this time it
-         * should have	expired.  Check its callback count has been incremented.
-         * The auto-reload	timer is still not running so should still have the same
+         * should have expired.  Check its callback count has been incremented.
+         * The auto-reload timer is still not running so should still have the same
          * count value.  This time the one-shot timer is not reset so should not
          * restart from its expiry period again. */
         if( ucISRAutoReloadTimerCounter != 3 )

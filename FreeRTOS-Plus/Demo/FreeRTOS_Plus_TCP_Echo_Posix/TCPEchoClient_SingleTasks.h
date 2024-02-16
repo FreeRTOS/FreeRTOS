@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,9 +31,8 @@
  * Create the TCP echo client tasks.  This is the version where an echo request
  * is made from the same task that listens for the echo reply.
  */
-void vStartTCPEchoClientTasks_SingleTasks( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority );
+void vStartTCPEchoClientTasks_SingleTasks( size_t uxTaskStackSize,
+                                           UBaseType_t uxTaskPriority );
 BaseType_t xAreSingleTaskTCPEchoClientsStillRunning( void );
 
 #endif /* SINGLE_TASK_TCP_ECHO_CLIENTS_H */
-
-

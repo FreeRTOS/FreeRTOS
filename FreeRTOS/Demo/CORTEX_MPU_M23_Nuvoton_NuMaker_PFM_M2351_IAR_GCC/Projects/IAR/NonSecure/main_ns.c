@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* Device includes. */
@@ -36,6 +35,7 @@
 /* Demo includes. */
 #include "tz_demo.h"
 #include "mpu_demo.h"
+#include "reg_tests.h"
 
 /**
  * @brief Create all demo tasks.
@@ -55,10 +55,10 @@ int main( void )
 	DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 
 	/* Print banner. */
-	printf( "\n" );
-	printf( "+---------------------------------------------+\n" );
-	printf( "|           Nonsecure is running ...          |\n" );
-	printf( "+---------------------------------------------+\n" );
+	printf( "\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
+	printf( "|           Nonsecure is running ...          |\r\n" );
+	printf( "+---------------------------------------------+\r\n" );
 
 	/* Create tasks. */
 	prvCreateTasks();
@@ -84,6 +84,8 @@ static void prvCreateTasks( void )
 	/* Create tasks for the TZ Demo. */
 	vStartTZDemo();
 
+	/* Create tasks for register tests. */
+	vStartRegTests();
 }
 /*-----------------------------------------------------------*/
 

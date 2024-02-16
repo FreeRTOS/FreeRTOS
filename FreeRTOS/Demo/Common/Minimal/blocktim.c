@@ -595,3 +595,4 @@ BaseType_t xAreBlockTimeTestTasksStillRunning( void )
 
     return xReturn;
 }
+

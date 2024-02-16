@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -56,8 +56,10 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <signal.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/select.h>
+#include <time.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -65,6 +67,10 @@
 
 /* Local includes. */
 #include "console.h"
+
+#if ( projCOVERAGE_TEST != 1 )
+    #include <trcRecorder.h>
+#endif
 
 #define    BLINKY_DEMO    0
 #define    FULL_DEMO      1
@@ -79,7 +85,7 @@
 #ifdef USER_DEMO
     #define     mainSELECTED_APPLICATION    USER_DEMO
 #else /* Default Setting */
-    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
+    #define    mainSELECTED_APPLICATION     FULL_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
@@ -91,7 +97,7 @@ static void traceOnEnter( void );
 
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
- * http://www.freertos.org/a00016.html for more information.
+ * https://www.FreeRTOS.org/a00016.html for more information.
  */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
@@ -140,6 +146,8 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
     static BaseType_t xTraceRunning = pdTRUE;
 #endif
 
+static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -149,37 +157,36 @@ int main( void )
 
     /* Do not include trace code when performing a code coverage analysis. */
     #if ( projCOVERAGE_TEST != 1 )
-        {
-            /* Initialise the trace recorder.  Use of the trace recorder is optional.
-             * See http://www.FreeRTOS.org/trace for more information. */
-            vTraceEnable( TRC_START );
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+         * See http://www.FreeRTOS.org/trace for more information. */
+        vTraceEnable( TRC_START );
 
-            /* Start the trace recording - the recording is written to a file if
-             * configASSERT() is called. */
-            printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+        /* Start the trace recording - the recording is written to a file if
+         * configASSERT() is called. */
+        printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
 
-            #if ( TRACE_ON_ENTER == 1 )
-                printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-            #endif
-            uiTraceStart();
-        }
+        #if ( TRACE_ON_ENTER == 1 )
+            printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+        #endif
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 
     console_init();
     #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
-        {
-            console_print( "Starting echo blinky demo\n" );
-            main_blinky();
-        }
+    {
+        console_print( "Starting echo blinky demo\n" );
+        main_blinky();
+    }
     #elif ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            console_print( "Starting full demo\n" );
-            main_full();
-        }
+    {
+        console_print( "Starting full demo\n" );
+        main_full();
+    }
     #else
-        {
-            #error "The selected demo is not valid"
-        }
+    {
+        #error "The selected demo is not valid"
+    }
     #endif /* if ( mainSELECTED_APPLICATION ) */
 
     return 0;
@@ -221,11 +228,11 @@ void vApplicationIdleHook( void )
     traceOnEnter();
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            /* Call the idle task processing used by the full demo.  The simple
-             * blinky demo does not use the idle task hook. */
-            vFullDemoIdleFunction();
-        }
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+         * blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -254,9 +261,9 @@ void vApplicationTickHook( void )
     * functions can be used (those that end in FromISR()). */
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            vFullDemoTickHookFunction();
-        }
+    {
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainSELECTED_APPLICATION */
 }
 
@@ -280,7 +287,7 @@ void traceOnEnter()
             }
 
             /* clear the buffer */
-            char buffer[ 0 ];
+            char buffer[ 1 ];
             read( STDIN_FILENO, &buffer, 1 );
         }
     #endif /* if ( TRACE_ON_ENTER == 1 ) */
@@ -313,7 +320,7 @@ void vAssertCalled( const char * const pcFileName,
     volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
     /* Called if an assertion passed to configASSERT() fails.  See
-     * http://www.freertos.org/a00110.html#configASSERT for more information. */
+     * https://www.FreeRTOS.org/a00110.html#configASSERT for more information. */
 
     /* Parameters are not used. */
     ( void ) ulLine;
@@ -350,24 +357,24 @@ static void prvSaveTraceFile( void )
 {
     /* Tracing is not used when code coverage analysis is being performed. */
     #if ( projCOVERAGE_TEST != 1 )
+    {
+        FILE * pxOutputFile;
+
+        vTraceStop();
+
+        pxOutputFile = fopen( "Trace.dump", "wb" );
+
+        if( pxOutputFile != NULL )
         {
-            FILE * pxOutputFile;
-
-            vTraceStop();
-
-            pxOutputFile = fopen( "Trace.dump", "wb" );
-
-            if( pxOutputFile != NULL )
-            {
-                fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-                fclose( pxOutputFile );
-                printf( "\r\nTrace output saved to Trace.dump\r\n" );
-            }
-            else
-            {
-                printf( "\r\nFailed to create trace dump file\r\n" );
-            }
+            fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+            fclose( pxOutputFile );
+            printf( "\r\nTrace output saved to Trace.dump\r\n" );
         }
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+        }
+    }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 }
 /*-----------------------------------------------------------*/
@@ -436,4 +443,21 @@ void handle_sigint( int signal )
     }
 
     exit( 2 );
+}
+
+static uint32_t ulEntryTime = 0;
+
+void vTraceTimerReset( void )
+{
+    ulEntryTime = xTaskGetTickCount();
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return configTICK_RATE_HZ;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+    return( xTaskGetTickCount() - ulEntryTime );
 }

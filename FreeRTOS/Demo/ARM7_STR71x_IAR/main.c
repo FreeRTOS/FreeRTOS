@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,19 +19,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
-	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is
-	called.  The demo applications included in the FreeRTOS.org download switch
-	to supervisor mode prior to main being called.  If you are not using one of
-	these demo application projects then ensure Supervisor mode is used.
-*/
+ *  NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
+ *  The processor MUST be in supervisor mode when vTaskStartScheduler is
+ *  called.  The demo applications included in the FreeRTOS.org download switch
+ *  to supervisor mode prior to main being called.  If you are not using one of
+ *  these demo application projects then ensure Supervisor mode is used.
+ */
 
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
@@ -70,28 +69,28 @@
 #include "comtest2.h"
 
 /* Priorities for the demo application tasks. */
-#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainLED_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3 )
+#define mainQUEUE_POLL_PRIORITY      ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 4 )
+#define mainSEM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY         ( tskIDLE_PRIORITY + 2 )
+#define mainCOM_TEST_PRIORITY        ( tskIDLE_PRIORITY + 2 )
 
 /* Constants required by the 'Check' task. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
-#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
-#define mainCHECK_TASK_LED			( 4 )
+#define mainNO_ERROR_FLASH_PERIOD    ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
+#define mainERROR_FLASH_PERIOD       ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
+#define mainCHECK_TASK_LED           ( 4 )
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
-#define mainCOM_TEST_LED			( 6 ) /* The LED built onto the kickstart board. */
+#define mainCOM_TEST_BAUD_RATE       ( ( unsigned long ) 115200 )
+#define mainCOM_TEST_LED             ( 6 ) /* The LED built onto the kickstart board. */
 
 /*
  * The task that executes at the highest priority and calls
  * prvCheckOtherTasksAreStillRunning().  See the description at the top
  * of the file.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 /*
  * Configure the processor for use with the IAR STR71x demo board.  This
@@ -113,37 +112,36 @@ static long prvCheckOtherTasksAreStillRunning( void );
  */
 void main( void )
 {
-	/* Setup any hardware that has not already been configured by the low
-	level init routines. */
-	prvSetupHardware();
+    /* Setup any hardware that has not already been configured by the low
+     * level init routines. */
+    prvSetupHardware();
 
-	/* Initialise the LED outputs for use by the demo application tasks. */
-	vParTestInitialise();
+    /* Initialise the LED outputs for use by the demo application tasks. */
+    vParTestInitialise();
 
-	/* Start all the standard demo application tasks. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vStartDynamicPriorityTasks();
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+    /* Start all the standard demo application tasks. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vStartDynamicPriorityTasks();
+    vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 
-	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Start the check task - which is defined in this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler.
+    /* Start the scheduler.
+     *
+     * NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
+     * The processor MUST be in supervisor mode when vTaskStartScheduler is
+     * called.  The demo applications included in the FreeRTOS.org download switch
+     * to supervisor mode prior to main being called.  If you are not using one of
+     * these demo application projects then ensure Supervisor mode is used here. */
 
-	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is
-	called.  The demo applications included in the FreeRTOS.org download switch
-	to supervisor mode prior to main being called.  If you are not using one of
-	these demo application projects then ensure Supervisor mode is used here. */
+    vTaskStartScheduler();
 
-	vTaskStartScheduler();
-
-	/* We should never get here as control is now taken by the scheduler. */
-	return;
+    /* We should never get here as control is now taken by the scheduler. */
 }
 /*-----------------------------------------------------------*/
 
@@ -152,90 +150,88 @@ static void prvSetupHardware( void )
     /* Setup the PLL to generate a 48MHz clock from the 4MHz CLK. */
 
     /* Turn of the div by two. */
-	RCCU_Div2Config( DISABLE );
+    RCCU_Div2Config( DISABLE );
 
     /* 48MHz = ( 4MHz * 12 ) / 1 */
-	RCCU_PLL1Config( RCCU_PLL1_Mul_12, RCCU_Div_1 );
+    RCCU_PLL1Config( RCCU_PLL1_Mul_12, RCCU_Div_1 );
     RCCU_RCLKSourceConfig( RCCU_PLL1_Output );
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
-TickType_t xLastWakeTime;
+    TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+    TickType_t xLastWakeTime;
 
-	/* The parameters are not used in this task. */
-	( void ) pvParameters;
+    /* The parameters are not used in this task. */
+    ( void ) pvParameters;
 
-	/* Initialise xLastWakeTime to ensure the first call to vTaskDelayUntil()
-	functions correctly. */
-	xLastWakeTime = xTaskGetTickCount();
+    /* Initialise xLastWakeTime to ensure the first call to vTaskDelayUntil()
+     * functions correctly. */
+    xLastWakeTime = xTaskGetTickCount();
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  If an error is detected then the delay period
-	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
-	the on board LED flash rate will increase. */
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error.  If an error is detected then the delay period
+     * is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
+     * the on board LED flash rate will increase. */
 
-	for( ;; )
-	{
-		/* Delay until it is time to execute again.  The delay period is
-		shorter following an error so the LED flashes faster. */
-		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
-	
-		/* Check all the standard demo application tasks are executing without
-		error. */
-		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
-		{
-			/* An error has been detected in one of the tasks - flash faster. */
-			xDelayPeriod = mainERROR_FLASH_PERIOD;
-		}
-		
-		vParTestToggleLED( mainCHECK_TASK_LED );
-	}
+    for( ; ; )
+    {
+        /* Delay until it is time to execute again.  The delay period is
+         * shorter following an error so the LED flashes faster. */
+        vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
+
+        /* Check all the standard demo application tasks are executing without
+         * error. */
+        if( prvCheckOtherTasksAreStillRunning() != pdPASS )
+        {
+            /* An error has been detected in one of the tasks - flash faster. */
+            xDelayPeriod = mainERROR_FLASH_PERIOD;
+        }
+
+        vParTestToggleLED( mainCHECK_TASK_LED );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static long prvCheckOtherTasksAreStillRunning( void )
 {
-long lReturn = ( long ) pdPASS;
+    long lReturn = ( long ) pdPASS;
 
-	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none of them have detected
-	an error. */
+    /* Check all the demo tasks (other than the flash tasks) to ensure
+     * that they are all still running, and that none of them have detected
+     * an error. */
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreComTestTasksStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreComTestTasksStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		lReturn = ( long ) pdFAIL;
-	}
+    if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+    {
+        lReturn = ( long ) pdFAIL;
+    }
 
-	return lReturn;
+    return lReturn;
 }
 /*-----------------------------------------------------------*/
-
-

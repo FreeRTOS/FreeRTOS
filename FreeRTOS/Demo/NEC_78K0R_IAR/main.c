@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -72,22 +71,22 @@
  * Priority definitions for most of the tasks in the demo application.  Some
  * tasks just use the idle priority.
  */
-#define mainCHECK_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define mainSEMTEST_PRIORITY    ( tskIDLE_PRIORITY + 1 )
-#define mainBUTTON_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define mainGEN_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
+#define mainCHECK_TASK_PRIORITY       ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY       ( tskIDLE_PRIORITY + 1 )
+#define mainSEMTEST_PRIORITY          ( tskIDLE_PRIORITY + 1 )
+#define mainBUTTON_PRIORITY           ( configMAX_PRIORITIES - 1 )
+#define mainGEN_QUEUE_PRIORITY        ( tskIDLE_PRIORITY )
 
 /* The period between executions of the check task. */
-#define mainNO_ERROR_TOGGLE_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
-#define mainERROR_TOGGLE_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
+#define mainNO_ERROR_TOGGLE_PERIOD    ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
+#define mainERROR_TOGGLE_PERIOD       ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* The LED toggled by the check task. */
-#define mainLED_0   P7_bit.no6
+#define mainLED_0                     P7_bit.no6
 
 /* A value that is passed in as the parameter to the 'check' task.  This is done
-purely to check that the parameter passing mechanism is functioning correctly. */
-#define mainCHECK_PARAMETER_VALUE	( 0x5678 )
+ * purely to check that the parameter passing mechanism is functioning correctly. */
+#define mainCHECK_PARAMETER_VALUE     ( 0x5678 )
 
 /*-----------------------------------------------------------*/
 
@@ -95,45 +94,45 @@ purely to check that the parameter passing mechanism is functioning correctly. *
  * The function that defines the 'check' task as described at the top of this
  * file.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 
 /*
  * This function is called from the C startup routine to setup the processor -
  * in particular the clock source.
  */
-int __low_level_init(void);
+int __low_level_init( void );
 
 /*
  * Functions that define the RegTest tasks as described at the top of this file.
  */
-extern void vRegTest1( void *pvParameters );
-extern void vRegTest2( void *pvParameters );
+extern void vRegTest1( void * pvParameters );
+extern void vRegTest2( void * pvParameters );
 
 /*
  * Function that defines the button push task as described at the top of this
  * file.
  */
-extern void vButtonTask( void *pvParameters );
+extern void vButtonTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* If an error is discovered by one of the RegTest tasks then this flag is set
-to pdFAIL.  The 'check' task then inspects this flag to detect errors within
-the RegTest tasks. */
+ * to pdFAIL.  The 'check' task then inspects this flag to detect errors within
+ * the RegTest tasks. */
 static short sRegTestStatus = pdPASS;
 
 /* 78K0R Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
-enabled. */
-__root __far const unsigned char OptionByte[] @ 0x00C0 =
+ * enabled. */
+__root __far const unsigned char OptionByte[] @0x00C0 =
 {
-	WATCHDOG_DISABLED, LVI_ENABLED, RESERVED_FF, OCD_ENABLED
+    WATCHDOG_DISABLED, LVI_ENABLED, RESERVED_FF, OCD_ENABLED
 };
 
 /* Security byte definition */
-__root __far const unsigned char SecuIDCode[]  @ 0x00C4 =
+__root __far const unsigned char SecuIDCode[]  @0x00C4 =
 {
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
 
@@ -141,234 +140,241 @@ __root __far const unsigned char SecuIDCode[]  @ 0x00C4 =
 
 short main( void )
 {
-	/* Creates all the tasks, then starts the scheduler. */
+    /* Creates all the tasks, then starts the scheduler. */
 
-	/* First create the 'standard demo' tasks.  These are used to demonstrate
-	API functions being used and also to test the kernel port.  More information
-	is provided on the FreeRTOS.org WEB site. */
-	vStartDynamicPriorityTasks();
+    /* First create the 'standard demo' tasks.  These are used to demonstrate
+     * API functions being used and also to test the kernel port.  More information
+     * is provided on the FreeRTOS.org WEB site. */
+    vStartDynamicPriorityTasks();
 
-	/* Create the RegTest tasks as described at the top of this file. */
-	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
-	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
+    /* Create the RegTest tasks as described at the top of this file. */
+    xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
+    xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 
-	/* Create the button push task as described at the top of this file. */
-	xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );
+    /* Create the button push task as described at the top of this file. */
+    xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );
 
-	/* Create the 'check' task as described at the top of this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, ( void* )mainCHECK_PARAMETER_VALUE, mainCHECK_TASK_PRIORITY, NULL );
+    /* Create the 'check' task as described at the top of this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, ( void * ) mainCHECK_PARAMETER_VALUE, mainCHECK_TASK_PRIORITY, NULL );
 
-	#ifdef __IAR_78K0R_Kx3__
-	{
-		/* The Kx3 has enough RAM to create more of the standard demo tasks. */
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartSemaphoreTasks(mainSEMTEST_PRIORITY);
-		vStartGenericQueueTasks( mainGEN_QUEUE_PRIORITY );
-		vCreateBlockTimeTasks();
-	}
-	#endif
+    #ifdef __IAR_78K0R_Kx3__
+    {
+        /* The Kx3 has enough RAM to create more of the standard demo tasks. */
+        vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+        vStartSemaphoreTasks( mainSEMTEST_PRIORITY );
+        vStartGenericQueueTasks( mainGEN_QUEUE_PRIORITY );
+        vCreateBlockTimeTasks();
+    }
+    #endif
 
-	/* Finally start the scheduler running. */
-	vTaskStartScheduler();
+    /* Finally start the scheduler running. */
+    vTaskStartScheduler();
 
-	/* If this line is reached then vTaskStartScheduler() returned because there
-	was insufficient heap memory remaining for the idle task to be created. */
-	for( ;; );
+    /* If this line is reached then vTaskStartScheduler() returned because there
+    * was insufficient heap memory remaining for the idle task to be created. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-TickType_t xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
+    TickType_t xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 
-	/* Ensure the parameter was passed in as expected.  This is just a test of
-	the kernel port, the parameter is not actually used for anything.  The
-	pointer will only actually be either 3 or 2 bytes, depending on the memory
-	model. */
-	if( pvParameters != ( void * ) mainCHECK_PARAMETER_VALUE )
-	{
-		xToggleRate = mainERROR_TOGGLE_PERIOD;
-	}
+    /* Ensure the parameter was passed in as expected.  This is just a test of
+     * the kernel port, the parameter is not actually used for anything.  The
+     * pointer will only actually be either 3 or 2 bytes, depending on the memory
+     * model. */
+    if( pvParameters != ( void * ) mainCHECK_PARAMETER_VALUE )
+    {
+        xToggleRate = mainERROR_TOGGLE_PERIOD;
+    }
 
-	/* Initialise xLastWakeTime before it is used.  After this point it is not
-	written to directly. */
-	xLastWakeTime = xTaskGetTickCount();
+    /* Initialise xLastWakeTime before it is used.  After this point it is not
+     * written to directly. */
+    xLastWakeTime = xTaskGetTickCount();
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error. */
-	for( ;; )
-	{
-		/* Wait until it is time to check all the other tasks again. */
-		vTaskDelayUntil( &xLastWakeTime, xToggleRate );
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error. */
+    for( ; ; )
+    {
+        /* Wait until it is time to check all the other tasks again. */
+        vTaskDelayUntil( &xLastWakeTime, xToggleRate );
 
-		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			xToggleRate = mainERROR_TOGGLE_PERIOD;
-		}
+        if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+        {
+            xToggleRate = mainERROR_TOGGLE_PERIOD;
+        }
 
-		if( sRegTestStatus != pdPASS )
-		{
-			xToggleRate = mainERROR_TOGGLE_PERIOD;
-		}
+        if( sRegTestStatus != pdPASS )
+        {
+            xToggleRate = mainERROR_TOGGLE_PERIOD;
+        }
 
-		#ifdef __IAR_78K0R_Kx3__
-		{
-			/* Only the Kx3 runs all the tasks. */
-			if( xArePollingQueuesStillRunning() != pdTRUE)
-			{
-				xToggleRate = mainERROR_TOGGLE_PERIOD;
-			}
+        #ifdef __IAR_78K0R_Kx3__
+        {
+            /* Only the Kx3 runs all the tasks. */
+            if( xArePollingQueuesStillRunning() != pdTRUE )
+            {
+                xToggleRate = mainERROR_TOGGLE_PERIOD;
+            }
 
-			if( xAreSemaphoreTasksStillRunning() != pdTRUE)
-			{
-				xToggleRate = mainERROR_TOGGLE_PERIOD;
-			}
+            if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+            {
+                xToggleRate = mainERROR_TOGGLE_PERIOD;
+            }
 
-			if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-			{
-				xToggleRate = mainERROR_TOGGLE_PERIOD;
-			}
+            if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+            {
+                xToggleRate = mainERROR_TOGGLE_PERIOD;
+            }
 
-			if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-			{
-				xToggleRate = mainERROR_TOGGLE_PERIOD;
-			}
-		}
-		#endif
+            if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+            {
+                xToggleRate = mainERROR_TOGGLE_PERIOD;
+            }
+        }
+        #endif /* ifdef __IAR_78K0R_Kx3__ */
 
-		/* Toggle the LED.  The toggle rate will depend on whether or not an
-		error has been found in any tasks. */
-		mainLED_0 = !mainLED_0;
-	}
+        /* Toggle the LED.  The toggle rate will depend on whether or not an
+         * error has been found in any tasks. */
+        mainLED_0 = !mainLED_0;
+    }
 }
 /*-----------------------------------------------------------*/
 
-int __low_level_init(void)
+int __low_level_init( void )
 {
-unsigned char ucResetFlag = RESF;
+    unsigned char ucResetFlag = RESF;
 
-	portDISABLE_INTERRUPTS();
+    portDISABLE_INTERRUPTS();
 
-	/* Clock Configuration:
-	In this port, to use the internal high speed clock source of the microcontroller
-	define the configCLOCK_SOURCE as 1 in FreeRTOSConfig.h.  To use an external
-	clock define configCLOCK_SOURCE as 0. */
-	#if configCLOCK_SOURCE == 1
-	{
-		/* Set XT1 and XT2 in Input Port Mode
-		   Set X1  and X2  in Input Port Mode
-		   High speed oscillator frequency 2MHz <= fMX <= 10MHz */
-		CMC = 0x00;
+    /* Clock Configuration:
+     * In this port, to use the internal high speed clock source of the microcontroller
+     * define the configCLOCK_SOURCE as 1 in FreeRTOSConfig.h.  To use an external
+     * clock define configCLOCK_SOURCE as 0. */
+    #if configCLOCK_SOURCE == 1
+    {
+        /* Set XT1 and XT2 in Input Port Mode
+         * Set X1  and X2  in Input Port Mode
+         * High speed oscillator frequency 2MHz <= fMX <= 10MHz */
+        CMC = 0x00;
 
-		/* X1 external oszillation stopped. */
-		MSTOP = 1;
+        /* X1 external oszillation stopped. */
+        MSTOP = 1;
 
-		/* Enable internal high speed oszillation. */
-		HIOSTOP = 0;
-		MCM0 = 0;
+        /* Enable internal high speed oszillation. */
+        HIOSTOP = 0;
+        MCM0 = 0;
 
-		/* Stop internal subsystem clock. */
-		XTSTOP = 1;
+        /* Stop internal subsystem clock. */
+        XTSTOP = 1;
 
-		/* Set clock speed. */
-		CSS = 0;
-		CKC &= (unsigned char)~0x07;
-		CKC |= 0x00;
-	}
-	#else
-	{
-		/* XT1 and XT2 pin in input port mode
-		   X1  and X2  pin in crystal resonator mode
-		   High speed oszillation frequency 10MHz < fMX <= 20MHz */
-		CMC   = 0x41;
+        /* Set clock speed. */
+        CSS = 0;
+        CKC &= ( unsigned char ) ~0x07;
+        CKC |= 0x00;
+    }
+    #else /* if configCLOCK_SOURCE == 1 */
+    {
+        /* XT1 and XT2 pin in input port mode
+         * X1  and X2  pin in crystal resonator mode
+         * High speed oszillation frequency 10MHz < fMX <= 20MHz */
+        CMC = 0x41;
 
-		/* Set oscillation stabilization time. */
-		OSTS  = 0x07;
+        /* Set oscillation stabilization time. */
+        OSTS = 0x07;
 
-		/* Set speed mode: fMX > 10MHz for Flash memory high speed operation. */
-		OSMC  = 0x01;
+        /* Set speed mode: fMX > 10MHz for Flash memory high speed operation. */
+        OSMC = 0x01;
 
-		/* Start up X1 oscillator operation
-		   Internal high-speed oscillator operating. */
-		MSTOP = 0;
+        /* Start up X1 oscillator operation
+         * Internal high-speed oscillator operating. */
+        MSTOP = 0;
 
-		/* Check oscillation stabilization time status. */
-		while(OSTC < 0x07)
-		{
-			/* Wait until X1 clock stabilization time. */
-			portNOP();
-		}
+        /* Check oscillation stabilization time status. */
+        while( OSTC < 0x07 )
+        {
+            /* Wait until X1 clock stabilization time. */
+            portNOP();
+        }
 
-		/* Switch CPU clock to X1 oscillator. */
-		MCM0 = 1;
-		while(MCS != 1)
-		{
-			/* Wait until CPU and peripherals operate with fX1 clock. */
-			portNOP();
-		}
+        /* Switch CPU clock to X1 oscillator. */
+        MCM0 = 1;
 
-		/* Stop the internal high-speed oscillator operation. */
-		HIOSTOP = 1;
+        while( MCS != 1 )
+        {
+            /* Wait until CPU and peripherals operate with fX1 clock. */
+            portNOP();
+        }
 
-		/* Stop the XT1 oscillator operation. */
-		XTSTOP  = 1;
+        /* Stop the internal high-speed oscillator operation. */
+        HIOSTOP = 1;
 
-		/* Operating frequency f = fx
-		   Change clock generator setting, if necessary. */
-		CKC &= 0xF8;
+        /* Stop the XT1 oscillator operation. */
+        XTSTOP = 1;
 
-		/* From here onwards the X1 oscillator is supplied to the CPU. */
-	}
-	#endif
+        /* Operating frequency f = fx
+         * Change clock generator setting, if necessary. */
+        CKC &= 0xF8;
 
-	/* LED port initialization - set port register. */
-	P7  = 0x80;
+        /* From here onwards the X1 oscillator is supplied to the CPU. */
+    }
+    #endif /* if configCLOCK_SOURCE == 1 */
 
-	/* Set port mode register. */
-	PM7 = 0x3F;
+    /* LED port initialization - set port register. */
+    P7 = 0x80;
 
-	/* Switch pin initialization - enable pull-up resistor. */
-	PU12_bit.no0  = 1;
+    /* Set port mode register. */
+    PM7 = 0x3F;
 
-	/* INTP0 is used by the button on the target board. */
+    /* Switch pin initialization - enable pull-up resistor. */
+    PU12_bit.no0 = 1;
 
-	/* INTP0 disable. */
-	PMK0 = 1;
+    /* INTP0 is used by the button on the target board. */
 
-	/* INTP0 IF clear. */
-	PIF0 = 0;
-	EGN0_bit.no0  = 1;
+    /* INTP0 disable. */
+    PMK0 = 1;
 
-	/* INTP0 priority low. */
-	PPR10 = 0;
-	PPR00 = 1;
+    /* INTP0 IF clear. */
+    PIF0 = 0;
+    EGN0_bit.no0 = 1;
 
-	/* Enable ext. INTP0 interrupt */
-	PMK0  = 0;
+    /* INTP0 priority low. */
+    PPR10 = 0;
+    PPR00 = 1;
 
-	return pdTRUE;
+    /* Enable ext. INTP0 interrupt */
+    PMK0 = 0;
+
+    return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
 void vRegTestError( void )
 {
-	/* Called by the RegTest tasks if an error is found.  lRegTestStatus is
-	inspected by the check task. */
-	sRegTestStatus = pdFAIL;
+    /* Called by the RegTest tasks if an error is found.  lRegTestStatus is
+     * inspected by the check task. */
+    sRegTestStatus = pdFAIL;
 
-	/* Do not return from here as the reg test tasks clobber all registers so
-	function calls may not function correctly. */
-	for( ;; );
+    /* Do not return from here as the reg test tasks clobber all registers so
+     * function calls may not function correctly. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * pcTaskName )
 {
-	( void ) xTask;
-	( void ) pcTaskName;
+    ( void ) xTask;
+    ( void ) pcTaskName;
 
-	/* This will get called if an overflow is detected in the stack of a task.
-	Inspect pxCurrentTCB to see which was the offending task. */
-	for( ;; );
+    /* This will get called if an overflow is detected in the stack of a task.
+     * Inspect pxCurrentTCB to see which was the offending task. */
+    for( ; ; )
+    {
+    }
 }
-

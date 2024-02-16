@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,55 +24,53 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #include "proof/queuecontracts.h"
 
 BaseType_t xQueuePeek( QueueHandle_t xQueue,
                        void * const pvBuffer,
                        TickType_t xTicksToWait )
-
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == false &*&
- *  [1/2]queuesuspend(xQueue) &*&
- *  chars(pvBuffer, M, ?x);@*/
-
+    [1/2]queuesuspend(xQueue) &*&
+    chars(pvBuffer, M, ?x);@*/
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
- *  [1/2]queuesuspend(xQueue) &*&
- *  (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x));@*/
+    [1/2]queuesuspend(xQueue) &*&
+    (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x));@*/
 {
     BaseType_t xEntryTimeSet = pdFALSE;
     TimeOut_t xTimeOut;
     int8_t * pcOriginalReadPosition;
+#ifdef VERIFAST /*< const pointer declaration */
+    Queue_t * pxQueue = xQueue;
+#else
+    Queue_t * const pxQueue = xQueue;
 
-    #ifdef VERIFAST /*< const pointer declaration */
-        Queue_t * pxQueue = xQueue;
-    #else
-        Queue_t * const pxQueue = xQueue;
+    /* Check the pointer is not NULL. */
+    configASSERT( ( pxQueue ) );
 
-        /* Check the pointer is not NULL. */
-        configASSERT( ( pxQueue ) );
+    /* The buffer into which data is received can only be NULL if the data size
+     * is zero (so no data is copied into the buffer. */
+    configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
 
-        /* The buffer into which data is received can only be NULL if the data size
-         * is zero (so no data is copied into the buffer. */
-        configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
-
-        /* Cannot block if the scheduler is suspended. */
-        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-            {
-                configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-            }
-        #endif
-    #endif /* ifdef VERIFAST */
+    /* Cannot block if the scheduler is suspended. */
+    #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+    {
+        configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+    }
+    #endif
+#endif
 
     /*lint -save -e904  This function relaxes the coding standard somewhat to
      * allow return statements within the function itself.  This is done in the
      * interest of execution time efficiency. */
     for( ; ; )
-
     /*@invariant [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-     *  [1/2]queuesuspend(xQueue) &*&
-     *  chars(pvBuffer, M, x) &*&
-     *  u_integer(&xTicksToWait, _) &*&
-     *  xTIME_OUT(&xTimeOut);@*/
+        [1/2]queuesuspend(xQueue) &*&
+        chars(pvBuffer, M, x) &*&
+        u_integer(&xTicksToWait, _) &*&
+        xTIME_OUT(&xTimeOut);@*/
     {
         taskENTER_CRITICAL();
         /*@assert queue(pxQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
@@ -148,7 +146,7 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
         taskEXIT_CRITICAL();
 
         /* Interrupts and other tasks can send to and receive from the queue
-         * now the critical section has been exited. */
+         * now that the critical section has been exited. */
 
         /*@close exists<QueueHandle_t>(pxQueue);@*/
         vTaskSuspendAll();
@@ -182,12 +180,12 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
                 /* There is data in the queue now, so don't enter the blocked
                  * state, instead return to try and obtain the data. */
                 prvUnlockQueue( pxQueue );
-                #ifdef VERIFAST /*< void cast of unused return value */
-                    /*@close exists<QueueHandle_t>(pxQueue);@*/
-                    xTaskResumeAll();
-                #else
-                    ( void ) xTaskResumeAll();
-                #endif
+#ifdef VERIFAST /*< void cast of unused return value */
+                /*@close exists<QueueHandle_t>(pxQueue);@*/
+                xTaskResumeAll();
+#else
+                ( void ) xTaskResumeAll();
+#endif
             }
         }
         else
@@ -195,12 +193,12 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
             /* The timeout has expired.  If there is still no data in the queue
              * exit, otherwise go back and try to read the data again. */
             prvUnlockQueue( pxQueue );
-            #ifdef VERIFAST /*< void cast of unused return value */
-                /*@close exists<QueueHandle_t>(pxQueue);@*/
-                xTaskResumeAll();
-            #else
-                ( void ) xTaskResumeAll();
-            #endif
+#ifdef VERIFAST /*< void cast of unused return value */
+            /*@close exists<QueueHandle_t>(pxQueue);@*/
+            xTaskResumeAll();
+#else
+            ( void ) xTaskResumeAll();
+#endif
 
             if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
             {
@@ -214,3 +212,5 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
         }
     } /*lint -restore */
 }
+
+/* *INDENT-ON* */

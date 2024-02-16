@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{292e0a6b-b7fa-4af5-bd35-d3ee63ced2ff}</ProjectGuid>
+    <RootNamespace>FreeRTOSPlusRelianceEdgewithCLI</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\Source\Reliance-Edge\os\freertos\include;..\..\Source\Reliance-Edge\projects\freertos\win32-demo;..\..\Source\Reliance-Edge\core\include;..\..\Source\Reliance-Edge\include;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-CLI;.;.\ConfigurationFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\blockio.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\buffer.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\core.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\dir.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\format.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\imap.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\imapextern.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\imapinline.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\inode.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\inodedata.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\volume.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\fse\fse.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osassert.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osbdev.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osclock.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osmutex.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osoutput.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\ostask.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\ostimestamp.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\posix\path.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\posix\posix.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\posix\fsstress.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\atoi.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\math.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\printf.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\rand.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\toolcmn\getopt.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\toolcmn\toolcmn.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\bitmap.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\crc.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\endian.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\memory.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\namelen.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\sign.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\string.c" />
+    <ClCompile Include="ConfigurationFiles\redconf.c" />
+    <ClCompile Include="File-Related-CLI-commands.c" />
+    <ClCompile Include="File-system-demo.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="Run-time-stats-utils.c" />
+    <ClCompile Include="Sample-CLI-commands.c" />
+    <ClCompile Include="UDPCommandServer.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.h" />
+    <ClInclude Include="ConfigurationFiles\redconf.h" />
+    <ClInclude Include="ConfigurationFiles\redtypes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">
+      <Project>{c90e6cc5-818b-4c97-8876-0986d989387c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">
+      <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj">
+      <Project>{be362ac0-b10b-4276-b84e-6304652ba228}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,15 +19,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
  * Utility functions required to gather run time statistics.  See:
- * http://www.freertos.org/rtos-run-time-stats.html
+ * https://www.FreeRTOS.org/rtos-run-time-stats.html
  *
  * Note that this is a simulated port, where simulated time is a lot slower than
  * real time, therefore the run time counter values have no real meaningful
@@ -72,10 +71,10 @@ LARGE_INTEGER liPerformanceCounterFrequency, liInitialRunTimeValue;
 }
 /*-----------------------------------------------------------*/
 
-unsigned long ulGetRunTimeCounterValue( void )
+configRUN_TIME_COUNTER_TYPE ulGetRunTimeCounterValue( void )
 {
 LARGE_INTEGER liCurrentCount;
-unsigned long ulReturn;
+configRUN_TIME_COUNTER_TYPE ulReturn;
 
 	/* What is the performance counter value now? */
 	QueryPerformanceCounter( &liCurrentCount );
@@ -91,7 +90,7 @@ unsigned long ulReturn;
 	}
 	else
 	{
-		ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
+		ulReturn = ( configRUN_TIME_COUNTER_TYPE ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
 	}
 
 	return ulReturn;

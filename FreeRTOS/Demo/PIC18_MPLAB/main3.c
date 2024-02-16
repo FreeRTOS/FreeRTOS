@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -59,16 +58,16 @@
  * flashing the one remaining LED (mainRESET_LED) when it starts.  After
  * this initial flash mainRESET_LED should remain off.
  *
- * http://www.FreeRTOS.org contains important information on the use of the
+ * https://www.FreeRTOS.org contains important information on the use of the
  * PIC18F port.
  */
 
 /*
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
-*/
+ * Changes from V2.0.0
+ *
+ + Delay periods are now specified using variables and constants of
+ +    TickType_t rather than unsigned long.
+ */
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -81,105 +80,104 @@ Changes from V2.0.0
 #include "integer.h"
 
 /* Priority definitions for the LED tasks.  Other tasks just use the idle
-priority. */
-#define mainCOMM_TEST_PRIORITY			( tskIDLE_PRIORITY + ( unsigned portBASE_TYPE ) 2 )
-#define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + ( unsigned portBASE_TYPE ) 3 )
+ * priority. */
+#define mainCOMM_TEST_PRIORITY       ( tskIDLE_PRIORITY + ( unsigned portBASE_TYPE ) 2 )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + ( unsigned portBASE_TYPE ) 3 )
 
 /* The period between executions of the check task before and after an error
-has been discovered.  If an error has been discovered the check task runs
-more frequently - increasing the LED flash rate. */
-#define mainNO_ERROR_CHECK_PERIOD		( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
-#define mainERROR_CHECK_PERIOD			( ( TickType_t ) 100 / portTICK_PERIOD_MS )
+ * has been discovered.  If an error has been discovered the check task runs
+ * more frequently - increasing the LED flash rate. */
+#define mainNO_ERROR_CHECK_PERIOD    ( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_PERIOD       ( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* The period for which mainRESET_LED remain on every reset. */
-#define mainRESET_LED_PERIOD			( ( TickType_t ) 500 / portTICK_PERIOD_MS )
+#define mainRESET_LED_PERIOD         ( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* The LED that is toggled whenever a character is transmitted.
-mainCOMM_TX_RX_LED + 1 will be toggled every time a character is received. */
-#define mainCOMM_TX_RX_LED				( ( unsigned portBASE_TYPE ) 2 )
+ * mainCOMM_TX_RX_LED + 1 will be toggled every time a character is received. */
+#define mainCOMM_TX_RX_LED           ( ( unsigned portBASE_TYPE ) 2 )
 
 /* The LED that is flashed by the check task at a rate that indicates the
-error status. */
-#define mainCHECK_TASK_LED				( ( unsigned portBASE_TYPE ) 1 )
+ * error status. */
+#define mainCHECK_TASK_LED           ( ( unsigned portBASE_TYPE ) 1 )
 
 /* The LED that is flashed once upon every reset. */
-#define mainRESET_LED					( ( unsigned portBASE_TYPE ) 0 )
+#define mainRESET_LED                ( ( unsigned portBASE_TYPE ) 0 )
 
 /* Constants required for the communications. */
-#define mainCOMMS_QUEUE_LENGTH			( ( unsigned portBASE_TYPE ) 5 )
-#define mainBAUD_RATE					( ( unsigned long ) 57600 )
+#define mainCOMMS_QUEUE_LENGTH       ( ( unsigned portBASE_TYPE ) 5 )
+#define mainBAUD_RATE                ( ( unsigned long ) 57600 )
 /*-----------------------------------------------------------*/
 
 /*
  * Task function which periodically checks the other tasks for errors.  Flashes
  * an LED at a rate that indicates whether an error has ever been detected.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* Creates the tasks, then starts the scheduler. */
 void main( void )
 {
-	/* Initialise the required hardware. */
-	vParTestInitialise();
+    /* Initialise the required hardware. */
+    vParTestInitialise();
 
-	/* Initialise the block memory allocator. */
-	vPortInitialiseBlocks();
+    /* Initialise the block memory allocator. */
+    vPortInitialiseBlocks();
 
-	/* Start the standard comtest tasks as defined in demo/common/minimal. */
-	vAltStartComTestTasks( mainCOMM_TEST_PRIORITY, mainBAUD_RATE, mainCOMM_TX_RX_LED );
+    /* Start the standard comtest tasks as defined in demo/common/minimal. */
+    vAltStartComTestTasks( mainCOMM_TEST_PRIORITY, mainBAUD_RATE, mainCOMM_TX_RX_LED );
 
-	/* Start the standard 32bit calculation task as defined in
-	demo/common/minimal. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    /* Start the standard 32bit calculation task as defined in
+     * demo/common/minimal. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
 
-	/* Start the check task defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Start the check task defined in this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler.  This will never return. */
-	vTaskStartScheduler();
+    /* Start the scheduler.  This will never return. */
+    vTaskStartScheduler();
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
-volatile unsigned long ulDummy = 3UL;
+    TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
+    volatile unsigned long ulDummy = 3UL;
 
-	/* Toggle the LED so we can see when a reset occurs. */
-	vParTestSetLED( mainRESET_LED, pdTRUE );
-	vTaskDelay( mainRESET_LED_PERIOD );
-	vParTestSetLED( mainRESET_LED, pdFALSE );
+    /* Toggle the LED so we can see when a reset occurs. */
+    vParTestSetLED( mainRESET_LED, pdTRUE );
+    vTaskDelay( mainRESET_LED_PERIOD );
+    vParTestSetLED( mainRESET_LED, pdFALSE );
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error. */
-	for( ;; )
-	{
-		/* Wait until it is time to check the other tasks. */
-		vTaskDelay( xDelayTime );
+    /* Cycle for ever, delaying then checking all the other tasks are still
+     * operating without error. */
+    for( ; ; )
+    {
+        /* Wait until it is time to check the other tasks. */
+        vTaskDelay( xDelayTime );
 
-		/* Perform an integer calculation - just to ensure the registers
-		get used.  The result is not important. */
-		ulDummy *= 3UL;
+        /* Perform an integer calculation - just to ensure the registers
+         * get used.  The result is not important. */
+        ulDummy *= 3UL;
 
-		/* Check all the other tasks are running, and running without ever
-		having an error.  The delay period is lowered if an error is reported,
-		causing the LED to flash at a higher rate. */
-		if( xAreIntegerMathsTaskStillRunning() == pdFALSE )
-		{
-			xDelayTime = mainERROR_CHECK_PERIOD;
-		}
+        /* Check all the other tasks are running, and running without ever
+         * having an error.  The delay period is lowered if an error is reported,
+         * causing the LED to flash at a higher rate. */
+        if( xAreIntegerMathsTaskStillRunning() == pdFALSE )
+        {
+            xDelayTime = mainERROR_CHECK_PERIOD;
+        }
 
-		if( xAreComTestTasksStillRunning() == pdFALSE )
-		{
-			xDelayTime = mainERROR_CHECK_PERIOD;
-		}
+        if( xAreComTestTasksStillRunning() == pdFALSE )
+        {
+            xDelayTime = mainERROR_CHECK_PERIOD;
+        }
 
-		/* Flash the LED for visual feedback.  The rate of the flash will
-		indicate the health of the system. */
-		vParTestToggleLED( mainCHECK_TASK_LED );
-	}
+        /* Flash the LED for visual feedback.  The rate of the flash will
+         * indicate the health of the system. */
+        vParTestToggleLED( mainCHECK_TASK_LED );
+    }
 }
 /*-----------------------------------------------------------*/
-

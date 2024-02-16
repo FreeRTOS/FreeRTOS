@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -207,7 +207,7 @@
 /**
  * @brief The length of #democonfigTHING_NAME.
  */
-#define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
+#define THING_NAME_LENGTH     ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
 
 /**
  * @brief The length of #democonfigSHADOW_NAME.
@@ -216,8 +216,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -348,7 +348,7 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo );
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
  */
-static void prvShadowDemoTask( void * pvParameters );
+void prvShadowDemoTask( void * pvParameters );
 
 /**
  * @brief Process payload from `/delete/rejected` topic.
@@ -390,7 +390,7 @@ static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext )
         /* Event callback will set #xDeleteResponseReceived when receiving an
          * incoming publish on either `/delete/accepted` or `/delete/rejected`
          * Shadow topics. */
-        xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext, MQTT_PROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext );
     }
 
     if( ( xMQTTStatus != MQTTSuccess ) || ( xDeleteResponseReceived != pdTRUE ) )
@@ -768,25 +768,6 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 }
 /*-----------------------------------------------------------*/
 
-/*
- * @brief Create the task that demonstrates the Device Shadow library API via a
- * MQTT mutually authenticated network connection with the AWS IoT broker.
- */
-void vStartShadowDemo( void )
-{
-    /* This example uses a single application task, which shows that how to
-     * use Device Shadow library to generate and validate AWS IoT Device Shadow
-     * MQTT topics, and use the coreMQTT library to communicate with the AWS IoT
-     * Device Shadow service. */
-    xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
-                 "DemoTask",               /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
-}
-/*-----------------------------------------------------------*/
-
 /**
  * @brief Entry point of shadow demo.
  *
@@ -830,6 +811,18 @@ void prvShadowDemoTask( void * pvParameters )
      * SHADOW_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /****************************** Connect. ******************************/
 
         xDemoStatus = xEstablishMqttSession( &xMqttContext,
@@ -1121,6 +1114,8 @@ void prvShadowDemoTask( void * pvParameters )
     {
         LogError( ( "Shadow Demo failed." ) );
     }
+
+    LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
 
     /* Delete this task. */
     LogInfo( ( "Deleting Shadow Demo task." ) );

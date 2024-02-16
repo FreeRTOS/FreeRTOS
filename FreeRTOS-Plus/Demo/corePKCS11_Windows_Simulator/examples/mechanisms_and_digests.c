@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -78,7 +78,7 @@ void vPKCS11MechanismsAndDigestDemo( void )
     CK_MECHANISM_TYPE xMechanismType = 0;
 
     /* This variable is not directly used, but is instantiated for demonstration
-     * purposes. 
+     * purposes.
      */
     ( void ) xMechanismType;
 
@@ -252,9 +252,9 @@ void vPKCS11MechanismsAndDigestDemo( void )
     {
         configPRINTF( ( "%x", xDigestResult[ ulIndex ] ) );
     }
+
     configPRINTF( ( "\r\n" ) );
 
     configPRINTF( ( "Finished PKCS #11 Mechanisms and Digest Demo.\r\n" ) );
     vEnd( hSession, pxSlotId );
 }
-

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -179,8 +179,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * can be set to following -
  * Enable data over MQTT - ( OTA_DATA_OVER_MQTT )
  * Enable data over HTTP - ( OTA_DATA_OVER_HTTP)
- * 
- * Note - Please check the OTA over MQTT demo which has the MQTT data transfer functionality and 
+ *
+ * Note - Please check the OTA over MQTT demo which has the MQTT data transfer functionality and
  * and this configuration is set to OTA_DATA_OVER_MQTT.
  */
 #define configENABLED_DATA_PROTOCOLS      ( OTA_DATA_OVER_HTTP )

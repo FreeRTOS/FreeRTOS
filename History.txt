@@ -1,5 +1,40 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS 202112.00 and FreeRTOS 202212.00 released December 2022
+
+	+ Released LTS 2.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,
+	  coreHTTP, coreJSON, AWS IoT Over-the-air-Updates (OTA), AWS IoT Device Shadow, AWS IoT Jobs,
+	  AWS IoT Device Defender, Backoff Algorithm, AWS IoT Fleet Provisioning, coreSNTP,
+	  SigV4, and FreeRTOS Cellular Interface libraries
+	    - FreeRTOS Kernel V10.5.1
+		- FreeRTOS+TCP V3.1.0
+		- coreMQTT v2.1.1
+		- corePKCS11 v3.5.0
+		- coreJSON v3.2.0
+		- AWS IoT Over-the-air (OTA) Update v3.4.0
+		- AWS IoT Device Shadow v1.3.0
+		- AWS IoT Jobs v1.3.0
+		- AWS IoT Device Defender v1.3.0
+		- Backoff Algorithm v1.3.0
+		- AWS IoT Fleet Provisioning v1.1.0
+		- coreSNTP v1.2.0
+		- SigV4 v1.2.0
+		- FreeRTOS Cellular Interface v1.3.0
+	+ Updated coreMQTT Agent library to v1.2.0 to be compatible with coreMQTT v2.X.X.
+	+ Demo Updates
+	    - Added Visual Studio static library projects for FreeRTOS Kernel, FreeRTOS+TCP,
+		  Logging, MbedTLS, coreHTTP, and corePKCS11 in FreeRTOS-Plus/VisualStudio_StaticProjects.
+		- All demos dependent on coreMQTT have been updated to be compatible with coreMQTT v2.X.X.
+		- All Windows Simulator projects have been updated to use new static Visual Studio projects.
+	+ Updated MbedTLS version to 3.2.1.
+
+Changes between FreeRTOS 202111.00 and FreeRTOS 202112.00 released December 2021
+
+	+ Added Fleet Provisioning library and demo showcasing the use of Fleet Provisioning library.
+	+ Added Sigv4 library and updated HTTP S3 download demo to showcase its use.
+	+ Added CBMC proofs for all public and private functions in the OTA Update library
+	+ Updated mbed TLS version used by corePKCS11 to v2.28.0
+
 Changes between FreeRTOS 202107.00 and FreeRTOS 202111.00 released November 2021
 
 	+ Add Cellular library and demo showcasing use of Cellular library.
@@ -25,7 +60,7 @@ Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 	+ Demo Updates
 		- Add basic publish-subscribe demo for coreMQTT Agent library.
 			- For examples of using coreMQTT Agent library to communicate with
-			  multiple AWS IoT services from different tasks using a shared 
+			  multiple AWS IoT services from different tasks using a shared
 			  MQTT connection, refer to https://github.com/FreeRTOS/coreMQTT-Agent-Demos
 		- OTA demo over MQTT
 		- OTA demo over HTTP
@@ -64,8 +99,8 @@ Changes between FreeRTOS V10.4.1 and FreeRTOS 202011.00 released November 10 202
 Changes between FreeRTOS V10.4.0 and FreeRTOS V10.4.1 released September 17 2020
 	See https://www.FreeRTOS.org/FreeRTOS-V10.4.x.html
 
-	+ Fixed an incorrectly named parameter that prevented the 
-	  ulTaskNotifyTakeIndexed macro compiling, and the name space clash in the 
+	+ Fixed an incorrectly named parameter that prevented the
+	  ulTaskNotifyTakeIndexed macro compiling, and the name space clash in the
 	  test code that prevented this error causing test failures.
 
 
@@ -106,7 +141,7 @@ Changes between FreeRTOS V10.3.1 and FreeRTOS V10.4.0 released September 10 2020
 	+ Added new POSIX port layer that allows FreeRTOS to run on Linux hosts in
 	  the same way the Windows port layer enables FreeRTOS to run on Windows
 	  hosts.
-	+ Many other minor optimisations and enhancements. For full details  
+	+ Many other minor optimisations and enhancements. For full details
 	  see https://github.com/FreeRTOS/FreeRTOS-Kernel/commits/master
 
 

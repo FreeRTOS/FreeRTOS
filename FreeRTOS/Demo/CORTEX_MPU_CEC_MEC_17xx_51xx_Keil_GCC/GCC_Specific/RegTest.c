@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* FreeRTOS includes. */
@@ -627,6 +626,7 @@ void HardFault_Handler( void )
 		" ldr r1, [r0, #24]									\n"
 		" ldr r2, handler_address_const						\n"
 		" bx r2												\n"
+		" .align 4											\n"
 		" handler_address_const: .word hard_fault_handler	\n"
 	);
 }
@@ -644,6 +644,7 @@ void MemManage_Handler( void )
 		" ldr r1, [r0, #24]									\n"
 		" ldr r2, handler2_address_const					\n"
 		" bx r2												\n"
+		" .align 4											\n"
 		" handler2_address_const: .word hard_fault_handler	\n"
 	);
 }/*-----------------------------------------------------------*/

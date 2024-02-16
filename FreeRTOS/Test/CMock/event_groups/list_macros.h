@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -65,7 +65,7 @@ TickType_t listGET_ITEM_VALUE_OF_HEAD_ENTRY( List_t * list );
 TCB_t * listGET_LIST_ITEM_OWNER( ListItem_t * listItem );
 
 #undef listGET_END_MARKER
-ListItem_t * listGET_END_MARKER( ListItem_t * pxList );
+ListItem_t * listGET_END_MARKER( const List_t * pxList );
 
 #undef listGET_NEXT
 ListItem_t * listGET_NEXT( ListItem_t * pxList );

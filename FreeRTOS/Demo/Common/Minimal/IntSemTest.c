@@ -535,3 +535,4 @@ BaseType_t xAreInterruptSemaphoreTasksStillRunning( void )
 
     return xReturn;
 }
+

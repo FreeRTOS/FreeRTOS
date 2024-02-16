@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -30,7 +30,7 @@
 /*
  * @brief this macro defines the stack size for the PKCS #11 demo task.
  */
-#define configPKCS11_DEMO_STACK_SIZE                200
+#define configPKCS11_DEMO_STACK_SIZE                256
 
 /*
  * @brief set this macro to "1" in order to run the PKCS #11 management and
@@ -42,19 +42,19 @@
  * @brief set this macro to "1" in order to run the PKCS #11 mechanisms and
  * digest demo.
  */
-#define configPKCS11_MECHANISMS_AND_DIGESTS_DEMO    0
+#define configPKCS11_MECHANISMS_AND_DIGESTS_DEMO    1
 
 /*
  * @brief set this macro to "1" in order to run the PKCS #11 object demo.
  */
-#define configPKCS11_OBJECT_DEMO                    0
+#define configPKCS11_OBJECT_DEMO                    1
 
 /*
- * @brief set this macro to "1" in order to run the PKCS #11 sign and verify 
+ * @brief set this macro to "1" in order to run the PKCS #11 sign and verify
  * demo.
  *
  * @warning This demo relies on the objects created in the object demo.
  */
-#define configPKCS11_SIGN_AND_VERIFY_DEMO           0
+#define configPKCS11_SIGN_AND_VERIFY_DEMO           1
 
-#endif
+#endif /* ifndef _PKCS11_DEMO_CONFIG_ */

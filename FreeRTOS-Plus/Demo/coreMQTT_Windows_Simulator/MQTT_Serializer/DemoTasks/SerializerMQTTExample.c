@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -420,7 +420,19 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
 
         /* Attempt to connect to the MQTT broker. If connection fails, retry after
          * a timeout. Timeout value will be exponentially increased until the maximum
@@ -494,6 +506,7 @@ static void prvMQTTDemoTask( void * pvParameters )
          * bombard the public test mosquitto broker. */
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.", xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully." ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );
     }
@@ -591,7 +604,18 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
         if( ulBrokerIPAddress != 0 )
         {
             xBrokerAddress.sin_port = FreeRTOS_htons( democonfigMQTT_BROKER_PORT );
-            xBrokerAddress.sin_addr = ulBrokerIPAddress;
+
+            #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            {
+                xBrokerAddress.sin_address.ulIP_IPv4 = ulBrokerIPAddress;
+            }
+            #else
+            {
+                xBrokerAddress.sin_addr = ulBrokerIPAddress;
+            }
+            #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+            xBrokerAddress.sin_family = FREERTOS_AF_INET;
 
             if( FreeRTOS_connect( xMQTTSocket, &xBrokerAddress, sizeof( xBrokerAddress ) ) == 0 )
             {

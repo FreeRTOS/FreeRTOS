@@ -21,9 +21,8 @@
 
     "INC ": [
         "$(FREERTOS)/Source/include",
-        "$(FREERTOS)/Source/portable/MSVC-MingW",
-        "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include",
-        "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/MSVC",
+        "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/include",
+        "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/portable/Compiler/MSVC",
         "$(FREERTOS)/../FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/WinPCap",
         "$(FREERTOS)/Demo/Common/include",
         "$(FREERTOS)/Test/CBMC/include",

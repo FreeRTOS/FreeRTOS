@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -48,6 +48,33 @@
  * MQTT connection.
  */
 
+#include "logging_levels.h"
+
+/* Logging configuration for the Demo. */
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME    "MqttMutualAuth"
+#endif
+
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif
+
+/* Prototype for the function used to print to console on Windows simulator
+ * of FreeRTOS.
+ * The function prints to the console before the network is connected;
+ * then a UDP port after the network has connected. */
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+
+/* Map the SdkLog macro to the logging function to enable logging
+ * on Windows simulator. */
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
+
+#include "logging_stack.h"
+
+
 /* Standard includes. */
 #include <string.h>
 #include <stdio.h>
@@ -66,7 +93,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /*-----------------------------------------------------------*/
 
@@ -184,8 +211,9 @@
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
+ * Refer to FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/readme.txt for more details.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 500U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 2000U )
 
 /**
  * @brief Keep alive time reported to the broker while establishing
@@ -213,20 +241,20 @@
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 200U )
 
 /**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
- *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
- * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+ * @brief The length of the outgoing publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for outgoing publishes.
+ * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT
+ * Update in ulMaxPublishCount needs updating mqttexampleOUTGOING_PUBLISH_RECORD_LEN.
  */
-#define AWS_IOT_MQTT_ALPN                                 "\x0ex-amzn-mqtt-ca"
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 15U )
 
 /**
- * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
- * required by AWS IoT for password-based authentication using TCP port 443.
+ * @brief The length of the incoming publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for incoming publishes.
+ * Number of publishes = ulMaxPublishCount * mqttexampleTOPIC_COUNT
+ * Update in ulMaxPublishCount needs updating mqttexampleINCOMING_PUBLISH_RECORD_LEN.
  */
-#define AWS_IOT_CUSTOM_AUTH_ALPN                          "\x04mqtt"
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 15U )
 
 /**
  * Provide default values for undefined configuration settings.
@@ -253,22 +281,6 @@
 #define AWS_IOT_METRICS_STRING                                 \
     "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
     "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
-
-/**
- * @brief The length of the MQTT metrics string expected by AWS IoT.
- */
-#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
-
-#ifdef democonfigCLIENT_USERNAME
-
-/**
- * @brief Append the username with the metrics string if #democonfigCLIENT_USERNAME is defined.
- *
- * This is to support both metrics reporting and username/password based client
- * authentication by AWS IoT.
- */
-    #define CLIENT_USERNAME_WITH_METRICS    democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING
-#endif
 
 /**
  * @brief Milliseconds per second.
@@ -400,6 +412,18 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo );
 
+/**
+ * @brief Call #MQTT_ProcessLoop in a loop for the duration of a timeout or
+ * #MQTT_ProcessLoop returns a failure.
+ *
+ * @param[in] pMqttContext MQTT context pointer.
+ * @param[in] ulTimeoutMs Duration to call #MQTT_ProcessLoop for.
+ *
+ * @return Returns the return value of the last call to #MQTT_ProcessLoop.
+ */
+static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
+                                               uint32_t ulTimeoutMs );
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -459,6 +483,24 @@ static MQTTFixedBuffer_t xBuffer =
     ucSharedBuffer,
     democonfigNETWORK_BUFFER_SIZE
 };
+
+/**
+ * @brief Array to track the outgoing publish records for outgoing publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pOutgoingPublishRecords[ mqttexampleOUTGOING_PUBLISH_RECORD_LEN ];
+
+/**
+ * @brief Array to track the incoming publish records for incoming publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pIncomingPublishRecords[ mqttexampleINCOMING_PUBLISH_RECORD_LEN ];
 
 /*-----------------------------------------------------------*/
 
@@ -525,7 +567,19 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
 
         /* Attempt to establish TLS session with MQTT broker. If connection fails,
          * retry after a timeout. Timeout value will be exponentially increased
@@ -560,7 +614,7 @@ static void prvMQTTDemoTask( void * pvParameters )
              * same topic, the broker will send publish message back to the
              * application. */
             LogInfo( ( "Attempt to receive publish message from broker.\r\n" ) );
-            xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+            xMQTTStatus = prvProcessLoopWithTimeout( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             configASSERT( xMQTTStatus == MQTTSuccess );
 
             /* Leave Connection Idle for some time. */
@@ -573,7 +627,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvMQTTUnsubscribeFromTopic( &xMQTTContext );
 
         /* Process incoming UNSUBACK packet from the broker. */
-        xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = prvProcessLoopWithTimeout( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
         /**************************** Disconnect. *****************************/
@@ -603,6 +657,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS );
     }
@@ -617,21 +672,43 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     BackoffAlgorithmContext_t xReconnectParams;
     uint16_t usNextRetryBackOff = 0U;
 
-    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+    #if defined( democonfigCLIENT_USERNAME )
 
-        /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-         * the first entry will contain the actual ALPN protocol string while the
-         * second entry must remain NULL. */
-        char * pcAlpnProtocols[] = { NULL, NULL };
+    /*
+     * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+     * to AWS IoT Core with Custom Authentication on port 443.
+     *
+     * Custom Authentication uses the contents of the username and password
+     * fields of the MQTT CONNECT packet to authenticate the client.
+     *
+     * For more information, refer to the documentation at:
+     * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+     */
+    static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
+    #if democonfigMQTT_BROKER_PORT != 443U
+    #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+    #endif /* democonfigMQTT_BROKER_PORT != 443U */
+    #else /* if !defined( democonfigCLIENT_USERNAME ) */
 
-        /* The ALPN string changes depending on whether username/password authentication is used. */
-        #ifdef democonfigCLIENT_USERNAME
-            pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-        #else
-            pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-        #endif
-        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
-    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+    /*
+     * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+     * x509 Certificate Authentication.
+     */
+    static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
+    #endif /* !defined( democonfigCLIENT_USERNAME ) */
+
+    /*
+     * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+     * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+     */
+    #if democonfigMQTT_BROKER_PORT == 443U
+        pxNetworkCredentials->pAlpnProtos = ppcAlpnProtocols;
+    #elif democonfigMQTT_BROKER_PORT == 8883U
+        pxNetworkCredentials->pAlpnProtos = NULL;
+    #else /* democonfigMQTT_BROKER_PORT != 8883U */
+        pxNetworkCredentials->pAlpnProtos = NULL;
+    #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+    #endif /* democonfigMQTT_BROKER_PORT != 443U */
 
     pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
@@ -713,9 +790,16 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.pNetworkContext = pxNetworkContext;
     xTransport.send = TLS_FreeRTOS_send;
     xTransport.recv = TLS_FreeRTOS_recv;
+    xTransport.writev = NULL;
 
     /* Initialize MQTT library. */
     xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
+    configASSERT( xResult == MQTTSuccess );
+    xResult = MQTT_InitStatefulQoS( pxMQTTContext,
+                                    pOutgoingPublishRecords,
+                                    mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
+                                    pIncomingPublishRecords,
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
     configASSERT( xResult == MQTTSuccess );
 
     /* Some fields are not used in this demo so start with everything at 0. */
@@ -739,18 +823,23 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Append metrics when connecting to the AWS IoT Core broker. */
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        #ifdef democonfigCLIENT_USERNAME
-            xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
-            xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
+        #if defined( democonfigCLIENT_USERNAME )
+            /* Append metrics string when connecting to AWS IoT Core with custom auth */
+            xConnectInfo.pUserName = democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING );
+
+            /* Use the provided password as-is */
             xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
             xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
         #else
+            /* If no username is needed, only send the metrics string */
             xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
-            xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( AWS_IOT_METRICS_STRING );
+
             /* Password for authentication is not used. */
             xConnectInfo.pPassword = NULL;
             xConnectInfo.passwordLength = 0U;
-        #endif
+        #endif /* defined( democonfigCLIENT_USERNAME ) */
     #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
         #ifdef democonfigCLIENT_USERNAME
             xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
@@ -847,7 +936,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
          * receiving Publish message before subscribe ack is zero; but application
          * must be ready to receive any packet.  This demo uses the generic packet
          * processing function everywhere to highlight this fact. */
-        xResult = MQTT_ProcessLoop( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xResult = prvProcessLoopWithTimeout( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xResult == MQTTSuccess );
 
         /* Reset flag before checking suback responses. */
@@ -1074,6 +1163,36 @@ static uint32_t prvGetTimeMs( void )
     ulTimeMs = ( uint32_t ) ( ulTimeMs - ulGlobalEntryTimeMs );
 
     return ulTimeMs;
+}
+
+/*-----------------------------------------------------------*/
+
+static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
+                                               uint32_t ulTimeoutMs )
+{
+    uint32_t ulMqttProcessLoopTimeoutTime;
+    uint32_t ulCurrentTime;
+
+    MQTTStatus_t eMqttStatus = MQTTSuccess;
+
+    ulCurrentTime = pMqttContext->getTime();
+    ulMqttProcessLoopTimeoutTime = ulCurrentTime + ulTimeoutMs;
+
+    /* Call MQTT_ProcessLoop multiple times a timeout happens, or
+     * MQTT_ProcessLoop fails. */
+    while( ( ulCurrentTime < ulMqttProcessLoopTimeoutTime ) &&
+           ( eMqttStatus == MQTTSuccess || eMqttStatus == MQTTNeedMoreBytes ) )
+    {
+        eMqttStatus = MQTT_ProcessLoop( pMqttContext );
+        ulCurrentTime = pMqttContext->getTime();
+    }
+
+    if( eMqttStatus == MQTTNeedMoreBytes )
+    {
+        eMqttStatus = MQTTSuccess;
+    }
+
+    return eMqttStatus;
 }
 
 /*-----------------------------------------------------------*/

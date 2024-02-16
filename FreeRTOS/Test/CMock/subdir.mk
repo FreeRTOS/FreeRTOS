@@ -12,12 +12,12 @@ COV_REPORT_DIR  :=  $(SCRATCH_DIR)/coverage
 
 all: run
 
-clean:
+clean :
     rm -rf $(SCRATCH_DIR)
     rm -f $(BIN_DIR)/$(PROJECT)*_utest
     rm -f $(COVINFO)
 
-libs:
+libs :
     make -C $(UT_ROOT_DIR) libs
 
 lcov : $(COVINFO)

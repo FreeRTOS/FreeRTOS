@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -148,5 +148,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * the preferred network provider.
  * #define CELLULAR_CONFIG_SARA_R4_SET_MNO_PROFILE         ( ...insert here... )
  */
+
+/*
+ * Reboot Sara R4 cellular modem in module init function.
+ */
+#define  CELLULAR_CONFIG_SARA_R4_REBOOT_ON_INIT
 
 #endif /* __CELLULAR_CONFIG_H__ */

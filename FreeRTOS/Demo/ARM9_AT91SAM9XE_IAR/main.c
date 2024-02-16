@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -63,21 +63,21 @@
 #include <pio/pio.h>
 
 /* Priorities for the demo application tasks. */
-#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 0 )
-#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 0 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY 	( tskIDLE_PRIORITY + 3 )
-#define mainGENERIC_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
+#define mainCOM_TEST_PRIORITY         ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY       ( tskIDLE_PRIORITY + 0 )
+#define mainCHECK_TASK_PRIORITY       ( tskIDLE_PRIORITY + 4 )
+#define mainSEM_TEST_PRIORITY         ( tskIDLE_PRIORITY + 0 )
+#define mainBLOCK_Q_PRIORITY          ( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY     ( tskIDLE_PRIORITY + 3 )
+#define mainGENERIC_QUEUE_PRIORITY    ( tskIDLE_PRIORITY )
 
 /* The period of the check task both in and out of the presense of an error. */
-#define mainNO_ERROR_PERIOD			( 5000 / portTICK_PERIOD_MS )
-#define mainERROR_PERIOD			( 500 / portTICK_PERIOD_MS );
+#define mainNO_ERROR_PERIOD           ( 5000 / portTICK_PERIOD_MS )
+#define mainERROR_PERIOD              ( 500 / portTICK_PERIOD_MS );
 
 /* Constants used by the ComTest task. */
-#define mainCOM_TEST_BAUD_RATE		( 38400 )
-#define mainCOM_TEST_LED			( LED_DS1 )
+#define mainCOM_TEST_BAUD_RATE        ( 38400 )
+#define mainCOM_TEST_LED              ( LED_DS1 )
 
 /*-----------------------------------------------------------*/
 
@@ -85,148 +85,150 @@
 static void prvSetupHardware( void );
 
 /* The check task as described at the top of this file. */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 int main()
 {
-	/* Perform any hardware setup necessary to run the demo. */
-	prvSetupHardware();
-	
-	/* First create the 'standard demo' tasks.  These exist just to to
-	demonstrate API functions being used and test the kernel port.  More
-	information is provided on the FreeRTOS.org WEB site. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartRecursiveMutexTasks();
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	
-	/* Create the check task - this is the task that checks all the other tasks
-	are executing as expected and without reporting any errors. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
-	
-	/* The death demo tasks must be started last as the sanity checks performed
-	require knowledge of the number of other tasks in the system. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	
-	/* Start the scheduler.  From this point on the execution will be under
-	the control of the kernel. */
-	vTaskStartScheduler();
-	
-	/* Will only get here if there was insufficient heap available for the
-	idle task to be created. */
-	for( ;; );
+    /* Perform any hardware setup necessary to run the demo. */
+    prvSetupHardware();
+
+    /* First create the 'standard demo' tasks.  These exist just to to
+     * demonstrate API functions being used and test the kernel port.  More
+     * information is provided on the FreeRTOS.org WEB site. */
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartDynamicPriorityTasks();
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vCreateBlockTimeTasks();
+    vStartCountingSemaphoreTasks();
+    vStartGenericQueueTasks( tskIDLE_PRIORITY );
+    vStartQueuePeekTasks();
+    vStartRecursiveMutexTasks();
+    vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+
+    /* Create the check task - this is the task that checks all the other tasks
+     * are executing as expected and without reporting any errors. */
+    xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+
+    /* The death demo tasks must be started last as the sanity checks performed
+     * require knowledge of the number of other tasks in the system. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+
+    /* Start the scheduler.  From this point on the execution will be under
+     * the control of the kernel. */
+    vTaskStartScheduler();
+
+    /* Will only get here if there was insufficient heap available for the
+     * idle task to be created. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTask( void * pvParameters )
 {
-TickType_t xNextWakeTime, xPeriod = mainNO_ERROR_PERIOD;
-static volatile unsigned long ulErrorCode = 0UL;
+    TickType_t xNextWakeTime, xPeriod = mainNO_ERROR_PERIOD;
+    static volatile unsigned long ulErrorCode = 0UL;
 
-	/* Just to remove the compiler warning. */
-	( void ) pvParameters;
+    /* Just to remove the compiler warning. */
+    ( void ) pvParameters;
 
-	/* Initialise xNextWakeTime prior to its first use.  From this point on
-	the value of the variable is handled automatically by the kernel. */
-	xNextWakeTime = xTaskGetTickCount();
-	
-	for( ;; )
-	{
-		/* Delay until it is time for this task to execute again. */
-		vTaskDelayUntil( &xNextWakeTime, xPeriod );
-		
-		/* Check all the other tasks in the system - latch any reported errors
-		into the ulErrorCode variable. */
-		if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x01UL;
-		}
+    /* Initialise xNextWakeTime prior to its first use.  From this point on
+     * the value of the variable is handled automatically by the kernel. */
+    xNextWakeTime = xTaskGetTickCount();
 
-		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x02UL;
-		}
+    for( ; ; )
+    {
+        /* Delay until it is time for this task to execute again. */
+        vTaskDelayUntil( &xNextWakeTime, xPeriod );
 
-		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x04UL;
-		}
+        /* Check all the other tasks in the system - latch any reported errors
+         * into the ulErrorCode variable. */
+        if( xAreBlockingQueuesStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x01UL;
+        }
 
-		if( xIsCreateTaskStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x08UL;
-		}
+        if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x02UL;
+        }
 
-		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x10UL;
-		}
+        if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x04UL;
+        }
 
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x20UL;
-		}
+        if( xIsCreateTaskStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x08UL;
+        }
 
-		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x40UL;
-		}
+        if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x10UL;
+        }
 
-		if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x80UL;
-		}
+        if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x20UL;
+        }
 
-		if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x100UL;
-		}
+        if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x40UL;
+        }
 
-		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x200UL;
-		}
+        if( xArePollingQueuesStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x80UL;
+        }
 
-		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x400UL;
-		}
-		
-		if( xAreComTestTasksStillRunning() != pdTRUE )
-		{
-			ulErrorCode |= 0x800UL;
-		}
-		
-		/* Reduce the block period and in so doing increase the frequency at
-		which this task executes if any errors have been latched.  The increased
-		frequency causes the LED toggle rate to increase and so gives some
-		visual feedback that an error has occurred. */
-		if( ulErrorCode != 0x00 )
-		{
-			xPeriod = mainERROR_PERIOD;
-		}
-		
-		/* Finally toggle the LED. */
-		vParTestToggleLED( LED_POWER );
-	}
+        if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x100UL;
+        }
+
+        if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x200UL;
+        }
+
+        if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x400UL;
+        }
+
+        if( xAreComTestTasksStillRunning() != pdTRUE )
+        {
+            ulErrorCode |= 0x800UL;
+        }
+
+        /* Reduce the block period and in so doing increase the frequency at
+         * which this task executes if any errors have been latched.  The increased
+         * frequency causes the LED toggle rate to increase and so gives some
+         * visual feedback that an error has occurred. */
+        if( ulErrorCode != 0x00 )
+        {
+            xPeriod = mainERROR_PERIOD;
+        }
+
+        /* Finally toggle the LED. */
+        vParTestToggleLED( LED_POWER );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-const Pin xPins[] = { PIN_USART0_RXD, PIN_USART0_TXD };
+    const Pin xPins[] = { PIN_USART0_RXD, PIN_USART0_TXD };
 
-	/* Setup the LED outputs. */
-	vParTestInitialise();
-	
-	/* Setup the pins for the UART. */
-	PIO_Configure( xPins, PIO_LISTSIZE( xPins ) );	
+    /* Setup the LED outputs. */
+    vParTestInitialise();
+
+    /* Setup the pins for the UART. */
+    PIO_Configure( xPins, PIO_LISTSIZE( xPins ) );
 }

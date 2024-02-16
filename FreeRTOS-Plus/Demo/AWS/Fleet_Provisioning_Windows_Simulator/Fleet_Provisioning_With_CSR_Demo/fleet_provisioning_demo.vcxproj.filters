@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{546ab88a-56ee-4b6f-ac35-b7b63f49ed2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{9049e888-7797-4792-90cb-a1e9e99a92a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{2eaca890-15c6-49a3-be88-574abbba0157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{78540744-1e91-4c12-965c-884a2cf92949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{9a6a66e0-e0cf-4ffe-9398-a23f26d3d5bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{653c873b-f2f7-4848-8db4-4ab67957f4b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{56bfdc25-748a-4c0a-a017-1daca6f2b698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport">
+      <UniqueIdentifier>{874d75af-778f-41a1-89dc-076ebf276fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport\include">
+      <UniqueIdentifier>{1b25efaf-5b58-403c-9308-b591c4061c9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{a8fad8ec-9a5d-42f0-9b8b-4166cca11354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp">
+      <UniqueIdentifier>{17955057-1e46-42cb-aa73-a6eb46abc9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT">
+      <UniqueIdentifier>{c69eabd6-7eed-4959-9351-41b8c3b731b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT\include">
+      <UniqueIdentifier>{64a78119-97f6-4252-b793-87cb6e7902d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\TinyCBOR">
+      <UniqueIdentifier>{58f51daa-dd72-4e9c-939d-3113f97234ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\AWS IoT Fleet Provisioning">
+      <UniqueIdentifier>{00849fd3-96f4-4fc3-b84f-fab958b5d5b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\AWS IoT Fleet Provisioning\include">
+      <UniqueIdentifier>{9b4954c3-1f90-4e61-bdc1-15e50cbec10a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm\include">
+      <UniqueIdentifier>{881fa2ff-3816-405f-9906-1f34585f7341}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborvalidation.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder_close_container_checked.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder_float.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborerrorstrings.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborparser.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborparser_dup_string.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborparser_float.c">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClCompile>
+    <ClCompile Include="tinycbor_serializer.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="FleetProvisioningDemoExample.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="pkcs11_operations.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_rng_pkcs11.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\AWS\fleet-provisioning\source\fleet_provisioning.c">
+      <Filter>Additional Libraries\AWS IoT Fleet Provisioning</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cbor.h">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cborinternal_p.h">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cborjson.h">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\compilersupport_p.h">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\tinycbor-version.h">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\utf8_p.h">
+      <Filter>Additional Libraries\TinyCBOR</Filter>
+    </ClInclude>
+    <ClInclude Include="core_mqtt_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="fleet_provisioning_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="pkcs11_operations.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="tinycbor_serializer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pkcs11.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + PKCS11 + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\AWS\fleet-provisioning\source\include\fleet_provisioning.h">
+      <Filter>Additional Libraries\AWS IoT Fleet Provisioning\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\AWS\fleet-provisioning\source\include\fleet_provisioning_config_defaults.h">
+      <Filter>Additional Libraries\AWS IoT Fleet Provisioning\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\Backoff Algorithm\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

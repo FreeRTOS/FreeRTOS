@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* FreeRTOS includes. */
@@ -38,6 +37,16 @@
  * @brief Memory region shared between two tasks.
  */
 static uint8_t ucSharedMemory[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+#if ( configTOTAL_MPU_REGIONS == 16 )
+    static uint8_t ucSharedMemory1[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory2[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory3[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory4[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory5[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory6[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory7[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static uint8_t ucSharedMemory8[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
+#endif /* configTOTAL_MPU_REGIONS == 16 */
 
 /**
  * @brief Memory region used to track Memory Fault intentionally caused by the
@@ -51,7 +60,7 @@ static uint8_t ucSharedMemory[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32
  * @note We are declaring a region of 32 bytes even though we need only one. The
  * reason is that the size of an MPU region must be a multiple of 32 bytes.
  */
-static uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) ) = { 0 };
+static volatile uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) ) = { 0 };
 /*-----------------------------------------------------------*/
 
 /**
@@ -81,22 +90,99 @@ static void prvROAccessTask( void * pvParameters )
 
     for( ; ; )
     {
-        /* This task has RO access to ucSharedMemory and therefore it can read
-         * it but cannot modify it. */
+        /* This task performs the following sequence for all the shared memory
+         * regions:
+         *
+         * 1. Perfrom a read access to the shared memory. Since this task has
+         *    RO access to the shared memory, the read operation is successful.
+         *
+         * 2. Set ucROTaskFaultTracker[ 0 ] to 1 before performing a write to
+         *    the shared memory. Since this task has Read Only access to the
+         *    shared memory, the write operation would result in a Memory Fault.
+         *    Setting ucROTaskFaultTracker[ 0 ] to 1 tells the Memory Fault
+         *    Handler that this is an expected fault. The handler recovers from
+         *    the expected fault gracefully by jumping to the next instruction.
+         *
+         * 3. Perfrom a write to the shared memory resulting in a memory fault.
+         *
+         * 4. Ensure that the write access did generate MemFault and the fault
+         *    handler did clear the ucROTaskFaultTracker[ 0 ].
+         */
+        /* Perform the above mentioned sequence on ucSharedMemory. */
         ucVal = ucSharedMemory[ 0 ];
-
         /* Silent compiler warnings about unused variables. */
         ( void ) ucVal;
-
-        /* Since this task has Read Only access to the ucSharedMemory region,
-         * writing to it results in Memory Fault. Set ucROTaskFaultTracker[ 0 ]
-         * to 1 to tell the Memory Fault Handler that this is an expected fault.
-         * The handler will recover from this fault gracefully by jumping to the
-         * next instruction. */
         ucROTaskFaultTracker[ 0 ] = 1;
-
-        /* Illegal access to generate Memory Fault. */
         ucSharedMemory[ 0 ] = 0;
+        configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+        #if ( configTOTAL_MPU_REGIONS == 16 )
+        {
+            /* Perform the above mentioned sequence on ucSharedMemory1. */
+            ucVal = ucSharedMemory1[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory1[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory2. */
+            ucVal = ucSharedMemory2[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory2[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory3. */
+            ucVal = ucSharedMemory3[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory3[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory4. */
+            ucVal = ucSharedMemory4[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory4[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory5. */
+            ucVal = ucSharedMemory5[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory5[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory6. */
+            ucVal = ucSharedMemory6[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory6[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory7. */
+            ucVal = ucSharedMemory7[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory7[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+
+            /* Perform the above mentioned sequence on ucSharedMemory8. */
+            ucVal = ucSharedMemory8[ 0 ];
+            /* Silent compiler warnings about unused variables. */
+            ( void ) ucVal;
+            ucROTaskFaultTracker[ 0 ] = 1;
+            ucSharedMemory8[ 0 ] = 0;
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+        }
+        #endif /* configTOTAL_MPU_REGIONS == 16 */
 
         /* Wait for a second. */
         vTaskDelay( pdMS_TO_TICKS( 1000 ) );
@@ -114,6 +200,19 @@ static void prvRWAccessTask( void * pvParameters )
         /* This task has RW access to ucSharedMemory and therefore can write to
          * it. */
         ucSharedMemory[ 0 ] = 0;
+
+        #if ( configTOTAL_MPU_REGIONS == 16 )
+        {
+            ucSharedMemory1[ 0 ] = 0;
+            ucSharedMemory2[ 0 ] = 0;
+            ucSharedMemory3[ 0 ] = 0;
+            ucSharedMemory4[ 0 ] = 0;
+            ucSharedMemory5[ 0 ] = 0;
+            ucSharedMemory6[ 0 ] = 0;
+            ucSharedMemory7[ 0 ] = 0;
+            ucSharedMemory8[ 0 ] = 0;
+        }
+        #endif /* configTOTAL_MPU_REGIONS == 16 */
 
         /* Wait for a second. */
         vTaskDelay( pdMS_TO_TICKS( 1000 ) );
@@ -135,9 +234,19 @@ void vStartMPUDemo( void )
         .puxStackBuffer = xROAccessTaskStack,
         .xRegions       =
         {
-            { ucSharedMemory,       32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { 0,                    0,  0                                                      },
+            { ( void * ) ucSharedMemory,       32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            #if ( configTOTAL_MPU_REGIONS == 16 )
+            { ( void * ) ucSharedMemory1,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory2,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory3,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory4,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory5,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory6,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory7,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ( void * ) ucSharedMemory8,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            #endif /* configTOTAL_MPU_REGIONS == 16 */
+            { ( void * ) ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { 0,                               0,  0                                                      },
         }
     };
     TaskParameters_t xRWAccessTaskParameters =
@@ -150,9 +259,19 @@ void vStartMPUDemo( void )
         .puxStackBuffer = xRWAccessTaskStack,
         .xRegions       =
         {
-            { ucSharedMemory, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { 0,              0,  0                                                      },
-            { 0,              0,  0                                                      },
+            { ( void * ) ucSharedMemory,  32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            #if ( configTOTAL_MPU_REGIONS == 16 )
+            { ( void * ) ucSharedMemory1, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory2, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory3, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory4, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory5, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory6, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory7, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ( void * ) ucSharedMemory8, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            #endif /* configTOTAL_MPU_REGIONS == 16 */
+            { 0,                          0,  0                                                      },
+            { 0,                          0,  0                                                      },
         }
     };
 

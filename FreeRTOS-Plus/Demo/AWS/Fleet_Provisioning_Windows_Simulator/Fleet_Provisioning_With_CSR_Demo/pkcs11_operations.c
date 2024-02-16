@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -44,66 +44,15 @@
 #include "core_pkcs11_config.h"
 #include "core_pki_utils.h"
 #include "mbedtls_utils.h"
+#include "mbedtls_pkcs11.h"
 
 /* MbedTLS include. */
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/entropy_poll.h"
 #include "mbedtls/error.h"
 #include "mbedtls/oid.h"
 #include "mbedtls/pk.h"
-#include "mbedtls/pk_internal.h"
 #include "mbedtls/sha256.h"
 #include "mbedtls/x509_crt.h"
 #include "mbedtls/x509_csr.h"
-
-/**
- * @brief Represents string to be logged when mbedTLS returned error
- * does not contain a high-level code.
- */
-static const char * pcNoHighLevelMbedTlsCodeStr = "<No-High-Level-Code>";
-
-/**
- * @brief Represents string to be logged when mbedTLS returned error
- * does not contain a low-level code.
- */
-static const char * pcNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
-
-/**
- * @brief Utility for converting the high-level code in an mbedTLS error to
- * string, if the code-contains a high-level code; otherwise, using a default
- * string.
- */
-#define mbedtlsHighLevelCodeOrDefault( mbedTlsCode )     \
-    ( mbedtls_high_level_strerr( mbedTlsCode ) != NULL ) \
-    ? mbedtls_high_level_strerr( mbedTlsCode )           \
-    : pcNoHighLevelMbedTlsCodeStr
-
-/**
- * @brief Utility for converting the level-level code in an mbedTLS error to
- * string, if the code-contains a level-level code; otherwise, using a default
- * string.
- */
-#define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )     \
-    ( mbedtls_low_level_strerr( mbedTlsCode ) != NULL ) \
-    ? mbedtls_low_level_strerr( mbedTlsCode )           \
-    : pcNoLowLevelMbedTlsCodeStr
-
-/**
- * @brief Struct containing parameters needed by the signing callback.
- */
-typedef struct SigningCallbackContext
-{
-    CK_SESSION_HANDLE p11Session;
-    CK_OBJECT_HANDLE p11PrivateKey;
-} SigningCallbackContext_t;
-
-/**
- * @brief Parameters for the signing callback. This needs to be global as
- * MbedTLS passes the key context to the signing function, so we cannot pass
- * our own.
- */
-static SigningCallbackContext_t xSigningContext = { 0 };
 
 /*-----------------------------------------------------------*/
 
@@ -119,51 +68,6 @@ static CK_RV prvDestroyProvidedObjects( CK_SESSION_HANDLE xSession,
                                         CK_BYTE_PTR * pxPkcsLabelsPtr,
                                         CK_OBJECT_CLASS * pxClass,
                                         CK_ULONG xCount );
-
-/**
- * @brief Read the specified ECDSA public key into the MbedTLS ECDSA context.
- *
- * @param[in] xP11Session The PKCS #11 session.
- * @param[in] pxEcdsaContext The context in which to store the key.
- * @param[in] xPublicKey The public key to read.
- */
-static int prvExtractEcPublicKey( CK_SESSION_HANDLE xP11Session,
-                                  mbedtls_ecdsa_context * pxEcdsaContext,
-                                  CK_OBJECT_HANDLE xPublicKey );
-
-/**
- * @brief MbedTLS callback for signing using the provisioned private key. Used for
- * signing the CSR.
- *
- * @param[in] pxContext Unused.
- * @param[in] xMdAlg Unused.
- * @param[in] pucHash Data to sign.
- * @param[in] xHashLen Length of #pucHash.
- * @param[out] pucSig The signature
- * @param[out] pxSigLen The length of the signature.
- * @param[in] pxRng Unused.
- * @param[in] pxRngContext Unused.
- */
-static int32_t prvPrivateKeySigningCallback( void * pxContext,
-                                             mbedtls_md_type_t xMdAlg,
-                                             const unsigned char * pucHash,
-                                             size_t xHashLen,
-                                             unsigned char * pucSig,
-                                             size_t * pxSigLen,
-                                             int ( * pxRng )( void *, unsigned char *, size_t ),
-                                             void * pxRngContext );
-
-/**
- * @brief MbedTLS random generation callback to generate random values with
- * PKCS #11.
- *
- * @param[in] pxCtx Pointer to the PKCS #11 session handle.
- * @param[out] pucRandom Buffer to write random data to.
- * @param[in] xRandomLength Length of random data to write.
- */
-static int prvRandomCallback( void * pxCtx,
-                              unsigned char * pucRandom,
-                              size_t xRandomLength );
 
 /**
  * @brief Generate a new ECDSA key pair using PKCS #11.
@@ -232,184 +136,6 @@ static CK_RV prvDestroyProvidedObjects( CK_SESSION_HANDLE xSession,
     }
 
     return xResult;
-}
-
-/*-----------------------------------------------------------*/
-
-static int prvExtractEcPublicKey( CK_SESSION_HANDLE xP11Session,
-                                  mbedtls_ecdsa_context * pxEcdsaContext,
-                                  CK_OBJECT_HANDLE xPublicKey )
-{
-    CK_ATTRIBUTE xEcTemplate = { 0 };
-    int xMbedtlsRet = -1;
-    CK_RV xPkcs11ret = CKR_OK;
-    CK_BYTE pxEcPoint[ 67 ] = { 0 };
-    CK_FUNCTION_LIST_PTR xP11FunctionList;
-
-    mbedtls_ecdsa_init( pxEcdsaContext );
-    mbedtls_ecp_group_init( &( pxEcdsaContext->grp ) );
-
-    xPkcs11ret = C_GetFunctionList( &xP11FunctionList );
-
-    if( xPkcs11ret != CKR_OK )
-    {
-        LogError( ( "Could not get a PKCS #11 function pointer." ) );
-    }
-    else
-    {
-        xEcTemplate.type = CKA_EC_POINT;
-        xEcTemplate.pValue = pxEcPoint;
-        xEcTemplate.ulValueLen = sizeof( pxEcPoint );
-        xPkcs11ret = xP11FunctionList->C_GetAttributeValue( xP11Session, xPublicKey, &xEcTemplate, 1 );
-
-        if( xPkcs11ret != CKR_OK )
-        {
-            LogError( ( "Failed to extract EC public key. Could not get attribute value. "
-                        "C_GetAttributeValue failed with %lu.", xPkcs11ret ) );
-        }
-    }
-
-    if( xPkcs11ret == CKR_OK )
-    {
-        xMbedtlsRet = mbedtls_ecp_group_load( &( pxEcdsaContext->grp ), MBEDTLS_ECP_DP_SECP256R1 );
-
-        if( xMbedtlsRet != 0 )
-        {
-            LogError( ( "Failed creating an EC key. "
-                        "mbedtls_ecp_group_load failed: MbedTLS"
-                        "error = %s : %s.",
-                        mbedtlsHighLevelCodeOrDefault( xMbedtlsRet ),
-                        mbedtlsLowLevelCodeOrDefault( xMbedtlsRet ) ) );
-            xPkcs11ret = CKR_FUNCTION_FAILED;
-        }
-        else
-        {
-            xMbedtlsRet = mbedtls_ecp_point_read_binary( &( pxEcdsaContext->grp ), &( pxEcdsaContext->Q ), &pxEcPoint[ 2 ], xEcTemplate.ulValueLen - 2 );
-
-            if( xMbedtlsRet != 0 )
-            {
-                LogError( ( "Failed creating an EC key. "
-                            "mbedtls_ecp_group_load failed: MbedTLS"
-                            "error = %s : %s.",
-                            mbedtlsHighLevelCodeOrDefault( xMbedtlsRet ),
-                            mbedtlsLowLevelCodeOrDefault( xMbedtlsRet ) ) );
-                xPkcs11ret = CKR_FUNCTION_FAILED;
-            }
-        }
-    }
-
-    return xMbedtlsRet;
-}
-
-/*-----------------------------------------------------------*/
-
-static int32_t prvPrivateKeySigningCallback( void * pxContext,
-                                             mbedtls_md_type_t xMdAlg,
-                                             const unsigned char * pucHash,
-                                             size_t xHashLen,
-                                             unsigned char * pucSig,
-                                             size_t * pxSigLen,
-                                             int ( * pxRng )( void *, unsigned char *, size_t ),
-                                             void * pxRngContext )
-{
-    CK_RV xRet = CKR_OK;
-    int32_t usResult = 0;
-    CK_MECHANISM xMech = { 0 };
-    CK_BYTE pxToBeSigned[ 256 ];
-    CK_ULONG xToBeSignedLen = sizeof( pxToBeSigned );
-    CK_FUNCTION_LIST_PTR xFunctionList = NULL;
-
-    /* Unreferenced parameters. */
-    ( void ) ( pxContext );
-    ( void ) ( pxRng );
-    ( void ) ( pxRngContext );
-    ( void ) ( xMdAlg );
-
-    /* Sanity check buffer length. */
-    if( xHashLen > sizeof( pxToBeSigned ) )
-    {
-        xRet = CKR_ARGUMENTS_BAD;
-    }
-
-    xMech.mechanism = CKM_ECDSA;
-    memcpy( pxToBeSigned, pucHash, xHashLen );
-    xToBeSignedLen = xHashLen;
-
-    if( xRet == CKR_OK )
-    {
-        xRet = C_GetFunctionList( &xFunctionList );
-    }
-
-    if( xRet == CKR_OK )
-    {
-        xRet = xFunctionList->C_SignInit( xSigningContext.p11Session, &xMech,
-                                          xSigningContext.p11PrivateKey );
-    }
-
-    if( xRet == CKR_OK )
-    {
-        *pxSigLen = sizeof( pxToBeSigned );
-        xRet = xFunctionList->C_Sign( xSigningContext.p11Session, pxToBeSigned,
-                                      xToBeSignedLen, pucSig, ( CK_ULONG_PTR ) pxSigLen );
-    }
-
-    if( xRet == CKR_OK )
-    {
-        /* PKCS #11 for P256 returns a 64-byte signature with 32 bytes for R and 32
-         * bytes for S. This must be converted to an ASN.1 encoded array. */
-        if( *pxSigLen != pkcs11ECDSA_P256_SIGNATURE_LENGTH )
-        {
-            xRet = CKR_FUNCTION_FAILED;
-            LogError( ( "Failed to sign message using PKCS #11. Expected signature "
-                        "length of %lu, but received %lu.",
-                        ( unsigned long ) pkcs11ECDSA_P256_SIGNATURE_LENGTH,
-                        ( unsigned long ) *pxSigLen ) );
-        }
-
-        if( xRet == CKR_OK )
-        {
-            PKI_pkcs11SignatureTombedTLSSignature( pucSig, pxSigLen );
-        }
-    }
-
-    if( xRet != CKR_OK )
-    {
-        LogError( ( "Failed to sign message using PKCS #11 with error code %lu.", xRet ) );
-        usResult = -1;
-    }
-
-    return usResult;
-}
-
-/*-----------------------------------------------------------*/
-
-static int prvRandomCallback( void * pxCtx,
-                              unsigned char * pucRandom,
-                              size_t xRandomLength )
-{
-    CK_SESSION_HANDLE * pxP11Session = ( CK_SESSION_HANDLE * ) pxCtx;
-    CK_RV xRes;
-    CK_FUNCTION_LIST_PTR xP11FunctionList;
-
-    xRes = C_GetFunctionList( &xP11FunctionList );
-
-    if( xRes != CKR_OK )
-    {
-        LogError( ( "Failed to generate a random number in RNG callback. Could not get a "
-                    "PKCS #11 function pointer." ) );
-    }
-    else
-    {
-        xRes = xP11FunctionList->C_GenerateRandom( *pxP11Session, pucRandom, xRandomLength );
-
-        if( xRes != CKR_OK )
-        {
-            LogError( ( "Failed to generate a random number in RNG callback. "
-                        "C_GenerateRandom failed with %lu.", ( unsigned long ) xRes ) );
-        }
-    }
-
-    return ( int ) xRes;
 }
 
 /*-----------------------------------------------------------*/
@@ -488,7 +214,6 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
     CK_OBJECT_HANDLE xPubKeyHandle;
     CK_RV xPkcs11Ret = CKR_OK;
     mbedtls_pk_context xPrivKey;
-    mbedtls_pk_info_t xPrivKeyInfo;
     mbedtls_ecdsa_context xEcdsaContext;
     mbedtls_x509write_csr xReq;
     int32_t ulMbedtlsRet = -1;
@@ -504,6 +229,11 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
                                        pcPubKeyLabel,
                                        &xPrivKeyHandle,
                                        &xPubKeyHandle );
+
+    if( xPkcs11Ret == CKR_OK )
+    {
+        xPkcs11Ret = xPKCS11_initMbedtlsPkContext( &xPrivKey, xP11Session, xPrivKeyHandle );
+    }
 
     if( xPkcs11Ret == CKR_OK )
     {
@@ -524,35 +254,18 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
 
         if( ulMbedtlsRet == 0 )
         {
-            mbedtls_pk_init( &xPrivKey );
-        }
-
-        if( ulMbedtlsRet == 0 )
-        {
-            ulMbedtlsRet = prvExtractEcPublicKey( xP11Session, &xEcdsaContext, xPubKeyHandle );
-        }
-
-        if( ulMbedtlsRet == 0 )
-        {
-            xSigningContext.p11Session = xP11Session;
-            xSigningContext.p11PrivateKey = xPrivKeyHandle;
-
-            memcpy( &xPrivKeyInfo, pxHeader, sizeof( mbedtls_pk_info_t ) );
-
-            xPrivKeyInfo.sign_func = prvPrivateKeySigningCallback;
-            xPrivKey.pk_info = &xPrivKeyInfo;
-            xPrivKey.pk_ctx = &xEcdsaContext;
-
             mbedtls_x509write_csr_set_key( &xReq, &xPrivKey );
 
-            ulMbedtlsRet = mbedtls_x509write_csr_pem( &xReq, ( unsigned char * ) pcCsrBuffer,
-                                                      xCsrBufferLength, &prvRandomCallback,
+            ulMbedtlsRet = mbedtls_x509write_csr_pem( &xReq,
+                                                      ( unsigned char * ) pcCsrBuffer,
+                                                      xCsrBufferLength,
+                                                      &lMbedCryptoRngCallbackPKCS11,
                                                       &xP11Session );
         }
 
         mbedtls_x509write_csr_free( &xReq );
-        mbedtls_ecdsa_free( &xEcdsaContext );
-        mbedtls_ecp_group_free( &( xEcdsaContext.grp ) );
+
+        mbedtls_pk_free( &xPrivKey );
     }
 
     *pxOutCsrLength = strlen( pcCsrBuffer );

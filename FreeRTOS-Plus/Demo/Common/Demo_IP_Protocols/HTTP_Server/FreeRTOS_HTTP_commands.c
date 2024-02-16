@@ -1,11 +1,6 @@
 /*
- *!
- *! The protocols implemented in this file are intended to be demo quality only,
- *! and not for production devices.
- *!
- *
- * FreeRTOS+TCP V2.0.3
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,10 +19,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
+/**
+ *!
+ *! The protocols implemented in this file are intended to be demo quality only,
+ *! and not for production devices.
+ *!
+ */
 
 /* Standard includes. */
 #include <stdio.h>
@@ -40,37 +42,46 @@
 
 const struct xWEB_COMMAND xWebCommands[ WEB_CMD_COUNT ] =
 {
-	{	3,     "GET",		ECMD_GET },
-	{	4,    "HEAD",		ECMD_HEAD },
-	{	4,    "POST",		ECMD_POST },
-	{	3,     "PUT",		ECMD_PUT },
-	{	6,  "DELETE",		ECMD_DELETE },
-	{	5,   "TRACE",		ECMD_TRACE },
-	{	7, "OPTIONS",		ECMD_OPTIONS },
-	{	7, "CONNECT",		ECMD_CONNECT },
-	{	5,   "PATCH",		ECMD_PATCH },
-	{	4,    "UNKN",		ECMD_UNK },
+    { 3, "GET",     ECMD_GET     },
+    { 4, "HEAD",    ECMD_HEAD    },
+    { 4, "POST",    ECMD_POST    },
+    { 3, "PUT",     ECMD_PUT     },
+    { 6, "DELETE",  ECMD_DELETE  },
+    { 5, "TRACE",   ECMD_TRACE   },
+    { 7, "OPTIONS", ECMD_OPTIONS },
+    { 7, "CONNECT", ECMD_CONNECT },
+    { 5, "PATCH",   ECMD_PATCH   },
+    { 4, "UNKN",    ECMD_UNK     },
 };
 
-const char *webCodename (int aCode)
+const char * webCodename( int aCode )
 {
-	switch (aCode) {
-	case WEB_REPLY_OK:	//  = 200,
-		return "OK";
-	case WEB_NO_CONTENT:    // 204
-		return "No content";
-	case WEB_BAD_REQUEST:	//  = 400,
-		return "Bad request";
-	case WEB_UNAUTHORIZED:	//  = 401,
-		return "Authorization Required";
-	case WEB_NOT_FOUND:	//  = 404,
-		return "Not Found";
-	case WEB_GONE:	//  = 410,
-		return "Done";
-	case WEB_PRECONDITION_FAILED:	//  = 412,
-		return "Precondition Failed";
-	case WEB_INTERNAL_SERVER_ERROR:	//  = 500,
-		return "Internal Server Error";
-	}
-	return "Unknown";
+    switch( aCode )
+    {
+        case WEB_REPLY_OK: /*  = 200, */
+            return "OK";
+
+        case WEB_NO_CONTENT: /* 204 */
+            return "No content";
+
+        case WEB_BAD_REQUEST: /*  = 400, */
+            return "Bad request";
+
+        case WEB_UNAUTHORIZED: /*  = 401, */
+            return "Authorization Required";
+
+        case WEB_NOT_FOUND: /*  = 404, */
+            return "Not Found";
+
+        case WEB_GONE: /*  = 410, */
+            return "Done";
+
+        case WEB_PRECONDITION_FAILED: /*  = 412, */
+            return "Precondition Failed";
+
+        case WEB_INTERNAL_SERVER_ERROR: /*  = 500, */
+            return "Internal Server Error";
+    }
+
+    return "Unknown";
 }

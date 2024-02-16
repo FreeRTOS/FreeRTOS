@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -54,7 +54,7 @@
  * deliberately written to be inefficient and should not be used as a template
  * for a production driver.  Type "help" to see a list of registered commands.
  * The FreeRTOS+CLI license is different to the FreeRTOS license, see
- * http://www.FreeRTOS.org/cli for license and usage details.
+ * https://www.FreeRTOS.org/cli for license and usage details.
  *
  * "Reg test" tasks - These fill both the core and floating point registers with
  * known values, then check that each register maintains its expected value for

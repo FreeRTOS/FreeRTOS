@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /***
@@ -37,7 +36,7 @@
 #include <intrin.h>
 
 /* FreeRTOS includes. */
-#include <FreeRTOS.h>
+#include "FreeRTOS.h"
 #include "task.h"
 
 /* Windows Crypto includes. */
@@ -50,11 +49,9 @@
 #include "pkcs11_demo_config.h"
 #include "pkcs11_demos.h"
 
-/*
- * Private function for starting the various PKCS #11 demos.
- *
- */
-static void prvStartPKCS11Demo( void )
+/*-----------------------------------------------------------*/
+
+static void prvPKCS11DemoTask( void * pvParameters )
 {
     configPRINTF( ( "---------STARTING DEMO---------\r\n" ) );
     #if ( configPKCS11_MANAGEMENT_AND_RNG_DEMO == 1 )
@@ -70,30 +67,24 @@ static void prvStartPKCS11Demo( void )
         vPKCS11SignVerifyDemo();
     #endif
     configPRINTF( ( "---------Finished DEMO---------\r\n" ) );
+
+    exit( 0 );
 }
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-    configPRINTF( ( "Creating PKCS #11 Demo Task.\r\n" ) );
-    BaseType_t xReturned;
-    TaskHandle_t xHandle = NULL;
+    vPlatformInitLogging();
 
-    mbedtls_threading_set_alt( aws_mbedtls_mutex_init,
-                               aws_mbedtls_mutex_free,
-                               aws_mbedtls_mutex_lock,
-                               aws_mbedtls_mutex_unlock );
-
-    /* Create the PKCS #11 demo task. */
-    xReturned = xTaskCreate(
-        ( TaskFunction_t ) prvStartPKCS11Demo,
-        "PKCS11 Demo",
-        configPKCS11_DEMO_STACK_SIZE,
-        NULL,
-        tskIDLE_PRIORITY + 1,
-        &xHandle );
-    configASSERT( xReturned == pdPASS );
+    /* Create the SNTP client task that is responsible for synchronizing system time with the time servers
+     * periodically. This is created as a high priority task to keep the SNTP client operation unhindered. */
+    xTaskCreate( prvPKCS11DemoTask,            /* Function that implements the task. */
+                 "PKCS11 Demo",                /* Text name for the task - only used for debugging. */
+                 configPKCS11_DEMO_STACK_SIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
+                 NULL,                         /* Task parameter - not used in this case. */
+                 configMAX_PRIORITIES - 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 NULL );
 
     /* Start the RTOS scheduler. */
     vTaskStartScheduler();
@@ -102,131 +93,13 @@ int main( void )
      * line will never be reached.  If the following line does execute, then
      * there was insufficient FreeRTOS heap memory available for the idle and/or
      * timer tasks to be created.  See the memory management section on the
-     * FreeRTOS web site for more details (this is standard text that is not
-     * really applicable to the Win32 simulator port). */
-    for( ; ; )
-    {
-        __debugbreak();
-    }
-}
-/*-----------------------------------------------------------*/
-
-void vLoggingPrintf( const char *pcFormat,
-					 ... )
-{
-va_list arg;
-
-	va_start( arg, pcFormat );
-	vprintf( pcFormat, arg );
-	va_end( arg );
-}
-/*-----------------------------------------------------------*/
-
-void vAssertCalled( const char * pcFile,
-                    uint32_t ulLine )
-{
-    volatile uint32_t ulBlockVariable = 0UL;
-    volatile char * pcFileName = ( volatile char * ) pcFile;
-    volatile uint32_t ulLineNumber = ulLine;
-
-    ( void ) pcFileName;
-    ( void ) ulLineNumber;
-
-    printf( "vAssertCalled( %s, %u\n", pcFile, ulLine );
-
-    /* Setting ulBlockVariable to a non-zero value in the debugger will allow
-     * this function to be exited. */
-    taskDISABLE_INTERRUPTS();
-    {
-        while( ulBlockVariable == 0UL )
-        {
-            __debugbreak();
-        }
-    }
-    taskENABLE_INTERRUPTS();
-}
-/*-----------------------------------------------------------*/
-
-int mbedtls_hardware_poll( void * data,
-                           unsigned char * output,
-                           size_t len,
-                           size_t * olen )
-{
-    int lStatus = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
-    HCRYPTPROV hProv = 0;
-
-    /* Unferenced parameter. */
-    ( void ) data;
-
-    /*
-     * This is port-specific for the Windows simulator, so just use Crypto API.
+     * FreeRTOS web site for more details.
      */
 
-    if( TRUE == CryptAcquireContextA(
-            &hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) )
+    for( ; ; )
     {
-        if( TRUE == CryptGenRandom( hProv, len, output ) )
-        {
-            lStatus = 0;
-            *olen = len;
-        }
-
-        CryptReleaseContext( hProv, 0 );
+        configASSERT( pdFALSE );
     }
-
-    return lStatus;
 }
 
-/* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
- * implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
- * used by the Idle task. */
-void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
-                                    StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize )
-{
-    /* If the buffers to be provided to the Idle task are declared inside this
-     * function then they must be declared static - otherwise they will be allocated on
-     * the stack and so not exists after this function exits. */
-    static StaticTask_t xIdleTaskTCB;
-    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
-
-    /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
-     * state will be stored. */
-    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
-
-    /* Pass out the array that will be used as the Idle task's stack. */
-    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
-
-    /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-     * Note that, as the array is necessarily of type StackType_t,
-     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-}
-/*-----------------------------------------------------------*/
-
-/* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
- * application must provide an implementation of vApplicationGetTimerTaskMemory()
- * to provide the memory that is used by the Timer service task. */
-void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
-                                     StackType_t ** ppxTimerTaskStackBuffer,
-                                     uint32_t * pulTimerTaskStackSize )
-{
-    /* If the buffers to be provided to the Timer task are declared inside this
-     * function then they must be declared static - otherwise they will be allocated on
-     * the stack and so not exists after this function exits. */
-    static StaticTask_t xTimerTaskTCB;
-    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
-
-    /* Pass out a pointer to the StaticTask_t structure in which the Timer
-     * task's state will be stored. */
-    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
-
-    /* Pass out the array that will be used as the Timer task's stack. */
-    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
-
-    /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
-     * Note that, as the array is necessarily of type StackType_t,
-     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
-}
 /*-----------------------------------------------------------*/

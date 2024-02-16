@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -249,7 +249,7 @@ static void vComRxTask( void * pvParameters )
                 {
                     /* This was not the expected character so post a message for
                      * printing to say that an error has occurred.  We will then wait
-                     * to resynchronise. */
+                     * to resynchronize. */
                     vPrintDisplayMessage( &pcTaskErrorMsg );
                     sResyncRequired = pdTRUE;
                 }

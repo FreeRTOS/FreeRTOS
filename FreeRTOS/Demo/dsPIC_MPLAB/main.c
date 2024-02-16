@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -77,46 +76,46 @@
 #include "timertest.h"
 
 /* Demo task priorities. */
-#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define mainCOM_TEST_PRIORITY				( 2 )
+#define mainBLOCK_Q_PRIORITY                      ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY                   ( tskIDLE_PRIORITY + 3 )
+#define mainCOM_TEST_PRIORITY                     ( 2 )
 
 /* The check task may require a bit more stack as it calls sprintf(). */
-#define mainCHECK_TAKS_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
+#define mainCHECK_TAKS_STACK_SIZE                 ( configMINIMAL_STACK_SIZE * 2 )
 
 /* The execution period of the check task. */
-#define mainCHECK_TASK_PERIOD				( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
+#define mainCHECK_TASK_PERIOD                     ( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
 
 /* The number of flash co-routines to create. */
-#define mainNUM_FLASH_COROUTINES			( 5 )
+#define mainNUM_FLASH_COROUTINES                  ( 5 )
 
 /* Baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( 19200 )
+#define mainCOM_TEST_BAUD_RATE                    ( 19200 )
 
 /* The LED used by the comtest tasks.  mainCOM_TEST_LED + 1 is also used.
-See the comtest.c file for more information. */
-#define mainCOM_TEST_LED					( 6 )
+ * See the comtest.c file for more information. */
+#define mainCOM_TEST_LED                          ( 6 )
 
 /* The frequency at which the "fast interrupt test" interrupt will occur. */
-#define mainTEST_INTERRUPT_FREQUENCY		( 20000 )
+#define mainTEST_INTERRUPT_FREQUENCY              ( 20000 )
 
 /* The number of processor clocks we expect to occur between each "fast
-interrupt test" interrupt. */
-#define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ( configCPU_CLOCK_HZ / mainTEST_INTERRUPT_FREQUENCY )
+ * interrupt test" interrupt. */
+#define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS    ( configCPU_CLOCK_HZ / mainTEST_INTERRUPT_FREQUENCY )
 
 /* The number of nano seconds between each processor clock. */
-#define mainNS_PER_CLOCK ( ( unsigned short ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK                          ( ( unsigned short ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* Dimension the buffer used to hold the value of the maximum jitter time when
-it is converted to a string. */
-#define mainMAX_STRING_LENGTH				( 20 )
+ * it is converted to a string. */
+#define mainMAX_STRING_LENGTH                     ( 20 )
 
 /*-----------------------------------------------------------*/
 
 /*
  * The check task as described at the top of this file.
  */
-static void vCheckTask( void *pvParameters );
+static void vCheckTask( void * pvParameters );
 
 /*
  * Setup the processor ready for the demo.
@@ -135,113 +134,112 @@ static QueueHandle_t xLCDQueue;
  */
 int main( void )
 {
-	/* Configure any hardware required for this demo. */
-	prvSetupHardware();
+    /* Configure any hardware required for this demo. */
+    prvSetupHardware();
 
-	/* Create the standard demo tasks. */
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	vCreateBlockTimeTasks();
+    /* Create the standard demo tasks. */
+    vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vStartIntegerMathTasks( tskIDLE_PRIORITY );
+    vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
+    vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+    vCreateBlockTimeTasks();
 
-	/* Create the test tasks defined within this file. */
-	xTaskCreate( vCheckTask, "Check", mainCHECK_TAKS_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Create the test tasks defined within this file. */
+    xTaskCreate( vCheckTask, "Check", mainCHECK_TAKS_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Start the task that will control the LCD.  This returns the handle
-	to the queue used to write text out to the task. */
-	xLCDQueue = xStartLCDTask();
+    /* Start the task that will control the LCD.  This returns the handle
+     * to the queue used to write text out to the task. */
+    xLCDQueue = xStartLCDTask();
 
-	/* Start the high frequency interrupt test. */
-	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
+    /* Start the high frequency interrupt test. */
+    vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 
-	/* Finally start the scheduler. */
-	vTaskStartScheduler();
+    /* Finally start the scheduler. */
+    vTaskStartScheduler();
 
-	/* Will only reach here if there is insufficient heap available to start
-	the scheduler. */
-	return 0;
+    /* Will only reach here if there is insufficient heap available to start
+     * the scheduler. */
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	vParTestInitialise();
+    vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
-static void vCheckTask( void *pvParameters )
+static void vCheckTask( void * pvParameters )
 {
 /* Used to wake the task at the correct frequency. */
-TickType_t xLastExecutionTime;
+    TickType_t xLastExecutionTime;
 
 /* The maximum jitter time measured by the fast interrupt test. */
-extern unsigned short usMaxJitter ;
+    extern unsigned short usMaxJitter;
 
 /* Buffer into which the maximum jitter time is written as a string. */
-static char cStringBuffer[ mainMAX_STRING_LENGTH ];
+    static char cStringBuffer[ mainMAX_STRING_LENGTH ];
 
 /* The message that is sent on the queue to the LCD task.  The first
-parameter is the minimum time (in ticks) that the message should be
-left on the LCD without being overwritten.  The second parameter is a pointer
-to the message to display itself. */
-xLCDMessage xMessage = { 0, cStringBuffer };
+ * parameter is the minimum time (in ticks) that the message should be
+ * left on the LCD without being overwritten.  The second parameter is a pointer
+ * to the message to display itself. */
+    xLCDMessage xMessage = { 0, cStringBuffer };
 
 /* Set to pdTRUE should an error be detected in any of the standard demo tasks. */
-unsigned short usErrorDetected = pdFALSE;
+    unsigned short usErrorDetected = pdFALSE;
 
-	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
-	works correctly. */
-	xLastExecutionTime = xTaskGetTickCount();
+    /* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
+     * works correctly. */
+    xLastExecutionTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		/* Wait until it is time for the next cycle. */
-		vTaskDelayUntil( &xLastExecutionTime, mainCHECK_TASK_PERIOD );
+    for( ; ; )
+    {
+        /* Wait until it is time for the next cycle. */
+        vTaskDelayUntil( &xLastExecutionTime, mainCHECK_TASK_PERIOD );
 
-		/* Has an error been found in any of the standard demo tasks? */
+        /* Has an error been found in any of the standard demo tasks? */
 
-		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-		{
-			usErrorDetected = pdTRUE;
-			sprintf( cStringBuffer, "FAIL #1" );
-		}
+        if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+        {
+            usErrorDetected = pdTRUE;
+            sprintf( cStringBuffer, "FAIL #1" );
+        }
 
-		if( xAreComTestTasksStillRunning() != pdTRUE )
-		{
-			usErrorDetected = pdTRUE;
-			sprintf( cStringBuffer, "FAIL #2" );
-		}
+        if( xAreComTestTasksStillRunning() != pdTRUE )
+        {
+            usErrorDetected = pdTRUE;
+            sprintf( cStringBuffer, "FAIL #2" );
+        }
 
-		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			usErrorDetected = pdTRUE;
-			sprintf( cStringBuffer, "FAIL #3" );
-		}
+        if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+        {
+            usErrorDetected = pdTRUE;
+            sprintf( cStringBuffer, "FAIL #3" );
+        }
 
-		if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			usErrorDetected = pdTRUE;
-			sprintf( cStringBuffer, "FAIL #4" );
-		}
+        if( xAreBlockingQueuesStillRunning() != pdTRUE )
+        {
+            usErrorDetected = pdTRUE;
+            sprintf( cStringBuffer, "FAIL #4" );
+        }
 
-		if( usErrorDetected == pdFALSE )
-		{
-			/* No errors have been discovered, so display the maximum jitter
-			timer discovered by the "fast interrupt test". */
-			sprintf( cStringBuffer, "%dns max jitter", ( short ) ( usMaxJitter - mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ) * mainNS_PER_CLOCK );
-		}
+        if( usErrorDetected == pdFALSE )
+        {
+            /* No errors have been discovered, so display the maximum jitter
+             * timer discovered by the "fast interrupt test". */
+            sprintf( cStringBuffer, "%dns max jitter", ( short ) ( usMaxJitter - mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ) * mainNS_PER_CLOCK );
+        }
 
-		/* Send the message to the LCD gatekeeper for display. */
-		xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
-	}
+        /* Send the message to the LCD gatekeeper for display. */
+        xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* Schedule the co-routines from within the idle task hook. */
-	vCoRoutineSchedule();
+    /* Schedule the co-routines from within the idle task hook. */
+    vCoRoutineSchedule();
 }
 /*-----------------------------------------------------------*/
-

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -48,10 +47,10 @@
  * that is found on the FreeRTOS.org web site.
  */
 
-/* 
+/*
  * The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within the IDE!  Once it has been executed, re-open or refresh 
+ * executed prior to this project being built.  The batch file *cannot* be
+ * executed from within the IDE!  Once it has been executed, re-open or refresh
  * the Eclipse project and remove the #error line below.
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
@@ -69,8 +68,8 @@
 #include "QueueOverwrite.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+ * or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
 
 /*-----------------------------------------------------------*/
 
@@ -90,128 +89,131 @@ extern void main_full( void );
 
 int main( void )
 {
-	/* Prepare the hardware to run this demo. */
-	prvSetupHardware();
+    /* Prepare the hardware to run this demo. */
+    prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+     * of this file. */
+    #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 
-	return 0;
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	configCONFIGURE_LED();
+    configCONFIGURE_LED();
 
-	/* Ensure all priority bits are assigned as preemption priority bits. */
-	NVIC_SetPriorityGrouping( 0 );
+    /* Ensure all priority bits are assigned as preemption priority bits. */
+    NVIC_SetPriorityGrouping( 0 );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	for( ;; )
-	{
-		__asm volatile( "NOP" );
-	};
+    /* vApplicationMallocFailedHook() will only be called if
+     * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+     * function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+     * timer or semaphore is created.  It is also called by various parts of the
+     * demo application.  If heap_1.c or heap_2.c are used, then the size of the
+     * heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+     * FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+     * to query the size of free heap space that remains (although it does not
+     * provide information on how the remaining heap might be fragmented). */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+        __asm volatile ( "NOP" );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
-	task.  It is essential that code added to this hook function never attempts
-	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+    /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+     * to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+     * task.  It is essential that code added to this hook function never attempts
+     * to block in any way (for example, call xQueueReceive() with a block time
+     * specified, or call vTaskDelay()).  If the application makes use of the
+     * vTaskDelete() API function (as this demo application does) then it is also
+     * important that vApplicationIdleHook() is permitted to return to its calling
+     * function, because it is the responsibility of the idle task to clean up
+     * memory allocated by the kernel to any task that has since been deleted. */
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; )
-	{
-		__asm volatile( "NOP" );
-	}
+    /* Run time stack overflow checking is performed if
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+        __asm volatile ( "NOP" );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* This function will be called by each tick interrupt if
-	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-	added here, but the tick hook is called from an interrupt context, so
-	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
+    /* This function will be called by each tick interrupt if
+    * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    * added here, but the tick hook is called from an interrupt context, so
+    * code must not attempt to block, and only the interrupt safe FreeRTOS API
+    * functions can be used (those that end in FromISR()). */
 
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
-	{
-		/* Write to a queue that is in use as part of the queue set demo to
-		demonstrate using queue sets from an ISR. */
-		vQueueSetAccessQueueSetFromISR();
+    #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
+    {
+        /* Write to a queue that is in use as part of the queue set demo to
+         * demonstrate using queue sets from an ISR. */
+        vQueueSetAccessQueueSetFromISR();
 
-		/* Test the ISR safe queue overwrite functions. */
-		vQueueOverwritePeriodicISRDemo();
-	}
-	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
+        /* Test the ISR safe queue overwrite functions. */
+        vQueueOverwritePeriodicISRDemo();
+    }
+    #endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 
 #ifdef JUST_AN_EXAMPLE_ISR
 
-void Dummy_IRQHandler(void)
-{
-long lHigherPriorityTaskWoken = pdFALSE;
+    void Dummy_IRQHandler( void )
+    {
+        long lHigherPriorityTaskWoken = pdFALSE;
 
-	/* Clear the interrupt if necessary. */
-	Dummy_ClearITPendingBit();
+        /* Clear the interrupt if necessary. */
+        Dummy_ClearITPendingBit();
 
-	/* This interrupt does nothing more than demonstrate how to synchronise a
-	task with an interrupt.  A semaphore is used for this purpose.  Note
-	lHigherPriorityTaskWoken is initialised to zero. */
-	xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
+        /* This interrupt does nothing more than demonstrate how to synchronise a
+         * task with an interrupt.  A semaphore is used for this purpose.  Note
+         * lHigherPriorityTaskWoken is initialised to zero. */
+        xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
 
-	/* If there was a task that was blocked on the semaphore, and giving the
-	semaphore caused the task to unblock, and the unblocked task has a priority
-	higher than the current Running state task (the task that this interrupt
-	interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE
-	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the
-	portEND_SWITCHING_ISR() macro will result in a context switch being pended to
-	ensure this interrupt returns directly to the unblocked, higher priority,
-	task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
-	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
-}
+        /* If there was a task that was blocked on the semaphore, and giving the
+         * semaphore caused the task to unblock, and the unblocked task has a priority
+         * higher than the current Running state task (the task that this interrupt
+         * interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE
+         * internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the
+         * portEND_SWITCHING_ISR() macro will result in a context switch being pended to
+         * ensure this interrupt returns directly to the unblocked, higher priority,
+         * task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
+        portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
+    }
 
 #endif /* JUST_AN_EXAMPLE_ISR */

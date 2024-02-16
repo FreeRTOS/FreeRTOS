@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -30,6 +30,14 @@
 void vStartTimerDemoTask( TickType_t xBaseFrequencyIn );
 BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency );
 void vTimerPeriodicISRTests( void );
+
+/*
+ * Test the behavior of backlogged timers.  The backlog tests should not be
+ * included while other demos are running concurrently with the timer demo.  The
+ * backlog tests utilize xTaskCatchUpTicks(), which is logically equivalent to
+ * starving all tasks for some number of ticks.  Under these conditions, other
+ * demos may errantly detect test failures.
+ */
 void vTimerDemoIncludeBacklogTests( BaseType_t includeBacklogTests );
 
 #endif /* TIMER_DEMO_H */

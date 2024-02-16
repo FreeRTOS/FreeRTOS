@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -159,7 +159,7 @@ void vStartTaskNotifyArrayTask( void )
     /* Create the task that performs some tests by itself, then loops around
      * being notified by both a software timer and an interrupt. */
     xTaskCreate( prvNotifiedTask,                    /* Function that implements the task. */
-                 "ArrayNotifed",                     /* Text name for the task - for debugging only - not used by the kernel. */
+                 "ArrayNotified",                    /* Text name for the task - for debugging only - not used by the kernel. */
                  notifyNOTIFY_ARRAY_TASK_STACK_SIZE, /* Task's stack size in words, not bytes!. */
                  NULL,                               /* Task parameter, not used in this case. */
                  notifyTASK_PRIORITY,                /* Task priority, 0 is the lowest. */
@@ -917,7 +917,7 @@ static void prvBlockOnTheNotifiedIndexed( void )
         xTaskNotifyStateClearIndexed( xTaskToNotify, uxIndex );
     }
 
-    /* Peform the test on each task notification within the array of task
+    /* Perform the test on each task notification within the array of task
      * notifications. */
     for( uxIndexToNotify = 0; uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToNotify++ )
     {

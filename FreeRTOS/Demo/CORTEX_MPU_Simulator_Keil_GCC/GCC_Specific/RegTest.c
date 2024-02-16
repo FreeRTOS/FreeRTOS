@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* FreeRTOS includes. */
@@ -608,10 +607,10 @@ volatile uint32_t stacked_psr;
 	( void ) stacked_pc;
 	( void ) stacked_lr;
 	( void ) stacked_r12;
-    ( void ) stacked_r0;
-    ( void ) stacked_r1;
-    ( void ) stacked_r2;
-    ( void ) stacked_r3;
+	( void ) stacked_r0;
+	( void ) stacked_r1;
+	( void ) stacked_r2;
+	( void ) stacked_r3;
 }
 /*-----------------------------------------------------------*/
 
@@ -620,6 +619,7 @@ void HardFault_Handler( void )
 {
 	__asm volatile
 	(
+	  ".align 8					   \n"
 		" tst lr, #4										\n"
 		" ite eq											\n"
 		" mrseq r0, msp										\n"
@@ -637,6 +637,7 @@ void MemManage_Handler( void )
 {
 	__asm volatile
 	(
+	  ".align 8					   \n"
 		" tst lr, #4										\n"
 		" ite eq											\n"
 		" mrseq r0, msp										\n"

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -73,6 +73,18 @@ int suiteTearDown( int numFailures )
 }
 
 /* ==========================  Helper functions =========================== */
+
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
 
 /* =============================  Test Cases ============================== */
 
@@ -287,6 +299,8 @@ void test_xQueuePeek_noop_waiting_higher_priority( void )
     /* peek from the queue */
     uint32_t checkVal = INVALID_UINT32;
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
     TEST_ASSERT_EQUAL( pdTRUE, xQueuePeek( xQueue, &checkVal, 0 ) );
@@ -294,7 +308,7 @@ void test_xQueuePeek_noop_waiting_higher_priority( void )
 
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Veify that the task Yielded */
+    /* Verify that the task Yielded */
     TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
 
     /* Check that vTaskMissedYield was called */
@@ -325,6 +339,7 @@ void test_xQueuePeek_xQueuePeek_waiting_higher_priority( void )
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
 
     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xStubExpectedReturnValue = pdTRUE;
 
@@ -338,7 +353,7 @@ void test_xQueuePeek_xQueuePeek_waiting_higher_priority( void )
 
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Veify that the task Yielded */
+    /* Verify that the task Yielded */
     TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
 
     /* Check that vTaskMissedYield was called */
@@ -369,6 +384,7 @@ void test_xQueuePeek_xQueueReceive_waiting_higher_priority( void )
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
 
     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueueReceive_Stub );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xStubExpectedReturnValue = pdTRUE;
 
@@ -382,7 +398,7 @@ void test_xQueuePeek_xQueueReceive_waiting_higher_priority( void )
 
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Veify that the task Yielded */
+    /* Verify that the task Yielded */
     TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
 
     /* Check that vTaskMissedYield was called */
@@ -805,6 +821,8 @@ void test_xQueueReceive_noop_waiting_higher_priority( void )
 
     uint32_t checkVal = INVALID_UINT32;
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
     /* receive from the queue */
@@ -994,27 +1012,33 @@ void test_xQueueReceiveFromISR_success( void )
 void test_xQueueReceiveFromISR_locked( void )
 {
     /* Create a new queue */
-    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+    QueueHandle_t xQueue = xQueueCreate( 2, sizeof( uint32_t ) );
 
     /* Send a test value so the queue is not empty */
     uint32_t testVal = getNextMonotonicTestValue();
 
     ( void ) xQueueSend( xQueue, &testVal, 0 );
+    ( void ) xQueueSend( xQueue, &testVal, 0 );
+
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     /* Set private lock counters */
     vSetQueueRxLock( xQueue, queueLOCKED_UNMODIFIED );
     vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
 
-    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
+    TEST_ASSERT_EQUAL( 2, uxQueueMessagesWaiting( xQueue ) );
 
     uint32_t checkVal = INVALID_UINT32;
 
     /* Run xQueueReceiveFromISR with the queue locked */
     TEST_ASSERT_EQUAL( pdTRUE, xQueueReceiveFromISR( xQueue, &checkVal, NULL ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueReceiveFromISR( xQueue, &checkVal, NULL ) );
 
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Verify that the cRxLock counter has been incremented */
+    /* Verify that the cRxLock counter has only been incremented by one
+     * even after 2 calls to xQueueReceiveFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
     TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueRxLock( xQueue ) );
 
     /* Verify that the cTxLock counter has not changed */
@@ -1042,6 +1066,10 @@ void test_xQueueReceiveFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueue, INT8_MAX );
 
     uint32_t checkVal = INVALID_UINT32;
+
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
 
     /* Expect an assertion since the cRxLock value has overflowed */
     fakeAssertExpectFail();

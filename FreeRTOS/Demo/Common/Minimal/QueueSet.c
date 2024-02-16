@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -158,8 +157,8 @@
  * Test the case where two queues within a set are written to with
  * xQueueOverwrite().
  */
-    static void prvTestQueueOverwriteOnTwoQueusInQueueSet( void );
-    static void prvTestQueueOverwriteFromISROnTwoQueusInQueueSet( void );
+    static void prvTestQueueOverwriteOnTwoQueuesInQueueSet( void );
+    static void prvTestQueueOverwriteFromISROnTwoQueuesInQueueSet( void );
 
 /*
  * Local pseudo random number seed and return functions.  Used to avoid calls
@@ -188,7 +187,7 @@
     static volatile uint32_t ulCycleCounter = 0UL;
 
 /* Set to pdFAIL if an error is detected by any queue set task.
- * ulCycleCounter will only be incremented if xQueueSetTasksSatus equals pdPASS. */
+ * ulCycleCounter will only be incremented if xQueueSetTasksStatus equals pdPASS. */
     static volatile BaseType_t xQueueSetTasksStatus = pdPASS;
 
 /* Just a flag to let the function that writes to a queue from an ISR know that
@@ -196,7 +195,7 @@
     static volatile BaseType_t xSetupComplete = pdFALSE;
 
 /* The value sent to the queue from the ISR is file scope so the
- * xAreQueeuSetTasksStillRunning() function can check it is incrementing as
+ * xAreQueueSetTasksStillRunning() function can check it is incrementing as
  * expected. */
     static volatile uint32_t ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
 
@@ -716,7 +715,7 @@
     }
 /*-----------------------------------------------------------*/
 
-    static void prvTestQueueOverwriteOnTwoQueusInQueueSet( void )
+    static void prvTestQueueOverwriteOnTwoQueuesInQueueSet( void )
     {
         uint32_t ulValueToSend1 = 1, ulValueToSend2 = 2UL, ulValueReceived = 0;
         QueueHandle_t xQueueHandle1 = NULL, xQueueHandle2 = NULL, xReceivedHandle = NULL;
@@ -880,7 +879,7 @@
     }
 /*-----------------------------------------------------------*/
 
-    static void prvTestQueueOverwriteFromISROnTwoQueusInQueueSet( void )
+    static void prvTestQueueOverwriteFromISROnTwoQueuesInQueueSet( void )
     {
         uint32_t ulValueToSend1 = 1, ulValueToSend2 = 2UL, ulValueReceived = 0;
         QueueHandle_t xQueueHandle1 = NULL, xQueueHandle2 = NULL, xReceivedHandle = NULL;
@@ -1132,8 +1131,8 @@
 
         /* Test the case where two queues within a set are written to with
          * xQueueOverwrite(). */
-        prvTestQueueOverwriteOnTwoQueusInQueueSet();
-        prvTestQueueOverwriteFromISROnTwoQueusInQueueSet();
+        prvTestQueueOverwriteOnTwoQueuesInQueueSet();
+        prvTestQueueOverwriteFromISROnTwoQueuesInQueueSet();
 
         /* In case any of the above have already indicated a failure. */
         configASSERT( xQueueSetTasksStatus != pdFAIL );

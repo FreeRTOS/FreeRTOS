@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -69,17 +69,17 @@ int suiteTearDown( int numFailures )
 static void test_long_queue( QueueHandle_t xQueue,
                              uint32_t maxItems )
 {
-    /* Veify that queue is empty */
+    /* Verify that queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
     queue_common_add_sequential_to_queue( xQueue, maxItems );
 
-    /* Veify that queue is full */
+    /* Verify that queue is full */
     TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
 
     queue_common_receive_sequential_from_queue( xQueue, maxItems, maxItems, 0 );
 
-    /* Veify that queue is empty */
+    /* Verify that queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 }
 
@@ -138,10 +138,16 @@ void test_macro_xQueueCreateStatic_nullQueueStorage_oneItem_zeroLength( void )
     /* validate returned queue handle */
     TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
 
-    /* Veify that new queue is empty */
+    /* Verify that Queue Length is one */
+    TEST_ASSERT_EQUAL( 1, uxQueueGetQueueLength( xQueue ) );
+
+    /* Verify that Queue ItemSize is zero */
+    TEST_ASSERT_EQUAL( 0, uxQueueGetQueueItemSize( xQueue ) );
+
+    /* Verify that new queue is empty */
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Valdiate that the queue has 1 space remaining */
+    /* Validate that the queue has 1 space remaining */
     TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueue ) );
 
     /* Send a test value */
@@ -184,7 +190,7 @@ void test_macro_xQueueCreateStatic_validQueueStorage_oneItem_zeroLength( void )
     uint32_t queueData;
 
     /* Expect that xQueueCreateStatic will assert because data storage is
-     *   prohibited for a zero itemLength queue */
+     * prohibited for a zero itemLength queue */
     fakeAssertExpectFail();
     QueueHandle_t xQueue = xQueueCreateStatic( 1, 0, ( void * ) &queueData, &queueBuffer );
 
@@ -204,6 +210,12 @@ void test_macro_xQueueCreateStatic_large( void )
     uint32_t queueStorage[ MAX_QUEUE_ITEMS ];
     StaticQueue_t queueBuffer;
     QueueHandle_t xQueue = xQueueCreateStatic( MAX_QUEUE_ITEMS, sizeof( uint32_t ), ( void * ) queueStorage, &queueBuffer );
+
+    /* Verify that Queue Length is equal to the MAX_QUEUE_ITEMS */
+    TEST_ASSERT_EQUAL( MAX_QUEUE_ITEMS, uxQueueGetQueueLength( xQueue ) );
+
+    /* Verify that Queue ItemSize is 4 */
+    TEST_ASSERT_EQUAL( 4, uxQueueGetQueueItemSize( xQueue ) );
 
     test_long_queue( xQueue, MAX_QUEUE_ITEMS );
     vQueueDelete( xQueue );

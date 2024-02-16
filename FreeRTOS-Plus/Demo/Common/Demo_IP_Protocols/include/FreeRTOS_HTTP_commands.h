@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP V2.0.3
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,49 +19,50 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 #ifndef FREERTOS_HTTP_COMMANDS_H
-#define	FREERTOS_HTTP_COMMANDS_H
+#define FREERTOS_HTTP_COMMANDS_H
 
-enum {
-	WEB_REPLY_OK = 200,
-	WEB_NO_CONTENT = 204,
-	WEB_BAD_REQUEST = 400,
-	WEB_UNAUTHORIZED = 401,
-	WEB_NOT_FOUND = 404,
-	WEB_GONE = 410,
-	WEB_PRECONDITION_FAILED = 412,
-	WEB_INTERNAL_SERVER_ERROR = 500,
+enum
+{
+    WEB_REPLY_OK = 200,
+    WEB_NO_CONTENT = 204,
+    WEB_BAD_REQUEST = 400,
+    WEB_UNAUTHORIZED = 401,
+    WEB_NOT_FOUND = 404,
+    WEB_GONE = 410,
+    WEB_PRECONDITION_FAILED = 412,
+    WEB_INTERNAL_SERVER_ERROR = 500,
 };
 
-enum EWebCommand {
-	ECMD_GET,
-	ECMD_HEAD,
-	ECMD_POST,
-	ECMD_PUT,
-	ECMD_DELETE,
-	ECMD_TRACE,
-	ECMD_OPTIONS,
-	ECMD_CONNECT,
-	ECMD_PATCH,
-	ECMD_UNK,
+enum EWebCommand
+{
+    ECMD_GET,
+    ECMD_HEAD,
+    ECMD_POST,
+    ECMD_PUT,
+    ECMD_DELETE,
+    ECMD_TRACE,
+    ECMD_OPTIONS,
+    ECMD_CONNECT,
+    ECMD_PATCH,
+    ECMD_UNK,
 };
 
 struct xWEB_COMMAND
 {
-	BaseType_t xCommandLength;
-	const char *pcCommandName;
-	const unsigned char ucCommandType;
+    BaseType_t xCommandLength;
+    const char * pcCommandName;
+    const unsigned char ucCommandType;
 };
 
-#define	WEB_CMD_COUNT	(ECMD_UNK+1)
+#define WEB_CMD_COUNT    ( ECMD_UNK + 1 )
 
-extern const struct xWEB_COMMAND xWebCommands[WEB_CMD_COUNT];
+extern const struct xWEB_COMMAND xWebCommands[ WEB_CMD_COUNT ];
 
-extern const char *webCodename (int aCode);
+extern const char * webCodename( int aCode );
 
-#endif	/* FREERTOS_HTTP_COMMANDS_H */
-
-
+#endif /* FREERTOS_HTTP_COMMANDS_H */

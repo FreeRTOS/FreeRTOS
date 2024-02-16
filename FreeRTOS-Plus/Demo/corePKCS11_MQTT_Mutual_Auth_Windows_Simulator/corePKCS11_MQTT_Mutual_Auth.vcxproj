@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{382dc80f-e278-4bc9-9db6-59014486da0f}</ProjectGuid>
+    <RootNamespace>corePKCS11_MQTT_Mutual_Auth</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>.;..\Common;DemoTasks\include;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_rng_pkcs11.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c" />
+    <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="PKCS11_Mqtt_MutualAuthDemo.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pkcs11.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h" />
+    <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
+    <ClInclude Include="core_mqtt_config.h" />
+    <ClInclude Include="demo_config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\corePKCS11\corePKCS11.vcxproj">
+      <Project>{19f0ff1a-3368-491a-9932-a2f089508f51}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">
+      <Project>{c90e6cc5-818b-4c97-8876-0986d989387c}</Project>
+      <Private>false</Private>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">
+      <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
+      <Private>false</Private>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj">
+      <Project>{be362ac0-b10b-4276-b84e-6304652ba228}</Project>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\MbedTLS\MbedTLS.vcxproj">
+      <Project>{e1016f3e-94e9-4864-9fd8-1d7c1fefbfd7}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

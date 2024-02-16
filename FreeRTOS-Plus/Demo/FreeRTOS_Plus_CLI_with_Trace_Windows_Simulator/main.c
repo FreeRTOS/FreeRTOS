@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -36,11 +35,11 @@
  * the timing information in the FreeRTOS+Trace logs have no meaningful units.
  * See the documentation page for the Windows simulator for an explanation of
  * the slow timing:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ * https://www.FreeRTOS.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * Documentation for this demo can be found on:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_Trace/Free_RTOS_Plus_Trace_CLI_Example.shtml
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_Trace/Free_RTOS_Plus_Trace_CLI_Example.shtml
  ******************************************************************************
  *
  * This is a simple FreeRTOS Windows simulator project that makes it easy to
@@ -79,19 +78,23 @@
 #include "task.h"
 #include "queue.h"
 
+/* FreeRTOS+Trace includes. */
+#include "trcDefines.h"
+#include "trcRecorder.h"
+
 /* Priorities at which the tasks are created. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainUDP_CLI_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1 )
+#define mainUDP_CLI_TASK_PRIORITY          ( tskIDLE_PRIORITY )
 
 /* The rate at which data is sent to the queue.  The (simulated) 250ms value is
-converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 250 / portTICK_RATE_MS )
+ * converted to ticks using the portTICK_RATE_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS        ( 250 / portTICK_RATE_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
-will remove items as they are added, meaning the send task should always find
-the queue empty. */
-#define mainQUEUE_LENGTH					( 1 )
+ * will remove items as they are added, meaning the send task should always find
+ * the queue empty. */
+#define mainQUEUE_LENGTH                   ( 1 )
 
 /*-----------------------------------------------------------*/
 
@@ -99,13 +102,13 @@ the queue empty. */
  * The queue send and receive tasks as described in the comments at the top of
  * this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*
  * The task that implements the UDP command interpreter using FreeRTOS+CLI.
  */
-extern void vUDPCommandInterpreterTask( void *pvParameters );
+extern void vUDPCommandInterpreterTask( void * pvParameters );
 
 /*
  * Register commands that can be used with FreeRTOS+CLI through the UDP socket.
@@ -120,127 +123,130 @@ static xQueueHandle xQueue = NULL;
 
 int main( void )
 {
-const uint32_t ulLongTime_ms = 250UL;
+    const uint32_t ulLongTime_ms = 250UL;
 
-	/* Initialise the trace recorder and create the label used to post user
-	events to the trace recording on each tick interrupt. */
-	vTraceEnable( TRC_START );
+    /* Initialise the trace recorder and create the label used to post user
+     * events to the trace recording on each tick interrupt. */
+    vTraceEnable( TRC_START );
 
-	/* Create the queue used to pass messages from the queue send task to the
-	queue receive task. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+    /* Create the queue used to pass messages from the queue send task to the
+     * queue receive task. */
+    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
-	/* Give the queue a name for the FreeRTOS+Trace log. */
-	vTraceSetQueueName( xQueue, "DemoQ" );
+    /* Give the queue a name for the FreeRTOS+Trace log. */
+    vTraceSetQueueName( xQueue, "DemoQ" );
 
-	/* Start the two tasks as described in the comments at the top of this
-	file. */
-	xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
-				"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-				configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task.  Not actually used as a stack in the Win32 simulator port. */
-				NULL,								/* The parameter passed to the task - not used in this example. */
-				mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
-				NULL );								/* The task handle is not required, so NULL is passed. */
+    /* Start the two tasks as described in the comments at the top of this
+     * file. */
+    xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
+                 "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+                 configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task.  Not actually used as a stack in the Win32 simulator port. */
+                 NULL,                            /* The parameter passed to the task - not used in this example. */
+                 mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
+                 NULL );                          /* The task handle is not required, so NULL is passed. */
 
-	xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+    xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-	/* Create the task that handles the CLI on a UDP port.  The port number
-	is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
-	xTaskCreate( vUDPCommandInterpreterTask, "CLI", configMINIMAL_STACK_SIZE, NULL, mainUDP_CLI_TASK_PRIORITY, NULL );
+    /* Create the task that handles the CLI on a UDP port.  The port number
+     * is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
+    xTaskCreate( vUDPCommandInterpreterTask, "CLI", configMINIMAL_STACK_SIZE, NULL, mainUDP_CLI_TASK_PRIORITY, NULL );
 
-	/* Register commands with the FreeRTOS+CLI command interpreter. */
-	vRegisterCLICommands();
+    /* Register commands with the FreeRTOS+CLI command interpreter. */
+    vRegisterCLICommands();
 
-	/* Start the tasks and timer running. */
-	vTaskStartScheduler();
+    /* Start the tasks and timer running. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the idle and/or
-	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not
-	really applicable to the Win32 simulator port). */
-	for( ;; )
-	{
-		Sleep( ulLongTime_ms );
-	}
+    /* If all is well, the scheduler will now be running, and the following
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the idle and/or
+     * timer tasks	to be created.  See the memory management section on the
+     * FreeRTOS web site for more details (this is standard text that is not
+     * really applicable to the Win32 simulator port). */
+    for( ; ; )
+    {
+        Sleep( ulLongTime_ms );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
+    TickType_t xNextWakeTime;
+    const unsigned long ulValueToSend = 100UL;
 
-	/* Remove warning about unused parameters. */
-	( void ) pvParameters;
+    /* Remove warning about unused parameters. */
+    ( void ) pvParameters;
 
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again.
-		While in the Blocked state this task will not consume any CPU time. */
-		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
+    for( ; ; )
+    {
+        /* Place this task in the blocked state until it is time to run again.
+         *  While in the Blocked state this task will not consume any CPU time. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
 
-		/* Send to the queue - causing the queue receive task to unblock and
-		write a message to the display.  0 is used as the block time so the
-		sending operation will not block - it shouldn't need to block as the
-		queue should always	be empty at this point in the code, and it is an
-		error if it is not. */
-		xQueueSend( xQueue, &ulValueToSend, 0U );
-	}
+        /* Send to the queue - causing the queue receive task to unblock and
+         * write a message to the display.  0 is used as the block time so the
+         * sending operation will not block - it shouldn't need to block as the
+         * queue should always	be empty at this point in the code, and it is an
+         * error if it is not. */
+        xQueueSend( xQueue, &ulValueToSend, 0U );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
+    unsigned long ulReceivedValue;
 
-	/* Remove warning about unused parameters. */
-	( void ) pvParameters;
+    /* Remove warning about unused parameters. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue - this task will block
-		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-		FreeRTOSConfig.h. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+    for( ; ; )
+    {
+        /* Wait until something arrives in the queue - this task will block
+         * indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
+         * FreeRTOSConfig.h. */
+        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, write the message to the
-		display before looping back to block on the queue again. */
-		if( ulReceivedValue == 100UL )
-		{
-			printf( "Message received!\r\n" );
-			ulReceivedValue = 0U;
-		}
-	}
+        /*  To get here something must have been received from the queue, but
+         * is it the expected value?  If it is, write the message to the
+         * display before looping back to block on the queue again. */
+        if( ulReceivedValue == 100UL )
+        {
+            printf( "Message received!\r\n" );
+            ulReceivedValue = 0U;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-const unsigned long ulMSToSleep = 5;
+    const unsigned long ulMSToSleep = 5;
 
-	/* This function is called on each cycle of the idle task if
-	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
-	load. */
-	Sleep( ulMSToSleep );
+    /* This function is called on each cycle of the idle task if
+     * configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
+     * load. */
+    Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( void )
+static uint32_t ulEntryTime = 0;
+
+void vTraceTimerReset( void )
 {
-const unsigned long ulLongSleep = 1000UL;
-
-	taskDISABLE_INTERRUPTS();
-	for( ;; )
-	{
-		Sleep( ulLongSleep );
-	}
+    ulEntryTime = xTaskGetTickCount();
 }
-/*-----------------------------------------------------------*/
 
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return configTICK_RATE_HZ;
+}
 
+uint32_t uiTraceTimerGetValue( void )
+{
+    return( xTaskGetTickCount() - ulEntryTime );
+}

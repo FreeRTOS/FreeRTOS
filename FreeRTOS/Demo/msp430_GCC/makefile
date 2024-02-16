@@ -1,5 +1,5 @@
 #/*
-# * FreeRTOS V202111.00
+# * FreeRTOS V202212.00
 # * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 # *
 # * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
 # * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # *
-# * http://www.FreeRTOS.org
-# * http://aws.amazon.com/freertos
+# * https://www.FreeRTOS.org
+# * https://github.com/FreeRTOS
 # *
 # * 1 tab == 4 spaces!
 # */
@@ -33,7 +33,7 @@ OPT=-Os
 WARNINGS=-Wall -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
 		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
 
-CFLAGS=-mmcu=msp430x449 $(OPT) $(DEBUG) -I. -I../../Source/include -I../Common/include -DGCC_MSP430 $(WARNINGS)
+CFLAGS=-mcpu=430 -mmcu=msp430f449 $(OPT) $(DEBUG) -I. -I../../Source/include -I../Common/include -DGCC_MSP430 $(WARNINGS)
 
 # Setup paths to source code
 SOURCE_PATH = ../../Source
@@ -69,16 +69,4 @@ $(OBJ) : %.o : %.c makefile
 	$(CC) -c $(CFLAGS) $< -o $@	
 	
 clean :
-	touch makefile
-	
-
-
-
-
-
-
-
-
-	
-
-
+	${RM} ${OBJ} a.out

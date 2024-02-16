@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,19 +24,21 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 /*@
- * predicate xLIST_uninitialised(struct xLIST *l) =
- *  l->uxNumberOfItems |-> _ &*&
- *  l->pxIndex |-> _ &*&
- *  l->xListEnd.xItemValue |-> _ &*&
- *  l->xListEnd.pxNext |-> _ &*&
- *  l->xListEnd.pxPrevious |-> _ &*&
- *  l->xListEnd.pvOwner |-> _ &*&
- *  l->xListEnd.pxContainer |-> _ &*&
- *  struct_xLIST_ITEM_padding(&l->xListEnd);
- * @*/
+predicate xLIST_uninitialised(struct xLIST *l) =
+    l->uxNumberOfItems |-> _ &*&
+    l->pxIndex |-> _ &*&
+    l->xListEnd.xItemValue |-> _ &*&
+    l->xListEnd.pxNext |-> _ &*&
+    l->xListEnd.pxPrevious |-> _ &*&
+    l->xListEnd.pvOwner |-> _ &*&
+    l->xListEnd.pxContainer |-> _ &*&
+    struct_xLIST_ITEM_padding(&l->xListEnd);
+@*/
 
 void vListInitialise( List_t * const pxList )
 /*@requires xLIST_uninitialised(pxList);@*/
@@ -49,6 +51,8 @@ void vListInitialise( List_t * const pxList )
      * as the only list entry. */
     pxList->pxIndex = ( ListItem_t * ) &( pxList->xListEnd ); /*lint !e826 !e740 !e9087 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 
+    listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( &( pxList->xListEnd ) );
+
     /* The list end value is the highest possible value in the list to
      * ensure it remains at the end of the list. */
     pxList->xListEnd.xItemValue = portMAX_DELAY;
@@ -58,6 +62,15 @@ void vListInitialise( List_t * const pxList )
     pxList->xListEnd.pxNext = ( ListItem_t * ) &( pxList->xListEnd );     /*lint !e826 !e740 !e9087 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
     pxList->xListEnd.pxPrevious = ( ListItem_t * ) &( pxList->xListEnd ); /*lint !e826 !e740 !e9087 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 
+    /* Initialize the remaining fields of xListEnd when it is a proper ListItem_t */
+    #if ( configUSE_MINI_LIST_ITEM == 0 )
+    {
+        pxList->xListEnd.pvOwner = NULL;
+        pxList->xListEnd.pxContainer = NULL;
+        listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( &( pxList->xListEnd ) );
+    }
+    #endif
+
     pxList->uxNumberOfItems = ( UBaseType_t ) 0U;
 
     /* Write known values into the list if
@@ -65,11 +78,13 @@ void vListInitialise( List_t * const pxList )
     listSET_LIST_INTEGRITY_CHECK_1_VALUE( pxList );
     listSET_LIST_INTEGRITY_CHECK_2_VALUE( pxList );
 
-    #ifdef VERIFAST /*< ***change MiniList_t to ListItem_t*** */
-        pxList->xListEnd.pxContainer = pxList;
-    #endif
+#ifdef VERIFAST /*< ***change MiniList_t to ListItem_t*** */
+    pxList->xListEnd.pxContainer = pxList;
+#endif
     /*@ListItem_t *end = &(pxList->xListEnd);@*/
     /*@close xLIST_ITEM(end, portMAX_DELAY, _, _, pxList);@*/
     /*@close DLS(end, end, end, end, singleton(end), singleton(portMAX_DELAY), pxList);@*/
     /*@close xLIST(pxList, 0, end, end, singleton(end), singleton(portMAX_DELAY));@*/
 }
+
+/* *INDENT-ON* */

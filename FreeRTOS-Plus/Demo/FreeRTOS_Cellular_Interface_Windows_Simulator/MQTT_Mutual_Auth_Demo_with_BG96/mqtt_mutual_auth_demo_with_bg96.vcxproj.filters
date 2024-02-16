@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{fd000e4f-72fc-4793-95d2-5e0fa48b3ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT">
+      <UniqueIdentifier>{8c6a2636-5c23-4bdf-8a05-9f95aa04293b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT\include">
+      <UniqueIdentifier>{4330017d-e8ce-4a33-b4ef-9fe90f2426b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT\interface">
+      <UniqueIdentifier>{147245f8-ee3f-4145-92b9-a9f07163c51c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{11d9ce61-9af6-408a-90fd-6978d46c94fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm\include">
+      <UniqueIdentifier>{d34ccce7-a7e3-45b3-9ab9-78519144db41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\FreeRTOS Cellular Interface">
+      <UniqueIdentifier>{26846a50-0d36-4873-968c-cccdc24355b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\FreeRTOS Cellular Interface\include">
+      <UniqueIdentifier>{977bdebd-1f49-47ec-b2b3-67d5f57ff41b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\FreeRTOS Cellular Interface\include\private">
+      <UniqueIdentifier>{f393698c-359c-48d8-a4e5-d53a5500025b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\FreeRTOS Cellular Interface\include\common">
+      <UniqueIdentifier>{2a115a7b-70ed-468c-b3ac-2d584c4ef779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\FreeRTOS Cellular Interface\interface">
+      <UniqueIdentifier>{86f3f8ab-e834-48a7-b935-036fe029ae73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\FreeRTOS Cellular Interface\module">
+      <UniqueIdentifier>{4a4a9a7c-7ba4-4fb0-824b-23c838d77815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{48ac0c9a-e1c2-47da-b315-0f23e97487c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{09ff68d7-878a-443b-9871-c5500b4cb673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{3824b829-824c-4188-abc7-7304392c558f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{f0330e9f-1e1a-4907-8acb-8dee46a4cc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\cellular">
+      <UniqueIdentifier>{c1cf6a38-0503-40dd-a8de-0a37fb58160f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{74cb620a-700c-4747-ac17-325628423dc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{3e89de57-dda5-42f7-839b-a70f06891aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{e6dd4447-6a83-4ce8-8742-8973f5884c20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Common\cellular_platform.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\cellular_setup.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\comm_if_windows.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\MutualAuthMQTTExample.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_api.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_urc_handler.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_at_core.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_common.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_common_api.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_pkthandler.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_pktio.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96_api.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96_urc_handler.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96_wrapper.c">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\cellular\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\cellular</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\cellular_platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_api.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_config_defaults.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_types.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_at_core.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_common.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_common_api.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_common_portable.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private\cellular_common_internal.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private\cellular_internal.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private\cellular_pkthandler_internal.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private\cellular_pktio_internal.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\include\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\interface\cellular_comm_interface.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
+      <Filter>Additional Libraries\coreMQTT\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96.h">
+      <Filter>Additional Libraries\FreeRTOS Cellular Interface\module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\Backoff Algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\core_mqtt_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="cellular_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

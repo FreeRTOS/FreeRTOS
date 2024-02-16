@@ -1,80 +1,81 @@
 name : "FreeRTOS"
-version: "202111.00"
+version: "202212.00"
 description: "This is the standard distribution of FreeRTOS."
+license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "e13f990"
+    version: "7284d84dc"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
       path: "FreeRTOS/Source"
 
   - name: "FreeRTOS-Plus-TCP"
-    version: "V2.4.0"
+    version: "V4.0.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP"
 
   - name: "coreJSON"
-    version: "v3.1.0"
+    version: "b92c8cd"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreJSON.git"
       path: "FreeRTOS-Plus/Source/coreJSON"
 
   - name: "sigv4"
-    version: "v1.1.0"
+    version: "9d9f95a"
     repository:
       type: "git"
       url: "https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/sigv4"
 
   - name: "coreHTTP"
-    version: "v2.1.0"
+    version: "dc94df0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
 
   - name: "coreMQTT"
-    version: "v1.2.0"
+    version: "238350a"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
 
   - name: "coreMQTT Agent"
-    version: "v1.1.0"
+    version: "d3668a6"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT-Agent.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "v3.3.0"
+    version: "cb865c1"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
       path: "FreeRTOS-Plus/Source/corePKCS11"
 
   - name: "device-defender"
-    version: "v1.2.0"
+    version: "9dbf7ba"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-defender"
 
   - name: "device-shadow"
-    version: "v1.2.0"
+    version: "2f16e7c"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "v1.2.0"
+    version: "f1c3bd6"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
@@ -88,56 +89,91 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v2.26.0"
+    version: "v3.5.1"
     repository:
       type: "git"
-      url:  "https://github.com/ARMmbed/mbedtls"
+      url:  "https://github.com/Mbed-TLS/mbedtls.git"
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
 
+  - name: "glib"
+    version: "2.76.3"
+    repository:
+      type: "git"
+      url:  "https://gitlab.gnome.org/GNOME/glib.git"
+      path: "FreeRTOS-Plus/ThirdParty/glib"
+
+  - name: "libslirp"
+    version: "177da3d"
+    repository:
+      type: "git"
+      url:  "https://gitlab.freedesktop.org/slirp/libslirp.git"
+      path: "FreeRTOS-Plus/ThirdParty/libslirp"
+
   - name: "backoffAlgorithm"
-    version: "v1.2.0"
+    version: "0b4f992"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/backoffAlgorithm"
       path: "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"
 
   - name: "ota"
-    version: "v3.3.0"
+    version: "9a8395b"
     repository:
       type: "git"
       url: "https://github.com/aws/ota-for-aws-iot-embedded-sdk"
       path: "FreeRTOS-Plus/Source/AWS/ota"
 
   - name: "coreSNTP"
-    version: "v1.1.0"
+    version: "c5face5"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreSNTP"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
 
   - name: "FreeRTOS-Community-Supported-Demos"
-    version: "e21b617"
+    version: "3d475bd"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"
       path: "FreeRTOS/Demo/ThirdParty/Community-Supported-Demos"
 
   - name: "FreeRTOS-Partner-Supported-Demos"
-    version: "109ef4d"
+    version: "e4183c7"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos"
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
   - name: "FreeRTOS-Cellular-Interface"
-    version: "v1.2.0"
+    version: "f1097fb"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
+  - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96"
+    version: "f61fc4c"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"
+
+  - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802"
+    version: "7d6393a"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"
+
+  - name: "Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4"
+    version: "dcdae99"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"
+
   - name: "fleet-provisioning"
-    version: "v1.0.1"
+    version: "daf174d"
     repository:
       type: "git"
       url: "https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git"
@@ -150,4 +186,23 @@ dependencies:
       url: "https://github.com/intel/tinycbor.git"
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
-license: "MIT"
+  - name: "TraceRecorder"
+    version: "3aa0355"
+    repository:
+      type: "git"
+      url: "https://github.com/percepio/TraceRecorderSource.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace"
+
+  - name: "CMock"
+    version: "afa2949"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS/Test/CMock/CMock"
+
+  - name: "CMock"
+    version: "150573c"
+    repository:
+      type: "git"
+      url: " https://github.com/ThrowTheSwitch/CMock.git"
+      path: "FreeRTOS-Plus/Test/CMock"

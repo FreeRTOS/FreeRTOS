@@ -409,3 +409,4 @@ BaseType_t xAreRecursiveMutexTasksStillRunning( void )
 
     return xReturn;
 }
+

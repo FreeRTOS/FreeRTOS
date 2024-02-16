@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -41,26 +41,27 @@
 #include "TwoEchoClients.h"
 #include "UDPCommandInterpreter.h"
 #include "logging.h"
+#include "user_settings.h"
 
 /* UDP command server task parameters. */
-#define mainUDP_CLI_TASK_PRIORITY					( tskIDLE_PRIORITY )
-#define mainUDP_CLI_PORT_NUMBER						( 5001UL )
-#define mainUDP_CLI_TASK_STACK_SIZE					( configMINIMAL_STACK_SIZE )
+#define mainUDP_CLI_TASK_PRIORITY                    ( tskIDLE_PRIORITY )
+#define mainUDP_CLI_PORT_NUMBER                      ( 5001UL )
+#define mainUDP_CLI_TASK_STACK_SIZE                  ( configMINIMAL_STACK_SIZE )
 
 /* Simple UDP client and server task parameters. */
-#define mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY		( tskIDLE_PRIORITY )
-#define mainSIMPLE_CLIENT_SERVER_PORT				( 5005UL )
-#define mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE	( configMINIMAL_STACK_SIZE )
+#define mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY       ( tskIDLE_PRIORITY )
+#define mainSIMPLE_CLIENT_SERVER_PORT                ( 5005UL )
+#define mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE     ( configMINIMAL_STACK_SIZE )
 
 /* Echo client task parameters. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE 			( configMINIMAL_STACK_SIZE * 2 )
-#define mainECHO_CLIENT_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainECHO_CLIENT_TASK_STACK_SIZE              ( configMINIMAL_STACK_SIZE * 2 )
+#define mainECHO_CLIENT_TASK_PRIORITY                ( tskIDLE_PRIORITY + 1 )
 
-/* Set the following constants to 1 or 0 to define which tasks to include and 
-exclude. */
-#define mainCREATE_UDP_CLI_TASKS					1
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS	0
-#define mainCREATE_UDP_ECHO_TASKS					1
+/* Set the following constants to 1 or 0 to define which tasks to include and
+ * exclude. */
+#define mainCREATE_UDP_CLI_TASKS                     1
+#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS    0
+#define mainCREATE_UDP_ECHO_TASKS                    1
 
 /*-----------------------------------------------------------*/
 
@@ -71,19 +72,19 @@ exclude. */
 extern void vRegisterCLICommands( void );
 
 /* The default IP and MAC address used by the demo.  The address configuration
-defined here will be used if ipconfigUSE_DHCP is 0, or if ipconfigUSE_DHCP is
-1 but a DHCP server could not be contacted.  See the online documentation for
-more information. */
+ * defined here will be used if ipconfigUSE_DHCP is 0, or if ipconfigUSE_DHCP is
+ * 1 but a DHCP server could not be contacted.  See the online documentation for
+ * more information. */
 static const uint8_t ucIPAddress[ 4 ] = { configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 };
 static const uint8_t ucNetMask[ 4 ] = { configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 };
 static const uint8_t ucGatewayAddress[ 4 ] = { configGATEWAY_ADDR0, configGATEWAY_ADDR1, configGATEWAY_ADDR2, configGATEWAY_ADDR3 };
 static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configDNS_SERVER_ADDR1, configDNS_SERVER_ADDR2, configDNS_SERVER_ADDR3 };
 
 /* Default MAC address configuration.  The demo creates a virtual network
-connection that uses this MAC address by accessing the raw Ethernet data
-to and from a real network connection on the host PC.  See the
-configNETWORK_INTERFACE_TO_USE definition for information on how to configure
-the real network connection to use. */
+ * connection that uses this MAC address by accessing the raw Ethernet data
+ * to and from a real network connection on the host PC.  See the
+ * configNETWORK_INTERFACE_TO_USE definition for information on how to configure
+ * the real network connection to use. */
 const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
 /* Used to guard prints to the console. */
@@ -101,203 +102,162 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
 /*-----------------------------------------------------------*/
 
 /* Define a name that will be used for LLMNR and NBNS searches. */
-#define mainHOST_NAME                                 "RTOSDemo"
-#define mainDEVICE_NICK_NAME                          "windows_demo"
+#define mainHOST_NAME           "RTOSDemo"
+#define mainDEVICE_NICK_NAME    "windows_demo"
 
 /* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+
+/* In case multiple interfaces are used, define them statically. */
+
+/* There is only 1 physical interface. */
+    static NetworkInterface_t xInterfaces[ 1 ];
+
+/* It will have several end-points. */
+    static NetworkEndPoint_t xEndPoints[ 4 ];
+
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
 /******************************************************************************
- *
- * See the following web page for information on using this demo.
- * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/RTOS_UDP_CLI_Windows_Simulator.shtml
- *
- ******************************************************************************/
+*
+* See the following web page for information on using this demo.
+* https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/RTOS_UDP_CLI_Windows_Simulator.shtml
+*
+******************************************************************************/
 
 
 int main( void )
 {
-const uint32_t ulLongTime_ms = 250UL;
+    const uint32_t ulLongTime_ms = 250UL;
 
-	/* Create a mutex that is used to guard against the console being accessed 
-	by more than one task simultaniously. */
-	xConsoleMutex = xSemaphoreCreateMutex();
+    /* Create a mutex that is used to guard against the console being accessed
+     * by more than one task simultaneously. */
+    xConsoleMutex = xSemaphoreCreateMutex();
 
-	/* Initialise the network interface.  Tasks that use the network are
-	created in the network event hook when the network is connected and ready
-	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
-	set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
-	contacted. */
-	FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    /* Initialise the network interface.  Tasks that use the network are
+     * created in the network event hook when the network is connected and ready
+     * for use.  The address values passed in here are used if ipconfigUSE_DHCP is
+     * set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
+     * contacted. */
 
-	/* Initialise the logging. */
-	uint32_t ulLoggingIPAddress;
+    /* Initialise the network interface.*/
+    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        /* Initialise the interface descriptor for WinPCap. */
+        pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+
+        /* === End-point 0 === */
+        FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    #if ( ipconfigUSE_DHCP != 0 )
+        {
+            /* End-point 0 wants to use DHCPv4. */
+            xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
+        }
+        #endif /* ( ipconfigUSE_DHCP != 0 ) */
+        memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
+        FreeRTOS_IPInit_Multi();
+    #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+        /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    /* Initialise the logging. */
+    uint32_t ulLoggingIPAddress;
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-		                                           configECHO_SERVER_ADDR1,
-		                                           configECHO_SERVER_ADDR2,
-		                                           configECHO_SERVER_ADDR3 );
+                                                   configECHO_SERVER_ADDR1,
+                                                   configECHO_SERVER_ADDR2,
+                                                   configECHO_SERVER_ADDR3 );
     vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
 
 
-	/* Register commands with the FreeRTOS+CLI command interpreter. */
-	vRegisterCLICommands();
+    /* Register commands with the FreeRTOS+CLI command interpreter. */
+    vRegisterCLICommands();
 
-	/* Start the RTOS scheduler. */
-	vTaskStartScheduler();
+    /* Start the RTOS scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the idle and/or
-	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not not
-	really applicable to the Win32 simulator port). */
-	for( ;; )
-	{
-		Sleep( ulLongTime_ms );
-	}
+    /* If all is well, the scheduler will now be running, and the following
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the idle and/or
+     * timer tasks to be created.  See the memory management section on the
+     * FreeRTOS web site for more details (this is standard text that is not not
+     * really applicable to the Win32 simulator port). */
+    for( ; ; )
+    {
+        Sleep( ulLongTime_ms );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-const unsigned long ulMSToSleep = 5;
+    const unsigned long ulMSToSleep = 5;
 
-	/* This function is called on each cycle of the idle task if
-	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
-	load. */
-	Sleep( ulMSToSleep );
-}
-/*-----------------------------------------------------------*/
-
-void vAssertCalled( void )
-{
-const unsigned long ulLongSleep = 1000UL;
-volatile uint32_t ulBlockVariable = 0UL;
-
-	/* Setting ulBlockVariable to a non-zero value in the debugger will allow
-	this function to be exited. */
-	taskDISABLE_INTERRUPTS();
-	{
-		while( ulBlockVariable == 0UL )
-		{
-			Sleep( ulLongSleep );
-		}
-	}
-	taskENABLE_INTERRUPTS();
-}
-/*-----------------------------------------------------------*/
-
-/* Called by FreeRTOS+TCP when the network connects. */
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
-{
-uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-int8_t cBuffer[ 16 ];
-static BaseType_t xTasksAlreadyCreated = pdFALSE;
-
-	if( eNetworkEvent == eNetworkUp )
-	{
-		/* Create the tasks that use the IP stack if they have not already been
-		created. */
-		if( xTasksAlreadyCreated == pdFALSE )
-		{
-			#if( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
-			{
-				/* Create tasks that demonstrate sending and receiving in both
-				standard and zero copy mode. */
-				vStartSimpleUDPClientServerTasks( mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE, mainSIMPLE_CLIENT_SERVER_PORT, mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY );
-			}
-			#endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
-
-			#if( mainCREATE_UDP_ECHO_TASKS == 1 )
-			{
-				/* Create the tasks that transmit to and receive from a standard
-				echo server (see the web documentation for this port) in both
-				standard and zero copy mode. */
-				vStartEchoClientTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
-			}
-			#endif /* mainCREATE_UDP_ECHO_TASKS */
-
-			#if( mainCREATE_UDP_CLI_TASKS == 1 )
-			{
-				/* Create the task that handles the CLI on a UDP port.  The port number
-				is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
-				vStartUDPCommandInterpreterTask( mainUDP_CLI_TASK_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY );
-			}
-			#endif /* mainCREATE_UDP_CLI_TASKS */
-
-			xTasksAlreadyCreated = pdTRUE;
-		}
-
-		/* Print out the network configuration, which may have come from a DHCP
-		server. */
-		FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
-		FreeRTOS_debug_printf( ( "IP Address: " ) );
-		FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\nSubnet Mask: " ) );
-		FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\nGateway Address: " ) );
-		FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\nDNS Server Address: " ) );
-		FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
-		FreeRTOS_debug_printf( ( ( char * ) cBuffer ) );
-		FreeRTOS_debug_printf( ( "\r\n\r\n" ) );
-	}
+    /* This function is called on each cycle of the idle task if
+     * configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
+     * load. */
+    Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
 
 /* Called automatically when a reply to an outgoing ping is received. */
-void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier )
+void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
+                                uint16_t usIdentifier )
 {
-static const uint8_t *pcSuccess = ( uint8_t * ) "Ping reply received - ";
-static const uint8_t *pcInvalidChecksum = ( uint8_t * ) "Ping reply received with invalid checksum - ";
-static const uint8_t *pcInvalidData = ( uint8_t * ) "Ping reply received with invalid data - ";
-static uint8_t cMessage[ 50 ];
+    static const uint8_t * pcSuccess = ( uint8_t * ) "Ping reply received - ";
+    static const uint8_t * pcInvalidChecksum = ( uint8_t * ) "Ping reply received with invalid checksum - ";
+    static const uint8_t * pcInvalidData = ( uint8_t * ) "Ping reply received with invalid data - ";
+    static uint8_t cMessage[ 50 ];
 
 
-	switch( eStatus )
-	{
-		case eSuccess	:
-			FreeRTOS_debug_printf( ( ( char * ) pcSuccess ) );
-			break;
+    switch( eStatus )
+    {
+        case eSuccess:
+            FreeRTOS_debug_printf( ( ( char * ) pcSuccess ) );
+            break;
 
-		case eInvalidChecksum :
-			FreeRTOS_debug_printf( ( ( char * ) pcInvalidChecksum ) );
-			break;
+        case eInvalidChecksum:
+            FreeRTOS_debug_printf( ( ( char * ) pcInvalidChecksum ) );
+            break;
 
-		case eInvalidData :
-			FreeRTOS_debug_printf( ( ( char * ) pcInvalidData ) );
-			break;
+        case eInvalidData:
+            FreeRTOS_debug_printf( ( ( char * ) pcInvalidData ) );
+            break;
 
-		default :
-			/* It is not possible to get here as all enums have their own
-			case. */
-			break;
-	}
+        default:
 
-	sprintf( ( char * ) cMessage, "identifier %d\r\n", ( int ) usIdentifier );
-	FreeRTOS_debug_printf( ( ( char * ) cMessage ) );
+            /* It is not possible to get here as all enums have their own
+             * case. */
+            break;
+    }
+
+    sprintf( ( char * ) cMessage, "identifier %d\r\n", ( int ) usIdentifier );
+    FreeRTOS_debug_printf( ( ( char * ) cMessage ) );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the 
-	size of the heap available to pvPortMalloc() is defined by 
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize() 
-	API function can be used to query the size of free heap space that remains 
-	(although it does not provide information on how the remaining heap might 
-	be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+     * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+     * function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+     * timer or semaphore is created.  It is also called by various parts of the
+     * demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the
+     * size of the heap available to pvPortMalloc() is defined by
+     * configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+     * API function can be used to query the size of free heap space that remains
+     * (although it does not provide information on how the remaining heap might
+     * be fragmented). */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -316,7 +276,12 @@ void vApplicationMallocFailedHook( void )
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        BaseType_t xApplicationDNSQueryHook_Multi( struct xNetworkEndPoint * pxEndPoint,
+                                                   const char * pcName )
+    #else
+        BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 
@@ -341,25 +306,3 @@ void vApplicationMallocFailedHook( void )
 
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
-
-UBaseType_t uxRand( void )
-{
-    const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
-
-    /* Utility function to generate a pseudo random number. */
-
-    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
-}
-
-
-/*
- * Supply a random number to FreeRTOS+TCP stack.
- * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
- * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
- */
-BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
-{
-    *( pulNumber ) = uxRand();
-    return pdTRUE;
-}

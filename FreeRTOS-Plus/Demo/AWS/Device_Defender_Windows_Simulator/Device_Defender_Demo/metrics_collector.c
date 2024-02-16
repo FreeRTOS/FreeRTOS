@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -82,10 +82,10 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
                     ( unsigned long ) xMetrics.xOutput.uxByteCount,
                     ( unsigned long ) xMetrics.xOutput.uxPacketCount ) );
 
-        pxOutNetworkStats->ulBytesReceived = xMetrics.xInput.uxByteCount;
-        pxOutNetworkStats->ulPacketsReceived = xMetrics.xInput.uxPacketCount;
-        pxOutNetworkStats->ulBytesSent = xMetrics.xOutput.uxByteCount;
-        pxOutNetworkStats->ulPacketsSent = xMetrics.xOutput.uxPacketCount;
+        pxOutNetworkStats->uxBytesReceived = xMetrics.xInput.uxByteCount;
+        pxOutNetworkStats->uxPacketsReceived = xMetrics.xInput.uxPacketCount;
+        pxOutNetworkStats->uxBytesSent = xMetrics.xOutput.uxByteCount;
+        pxOutNetworkStats->uxPacketsSent = xMetrics.xOutput.uxPacketCount;
     }
 
     return eStatus;
@@ -154,7 +154,7 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
-    uint32_t xCopyAmount = 0UL;
+    size_t xCopyAmount = 0UL;
 
     /* pusOutUdpPortsArray can be NULL. */
     configASSERT( pxOutNumUdpOpenPorts != NULL );
@@ -210,8 +210,8 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
     size_t xCopyAmount = 0UL;
+    size_t uxIdx;
     uint32_t ulLocalIp = 0UL;
-    uint32_t i;
 
     /* pxOutConnectionsArray can be NULL. */
     configASSERT( pxOutNumEstablishedConnections != NULL );
@@ -244,15 +244,15 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
                 xCopyAmount = xConnectionsArrayLength;
             }
 
-            for( i = 0; i < xCopyAmount; i++ )
+            for( uxIdx = 0; uxIdx < xCopyAmount; uxIdx++ )
             {
-                pxOutConnectionsArray[ i ].ulLocalIp = ulLocalIp;
-                pxOutConnectionsArray[ i ].usLocalPort =
-                    xMetrics.xTCPSocketList.xTCPList[ i ].usLocalPort;
-                pxOutConnectionsArray[ i ].ulRemoteIp =
-                    xMetrics.xTCPSocketList.xTCPList[ i ].ulRemoteIP;
-                pxOutConnectionsArray[ i ].usRemotePort =
-                    xMetrics.xTCPSocketList.xTCPList[ i ].usRemotePort;
+                pxOutConnectionsArray[ uxIdx ].ulLocalIp = ulLocalIp;
+                pxOutConnectionsArray[ uxIdx ].usLocalPort =
+                    xMetrics.xTCPSocketList.xTCPList[ uxIdx ].usLocalPort;
+                pxOutConnectionsArray[ uxIdx ].ulRemoteIp =
+                    xMetrics.xTCPSocketList.xTCPList[ uxIdx ].ulRemoteIP;
+                pxOutConnectionsArray[ uxIdx ].usRemotePort =
+                    xMetrics.xTCPSocketList.xTCPList[ uxIdx ].usRemotePort;
             }
 
             /* Return the number of elements copied to the array. */

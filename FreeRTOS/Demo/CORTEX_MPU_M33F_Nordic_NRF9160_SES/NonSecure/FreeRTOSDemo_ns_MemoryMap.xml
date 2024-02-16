@@ -1,0 +1,8 @@
+<!DOCTYPE Board_Memory_Definition_File>
+<root name="nRF9160_xxAA">
+  <MemorySegment name="FLASH_NS_PRIV" start="0x00080000" size="0x00020000" access="ReadOnly" />
+  <MemorySegment name="FLASH_NS_SYSCALLS" start="0x000A0000" size="0x00008000" access="ReadOnly" />
+  <MemorySegment name="FLASH_NS_UNPRIV" start="0x000A8000" size="0x00058000" access="ReadOnly" />
+  <MemorySegment name="RAM_NS_PRIV" start="0x20020000" size="0x00010000" access="Read/Write" />
+  <MemorySegment name="RAM_NS_UNPRIV" start="0x20030000" size="0x0000E000" access="Read/Write" />
+</root>

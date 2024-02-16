@@ -229,7 +229,7 @@
 
                     <sourceEntries>
 
-                        <entry excluding="polarfire_hal/platform/mpfs_hal/startup_gcc/mss_entry_non_bl.S" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="polarfire_hal/platform/mpfs_hal/startup_gcc/mss_entry_non_bl.S|FreeRTOS/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 
                     </sourceEntries>
 

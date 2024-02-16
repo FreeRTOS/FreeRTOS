@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -44,7 +44,7 @@
 #include "demo_helpers.h"
 
 void vStart( CK_SESSION_HANDLE * pxSession,
-               CK_SLOT_ID ** ppxSlotId )
+             CK_SLOT_ID ** ppxSlotId )
 {
     CK_RV xResult = CKR_OK;
 
@@ -101,7 +101,7 @@ void vStart( CK_SESSION_HANDLE * pxSession,
 /*-----------------------------------------------------------*/
 
 void vEnd( CK_SESSION_HANDLE xSession,
-             CK_SLOT_ID * pxSlotId )
+           CK_SLOT_ID * pxSlotId )
 {
     C_CloseSession( xSession );
     C_Finalize( NULL );
@@ -163,14 +163,14 @@ void vWriteHexBytesToConsole( char * pcDescription,
 }
 /*-----------------------------------------------------------*/
 
-/* Extract ECDSA public key. */  
+/* Extract ECDSA public key. */
 CK_RV vExportPublicKey( CK_SESSION_HANDLE xSession,
                         CK_OBJECT_HANDLE xPublicKeyHandle,
                         CK_BYTE ** ppucDerPublicKey,
                         CK_ULONG * pulDerPublicKeyLength )
 {
     /* This function is simply a helper function to export the raw hex values
-     * of an EC public key into a buffer. It's explanation is not within the 
+     * of an EC public key into a buffer. It's explanation is not within the
      * scope of the demos and is sparsely commented. */
     CK_RV xResult;
     CK_FUNCTION_LIST_PTR pxFunctionList;
@@ -274,69 +274,3 @@ void * pvCalloc( size_t xNumElements,
     return pvNew;
 }
 /*-----------------------------------------------------------*/
-
-void aws_mbedtls_mutex_init( mbedtls_threading_mutex_t * mutex )
-{
-    mutex->mutex = xSemaphoreCreateMutex();
-
-    if( mutex->mutex != NULL )
-    {
-        mutex->is_valid = 1;
-    }
-    else
-    {
-        mutex->is_valid = 0;
-    }
-}
-/*-----------------------------------------------------------*/
-
-void aws_mbedtls_mutex_free( mbedtls_threading_mutex_t * mutex )
-{
-    if( mutex->is_valid == 1 )
-    {
-        vSemaphoreDelete( mutex->mutex );
-        mutex->is_valid = 0;
-    }
-}
-/*-----------------------------------------------------------*/
-
-int aws_mbedtls_mutex_lock( mbedtls_threading_mutex_t * mutex )
-{
-    int ret = MBEDTLS_ERR_THREADING_BAD_INPUT_DATA;
-
-    if( mutex->is_valid == 1 )
-    {
-        if( xSemaphoreTake( mutex->mutex, portMAX_DELAY ) )
-        {
-            ret = 0;
-        }
-        else
-        {
-            ret = MBEDTLS_ERR_THREADING_MUTEX_ERROR;
-        }
-    }
-
-    return ret;
-}
-/*-----------------------------------------------------------*/
-
-int aws_mbedtls_mutex_unlock( mbedtls_threading_mutex_t * mutex )
-{
-    int ret = MBEDTLS_ERR_THREADING_BAD_INPUT_DATA;
-
-    if( mutex->is_valid == 1 )
-    {
-        if( xSemaphoreGive( mutex->mutex ) )
-        {
-            ret = 0;
-        }
-        else
-        {
-            ret = MBEDTLS_ERR_THREADING_MUTEX_ERROR;
-        }
-    }
-
-    return ret;
-}
-/*-----------------------------------------------------------*/
-

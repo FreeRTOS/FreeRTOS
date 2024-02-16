@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -118,8 +118,8 @@
     #define testCELLULAR_WAIT_PSM_ENTER_EVENT_RETRY    ( 2U )
 #endif
 
-#ifndef testCELLULAR_MAX_PDN_STATSU_NUM
-    #define testCELLULAR_MAX_PDN_STATSU_NUM    ( CELLULAR_PDN_CONTEXT_ID_MAX - CELLULAR_PDN_CONTEXT_ID_MIN + 1U )
+#ifndef testCELLULAR_MAX_PDN_STATUS_NUM
+    #define testCELLULAR_MAX_PDN_STATUS_NUM    ( CELLULAR_PDN_CONTEXT_ID_MAX - CELLULAR_PDN_CONTEXT_ID_MIN + 1U )
 #endif
 
 /* Custom CELLULAR Test asserts. */
@@ -505,7 +505,7 @@ static BaseType_t prvConnectCellular( void )
     CellularServiceStatus_t serviceStatus = { 0 };
     CellularCommInterface_t * pCommIntf = &CellularCommInterface;
     CellularPdnConfig_t pdnConfig = { CELLULAR_PDN_CONTEXT_IPV4, CELLULAR_PDN_AUTH_NONE, testCELLULAR_APN, "", "" };
-    CellularPdnStatus_t PdnStatusBuffers[ testCELLULAR_MAX_PDN_STATSU_NUM ] = { 0 };
+    CellularPdnStatus_t PdnStatusBuffers[ testCELLULAR_MAX_PDN_STATUS_NUM ] = { 0 };
     char localIP[ CELLULAR_IP_ADDRESS_MAX_SIZE ] = { '\0' };
     uint32_t timeoutCount = 0;
     uint8_t NumStatus = 0;
@@ -610,7 +610,7 @@ static BaseType_t prvConnectCellular( void )
     {
         eidrxSettings.mode = 0;
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = 0;
+        eidrxSettings.requestedEdrxValue = 0;
 
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
     }
@@ -641,7 +641,7 @@ static BaseType_t prvConnectCellular( void )
 
         if( xCellularStatus == CELLULAR_SUCCESS )
         {
-            xCellularStatus = Cellular_GetPdnStatus( _cellularHandle, PdnStatusBuffers, testCELLULAR_MAX_PDN_STATSU_NUM, &NumStatus );
+            xCellularStatus = Cellular_GetPdnStatus( _cellularHandle, PdnStatusBuffers, testCELLULAR_MAX_PDN_STATUS_NUM, &NumStatus );
         }
 
         if( xCellularStatus == CELLULAR_SUCCESS )
@@ -685,7 +685,7 @@ static BaseType_t prvConnectCellular( void )
 static BaseType_t prvIsConnectedCellular( void )
 {
     CellularError_t xCellularStatus = CELLULAR_SUCCESS;
-    CellularPdnStatus_t PdnStatusBuffers[ testCELLULAR_MAX_PDN_STATSU_NUM ] = { 0 };
+    CellularPdnStatus_t PdnStatusBuffers[ testCELLULAR_MAX_PDN_STATUS_NUM ] = { 0 };
     uint8_t NumStatus = 0;
     BaseType_t xResult = pdFAIL;
     uint32_t i = 0;
@@ -694,7 +694,7 @@ static BaseType_t prvIsConnectedCellular( void )
     {
         xCellularStatus = Cellular_GetPdnStatus( _cellularHandle,
                                                  PdnStatusBuffers,
-                                                 testCELLULAR_MAX_PDN_STATSU_NUM,
+                                                 testCELLULAR_MAX_PDN_STATUS_NUM,
                                                  &NumStatus );
 
         /* State 0 = Deactivated, 1 = Activated. */
@@ -1106,8 +1106,8 @@ TEST_SETUP( Full_CELLULAR_API )
                             i,
                             eidrxSettingsList.eidrxList[ i ].mode,
                             eidrxSettingsList.eidrxList[ i ].rat,
-                            eidrxSettingsList.eidrxList[ i ].requestedEdrxVaue,
-                            eidrxSettingsList.eidrxList[ i ].nwProvidedEdrxVaue ) );
+                            eidrxSettingsList.eidrxList[ i ].requestedEdrxValue,
+                            eidrxSettingsList.eidrxList[ i ].nwProvidedEdrxValue ) );
         }
     }
     else
@@ -1239,7 +1239,7 @@ TEST( Full_CELLULAR_API, Cellular_Activate )
     CellularServiceStatus_t serviceStatus = { 0 };
     CellularPdnConfig_t pdnConfig =
     { CELLULAR_PDN_CONTEXT_IPV4, CELLULAR_PDN_AUTH_NONE, testCELLULAR_APN, "", "" };
-    CellularPdnStatus_t PdnStatusBuffers[ testCELLULAR_MAX_PDN_STATSU_NUM ] = { 0 };
+    CellularPdnStatus_t PdnStatusBuffers[ testCELLULAR_MAX_PDN_STATUS_NUM ] = { 0 };
     char localIP[ CELLULAR_IP_ADDRESS_MAX_SIZE ] = { '\0' };
     uint32_t timeoutCount = 0;
     uint8_t numStatus = 0;
@@ -1309,7 +1309,7 @@ TEST( Full_CELLULAR_API, Cellular_Activate )
 
         xCellularStatus = Cellular_GetPdnStatus( _cellularHandle,
                                                  PdnStatusBuffers,
-                                                 testCELLULAR_MAX_PDN_STATSU_NUM,
+                                                 testCELLULAR_MAX_PDN_STATUS_NUM,
                                                  &numStatus );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
 
@@ -1342,7 +1342,7 @@ TEST( Full_CELLULAR_API, Cellular_Activate )
 
         eidrxSettings.mode = 0;
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = 0;
+        eidrxSettings.requestedEdrxValue = 0;
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
         TEST_CELLULAR_ASSERT_REQUIRED_API_MSG( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus,
                                                ">>>  Disable EDRX failed  <<<" );
@@ -1521,7 +1521,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxSettings )
         /* Disable the EDRX mode. */
         eidrxSettings.mode = 0;
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = 0;
+        eidrxSettings.requestedEdrxValue = 0;
 
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
@@ -1529,7 +1529,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxSettings )
         /* Enabling the EDRX mode and verify. */
         eidrxSettings.mode = 1; /* Enable the use of e-I-DRX. */
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = drxValue;
+        eidrxSettings.requestedEdrxValue = drxValue;
 
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
@@ -1542,7 +1542,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxSettings )
         {
             if( eidrxSettingsList.eidrxList[ i ].rat == testCELLULAR_EDRX_RAT )
             {
-                TEST_ASSERT_EQUAL_INT32( eidrxSettingsList.eidrxList[ i ].requestedEdrxVaue, drxValue );
+                TEST_ASSERT_EQUAL_INT32( eidrxSettingsList.eidrxList[ i ].requestedEdrxValue, drxValue );
             }
         }
 
@@ -1550,7 +1550,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxSettings )
         eidrxSettings.mode = 3; /* Disable the use of e-I-DRX and discard all parameters for e-I-DRX or,
                                  * if available, reset to the manufacturer specific default values. */
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = 0;
+        eidrxSettings.requestedEdrxValue = 0;
 
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
@@ -1870,7 +1870,7 @@ TEST( Full_CELLULAR_API, Cellular_AirplaneMode )
 TEST( Full_CELLULAR_API, Cellular_Deactivate )
 {
     CellularError_t xCellularStatus = CELLULAR_SUCCESS;
-    CellularPdnStatus_t pdnStatusBuffers[ testCELLULAR_MAX_PDN_STATSU_NUM ] = { 0 };
+    CellularPdnStatus_t pdnStatusBuffers[ testCELLULAR_MAX_PDN_STATUS_NUM ] = { 0 };
     uint8_t numStatus = 0;
     uint32_t i = 0;
 
@@ -1879,7 +1879,7 @@ TEST( Full_CELLULAR_API, Cellular_Deactivate )
         /* Activate PDN for deactivate test. */
         xCellularStatus = Cellular_GetPdnStatus( _cellularHandle,
                                                  pdnStatusBuffers,
-                                                 testCELLULAR_MAX_PDN_STATSU_NUM,
+                                                 testCELLULAR_MAX_PDN_STATUS_NUM,
                                                  &numStatus );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
 
@@ -1911,7 +1911,7 @@ TEST( Full_CELLULAR_API, Cellular_Deactivate )
         {
             xCellularStatus = Cellular_GetPdnStatus( _cellularHandle,
                                                      pdnStatusBuffers,
-                                                     testCELLULAR_MAX_PDN_STATSU_NUM,
+                                                     testCELLULAR_MAX_PDN_STATUS_NUM,
                                                      &numStatus );
             TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
 
@@ -1921,7 +1921,7 @@ TEST( Full_CELLULAR_API, Cellular_Deactivate )
                 {
                     if( pdnStatusBuffers[ i ].contextId == testCELLULAR_PDN_CONTEXT_ID )
                     {
-                        TEST_ASSERT_MESSAGE( ( pdnStatusBuffers[ i ].state == 0 ), "Deactive PDN should return 0" );
+                        TEST_ASSERT_MESSAGE( ( pdnStatusBuffers[ i ].state == 0 ), "Deactivate PDN should return 0" );
                         break;
                     }
                 }
@@ -2298,7 +2298,7 @@ TEST( Full_CELLULAR_API, Cellular_SetEidrxSettings_InvalidMode )
 
     eidrxSettings.mode = 1;
     eidrxSettings.rat = 6; /* invalid value. */
-    eidrxSettings.requestedEdrxVaue = 1;
+    eidrxSettings.requestedEdrxValue = 1;
 
     if( prvIsConnectedCellular() == pdFAIL )
     {
@@ -2642,7 +2642,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxEchoTimes )
         /* Disable the EDRX mode. */
         eidrxSettings.mode = 0;
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = 0;
+        eidrxSettings.requestedEdrxValue = 0;
 
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
@@ -2655,7 +2655,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxEchoTimes )
         /* Enabling the EDRX mode and verify. */
         eidrxSettings.mode = 1;
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = drxValue;
+        eidrxSettings.requestedEdrxValue = drxValue;
 
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );
         TEST_CELLULAR_ASSERT_REQUIRED_API( CELLULAR_SUCCESS == xCellularStatus, xCellularStatus );
@@ -2672,7 +2672,7 @@ TEST( Full_CELLULAR_API, Cellular_EidrxEchoTimes )
         /* Disabling the EDRX mode. */
         eidrxSettings.mode = 3;
         eidrxSettings.rat = testCELLULAR_EDRX_RAT;
-        eidrxSettings.requestedEdrxVaue = 0;
+        eidrxSettings.requestedEdrxValue = 0;
 
         configPRINTF( ( "Disable and reset EDRX settings\r\n" ) );
         xCellularStatus = Cellular_SetEidrxSettings( _cellularHandle, &eidrxSettings );

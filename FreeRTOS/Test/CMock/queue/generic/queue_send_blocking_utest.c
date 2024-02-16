@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -45,6 +45,18 @@ static QueueHandle_t xQueueHandleStatic;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* ============================= Unity Fixtures ============================= */
 
 void setUp( void )
@@ -82,6 +94,8 @@ static BaseType_t xQueueSend_locked_xTaskCheckForTimeOutCB( TimeOut_t * const px
 {
     BaseType_t xReturnValue = td_task_xTaskCheckForTimeOutStub( pxTimeOut, pxTicksToWait, cmock_num_calls );
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     if( cmock_num_calls == NUM_CALLS_TO_INTERCEPT )
     {
         uint32_t checkVal = INVALID_UINT32;
@@ -114,6 +128,7 @@ void test_macro_xQueueSend_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t testVal2 = getLastMonotonicTestValue() + 12345;
 
@@ -136,6 +151,8 @@ void test_macro_xQueueSend_blocking_success_locked_no_pending( void )
 static BaseType_t xQueueSend_xTaskResumeAllCallback( int cmock_num_calls )
 {
     BaseType_t xReturnValue = td_task_xTaskResumeAllStub( cmock_num_calls );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* If td_task_xTaskResumeAllStub returns pdTRUE, a higher priority task is pending
      * Send from an ISR to block */
@@ -169,6 +186,8 @@ void test_macro_xQueueSend_blocking_fail_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueSend_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* this task is lower priority than the pending task */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
@@ -215,6 +234,7 @@ void test_macro_xQueueSend_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueSend_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     /* The pending task is lower priority */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
@@ -253,6 +273,7 @@ void test_macro_xQueueSend_blocking_suspended_assert( void )
     uint32_t testVal = getNextMonotonicTestValue();
 
     fakeAssertExpectFail();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setSchedulerState( taskSCHEDULER_SUSPENDED );
 
@@ -278,6 +299,8 @@ void test_macro_xQueueSend_blocking_timeout( void )
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 
     uint32_t testVal = getNextMonotonicTestValue();
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Fill up the queue */
     TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testVal, 0 ) );
@@ -310,6 +333,8 @@ void test_macro_xQueueSend_blocking_locked( void )
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 
     uint32_t testVal1 = getNextMonotonicTestValue();
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Fill the queue */
     TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testVal1, TICKS_TO_WAIT ) );

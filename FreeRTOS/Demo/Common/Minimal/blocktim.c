@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -290,7 +290,7 @@ static void vPrimaryBlockTimeTestTask( void * pvParameters )
             vTaskPrioritySet( xSecondary, bktSECONDARY_PRIORITY );
         }
 
-        /* Let the other task timeout.  When it unblockes it will check that it
+        /* Let the other task timeout.  When it unblocks it will check that it
          * unblocked at the correct time, then suspend itself. */
         while( xRunIndicator != bktRUN_INDICATOR )
         {
@@ -367,7 +367,7 @@ static void vPrimaryBlockTimeTestTask( void * pvParameters )
             vTaskPrioritySet( xSecondary, bktSECONDARY_PRIORITY );
         }
 
-        /* Let the other task timeout.  When it unblockes it will check that it
+        /* Let the other task timeout.  When it unblocks it will check that it
          * unblocked at the correct time, then suspend itself. */
         while( xRunIndicator != bktRUN_INDICATOR )
         {

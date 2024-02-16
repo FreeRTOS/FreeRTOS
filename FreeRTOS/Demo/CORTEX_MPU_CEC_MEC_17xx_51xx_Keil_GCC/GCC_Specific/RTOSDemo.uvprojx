@@ -15,7 +15,7 @@
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.1</PackID>
+          <PackID>ARM.CMSIS.5.9.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x00000000,0x80000) IRAM(0x20000000,0x20000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -167,6 +167,9 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
+            <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <OnChipMemories>
@@ -235,7 +238,7 @@
             <bigend>0</bigend>
             <Strict>0</Strict>
             <Optim>1</Optim>
-            <wLevel>3</wLevel>
+            <wLevel>2</wLevel>
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls>-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -O0 -g</MiscControls>
@@ -345,9 +348,19 @@
               <FilePath>..\..\..\Source\portable\Common\mpu_wrappers.c</FilePath>
             </File>
             <File>
+              <FileName>mpu_wrappers_v2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Source\portable\Common\mpu_wrappers_v2.c</FilePath>
+            </File>
+            <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Source\portable\GCC\ARM_CM4_MPU\port.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu_wrappers_v2_asm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Source\portable\GCC\ARM_CM4_MPU\mpu_wrappers_v2_asm.c</FilePath>
             </File>
             <File>
               <FileName>stream_buffer.c</FileName>

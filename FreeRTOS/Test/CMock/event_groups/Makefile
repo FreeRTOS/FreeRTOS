@@ -31,11 +31,12 @@ MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_port.h
 MOCK_FILES_FP   +=  $(PROJECT_DIR)/list_macros.h
 
 
-# List any addiitonal flags needed by the preprocessor
+# List any additional flags needed by the preprocessor
 CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
+CPPFLAGS            += -include list_macros.h
+CFLAGS            += -include list_macros.h
 
-# List any addiitonal flags needed by the compiler
-CFLAGS              += -include list_macros.h
+# List any additional flags needed by the compiler
 CFLAGS              += -Wno-incompatible-pointer-types
 
 # Try not to edit beyond this line unless necessary.

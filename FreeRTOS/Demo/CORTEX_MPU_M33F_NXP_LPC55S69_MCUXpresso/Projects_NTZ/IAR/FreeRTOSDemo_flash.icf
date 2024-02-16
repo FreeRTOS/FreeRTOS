@@ -1,0 +1,144 @@
+/*
+** ###################################################################
+**     Processors:          LPC55S69JBD100_cm33_core0
+**                          LPC55S69JBD64_cm33_core0
+**                          LPC55S69JEV98_cm33_core0
+**
+**     Compiler:            IAR ANSI C/C++ Compiler for ARM
+**     Reference manual:    LPC55S6x/LPC55S2x/LPC552x User manual(UM11126) Rev.1.3  16 May 2019
+**     Version:             rev. 1.1, 2019-05-16
+**     Build:               b190926
+**
+**     Abstract:
+**         Linker file for the IAR ANSI C/C++ Compiler for ARM
+**
+**     Copyright 2016 Freescale Semiconductor, Inc.
+**     Copyright 2016-2019 NXP
+**     All rights reserved.
+**
+**     SPDX-License-Identifier: BSD-3-Clause
+**
+**     http:                 www.nxp.com
+**     mail:                 support@nxp.com
+**
+** ###################################################################
+*/
+
+
+/* USB BDT size */
+define symbol usb_bdt_size             = 0x0;
+/* Stack and Heap Sizes */
+if (isdefinedsymbol(__stack_size__)) {
+  define symbol __size_cstack__        = __stack_size__;
+} else {
+  define symbol __size_cstack__        = 0x0400;
+}
+
+if (isdefinedsymbol(__heap_size__)) {
+  define symbol __size_heap__          = __heap_size__;
+} else {
+  define symbol __size_heap__          = 0x0400;
+}
+
+define symbol m_privileged_text_start          = 0x10000000;
+define symbol m_privileged_text_end            = 0x10007FFF;
+
+define symbol m_syscalls_text_start            = 0x10008000;
+define symbol m_syscalls_text_end              = 0x1000FFFF;
+
+define symbol m_unprivileged_text_start        = 0x10010000;
+define symbol m_unprivileged_text_end          = 0x10071FFF;
+
+define exported symbol core1_image_start     = 0x10072000;
+define exported symbol core1_image_end       = 0x1009D7FF;
+
+if (isdefinedsymbol(__use_shmem__)) {
+  define symbol m_privileged_data_start          = 0x30000000;
+  define symbol m_privileged_data_end            = 0x3000FFFF;
+
+  define symbol m_unprivileged_data_start        = 0x30010000;
+  define symbol m_unprivileged_data_end          = 0x30030FFF;
+
+  define exported symbol rpmsg_sh_mem_start      = 0x30031800;
+  define exported symbol rpmsg_sh_mem_end        = 0x30032FFF;
+} else {
+  define symbol m_privileged_data_start          = 0x30000000;
+  define symbol m_privileged_data_end            = 0x3000FFFF;
+
+  define symbol m_unprivileged_data_start        = 0x30010000;
+  define symbol m_unprivileged_data_end          = 0x30032FFF;
+}
+
+define symbol m_usb_sram_start                 = 0x50100000;
+define symbol m_usb_sram_end                   = 0x50103FFF;
+
+define memory mem with size = 4G;
+
+define region TEXT_privileged_region    = mem:[from m_privileged_text_start to m_privileged_text_end];
+define region TEXT_syscalls_region      = mem:[from m_syscalls_text_start to m_syscalls_text_end];
+define region TEXT_unprivileged_region  = mem:[from m_unprivileged_text_start to m_unprivileged_text_end];
+
+
+define region DATA_privileged_region    = mem:[from m_privileged_data_start to m_privileged_data_end];
+define region DATA_unprivileged_region  = mem:[from m_unprivileged_data_start to m_unprivileged_data_end-__size_cstack__];
+define region CSTACK_region             = mem:[from m_unprivileged_data_end-__size_cstack__+1 to m_unprivileged_data_end];
+
+if (isdefinedsymbol(__use_shmem__)) {
+  define region rpmsg_sh_mem_region     = mem:[from rpmsg_sh_mem_start to rpmsg_sh_mem_end];
+}
+
+define block CSTACK    with alignment = 8, size = __size_cstack__   { };
+define block HEAP      with alignment = 8, size = __size_heap__     { };
+define block RW        { readwrite };
+define block ZI        { zi };
+
+define region core1_region = mem:[from core1_image_start to core1_image_end];
+define block CORE1_IMAGE_WBLOCK          { section  __core1_image };
+
+/* regions for USB */
+define region USB_BDT_region = mem:[from m_usb_sram_start to m_usb_sram_start + usb_bdt_size - 1];
+define region USB_SRAM_region = mem:[from m_usb_sram_start + usb_bdt_size to m_usb_sram_end];
+place in USB_BDT_region                     { section m_usb_bdt };
+place in USB_SRAM_region                    { section m_usb_global };
+
+initialize by copy { readwrite, section .textrw };
+
+if (isdefinedsymbol(__USE_DLIB_PERTHREAD))
+{
+  /* Required in a multi-threaded application */
+  initialize by copy with packing = none { section __DLIB_PERTHREAD };
+}
+
+do not initialize  { section .noinit, section m_usb_bdt, section m_usb_global };
+if (isdefinedsymbol(__use_shmem__)) {
+  do not initialize  { section rpmsg_sh_mem_section };
+}
+
+/* Exported symbols. */
+define exported symbol __privileged_functions_start__   = m_privileged_text_start;
+define exported symbol __privileged_functions_end__     = m_privileged_text_end;
+define exported symbol __syscalls_flash_start__         = m_syscalls_text_start;
+define exported symbol __syscalls_flash_end__           = m_syscalls_text_end;
+define exported symbol __unprivileged_flash_start__     = m_unprivileged_text_start;
+define exported symbol __unprivileged_flash_end__       = m_unprivileged_text_end;
+define exported symbol __privileged_sram_start__        = m_privileged_data_start;
+define exported symbol __privileged_sram_end__          = m_privileged_data_end;
+
+/* Placements. */
+place at address mem: m_privileged_text_start    { readonly section .intvec };
+
+place in TEXT_privileged_region     { readonly section privileged_functions };
+place in TEXT_syscalls_region       { readonly section freertos_system_calls };
+place in TEXT_unprivileged_region   { readonly };
+
+place in DATA_privileged_region     { readwrite section privileged_data };
+place in DATA_unprivileged_region   { block RW };
+place in DATA_unprivileged_region   { block ZI };
+place in DATA_unprivileged_region   { last block HEAP };
+
+place in CSTACK_region                      { block CSTACK };
+if (isdefinedsymbol(__use_shmem__)) {
+  place in rpmsg_sh_mem_region                { section rpmsg_sh_mem_section };
+}
+place in core1_region                       { block CORE1_IMAGE_WBLOCK };
+

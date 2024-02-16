@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018, 2020 NXP
+ * Copyright 2017-2018, 2020, 2022NXP
  * All rights reserved.
  *
  *
@@ -15,6 +15,7 @@
 #include <math.h>
 #include "fsl_debug_console.h"
 #include "fsl_adapter_uart.h"
+#include "fsl_str.h"
 
 /*! @brief Keil: suppress ellipsis warning in va_arg usage below. */
 #if defined(__CC_ARM)
@@ -43,63 +44,24 @@ typedef struct DebugConsoleState
     hal_uart_status_t (*getChar)(hal_uart_handle_t handle,
                                  uint8_t *data,
                                  size_t length); /*!< get char function pointer */
-    serial_port_type_t type;                     /*!< The initialized port of the debug console. */
+    serial_port_type_t serial_port_type;         /*!< The initialized port of the debug console. */
 } debug_console_state_t;
 
 /*! @brief Type of KSDK printf function pointer. */
 typedef int (*PUTCHAR_FUNC)(int a);
 
-#if PRINTF_ADVANCED_ENABLE
-/*! @brief Specification modifier flags for printf. */
-enum _debugconsole_printf_flag
-{
-    kPRINTF_Minus             = 0x01U,  /*!< Minus FLag. */
-    kPRINTF_Plus              = 0x02U,  /*!< Plus Flag. */
-    kPRINTF_Space             = 0x04U,  /*!< Space Flag. */
-    kPRINTF_Zero              = 0x08U,  /*!< Zero Flag. */
-    kPRINTF_Pound             = 0x10U,  /*!< Pound Flag. */
-    kPRINTF_LengthChar        = 0x20U,  /*!< Length: Char Flag. */
-    kPRINTF_LengthShortInt    = 0x40U,  /*!< Length: Short Int Flag. */
-    kPRINTF_LengthLongInt     = 0x80U,  /*!< Length: Long Int Flag. */
-    kPRINTF_LengthLongLongInt = 0x100U, /*!< Length: Long Long Int Flag. */
-};
-#endif /* PRINTF_ADVANCED_ENABLE */
-
-/*! @brief Specification modifier flags for scanf. */
-enum _debugconsole_scanf_flag
-{
-    kSCANF_Suppress   = 0x2U,    /*!< Suppress Flag. */
-    kSCANF_DestMask   = 0x7cU,   /*!< Destination Mask. */
-    kSCANF_DestChar   = 0x4U,    /*!< Destination Char Flag. */
-    kSCANF_DestString = 0x8U,    /*!< Destination String FLag. */
-    kSCANF_DestSet    = 0x10U,   /*!< Destination Set Flag. */
-    kSCANF_DestInt    = 0x20U,   /*!< Destination Int Flag. */
-    kSCANF_DestFloat  = 0x30U,   /*!< Destination Float Flag. */
-    kSCANF_LengthMask = 0x1f00U, /*!< Length Mask Flag. */
-#if SCANF_ADVANCED_ENABLE
-    kSCANF_LengthChar        = 0x100U, /*!< Length Char Flag. */
-    kSCANF_LengthShortInt    = 0x200U, /*!< Length ShortInt Flag. */
-    kSCANF_LengthLongInt     = 0x400U, /*!< Length LongInt Flag. */
-    kSCANF_LengthLongLongInt = 0x800U, /*!< Length LongLongInt Flag. */
-#endif                                 /* SCANF_ADVANCED_ENABLE */
-#if SCANF_FLOAT_ENABLE
-    kSCANF_LengthLongLongDouble = 0x1000U, /*!< Length LongLongDuoble Flag. */
-#endif                                     /*SCANF_FLOAT_ENABLE */
-    kSCANF_TypeSinged = 0x2000U,           /*!< TypeSinged Flag. */
-};
-
 /*******************************************************************************
  * Variables
  ******************************************************************************/
+#if ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART))
 /*! @brief Debug UART state information. */
 static debug_console_state_t s_debugConsole;
-
+#endif
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
-#if SDK_DEBUGCONSOLE
+#if (defined(SDK_DEBUGCONSOLE) && (SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK))
 static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt, va_list ap);
-static int DbgConsole_ScanfFormattedData(const char *line_ptr, char *format, va_list args_ptr);
 #endif /* SDK_DEBUGCONSOLE */
 
 /*******************************************************************************
@@ -120,7 +82,7 @@ status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t
     }
 
     /* Set debug console to initialized to avoid duplicated initialized operation. */
-    s_debugConsole.type = device;
+    s_debugConsole.serial_port_type = device;
 
     usrtConfig.srcClock_Hz  = clkSrcFreq;
     usrtConfig.baudRate_Bps = baudRate;
@@ -147,34 +109,45 @@ status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t
 /* See fsl_debug_console.h for documentation of this function. */
 status_t DbgConsole_Deinit(void)
 {
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return kStatus_Success;
     }
 
     (void)HAL_UartDeinit((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0]);
 
-    s_debugConsole.type = kSerialPort_None;
+    s_debugConsole.serial_port_type = kSerialPort_None;
 
     return kStatus_Success;
 }
 #endif /* DEBUGCONSOLE_REDIRECT_TO_SDK */
 
-#if SDK_DEBUGCONSOLE
+#if (defined(SDK_DEBUGCONSOLE) && (SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK))
 /* See fsl_debug_console.h for documentation of this function. */
 int DbgConsole_Printf(const char *fmt_s, ...)
 {
     va_list ap;
-    int result;
+    int result = 0;
+
+    va_start(ap, fmt_s);
+    result = DbgConsole_Vprintf(fmt_s, ap);
+    va_end(ap);
+
+    return result;
+}
+
+/* See fsl_debug_console.h for documentation of this function. */
+int DbgConsole_Vprintf(const char *fmt_s, va_list formatStringArg)
+{
+    int result = 0;
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
-    va_start(ap, fmt_s);
-    result = DbgConsole_PrintfFormattedData(DbgConsole_Putchar, fmt_s, ap);
-    va_end(ap);
+
+    result = DbgConsole_PrintfFormattedData(DbgConsole_Putchar, fmt_s, formatStringArg);
 
     return result;
 }
@@ -183,7 +156,7 @@ int DbgConsole_Printf(const char *fmt_s, ...)
 int DbgConsole_Putchar(int ch)
 {
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -193,7 +166,7 @@ int DbgConsole_Putchar(int ch)
 }
 
 /* See fsl_debug_console.h for documentation of this function. */
-int DbgConsole_Scanf(char *fmt_ptr, ...)
+int DbgConsole_Scanf(char *fmt_s, ...)
 {
     /* Plus one to store end of string char */
     char temp_buf[IO_MAXLINE + 1];
@@ -202,11 +175,11 @@ int DbgConsole_Scanf(char *fmt_ptr, ...)
     char result;
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
-    va_start(ap, fmt_ptr);
+    va_start(ap, fmt_s);
     temp_buf[0] = '\0';
 
     i = 0;
@@ -245,7 +218,7 @@ int DbgConsole_Scanf(char *fmt_ptr, ...)
     {
         temp_buf[i + 1] = '\0';
     }
-    result = (char)DbgConsole_ScanfFormattedData(temp_buf, fmt_ptr, ap);
+    result = (char)StrFormatScanf(temp_buf, fmt_s, ap);
     va_end(ap);
 
     return (int)result;
@@ -256,7 +229,7 @@ int DbgConsole_Getchar(void)
 {
     char ch;
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -270,27 +243,6 @@ int DbgConsole_Getchar(void)
 }
 
 /*************Code for process formatted data*******************************/
-/*!
- * @brief Scanline function which ignores white spaces.
- *
- * @param[in]   s The address of the string pointer to update.
- * @return      String without white spaces.
- */
-static uint32_t DbgConsole_ScanIgnoreWhiteSpace(const char **s)
-{
-    uint8_t count = 0;
-    char c;
-
-    c = **s;
-    while ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r') || (c == '\v') || (c == '\f'))
-    {
-        count++;
-        (*s)++;
-        c = **s;
-    }
-    return count;
-}
-
 /*!
  * @brief This function puts padding character.
  *
@@ -326,21 +278,23 @@ static void DbgConsole_PrintfPaddingCharacter(
 static int32_t DbgConsole_ConvertRadixNumToString(char *numstr, void *nump, int32_t neg, int32_t radix, bool use_caps)
 {
 #if PRINTF_ADVANCED_ENABLE
-    int64_t a;
-    int64_t b;
-    int64_t c;
+    long long int a;
+    long long int b;
+    long long int c;
 
-    uint64_t ua;
-    uint64_t ub;
-    uint64_t uc;
+    unsigned long long int ua;
+    unsigned long long int ub;
+    unsigned long long int uc;
+    unsigned long long int uc_param;
 #else
-    int32_t a;
-    int32_t b;
-    int32_t c;
+    int a;
+    int b;
+    int c;
 
-    uint32_t ua;
-    uint32_t ub;
-    uint32_t uc;
+    unsigned int ua;
+    unsigned int ub;
+    unsigned int uc;
+    unsigned int uc_param;
 #endif /* PRINTF_ADVANCED_ENABLE */
 
     int32_t nlen;
@@ -354,12 +308,43 @@ static int32_t DbgConsole_ConvertRadixNumToString(char *numstr, void *nump, int3
     neg = 0;
 #endif
 
+#if PRINTF_ADVANCED_ENABLE
+    a        = 0;
+    b        = 0;
+    c        = 0;
+    ua       = 0ULL;
+    ub       = 0ULL;
+    uc       = 0ULL;
+    uc_param = 0ULL;
+#else
+    a        = 0;
+    b        = 0;
+    c        = 0;
+    ua       = 0U;
+    ub       = 0U;
+    uc       = 0U;
+    uc_param = 0U;
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)ua;
+    (void)ub;
+    (void)uc;
+    (void)uc_param;
+    (void)neg;
+    /*
+     * Fix MISRA issue: CID 15985711 (#15 of 15): MISRA C-2012 Control Flow Expressions (MISRA C-2012 Rule 14.3)
+     * misra_c_2012_rule_14_3_violation: Execution cannot reach this statement: a = *((int *)nump);
+     */
+#if PRINTF_ADVANCED_ENABLE
     if (0 != neg)
     {
 #if PRINTF_ADVANCED_ENABLE
-        a = *(int64_t *)nump;
+        a = *(long long int *)nump;
 #else
-        a = *(int32_t *)nump;
+        a = *(int *)nump;
 #endif /* PRINTF_ADVANCED_ENABLE */
         if (a == 0)
         {
@@ -370,23 +355,27 @@ static int32_t DbgConsole_ConvertRadixNumToString(char *numstr, void *nump, int3
         while (a != 0)
         {
 #if PRINTF_ADVANCED_ENABLE
-            b = (int64_t)a / (int64_t)radix;
-            c = (int64_t)a - ((int64_t)b * (int64_t)radix);
+            b = (long long int)a / (long long int)radix;
+            c = (long long int)a - ((long long int)b * (long long int)radix);
             if (c < 0)
             {
-                c = (int64_t)'0' - c;
+                uc       = (unsigned long long int)c;
+                uc_param = ~uc;
+                c        = (long long int)uc_param + 1 + (long long int)'0';
             }
 #else
-            b = a / radix;
-            c = a - (b * radix);
+            b = (int)a / (int)radix;
+            c = (int)a - ((int)b * (int)radix);
             if (c < 0)
             {
-                c = (int32_t)'0' - c;
+                uc       = (unsigned int)c;
+                uc_param = ~uc;
+                c        = (int)uc_param + 1 + (int)'0';
             }
 #endif /* PRINTF_ADVANCED_ENABLE */
             else
             {
-                c = c + '0';
+                c = c + (int)'0';
             }
             a        = b;
             *nstrp++ = (char)c;
@@ -394,11 +383,12 @@ static int32_t DbgConsole_ConvertRadixNumToString(char *numstr, void *nump, int3
         }
     }
     else
+#endif /* PRINTF_ADVANCED_ENABLE */
     {
 #if PRINTF_ADVANCED_ENABLE
-        ua = *(uint64_t *)nump;
+        ua = *(unsigned long long int *)nump;
 #else
-        ua = *(uint32_t *)nump;
+        ua = *(unsigned int *)nump;
 #endif /* PRINTF_ADVANCED_ENABLE */
         if (ua == 0U)
         {
@@ -409,20 +399,20 @@ static int32_t DbgConsole_ConvertRadixNumToString(char *numstr, void *nump, int3
         while (ua != 0U)
         {
 #if PRINTF_ADVANCED_ENABLE
-            ub = (uint64_t)ua / (uint64_t)radix;
-            uc = (uint64_t)ua - ((uint64_t)ub * (uint64_t)radix);
+            ub = (unsigned long long int)ua / (unsigned long long int)radix;
+            uc = (unsigned long long int)ua - ((unsigned long long int)ub * (unsigned long long int)radix);
 #else
-            ub = ua / (uint32_t)radix;
-            uc = ua - (ub * (uint32_t)radix);
+            ub = ua / (unsigned int)radix;
+            uc = ua - (ub * (unsigned int)radix);
 #endif /* PRINTF_ADVANCED_ENABLE */
 
             if (uc < 10U)
             {
-                uc = uc + '0';
+                uc = uc + (unsigned int)'0';
             }
             else
             {
-                uc = uc - 10U + (use_caps ? 'A' : 'a');
+                uc = uc - 10U + (unsigned int)(use_caps ? 'A' : 'a');
             }
             ua       = ub;
             *nstrp++ = (char)uc;
@@ -496,7 +486,7 @@ static int32_t DbgConsole_ConvertFloatRadixNumToString(char *numstr,
     for (i = 0; i < precision_width; i++)
     {
         fb = fa / (double)radix;
-        dc = (fa - (double)(int64_t)fb * (double)radix);
+        dc = (fa - (double)(long long int)fb * (double)radix);
         c  = (int32_t)dc;
         if (c < 0)
         {
@@ -548,8 +538,8 @@ static int32_t DbgConsole_ConvertFloatRadixNumToString(char *numstr,
  * (*func_ptr)(c);
  *
  * @param[in] func_ptr  Function to put character out.
- * @param[in] fmt_ptr   Format string for printf.
- * @param[in] args_ptr  Arguments to printf.
+ * @param[in] fmt       Format string for printf.
+ * @param[in] ap        Arguments to printf.
  *
  * @return Number of characters
  */
@@ -577,12 +567,12 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
     uint32_t flags_used;
     char schar;
     bool dschar;
-    int64_t ival;
-    uint64_t uval = 0;
+    long long int ival;
+    unsigned long long int uval = 0;
     bool valid_precision_width;
 #else
-    int32_t ival;
-    uint32_t uval = 0;
+    int ival;
+    unsigned int uval = 0;
 #endif /* PRINTF_ADVANCED_ENABLE */
 
 #if PRINTF_FLOAT_ENABLE
@@ -660,7 +650,7 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
 #if PRINTF_ADVANCED_ENABLE
             else if (c == '*')
             {
-                field_width = (uint32_t)va_arg(ap, uint32_t);
+                field_width = (uint32_t)va_arg(ap, unsigned int);
             }
 #endif /* PRINTF_ADVANCED_ENABLE */
             else
@@ -695,7 +685,7 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
 #if PRINTF_ADVANCED_ENABLE
                 else if (c == '*')
                 {
-                    precision_width       = (uint32_t)va_arg(ap, uint32_t);
+                    precision_width       = (uint32_t)va_arg(ap, unsigned int);
                     valid_precision_width = true;
                 }
 #endif /* PRINTF_ADVANCED_ENABLE */
@@ -740,6 +730,24 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
                     flags_used |= (uint32_t)kPRINTF_LengthLongLongInt;
                 }
                 break;
+            case 'z':
+                if (sizeof(size_t) == sizeof(uint32_t))
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthLongInt;
+                }
+                else if (sizeof(size_t) == (2U * sizeof(uint32_t)))
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthLongLongInt;
+                }
+                else if (sizeof(size_t) == sizeof(uint16_t))
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthShortInt;
+                }
+                else
+                {
+                    /* MISRA C-2012 Rule 15.7 */
+                }
+                break;
             default:
                 /* we've gone one char too far */
                 --p;
@@ -757,12 +765,16 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
 #if PRINTF_ADVANCED_ENABLE
                     if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
                     {
-                        ival = (int64_t)va_arg(ap, int64_t);
+                        ival = (long long int)va_arg(ap, long long int);
+                    }
+                    else if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongInt))
+                    {
+                        ival = (long int)va_arg(ap, long int);
                     }
                     else
 #endif /* PRINTF_ADVANCED_ENABLE */
                     {
-                        ival = (int32_t)va_arg(ap, int32_t);
+                        ival = (int)va_arg(ap, int);
                     }
                     vlen  = DbgConsole_ConvertRadixNumToString(vstr, &ival, 1, 10, use_caps);
                     vstrp = &vstr[vlen];
@@ -903,12 +915,16 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
 #if PRINTF_ADVANCED_ENABLE
                     if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
                     {
-                        uval = (uint64_t)va_arg(ap, uint64_t);
+                        uval = (unsigned long long int)va_arg(ap, unsigned long long int);
+                    }
+                    else if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongInt))
+                    {
+                        uval = (unsigned long int)va_arg(ap, unsigned long int);
                     }
                     else
 #endif /* PRINTF_ADVANCED_ENABLE */
                     {
-                        uval = (uint32_t)va_arg(ap, uint32_t);
+                        uval = (unsigned int)va_arg(ap, unsigned int);
                     }
                     vlen  = DbgConsole_ConvertRadixNumToString(vstr, &uval, 0, 16, use_caps);
                     vstrp = &vstr[vlen];
@@ -959,15 +975,36 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
                 }
                 if ((c == 'o') || (c == 'b') || (c == 'p') || (c == 'u'))
                 {
-#if PRINTF_ADVANCED_ENABLE
-                    if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
+                    if ('p' == c)
                     {
-                        uval = (uint64_t)va_arg(ap, uint64_t);
+                        /*
+                         * Fix MISRA issue: CID 16209727 (#15 of 15): MISRA C-2012 Pointer Type Conversions (MISRA
+                         * C-2012 Rule 11.6)
+                         * 1. misra_c_2012_rule_11_6_violation: The expression va_arg (ap, void *) of type void * is
+                         * cast to type unsigned int.
+                         *
+                         * Orignal code: uval = (unsigned int)va_arg(ap, void *);
+                         */
+                        void *pval;
+                        pval = (void *)va_arg(ap, void *);
+                        (void)memcpy((void *)&uval, (void *)&pval, sizeof(void *));
                     }
                     else
-#endif /* PRINTF_ADVANCED_ENABLE */
                     {
-                        uval = (uint32_t)va_arg(ap, uint32_t);
+#if PRINTF_ADVANCED_ENABLE
+                        if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
+                        {
+                            uval = (unsigned long long int)va_arg(ap, unsigned long long int);
+                        }
+                        else if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongInt))
+                        {
+                            uval = (unsigned long int)va_arg(ap, unsigned long int);
+                        }
+                        else
+#endif /* PRINTF_ADVANCED_ENABLE */
+                        {
+                            uval = (unsigned int)va_arg(ap, unsigned int);
+                        }
                     }
                     switch (c)
                     {
@@ -1024,7 +1061,7 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
             }
             else if (c == 'c')
             {
-                cval = (int32_t)va_arg(ap, uint32_t);
+                cval = (int32_t)va_arg(ap, unsigned int);
                 (void)func_ptr(cval);
                 count++;
             }
@@ -1092,496 +1129,9 @@ static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt
         }
         p++;
     }
-    return count;
+    return (int)count;
 }
 
-/*!
- * @brief Converts an input line of ASCII characters based upon a provided
- * string format.
- *
- * @param[in] line_ptr The input line of ASCII data.
- * @param[in] format   Format first points to the format string.
- * @param[in] args_ptr The list of parameters.
- *
- * @return Number of input items converted and assigned.
- * @retval IO_EOF When line_ptr is empty string "".
- */
-static int DbgConsole_ScanfFormattedData(const char *line_ptr, char *format, va_list args_ptr)
-{
-    uint8_t base;
-    int8_t neg;
-    /* Identifier for the format string. */
-    char *c = format;
-    char temp;
-    char *buf;
-    /* Flag telling the conversion specification. */
-    uint32_t flag = 0;
-    /* Filed width for the matching input streams. */
-    uint32_t field_width;
-    /* How many arguments are assigned except the suppress. */
-    uint32_t nassigned = 0;
-    bool match_failure = false;
-    /* How many characters are read from the input streams. */
-    uint32_t n_decode = 0;
-
-    int32_t val;
-
-    const char *s;
-    /* Identifier for the input string. */
-    const char *p = line_ptr;
-
-#if SCANF_FLOAT_ENABLE
-    double fnum = 0.0;
-#endif /* SCANF_FLOAT_ENABLE */
-
-    /* Return EOF error before any conversion. */
-    if (*p == '\0')
-    {
-        return -1;
-    }
-
-    /* Decode directives. */
-    while (('\0' != (*c)) && ('\0' != (*p)))
-    {
-        /* Ignore all white-spaces in the format strings. */
-        if (0U != DbgConsole_ScanIgnoreWhiteSpace((const char **)(void *)&c))
-        {
-            n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
-        }
-        else if ((*c != '%') || ((*c == '%') && (*(c + 1) == '%')))
-        {
-            /* Ordinary characters. */
-            c++;
-            if (*p == *c)
-            {
-                n_decode++;
-                p++;
-                c++;
-            }
-            else
-            {
-                /* Match failure. Misalignment with C99, the unmatched characters need to be pushed back to stream.
-                 * However, it is deserted now. */
-                break;
-            }
-        }
-        else
-        {
-            /* convernsion specification */
-            c++;
-            /* Reset. */
-            flag        = 0;
-            field_width = 0;
-            base        = 0;
-
-            /* Loop to get full conversion specification. */
-            while (('\0' != *c) && (0U == (flag & (uint32_t)kSCANF_DestMask)))
-            {
-                switch (*c)
-                {
-#if SCANF_ADVANCED_ENABLE
-                    case '*':
-                        if (0U != (flag & (uint32_t)kSCANF_Suppress))
-                        {
-                            /* Match failure. */
-                            match_failure = true;
-                            break;
-                        }
-                        flag |= (uint32_t)kSCANF_Suppress;
-                        c++;
-                        break;
-                    case 'h':
-                        if (0U != (flag & (uint32_t)kSCANF_LengthMask))
-                        {
-                            /* Match failure. */
-                            match_failure = true;
-                            break;
-                        }
-
-                        if (c[1] == 'h')
-                        {
-                            flag |= (uint32_t)kSCANF_LengthChar;
-                            c++;
-                        }
-                        else
-                        {
-                            flag |= (uint32_t)kSCANF_LengthShortInt;
-                        }
-                        c++;
-                        break;
-                    case 'l':
-                        if (0U != (flag & (uint32_t)kSCANF_LengthMask))
-                        {
-                            /* Match failure. */
-                            match_failure = true;
-                            break;
-                        }
-
-                        if (c[1] == 'l')
-                        {
-                            flag |= (uint32_t)kSCANF_LengthLongLongInt;
-                            c++;
-                        }
-                        else
-                        {
-                            flag |= (uint32_t)kSCANF_LengthLongInt;
-                        }
-                        c++;
-                        break;
-#endif /* SCANF_ADVANCED_ENABLE */
-#if SCANF_FLOAT_ENABLE
-                    case 'L':
-                        if (flag & (uint32_t)kSCANF_LengthMask)
-                        {
-                            /* Match failure. */
-                            match_failure = true;
-                            break;
-                        }
-                        flag |= (uint32_t)kSCANF_LengthLongLongDouble;
-                        c++;
-                        break;
-#endif /* SCANF_FLOAT_ENABLE */
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        if (0U != field_width)
-                        {
-                            /* Match failure. */
-                            match_failure = true;
-                            break;
-                        }
-                        do
-                        {
-                            field_width = field_width * 10U + ((uint32_t)*c - (uint32_t)'0');
-                            c++;
-                        } while ((*c >= '0') && (*c <= '9'));
-                        break;
-                    case 'd':
-                        base = 10;
-                        flag |= (uint32_t)kSCANF_TypeSinged;
-                        flag |= (uint32_t)kSCANF_DestInt;
-                        c++;
-                        break;
-                    case 'u':
-                        base = 10;
-                        flag |= (uint32_t)kSCANF_DestInt;
-                        c++;
-                        break;
-                    case 'o':
-                        base = 8;
-                        flag |= (uint32_t)kSCANF_DestInt;
-                        c++;
-                        break;
-                    case 'x':
-                    case 'X':
-                        base = 16;
-                        flag |= (uint32_t)kSCANF_DestInt;
-                        c++;
-                        break;
-                    case 'i':
-                        base = 0;
-                        flag |= (uint32_t)kSCANF_DestInt;
-                        c++;
-                        break;
-#if SCANF_FLOAT_ENABLE
-                    case 'a':
-                    case 'A':
-                    case 'e':
-                    case 'E':
-                    case 'f':
-                    case 'F':
-                    case 'g':
-                    case 'G':
-                        flag |= kSCANF_DestFloat;
-                        c++;
-                        break;
-#endif /* SCANF_FLOAT_ENABLE */
-                    case 'c':
-                        flag |= (uint32_t)kSCANF_DestChar;
-                        if (0U == field_width)
-                        {
-                            field_width = 1;
-                        }
-                        c++;
-                        break;
-                    case 's':
-                        flag |= (uint32_t)kSCANF_DestString;
-                        c++;
-                        break;
-                    default:
-                        /* Match failure. */
-                        match_failure = true;
-                        break;
-                }
-
-                /* Match failure. */
-                if (match_failure)
-                {
-                    return (int)nassigned;
-                }
-            }
-
-            if (0U == (flag & (uint32_t)kSCANF_DestMask))
-            {
-                /* Format strings are exhausted. */
-                return (int)nassigned;
-            }
-
-            if (0U == field_width)
-            {
-                /* Large than length of a line. */
-                field_width = 99;
-            }
-
-            /* Matching strings in input streams and assign to argument. */
-            switch (flag & (uint32_t)kSCANF_DestMask)
-            {
-                case (uint32_t)kSCANF_DestChar:
-                    s   = (const char *)p;
-                    buf = va_arg(args_ptr, char *);
-                    while (((field_width--) > 0U) && ('\0' != *p))
-                    {
-                        if (0U == (flag & (uint32_t)kSCANF_Suppress))
-                        {
-                            *buf++ = *p++;
-                        }
-                        else
-                        {
-                            p++;
-                        }
-                        n_decode++;
-                    }
-
-                    if ((0U == (flag & (uint32_t)kSCANF_Suppress)) && (s != p))
-                    {
-                        nassigned++;
-                    }
-                    break;
-                case (uint32_t)kSCANF_DestString:
-                    n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
-                    s   = p;
-                    buf = va_arg(args_ptr, char *);
-                    while ((field_width-- > 0U) && (*p != '\0') && (*p != ' ') && (*p != '\t') && (*p != '\n') &&
-                           (*p != '\r') && (*p != '\v') && (*p != '\f'))
-                    {
-                        if (0U != (flag & (uint32_t)kSCANF_Suppress))
-                        {
-                            p++;
-                        }
-                        else
-                        {
-                            *buf++ = *p++;
-                        }
-                        n_decode++;
-                    }
-
-                    if ((0U == (flag & (uint32_t)kSCANF_Suppress)) && (s != p))
-                    {
-                        /* Add NULL to end of string. */
-                        *buf = '\0';
-                        nassigned++;
-                    }
-                    break;
-                case (uint32_t)kSCANF_DestInt:
-                    n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
-                    s   = p;
-                    val = 0;
-                    if ((base == 0U) || (base == 16U))
-                    {
-                        if ((s[0] == '0') && ((s[1] == 'x') || (s[1] == 'X')))
-                        {
-                            base = 16U;
-                            if (field_width >= 1U)
-                            {
-                                p += 2;
-                                n_decode += 2U;
-                                field_width -= 2U;
-                            }
-                        }
-                    }
-
-                    if (base == 0U)
-                    {
-                        if (s[0] == '0')
-                        {
-                            base = 8U;
-                        }
-                        else
-                        {
-                            base = 10U;
-                        }
-                    }
-
-                    neg = 1;
-                    switch (*p)
-                    {
-                        case '-':
-                            neg = -1;
-                            n_decode++;
-                            p++;
-                            field_width--;
-                            break;
-                        case '+':
-                            neg = 1;
-                            n_decode++;
-                            p++;
-                            field_width--;
-                            break;
-                        default:
-                            /* MISRA C-2012 Rule 16.4 */
-                            break;
-                    }
-
-                    while ((field_width-- > 0U) && (*p > '\0'))
-                    {
-                        if ((*p <= '9') && (*p >= '0'))
-                        {
-                            temp = *p - '0' + (char)0;
-                        }
-                        else if ((*p <= 'f') && (*p >= 'a'))
-                        {
-                            temp = *p - 'a' + (char)10;
-                        }
-                        else if ((*p <= 'F') && (*p >= 'A'))
-                        {
-                            temp = *p - 'A' + (char)10;
-                        }
-                        else
-                        {
-                            temp = (char)base;
-                        }
-
-                        if ((uint8_t)temp >= base)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            val = (int32_t)base * val + (int32_t)temp;
-                        }
-                        p++;
-                        n_decode++;
-                    }
-                    val *= neg;
-                    if (0U == (flag & (uint32_t)kSCANF_Suppress))
-                    {
-#if SCANF_ADVANCED_ENABLE
-                        switch (flag & (uint32_t)kSCANF_LengthMask)
-                        {
-                            case (uint32_t)kSCANF_LengthChar:
-                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
-                                {
-                                    *va_arg(args_ptr, signed char *) = (signed char)val;
-                                }
-                                else
-                                {
-                                    *va_arg(args_ptr, unsigned char *) = (unsigned char)val;
-                                }
-                                break;
-                            case (uint32_t)kSCANF_LengthShortInt:
-                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
-                                {
-                                    *va_arg(args_ptr, signed short *) = (signed short)val;
-                                }
-                                else
-                                {
-                                    *va_arg(args_ptr, unsigned short *) = (unsigned short)val;
-                                }
-                                break;
-                            case (uint32_t)kSCANF_LengthLongInt:
-                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
-                                {
-                                    *va_arg(args_ptr, signed long int *) = (signed long int)val;
-                                }
-                                else
-                                {
-                                    *va_arg(args_ptr, unsigned long int *) = (unsigned long int)val;
-                                }
-                                break;
-                            case (uint32_t)kSCANF_LengthLongLongInt:
-                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
-                                {
-                                    *va_arg(args_ptr, signed long long int *) = (signed long long int)val;
-                                }
-                                else
-                                {
-                                    *va_arg(args_ptr, unsigned long long int *) = (unsigned long long int)val;
-                                }
-                                break;
-                            default:
-                                /* The default type is the type int. */
-                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
-                                {
-                                    *va_arg(args_ptr, signed int *) = (signed int)val;
-                                }
-                                else
-                                {
-                                    *va_arg(args_ptr, unsigned int *) = (unsigned int)val;
-                                }
-                                break;
-                        }
-#else
-                        /* The default type is the type int. */
-                        if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
-                        {
-                            *va_arg(args_ptr, signed int *) = (signed int)val;
-                        }
-                        else
-                        {
-                            *va_arg(args_ptr, unsigned int *) = (unsigned int)val;
-                        }
-#endif /* SCANF_ADVANCED_ENABLE */
-                        nassigned++;
-                    }
-                    break;
-#if SCANF_FLOAT_ENABLE
-                case (uint32_t)kSCANF_DestFloat:
-                    n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
-                    fnum = strtod(p, (char **)&s);
-
-                    if ((fnum >= HUGE_VAL) || (fnum <= -HUGE_VAL))
-                    {
-                        break;
-                    }
-
-                    n_decode += (int)(s) - (int)(p);
-                    p = s;
-                    if (0U == (flag & (uint32_t)kSCANF_Suppress))
-                    {
-                        if (0U != (flag & (uint32_t)kSCANF_LengthLongLongDouble))
-                        {
-                            *va_arg(args_ptr, double *) = fnum;
-                        }
-                        else
-                        {
-                            *va_arg(args_ptr, float *) = (float)fnum;
-                        }
-                        nassigned++;
-                    }
-                    break;
-#endif /* SCANF_FLOAT_ENABLE */
-                default:
-                    /* Match failure. */
-                    match_failure = true;
-                    break;
-            }
-
-            /* Match failure. */
-            if (match_failure)
-            {
-                return (int)nassigned;
-            }
-        }
-    }
-    return (int)nassigned;
-}
 #endif /* SDK_DEBUGCONSOLE */
 
 /*************Code to support toolchain's printf, scanf *******************************/
@@ -1607,7 +1157,7 @@ size_t __write(int handle, const unsigned char *buffer, size_t size)
          */
         ret = (size_t)-1;
     }
-    else if (kSerialPort_None == s_debugConsole.type)
+    else if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         /* Do nothing if the debug UART is not initialized. */
         ret = (size_t)-1;
@@ -1631,7 +1181,7 @@ size_t __read(int handle, unsigned char *buffer, size_t size)
     {
         ret = ((size_t)-1);
     }
-    else if (kSerialPort_None == s_debugConsole.type)
+    else if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         /* Do nothing if the debug UART is not initialized. */
         ret = ((size_t)-1);
@@ -1665,7 +1215,7 @@ int __attribute__((weak)) __sys_write(int handle, char *buffer, int size)
     }
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1680,7 +1230,7 @@ int __attribute__((weak)) __sys_readc(void)
 {
     char tmp;
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1716,7 +1266,7 @@ FILE __stdin;
 int fputc(int ch, FILE *f)
 {
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1731,7 +1281,7 @@ int fgetc(FILE *f)
 {
     char ch;
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1789,7 +1339,7 @@ int __attribute__((weak)) _write_r(void *ptr, int handle, char *buffer, int size
     }
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1810,7 +1360,7 @@ int __attribute__((weak)) _read_r(void *ptr, int handle, char *buffer, int size)
     }
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1842,7 +1392,7 @@ int __attribute__((weak)) _write(int handle, char *buffer, int size)
     }
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }
@@ -1863,7 +1413,7 @@ int __attribute__((weak)) _read(int handle, char *buffer, int size)
     }
 
     /* Do nothing if the debug UART is not initialized. */
-    if (kSerialPort_None == s_debugConsole.type)
+    if (kSerialPort_None == s_debugConsole.serial_port_type)
     {
         return -1;
     }

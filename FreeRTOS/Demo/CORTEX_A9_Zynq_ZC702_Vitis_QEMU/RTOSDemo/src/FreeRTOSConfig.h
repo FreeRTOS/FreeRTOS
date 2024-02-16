@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -67,7 +67,7 @@
  */
 
 /* Setting configUSING_QEMU results in console output when an LED toggles as
-LEDs aren't visible in QEMU. */
+LEDs are not visible in QEMU. */
 #define configUSING_QEMU						1
 
 #define configMAX_API_CALL_INTERRUPT_PRIORITY	18

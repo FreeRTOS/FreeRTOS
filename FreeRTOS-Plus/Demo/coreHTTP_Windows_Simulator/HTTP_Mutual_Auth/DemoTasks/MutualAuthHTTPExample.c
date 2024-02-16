@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -60,7 +60,7 @@
 #include "core_http_client.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* Common HTTP demo utilities. */
 #include "http_demo_utils.h"
@@ -120,10 +120,10 @@
  *
  * @note When using ALPN, port 443 must be used to connect to AWS IoT Core.
  */
-#define IOT_CORE_ALPN_PROTOCOL_NAME    "\x0ex-amzn-http-ca"
+#define IOT_CORE_ALPN_PROTOCOL_NAME    "x-amzn-http-ca"
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -253,6 +253,19 @@ static void prvHTTPDemoTask( void * pvParameters )
      * HTTP_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /**************************** Connect. ******************************/
 
         /* Attempt to connect to the HTTP server. If connection fails, retry after a
@@ -332,6 +345,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         vTaskDelete( NULL );
     }
 }

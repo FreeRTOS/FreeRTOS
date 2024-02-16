@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="examples\demo_helpers.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\management_and_rng.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\mechanisms_and_digests.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\sign_and_verify.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\objects.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="examples\demo_helpers.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="pkcs11_demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\pkcs11_demos.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Config">
+      <UniqueIdentifier>{faeb0483-c7c8-40af-aa30-ad501182c5f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{13fbcac5-8c84-4c23-bfa9-c78eedea35fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{14848d72-d909-48a8-bbe0-06c50eadf3f8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

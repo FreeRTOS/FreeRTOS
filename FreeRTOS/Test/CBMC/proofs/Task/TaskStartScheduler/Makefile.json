@@ -1,6 +1,6 @@
 #
 # FreeRTOS memory safety proofs with CBMC.
-# Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+# Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -38,7 +38,7 @@
   "CBMCFLAGS":
   [
       "--unwind 1",
-      "--unwindset prvInitialiseTaskLists.0:8,prvInitialiseNewTask.0:16,prvInitialiseNewTask.1:4"
+      "--unwindset prvInitialiseTaskLists.0:8,prvInitialiseNewTask.0:16,prvInitialiseNewTask.1:4,prvCreateIdleTasks.0:20,prvCreateIdleTasks.1:2"
   ],
   "OBJS":
   [

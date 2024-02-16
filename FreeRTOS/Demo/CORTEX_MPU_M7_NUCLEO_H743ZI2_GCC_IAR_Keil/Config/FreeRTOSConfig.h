@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -139,4 +139,17 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
  * used. TEX=0, S=0, C=1, B=1. */
 #define configTEX_S_C_B_SRAM						( 0x03UL )
 
+/* Do not allow critical sections from unprivileged tasks. */
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS	0
+
+/* Set configUSE_MPU_WRAPPERS_V1 to 0 to use new MPU wrapper.
+ * See https://freertos.org/a00110.html#configUSE_MPU_WRAPPERS_V1 for details. */
+#define configUSE_MPU_WRAPPERS_V1						( 0 )
+/* Set configENABLE_ACCESS_CONTROL_LIST to 1 to use access control list.
+ * See https://freertos.org/a00110.html#configENABLE_ACCESS_CONTROL_LIST for details. */
+#define configENABLE_ACCESS_CONTROL_LIST				( 1 )
+/* See https://freertos.org/a00110.html#configPROTECTED_KERNEL_OBJECT_POOL_SIZE for details. */
+#define configPROTECTED_KERNEL_OBJECT_POOL_SIZE			( 150 )
+/* See https://freertos.org/a00110.html#configSYSTEM_CALL_STACK_SIZE for details. */
+#define configSYSTEM_CALL_STACK_SIZE					( 128 )
 #endif /* FREERTOS_CONFIG_H */

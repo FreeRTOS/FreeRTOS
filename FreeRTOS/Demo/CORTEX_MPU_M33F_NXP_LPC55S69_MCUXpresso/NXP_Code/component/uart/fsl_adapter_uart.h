@@ -58,13 +58,19 @@
 #define HAL_UART_ADAPTER_LOWPOWER (0U)
 #endif /* HAL_UART_ADAPTER_LOWPOWER */
 
+/*! @brief Enable or disable uart hardware FIFO mode (1 - enable, 0 - disable) */
 #ifndef HAL_UART_ADAPTER_FIFO
-#define HAL_UART_ADAPTER_FIFO (0U)
+#define HAL_UART_ADAPTER_FIFO (1U)
 #endif /* HAL_UART_ADAPTER_FIFO */
 
 #ifndef HAL_UART_DMA_ENABLE
 #define HAL_UART_DMA_ENABLE (0U)
 #endif /* HAL_UART_DMA_ENABLE */
+
+/*! @brief Enable or disable uart DMA adapter int mode (1 - enable, 0 - disable) */
+#ifndef HAL_UART_DMA_INIT_ENABLE
+#define HAL_UART_DMA_INIT_ENABLE (1U)
+#endif /* HAL_SPI_MASTER_DMA_INIT_ENABLE */
 
 /*! @brief Definition of uart dma adapter software idleline detection timeout value in ms. */
 #ifndef HAL_UART_DMA_IDLELINE_TIMEOUT
@@ -73,10 +79,10 @@
 
 /*! @brief Definition of uart adapter handle size. */
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-#define HAL_UART_HANDLE_SIZE       (92U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4)
-#define HAL_UART_BLOCK_HANDLE_SIZE (8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4)
+#define HAL_UART_HANDLE_SIZE       (92U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4U)
+#define HAL_UART_BLOCK_HANDLE_SIZE (8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4U)
 #else
-#define HAL_UART_HANDLE_SIZE (8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4)
+#define HAL_UART_HANDLE_SIZE (8U + HAL_UART_ADAPTER_LOWPOWER * 16U + HAL_UART_DMA_ENABLE * 4U)
 #endif
 
 /*! @brief Definition of uart dma adapter handle size. */
@@ -148,15 +154,6 @@ typedef enum _hal_uart_parity_mode
     kHAL_UartParityOdd      = 0x3U, /*!< Parity odd enabled */
 } hal_uart_parity_mode_t;
 
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-/*! @brief UART Block Mode. */
-typedef enum _hal_uart_block_mode
-{
-    kHAL_UartNonBlockMode = 0x0U, /*!< Uart NonBlock Mode */
-    kHAL_UartBlockMode    = 0x1U, /*!< Uart Block Mode */
-} hal_uart_block_mode_t;
-#endif /* UART_ADAPTER_NON_BLOCKING_MODE */
-
 /*! @brief UART stop bit count. */
 typedef enum _hal_uart_stop_bit_count
 {
@@ -178,9 +175,6 @@ typedef struct _hal_uart_config
     uint8_t instance; /*!< Instance (0 - UART0, 1 - UART1, ...), detail information please refer to the
                            SOC corresponding RM.
                            Invalid instance value will cause initialization failure. */
-#if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
-    hal_uart_block_mode_t mode; /*!< Uart  block mode */
-#endif                          /* UART_ADAPTER_NON_BLOCKING_MODE */
 #if (defined(HAL_UART_ADAPTER_FIFO) && (HAL_UART_ADAPTER_FIFO > 0u))
     uint8_t txFifoWatermark;
     uint8_t rxFifoWatermark;
@@ -200,21 +194,38 @@ typedef enum _hal_uart_dma_status
     kStatus_HAL_UartDmaError    = (1U << 6U),
 } hal_uart_dma_status_t;
 
+typedef struct _dma_mux_configure_t
+{
+    union
+    {
+        struct
+        {
+            uint8_t dma_mux_instance;
+            uint32_t rx_request;
+            uint32_t tx_request;
+        } dma_dmamux_configure;
+    };
+} dma_mux_configure_t;
+typedef struct _dma_channel_mux_configure_t
+{
+    union
+    {
+        struct
+        {
+            uint32_t dma_rx_channel_mux;
+            uint32_t dma_tx_channel_mux;
+        } dma_dmamux_configure;
+    };
+} dma_channel_mux_configure_t;
+
 typedef struct _hal_uart_dma_config_t
 {
     uint8_t uart_instance;
     uint8_t dma_instance;
     uint8_t rx_channel;
     uint8_t tx_channel;
-#if defined(FSL_FEATURE_SOC_DMAMUX_COUNT) && FSL_FEATURE_SOC_DMAMUX_COUNT
-    uint8_t dma_mux_instance;
-    dma_request_source_t rx_request;
-    dma_request_source_t tx_request;
-#endif
-#if defined(FSL_FEATURE_EDMA_HAS_CHANNEL_MUX) && FSL_FEATURE_EDMA_HAS_CHANNEL_MUX
-    uint32_t dma_rx_channel_mux;
-    uint32_t dma_tx_channel_mux;
-#endif
+    void *dma_mux_configure;
+    void *dma_channel_mux_configure;
 } hal_uart_dma_config_t;
 #endif /* HAL_UART_DMA_ENABLE */
 

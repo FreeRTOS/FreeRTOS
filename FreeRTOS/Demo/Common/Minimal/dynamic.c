@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -264,9 +264,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
             vTaskSuspend( xContinuousIncrementHandle );
             {
                 #if ( INCLUDE_eTaskGetState == 1 )
-                    {
-                        configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
-                    }
+                {
+                    configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
+                }
                 #endif /* INCLUDE_eTaskGetState */
 
                 ulLastCounter = ulCounter;
@@ -278,9 +278,18 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
             #endif
 
             #if ( INCLUDE_eTaskGetState == 1 )
+            {
+                #if ( configNUMBER_OF_CORES > 1 )
+                {
+                    eTaskState eState = eTaskGetState( xContinuousIncrementHandle );
+                    configASSERT( ( eState == eReady ) || ( eState == eRunning ) );
+                }
+                #else
                 {
                     configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
                 }
+                #endif
+            }
             #endif /* INCLUDE_eTaskGetState */
 
             /* Now delay to ensure the other task has processor time. */
@@ -311,9 +320,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
         ulCounter = ( uint32_t ) 0;
 
         #if ( INCLUDE_eTaskGetState == 1 )
-            {
-                configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
-            }
+        {
+            configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+        }
         #endif /* INCLUDE_eTaskGetState */
 
         /* Resume the limited count task which has a higher priority than us.
@@ -328,9 +337,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
         /* This task should not run again until xLimitedIncrementHandle has
          * suspended itself. */
         #if ( INCLUDE_eTaskGetState == 1 )
-            {
-                configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
-            }
+        {
+            configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+        }
         #endif /* INCLUDE_eTaskGetState */
 
         /* Does the counter variable have the expected value? */
@@ -415,9 +424,9 @@ static portTASK_FUNCTION( vQueueReceiveWhenSuspendedTask, pvParameters )
             xTaskResumeAll();
 
             #if configUSE_PREEMPTION == 0
-                {
-                    taskYIELD();
-                }
+            {
+                taskYIELD();
+            }
             #endif
         } while( xGotValue == pdFALSE );
 

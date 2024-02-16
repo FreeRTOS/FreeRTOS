@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -131,7 +131,7 @@ static uint32_t ulNonBlockingRxCounter = 0;
 
 /* A message that is longer than the buffer, parts of which are written to the
  * message buffer to test writing different lengths at different offsets. */
-static const char * pc55ByteString = "One two three four five six seven eight nine ten eleve";
+static const char * pc55ByteString = "One two three four five six seven eight nine ten eleven";
 
 /* Remember the required stack size so tasks can be created at run time (after
  * initialisation time. */
@@ -163,23 +163,23 @@ void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize )
     xTaskCreate( prvNonBlockingSenderTask, "NonBlkTx", xStackSize, ( void * ) xMessageBuffer, tskIDLE_PRIORITY, NULL );
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            /* The sender tasks set up the message buffers before creating the
-             * receiver tasks.  Priorities must be 0 and 1 as the priority is used to
-             * index into the xStaticMessageBuffers and ucBufferStorage arrays. */
-            xTaskCreate( prvSenderTask, "1Sender", xBlockingStackSize, NULL, mbHIGHER_PRIORITY, NULL );
-            xTaskCreate( prvSenderTask, "2Sender", xBlockingStackSize, NULL, mbLOWER_PRIORITY, NULL );
-        }
+    {
+        /* The sender tasks set up the message buffers before creating the
+         * receiver tasks.  Priorities must be 0 and 1 as the priority is used to
+         * index into the xStaticMessageBuffers and ucBufferStorage arrays. */
+        xTaskCreate( prvSenderTask, "1Sender", xBlockingStackSize, NULL, mbHIGHER_PRIORITY, NULL );
+        xTaskCreate( prvSenderTask, "2Sender", xBlockingStackSize, NULL, mbLOWER_PRIORITY, NULL );
+    }
     #endif /* configSUPPORT_STATIC_ALLOCATION */
 
     #if ( configRUN_ADDITIONAL_TESTS == 1 )
-        {
-            xCoherenceTestMessageBuffer = xMessageBufferCreate( mbCOHERENCE_TEST_BUFFER_SIZE );
-            configASSERT( xCoherenceTestMessageBuffer );
+    {
+        xCoherenceTestMessageBuffer = xMessageBufferCreate( mbCOHERENCE_TEST_BUFFER_SIZE );
+        configASSERT( xCoherenceTestMessageBuffer );
 
-            xTaskCreate( prvSpaceAvailableCoherenceActor, "mbsanity1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-            xTaskCreate( prvSpaceAvailableCoherenceTester, "mbsanity2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-        }
+        xTaskCreate( prvSpaceAvailableCoherenceActor, "mbsanity1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+        xTaskCreate( prvSpaceAvailableCoherenceTester, "mbsanity2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -238,7 +238,7 @@ static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
     {
         configASSERT( xMessageBufferIsFull( xMessageBuffer ) == pdFALSE );
 
-        /* Generate recognisable data to write to the buffer.  This is just
+        /* Generate recognizable data to write to the buffer.  This is just
          * ascii characters that shows which loop iteration the data was written
          * in. The 'FromISR' version is used to give it some exercise as a block
          * time is not used.  That requires the call to be in a critical section
@@ -372,7 +372,7 @@ static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
      * times will cause the data to wrap in the buffer.*/
     for( xItem = 0; xItem < 100; xItem++ )
     {
-        /* Generate recognisable data to write to the queue.  This is just
+        /* Generate recognizable data to write to the queue.  This is just
          * ascii characters that shows which loop iteration the data was written
          * in. */
         memset( ( void * ) pucData, ( ( int ) '0' ) + ( int ) xItem, x17ByteLength );
@@ -419,19 +419,19 @@ static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
     configASSERT( xReturned == 0 );
     ( void ) xReturned; /* In case configASSERT() is not defined. */
     #ifndef configMESSAGE_BUFFER_LENGTH_TYPE
-        {
-            /* The following will fail if configMESSAGE_BUFFER_LENGTH_TYPE is set
-             * to a non 32-bit type. */
-            xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 1, mbDONT_BLOCK );
-            configASSERT( xReturned == 0 );
-            ( void ) xReturned; /* In case configASSERT() is not defined. */
-            xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 2, mbDONT_BLOCK );
-            configASSERT( xReturned == 0 );
-            ( void ) xReturned; /* In case configASSERT() is not defined. */
-            xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 3, mbDONT_BLOCK );
-            configASSERT( xReturned == 0 );
-            ( void ) xReturned; /* In case configASSERT() is not defined. */
-        }
+    {
+        /* The following will fail if configMESSAGE_BUFFER_LENGTH_TYPE is set
+         * to a non 32-bit type. */
+        xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 1, mbDONT_BLOCK );
+        configASSERT( xReturned == 0 );
+        ( void ) xReturned; /* In case configASSERT() is not defined. */
+        xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 2, mbDONT_BLOCK );
+        configASSERT( xReturned == 0 );
+        ( void ) xReturned; /* In case configASSERT() is not defined. */
+        xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 3, mbDONT_BLOCK );
+        configASSERT( xReturned == 0 );
+        ( void ) xReturned; /* In case configASSERT() is not defined. */
+    }
     #endif /* ifndef configMESSAGE_BUFFER_LENGTH_TYPE */
 
     /* Don't expect any messages to be available as the above were too large to
@@ -661,7 +661,7 @@ static void prvNonBlockingReceiverTask( void * pvParameters )
 
     static void prvReceiverTask( void * pvParameters )
     {
-        MessageBufferHandle_t * const pxMessageBuffer = ( MessageBufferHandle_t * ) pvParameters;
+        MessageBufferHandle_t const pxMessageBuffer = ( MessageBufferHandle_t ) pvParameters;
         char cExpectedString[ 12 ]; /* Large enough to hold a 32-bit number in ASCII. */
         char cReceivedString[ 12 ]; /* Large enough to hold a 32-bit number in ASCII. */
         int32_t iExpectedData = 0;
@@ -934,36 +934,36 @@ BaseType_t xAreMessageBufferTasksStillRunning( void )
     }
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    {
+        static uint32_t ulLastSenderLoopCounters[ mbNUMBER_OF_ECHO_CLIENTS ] = { 0 };
+
+        for( x = 0; x < mbNUMBER_OF_SENDER_TASKS; x++ )
         {
-            static uint32_t ulLastSenderLoopCounters[ mbNUMBER_OF_ECHO_CLIENTS ] = { 0 };
-
-            for( x = 0; x < mbNUMBER_OF_SENDER_TASKS; x++ )
-            {
-                if( ulLastSenderLoopCounters[ x ] == ulSenderLoopCounters[ x ] )
-                {
-                    xReturn = pdFAIL;
-                }
-                else
-                {
-                    ulLastSenderLoopCounters[ x ] = ulSenderLoopCounters[ x ];
-                }
-            }
-        }
-    #endif /* configSUPPORT_STATIC_ALLOCATION */
-
-    #if ( configRUN_ADDITIONAL_TESTS == 1 )
-        {
-            static uint32_t ullastSizeCoherencyTestCycles = 0UL;
-
-            if( ullastSizeCoherencyTestCycles == ulSizeCoherencyTestCycles )
+            if( ulLastSenderLoopCounters[ x ] == ulSenderLoopCounters[ x ] )
             {
                 xReturn = pdFAIL;
             }
             else
             {
-                ullastSizeCoherencyTestCycles = ulSizeCoherencyTestCycles;
+                ulLastSenderLoopCounters[ x ] = ulSenderLoopCounters[ x ];
             }
         }
+    }
+    #endif /* configSUPPORT_STATIC_ALLOCATION */
+
+    #if ( configRUN_ADDITIONAL_TESTS == 1 )
+    {
+        static uint32_t ullastSizeCoherencyTestCycles = 0UL;
+
+        if( ullastSizeCoherencyTestCycles == ulSizeCoherencyTestCycles )
+        {
+            xReturn = pdFAIL;
+        }
+        else
+        {
+            ullastSizeCoherencyTestCycles = ulSizeCoherencyTestCycles;
+        }
+    }
     #endif /* if ( configRUN_ADDITIONAL_TESTS == 1 ) */
 
     return xReturn;

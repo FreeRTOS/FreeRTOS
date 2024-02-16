@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -192,9 +192,9 @@ void vStartGenericQueueTasks( UBaseType_t uxPriority )
         /* If INCLUDE_xTaskAbortDelay is set then additional tests are performed,
          * requiring two instances of prvHighPriorityMutexTask(). */
         #if ( INCLUDE_xTaskAbortDelay == 1 )
-            {
-                xTaskCreate( prvHighPriorityMutexTask, "MuHigh2", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_MEDIUM_PRIORITY, &xSecondMediumPriorityMutexTask );
-            }
+        {
+            xTaskCreate( prvHighPriorityMutexTask, "MuHigh2", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_MEDIUM_PRIORITY, &xSecondMediumPriorityMutexTask );
+        }
         #endif /* INCLUDE_xTaskAbortDelay */
     }
 }
@@ -679,9 +679,9 @@ static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex,
     /* Ensure the task is reporting its priority as blocked and not
      * suspended (as it would have done in versions up to V7.5.3). */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
-        }
+    {
+        configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* This task should now have inherited the priority of the high priority
@@ -812,9 +812,9 @@ static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex,
     /* Ensure the task is reporting its priority as blocked and not
      * suspended (as it would have done in versions up to V7.5.3). */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
-        }
+    {
+        configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* This task should now have inherited the priority of the high priority
@@ -943,12 +943,12 @@ static void prvLowPriorityMutexTask( void * pvParameters )
         #endif
 
         #if ( INCLUDE_xTaskAbortDelay == 1 )
-            {
-                /* Tests the behaviour when a low priority task inherits the
-                 * priority of a high priority task only for the high priority task to
-                 * timeout before obtaining the mutex. */
-                prvHighPriorityTimeout( xMutex );
-            }
+        {
+            /* Tests the behaviour when a low priority task inherits the
+             * priority of a high priority task only for the high priority task to
+             * timeout before obtaining the mutex. */
+            prvHighPriorityTimeout( xMutex );
+        }
         #endif
     }
 }

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C686325E-3261-42F7-AEB1-DDE5280E1CEB}</ProjectGuid>
+    <ProjectName>RTOSDemo</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="FreeRTOS_Plus_TCP_IPv6_Multi.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>
+$(FREERTOS_INCLUDE_DIR);
+$(FREERTOS_SOURCE_DIR)\portable\MSVC-MingW;
+$(UTILITIES_SOURCE_DIR)\include;
+$(PLUS_TCP_INCLUDE_DIR);
+$(PLUS_TCP_SOURCE_DIR)\protocols\include;
+$(PLUS_TCP_SOURCE_DIR)\portable\BufferManagement;
+$(PLUS_TCP_SOURCE_DIR)\portable\Compiler\MSVC;
+$(DEMO_COMMON_SOURCE_DIR)\WinPCap;
+$(DEMO_COMMON_SOURCE_DIR)\logging\include;
+..\common\NTP\include;
+.;
+..\common\Logging\windows
+</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;ipconfigUSE_PCAP=1;_NO_CRT_STDIO_INLINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/wd4210 /wd4127 /wd4214 /wd4201 /wd4244  /wd4310 %(AdditionalOptions)</AdditionalOptions>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ExceptionHandling>false</ExceptionHandling>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Debug/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DEMO_COMMON_SOURCE_DIR)\WinPCap</AdditionalLibraryDirectories>
+      <Profile>false</Profile>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="$(UTILITIES_SOURCE_DIR)\date_and_time.c" />
+    <ClCompile Include="$(UTILITIES_SOURCE_DIR)\http_client_test.c" />
+    <ClCompile Include="$(UTILITIES_SOURCE_DIR)\plus_tcp_demo_cli.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/wd4068 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="$(UTILITIES_SOURCE_DIR)\tcp_dump_packets.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_BitConfig.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4_Sockets.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4_Utils.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Sockets.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Utils.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv6.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv6.c" />
+    <ClCompile Include="..\..\FreeRTOS_Plus_TCP_Minimal_Windows_Simulator\DemoTasks\SimpleTCPEchoServer.c" />
+    <ClCompile Include="Logging_WinSim.c" />
+    <ClCompile Include="printf-stdarg.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\event_groups.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\list.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\portable\MemMang\heap_4.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\portable\MSVC-MingW\port.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\queue.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\tasks.c" />
+    <ClCompile Include="$(FREERTOS_SOURCE_DIR)\timers.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_ARP.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DHCP.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DNS.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DNS_Cache.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DNS_Callback.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DNS_Networking.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DNS_Parser.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_ICMP.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_IP.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_IP_Timers.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_IP_Utils.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_Sockets.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_Stream_Buffer.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_TCP_IP.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_TCP_Reception.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_TCP_State_Handling.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_TCP_Transmission.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_TCP_Utils.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_TCP_WIN.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_UDP_IP.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_Routing.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\portable\BufferManagement\BufferAllocation_2.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_DHCPv6.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_ND.c" />
+    <ClCompile Include="$(PLUS_TCP_SOURCE_DIR)\FreeRTOS_RA.c" />
+    <ClCompile Include="..\common\NTP\NTPDemo.c" />
+    <ClCompile Include="main.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="TCPEchoClient_SingleTasks.c" />
+    <ClCompile Include="UDPEchoClient_SingleTasks.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\event_groups.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\FreeRTOS.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\portable.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\projdefs.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\queue.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\semphr.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\task.h" />
+    <ClInclude Include="$(FREERTOS_INCLUDE_DIR)\timers.h" />
+    <ClInclude Include="$(FREERTOS_SOURCE_DIR)\portable\MSVC-MingW\portmacro.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOSIPConfigDefaults.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_ARP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DHCP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DNS.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DNS_Cache.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DNS_Callback.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DNS_Globals.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DNS_Networking.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DNS_Parser.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_errno_TCP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_ICMP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_IP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_IP_Private.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_IP_Timers.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_IP_Utils.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_Sockets.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_Stream_Buffer.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_TCP_IP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_TCP_Reception.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_TCP_State_Handling.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_TCP_Transmission.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_TCP_Utils.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_TCP_WIN.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_UDP_IP.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_Routing.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_BitConfig.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_DHCPv6.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\FreeRTOS_ND.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\IPTraceMacroDefaults.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\NetworkBufferManagement.h" />
+    <ClInclude Include="$(PLUS_TCP_INCLUDE_DIR)\NetworkInterface.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Private.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Sockets.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Utils.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Private.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Sockets.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Utils.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP_Common.h" />
+    <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="TCPEchoClient_SingleTasks.h" />
+    <ClInclude Include="UDPEchoClient_SingleTasks.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

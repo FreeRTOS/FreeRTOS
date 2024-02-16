@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -38,6 +38,8 @@
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 #include "task.h"
+
+#include "FreeRTOSIPConfig.h"
 
 /* Demo application includes. */
 #include "FreeRTOS_IP.h"
@@ -86,8 +88,8 @@
  * connections on the standard echo port (port 7), then echos back any data
  * received on that connection.
  */
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     1
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE              0
+#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
 /*-----------------------------------------------------------*/
 
@@ -113,12 +115,9 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 
 /* Set the following constant to pdTRUE to log using the method indicated by the
  * name of the constant, or pdFALSE to not log using the method indicated by the
- * name of the constant.  Options include to standard out (xLogToStdout), to a disk
- * file (xLogToFile), and to a UDP port (xLogToUDP).  If xLogToUDP is set to pdTRUE
- * then UDP messages are sent to the IP address configured as the echo server
- * address (see the configECHO_SERVER_ADDR0 definitions in FreeRTOSConfig.h) and
- * the port number set by configPRINT_PORT in FreeRTOSConfig.h. */
-const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALSE;
+ * name of the constant.  Options include to standard out (xLogToStdout) and to a
+ * file on disk (xLogToFile). */
+const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE;
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet data
@@ -129,6 +128,18 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
+/*-----------------------------------------------------------*/
+
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    /* In case multiple interfaces are used, define them statically. */
+
+/* With WinPCap there is only 1 physical interface. */
+    static NetworkInterface_t xInterfaces[ 1 ];
+
+/* It will have several end-points. */
+    static NetworkEndPoint_t xEndPoints[ 4 ];
+
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
 /*-----------------------------------------------------------*/
 
@@ -152,8 +163,35 @@ int main( void )
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
+
+    /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
-    FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        #ifdef ipconfigUSE_LIBSLIRP
+            extern NetworkInterface_t * pxLibslirp_FillInterfaceDescriptor( BaseType_t xEMACIndex,
+                                                                            NetworkInterface_t * pxInterface );
+            pxLibslirp_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+        #else
+            pxWinPcap_FillInterfaceDescriptor( 0, &( xInterfaces[ 0 ] ) );
+        #endif
+
+        /* === End-point 0 === */
+        FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    #if ( ipconfigUSE_DHCP != 0 )
+        {
+            /* End-point 0 wants to use DHCPv4. */
+            xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
+        }
+        #endif /* ( ipconfigUSE_DHCP != 0 ) */
+
+        memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
+
+        FreeRTOS_IPInit_Multi();
+    #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+        /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
+        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );
@@ -184,35 +222,15 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char * pcFile,
-                    uint32_t ulLine )
-{
-    const uint32_t ulLongSleep = 1000UL;
-    volatile uint32_t ulBlockVariable = 0UL;
-    volatile char * pcFileName = ( volatile char * ) pcFile;
-    volatile uint32_t ulLineNumber = ulLine;
-
-    ( void ) pcFileName;
-    ( void ) ulLineNumber;
-
-    FreeRTOS_debug_printf( ( "vAssertCalled( %s, %ld\r\n", pcFile, ulLine ) );
-
-    /* Setting ulBlockVariable to a non-zero value in the debugger will allow
-     * this function to be exited. */
-    taskDISABLE_INTERRUPTS();
-    {
-        while( ulBlockVariable == 0UL )
-        {
-            Sleep( ulLongSleep );
-        }
-    }
-    taskENABLE_INTERRUPTS();
-}
-/*-----------------------------------------------------------*/
 
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
+                                               struct xNetworkEndPoint * pxEndPoint )
+#else
+    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 {
     uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
     char cBuffer[ 16 ];
@@ -229,21 +247,21 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
              * macros at the top of this file for a description of the individual
              * demo tasks. */
             #if ( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
-                {
-                    vStartSimpleUDPClientServerTasks( configMINIMAL_STACK_SIZE, mainSIMPLE_UDP_CLIENT_SERVER_PORT, mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY );
-                }
+            {
+                vStartSimpleUDPClientServerTasks( configMINIMAL_STACK_SIZE, mainSIMPLE_UDP_CLIENT_SERVER_PORT, mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY );
+            }
             #endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
 
             #if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
-                {
-                    vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
-                }
+            {
+                vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
+            }
             #endif /* mainCREATE_TCP_ECHO_TASKS_SINGLE */
 
             #if ( mainCREATE_TCP_ECHO_SERVER_TASK == 1 )
-                {
-                    vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
-                }
+            {
+                vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
+            }
             #endif
 
             xTasksAlreadyCreated = pdTRUE;
@@ -251,7 +269,15 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 
         /* Print out the network configuration, which may have come from a DHCP
          * server. */
-        FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
+
+        /* Using ipconfigIPv4_BACKWARD_COMPATIBLE as the substitute of the
+         * downward compatibility*/
+
+        #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            FreeRTOS_GetEndPointConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress, pxNetworkEndPoints );
+        #else
+            FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
+        #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
         FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
 
@@ -278,16 +304,6 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-UBaseType_t uxRand( void )
-{
-    const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
-
-    /* Utility function to generate a pseudo random number. */
-
-    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
-}
-/*-----------------------------------------------------------*/
 
 static void prvSRand( UBaseType_t ulSeed )
 {
@@ -299,16 +315,24 @@ static void prvSRand( UBaseType_t ulSeed )
 static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
-    uint32_t ulLoggingIPAddress;
+    uint32_t ulRandomNumbers[ 4 ];
 
-    ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
-    vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
+    vLoggingInit( xLogToStdout, xLogToFile, pdFALSE, 0, 0 );
 
     /* Seed the random number generator. */
     time( &xTimeNow );
     FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\r\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
-    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\r\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
+
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 0 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 1 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 2 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 3 ] );
+    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\r\n",
+                             ulRandomNumbers[ 0 ],
+                             ulRandomNumbers[ 1 ],
+                             ulRandomNumbers[ 2 ],
+                             ulRandomNumbers[ 3 ] ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -327,7 +351,12 @@ static void prvMiscInitialisation( void )
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        BaseType_t xApplicationDNSQueryHook_Multi( struct xNetworkEndPoint * pxEndPoint,
+                                                   const char * pcName )
+    #else
+        BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 
@@ -351,6 +380,7 @@ static void prvMiscInitialisation( void )
     }
 
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
+/*-----------------------------------------------------------*/
 
 /*
  * Callback that provides the inputs necessary to generate a randomized TCP
@@ -370,6 +400,7 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 
     return uxRand();
 }
+/*-----------------------------------------------------------*/
 
 /*
  * Supply a random number to FreeRTOS+TCP stack.
@@ -381,3 +412,22 @@ BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
     *( pulNumber ) = uxRand();
     return pdTRUE;
 }
+/*-----------------------------------------------------------*/
+
+#if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) )
+
+    #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+        eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
+                                                    uint32_t ulIPAddress )
+    #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+        eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
+                                                          struct xNetworkEndPoint * pxEndPoint,
+                                                          IP_Address_t * pxIPAddress )
+    #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+    {
+        /* Provide a stub for this function. */
+        return eDHCPContinue;
+    }
+
+#endif /* if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_DHCP_HOOK != 0 ) ) */
+/*-----------------------------------------------------------*/

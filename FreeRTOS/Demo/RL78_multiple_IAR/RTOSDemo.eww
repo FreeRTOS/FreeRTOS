@@ -1,10 +1,39 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <workspace>
-  <project>
-    <path>$WS_DIR$\RTOSDemo.ewp</path>
-  </project>
-  <batchBuild/>
+    <project>
+        <path>$WS_DIR$\RTOSDemo.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>Build All!</name>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>YRPBRL78G13</configuration>
+            </member>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>YRPBRL78G14</configuration>
+            </member>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>YRDKRL78G14</configuration>
+            </member>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>RSKRL78G1C</configuration>
+            </member>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>RSKRL78L13</configuration>
+            </member>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>RSKRL78L1C</configuration>
+            </member>
+            <member>
+                <project>RTOSDemo</project>
+                <configuration>QB_R5F10ELE_TB</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
 </workspace>
-
-

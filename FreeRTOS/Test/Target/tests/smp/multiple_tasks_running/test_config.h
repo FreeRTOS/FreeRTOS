@@ -38,10 +38,6 @@
     #undef configUSE_CORE_AFFINITY
 #endif /* ifdef configUSE_CORE_AFFINITY */
 
-#ifdef configUSE_MINIMAL_IDLE_HOOK
-    #undef configUSE_MINIMAL_IDLE_HOOK
-#endif /* ifdef configUSE_MINIMAL_IDLE_HOOK */
-
 #ifdef configUSE_TASK_PREEMPTION_DISABLE
     #undef configUSE_TASK_PREEMPTION_DISABLE
 #endif /* ifdef configUSE_TASK_PREEMPTION_DISABLE */
@@ -56,7 +52,6 @@
 
 #define configRUN_MULTIPLE_PRIORITIES        1
 #define configUSE_CORE_AFFINITY              0
-#define configUSE_MINIMAL_IDLE_HOOK          0
 #define configUSE_TASK_PREEMPTION_DISABLE    0
 #define configUSE_TIME_SLICING               0
 #define configUSE_PREEMPTION                 0

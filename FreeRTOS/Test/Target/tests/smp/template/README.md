@@ -16,7 +16,6 @@
     - Ensure that the following configurations are not defined in `FreeRTOSConfig.h` as those are defined in `test_config.h`:
         - `configRUN_MULTIPLE_PRIORITIES`
         - `configUSE_CORE_AFFINITY`
-        - `configUSE_MINIMAL_IDLE_HOOK`
         - `configUSE_TASK_PREEMPTION_DISABLE`
         - `configUSE_TIME_SLICING`
         - `configUSE_PREEMPTION`

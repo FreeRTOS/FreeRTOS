@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2023 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,16 +31,17 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationMallocFailedHook( void );
 void vMainMQTTClientTasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 
 extern void initialise_monitor_handles( void );
-extern void vStartupTask( void* pvParameters );
+extern void vStartupTask( void * pvParameters );
 
-int main ()
+int main()
 {
     initialise_monitor_handles();
 
@@ -51,14 +52,16 @@ int main ()
         NULL,
         1U,
         NULL
-    );
+        );
 
     vTaskStartScheduler();
 
-    // The code should never reach here.
+    /* The code should never reach here. */
     configASSERT( 0 );
 
-    for ( ;; ) {}
+    for( ; ; )
+    {
+    }
 
     return 0;
 }
@@ -68,39 +71,46 @@ int main ()
 void vApplicationMallocFailedHook( void )
 {
     /* Called if a call to pvPortMalloc() fails because there is insufficient
-    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-    internally by FreeRTOS API functions that create tasks, queues, software
-    timers, and semaphores.  The size of the FreeRTOS heap is set by the
-    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+     * free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+     * internally by FreeRTOS API functions that create tasks, queues, software
+     * timers, and semaphores.  The size of the FreeRTOS heap is set by the
+     * configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
     taskDISABLE_INTERRUPTS();
-    for( ;; ){};
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
     ( void ) pcTaskName;
     ( void ) pxTask;
 
     /* Run time stack overflow checking is performed if
-    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-    function is called if a stack overflow is detected. */
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
     taskDISABLE_INTERRUPTS();
-    for( ;; ){};
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeHeapSpace;
+    volatile size_t xFreeHeapSpace;
 
     /* This is just a trivial example of an idle hook.  It is called on each
-    cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-    idle task just queries the amount of FreeRTOS heap that remains.  See the
-    memory management section on the https://www.FreeRTOS.org web site for memory
-    management options.  If there is a lot of heap memory free then the
-    configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-    RAM. */
+     * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+     * idle task just queries the amount of FreeRTOS heap that remains.  See the
+     * memory management section on the https://www.FreeRTOS.org web site for memory
+     * management options.  If there is a lot of heap memory free then the
+     * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+     * RAM. */
 }
 /*-----------------------------------------------------------*/
 
@@ -112,10 +122,11 @@ void vApplicationTickHook( void )
 void vAssertCalled( void )
 {
     volatile unsigned long looping = 0;
+
     taskENTER_CRITICAL();
     {
-        /* Use the debugger to set looping to a non-zero value in order to step out
-                of this function to determine why it was called. */
+        /* Use the debugger to set looping to a non-zero value in order to step 
+         * out of this function to determine why it was called. */
         while( looping == 0LU )
         {
             portNOP();
@@ -124,13 +135,14 @@ void vAssertCalled( void )
     taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
-void vLoggingPrintf( const char *pcFormat, ... )
+void vLoggingPrintf( const char * pcFormat,
+                     ... )
 {
-        va_list arg;
+    va_list arg;
 
-        va_start( arg, pcFormat );
-        vprintf( pcFormat, arg );
-        va_end( arg );
+    va_start( arg, pcFormat );
+    vprintf( pcFormat, arg );
+    va_end( arg );
 }
 
 /*-----------------------------------------------------------*/

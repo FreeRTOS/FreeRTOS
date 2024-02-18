@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2023 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -185,7 +185,6 @@ void vPlatformInitIpStack( void )
 {
     BaseType_t xResult;
     uint8_t ucIPAddress[ 4 ];
-    uint8_t ucNetMask[ 4 ] = { configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 };
     uint8_t ucNullAddress[ 4 ] = { 0, 0, 0, 0 };
     uint8_t ucMACAddress[ 6 ];
     uint8_t ucDNSServerAddress[ 4 ];

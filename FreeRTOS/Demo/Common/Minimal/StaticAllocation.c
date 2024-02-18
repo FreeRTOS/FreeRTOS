@@ -391,8 +391,8 @@
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
         {
-            xQueue = xQueueCreate( staticQUEUE_LENGTH_IN_ITEMS,     /* The maximum number of items the queue can hold. */
-                                   sizeof( uint64_t ) );            /* The size of each item. */
+            xQueue = xQueueCreate( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
+                                   sizeof( uint64_t ) );        /* The size of each item. */
 
             /* The queue handle should equal the static queue structure passed into the
              * xQueueCreateStatic() function. */
@@ -645,11 +645,11 @@
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
         {
-            xTimer = xTimerCreate( "T1",                                  /* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
-                                   xTimerPeriod,                          /* The period of the timer in ticks. */
-                                   pdTRUE,                                /* This is an auto-reload timer. */
-                                   ( void * ) &uxVariableToIncrement,     /* The variable incremented by the test is passed into the timer callback using the timer ID. */
-                                   prvTimerCallback );                    /* The function to execute when the timer expires. */
+            xTimer = xTimerCreate( "T1",                              /* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
+                                   xTimerPeriod,                      /* The period of the timer in ticks. */
+                                   pdTRUE,                            /* This is an auto-reload timer. */
+                                   ( void * ) &uxVariableToIncrement, /* The variable incremented by the test is passed into the timer callback using the timer ID. */
+                                   prvTimerCallback );                /* The function to execute when the timer expires. */
 
             configASSERT( xTimer != NULL );
 
@@ -778,12 +778,12 @@
             BaseType_t xReturned;
 
             xReturned = xTaskCreate(
-                prvStaticallyAllocatedTask,        /* Function that implements the task - the same function is used but is actually dynamically allocated this time. */
-                "Static",                          /* Human readable name for the task. */
-                configMINIMAL_STACK_SIZE,          /* Task's stack size, in words (not bytes!). */
-                NULL,                              /* Parameter to pass into the task. */
-                uxTaskPriorityGet( NULL ) + 1,     /* The priority of the task. */
-                &xCreatedTask );                   /* Handle of the task being created. */
+                prvStaticallyAllocatedTask,    /* Function that implements the task - the same function is used but is actually dynamically allocated this time. */
+                "Static",                      /* Human readable name for the task. */
+                configMINIMAL_STACK_SIZE,      /* Task's stack size, in words (not bytes!). */
+                NULL,                          /* Parameter to pass into the task. */
+                uxTaskPriorityGet( NULL ) + 1, /* The priority of the task. */
+                &xCreatedTask );               /* Handle of the task being created. */
 
             if( eTaskGetState( xCreatedTask ) != eSuspended )
             {

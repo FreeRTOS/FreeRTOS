@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -37,7 +37,7 @@
 #include "regtest.h"
 
 /* Priority definitions for most of the tasks in the demo application.  Some
-tasks just use the idle priority. */
+ * tasks just use the idle priority. */
 #define mainCOM_TEST_PRIORITY       ( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY     ( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY     ( tskIDLE_PRIORITY + 3 )
@@ -46,20 +46,20 @@ tasks just use the idle priority. */
 #define mainCOM_TEST_BAUD_RATE      ( ( unsigned long ) 9600 )
 
 /* LED used by the serial port tasks.  This is toggled on each character Tx,
-and mainCOM_TEST_LED + 1 is toggles on each character Rx. */
+ * and mainCOM_TEST_LED + 1 is toggles on each character Rx. */
 #define mainCOM_TEST_LED            ( 7 )
 
 /* LED that is toggled by the check task.  The check task periodically checks
-that all the other tasks are operating without error.  If no errors are found
-the LED is toggled.  If an error is found at any time the LED is never toggles
-again. */
+ * that all the other tasks are operating without error.  If no errors are found
+ * the LED is toggled.  If an error is found at any time the LED is never toggles
+ * again. */
 #define mainCHECK_TASK_LED          ( 6 )
 
 /* The period between executions of the check task. */
 #define mainCHECK_PERIOD            ( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
 
 /* An address in the EEPROM used to count resets.  This is used to check that
-the demo application is not unexpectedly resetting. */
+ * the demo application is not unexpectedly resetting. */
 #define mainRESET_COUNT_ADDRESS     ( 0x1400 )
 
 /* The number of coroutines to create. */
@@ -68,7 +68,7 @@ the demo application is not unexpectedly resetting. */
 /*
  * The task function for the "Check" task.
  */
-static void vErrorChecks( void *pvParameters );
+static void vErrorChecks( void * pvParameters );
 
 /*
  * Checks the unique counts of other tasks to ensure they are still operational.
@@ -91,16 +91,16 @@ void main_minimal( void )
     vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
     vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
     vStartRegTestTasks();
-    
+
     /* Create the tasks defined within this file. */
     xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
     /* Create the co-routines that flash the LED's. */
     vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
-    
+
     /* In this port, to use preemptive scheduler define configUSE_PREEMPTION
-    as 1 in portmacro.h.  To use the cooperative scheduler define
-    configUSE_PREEMPTION as 0. */
+     * as 1 in portmacro.h.  To use the cooperative scheduler define
+     * configUSE_PREEMPTION as 0. */
     vTaskStartScheduler();
 }
 
@@ -109,28 +109,28 @@ void init_minimal( void )
     /* Configure UART pins: PC1 Rx, PC0 Tx */
     PORTC.DIR &= ~PIN0_bm;
     PORTC.DIR |= PIN1_bm;
-    
+
     vParTestInitialise();
 }
 
-static void vErrorChecks( void *pvParameters )
+static void vErrorChecks( void * pvParameters )
 {
-static volatile unsigned long ulDummyVariable = 3UL;
+    static volatile unsigned long ulDummyVariable = 3UL;
 
     /* The parameters are not used. */
     ( void ) pvParameters;
 
     /* Cycle for ever, delaying then checking all the other tasks are still
-    operating without error. */
-    for( ;; )
+     * operating without error. */
+    for( ; ; )
     {
         vTaskDelay( mainCHECK_PERIOD );
 
         /* Perform a bit of 32bit maths to ensure the registers used by the
-        integer tasks get some exercise.  The result here is not important -
-        see the demo application documentation for more info. */
+         * integer tasks get some exercise.  The result here is not important -
+         * see the demo application documentation for more info. */
         ulDummyVariable *= 3;
-        
+
         prvCheckOtherTasksAreStillRunning();
     }
 }
@@ -138,7 +138,7 @@ static volatile unsigned long ulDummyVariable = 3UL;
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
-static portBASE_TYPE xErrorHasOccurred = pdFALSE;
+    static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 
     if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
     {
@@ -159,11 +159,11 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
     {
         xErrorHasOccurred = pdTRUE;
     }
-    
+
     if( xErrorHasOccurred == pdFALSE )
     {
         /* Toggle the LED if everything is okay so we know if an error occurs even if not
-        using console IO. */
+         * using console IO. */
         vParTestToggleLED( mainCHECK_TASK_LED );
     }
 }
@@ -171,7 +171,7 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 
 static void prvIncrementResetCount( void )
 {
-unsigned char ucResetCount;
+    unsigned char ucResetCount;
 
     eeprom_read_block( &ucResetCount, ( void * ) mainRESET_COUNT_ADDRESS, sizeof( ucResetCount ) );
     ucResetCount++;

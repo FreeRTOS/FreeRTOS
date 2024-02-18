@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -281,10 +281,10 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
         if( xSemaphoreTakeRecursive( xMutex, recmuNO_DELAY ) == pdPASS )
         {
             #if ( INCLUDE_eTaskGetState == 1 )
-                {
-                    configASSERT( eTaskGetState( xControllingTaskHandle ) == eSuspended );
-                    configASSERT( eTaskGetState( xBlockingTaskHandle ) == eSuspended );
-                }
+            {
+                configASSERT( eTaskGetState( xControllingTaskHandle ) == eSuspended );
+                configASSERT( eTaskGetState( xBlockingTaskHandle ) == eSuspended );
+            }
             #endif /* INCLUDE_eTaskGetState */
 
             /* Is the blocking task suspended? */
@@ -325,17 +325,17 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
                 }
 
                 #if ( INCLUDE_uxTaskPriorityGet == 1 )
-                    {
-                        /* Check priority inherited. */
-                        configASSERT( uxTaskPriorityGet( NULL ) == recmuCONTROLLING_TASK_PRIORITY );
-                    }
+                {
+                    /* Check priority inherited. */
+                    configASSERT( uxTaskPriorityGet( NULL ) == recmuCONTROLLING_TASK_PRIORITY );
+                }
                 #endif /* INCLUDE_uxTaskPriorityGet */
 
                 #if ( INCLUDE_eTaskGetState == 1 )
-                    {
-                        configASSERT( eTaskGetState( xControllingTaskHandle ) == eBlocked );
-                        configASSERT( eTaskGetState( xBlockingTaskHandle ) == eBlocked );
-                    }
+                {
+                    configASSERT( eTaskGetState( xControllingTaskHandle ) == eBlocked );
+                    configASSERT( eTaskGetState( xBlockingTaskHandle ) == eBlocked );
+                }
                 #endif /* INCLUDE_eTaskGetState */
 
                 /* Release the mutex, disinheriting the higher priority again. */
@@ -345,18 +345,18 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
                 }
 
                 #if ( INCLUDE_uxTaskPriorityGet == 1 )
-                    {
-                        /* Check priority disinherited. */
-                        configASSERT( uxTaskPriorityGet( NULL ) == recmuPOLLING_TASK_PRIORITY );
-                    }
+                {
+                    /* Check priority disinherited. */
+                    configASSERT( uxTaskPriorityGet( NULL ) == recmuPOLLING_TASK_PRIORITY );
+                }
                 #endif /* INCLUDE_uxTaskPriorityGet */
             }
         }
 
         #if configUSE_PREEMPTION == 0
-            {
-                taskYIELD();
-            }
+        {
+            taskYIELD();
+        }
         #endif
     }
 }
@@ -409,4 +409,3 @@ BaseType_t xAreRecursiveMutexTasksStillRunning( void )
 
     return xReturn;
 }
-

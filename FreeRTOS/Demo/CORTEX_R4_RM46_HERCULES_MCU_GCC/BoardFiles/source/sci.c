@@ -468,9 +468,9 @@ uint32 sciIsIdleDetected( sciBASE_t * sci )
 /* Requirements : HL_SR238 */
 uint32 sciRxError( sciBASE_t * sci )
 {
-    uint32 status =
-        ( sci->FLR &
-          ( ( uint32 ) SCI_FE_INT | ( uint32 ) SCI_OE_INT | ( uint32 ) SCI_PE_INT ) );
+    uint32 status = ( sci->FLR
+                      & ( ( uint32 ) SCI_FE_INT | ( uint32 ) SCI_OE_INT
+                          | ( uint32 ) SCI_PE_INT ) );
 
     /* USER CODE BEGIN (15) */
     /* USER CODE END */
@@ -536,7 +536,8 @@ void sciReceive( sciBASE_t * sci, uint32 length, uint8 * data )
         uint32 index = ( sci == sciREG ) ? 0U : 1U;
 
         /* clear error flags */
-        sci->FLR = ( ( uint32 ) SCI_FE_INT | ( uint32 ) SCI_OE_INT | ( uint32 ) SCI_PE_INT );
+        sci->FLR = ( ( uint32 ) SCI_FE_INT | ( uint32 ) SCI_OE_INT
+                     | ( uint32 ) SCI_PE_INT );
 
         g_sciTransfer_t[ index ].rx_length = length;
         /*SAFETYMCUSW 45 D MR:21.1 <APPROVED> "Valid non NULL input parameters are only
@@ -587,8 +588,8 @@ void sciEnableLoopback( sciBASE_t * sci, loopBackType_t Loopbacktype )
     sci->IODFTCTRL = 0U;
 
     /* Enable Loopback either in Analog or Digital Mode */
-    sci->IODFTCTRL = ( uint32 ) 0x00000A00U |
-                     ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
+    sci->IODFTCTRL = ( uint32 ) 0x00000A00U
+                   | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
 
     /* USER CODE BEGIN (20) */
     /* USER CODE END */

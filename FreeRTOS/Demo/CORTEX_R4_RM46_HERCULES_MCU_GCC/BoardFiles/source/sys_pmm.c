@@ -65,22 +65,22 @@ void pmmInit( void )
 
     /*wait till Logic Power Domain PD2 turns ON*/
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Wait for hardware status bit" */
-    while( ( pmmREG->LOGICPDPWRSTAT[ PMM_LOGICPD2 ] & PMM_LOGICPDPWRSTAT_DOMAINON ) == 0U
-    )
+    while( ( pmmREG->LOGICPDPWRSTAT[ PMM_LOGICPD2 ] & PMM_LOGICPDPWRSTAT_DOMAINON )
+           == 0U )
     {
     } /* Wait */
 
     /*wait till Logic Power Domain PD3 turns ON*/
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Wait for hardware status bit" */
-    while( ( pmmREG->LOGICPDPWRSTAT[ PMM_LOGICPD3 ] & PMM_LOGICPDPWRSTAT_DOMAINON ) == 0U
-    )
+    while( ( pmmREG->LOGICPDPWRSTAT[ PMM_LOGICPD3 ] & PMM_LOGICPDPWRSTAT_DOMAINON )
+           == 0U )
     {
     } /* Wait */
 
     /*wait till Logic Power Domain PD5 turns ON*/
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Wait for hardware status bit" */
-    while( ( pmmREG->LOGICPDPWRSTAT[ PMM_LOGICPD5 ] & PMM_LOGICPDPWRSTAT_DOMAINON ) == 0U
-    )
+    while( ( pmmREG->LOGICPDPWRSTAT[ PMM_LOGICPD5 ] & PMM_LOGICPDPWRSTAT_DOMAINON )
+           == 0U )
     {
     } /* Wait */
 
@@ -125,26 +125,26 @@ void pmmTurnONLogicPowerDomain( pmm_LogicPD_t logicPD )
         if( logicPD == PMM_LOGICPD2 )
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xF0FFFFFFU ) |
-                                      0x05000000U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xF0FFFFFFU )
+                                    | 0x05000000U;
         }
         else if( logicPD == PMM_LOGICPD3 )
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFF0FFFFU ) |
-                                      0x00050000U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFF0FFFFU )
+                                    | 0x00050000U;
         }
         else if( logicPD == PMM_LOGICPD4 )
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFF0FFU ) |
-                                      0x00000500U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFF0FFU )
+                                    | 0x00000500U;
         }
         else
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFFFF0U ) |
-                                      0x00000005U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFFFF0U )
+                                    | 0x00000005U;
         }
 
         /* Wait until the power domain turns on */
@@ -222,32 +222,32 @@ void pmmTurnOFFLogicPowerDomain( pmm_LogicPD_t logicPD )
         if( logicPD == PMM_LOGICPD2 )
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue*/
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xF0FFFFFFU ) |
-                                      0x0A000000U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xF0FFFFFFU )
+                                    | 0x0A000000U;
         }
         else if( logicPD == PMM_LOGICPD3 )
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFF0FFFFU ) |
-                                      0x000A0000U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFF0FFFFU )
+                                    | 0x000A0000U;
         }
         else if( logicPD == PMM_LOGICPD4 )
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFF0FFU ) |
-                                      0x00000A00U;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFF0FFU )
+                                    | 0x00000A00U;
         }
         else
         {
             /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFFFF0U ) |
-                                      0x0000000AU;
+            pmmREG->LOGICPDPWRCTRL0 = ( pmmREG->LOGICPDPWRCTRL0 & 0xFFFFFFF0U )
+                                    | 0x0000000AU;
         }
 
         /* Wait until the power domain turns off */
         /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Wait for hardware status bit" */
-        while( ( pmmREG->LOGICPDPWRSTAT[ logicPD ] & PMM_LOGICPDPWRSTAT_LOGICPDPWRSTAT
-               ) != 0U )
+        while( ( pmmREG->LOGICPDPWRSTAT[ logicPD ] & PMM_LOGICPDPWRSTAT_LOGICPDPWRSTAT )
+               != 0U )
         {
         } /* Wait */
     }

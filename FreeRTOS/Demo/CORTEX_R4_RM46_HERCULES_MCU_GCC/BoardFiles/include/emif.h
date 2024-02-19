@@ -123,59 +123,59 @@ typedef struct emif_config_reg
 
 /* Configuration registers initial value for EMIF*/
 #define EMIF_AWCC_CONFIGVALUE                                                          \
-    ( ( uint32 ) ( ( uint32 ) emif_pin_high << 29U ) |                                 \
-      ( uint32 ) ( ( uint32 ) emif_pin_low << 28U ) |                                  \
-      ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 16U ) |                                \
-      ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 18U ) |                                \
-      ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 20U ) | ( uint32 ) ( ( uint32 ) 0U ) | \
-      ( uint32 ) 0xC0000000U )
+    ( ( uint32 ) ( ( uint32 ) emif_pin_high << 29U )                                   \
+      | ( uint32 ) ( ( uint32 ) emif_pin_low << 28U )                                  \
+      | ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 16U )                                \
+      | ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 18U )                                \
+      | ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 20U ) | ( uint32 ) ( ( uint32 ) 0U ) \
+      | ( uint32 ) 0xC0000000U )
 
-#define EMIF_SDCR_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 1U << 31U ) | ( uint32 ) ( ( uint32 ) 1U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) elements_256 ) )
+#define EMIF_SDCR_CONFIGVALUE                                                   \
+    ( ( uint32 ) ( ( uint32 ) 1U << 31U ) | ( uint32 ) ( ( uint32 ) 1U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) \
+      | ( uint32 ) ( ( uint32 ) elements_256 ) )
 
 #define EMIF_SDRCR_CONFIGVALUE 0U
 
 #define EMIF_CE2CFG_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) |   \
-      ( uint32 ) ( ( uint32 ) 15U << 26U ) | ( uint32 ) ( ( uint32 ) 63U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 7U << 17U ) | ( uint32 ) ( ( uint32 ) 15U << 13U ) |  \
-      ( uint32 ) ( ( uint32 ) 63U << 7U ) | ( uint32 ) ( ( uint32 ) 7U << 4U ) |    \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) emif_8_bit_port ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )     \
+      | ( uint32 ) ( ( uint32 ) 15U << 26U ) | ( uint32 ) ( ( uint32 ) 63U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 7U << 17U ) | ( uint32 ) ( ( uint32 ) 15U << 13U )  \
+      | ( uint32 ) ( ( uint32 ) 63U << 7U ) | ( uint32 ) ( ( uint32 ) 7U << 4U )    \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) emif_8_bit_port ) )
 
 #define EMIF_CE3CFG_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) |   \
-      ( uint32 ) ( ( uint32 ) 15U << 26U ) | ( uint32 ) ( ( uint32 ) 63U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 7U << 17U ) | ( uint32 ) ( ( uint32 ) 15U << 13U ) |  \
-      ( uint32 ) ( ( uint32 ) 63U << 7U ) | ( uint32 ) ( ( uint32 ) 7U << 4U ) |    \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) emif_8_bit_port ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )     \
+      | ( uint32 ) ( ( uint32 ) 15U << 26U ) | ( uint32 ) ( ( uint32 ) 63U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 7U << 17U ) | ( uint32 ) ( ( uint32 ) 15U << 13U )  \
+      | ( uint32 ) ( ( uint32 ) 63U << 7U ) | ( uint32 ) ( ( uint32 ) 7U << 4U )    \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) emif_8_bit_port ) )
 
 #define EMIF_CE4CFG_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) |   \
-      ( uint32 ) ( ( uint32 ) 15U << 26U ) | ( uint32 ) ( ( uint32 ) 63U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 7U << 17U ) | ( uint32 ) ( ( uint32 ) 15U << 13U ) |  \
-      ( uint32 ) ( ( uint32 ) 63U << 7U ) | ( uint32 ) ( ( uint32 ) 7U << 4U ) |    \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) emif_8_bit_port ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )     \
+      | ( uint32 ) ( ( uint32 ) 15U << 26U ) | ( uint32 ) ( ( uint32 ) 63U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 7U << 17U ) | ( uint32 ) ( ( uint32 ) 15U << 13U )  \
+      | ( uint32 ) ( ( uint32 ) 63U << 7U ) | ( uint32 ) ( ( uint32 ) 7U << 4U )    \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) emif_8_bit_port ) )
 
 #define EMIF_CE5CFG_CONFIGVALUE 0x3FFFFFFDU
 
 #define EMIF_SDTIMR_CONFIGVALUE                                                   \
-    ( ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | 0x00000000U )
+    ( ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 24U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | 0x00000000U )
 
 #define EMIF_SDSRETR_CONFIGVALUE 0U
 #define EMIF_INTMSK_CONFIGVALUE  0x00000000U
 #define EMIF_PMCR_CONFIGVALUE                                                       \
-    ( 0xFC000000U | ( uint32 ) ( ( uint32 ) 0U << 2U ) |                            \
-      ( uint32 ) ( ( uint32 ) emif_4_words << 1U ) | ( uint32 ) ( ( uint32 ) 0U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) |                                         \
-      ( uint32 ) ( ( uint32 ) emif_4_words << 9U ) |                                \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) |    \
-      ( uint32 ) ( ( uint32 ) emif_4_words << 17U ) |                               \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) )
+    ( 0xFC000000U | ( uint32 ) ( ( uint32 ) 0U << 2U )                              \
+      | ( uint32 ) ( ( uint32 ) emif_4_words << 1U ) | ( uint32 ) ( ( uint32 ) 0U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U )                                         \
+      | ( uint32 ) ( ( uint32 ) emif_4_words << 9U )                                \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 18U )    \
+      | ( uint32 ) ( ( uint32 ) emif_4_words << 17U )                               \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) )
 
 /**
  *  @defgroup EMIF EMIF

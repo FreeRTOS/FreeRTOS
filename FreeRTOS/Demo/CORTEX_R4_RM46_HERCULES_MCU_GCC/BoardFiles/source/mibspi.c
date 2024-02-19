@@ -72,13 +72,13 @@ void mibspiInit( void )
     mibspiREG1->MIBSPIE = ( mibspiREG1->MIBSPIE & 0xFFFFFFFEU ) | 1U;
 
     /** MIBSPI1 master mode and clock configuration */
-    mibspiREG1->GCR1 = ( mibspiREG1->GCR1 & 0xFFFFFFFCU ) |
-                       ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+    mibspiREG1->GCR1 = ( mibspiREG1->GCR1 & 0xFFFFFFFCU )
+                     | ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
                          | 1U );                            /* MASTER */
 
     /** MIBSPI1 enable pin configuration */
-    mibspiREG1->INT0 = ( mibspiREG1->INT0 & 0xFEFFFFFFU ) |
-                       ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+    mibspiREG1->INT0 = ( mibspiREG1->INT0 & 0xFEFFFFFFU )
+                     | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
                                                                HIGHZ
                                                              */
 
@@ -220,10 +220,10 @@ void mibspiInit( void )
 
     mibspiREG1->TGCTRL[ 8U ] = ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U;
 
-    mibspiREG1->LTGPEND = ( mibspiREG1->LTGPEND & 0xFFFF00FFU ) |
-                          ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U +
-                                                      0U ) -
-                                                    1U )
+    mibspiREG1->LTGPEND = ( mibspiREG1->LTGPEND & 0xFFFF00FFU )
+                        | ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U
+                                                      + 0U )
+                                                    - 1U )
                                        << 8U );
 
     /** - initialize buffer ram */
@@ -242,8 +242,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
                 i++;
             }
     #endif /* if ( 8U > 1U ) */
@@ -253,8 +253,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -272,8 +272,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -284,8 +284,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -303,8 +303,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -315,8 +315,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -334,8 +334,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -346,8 +346,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -365,8 +365,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -377,8 +377,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -396,8 +396,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -408,8 +408,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -427,8 +427,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -439,8 +439,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -458,8 +458,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -470,8 +470,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
             i++;
         }
 #endif /* if ( 0U > 0U ) */
@@ -491,8 +491,8 @@ void mibspiInit( void )
     mibspiREG1->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    mibspiREG1->INT0 = ( mibspiREG1->INT0 & 0xFFFF0000U ) |
-                       ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT
+    mibspiREG1->INT0 = ( mibspiREG1->INT0 & 0xFFFF0000U )
+                     | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT
                                                             */
                      | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
                      | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
@@ -601,13 +601,13 @@ void mibspiInit( void )
     mibspiREG3->MIBSPIE = ( mibspiREG3->MIBSPIE & 0xFFFFFFFEU ) | 1U;
 
     /** MIBSPI3 master mode and clock configuration */
-    mibspiREG3->GCR1 = ( mibspiREG3->GCR1 & 0xFFFFFFFCU ) |
-                       ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+    mibspiREG3->GCR1 = ( mibspiREG3->GCR1 & 0xFFFFFFFCU )
+                     | ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
                          | 1U );                            /* MASTER */
 
     /** MIBSPI3 enable pin configuration */
-    mibspiREG3->INT0 = ( mibspiREG3->INT0 & 0xFEFFFFFFU ) |
-                       ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+    mibspiREG3->INT0 = ( mibspiREG3->INT0 & 0xFEFFFFFFU )
+                     | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
                                                                HIGHZ
                                                              */
 
@@ -749,10 +749,10 @@ void mibspiInit( void )
 
     mibspiREG3->TGCTRL[ 8U ] = ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U;
 
-    mibspiREG3->LTGPEND = ( mibspiREG3->LTGPEND & 0xFFFF00FFU ) |
-                          ( uint32 ) ( ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U +
-                                                      0U ) -
-                                         1U )
+    mibspiREG3->LTGPEND = ( mibspiREG3->LTGPEND & 0xFFFF00FFU )
+                        | ( uint32 ) ( ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U
+                                                      + 0U )
+                                         - 1U )
                                        << 8U );
 
     /** - initialize buffer ram */
@@ -771,8 +771,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
                 i++;
             }
     #endif /* if ( 8U > 1U ) */
@@ -782,8 +782,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -801,8 +801,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -813,8 +813,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -832,8 +832,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -844,8 +844,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -863,8 +863,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -875,8 +875,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -894,8 +894,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -906,8 +906,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -925,8 +925,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -937,8 +937,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -956,8 +956,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -968,8 +968,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -987,8 +987,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -999,8 +999,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
             i++;
         }
 #endif /* if ( 0U > 0U ) */
@@ -1020,8 +1020,8 @@ void mibspiInit( void )
     mibspiREG3->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    mibspiREG3->INT0 = ( mibspiREG3->INT0 & 0xFFFF0000U ) |
-                       ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT
+    mibspiREG3->INT0 = ( mibspiREG3->INT0 & 0xFFFF0000U )
+                     | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT
                                                             */
                      | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
                      | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
@@ -1118,13 +1118,13 @@ void mibspiInit( void )
     mibspiREG5->MIBSPIE = ( mibspiREG5->MIBSPIE & 0xFFFFFFFEU ) | 1U;
 
     /** MIBSPI5 master mode and clock configuration */
-    mibspiREG5->GCR1 = ( mibspiREG5->GCR1 & 0xFFFFFFFCU ) |
-                       ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+    mibspiREG5->GCR1 = ( mibspiREG5->GCR1 & 0xFFFFFFFCU )
+                     | ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
                          | 1U );                            /* MASTER */
 
     /** MIBSPI5 enable pin configuration */
-    mibspiREG5->INT0 = ( mibspiREG5->INT0 & 0xFEFFFFFFU ) |
-                       ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+    mibspiREG5->INT0 = ( mibspiREG5->INT0 & 0xFEFFFFFFU )
+                     | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
                                                                HIGHZ
                                                              */
 
@@ -1266,10 +1266,10 @@ void mibspiInit( void )
 
     mibspiREG5->TGCTRL[ 8U ] = ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U;
 
-    mibspiREG5->LTGPEND = ( mibspiREG5->LTGPEND & 0xFFFF00FFU ) |
-                          ( uint32 ) ( ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U +
-                                                      0U ) -
-                                         1U )
+    mibspiREG5->LTGPEND = ( mibspiREG5->LTGPEND & 0xFFFF00FFU )
+                        | ( uint32 ) ( ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U
+                                                      + 0U )
+                                         - 1U )
                                        << 8U );
 
     /** - initialize buffer ram */
@@ -1288,8 +1288,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
                 i++;
             }
     #endif /* if ( 8U > 1U ) */
@@ -1299,8 +1299,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_0 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1318,8 +1318,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1330,8 +1330,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_1 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1349,8 +1349,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1361,8 +1361,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_2 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1380,8 +1380,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1392,8 +1392,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_3 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1411,8 +1411,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1423,8 +1423,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_4 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1442,8 +1442,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1454,8 +1454,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_5 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1473,8 +1473,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1485,8 +1485,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_6 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
 
             i++;
         }
@@ -1504,8 +1504,8 @@ void mibspiInit( void )
                              | ( uint16 ) ( ( uint16 ) 0U << 11U ) /* lock transmission */
                              | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                              /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) ) &
-                                 ( uint16 ) 0x00FFU ); /* chip select */
+                             | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) )
+                                 & ( uint16 ) 0x00FFU ); /* chip select */
 
                 i++;
             }
@@ -1516,8 +1516,8 @@ void mibspiInit( void )
                          | ( uint16 ) ( ( uint16 ) 0U << 10U ) /* enable WDELAY */
                          | ( uint16 ) ( ( uint16 ) 0U << 8U )  /* data format */
                          /*SAFETYMCUSW 334 S MR:10.5 <APPROVED> "LDRA Tool issue" */
-                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) ) &
-                             ( uint16 ) 0x00FFU ); /* chip select */
+                         | ( ( uint16 ) ( ~( ( uint16 ) 0xFFU ^ ( uint16 ) CS_7 ) )
+                             & ( uint16 ) 0x00FFU ); /* chip select */
             i++;
         }
 #endif /* if ( 0U > 0U ) */
@@ -1537,8 +1537,8 @@ void mibspiInit( void )
     mibspiREG5->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    mibspiREG5->INT0 = ( mibspiREG5->INT0 & 0xFFFF0000U ) |
-                       ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT
+    mibspiREG5->INT0 = ( mibspiREG5->INT0 & 0xFFFF0000U )
+                     | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT
                                                             */
                      | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
                      | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
@@ -1815,8 +1815,8 @@ boolean mibspiIsTransferComplete( mibspiBASE_t * mibspi, uint32 group )
 
     if( ( ( ( ( mibspi->TGINTFLG & 0xFFFF0000U ) >> 16U ) >> group ) & 1U ) == 1U )
     {
-        mibspi->TGINTFLG = ( mibspi->TGINTFLG & 0x0000FFFFU ) |
-                           ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
+        mibspi->TGINTFLG = ( mibspi->TGINTFLG & 0x0000FFFFU )
+                         | ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
         status = TRUE;
     }
     else
@@ -1849,8 +1849,8 @@ void mibspiEnableLoopback( mibspiBASE_t * mibspi, loopBackType_t Loopbacktype )
     mibspi->IOLPKTSTCR = 0U;
 
     /* Enable Loopback either in Analog or Digital Mode */
-    mibspi->IOLPKTSTCR = ( uint32 ) 0x00000A00U |
-                         ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
+    mibspi->IOLPKTSTCR = ( uint32 ) 0x00000A00U
+                       | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
 
     /* USER CODE BEGIN (15) */
     /* USER CODE END */
@@ -1901,8 +1901,10 @@ void mibspiPmodeSet( mibspiBASE_t * mibspi, mibspiPmode_t Pmode, mibspiDFMT_t DF
     uint32 pmctrl_reg;
 
     /* Set the Pmode for the selected Data Format register */
-    pmctrl_reg = ( mibspi->PMCTRL & ( ~( uint32 ) ( ( uint32 ) 0xFFU << ( 8U * DFMT ) ) ) );
-    mibspi->PMCTRL = ( pmctrl_reg | ( uint32 ) ( ( uint32 ) Pmode << ( ( 8U * DFMT ) ) ) );
+    pmctrl_reg = ( mibspi->PMCTRL
+                   & ( ~( uint32 ) ( ( uint32 ) 0xFFU << ( 8U * DFMT ) ) ) );
+    mibspi->PMCTRL = ( pmctrl_reg
+                       | ( uint32 ) ( ( uint32 ) Pmode << ( ( 8U * DFMT ) ) ) );
 }
 
 /** @fn void mibspiEnableGroupNotification(mibspiBASE_t *mibspi, uint32 group, uint32
@@ -1924,17 +1926,17 @@ void mibspiEnableGroupNotification( mibspiBASE_t * mibspi, uint32 group, uint32 
 
     if( level != 0U )
     {
-        mibspi->TGITLVST = ( mibspi->TGITLVST & 0x0000FFFFU ) |
-                           ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
+        mibspi->TGITLVST = ( mibspi->TGITLVST & 0x0000FFFFU )
+                         | ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
     }
     else
     {
-        mibspi->TGITLVCR = ( mibspi->TGITLVCR & 0x0000FFFFU ) |
-                           ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
+        mibspi->TGITLVCR = ( mibspi->TGITLVCR & 0x0000FFFFU )
+                         | ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
     }
 
-    mibspi->TGITENST = ( mibspi->TGITENST & 0x0000FFFFU ) |
-                       ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
+    mibspi->TGITENST = ( mibspi->TGITENST & 0x0000FFFFU )
+                     | ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
 
     /* USER CODE BEGIN (19) */
     /* USER CODE END */
@@ -1955,8 +1957,8 @@ void mibspiDisableGroupNotification( mibspiBASE_t * mibspi, uint32 group )
     /* USER CODE BEGIN (20) */
     /* USER CODE END */
 
-    mibspi->TGITENCR = ( mibspi->TGITENCR & 0x0000FFFFU ) |
-                       ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
+    mibspi->TGITENCR = ( mibspi->TGITENCR & 0x0000FFFFU )
+                     | ( uint32 ) ( ( uint32 ) ( ( uint32 ) 1U << group ) << 16U );
 
     /* USER CODE BEGIN (21) */
     /* USER CODE END */

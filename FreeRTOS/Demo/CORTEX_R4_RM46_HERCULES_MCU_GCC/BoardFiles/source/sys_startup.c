@@ -257,10 +257,8 @@ void _c_int00( void )
     systemInit();
 
     /* Run PBIST on STC ROM */
-    pbistRun(
-        ( uint32 ) STC_ROM_PBIST_RAM_GROUP,
-        ( ( uint32 ) PBIST_TripleReadSlow | ( uint32 ) PBIST_TripleReadFast )
-    );
+    pbistRun( ( uint32 ) STC_ROM_PBIST_RAM_GROUP,
+              ( ( uint32 ) PBIST_TripleReadSlow | ( uint32 ) PBIST_TripleReadFast ) );
 
     /* Wait for PBIST for STC ROM to be completed */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
@@ -283,10 +281,8 @@ void _c_int00( void )
     pbistStop();
 
     /* Run PBIST on PBIST ROM */
-    pbistRun(
-        ( uint32 ) PBIST_ROM_PBIST_RAM_GROUP,
-        ( ( uint32 ) PBIST_TripleReadSlow | ( uint32 ) PBIST_TripleReadFast )
-    );
+    pbistRun( ( uint32 ) PBIST_ROM_PBIST_RAM_GROUP,
+              ( ( uint32 ) PBIST_TripleReadSlow | ( uint32 ) PBIST_TripleReadFast ) );
 
     /* Wait for PBIST for PBIST ROM to be completed */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */

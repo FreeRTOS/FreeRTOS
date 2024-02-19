@@ -104,28 +104,21 @@ extern void USBDCDSendDataEP0( uint32 ulIndex, uint8 * pucData, uint32 ulSize );
 extern void USBDCDSetDefaultConfiguration( uint32 ulIndex, uint32 ulDefaultConfig );
 extern uint32 USBDCDConfigDescGetSize( const tConfigHeader * psConfig );
 extern uint32 USBDCDConfigDescGetNum( const tConfigHeader * psConfig, uint32 ulType );
-extern tDescriptorHeader * USBDCDConfigDescGet(
-    const tConfigHeader * psConfig,
-    uint32 ulType,
-    uint32 ulIndex,
-    uint32 * pulSection
-);
-extern uint32 USBDCDConfigGetNumAlternateInterfaces(
-    const tConfigHeader * psConfig,
-    uint8 ucInterfaceNumber
-);
-extern tInterfaceDescriptor * USBDCDConfigGetInterface(
-    const tConfigHeader * psConfig,
-    uint32 ulIndex,
-    uint32 ulAltCfg,
-    uint32 * pulSection
-);
+extern tDescriptorHeader * USBDCDConfigDescGet( const tConfigHeader * psConfig,
+                                                uint32 ulType,
+                                                uint32 ulIndex,
+                                                uint32 * pulSection );
+extern uint32 USBDCDConfigGetNumAlternateInterfaces( const tConfigHeader * psConfig,
+                                                     uint8 ucInterfaceNumber );
+extern tInterfaceDescriptor * USBDCDConfigGetInterface( const tConfigHeader * psConfig,
+                                                        uint32 ulIndex,
+                                                        uint32 ulAltCfg,
+                                                        uint32 * pulSection );
 extern tEndpointDescriptor * USBDCDConfigGetInterfaceEndpoint(
     const tConfigHeader * psConfig,
     uint32 ulInterfaceNumber,
     uint32 ulAltCfg,
-    uint32 ulIndex
-);
+    uint32 ulIndex );
 extern void USBDCDPowerStatusSet( uint32 ulIndex, uint8 ucPower );
 extern tBoolean USBDCDRemoteWakeupRequest( uint32 ulIndex );
 

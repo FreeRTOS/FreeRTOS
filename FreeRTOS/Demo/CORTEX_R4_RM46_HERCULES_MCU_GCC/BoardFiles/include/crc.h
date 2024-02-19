@@ -255,12 +255,12 @@ typedef struct crc_config_reg
 
 #define CRC_CTRL0_CONFIGVALUE 0x00000000U
 #define CRC_CTRL1_CONFIGVALUE 0x00000000U
-#define CRC_CTRL2_CONFIGVALUE                                            \
-    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( CRC_FULL_CPU ) | \
-      ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U ) )
-#define CRC_INTS_CONFIGVALUE                                                \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
+#define CRC_CTRL2_CONFIGVALUE                                          \
+    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( CRC_FULL_CPU ) \
+      | ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U ) )
+#define CRC_INTS_CONFIGVALUE                                                            \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 #define CRC_PCOUNT_REG1_CONFIGVALUE ( 0x00000000U )
 #define CRC_SCOUNT_REG1_CONFIGVALUE ( 0x00000000U )
 #define CRC_WDTOPLD1_CONFIGVALUE    ( 0x00000000U )

@@ -338,10 +338,10 @@ typedef struct
                                   * been copied from Active to Copy VS */
     uint8 Fee_u8VirtualSectorStart; /* Index of the Start Sector of the VS */
     uint8 Fee_u8VirtualSectorEnd;   /* Index of the End Sector of the VS */
-    uint32 Fee_au32VirtualSectorStateValue
-        [ TI_FEE_VIRTUAL_SECTOR_OVERHEAD >> 2U ]; /* Array to store the Virtual
-                                                   * Sector Header and
-                                                   * Information record */
+    uint32 Fee_au32VirtualSectorStateValue[ TI_FEE_VIRTUAL_SECTOR_OVERHEAD
+                                            >> 2U ]; /* Array to store the Virtual
+                                                      * Sector Header and
+                                                      * Information record */
     uint8 Fee_au8VirtualSectorState[ TI_FEE_NUMBER_OF_VIRTUAL_SECTORS ]; /* Stores the
                                                                           * state of each
                                                                           * Virtual sector
@@ -469,12 +469,10 @@ extern TI_FeeModuleStatusType TI_Fee_GetStatus( uint8 u8EEPIndex );
 extern void TI_Fee_GetVersionInfo( Std_VersionInfoType * VersionInfoPtr );
 extern void TI_Fee_Init( void );
 extern Std_ReturnType TI_Fee_InvalidateBlock( uint16 BlockNumber );
-extern Std_ReturnType TI_Fee_Read(
-    uint16 BlockNumber,
-    uint16 BlockOffset,
-    uint8 * DataBufferPtr,
-    uint16 Length
-);
+extern Std_ReturnType TI_Fee_Read( uint16 BlockNumber,
+                                   uint16 BlockOffset,
+                                   uint8 * DataBufferPtr,
+                                   uint16 Length );
 extern Std_ReturnType TI_Fee_WriteAsync( uint16 BlockNumber, uint8 * DataBufferPtr );
 extern void TI_Fee_MainFunction( void );
 extern TI_Fee_ErrorCodeType TI_FeeErrorCode( uint8 u8EEPIndex );
@@ -491,95 +489,75 @@ extern void TI_Fee_ErrorHookDoubleBitError( void );
 extern Std_ReturnType TI_Fee_WriteSync( uint16 BlockNumber, uint8 * DataBufferPtr );
 extern Std_ReturnType TI_Fee_Shutdown( void );
 extern boolean TI_Fee_Format( uint32 u32FormatKey );
-extern Std_ReturnType TI_Fee_ReadSync(
-    uint16 BlockNumber,
-    uint16 BlockOffset,
-    uint8 * DataBufferPtr,
-    uint16 Length
-);
+extern Std_ReturnType TI_Fee_ReadSync( uint16 BlockNumber,
+                                       uint16 BlockOffset,
+                                       uint8 * DataBufferPtr,
+                                       uint16 Length );
     #endif
 
 /*  TI Fee Internal Functions */
 TI_Fee_AddressType TI_FeeInternal_GetNextFlashAddress( uint8 u8EEPIndex );
 TI_Fee_AddressType TI_FeeInternal_AlignAddressForECC( TI_Fee_AddressType oAddress );
-TI_Fee_AddressType TI_FeeInternal_GetCurrentBlockAddress(
-    uint16 BlockNumber,
-    uint16 DataSetNumber,
-    uint8 u8EEPIndex
-);
+TI_Fee_AddressType TI_FeeInternal_GetCurrentBlockAddress( uint16 BlockNumber,
+                                                          uint16 DataSetNumber,
+                                                          uint8 u8EEPIndex );
 /*SAFETYMCUSW 61 X MR:1.4,5.1 <APPROVED> "Reason -
  * TI_FeeInternal_GetVirtualSectorParameter name is required here."*/
-uint32 TI_FeeInternal_GetVirtualSectorParameter(
-    Fapi_FlashSectorType oSector,
-    uint16 u16Bank,
-    boolean VirtualSectorInfo,
-    uint8 u8EEPIndex
-);
+uint32 TI_FeeInternal_GetVirtualSectorParameter( Fapi_FlashSectorType oSector,
+                                                 uint16 u16Bank,
+                                                 boolean VirtualSectorInfo,
+                                                 uint8 u8EEPIndex );
 uint32 TI_FeeInternal_PollFlashStatus( void );
 uint16 TI_FeeInternal_GetBlockSize( uint16 BlockIndex );
 uint16 TI_FeeInternal_GetBlockIndex( uint16 BlockNumber );
 uint16 TI_FeeInternal_GetDataSetIndex( uint16 BlockNumber );
 uint16 TI_FeeInternal_GetBlockNumber( uint16 BlockNumber );
 uint8 TI_FeeInternal_FindNextVirtualSector( uint8 u8EEPIndex );
-uint8 TI_FeeInternal_WriteDataF021( boolean bCopy, uint16 u16WriteSize, uint8 u8EEPIndex );
-boolean TI_FeeInternal_BlankCheck(
-    uint32 u32StartAddress,
-    uint32 u32EndAddress,
-    uint16 u16Bank,
-    uint8 u8EEPIndex
-);
-Std_ReturnType TI_FeeInternal_CheckReadParameters(
-    uint32 u32BlockSize,
-    uint16 BlockOffset,
-    const uint8 * DataBufferPtr,
-    uint16 Length,
-    uint8 u8EEPIndex
-);
+uint8 TI_FeeInternal_WriteDataF021( boolean bCopy,
+                                    uint16 u16WriteSize,
+                                    uint8 u8EEPIndex );
+boolean TI_FeeInternal_BlankCheck( uint32 u32StartAddress,
+                                   uint32 u32EndAddress,
+                                   uint16 u16Bank,
+                                   uint8 u8EEPIndex );
+Std_ReturnType TI_FeeInternal_CheckReadParameters( uint32 u32BlockSize,
+                                                   uint16 BlockOffset,
+                                                   const uint8 * DataBufferPtr,
+                                                   uint16 Length,
+                                                   uint8 u8EEPIndex );
 Std_ReturnType TI_FeeInternal_CheckModuleState( uint8 u8EEPIndex );
 Std_ReturnType TI_FeeInternal_InvalidateErase( uint16 BlockNumber );
 TI_Fee_StatusType TI_FeeInternal_FeeManager( uint8 u8EEPIndex );
-void TI_FeeInternal_WriteVirtualSectorHeader(
-    uint8 FeeVirtualSectorNumber,
-    VirtualSectorStatesType VsState,
-    uint8 u8EEPIndex
-);
+void TI_FeeInternal_WriteVirtualSectorHeader( uint8 FeeVirtualSectorNumber,
+                                              VirtualSectorStatesType VsState,
+                                              uint8 u8EEPIndex );
 /*SAFETYMCUSW 61 X MR:1.4,5.1 <APPROVED> "Reason -  TI_FeeInternal_GetVirtualSectorIndex
  * name is required here."*/
-void TI_FeeInternal_GetVirtualSectorIndex(
-    Fapi_FlashSectorType oSectorStart,
-    Fapi_FlashSectorType oSectorEnd,
-    uint16 u16Bank,
-    boolean bOperation,
-    uint8 u8EEPIndex
-);
+void TI_FeeInternal_GetVirtualSectorIndex( Fapi_FlashSectorType oSectorStart,
+                                           Fapi_FlashSectorType oSectorEnd,
+                                           uint16 u16Bank,
+                                           boolean bOperation,
+                                           uint8 u8EEPIndex );
 void TI_FeeInternal_WritePreviousBlockHeader( boolean bWrite, uint8 u8EEPIndex );
-void TI_FeeInternal_WriteBlockHeader(
-    boolean bWrite,
-    uint8 u8EEPIndex,
-    uint16 Fee_BlockSize_u16,
-    uint16 u16BlockNumber
-);
+void TI_FeeInternal_WriteBlockHeader( boolean bWrite,
+                                      uint8 u8EEPIndex,
+                                      uint16 Fee_BlockSize_u16,
+                                      uint16 u16BlockNumber );
 void TI_FeeInternal_SetClearCopyBlockState( uint8 u8EEPIndex, boolean bSetClear );
 void TI_FeeInternal_SanityCheck( uint16 BlockSize, uint8 u8EEPIndex );
 void TI_FeeInternal_StartProgramBlock( uint8 u8EEPIndex );
-void TI_FeeInternal_UpdateBlockOffsetArray(
-    uint8 u8EEPIndex,
-    boolean bActCpyVS,
-    uint8 u8VirtualSector
-);
-void TI_FeeInternal_WriteInitialize(
-    TI_Fee_AddressType oFlashNextAddress,
-    uint8 * DataBufferPtr,
-    uint8 u8EEPIndex
-);
+void TI_FeeInternal_UpdateBlockOffsetArray( uint8 u8EEPIndex,
+                                            boolean bActCpyVS,
+                                            uint8 u8VirtualSector );
+void TI_FeeInternal_WriteInitialize( TI_Fee_AddressType oFlashNextAddress,
+                                     uint8 * DataBufferPtr,
+                                     uint8 u8EEPIndex );
 void TI_FeeInternal_CheckForError( uint8 u8EEPIndex );
 void TI_FeeInternal_EnableRequiredFlashSector( uint32 u32VirtualSectorStartAddress );
-uint16 TI_FeeInternal_GetArrayIndex(
-    uint16 BlockNumber,
-    uint16 DataSetNumber,
-    uint8 u8EEPIndex,
-    boolean bCallContext
-);
+uint16 TI_FeeInternal_GetArrayIndex( uint16 BlockNumber,
+                                     uint16 DataSetNumber,
+                                     uint8 u8EEPIndex,
+                                     boolean bCallContext );
     #if( TI_FEE_FLASH_CHECKSUM_ENABLE == STD_ON )
 uint32 TI_FeeInternal_Fletcher16( uint8 const * pu8data, uint16 u16Length );
     #endif

@@ -73,17 +73,17 @@ extern "C" {
 #define PMM_GLOBALCTRL1_AUTOCLKWAKEENA    0x00000001U
 
 /* Configuration registers initial value */
-#define PMM_LOGICPDPWRCTRL0_CONFIGVALUE                                               \
-    ( ( uint32 ) ( ( uint32 ) 0x5U << 24U ) | ( uint32 ) ( ( uint32 ) 0x5U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0xAU << 8U ) | ( uint32 ) ( ( uint32 ) 0x5U << 0U ) )
+#define PMM_LOGICPDPWRCTRL0_CONFIGVALUE                                             \
+    ( ( uint32 ) ( ( uint32 ) 0x5U << 24U ) | ( uint32 ) ( ( uint32 ) 0x5U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0xAU << 8U ) | ( uint32 ) ( ( uint32 ) 0x5U << 0U ) )
 #define PMM_MEMPDPWRCTRL0_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) 0x5U << 24U ) | ( uint32 ) ( ( uint32 ) 0x5U << 16U ) )
 
 #define PMM_PDCLKDISREG_CONFIGVALUE                 \
-    ( ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 0U ) | \
-      ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 1U ) | \
-      ( uint32 ) ( ( uint32 ) ( 1U - 0U ) << 2U ) | \
-      ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 3U ) )
+    ( ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 0U )   \
+      | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 1U ) \
+      | ( uint32 ) ( ( uint32 ) ( 1U - 0U ) << 2U ) \
+      | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 3U ) )
 
 #define PMM_GLOBALCTRL1_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )

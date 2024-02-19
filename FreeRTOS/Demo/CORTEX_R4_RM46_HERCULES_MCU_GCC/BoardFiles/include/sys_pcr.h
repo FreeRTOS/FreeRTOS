@@ -271,31 +271,27 @@ void peripheral_Powerdown_Set( peripheral_Quad_ChipSelect_t peripheral_Quad_CS )
 void peripheral_Powerdown_Clr( peripheral_Quad_ChipSelect_t peripheral_Quad_CS );
 void peripheral_Powerdown_Status( peripheral_Quad_ChipSelect_t * peripheral_Quad_CS );
 
-void peripheral_Memory_Protection_Set( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-);
-void peripheral_Memory_Protection_Clr( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-);
+void peripheral_Memory_Protection_Set(
+    peripheral_Memory_ChipSelect_t peripheral_Memory_CS );
+void peripheral_Memory_Protection_Clr(
+    peripheral_Memory_ChipSelect_t peripheral_Memory_CS );
 void peripheral_Memory_Protection_Status(
-    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS
-);
-void peripheral_Memory_Powerdown_Set( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-);
-void peripheral_Memory_Powerdown_Clr( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-);
+    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS );
+void peripheral_Memory_Powerdown_Set(
+    peripheral_Memory_ChipSelect_t peripheral_Memory_CS );
+void peripheral_Memory_Powerdown_Clr(
+    peripheral_Memory_ChipSelect_t peripheral_Memory_CS );
 void peripheral_Memory_Powerdown_Status(
-    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS
-);
+    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS );
 
-void peripheral_Mem_Frame_Prot_Set( peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-);
-void peripheral_Mem_Frame_Prot_Clr( peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-);
+void peripheral_Mem_Frame_Prot_Set(
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS );
+void peripheral_Mem_Frame_Prot_Clr(
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS );
 void peripheral_Mem_Frame_Pwrdwn_Set(
-    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-);
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS );
 void peripheral_Mem_Frame_Pwrdwn_Clr(
-    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-);
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS );
 
 void pcrGetConfigValue( pcr_config_reg_t * config_reg, config_value_type_t type );
 

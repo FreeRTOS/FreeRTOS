@@ -81,13 +81,13 @@ void spiInit( void )
     spiREG2->GCR0 = 1U;
 
     /** SPI2 master mode and clock configuration */
-    spiREG2->GCR1 = ( spiREG2->GCR1 & 0xFFFFFFFCU ) |
-                    ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+    spiREG2->GCR1 = ( spiREG2->GCR1 & 0xFFFFFFFCU )
+                  | ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
                       | 1U );                            /* MASTER */
 
     /** SPI2 enable pin configuration */
-    spiREG2->INT0 = ( spiREG2->INT0 & 0xFEFFFFFFU ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+    spiREG2->INT0 = ( spiREG2->INT0 & 0xFEFFFFFFU )
+                  | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
                                                             HIGHZ */
 
     /** - Delays */
@@ -153,8 +153,8 @@ void spiInit( void )
     spiREG2->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    spiREG2->INT0 = ( spiREG2->INT0 & 0xFFFF0000U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
+    spiREG2->INT0 = ( spiREG2->INT0 & 0xFFFF0000U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
                   | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
                   | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
                   | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
@@ -227,13 +227,13 @@ void spiInit( void )
     spiREG4->GCR0 = 1U;
 
     /** SPI4 master mode and clock configuration */
-    spiREG4->GCR1 = ( spiREG4->GCR1 & 0xFFFFFFFCU ) |
-                    ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
+    spiREG4->GCR1 = ( spiREG4->GCR1 & 0xFFFFFFFCU )
+                  | ( ( uint32 ) ( ( uint32 ) 1U << 1U ) /* CLOKMOD */
                       | 1U );                            /* MASTER */
 
     /** SPI4 enable pin configuration */
-    spiREG4->INT0 = ( spiREG4->INT0 & 0xFEFFFFFFU ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
+    spiREG4->INT0 = ( spiREG4->INT0 & 0xFEFFFFFFU )
+                  | ( uint32 ) ( ( uint32 ) 0U << 24U ); /* ENABLE
                                                             HIGHZ */
 
     /** - Delays */
@@ -300,8 +300,8 @@ void spiInit( void )
     spiREG4->FLG |= 0xFFFFU;
 
     /** - enable interrupts */
-    spiREG4->INT0 = ( spiREG4->INT0 & 0xFFFF0000U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
+    spiREG4->INT0 = ( spiREG4->INT0 & 0xFFFF0000U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 9U )  /* TXINT */
                   | ( uint32 ) ( ( uint32 ) 0U << 8U )  /* RXINT */
                   | ( uint32 ) ( ( uint32 ) 0U << 6U )  /* OVRNINT */
                   | ( uint32 ) ( ( uint32 ) 0U << 4U )  /* BITERR */
@@ -404,12 +404,10 @@ void spiSetFunctional( spiBASE_t * spi, uint32 port )
 /* SourceId : SPI_SourceId_003 */
 /* DesignId : SPI_DesignId_007 */
 /* Requirements : HL_SR133 */
-uint32 spiReceiveData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * destbuff
-)
+uint32 spiReceiveData( spiBASE_t * spi,
+                       spiDAT1_t * dataconfig_t,
+                       uint32 blocksize,
+                       uint16 * destbuff )
 {
     /* USER CODE BEGIN (6) */
     /* USER CODE END */
@@ -431,8 +429,8 @@ uint32 spiReceiveData(
         }
 
         /*SAFETYMCUSW 51 S MR:12.3 <APPROVED> "Needs shifting for 32-bit value" */
-        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
-                    ( WDelay ) | ( Chip_Select_Hold ) | ( 0x00000000U );
+        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U )
+                  | ( WDelay ) | ( Chip_Select_Hold ) | ( 0x00000000U );
 
         /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
         while( ( spi->FLG & 0x00000100U ) != 0x00000100U )
@@ -469,20 +467,18 @@ uint32 spiReceiveData(
 /* SourceId : SPI_SourceId_004 */
 /* DesignId : SPI_DesignId_008 */
 /* Requirements : HL_SR134 */
-void spiGetData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * destbuff
-)
+void spiGetData( spiBASE_t * spi,
+                 spiDAT1_t * dataconfig_t,
+                 uint32 blocksize,
+                 uint16 * destbuff )
 {
     uint32 index = ( spi == spiREG1 )
                      ? 0U
                      : ( ( spi == spiREG2 )
                              ? 1U
-                             : ( ( spi == spiREG3 ) ? 2U
-                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
-                       );
+                             : ( ( spi == spiREG3 )
+                                     ? 2U
+                                     : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
 
     /* USER CODE BEGIN (8) */
     /* USER CODE END */
@@ -514,12 +510,10 @@ void spiGetData(
 /* SourceId : SPI_SourceId_005 */
 /* DesignId : SPI_DesignId_005 */
 /* Requirements : HL_SR131 */
-uint32 spiTransmitData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff
-)
+uint32 spiTransmitData( spiBASE_t * spi,
+                        spiDAT1_t * dataconfig_t,
+                        uint32 blocksize,
+                        uint16 * srcbuff )
 {
     volatile uint32 SpiBuf;
     uint16 Tx_Data;
@@ -546,8 +540,8 @@ uint32 spiTransmitData(
          * allowed in this driver" */
         Tx_Data = *srcbuff;
 
-        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
-                    ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
+        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U )
+                  | ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
         /*SAFETYMCUSW 567 S MR:17.1,17.4 <APPROVED> "Pointer increment needed" */
         srcbuff++;
 
@@ -584,20 +578,18 @@ uint32 spiTransmitData(
 /* SourceId : SPI_SourceId_006 */
 /* DesignId : SPI_DesignId_006 */
 /* Requirements : HL_SR132 */
-void spiSendData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff
-)
+void spiSendData( spiBASE_t * spi,
+                  spiDAT1_t * dataconfig_t,
+                  uint32 blocksize,
+                  uint16 * srcbuff )
 {
     uint32 index = ( spi == spiREG1 )
                      ? 0U
                      : ( ( spi == spiREG2 )
                              ? 1U
-                             : ( ( spi == spiREG3 ) ? 2U
-                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
-                       );
+                             : ( ( spi == spiREG3 )
+                                     ? 2U
+                                     : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
 
     /* USER CODE BEGIN (12) */
     /* USER CODE END */
@@ -630,13 +622,11 @@ void spiSendData(
 /* SourceId : SPI_SourceId_007 */
 /* DesignId : SPI_DesignId_009 */
 /* Requirements : HL_SR135 */
-uint32 spiTransmitAndReceiveData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff,
-    uint16 * destbuff
-)
+uint32 spiTransmitAndReceiveData( spiBASE_t * spi,
+                                  spiDAT1_t * dataconfig_t,
+                                  uint32 blocksize,
+                                  uint16 * srcbuff,
+                                  uint16 * destbuff )
 {
     uint16 Tx_Data;
     uint32 Chip_Select_Hold = ( dataconfig_t->CS_HOLD ) ? 0x10000000U : 0U;
@@ -662,8 +652,8 @@ uint32 spiTransmitAndReceiveData(
          * allowed in this driver" */
         Tx_Data = *srcbuff;
 
-        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U ) |
-                    ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
+        spi->DAT1 = ( ( uint32 ) DataFormat << 24U ) | ( ( uint32 ) ChipSelect << 16U )
+                  | ( WDelay ) | ( Chip_Select_Hold ) | ( uint32 ) Tx_Data;
         /*SAFETYMCUSW 567 S MR:17.1,17.4 <APPROVED> "Pointer increment needed" */
         srcbuff++;
 
@@ -704,13 +694,11 @@ uint32 spiTransmitAndReceiveData(
 /* SourceId : SPI_SourceId_008 */
 /* DesignId : SPI_DesignId_010 */
 /* Requirements : HL_SR136 */
-void spiSendAndGetData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff,
-    uint16 * destbuff
-)
+void spiSendAndGetData( spiBASE_t * spi,
+                        spiDAT1_t * dataconfig_t,
+                        uint32 blocksize,
+                        uint16 * srcbuff,
+                        uint16 * destbuff )
 {
     /* USER CODE BEGIN (17) */
     /* USER CODE END */
@@ -719,9 +707,9 @@ void spiSendAndGetData(
                      ? 0U
                      : ( ( spi == spiREG2 )
                              ? 1U
-                             : ( ( spi == spiREG3 ) ? 2U
-                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
-                       );
+                             : ( ( spi == spiREG3 )
+                                     ? 2U
+                                     : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
 
     g_spiPacket_t[ index ].tx_length = blocksize;
     g_spiPacket_t[ index ].rx_length = blocksize;
@@ -757,9 +745,9 @@ SpiDataStatus_t SpiTxStatus( spiBASE_t * spi )
                      ? 0U
                      : ( ( spi == spiREG2 )
                              ? 1U
-                             : ( ( spi == spiREG3 ) ? 2U
-                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
-                       );
+                             : ( ( spi == spiREG3 )
+                                     ? 2U
+                                     : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
 
     return ( g_spiPacket_t[ index ].tx_data_status );
 }
@@ -787,9 +775,9 @@ SpiDataStatus_t SpiRxStatus( spiBASE_t * spi )
                      ? 0U
                      : ( ( spi == spiREG2 )
                              ? 1U
-                             : ( ( spi == spiREG3 ) ? 2U
-                                                    : ( ( spi == spiREG4 ) ? 3U : 4U ) )
-                       );
+                             : ( ( spi == spiREG3 )
+                                     ? 2U
+                                     : ( ( spi == spiREG4 ) ? 3U : 4U ) ) );
 
     return ( g_spiPacket_t[ index ].rx_data_status );
 }
@@ -816,8 +804,8 @@ void spiEnableLoopback( spiBASE_t * spi, loopBackType_t Loopbacktype )
     spi->IOLPKTSTCR = 0U;
 
     /* Enable Loopback either in Analog or Digital Mode */
-    spi->IOLPKTSTCR = ( uint32 ) 0x00000A00U |
-                      ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
+    spi->IOLPKTSTCR = ( uint32 ) 0x00000A00U
+                    | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U );
 
     /* USER CODE BEGIN (24) */
     /* USER CODE END */

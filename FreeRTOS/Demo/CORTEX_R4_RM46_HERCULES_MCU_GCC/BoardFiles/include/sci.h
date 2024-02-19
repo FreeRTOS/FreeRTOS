@@ -111,22 +111,22 @@ typedef struct sci_config_reg
 
 /* Configuration registers initial value for SCI*/
 #define SCI_GCR0_CONFIGVALUE 0x00000001U
-#define SCI_GCR1_CONFIGVALUE                                                             \
-    ( ( uint32 ) ( ( uint32 ) 1U << 5U ) | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |          \
-      ( uint32 ) ( ( uint32 ) 1U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |          \
-      ( uint32 ) ( 0x03000080U ) )
+#define SCI_GCR1_CONFIGVALUE                                                           \
+    ( ( uint32 ) ( ( uint32 ) 1U << 5U ) | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )        \
+      | ( uint32 ) ( ( uint32 ) 1U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )        \
+      | ( uint32 ) ( 0x03000080U ) )
 
-#define SCI_SETINTLVL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define SCI_SETINTLVL_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
-#define SCI_SETINT_CONFIGVALUE                                                    \
-    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define SCI_SETINT_CONFIGVALUE                                                   \
+    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define SCI_FORMAT_CONFIGVALUE ( 8U - 1U )
 #define SCI_BRS_CONFIGVALUE    ( 59U )
@@ -143,22 +143,22 @@ typedef struct sci_config_reg
 
 /* Configuration registers initial value for SCI*/
 #define SCILIN_GCR0_CONFIGVALUE 0x00000001U
-#define SCILIN_GCR1_CONFIGVALUE                                                          \
-    ( ( uint32 ) ( ( uint32 ) 1U << 5U ) | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |          \
-      ( uint32 ) ( ( uint32 ) 1U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |          \
-      ( uint32 ) ( 0x03000080U ) )
+#define SCILIN_GCR1_CONFIGVALUE                                                        \
+    ( ( uint32 ) ( ( uint32 ) 1U << 5U ) | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )        \
+      | ( uint32 ) ( ( uint32 ) 1U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )        \
+      | ( uint32 ) ( 0x03000080U ) )
 
-#define SCILIN_SETINTLVL_CONFIGVALUE                                              \
-    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U ) )
+#define SCILIN_SETINTLVL_CONFIGVALUE                                             \
+    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )  \
+      | ( uint32 ) ( ( uint32 ) 0U ) )
 
-#define SCILIN_SETINT_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define SCILIN_SETINT_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 25U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define SCILIN_FORMAT_CONFIGVALUE ( 8U - 1U )
 #define SCILIN_BRS_CONFIGVALUE    ( 59U )

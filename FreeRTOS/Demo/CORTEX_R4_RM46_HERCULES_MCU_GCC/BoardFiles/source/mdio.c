@@ -78,42 +78,41 @@
 /* SourceId : ETH_SourceId_059 */
 /* DesignId : ETH_DesignId_059*/
 /* Requirements : HL_ETH_SR41, HL_ETH_SR45 */
-boolean MDIOPhyRegRead(
-    uint32 baseAddr,
-    uint32 phyAddr,
-    uint32 regNum,
-    volatile uint16 * dataPtr
-)
+boolean MDIOPhyRegRead( uint32 baseAddr,
+                        uint32 phyAddr,
+                        uint32 regNum,
+                        volatile uint16 * dataPtr )
 {
     boolean retVal = FALSE;
 
     /* Wait till transaction completion if any */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
-    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO ) ==
-           MDIO_USERACCESS0_GO )
+    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO )
+           == MDIO_USERACCESS0_GO )
     {
     } /* Wait */
 
-    HWREG( baseAddr + MDIO_USERACCESS0 ) =
-        ( ( ( uint32 ) MDIO_USERACCESS0_READ ) | MDIO_USERACCESS0_GO |
-          ( ( regNum & PHY_REG_MASK ) << PHY_REG_SHIFT ) |
-          ( ( phyAddr & PHY_ADDR_MASK ) << PHY_ADDR_SHIFT ) );
+    HWREG( baseAddr
+           + MDIO_USERACCESS0 ) = ( ( ( uint32 ) MDIO_USERACCESS0_READ )
+                                    | MDIO_USERACCESS0_GO
+                                    | ( ( regNum & PHY_REG_MASK ) << PHY_REG_SHIFT )
+                                    | ( ( phyAddr & PHY_ADDR_MASK ) << PHY_ADDR_SHIFT ) );
 
     /* wait for command completion */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
-    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO ) ==
-           MDIO_USERACCESS0_GO )
+    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO )
+           == MDIO_USERACCESS0_GO )
     {
     } /* Wait */
 
     /* Store the data if the read is acknowledged */
-    if( ( ( HWREG( baseAddr + MDIO_USERACCESS0 ) ) & MDIO_USERACCESS0_ACK ) ==
-        MDIO_USERACCESS0_ACK )
+    if( ( ( HWREG( baseAddr + MDIO_USERACCESS0 ) ) & MDIO_USERACCESS0_ACK )
+        == MDIO_USERACCESS0_ACK )
     {
         /*SAFETYMCUSW 439 S MR:11.3 <APPROVED> "Output is a 16 bit Value to be stored -
          * Advisory as per MISRA" */
-        *dataPtr = ( uint16 ) ( ( HWREG( baseAddr + MDIO_USERACCESS0 ) ) & PHY_DATA_MASK
-        );
+        *dataPtr = ( uint16 ) ( ( HWREG( baseAddr + MDIO_USERACCESS0 ) )
+                                & PHY_DATA_MASK );
         retVal = TRUE;
     }
 
@@ -138,20 +137,21 @@ void MDIOPhyRegWrite( uint32 baseAddr, uint32 phyAddr, uint32 regNum, uint16 Reg
 {
     /* Wait till transaction completion if any */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
-    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO ) ==
-           MDIO_USERACCESS0_GO )
+    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO )
+           == MDIO_USERACCESS0_GO )
     {
     } /* Wait */
 
-    HWREG( baseAddr + MDIO_USERACCESS0 ) =
-        ( MDIO_USERACCESS0_WRITE | MDIO_USERACCESS0_GO |
-          ( ( regNum & PHY_REG_MASK ) << PHY_REG_SHIFT ) |
-          ( ( phyAddr & PHY_ADDR_MASK ) << PHY_ADDR_SHIFT ) | RegVal );
+    HWREG( baseAddr
+           + MDIO_USERACCESS0 ) = ( MDIO_USERACCESS0_WRITE | MDIO_USERACCESS0_GO
+                                    | ( ( regNum & PHY_REG_MASK ) << PHY_REG_SHIFT )
+                                    | ( ( phyAddr & PHY_ADDR_MASK ) << PHY_ADDR_SHIFT )
+                                    | RegVal );
 
     /* wait for command completion*/
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
-    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO ) ==
-           MDIO_USERACCESS0_GO )
+    while( ( HWREG( baseAddr + MDIO_USERACCESS0 ) & MDIO_USERACCESS0_GO )
+           == MDIO_USERACCESS0_GO )
     {
     } /* Wait */
 }
@@ -209,9 +209,9 @@ void MDIOInit( uint32 baseAddr, uint32 mdioInputFreq, uint32 mdioOutputFreq )
 {
     uint32 clkDiv = ( mdioInputFreq / mdioOutputFreq ) - 1U;
 
-    HWREG( baseAddr + MDIO_CONTROL ) =
-        ( ( clkDiv & MDIO_CONTROL_CLKDIV ) | MDIO_CONTROL_ENABLE | MDIO_CONTROL_PREAMBLE |
-          MDIO_CONTROL_FAULTENB );
+    HWREG( baseAddr + MDIO_CONTROL ) = ( ( clkDiv & MDIO_CONTROL_CLKDIV )
+                                         | MDIO_CONTROL_ENABLE | MDIO_CONTROL_PREAMBLE
+                                         | MDIO_CONTROL_FAULTENB );
 }
 
 /**
@@ -227,8 +227,8 @@ void MDIOInit( uint32 baseAddr, uint32 mdioInputFreq, uint32 mdioOutputFreq )
 /* Requirements : HL_ETH_SR40 */
 void MDIOEnable( uint32 baseAddr )
 {
-    HWREG( baseAddr + MDIO_CONTROL ) = HWREG( baseAddr + MDIO_CONTROL ) |
-                                       MDIO_CONTROL_ENABLE;
+    HWREG( baseAddr + MDIO_CONTROL ) = HWREG( baseAddr + MDIO_CONTROL )
+                                     | MDIO_CONTROL_ENABLE;
 }
 
 /**
@@ -244,8 +244,8 @@ void MDIOEnable( uint32 baseAddr )
 /* Requirements : HL_ETH_SR40 */
 void MDIODisable( uint32 baseAddr )
 {
-    HWREG( baseAddr + MDIO_CONTROL ) = HWREG( baseAddr + MDIO_CONTROL ) &
-                                       ( ~MDIO_CONTROL_ENABLE );
+    HWREG( baseAddr + MDIO_CONTROL ) = HWREG( baseAddr + MDIO_CONTROL )
+                                     & ( ~MDIO_CONTROL_ENABLE );
 }
 
 /* USER CODE BEGIN (2) */

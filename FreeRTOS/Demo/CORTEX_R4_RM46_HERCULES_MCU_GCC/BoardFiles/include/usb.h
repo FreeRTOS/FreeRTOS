@@ -69,11 +69,9 @@
 #define USB_FIFO_SZ_TO_BYTES( x )                                                       \
     ( uint16_t )(                                                                       \
         ( uint8_t ) 8U                                                                  \
-        << ( ( ( uint8_t ) ( x ) & ( uint8_t ) ( ~( uint8_t ) USB_FIFO_SIZE_DB_FLAG )   \
-             ) +                                                                        \
-             ( uint8_t ) ( ( ( uint8_t ) ( x ) & ( uint8_t ) USB_FIFO_SIZE_DB_FLAG ) >> \
-                           4U ) )                                                       \
-    )
+        << ( ( ( uint8_t ) ( x ) & ( uint8_t ) ( ~( uint8_t ) USB_FIFO_SIZE_DB_FLAG ) ) \
+             + ( uint8_t ) ( ( ( uint8_t ) ( x ) & ( uint8_t ) USB_FIFO_SIZE_DB_FLAG )  \
+                             >> 4U ) ) )
 
 /******************************************************************************
  *
@@ -140,9 +138,9 @@
 #define USBD_INT_EN_EPN_TX_IE       ( 0x0010u ) /* Non-EP0 TX Interrupt */
 #define USBD_INT_EN_DS_CHG_IE       ( 0x0008u ) /* Device State change interrupt */
 #define USBD_INT_EN_EP0_IE          ( 0x0001u ) /* EP0 Interrupt */
-#define USBD_INT_EN_ALL                                                    \
-    ( USBD_IRQ_EN_SOF_IE | USBD_IRQ_EN_EPN_RX_IE | USBD_IRQ_EN_EPN_TX_IE | \
-      USBD_IRQ_EN_DS_CHG_IE | USBD_IRQ_EN_EP0_IE )
+#define USBD_INT_EN_ALL                                                  \
+    ( USBD_IRQ_EN_SOF_IE | USBD_IRQ_EN_EPN_RX_IE | USBD_IRQ_EN_EPN_TX_IE \
+      | USBD_IRQ_EN_DS_CHG_IE | USBD_IRQ_EN_EP0_IE )
 
 /******************************************************************************
  *
@@ -457,12 +455,10 @@ uint16 USBEndpointDataAvail( uint32 ulBase, uint16 usEndpoint );
  *  \return This call will return 0, or -1 if no packet was received.
  *
  *****************************************************************************/
-sint32 USBEndpointDataGet(
-    uint32 ulBase,
-    uint16 usEndpoint,
-    uint8 * pucData,
-    uint32 * pulSize
-);
+sint32 USBEndpointDataGet( uint32 ulBase,
+                           uint16 usEndpoint,
+                           uint8 * pucData,
+                           uint32 * pulSize );
 
 /******************************************************************************
  *
@@ -523,12 +519,10 @@ void USBDevEndpointDataAck( uint32 ulBase, uint16 usEndpoint, tBoolean bIsLastPa
  *  is in use and cannot be written.
  *
  *****************************************************************************/
-uint32 USBEndpointDataPut(
-    uint32 ulBase,
-    uint16 usEndpoint,
-    uint8 * pucData,
-    uint32 ulSize
-);
+uint32 USBEndpointDataPut( uint32 ulBase,
+                           uint16 usEndpoint,
+                           uint8 * pucData,
+                           uint32 ulSize );
 
 /******************************************************************************
  *
@@ -594,13 +588,11 @@ void USBReset( void );
  *  \return None.
  *
  *****************************************************************************/
-void USBFIFOConfigSet(
-    uint32 ulBase,
-    uint32 usEndpoint,
-    uint32 uFIFOAddress,
-    uint32 uFIFOSize,
-    uint16 uFlags
-);
+void USBFIFOConfigSet( uint32 ulBase,
+                       uint32 usEndpoint,
+                       uint32 uFIFOAddress,
+                       uint32 uFIFOSize,
+                       uint16 uFlags );
 
 /******************************************************************************
  *
@@ -625,12 +617,10 @@ void USBFIFOConfigSet(
  *  \return None.
  *
  *****************************************************************************/
-void USBDevEndpointConfigGet(
-    uint32 ulBase,
-    uint16 usEndpoint,
-    uint32 * pulMaxPacketSize,
-    uint32 * puFlags
-);
+void USBDevEndpointConfigGet( uint32 ulBase,
+                              uint16 usEndpoint,
+                              uint32 * pulMaxPacketSize,
+                              uint32 * puFlags );
 
 /******************************************************************************
  *
@@ -660,12 +650,10 @@ void USBDevEndpointConfigGet(
  *  \return None.
  *
  *****************************************************************************/
-void USBDevEndpointConfigSet(
-    uint32 ulBase,
-    uint16 usEndpoint,
-    uint32 ulMaxPacketSize,
-    uint32 uFlags
-);
+void USBDevEndpointConfigSet( uint32 ulBase,
+                              uint16 usEndpoint,
+                              uint32 ulMaxPacketSize,
+                              uint32 uFlags );
 
 void USBDevSetDevCfg( uint32 ulBase );
 void USBDevClearDevCfg( uint32 ulBase );

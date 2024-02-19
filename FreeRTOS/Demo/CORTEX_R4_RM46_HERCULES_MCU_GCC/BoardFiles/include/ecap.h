@@ -167,109 +167,109 @@ typedef struct ecap_config_reg
 
 #define ECAP1_CTRPHS_CONFIGVALUE 0x00000000U
 #define ECAP1_ECCTL1_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
+    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
 #define ECAP1_ECCTL2_CONFIGVALUE                       \
-    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U ) |       \
-      ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
+    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         \
+      | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
 #define ECAP1_ECEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 
 #define ECAP2_CTRPHS_CONFIGVALUE 0x00000000U
 #define ECAP2_ECCTL1_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
+    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
 #define ECAP2_ECCTL2_CONFIGVALUE                       \
-    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U ) |       \
-      ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
+    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         \
+      | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
 #define ECAP2_ECEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 
 #define ECAP3_CTRPHS_CONFIGVALUE 0x00000000U
 #define ECAP3_ECCTL1_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
+    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
 #define ECAP3_ECCTL2_CONFIGVALUE                       \
-    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U ) |       \
-      ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
+    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         \
+      | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
 #define ECAP3_ECEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 
 #define ECAP4_CTRPHS_CONFIGVALUE 0x00000000U
 #define ECAP4_ECCTL1_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
+    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
 #define ECAP4_ECCTL2_CONFIGVALUE                       \
-    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U ) |       \
-      ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
+    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         \
+      | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
 #define ECAP4_ECEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 
 #define ECAP5_CTRPHS_CONFIGVALUE 0x00000000U
 #define ECAP5_ECCTL1_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
+    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
 #define ECAP5_ECCTL2_CONFIGVALUE                       \
-    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U ) |       \
-      ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
+    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         \
+      | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
 #define ECAP5_ECEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 
 #define ECAP6_CTRPHS_CONFIGVALUE 0x00000000U
 #define ECAP6_ECCTL1_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) | \
-      ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U ) |   \
-      ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
+    ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) \
+      | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   \
+      | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 9U ) )
 #define ECAP6_ECCTL2_CONFIGVALUE                       \
-    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U ) |       \
-      ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
+    ( ( uint16 ) ( ( uint16 ) ONE_SHOT << 0U )         \
+      | ( uint16 ) ( ( uint16 ) CAPTURE_EVENT1 << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 9U ) | ( uint16 ) 0x00000010U )
 #define ECAP6_ECEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 
@@ -293,38 +293,28 @@ void ecapSetCounter( ecapBASE_t * ecap, uint32 value );
 void ecapEnableCounterLoadOnSync( ecapBASE_t * ecap, uint32 phase );
 void ecapDisableCounterLoadOnSync( ecapBASE_t * ecap );
 void ecapSetEventPrescaler( ecapBASE_t * ecap, ecapPrescale_t prescale );
-void ecapSetCaptureEvent1(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-);
-void ecapSetCaptureEvent2(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-);
-void ecapSetCaptureEvent3(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-);
-void ecapSetCaptureEvent4(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-);
+void ecapSetCaptureEvent1( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable );
+void ecapSetCaptureEvent2( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable );
+void ecapSetCaptureEvent3( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable );
+void ecapSetCaptureEvent4( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable );
 void ecapSetCaptureMode( ecapBASE_t * ecap, ecapMode_t capMode, ecapEvent_t event );
 void ecapEnableCapture( ecapBASE_t * ecap );
 void ecapDisableCapture( ecapBASE_t * ecap );
 void ecapStartCounter( ecapBASE_t * ecap );
 void ecapStopCounter( ecapBASE_t * ecap );
 void ecapSetSyncOut( ecapBASE_t * ecap, ecapSyncOut_t syncOutSrc );
-void ecapEnableAPWMmode(
-    ecapBASE_t * ecap,
-    ecapAPWMPolarity_t pwmPolarity,
-    uint32 period,
-    uint32 duty
-);
+void ecapEnableAPWMmode( ecapBASE_t * ecap,
+                         ecapAPWMPolarity_t pwmPolarity,
+                         uint32 period,
+                         uint32 duty );
 void ecapDisableAPWMMode( ecapBASE_t * ecap );
 void ecapEnableInterrupt( ecapBASE_t * ecap, ecapInterrupt_t interrupts );
 void ecapDisableInterrupt( ecapBASE_t * ecap, ecapInterrupt_t interrupts );

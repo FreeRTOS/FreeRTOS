@@ -100,8 +100,8 @@ extern "C" {
  * must be done explicitly.
  *
  *****************************************************************************/
-#if defined( ccs ) || defined( codered ) || defined( gcc ) || defined( rvmdk ) || \
-    defined( __ARMCC_VERSION ) || defined( sourcerygxx )
+#if defined( ccs ) || defined( codered ) || defined( gcc ) || defined( rvmdk ) \
+    || defined( __ARMCC_VERSION ) || defined( sourcerygxx )
     #define PACKED __attribute__( ( packed ) )
 #elif defined( ewarm ) || defined( __IAR_SYSTEMS_ICC__ )
     #define PACKED
@@ -936,11 +936,9 @@ typedef void ( *tInfoCallback )( void * pvInstance, uint32 ulInfo );
  *          change has occurred.
  *
  *****************************************************************************/
-typedef void ( *tInterfaceCallback )(
-    void * pvInstance,
-    uint8 ucInterfaceNum,
-    uint8 ucAlternateSetting
-);
+typedef void ( *tInterfaceCallback )( void * pvInstance,
+                                      uint8 ucInterfaceNum,
+                                      uint8 ucAlternateSetting );
 
 /** ***************************************************************************
  *
@@ -962,11 +960,9 @@ typedef void ( *tUSBEPIntHandler )( void * pvInstance, uint32 ulStatus );
  *          call into an instance of class.
  *
  *****************************************************************************/
-typedef void ( *tUSBDeviceHandler )(
-    void * pvInstance,
-    uint32 ulRequest,
-    void * pvRequestData
-);
+typedef void ( *tUSBDeviceHandler )( void * pvInstance,
+                                     uint32 ulRequest,
+                                     void * pvRequestData );
 
 /** ***************************************************************************
  *
@@ -1275,26 +1271,19 @@ typedef struct
 #define USB_DESC_ANY 0xFFFFFFFFu
 
 extern uint32 USBDescGetNum( tDescriptorHeader * psDesc, uint32 ulSize, uint32 ulType );
-extern tDescriptorHeader * USBDescGet(
-    tDescriptorHeader * psDesc,
-    uint32 ulSize,
-    uint32 ulType,
-    uint32 ulIndex
-);
-extern uint32 USBDescGetNumAlternateInterfaces(
-    tConfigDescriptor * psConfig,
-    uint8 ucInterfaceNumber
-);
-extern tInterfaceDescriptor * USBDescGetInterface(
-    tConfigDescriptor * psConfig,
-    uint32 ulIndex,
-    uint32 ulAltCfg
-);
+extern tDescriptorHeader * USBDescGet( tDescriptorHeader * psDesc,
+                                       uint32 ulSize,
+                                       uint32 ulType,
+                                       uint32 ulIndex );
+extern uint32 USBDescGetNumAlternateInterfaces( tConfigDescriptor * psConfig,
+                                                uint8 ucInterfaceNumber );
+extern tInterfaceDescriptor * USBDescGetInterface( tConfigDescriptor * psConfig,
+                                                   uint32 ulIndex,
+                                                   uint32 ulAltCfg );
 extern tEndpointDescriptor * USBDescGetInterfaceEndpoint(
     tInterfaceDescriptor * psInterface,
     uint32 ulIndex,
-    uint32 ulSize
-);
+    uint32 ulSize );
 
 /** ***************************************************************************
  *
@@ -1342,21 +1331,17 @@ typedef void ( *tUSBModeCallback )( uint32 ulIndex, tUSBMode eMode );
  * Mode selection and dual mode interrupt steering functions.
  *
  *****************************************************************************/
-extern void USBStackModeSet(
-    uint32 ulIndex,
-    tUSBMode eUSBMode,
-    tUSBModeCallback pfnCallback
-);
+extern void USBStackModeSet( uint32 ulIndex,
+                             tUSBMode eUSBMode,
+                             tUSBModeCallback pfnCallback );
 extern void USBDualModeInit( uint32 ulIndex );
 extern void USBDualModeTerm( uint32 ulIndex );
 extern void USBOTGMain( uint32 ulMsTicks );
 extern void USBOTGPollRate( uint32 ulIndex, uint32 ulPollRate );
-extern void USBOTGModeInit(
-    uint32 ulIndex,
-    uint32 ulPollRate,
-    void * pHostData,
-    uint32 ulHostDataSize
-);
+extern void USBOTGModeInit( uint32 ulIndex,
+                            uint32 ulPollRate,
+                            void * pHostData,
+                            uint32 ulHostDataSize );
 extern void USBOTGModeTerm( uint32 ulIndex );
 extern void USB0OTGModeIntHandler( void );
 extern void USB0DualModeIntHandler( void );
@@ -1381,12 +1366,10 @@ extern void USB0DualModeIntHandler( void );
  *  @return Returns an event-dependent value.
  *
  *****************************************************************************/
-typedef uint32 ( *tUSBCallback )(
-    void * pvCBData,
-    uint32 ulEvent,
-    uint32 ulMsgParam,
-    void * pvMsgData
-);
+typedef uint32 ( *tUSBCallback )( void * pvCBData,
+                                  uint32 ulEvent,
+                                  uint32 ulMsgParam,
+                                  void * pvMsgData );
 
 /** ***************************************************************************
  *
@@ -1703,12 +1686,10 @@ typedef uint32 ( *tUSBCallback )(
  *          to the USB buffer object.
  *
  *****************************************************************************/
-typedef uint32 ( *tUSBPacketTransfer )(
-    void * pvHandle,
-    uint8 * pcData,
-    uint32 ulLength,
-    tBoolean bLast
-);
+typedef uint32 ( *tUSBPacketTransfer )( void * pvHandle,
+                                        uint8 * pcData,
+                                        uint32 ulLength,
+                                        tBoolean bLast );
 
 /** ***************************************************************************
  *
@@ -1835,29 +1816,24 @@ typedef struct
  *
  *****************************************************************************/
 extern const tUSBBuffer * USBBufferInit( const tUSBBuffer * psBuffer );
-extern void USBBufferInfoGet( const tUSBBuffer * psBuffer, tUSBRingBufObject * psRingBuf );
+extern void USBBufferInfoGet( const tUSBBuffer * psBuffer,
+                              tUSBRingBufObject * psRingBuf );
 extern void * USBBufferCallbackDataSet( tUSBBuffer * psBuffer, void * pvCBData );
-extern uint32 USBBufferWrite(
-    const tUSBBuffer * psBuffer,
-    const uint8 * pucData,
-    uint32 ulLength
-);
+extern uint32 USBBufferWrite( const tUSBBuffer * psBuffer,
+                              const uint8 * pucData,
+                              uint32 ulLength );
 extern void USBBufferDataWritten( const tUSBBuffer * psBuffer, uint32 ulLength );
 extern void USBBufferDataRemoved( const tUSBBuffer * psBuffer, uint32 ulLength );
 extern void USBBufferFlush( const tUSBBuffer * psBuffer );
-extern uint32 USBBufferRead(
-    const tUSBBuffer * psBuffer,
-    uint8 * pucData,
-    uint32 ulLength
-);
+extern uint32 USBBufferRead( const tUSBBuffer * psBuffer,
+                             uint8 * pucData,
+                             uint32 ulLength );
 extern uint32 USBBufferDataAvailable( const tUSBBuffer * psBuffer );
 extern uint32 USBBufferSpaceAvailable( const tUSBBuffer * psBuffer );
-extern uint32 USBBufferEventCallback(
-    void * pvCBData,
-    uint32 ulEvent,
-    uint32 ulMsgValue,
-    void * pvMsgData
-);
+extern uint32 USBBufferEventCallback( void * pvCBData,
+                                      uint32 ulEvent,
+                                      uint32 ulMsgValue,
+                                      void * pvMsgData );
 extern tBoolean USBRingBufFull( tUSBRingBufObject * ptUSBRingBuf );
 extern tBoolean USBRingBufEmpty( tUSBRingBufObject * ptUSBRingBuf );
 extern void USBRingBufFlush( tUSBRingBufObject * ptUSBRingBuf );
@@ -1867,24 +1843,18 @@ extern uint32 USBRingBufContigUsed( tUSBRingBufObject * ptUSBRingBuf );
 extern uint32 USBRingBufContigFree( tUSBRingBufObject * ptUSBRingBuf );
 extern uint32 USBRingBufSize( tUSBRingBufObject * ptUSBRingBuf );
 extern uint8 USBRingBufReadOne( tUSBRingBufObject * ptUSBRingBuf );
-extern void USBRingBufRead(
-    tUSBRingBufObject * ptUSBRingBuf,
-    uint8 * pucData,
-    uint32 ulLength
-);
+extern void USBRingBufRead( tUSBRingBufObject * ptUSBRingBuf,
+                            uint8 * pucData,
+                            uint32 ulLength );
 extern void USBRingBufWriteOne( tUSBRingBufObject * ptUSBRingBuf, uint8 ucData );
-extern void USBRingBufWrite(
-    tUSBRingBufObject * ptUSBRingBuf,
-    const uint8 pucData[],
-    uint32 ulLength
-);
+extern void USBRingBufWrite( tUSBRingBufObject * ptUSBRingBuf,
+                             const uint8 pucData[],
+                             uint32 ulLength );
 extern void USBRingBufAdvanceWrite( tUSBRingBufObject * ptUSBRingBuf, uint32 ulNumBytes );
 extern void USBRingBufAdvanceRead( tUSBRingBufObject * ptUSBRingBuf, uint32 ulNumBytes );
-extern void USBRingBufInit(
-    tUSBRingBufObject * ptUSBRingBuf,
-    uint8 * pucBuf,
-    uint32 ulSize
-);
+extern void USBRingBufInit( tUSBRingBufObject * ptUSBRingBuf,
+                            uint8 * pucBuf,
+                            uint32 ulSize );
 
 /** ***************************************************************************
  *

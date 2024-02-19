@@ -664,8 +664,8 @@ boolean efcStuckZeroTest( void )
     uint32 ESM_ESTATUS4, ESM_ESTATUS1;
 
     boolean result = FALSE;
-    uint32 error_checks = EFC_INSTRUCTION_INFO_EN | EFC_INSTRUCTION_ERROR_EN |
-                          EFC_AUTOLOAD_ERROR_EN | EFC_SELF_TEST_ERROR_EN;
+    uint32 error_checks = EFC_INSTRUCTION_INFO_EN | EFC_INSTRUCTION_ERROR_EN
+                        | EFC_AUTOLOAD_ERROR_EN | EFC_SELF_TEST_ERROR_EN;
 
     /* configure the output enable for auto load error , instruction info,
      *   instruction error, and self test error using boundary register
@@ -681,8 +681,8 @@ boolean efcStuckZeroTest( void )
         ESM_ESTATUS1 = esmREG->SR1[ 2U ];
 
         /* check if the ESM group1 channel 41 is set and group3 channel 1 is set */
-        if( ( ( ESM_ESTATUS4 & 0x200U ) == 0x200U ) &&
-            ( ( ESM_ESTATUS1 & 0x2U ) == 0x2U ) )
+        if( ( ( ESM_ESTATUS4 & 0x200U ) == 0x200U )
+            && ( ( ESM_ESTATUS1 & 0x2U ) == 0x2U ) )
         {
             /* stuck-at-zero test passed */
             result = TRUE;
@@ -2234,8 +2234,8 @@ void fmcBus1ParityCheck( void )
     flashWREG->FEDACSTATUS = 0x400U;
 
     /* Enable Parity Error */
-    flashWREG->FPAROVR = ( uint32 ) ( ( uint32 ) 0x5U << 9U ) |
-                         ( uint32 ) ( ( uint32 ) 0x5U << 12U );
+    flashWREG->FPAROVR = ( uint32 ) ( ( uint32 ) 0x5U << 9U )
+                       | ( uint32 ) ( ( uint32 ) 0x5U << 12U );
 
     /* set Diag test mode */
     flashWREG->FDIAGCTRL = 0x00050000U | 0x00000007U;
@@ -2301,12 +2301,12 @@ void pbistFail( void )
 
     if( pbistPortTestStatus( ( uint32 ) PBIST_PORT0 ) != TRUE )
     {
-        memoryPort0TestFailNotification(
-            ( uint32 ) ( ( PBIST_RAMT & 0xFF000000U ) >> 24U ),
-            ( uint32 ) ( ( PBIST_RAMT & 0x00FF0000U ) >> 16U ),
-            ( uint32 ) PBIST_FSRA0,
-            ( uint32 ) PBIST_FSRDL0
-        );
+        memoryPort0TestFailNotification( ( uint32 ) ( ( PBIST_RAMT & 0xFF000000U )
+                                                      >> 24U ),
+                                         ( uint32 ) ( ( PBIST_RAMT & 0x00FF0000U )
+                                                      >> 16U ),
+                                         ( uint32 ) PBIST_FSRA0,
+                                         ( uint32 ) PBIST_FSRDL0 );
     }
     else
     {
@@ -2624,9 +2624,9 @@ void errata_PBIST_4( void )
             PBIST_wait_done_loop = ( ( sint32 ) pmuCount / 2 ) - 1000;
 
             /* Check PBIST status results (Address, Status, Count, etc...) */
-            if( ( pbistREG->FSRA0 | pbistREG->FSRA1 | pbistREG->FSRDL0 | pbistREG->rsvd3 |
-                  pbistREG->FSRDL1 | pbistREG->rsvd4[ 0U ] | pbistREG->rsvd4[ 1U ] ) !=
-                0U )
+            if( ( pbistREG->FSRA0 | pbistREG->FSRA1 | pbistREG->FSRDL0 | pbistREG->rsvd3
+                  | pbistREG->FSRDL1 | pbistREG->rsvd4[ 0U ] | pbistREG->rsvd4[ 1U ] )
+                != 0U )
             {
                 /* PBIST Failure for the Algorithm chosen above */
                 selftestFailNotification( PBISTSELFCHECK_FAIL1 );

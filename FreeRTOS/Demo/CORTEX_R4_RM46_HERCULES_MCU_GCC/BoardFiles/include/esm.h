@@ -689,109 +689,109 @@ typedef struct esm_config_reg
 
 /* Configuration registers initial value */
 #define ESM_EEPAPR1_CONFIGVALUE                                                   \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define ESM_IESR1_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define ESM_ILSR1_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define ESM_LTCPR_CONFIGVALUE ( 16384U - 1U )
 #define ESM_EKR_CONFIGVALUE   0U
 #define ESM_IEPSR4_CONFIGVALUE                                                    \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define ESM_IESR4_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define ESM_ILSR4_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 31U ) | ( uint32 ) ( ( uint32 ) 0U << 30U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 29U ) | ( uint32 ) ( ( uint32 ) 0U << 28U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 27U ) | ( uint32 ) ( ( uint32 ) 0U << 26U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 25U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 23U ) | ( uint32 ) ( ( uint32 ) 0U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 21U ) | ( uint32 ) ( ( uint32 ) 0U << 20U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 15U ) | ( uint32 ) ( ( uint32 ) 0U << 14U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 13U ) | ( uint32 ) ( ( uint32 ) 0U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 10U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 7U ) | ( uint32 ) ( ( uint32 ) 0U << 6U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 5U ) | ( uint32 ) ( ( uint32 ) 0U << 4U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 /* USER CODE BEGIN (1) */
 /* USER CODE END */

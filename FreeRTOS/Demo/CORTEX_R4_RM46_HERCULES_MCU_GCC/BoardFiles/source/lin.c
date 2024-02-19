@@ -87,9 +87,9 @@ void linInit( void )
      *     - Enable/Disable parity
      *     - Disable data length control in ID4 and ID5
      */
-    linREG->GCR1 |= 0x03000C40U | ( uint32 ) ( ( uint32 ) 1U << 12U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 5U );
+    linREG->GCR1 |= 0x03000C40U | ( uint32 ) ( ( uint32 ) 1U << 12U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 5U );
 
     /** - Setup maximum baud rate prescaler */
     linREG->MBRSR = ( uint32 ) 4954U;
@@ -104,13 +104,12 @@ void linInit( void )
      *     - Sync delimiter
      *     - Sync break extension
      */
-    linREG
-        ->COMP = ( ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 8U ) | ( ( uint32 ) 13U - 13U ) );
+    linREG->COMP = ( ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 8U )
+                     | ( ( uint32 ) 13U - 13U ) );
 
     /** - Setup response length */
-    linREG->FORMAT =
-        ( ( linREG->FORMAT & 0xFFF8FFFFU ) | ( uint32 ) ( ( ( uint32 ) 8U - 1U ) << 16U )
-        );
+    linREG->FORMAT = ( ( linREG->FORMAT & 0xFFF8FFFFU )
+                       | ( uint32 ) ( ( ( uint32 ) 8U - 1U ) << 16U ) );
 
     /** - Set LIN pins functional mode
      *     - TX
@@ -172,13 +171,14 @@ void linInit( void )
      *     - Wakeup level
      *     - Break detect level
      */
-    linREG->SETINTLVL =
-        ( ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U );
+    linREG->SETINTLVL = ( ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                          | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U );
 
     /** - Set interrupt enable
      *     - Enable/Disable bit error
@@ -198,13 +198,14 @@ void linInit( void )
      *     - Enable/Disable wakeup level
      *     - Enable/Disable break detect level
      */
-    linREG->SETINT =
-        ( ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-          ( uint32 ) 0x00000000U );
+    linREG->SETINT = ( ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                       | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U );
 
     /** - Finaly start LIN */
     linREG->GCR1 |= 0x00000080U;
@@ -436,13 +437,14 @@ uint32 linIsRxReady( linBASE_t * lin )
 /* Requirements : HL_SR263 */
 uint32 linTxRxError( linBASE_t * lin )
 {
-    uint32 status = lin->FLR & ( LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT |
-                                 LIN_NRE_INT | LIN_FE_INT | LIN_OE_INT | LIN_PE_INT |
-                                 LIN_TOA3WUS_INT | LIN_TOAWUS_INT | LIN_TO_INT );
+    uint32 status = lin->FLR
+                  & ( LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT | LIN_NRE_INT
+                      | LIN_FE_INT | LIN_OE_INT | LIN_PE_INT | LIN_TOA3WUS_INT
+                      | LIN_TOAWUS_INT | LIN_TO_INT );
 
-    lin->FLR = LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT | LIN_NRE_INT |
-               LIN_FE_INT | LIN_OE_INT | LIN_PE_INT | LIN_TOA3WUS_INT | LIN_TOAWUS_INT |
-               LIN_TO_INT;
+    lin->FLR = LIN_BE_INT | LIN_PBE_INT | LIN_CE_INT | LIN_ISFE_INT | LIN_NRE_INT
+             | LIN_FE_INT | LIN_OE_INT | LIN_PE_INT | LIN_TOA3WUS_INT | LIN_TOAWUS_INT
+             | LIN_TO_INT;
 
     /* USER CODE BEGIN (20) */
     /* USER CODE END */
@@ -521,8 +523,8 @@ void linEnableLoopback( linBASE_t * lin, loopBackType_t Loopbacktype )
     lin->IODFTCTRL = 0U;
 
     /* Enable Loopback either in Analog or Digital Mode */
-    lin->IODFTCTRL =
-        ( ( uint32 ) ( 0x00000A00U ) | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U ) );
+    lin->IODFTCTRL = ( ( uint32 ) ( 0x00000A00U )
+                       | ( uint32 ) ( ( uint32 ) Loopbacktype << 1U ) );
 
     /* USER CODE BEGIN (25) */
     /* USER CODE END */

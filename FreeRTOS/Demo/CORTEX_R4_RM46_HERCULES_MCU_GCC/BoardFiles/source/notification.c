@@ -79,12 +79,10 @@ void esmGroup2Notification( uint32 channel )
 
 /* USER CODE BEGIN (4) */
 /* USER CODE END */
-void memoryPort0TestFailNotification(
-    uint32 groupSelect,
-    uint32 dataSelect,
-    uint32 address,
-    uint32 data
-)
+void memoryPort0TestFailNotification( uint32 groupSelect,
+                                      uint32 dataSelect,
+                                      uint32 address,
+                                      uint32 data )
 {
     /*  enter user code between the USER CODE BEGIN and USER CODE END. */
     /* USER CODE BEGIN (5) */
@@ -93,12 +91,10 @@ void memoryPort0TestFailNotification(
 
 /* USER CODE BEGIN (6) */
 /* USER CODE END */
-void memoryPort1TestFailNotification(
-    uint32 groupSelect,
-    uint32 dataSelect,
-    uint32 address,
-    uint32 data
-)
+void memoryPort1TestFailNotification( uint32 groupSelect,
+                                      uint32 dataSelect,
+                                      uint32 address,
+                                      uint32 data )
 {
     /*  enter user code between the USER CODE BEGIN and USER CODE END. */
     /* USER CODE BEGIN (7) */

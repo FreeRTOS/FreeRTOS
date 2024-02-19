@@ -81,26 +81,26 @@ void emif_ASYNC1Init( void )
     /* USER CODE BEGIN (4) */
     /* USER CODE END */
     emifREG->CE2CFG = 0x00000000U;
-    emifREG->CE2CFG = ( uint32 ) ( ( uint32 ) 0U << 31U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 30U ) |
-                      ( uint32 ) ( ( uint32 ) 15U << 26U ) |
-                      ( uint32 ) ( ( uint32 ) 63U << 20U ) |
-                      ( uint32 ) ( ( uint32 ) 7U << 17U ) |
-                      ( uint32 ) ( ( uint32 ) 15U << 13U ) |
-                      ( uint32 ) ( ( uint32 ) 63U << 7U ) |
-                      ( uint32 ) ( ( uint32 ) 7U << 4U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                      ( uint32 ) ( ( uint32 ) emif_8_bit_port );
+    emifREG->CE2CFG = ( uint32 ) ( ( uint32 ) 0U << 31U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 30U )
+                    | ( uint32 ) ( ( uint32 ) 15U << 26U )
+                    | ( uint32 ) ( ( uint32 ) 63U << 20U )
+                    | ( uint32 ) ( ( uint32 ) 7U << 17U )
+                    | ( uint32 ) ( ( uint32 ) 15U << 13U )
+                    | ( uint32 ) ( ( uint32 ) 63U << 7U )
+                    | ( uint32 ) ( ( uint32 ) 7U << 4U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                    | ( uint32 ) ( ( uint32 ) emif_8_bit_port );
 
-    emifREG->AWCC = ( emifREG->AWCC & 0xC0FF0000U ) |
-                    ( uint32 ) ( ( uint32 ) emif_pin_high << 29U ) |
-                    ( uint32 ) ( ( uint32 ) emif_pin_low << 28U ) |
-                    ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 0U );
+    emifREG->AWCC = ( emifREG->AWCC & 0xC0FF0000U )
+                  | ( uint32 ) ( ( uint32 ) emif_pin_high << 29U )
+                  | ( uint32 ) ( ( uint32 ) emif_pin_low << 28U )
+                  | ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 16U )
+                  | ( uint32 ) ( ( uint32 ) 0U );
 
-    emifREG->PMCR = ( emifREG->PMCR & 0xFFFFFF00U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) emif_4_words << 1U ) |
-                    ( uint32 ) ( ( uint32 ) 0U );
+    emifREG->PMCR = ( emifREG->PMCR & 0xFFFFFF00U ) | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) emif_4_words << 1U )
+                  | ( uint32 ) ( ( uint32 ) 0U );
     /* USER CODE BEGIN (5) */
     /* USER CODE END */
 }
@@ -120,27 +120,26 @@ void emif_ASYNC2Init( void )
     /* USER CODE END */
 
     emifREG->CE3CFG = 0x00000000U;
-    emifREG->CE3CFG = ( uint32 ) ( ( uint32 ) 0U << 31U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 30U ) |
-                      ( uint32 ) ( ( uint32 ) 15U << 26U ) |
-                      ( uint32 ) ( ( uint32 ) 63U << 20U ) |
-                      ( uint32 ) ( ( uint32 ) 7U << 17U ) |
-                      ( uint32 ) ( ( uint32 ) 15U << 13U ) |
-                      ( uint32 ) ( ( uint32 ) 63U << 7U ) |
-                      ( uint32 ) ( ( uint32 ) 7U << 4U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                      ( uint32 ) ( ( uint32 ) emif_8_bit_port );
+    emifREG->CE3CFG = ( uint32 ) ( ( uint32 ) 0U << 31U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 30U )
+                    | ( uint32 ) ( ( uint32 ) 15U << 26U )
+                    | ( uint32 ) ( ( uint32 ) 63U << 20U )
+                    | ( uint32 ) ( ( uint32 ) 7U << 17U )
+                    | ( uint32 ) ( ( uint32 ) 15U << 13U )
+                    | ( uint32 ) ( ( uint32 ) 63U << 7U )
+                    | ( uint32 ) ( ( uint32 ) 7U << 4U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                    | ( uint32 ) ( ( uint32 ) emif_8_bit_port );
 
-    emifREG->AWCC = ( emifREG->AWCC & 0xC0FF0000U ) |
-                    ( uint32 ) ( ( uint32 ) emif_pin_high << 29U ) |
-                    ( uint32 ) ( ( uint32 ) emif_pin_low << 28U ) |
-                    ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U );
+    emifREG->AWCC = ( emifREG->AWCC & 0xC0FF0000U )
+                  | ( uint32 ) ( ( uint32 ) emif_pin_high << 29U )
+                  | ( uint32 ) ( ( uint32 ) emif_pin_low << 28U )
+                  | ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U );
 
-    emifREG->PMCR = ( emifREG->PMCR & 0xFFFF00FFU ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 10U ) |
-                    ( uint32 ) ( ( uint32 ) emif_4_words << 9U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 8U );
+    emifREG->PMCR = ( emifREG->PMCR & 0xFFFF00FFU ) | ( uint32 ) ( ( uint32 ) 0U << 10U )
+                  | ( uint32 ) ( ( uint32 ) emif_4_words << 9U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 8U );
     /* USER CODE BEGIN (7) */
     /* USER CODE END */
 }
@@ -160,27 +159,26 @@ void emif_ASYNC3Init( void )
     /* USER CODE END */
 
     emifREG->CE4CFG = 0x00000000U;
-    emifREG->CE4CFG = ( uint32 ) ( ( uint32 ) 0U << 31U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 30U ) |
-                      ( uint32 ) ( ( uint32 ) 15U << 26U ) |
-                      ( uint32 ) ( ( uint32 ) 63U << 20U ) |
-                      ( uint32 ) ( ( uint32 ) 7U << 17U ) |
-                      ( uint32 ) ( ( uint32 ) 15U << 13U ) |
-                      ( uint32 ) ( ( uint32 ) 63U << 7U ) |
-                      ( uint32 ) ( ( uint32 ) 7U << 4U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                      ( uint32 ) ( ( uint32 ) emif_8_bit_port );
+    emifREG->CE4CFG = ( uint32 ) ( ( uint32 ) 0U << 31U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 30U )
+                    | ( uint32 ) ( ( uint32 ) 15U << 26U )
+                    | ( uint32 ) ( ( uint32 ) 63U << 20U )
+                    | ( uint32 ) ( ( uint32 ) 7U << 17U )
+                    | ( uint32 ) ( ( uint32 ) 15U << 13U )
+                    | ( uint32 ) ( ( uint32 ) 63U << 7U )
+                    | ( uint32 ) ( ( uint32 ) 7U << 4U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                    | ( uint32 ) ( ( uint32 ) emif_8_bit_port );
 
-    emifREG->AWCC = ( emifREG->AWCC & 0xC0FF0000U ) |
-                    ( uint32 ) ( ( uint32 ) emif_pin_high << 29U ) |
-                    ( uint32 ) ( ( uint32 ) emif_pin_low << 28U ) |
-                    ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 20U ) |
-                    ( uint32 ) ( ( uint32 ) 0U );
+    emifREG->AWCC = ( emifREG->AWCC & 0xC0FF0000U )
+                  | ( uint32 ) ( ( uint32 ) emif_pin_high << 29U )
+                  | ( uint32 ) ( ( uint32 ) emif_pin_low << 28U )
+                  | ( uint32 ) ( ( uint32 ) emif_wait_pin0 << 20U )
+                  | ( uint32 ) ( ( uint32 ) 0U );
 
-    emifREG->PMCR = ( emifREG->PMCR & 0xFF00FFFFU ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) emif_4_words << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U );
+    emifREG->PMCR = ( emifREG->PMCR & 0xFF00FFFFU ) | ( uint32 ) ( ( uint32 ) 0U << 18U )
+                  | ( uint32 ) ( ( uint32 ) emif_4_words << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U );
 
     /* USER CODE BEGIN (9) */
     /* USER CODE END */
@@ -265,17 +263,17 @@ void emif_SDRAM_StartupInit( void )
 
     /* Procedure B  Step 2:  Program SDTIMR and SDSRETR to satisfy requirements of SDRAM
      * Device */
-    emifREG->SDTIMR = ( uint32 ) ( ( uint32 ) 0U << 27U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 24U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 23U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 20U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 19U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 12U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 8U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 7U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 4U ) |
-                      ( uint32 ) ( ( uint32 ) 0U << 3U );
+    emifREG->SDTIMR = ( uint32 ) ( ( uint32 ) 0U << 27U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 24U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 23U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 20U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 19U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 12U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 8U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 7U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 4U )
+                    | ( uint32 ) ( ( uint32 ) 0U << 3U );
 
     emifREG->SDSRETR = ( uint32 ) 0U;
 
@@ -292,12 +290,12 @@ void emif_SDRAM_StartupInit( void )
      *    -selecting the banks
      *    -setting the pagesize
      */
-    emifREG->SDCR = ( uint32 ) ( ( uint32 ) 0U << 31U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 14U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 9U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 8U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 4U ) |
-                    ( uint32 ) ( ( uint32 ) elements_256 );
+    emifREG->SDCR = ( uint32 ) ( ( uint32 ) 0U << 31U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 14U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 9U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 8U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 4U )
+                  | ( uint32 ) ( ( uint32 ) elements_256 );
 
     /* Procedure B  Step 5:  Read of SDRAM memory location causes processor to wait until
      * SDRAM Initialization completes */

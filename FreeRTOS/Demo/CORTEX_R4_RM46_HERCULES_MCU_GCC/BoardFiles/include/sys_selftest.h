@@ -201,12 +201,10 @@ typedef struct pbist_config_reg
  *
  *   @note This function has to be provide by the user.
  */
-void memoryPort0TestFailNotification(
-    uint32 groupSelect,
-    uint32 dataSelect,
-    uint32 address,
-    uint32 data
-);
+void memoryPort0TestFailNotification( uint32 groupSelect,
+                                      uint32 dataSelect,
+                                      uint32 address,
+                                      uint32 data );
 
 /** @fn void memoryPort1TestFailNotification(uint32 groupSelect, uint32 dataSelect, uint32
  * address, uint32 data)
@@ -218,12 +216,10 @@ void memoryPort0TestFailNotification(
  *
  *   @note This function has to be provide by the user.
  */
-void memoryPort1TestFailNotification(
-    uint32 groupSelect,
-    uint32 dataSelect,
-    uint32 address,
-    uint32 data
-);
+void memoryPort1TestFailNotification( uint32 groupSelect,
+                                      uint32 dataSelect,
+                                      uint32 address,
+                                      uint32 data );
 
 void pbistGetConfigValue( pbist_config_reg_t * config_reg, config_value_type_t type );
 #endif /* ifndef __PBIST_H__ */

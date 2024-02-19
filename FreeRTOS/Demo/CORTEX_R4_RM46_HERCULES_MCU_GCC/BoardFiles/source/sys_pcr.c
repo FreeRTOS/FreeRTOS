@@ -237,8 +237,8 @@ void peripheral_Frame_Powerdown_Clr( peripheral_Frame_Select_t peripheral_Frame 
 /* SourceId : PCR_SourceId_005 */
 /* DesignId : PCR_DesignId_017 */
 /* Requirements : HL_SR57 */
-void peripheral_Mem_Frame_Prot_Set( peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-)
+void peripheral_Mem_Frame_Prot_Set(
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS )
 {
     /* USER CODE BEGIN (14) */
     /* USER CODE END */
@@ -274,8 +274,8 @@ void peripheral_Mem_Frame_Prot_Set( peripheral_MemoryFrame_CS_t peripheral_Memor
 /* SourceId : PCR_SourceId_006 */
 /* DesignId : PCR_DesignId_018 */
 /* Requirements : HL_SR58 */
-void peripheral_Mem_Frame_Prot_Clr( peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-)
+void peripheral_Mem_Frame_Prot_Clr(
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS )
 {
     /* USER CODE BEGIN (17) */
     /* USER CODE END */
@@ -312,8 +312,7 @@ void peripheral_Mem_Frame_Prot_Clr( peripheral_MemoryFrame_CS_t peripheral_Memor
 /* DesignId : PCR_DesignId_019 */
 /* Requirements : HL_SR59 */
 void peripheral_Mem_Frame_Pwrdwn_Set(
-    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-)
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS )
 {
     /* USER CODE BEGIN (20) */
     /* USER CODE END */
@@ -350,8 +349,7 @@ void peripheral_Mem_Frame_Pwrdwn_Set(
 /* DesignId : PCR_DesignId_020 */
 /* Requirements : HL_SR60 */
 void peripheral_Mem_Frame_Pwrdwn_Clr(
-    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS
-)
+    peripheral_MemoryFrame_CS_t peripheral_Memory_Frame_CS )
 {
     /* USER CODE BEGIN (23) */
     /* USER CODE END */
@@ -490,8 +488,8 @@ void peripheral_Powerdown_Clr( peripheral_Quad_ChipSelect_t peripheral_Quad_CS )
 /* SourceId : PCR_SourceId_013 */
 /* DesignId : PCR_DesignId_011 */
 /* Requirements : HL_SR51 */
-void peripheral_Memory_Protection_Set( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-)
+void peripheral_Memory_Protection_Set(
+    peripheral_Memory_ChipSelect_t peripheral_Memory_CS )
 {
     /* USER CODE BEGIN (38) */
     /* USER CODE END */
@@ -517,8 +515,8 @@ void peripheral_Memory_Protection_Set( peripheral_Memory_ChipSelect_t peripheral
 /* SourceId : PCR_SourceId_014 */
 /* DesignId : PCR_DesignId_012 */
 /* Requirements : HL_SR52 */
-void peripheral_Memory_Protection_Clr( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-)
+void peripheral_Memory_Protection_Clr(
+    peripheral_Memory_ChipSelect_t peripheral_Memory_CS )
 {
     /* USER CODE BEGIN (41) */
     /* USER CODE END */
@@ -543,8 +541,7 @@ void peripheral_Memory_Protection_Clr( peripheral_Memory_ChipSelect_t peripheral
 /* SourceId : PCR_SourceId_015 */
 /* DesignId : PCR_DesignId_014 */
 /* Requirements : HL_SR54 */
-void peripheral_Memory_Powerdown_Set( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-)
+void peripheral_Memory_Powerdown_Set( peripheral_Memory_ChipSelect_t peripheral_Memory_CS )
 {
     /* USER CODE BEGIN (44) */
     /* USER CODE END */
@@ -570,8 +567,7 @@ void peripheral_Memory_Powerdown_Set( peripheral_Memory_ChipSelect_t peripheral_
 /* SourceId : PCR_SourceId_016 */
 /* DesignId : PCR_DesignId_015 */
 /* Requirements : HL_SR55 */
-void peripheral_Memory_Powerdown_Clr( peripheral_Memory_ChipSelect_t peripheral_Memory_CS
-)
+void peripheral_Memory_Powerdown_Clr( peripheral_Memory_ChipSelect_t peripheral_Memory_CS )
 {
     /* USER CODE BEGIN (47) */
     /* USER CODE END */
@@ -650,8 +646,7 @@ void peripheral_Protection_Status( peripheral_Quad_ChipSelect_t * peripheral_Qua
 /* DesignId : PCR_DesignId_013 */
 /* Requirements : HL_SR53 */
 void peripheral_Memory_Protection_Status(
-    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS
-)
+    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS )
 {
     /* USER CODE BEGIN (56) */
     /* USER CODE END */
@@ -678,8 +673,7 @@ void peripheral_Memory_Protection_Status(
 /* DesignId : PCR_DesignId_016 */
 /* Requirements : HL_SR56 */
 void peripheral_Memory_Powerdown_Status(
-    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS
-)
+    peripheral_Memory_ChipSelect_t * peripheral_Memory_CS )
 {
     /* USER CODE BEGIN (59) */
     /* USER CODE END */

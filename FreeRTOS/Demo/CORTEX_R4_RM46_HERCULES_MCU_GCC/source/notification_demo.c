@@ -113,23 +113,19 @@ static void prvNotificationTestTask( void * pvParameters )
         sci_print( "Notification Task correctly sent itself two notifications!\r\n" );
 
         /* Now make the task send itself a notification with a value */
-        xReturned = xTaskNotify(
-            xTaskGetCurrentTaskHandle(),
-            notificationTEST_VALUE,
-            eSetValueWithOverwrite
-        );
+        xReturned = xTaskNotify( xTaskGetCurrentTaskHandle(),
+                                 notificationTEST_VALUE,
+                                 eSetValueWithOverwrite );
         prvNotifyCheck( xReturned );
 
         /* Clear ulNotificationValue before using it */
         ulNotificationValue = 0x0UL;
 
         /* Receive the value sent using xTaskNotify */
-        xReturned = xTaskNotifyWait(
-            0,
-            ( uint32_t ) 0xFFFFFFFFUL,
-            &ulNotificationValue,
-            ( TickType_t ) 0x50UL
-        );
+        xReturned = xTaskNotifyWait( 0,
+                                     ( uint32_t ) 0xFFFFFFFFUL,
+                                     &ulNotificationValue,
+                                     ( TickType_t ) 0x50UL );
         prvNotifyCheck( xReturned );
 
         if( notificationTEST_VALUE == ulNotificationValue )
@@ -154,11 +150,9 @@ static void prvNotificationTestTask( void * pvParameters )
             configASSERT( 0x0UL );
         }
 
-        xTaskNotify(
-            xTaskGetCurrentTaskHandle(),
-            ulNotificationValue,
-            eSetValueWithOverwrite
-        );
+        xTaskNotify( xTaskGetCurrentTaskHandle(),
+                     ulNotificationValue,
+                     eSetValueWithOverwrite );
         xReturned = xTaskNotifyStateClear( NULL );
 
         /* First time a notification was pending. */
@@ -234,11 +228,9 @@ BaseType_t xCreateNotificationTestTask( void )
         }
     };
 
-    /* Create the first register test task as a privileged task */
-    xReturn = xTaskCreateRestrictedStatic(
-        &( xNotificationTestTaskParameters ),
-        &( xNotificationTaskOneHandle )
-    );
+    /* Create the notification test task */
+    xReturn = xTaskCreateRestrictedStatic( &( xNotificationTestTaskParameters ),
+                                           &( xNotificationTaskOneHandle ) );
     if( pdPASS == xReturn )
     {
         sci_print( "Created the Notification Test Task\r\n" );

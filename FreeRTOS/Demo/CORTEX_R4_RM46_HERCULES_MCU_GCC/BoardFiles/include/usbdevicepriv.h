@@ -67,17 +67,13 @@ extern "C" {
  * the interrupt handler in device/usbhandler.c
  *
  *****************************************************************************/
-extern tBoolean USBDeviceConfig(
-    uint32 ulIndex,
-    const tConfigHeader * psConfig,
-    const tFIFOConfig * psFIFOConfig
-);
-extern tBoolean USBDeviceConfigAlternate(
-    uint32 ulIndex,
-    const tConfigHeader * psConfig,
-    uint8 ucInterfaceNum,
-    uint8 ucAlternateSetting
-);
+extern tBoolean USBDeviceConfig( uint32 ulIndex,
+                                 const tConfigHeader * psConfig,
+                                 const tFIFOConfig * psFIFOConfig );
+extern tBoolean USBDeviceConfigAlternate( uint32 ulIndex,
+                                          const tConfigHeader * psConfig,
+                                          uint8 ucInterfaceNum,
+                                          uint8 ucAlternateSetting );
 extern void USBDeviceResumeTickHandler( uint32 ulIndex );
 
 /******************************************************************************

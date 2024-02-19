@@ -59,12 +59,10 @@
  *****************************************************************************/
 uint32 RxHandler( void * pvCBData, uint32 ulEvent, uint32 ulMsgValue, void * pvMsgData );
 uint32 TxHandler( void * pvCBData, uint32 ulEvent, uint32 ulMsgValue, void * pvMsgData );
-uint32 ControlHandler(
-    void * pvCBData,
-    uint32 ulEvent,
-    uint32 ulMsgValue,
-    void * pvMsgData
-);
+uint32 ControlHandler( void * pvCBData,
+                       uint32 ulEvent,
+                       uint32 ulMsgValue,
+                       void * pvMsgData );
 
 extern const tUSBBuffer g_sTxBuffer;
 extern const tUSBBuffer g_sRxBuffer;

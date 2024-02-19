@@ -98,11 +98,10 @@ void setupPLL( void )
      *     - Setup reference clock divider
      *     - Setup Pll multiplier
      */
-    systemREG1->PLLCTL1 = ( uint32 ) 0x00000000U | ( uint32 ) 0x20000000U |
-                          ( uint32 ) ( ( uint32 ) 0x1FU << 24U ) |
-                          ( uint32 ) 0x00000000U |
-                          ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U ) |
-                          ( uint32 ) ( 0xA400U );
+    systemREG1->PLLCTL1 = ( uint32 ) 0x00000000U | ( uint32 ) 0x20000000U
+                        | ( uint32 ) ( ( uint32 ) 0x1FU << 24U ) | ( uint32 ) 0x00000000U
+                        | ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U )
+                        | ( uint32 ) ( 0xA400U );
 
     /**   - Setup pll control register 2
      *     - Setup spreading rate
@@ -110,9 +109,9 @@ void setupPLL( void )
      *     - Setup internal Pll output divider
      *     - Setup spreading amount
      */
-    systemREG1->PLLCTL2 = ( uint32 ) ( ( uint32 ) 255U << 22U ) |
-                          ( uint32 ) ( ( uint32 ) 7U << 12U ) |
-                          ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 9U ) | ( uint32 ) 61U;
+    systemREG1->PLLCTL2 = ( uint32 ) ( ( uint32 ) 255U << 22U )
+                        | ( uint32 ) ( ( uint32 ) 7U << 12U )
+                        | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 9U ) | ( uint32 ) 61U;
 
     /** @b Initialize @b Pll2: */
 
@@ -122,14 +121,14 @@ void setupPLL( void )
      *     - Setup internal Pll output divider
      *     - Setup Pll multiplier
      */
-    systemREG2->PLLCTL3 = ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 29U ) |
-                          ( uint32 ) ( ( uint32 ) 0x1FU << 24U ) |
-                          ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U ) |
-                          ( uint32 ) ( 0xA400U );
+    systemREG2->PLLCTL3 = ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 29U )
+                        | ( uint32 ) ( ( uint32 ) 0x1FU << 24U )
+                        | ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U )
+                        | ( uint32 ) ( 0xA400U );
 
     /** - Enable PLL(s) to start up or Lock */
-    systemREG1->CSDIS = 0x00000000U | 0x00000000U | 0x00000008U | 0x00000080U |
-                        0x00000000U | 0x00000000U | 0x00000000U;
+    systemREG1->CSDIS = 0x00000000U | 0x00000000U | 0x00000008U | 0x00000080U
+                      | 0x00000000U | 0x00000000U | 0x00000000U;
 }
 
 /** @fn void trimLPO(void)
@@ -155,15 +154,14 @@ void trimLPO( void )
      * the routine can temporarily disable the LPOCLKMON range check so the sudden change
      * will not cause a fault.*/
     /* Disable clock range detection*/
-    systemREG1->CLKTEST = ( systemREG1->CLKTEST | ( uint32 ) ( ( uint32 ) 0x1U << 24U )
-                          ) &
-                          ( uint32 ) ( ~( ( uint32 ) 0x1U << 25U ) );
+    systemREG1->CLKTEST = ( systemREG1->CLKTEST | ( uint32 ) ( ( uint32 ) 0x1U << 24U ) )
+                        & ( uint32 ) ( ~( ( uint32 ) 0x1U << 25U ) );
 
     /*SAFETYMCUSW 139 S MR:13.7 <APPROVED> "Hardware status bit read check" */
     if( LPO_TRIM_VALUE != 0xFFFFU )
     {
-        systemREG1->LPOMONCTL = ( uint32 ) ( ( uint32 ) 1U << 24U ) |
-                                ( uint32 ) ( ( uint32 ) LPO_TRIM_VALUE );
+        systemREG1->LPOMONCTL = ( uint32 ) ( ( uint32 ) 1U << 24U )
+                              | ( uint32 ) ( ( uint32 ) LPO_TRIM_VALUE );
     }
     else
     {
@@ -186,8 +184,8 @@ void setupFlash( void )
     /* USER CODE END */
 
     /** - Setup flash read mode, address wait states and data wait states */
-    flashWREG->FRDCNTL = 0x00000000U | ( uint32 ) ( ( uint32 ) 3U << 8U ) |
-                         ( uint32 ) ( ( uint32 ) 1U << 4U ) | 1U;
+    flashWREG->FRDCNTL = 0x00000000U | ( uint32 ) ( ( uint32 ) 3U << 8U )
+                       | ( uint32 ) ( ( uint32 ) 1U << 4U ) | 1U;
 
     /** - Setup flash access wait states for bank 7 */
     FSM_WR_ENA_HL = 0x5U;
@@ -200,8 +198,8 @@ void setupFlash( void )
     FSM_WR_ENA_HL = 0xAU;
 
     /** - Setup flash bank power modes */
-    flashWREG->FBFALLBACK = 0x00000000U |
-                            ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 14U ) /* BANK 7 */
+    flashWREG->FBFALLBACK = 0x00000000U
+                          | ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 14U ) /* BANK 7 */
                           | ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 2U )  /* BANK 1 */
                           | ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 0U ); /* BANK 0 */
 
@@ -266,8 +264,8 @@ void mapClocks( void )
     SYS_CSVSTAT = systemREG1->CSVSTAT;
     SYS_CSDIS = systemREG1->CSDIS;
 
-    while( ( SYS_CSVSTAT & ( ( SYS_CSDIS ^ 0xFFU ) & 0xFFU ) ) !=
-           ( ( SYS_CSDIS ^ 0xFFU ) & 0xFFU ) )
+    while( ( SYS_CSVSTAT & ( ( SYS_CSDIS ^ 0xFFU ) & 0xFFU ) )
+           != ( ( SYS_CSDIS ^ 0xFFU ) & 0xFFU ) )
     {
         SYS_CSVSTAT = systemREG1->CSVSTAT;
         SYS_CSDIS = systemREG1->CSDIS;
@@ -282,36 +280,36 @@ void mapClocks( void )
 
     /** - Setup GCLK, HCLK and VCLK clock source for normal operation, power down mode and
      * after wakeup */
-    systemREG1->GHVSRC = ( uint32 ) ( ( uint32 ) SYS_OSC << 24U ) |
-                         ( uint32 ) ( ( uint32 ) SYS_OSC << 16U ) |
-                         ( uint32 ) ( ( uint32 ) SYS_PLL1 << 0U );
+    systemREG1->GHVSRC = ( uint32 ) ( ( uint32 ) SYS_OSC << 24U )
+                       | ( uint32 ) ( ( uint32 ) SYS_OSC << 16U )
+                       | ( uint32 ) ( ( uint32 ) SYS_PLL1 << 0U );
 
     /** - Setup RTICLK1 and RTICLK2 clocks */
-    systemREG1->RCLKSRC = ( uint32 ) ( ( uint32 ) 1U << 24U ) |
-                          ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U ) |
-                          ( uint32 ) ( ( uint32 ) 1U << 8U ) |
-                          ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U );
+    systemREG1->RCLKSRC = ( uint32 ) ( ( uint32 ) 1U << 24U )
+                        | ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U )
+                        | ( uint32 ) ( ( uint32 ) 1U << 8U )
+                        | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U );
 
     /** - Setup asynchronous peripheral clock sources for AVCLK1 and AVCLK2 */
-    systemREG1->VCLKASRC = ( uint32 ) ( ( uint32 ) SYS_VCLK << 8U ) |
-                           ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U );
+    systemREG1->VCLKASRC = ( uint32 ) ( ( uint32 ) SYS_VCLK << 8U )
+                         | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U );
 
     /** - Setup synchronous peripheral clock dividers for VCLK1, VCLK2, VCLK3 */
-    systemREG1->CLKCNTL = ( systemREG1->CLKCNTL & 0xF0FFFFFFU ) |
-                          ( uint32 ) ( ( uint32 ) 1U << 24U );
-    systemREG1->CLKCNTL = ( systemREG1->CLKCNTL & 0xFFF0FFFFU ) |
-                          ( uint32 ) ( ( uint32 ) 1U << 16U );
+    systemREG1->CLKCNTL = ( systemREG1->CLKCNTL & 0xF0FFFFFFU )
+                        | ( uint32 ) ( ( uint32 ) 1U << 24U );
+    systemREG1->CLKCNTL = ( systemREG1->CLKCNTL & 0xFFF0FFFFU )
+                        | ( uint32 ) ( ( uint32 ) 1U << 16U );
 
-    systemREG2->CLK2CNTL = ( systemREG2->CLK2CNTL & 0xFFFFF0F0U ) |
-                           ( uint32 ) ( ( uint32 ) 1U << 8U ) |
-                           ( uint32 ) ( ( uint32 ) 1U << 0U );
+    systemREG2->CLK2CNTL = ( systemREG2->CLK2CNTL & 0xFFFFF0F0U )
+                         | ( uint32 ) ( ( uint32 ) 1U << 8U )
+                         | ( uint32 ) ( ( uint32 ) 1U << 0U );
 
-    systemREG2->VCLKACON1 = ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U ) |
-                            ( uint32 ) ( ( uint32 ) 0U << 20U ) |
-                            ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U ) |
-                            ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 8U ) |
-                            ( uint32 ) ( ( uint32 ) 0U << 4U ) |
-                            ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U );
+    systemREG2->VCLKACON1 = ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U )
+                          | ( uint32 ) ( ( uint32 ) 0U << 20U )
+                          | ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U )
+                          | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 8U )
+                          | ( uint32 ) ( ( uint32 ) 0U << 4U )
+                          | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U );
 
     /* USER CODE BEGIN (13) */
     /* USER CODE END */
@@ -319,11 +317,11 @@ void mapClocks( void )
     /* Now the PLLs are locked and the PLL outputs can be sped up */
     /* The R-divider was programmed to be 0xF. Now this divider is changed to programmed
      * value */
-    systemREG1->PLLCTL1 = ( systemREG1->PLLCTL1 & 0xE0FFFFFFU ) |
-                          ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U );
+    systemREG1->PLLCTL1 = ( systemREG1->PLLCTL1 & 0xE0FFFFFFU )
+                        | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U );
     /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-    systemREG2->PLLCTL3 = ( systemREG2->PLLCTL3 & 0xE0FFFFFFU ) |
-                          ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U );
+    systemREG2->PLLCTL3 = ( systemREG2->PLLCTL3 & 0xE0FFFFFFU )
+                        | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U );
 
     /* Enable/Disable Frequency modulation */
     systemREG1->PLLCTL2 |= 0x00000000U;
@@ -409,9 +407,9 @@ void systemInit( void )
     systemREG1->SYSPC9 = 1U;
 
     /** - Setup ECLK */
-    systemREG1->ECPCNTL = ( uint32 ) ( ( uint32 ) 0U << 24U ) |
-                          ( uint32 ) ( ( uint32 ) 0U << 23U ) |
-                          ( uint32 ) ( ( uint32 ) ( 8U - 1U ) & 0xFFFFU );
+    systemREG1->ECPCNTL = ( uint32 ) ( ( uint32 ) 0U << 24U )
+                        | ( uint32 ) ( ( uint32 ) 0U << 23U )
+                        | ( uint32 ) ( ( uint32 ) ( 8U - 1U ) & 0xFFFFU );
 
     /* USER CODE BEGIN (25) */
     /* USER CODE END */
@@ -573,7 +571,8 @@ void systemGetConfigValue( system_config_reg_t * config_reg, config_value_type_t
 /* SourceId : SYSTEM_SourceId_009 */
 /* DesignId : SYSTEM_DesignId_009 */
 /* Requirements : HL_SR506 */
-void tcmflashGetConfigValue( tcmflash_config_reg_t * config_reg, config_value_type_t type )
+void tcmflashGetConfigValue( tcmflash_config_reg_t * config_reg,
+                             config_value_type_t type )
 {
     if( type == InitialValue )
     {
@@ -679,9 +678,9 @@ void customTrimLPO( void )
     /* USER CODE END */
 
     /* Load default trimLPO value */
-    systemREG1->LPOMONCTL = ( uint32 ) ( ( uint32 ) 1U << 24U ) |
-                            ( uint32 ) ( ( uint32 ) 16U << 8U ) |
-                            ( uint32 ) ( ( uint32 ) 16U );
+    systemREG1->LPOMONCTL = ( uint32 ) ( ( uint32 ) 1U << 24U )
+                          | ( uint32 ) ( ( uint32 ) 16U << 8U )
+                          | ( uint32 ) ( ( uint32 ) 16U );
 
     /* USER CODE BEGIN (30) */
     /* USER CODE END */

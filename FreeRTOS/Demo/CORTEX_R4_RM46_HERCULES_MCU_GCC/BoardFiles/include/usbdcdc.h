@@ -342,18 +342,14 @@ extern void USBDCDCTerm( void * pvInstance );
 extern void * USBDCDCSetControlCBData( tUSBDCDCDevice * pvInstance, void * pvCBData );
 extern void * USBDCDCSetRxCBData( void * pvInstance, void * pvCBData );
 extern void * USBDCDCSetTxCBData( void * pvInstance, void * pvCBData );
-extern uint32 USBDCDCPacketWrite(
-    void * pvInstance,
-    uint8 * pcData,
-    uint32 ulLength,
-    tBoolean bLast
-);
-extern uint32 USBDCDCPacketRead(
-    void * pvInstance,
-    uint8 * pcData,
-    uint32 ulLength,
-    tBoolean bLast
-);
+extern uint32 USBDCDCPacketWrite( void * pvInstance,
+                                  uint8 * pcData,
+                                  uint32 ulLength,
+                                  tBoolean bLast );
+extern uint32 USBDCDCPacketRead( void * pvInstance,
+                                 uint8 * pcData,
+                                 uint32 ulLength,
+                                 tBoolean bLast );
 extern uint32 USBDCDCTxPacketAvailable( void * pvInstance );
 extern uint32 USBDCDCRxPacketAvailable( void * pvInstance );
 extern void USBDCDCSerialStateChange( void * pvInstance, uint16 usState );

@@ -123,213 +123,209 @@ typedef struct vim_config_reg
 } vim_config_reg_t;
 
 /* Configuration registers initial value */
-#define VIM_FIRQPR0_CONFIGVALUE                  \
-    ( ( uint32 ) ( ( uint32 ) SYS_FIQ << 0U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_FIQ << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
+#define VIM_FIRQPR0_CONFIGVALUE                                                         \
+    ( ( uint32 ) ( ( uint32 ) SYS_FIQ << 0U ) | ( uint32 ) ( ( uint32 ) SYS_FIQ << 1U ) \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
 
-#define VIM_FIRQPR1_CONFIGVALUE                  \
-    ( ( uint32 ) ( ( uint32 ) SYS_IRQ << 0U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
+#define VIM_FIRQPR1_CONFIGVALUE                                                         \
+    ( ( uint32 ) ( ( uint32 ) SYS_IRQ << 0U ) | ( uint32 ) ( ( uint32 ) SYS_IRQ << 1U ) \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
 
-#define VIM_FIRQPR2_CONFIGVALUE                  \
-    ( ( uint32 ) ( ( uint32 ) SYS_IRQ << 0U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
+#define VIM_FIRQPR2_CONFIGVALUE                                                         \
+    ( ( uint32 ) ( ( uint32 ) SYS_IRQ << 0U ) | ( uint32 ) ( ( uint32 ) SYS_IRQ << 1U ) \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
 
-#define VIM_FIRQPR3_CONFIGVALUE                  \
-    ( ( uint32 ) ( ( uint32 ) SYS_IRQ << 0U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U ) |  \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
+#define VIM_FIRQPR3_CONFIGVALUE                                                         \
+    ( ( uint32 ) ( ( uint32 ) SYS_IRQ << 0U ) | ( uint32 ) ( ( uint32 ) SYS_IRQ << 1U ) \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 2U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 3U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 4U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 5U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 6U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 7U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 8U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 9U )                                         \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 10U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 11U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 12U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 13U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 14U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 15U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 16U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 17U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 18U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 19U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 20U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 21U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 22U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 23U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 24U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 25U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 26U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 27U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 28U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 29U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 30U )                                        \
+      | ( uint32 ) ( ( uint32 ) SYS_IRQ << 31U ) )
 
 #define VIM_REQMASKSET0_CONFIGVALUE                                               \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 1U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 1U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
 
 #define VIM_REQMASKSET1_CONFIGVALUE                                               \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
 
 #define VIM_REQMASKSET2_CONFIGVALUE                                               \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
 
 #define VIM_REQMASKSET3_CONFIGVALUE                                               \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 7U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 12U ) | ( uint32 ) ( ( uint32 ) 0U << 13U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 14U ) | ( uint32 ) ( ( uint32 ) 0U << 15U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 18U ) | ( uint32 ) ( ( uint32 ) 0U << 19U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 28U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 31U ) )
 
 #define VIM_WAKEMASKSET0_CONFIGVALUE 0xFFFFFFFFU
 #define VIM_WAKEMASKSET1_CONFIGVALUE 0xFFFFFFFFU

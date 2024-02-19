@@ -73,18 +73,14 @@ extern "C" {
 extern uint32 MDIOPhyAliveStatusGet( uint32 baseAddr );
 extern uint32 MDIOPhyLinkStatusGet( uint32 baseAddr );
 extern void MDIOInit( uint32 baseAddr, uint32 mdioInputFreq, uint32 mdioOutputFreq );
-extern boolean MDIOPhyRegRead(
-    uint32 baseAddr,
-    uint32 phyAddr,
-    uint32 regNum,
-    volatile uint16 * dataPtr
-);
-extern void MDIOPhyRegWrite(
-    uint32 baseAddr,
-    uint32 phyAddr,
-    uint32 regNum,
-    uint16 RegVal
-);
+extern boolean MDIOPhyRegRead( uint32 baseAddr,
+                               uint32 phyAddr,
+                               uint32 regNum,
+                               volatile uint16 * dataPtr );
+extern void MDIOPhyRegWrite( uint32 baseAddr,
+                             uint32 phyAddr,
+                             uint32 regNum,
+                             uint16 RegVal );
 extern void MDIOEnable( uint32 baseAddr );
 extern void MDIODisable( uint32 baseAddr );
 

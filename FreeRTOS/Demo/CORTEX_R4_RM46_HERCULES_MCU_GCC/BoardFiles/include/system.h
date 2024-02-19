@@ -295,27 +295,27 @@ typedef struct system_config_reg
 
 #define SYS_SYSPC9_CONFIGVALUE 1U
 
-#define SYS_CSDIS_CONFIGVALUE                                               \
-    ( 0x00000000U | 0x00000000U | 0x00000008U | 0x00000080U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x4U )
+#define SYS_CSDIS_CONFIGVALUE                                                           \
+    ( 0x00000000U | 0x00000000U | 0x00000008U | 0x00000080U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x4U )
 
 #define SYS_CDDIS_CONFIGVALUE                                                   \
-    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 11U ) )
 
 #define SYS_GHVSRC_CONFIGVALUE                   \
-    ( ( uint32 ) ( ( uint32 ) SYS_OSC << 24U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_OSC << 16U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_PLL1 << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) SYS_OSC << 24U )   \
+      | ( uint32 ) ( ( uint32 ) SYS_OSC << 16U ) \
+      | ( uint32 ) ( ( uint32 ) SYS_PLL1 << 0U ) )
 
-#define SYS_VCLKASRC_CONFIGVALUE                 \
-    ( ( uint32 ) ( ( uint32 ) SYS_VCLK << 8U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U ) )
+#define SYS_VCLKASRC_CONFIGVALUE               \
+    ( ( uint32 ) ( ( uint32 ) SYS_VCLK << 8U ) \
+      | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U ) )
 
-#define SYS_RCLKSRC_CONFIGVALUE                                                         \
-    ( ( uint32 ) ( ( uint32 ) 1U << 24U ) | ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U ) )
+#define SYS_RCLKSRC_CONFIGVALUE                                                       \
+    ( ( uint32 ) ( ( uint32 ) 1U << 24U ) | ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U ) )
 
 #define SYS_MSTGCR_CONFIGVALUE   0x00000105U
 
@@ -324,18 +324,18 @@ typedef struct system_config_reg
 #define SYS_MSINENA_CONFIGVALUE  0U
 
 #define SYS_PLLCTL1_CONFIGVALUE_1                                       \
-    ( ( uint32 ) 0x00000000U | ( uint32 ) 0x20000000U |                 \
-      ( uint32 ) ( ( uint32 ) 0x1FU << 24U ) | ( uint32 ) 0x00000000U | \
-      ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U ) | ( uint32 ) ( 0xA400U ) )
+    ( ( uint32 ) 0x00000000U | ( uint32 ) 0x20000000U                   \
+      | ( uint32 ) ( ( uint32 ) 0x1FU << 24U ) | ( uint32 ) 0x00000000U \
+      | ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U ) | ( uint32 ) ( 0xA400U ) )
 
-#define SYS_PLLCTL1_CONFIGVALUE_2                       \
-    ( ( ( SYS_PLLCTL1_CONFIGVALUE_1 ) & 0xE0FFFFFFU ) | \
-      ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U ) )
+#define SYS_PLLCTL1_CONFIGVALUE_2                     \
+    ( ( ( SYS_PLLCTL1_CONFIGVALUE_1 ) & 0xE0FFFFFFU ) \
+      | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U ) )
 
-#define SYS_PLLCTL2_CONFIGVALUE                                        \
-    ( ( uint32 ) 0x00000000U | ( uint32 ) ( ( uint32 ) 255U << 22U ) | \
-      ( uint32 ) ( ( uint32 ) 7U << 12U ) |                            \
-      ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 9U ) | ( uint32 ) 61U )
+#define SYS_PLLCTL2_CONFIGVALUE                                      \
+    ( ( uint32 ) 0x00000000U | ( uint32 ) ( ( uint32 ) 255U << 22U ) \
+      | ( uint32 ) ( ( uint32 ) 7U << 12U )                          \
+      | ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 9U ) | ( uint32 ) 61U )
 
 #define SYS_UERFLAG_CONFIGVALUE 0U
 
@@ -358,31 +358,31 @@ typedef struct system_config_reg
 
 #define SYS_MMUGCR_CONFIGVALUE      0U
 
-#define SYS_CLKCNTL_CONFIGVALUE                           \
-    ( 0x00000100U | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+#define SYS_CLKCNTL_CONFIGVALUE                         \
+    ( 0x00000100U | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 
-#define SYS_ECPCNTL_CONFIGVALUE                                                   \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) ( 8U - 1U ) & 0xFFFFU ) )
+#define SYS_ECPCNTL_CONFIGVALUE                                                 \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) \
+      | ( uint32 ) ( ( uint32 ) ( 8U - 1U ) & 0xFFFFU ) )
 
 #define SYS_DEVCR1_CONFIGVALUE 0xAU
 
 #define SYS_SYSECR_CONFIGVALUE 0x00004000U
-#define SYS2_PLLCTL3_CONFIGVALUE_1                   \
-    ( ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 29U ) | \
-      ( uint32 ) ( ( uint32 ) 0x1FU << 24U ) |       \
-      ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U ) | ( uint32 ) ( 0xA400U ) )
+#define SYS2_PLLCTL3_CONFIGVALUE_1                 \
+    ( ( uint32 ) ( ( uint32 ) ( 2U - 1U ) << 29U ) \
+      | ( uint32 ) ( ( uint32 ) 0x1FU << 24U )     \
+      | ( uint32 ) ( ( uint32 ) ( 6U - 1U ) << 16U ) | ( uint32 ) ( 0xA400U ) )
 
-#define SYS2_PLLCTL3_CONFIGVALUE_2                       \
-    ( ( ( SYS2_PLLCTL3_CONFIGVALUE_1 ) & 0xE0FFFFFFU ) | \
-      ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U ) )
+#define SYS2_PLLCTL3_CONFIGVALUE_2                     \
+    ( ( ( SYS2_PLLCTL3_CONFIGVALUE_1 ) & 0xE0FFFFFFU ) \
+      | ( uint32 ) ( ( uint32 ) ( 1U - 1U ) << 24U ) )
 #define SYS2_STCCLKDIV_CONFIGVALUE 0U
 #define SYS2_CLK2CNTL_CONFIGVALUE  ( 1U | 0x00000100U )
 #define SYS2_VCLKACON1_CONFIGVALUE                                                     \
-    ( ( uint32 ) ( ( uint32 ) 1U << 24U ) | ( uint32 ) ( ( uint32 ) 1U << 20U ) |      \
-      ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U ) | ( uint32 ) ( ( uint32 ) 1U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 24U ) | ( uint32 ) ( ( uint32 ) 1U << 20U )        \
+      | ( uint32 ) ( ( uint32 ) SYS_VCLK << 16U ) | ( uint32 ) ( ( uint32 ) 1U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) SYS_VCLK << 0U ) )
 #define SYS2_CLKSLIP_CONFIGVALUE   0x5U
 #define SYS2_EFC_CTLEN_CONFIGVALUE 0x5U
 
@@ -434,9 +434,9 @@ typedef struct tcmflash_config_reg
 } tcmflash_config_reg_t;
 
 /* Configuration registers initial value */
-#define TCMFLASH_FRDCNTL_CONFIGVALUE                     \
-    ( 0x00000000U | ( uint32 ) ( ( uint32 ) 3U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | 1U )
+#define TCMFLASH_FRDCNTL_CONFIGVALUE                   \
+    ( 0x00000000U | ( uint32 ) ( ( uint32 ) 3U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | 1U )
 #define TCMFLASH_FEDACCTRL1_CONFIGVALUE 0x000A0005U
 #define TCMFLASH_FEDACCTRL2_CONFIGVALUE 0U
 #define TCMFLASH_FEDACSDIS_CONFIGVALUE  0U
@@ -444,11 +444,11 @@ typedef struct tcmflash_config_reg
 #define TCMFLASH_FBSE_CONFIGVALUE       0U
 #define TCMFLASH_FBAC_CONFIGVALUE       0xFU
 #define TCMFLASH_FBFALLBACK_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 14U ) |                                     \
-      ( uint32 ) ( ( uint32 ) 3U << 12U ) | ( uint32 ) ( ( uint32 ) 3U << 10U ) |       \
-      ( uint32 ) ( ( uint32 ) 3U << 8U ) | ( uint32 ) ( ( uint32 ) 3U << 6U ) |         \
-      ( uint32 ) ( ( uint32 ) 3U << 4U ) | ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 2U ) | \
-      ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 14U ) | ( uint32 ) ( ( uint32 ) 3U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 3U << 10U ) | ( uint32 ) ( ( uint32 ) 3U << 8U )        \
+      | ( uint32 ) ( ( uint32 ) 3U << 6U ) | ( uint32 ) ( ( uint32 ) 3U << 4U )         \
+      | ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 2U )                                      \
+      | ( uint32 ) ( ( uint32 ) SYS_ACTIVE << 0U ) )
 
 #define TCMFLASH_FPAC1_CONFIGVALUE      0x00C80001U
 #define TCMFLASH_FPAC2_CONFIGVALUE      0U
@@ -457,10 +457,8 @@ typedef struct tcmflash_config_reg
 #define TCMFLASH_FDIAGCTRL_CONFIGVALUE  0x000A0000U
 #define TCMFLASH_FEDACSDIS2_CONFIGVALUE 0U
 
-void tcmflashGetConfigValue(
-    tcmflash_config_reg_t * config_reg,
-    config_value_type_t type
-);
+void tcmflashGetConfigValue( tcmflash_config_reg_t * config_reg,
+                             config_value_type_t type );
 
 /* USER CODE BEGIN (3) */
 /* USER CODE END */

@@ -276,11 +276,9 @@ void dccSetCounter0Seed( dccBASE_t * dcc, uint32 cnt0seed );
 void dccSetTolerance( dccBASE_t * dcc, uint32 valid0seed );
 void dccSetCounter1Seed( dccBASE_t * dcc, uint32 cnt1seed );
 void dccSetSeed( dccBASE_t * dcc, uint32 cnt0seed, uint32 valid0seed, uint32 cnt1seed );
-void dccSelectClockSource(
-    dccBASE_t * dcc,
-    uint32 cnt0_Clock_Source,
-    uint32 cnt1_Clock_Source
-);
+void dccSelectClockSource( dccBASE_t * dcc,
+                           uint32 cnt0_Clock_Source,
+                           uint32 cnt1_Clock_Source );
 void dccEnable( dccBASE_t * dcc );
 void dccDisable( dccBASE_t * dcc );
 uint32 dccGetErrStatus( dccBASE_t * dcc );

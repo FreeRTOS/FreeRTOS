@@ -500,36 +500,36 @@ typedef struct etpwm_config_reg
 #define ETPWM1_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM1_CMPA_CONFIGVALUE   50U
 #define ETPWM1_CMPB_CONFIGVALUE   50U
-#define ETPWM1_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM1_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM1_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM1_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM1_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM1_DBRED_CONFIGVALUE 1U
 #define ETPWM1_DBFED_CONFIGVALUE 1U
-#define ETPWM1_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM1_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM1_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM1_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM1_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM1_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM1_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM1_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM1_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM1_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM1_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM1_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM1_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM1_DCBCTL_CONFIGVALUE       0x00000000U
@@ -545,36 +545,36 @@ typedef struct etpwm_config_reg
 #define ETPWM2_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM2_CMPA_CONFIGVALUE   50U
 #define ETPWM2_CMPB_CONFIGVALUE   50U
-#define ETPWM2_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM2_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM2_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM2_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM2_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM2_DBRED_CONFIGVALUE 1U
 #define ETPWM2_DBFED_CONFIGVALUE 1U
-#define ETPWM2_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM2_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM2_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM2_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM2_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM2_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM2_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM2_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM2_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM2_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM2_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM2_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM2_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM2_DCBCTL_CONFIGVALUE       0x00000000U
@@ -590,36 +590,36 @@ typedef struct etpwm_config_reg
 #define ETPWM3_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM3_CMPA_CONFIGVALUE   50U
 #define ETPWM3_CMPB_CONFIGVALUE   50U
-#define ETPWM3_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM3_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM3_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM3_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM3_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM3_DBRED_CONFIGVALUE 1U
 #define ETPWM3_DBFED_CONFIGVALUE 1U
-#define ETPWM3_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM3_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM3_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM3_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM3_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM3_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM3_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM3_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM3_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM3_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM3_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM3_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM3_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM3_DCBCTL_CONFIGVALUE       0x00000000U
@@ -635,36 +635,36 @@ typedef struct etpwm_config_reg
 #define ETPWM4_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM4_CMPA_CONFIGVALUE   50U
 #define ETPWM4_CMPB_CONFIGVALUE   50U
-#define ETPWM4_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM4_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM4_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM4_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM4_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM4_DBRED_CONFIGVALUE 1U
 #define ETPWM4_DBFED_CONFIGVALUE 1U
-#define ETPWM4_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM4_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM4_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM4_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM4_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM4_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM4_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM4_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM4_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM4_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM4_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM4_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM4_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM4_DCBCTL_CONFIGVALUE       0x00000000U
@@ -680,36 +680,36 @@ typedef struct etpwm_config_reg
 #define ETPWM5_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM5_CMPA_CONFIGVALUE   50U
 #define ETPWM5_CMPB_CONFIGVALUE   50U
-#define ETPWM5_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM5_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM5_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM5_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM5_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM5_DBRED_CONFIGVALUE 1U
 #define ETPWM5_DBFED_CONFIGVALUE 1U
-#define ETPWM5_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM5_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM5_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM5_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM5_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM5_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM5_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM5_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM5_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM5_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM5_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM5_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM5_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM5_DCBCTL_CONFIGVALUE       0x00000000U
@@ -725,36 +725,36 @@ typedef struct etpwm_config_reg
 #define ETPWM6_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM6_CMPA_CONFIGVALUE   50U
 #define ETPWM6_CMPB_CONFIGVALUE   50U
-#define ETPWM6_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM6_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM6_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM6_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM6_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM6_DBRED_CONFIGVALUE 1U
 #define ETPWM6_DBFED_CONFIGVALUE 1U
-#define ETPWM6_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM6_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM6_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM6_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM6_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM6_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM6_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM6_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM6_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM6_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM6_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM6_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM6_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM6_DCBCTL_CONFIGVALUE       0x00000000U
@@ -770,36 +770,36 @@ typedef struct etpwm_config_reg
 #define ETPWM7_CMPCTL_CONFIGVALUE 0x00000000U
 #define ETPWM7_CMPA_CONFIGVALUE   50U
 #define ETPWM7_CMPB_CONFIGVALUE   50U
-#define ETPWM7_AQCTLA_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
-#define ETPWM7_AQCTLB_CONFIGVALUE                      \
-    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) | \
-      ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
+#define ETPWM7_AQCTLA_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) )
+#define ETPWM7_AQCTLB_CONFIGVALUE                    \
+    ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) \
+      | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) )
 #define ETPWM7_DBCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) | \
-      ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
+    ( ( uint16 ) ( ( uint16 ) 0U << 5U ) | ( uint16 ) ( ( uint16 ) 0u << 4U )   \
+      | ( uint16 ) ( ( uint16 ) 0U << 3U ) | ( uint16 ) ( ( uint16 ) 0U << 2U ) \
+      | ( uint16 ) ( ( uint16 ) 0U << 1U ) | ( uint16 ) ( ( uint16 ) 0U << 0U ) )
 #define ETPWM7_DBRED_CONFIGVALUE 1U
 #define ETPWM7_DBFED_CONFIGVALUE 1U
-#define ETPWM7_TZSEL_CONFIGVALUE                                                      \
-    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | \
-      0x0000U | 0x0000U | 0x0000U | 0x0000U )
+#define ETPWM7_TZSEL_CONFIGVALUE                                                    \
+    ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U \
+      | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
 #define ETPWM7_TZDCSEL_CONFIGVALUE 0x00000000U
 #define ETPWM7_TZCTL_CONFIGVALUE   0x00000000U
 #define ETPWM7_TZEINT_CONFIGVALUE \
     ( 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U | 0x0000U )
-#define ETPWM7_ETSEL_CONFIGVALUE                                         \
-    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) | \
-      ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U |    \
-      ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |                          \
-      ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
-#define ETPWM7_ETPS_CONFIGVALUE                            \
-    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) | \
-      ( uint16 ) ( ( uint16 ) 1U << 12U ) )
-#define ETPWM7_PCCTL_CONFIGVALUE                                                \
-    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) | \
-      ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
+#define ETPWM7_ETSEL_CONFIGVALUE                                       \
+    ( ( uint16 ) ( ( ( uint16 ) NO_EVENT == 0U ) ? 0x0000U : 0x0008U ) \
+      | ( uint16 ) NO_EVENT | ( uint16 ) 0x0000U | ( uint16 ) 0x0000U  \
+      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )                        \
+      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) )
+#define ETPWM7_ETPS_CONFIGVALUE                          \
+    ( ( uint16 ) 1U | ( uint16 ) ( ( uint16 ) 1U << 8U ) \
+      | ( uint16 ) ( ( uint16 ) 1U << 12U ) )
+#define ETPWM7_PCCTL_CONFIGVALUE                                              \
+    ( ( uint16 ) ( ( uint16 ) 0U << 0U ) | ( uint16 ) ( ( uint16 ) 1U << 1U ) \
+      | ( uint16 ) ( ( uint16 ) 3U << 8U ) | ( uint16 ) ( ( uint16 ) 0U << 5U ) )
 #define ETPWM7_DCTRIPSEL_CONFIGVALUE    0x00000000U
 #define ETPWM7_DCACTL_CONFIGVALUE       0x00000000U
 #define ETPWM7_DCBCTL_CONFIGVALUE       0x00000000U
@@ -828,11 +828,9 @@ void etpwmInit( void );
 void etpwmStartTBCLK( void );
 void etpwmStopTBCLK( void );
 
-void etpwmSetClkDiv(
-    etpwmBASE_t * etpwm,
-    etpwmClkDiv_t clkdiv,
-    etpwmHspClkDiv_t hspclkdiv
-);
+void etpwmSetClkDiv( etpwmBASE_t * etpwm,
+                     etpwmClkDiv_t clkdiv,
+                     etpwmHspClkDiv_t hspclkdiv );
 void etpwmSetTimebasePeriod( etpwmBASE_t * etpwm, uint16 period );
 void etpwmSetCount( etpwmBASE_t * etpwm, uint16 count );
 void etpwmDisableTimebasePeriodShadowMode( etpwmBASE_t * etpwm );
@@ -851,14 +849,10 @@ void etpwmDisableCmpAShadowMode( etpwmBASE_t * etpwm );
 void etpwmEnableCmpBShadowMode( etpwmBASE_t * etpwm, etpwmLoadMode_t loadmode );
 void etpwmDisableCmpBShadowMode( etpwmBASE_t * etpwm );
 
-void etpwmSetActionQualPwmA(
-    etpwmBASE_t * etpwm,
-    etpwmActionQualConfig_t actionqualconfig
-);
-void etpwmSetActionQualPwmB(
-    etpwmBASE_t * etpwm,
-    etpwmActionQualConfig_t actionqualconfig
-);
+void etpwmSetActionQualPwmA( etpwmBASE_t * etpwm,
+                             etpwmActionQualConfig_t actionqualconfig );
+void etpwmSetActionQualPwmB( etpwmBASE_t * etpwm,
+                             etpwmActionQualConfig_t actionqualconfig );
 
 void etpwmEnableDeadBand( etpwmBASE_t * etpwm, etpwmDeadBandConfig_t deadbandconfig );
 void etpwmDisableDeadband( etpwmBASE_t * etpwm );
@@ -876,31 +870,23 @@ void etpwmDisableTripInterrupt( etpwmBASE_t * etpwm, etpwmTrip_t interrupts );
 void etpwmClearTripCondition( etpwmBASE_t * etpwm, etpwmTrip_t trips );
 void etpwmClearTripInterruptFlag( etpwmBASE_t * etpwm );
 void etpwmForceTripEvent( etpwmBASE_t * etpwm, etpwmTrip_t trip );
-void etpwmEnableSOCA(
-    etpwmBASE_t * etpwm,
-    etpwmEventSrc_t eventsource,
-    etpwmEventPeriod_t eventperiod
-);
+void etpwmEnableSOCA( etpwmBASE_t * etpwm,
+                      etpwmEventSrc_t eventsource,
+                      etpwmEventPeriod_t eventperiod );
 void etpwmDisableSOCA( etpwmBASE_t * etpwm );
-void etpwmEnableSOCB(
-    etpwmBASE_t * etpwm,
-    etpwmEventSrc_t eventsource,
-    etpwmEventPeriod_t eventperiod
-);
+void etpwmEnableSOCB( etpwmBASE_t * etpwm,
+                      etpwmEventSrc_t eventsource,
+                      etpwmEventPeriod_t eventperiod );
 void etpwmDisableSOCB( etpwmBASE_t * etpwm );
-void etpwmEnableInterrupt(
-    etpwmBASE_t * etpwm,
-    etpwmEventSrc_t eventsource,
-    etpwmEventPeriod_t eventperiod
-);
+void etpwmEnableInterrupt( etpwmBASE_t * etpwm,
+                           etpwmEventSrc_t eventsource,
+                           etpwmEventPeriod_t eventperiod );
 void etpwmDisableInterrupt( etpwmBASE_t * etpwm );
 uint16 etpwmGetEventStatus( etpwmBASE_t * etpwm );
 void etpwmClearEventFlag( etpwmBASE_t * etpwm, etpwmEvent_t events );
 void etpwmTriggerEvent( etpwmBASE_t * etpwm, etpwmEvent_t events );
-void etpwmEnableDigitalCompareEvents(
-    etpwmBASE_t * etpwm,
-    etpwmDigitalCompareConfig_t digitalcompareconfig
-);
+void etpwmEnableDigitalCompareEvents( etpwmBASE_t * etpwm,
+                                      etpwmDigitalCompareConfig_t digitalcompareconfig );
 void etpwm1GetConfigValue( etpwm_config_reg_t * config_reg, config_value_type_t type );
 void etpwm2GetConfigValue( etpwm_config_reg_t * config_reg, config_value_type_t type );
 void etpwm3GetConfigValue( etpwm_config_reg_t * config_reg, config_value_type_t type );

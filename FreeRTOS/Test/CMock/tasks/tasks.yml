@@ -1,0 +1,32 @@
+:cmock:
+  :mock_prefix: mock_
+  :when_no_prototypes: :warn
+  :when_ptr: :compare_ptr
+  :treat_externs: :include
+  :treat_inlines: :include
+  :enforce_strict_ordering: TRUE
+  :plugins:
+    - :ignore
+    - :ignore_arg
+    - :expect_any_args
+    - :callback
+    - :return_thru_ptr
+  :callback_include_count: true # include a count arg when calling the callback
+  :callback_after_arg_check: false # check arguments before calling the callback
+  :treat_as:
+    uint8:    HEX8
+    uint16:   HEX16
+    uint32:   UINT32
+    int8:     INT8
+    bool:     UINT8
+  :includes:        # This will add these includes to each mock.
+    - "FreeRTOSConfig.h"
+    - "FreeRTOS.h"
+    - "task.h"
+  :weak: __attribute__((weak))
+  :verbosity: 3
+  :attributes:
+    - PRIVILEGED_FUNCTION
+  :strippables:
+    - PRIVILEGED_FUNCTION
+    - portDONT_DISCARD

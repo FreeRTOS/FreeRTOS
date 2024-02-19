@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -71,7 +71,7 @@
 #include "core_http_client.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* Common HTTP demo utilities. */
 #include "http_demo_utils.h"
@@ -175,17 +175,17 @@
  * 3. Session Token
  * 4. Expiration Date
  */
-#define CREDENTIAL_BUFFER_LENGTH                 1500U
+#define CREDENTIAL_BUFFER_LENGTH                             1500U
 
 /**
  * @brief AWS Service name to send HTTP request using SigV4 library.
  */
-#define AWS_S3_SERVICE_NAME                      "s3"
+#define AWS_S3_SERVICE_NAME                                  "s3"
 
 /**
  * @brief AWS S3 Endpoint.
  */
-#define AWS_S3_ENDPOINT                            \
+#define AWS_S3_ENDPOINT                                  \
     democonfigS3_BUCKET_NAME "." AWS_S3_SERVICE_NAME "." \
     democonfigS3_BUCKET_REGION  ".amazonaws.com"
 
@@ -278,8 +278,8 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -377,6 +377,7 @@ static void prvHTTPDemoTask( void * pvParameters );
 static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
                                       const char * pcServer,
                                       NetworkCredentials_t * pxNetworkCredentials );
+
 /**
  * @brief Establish a HTTP connection with AWS S3 server.
  *
@@ -620,6 +621,19 @@ static void prvHTTPDemoTask( void * pvParameters )
      * times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /**************************** Connect. ******************************/
 
         /* Attempt to connect to the HTTP server. If connection fails, retry after a
@@ -653,11 +667,13 @@ static void prvHTTPDemoTask( void * pvParameters )
             xCredentialResponse.pBuffer = ucCredBuffer;
             xCredentialResponse.bufferLen = CREDENTIAL_BUFFER_LENGTH;
             xDemoStatus = prvGetTemporaryCredentials( &xTransportInterface, cDateISO8601, sizeof( cDateISO8601 ), &xCredentialResponse, &xSigvCreds );
+
             if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to get credential from credential provider: %d.", xDemoStatus ) );
             }
         }
+
         if( xIsConnectionEstablished == pdTRUE )
         {
             /* Close the connection with IoT credential provider. */
@@ -670,11 +686,11 @@ static void prvHTTPDemoTask( void * pvParameters )
         {
             xDemoStatus = connectToServerWithBackoffRetries( prvConnectToS3Server,
                                                              &xNetworkContext );
+
             if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to connect to AWS S3 server: %d.", xDemoStatus ) );
             }
-
         }
 
         if( xDemoStatus == pdPASS )
@@ -733,6 +749,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         vTaskDelete( NULL );
     }
 }
@@ -759,16 +776,16 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
                                            democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                            democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS );
 
-    return xNetworkStatus == TLS_TRANSPORT_SUCCESS? pdPASS : pdFAIL;
-
+    return xNetworkStatus == TLS_TRANSPORT_SUCCESS ? pdPASS : pdFAIL;
 }
 
 static BaseType_t prvConnectToS3Server( NetworkContext_t * pxNetworkContext )
 {
     NetworkCredentials_t xNetworkCredentials = { 0 };
+
     xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa = ( uint8_t * )democonfigS3_ROOT_CA_PEM;
+    xNetworkCredentials.pRootCa = ( uint8_t * ) democonfigS3_ROOT_CA_PEM;
     xNetworkCredentials.rootCaSize = sizeof( democonfigS3_ROOT_CA_PEM );
 
     return prvConnectToServer( pxNetworkContext, AWS_S3_ENDPOINT, &xNetworkCredentials );
@@ -777,13 +794,14 @@ static BaseType_t prvConnectToS3Server( NetworkContext_t * pxNetworkContext )
 static BaseType_t prvConnectToIotServer( NetworkContext_t * pxNetworkContext )
 {
     NetworkCredentials_t xNetworkCredentials = { 0 };
+
     xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa =  ( uint8_t * )democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM;
+    xNetworkCredentials.pRootCa = ( uint8_t * ) democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM;
     xNetworkCredentials.rootCaSize = sizeof( democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM );
-    xNetworkCredentials.pClientCert = ( uint8_t * )democonfigCLIENT_CERTIFICATE_PEM;
+    xNetworkCredentials.pClientCert = ( uint8_t * ) democonfigCLIENT_CERTIFICATE_PEM;
     xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-    xNetworkCredentials.pPrivateKey = ( uint8_t * )democonfigCLIENT_PRIVATE_KEY_PEM;
+    xNetworkCredentials.pPrivateKey = ( uint8_t * ) democonfigCLIENT_PRIVATE_KEY_PEM;
     xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
 
     return prvConnectToServer( pxNetworkContext, democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT, &xNetworkCredentials );
@@ -891,6 +909,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
     /* Store Signature used in AWS HTTP requests generated using SigV4 library. */
     char * pcSignature = NULL;
     size_t xSignatureLen = 0;
+
     /* Pointer to start of key-value pair buffer in request buffer. This is
      * used for Sigv4 signing */
     char * pcHeaderStart;
@@ -927,6 +946,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
 
     xHttpStatus = HTTPClient_InitializeRequestHeaders( &xRequestHeaders,
                                                        &xRequestInfo );
+
     if( xHttpStatus != HTTPSuccess )
     {
         LogError( ( "Failed initialize HTTP headers: Error=%s.",
@@ -942,6 +962,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
                                             sizeof( SIGV4_HTTP_X_AMZ_DATE_HEADER ) - 1,
                                             cDateISO8601,
                                             SIGV4_ISO_STRING_LEN );
+
         if( xHttpStatus != HTTPSuccess )
         {
             LogError( ( "Failed to add X-AMZ-DATE to request headers: Error=%s.",
@@ -958,6 +979,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
                                             sizeof( SIGV4_HTTP_X_AMZ_SECURITY_TOKEN_HEADER ) - 1,
                                             pcSecurityToken,
                                             xSecurityTokenLen );
+
         if( xHttpStatus != HTTPSuccess )
         {
             LogError( ( "Failed to add X-AMZ-SECURITY-TOKEN to request headers: Error=%s.",
@@ -972,6 +994,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
         xHttpStatus = HTTPClient_AddRangeHeader( &xRequestHeaders,
                                                  ulRangeStart,
                                                  ulRangeEnd );
+
         if( xHttpStatus != HTTPSuccess )
         {
             LogError( ( "Failed to add range to request headers: Error=%s.",
@@ -983,12 +1006,13 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
     if( xStatus == pdPASS )
     {
         /* Add the SHA256 of an empty payload. */
-        prvSha256Encode( S3_REQUEST_EMPTY_PAYLOAD, sizeof(S3_REQUEST_EMPTY_PAYLOAD) - 1, cPayloadSha256 );
+        prvSha256Encode( S3_REQUEST_EMPTY_PAYLOAD, sizeof( S3_REQUEST_EMPTY_PAYLOAD ) - 1, cPayloadSha256 );
         xHttpStatus = HTTPClient_AddHeader( &xRequestHeaders,
-                                           SIGV4_HTTP_X_AMZ_CONTENT_SHA256_HEADER,
-                                           sizeof( SIGV4_HTTP_X_AMZ_CONTENT_SHA256_HEADER ) - 1,
-                                           cPayloadSha256,
-                                           sizeof( cPayloadSha256 ) );
+                                            SIGV4_HTTP_X_AMZ_CONTENT_SHA256_HEADER,
+                                            sizeof( SIGV4_HTTP_X_AMZ_CONTENT_SHA256_HEADER ) - 1,
+                                            cPayloadSha256,
+                                            sizeof( cPayloadSha256 ) );
+
         if( xHttpStatus != HTTPSuccess )
         {
             LogError( ( "Failed to add X-AMZ-CONTENT-SHA256-HEADER to request headers: Error=%s.",
@@ -1056,6 +1080,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
                                        0,
                                        pxResponse,
                                        0 );
+
         if( xHttpStatus != HTTPSuccess )
         {
             LogError( ( "Failed to send HTTP GET request to %s%s: Error=%s.",
@@ -1332,11 +1357,11 @@ static JSONStatus_t prvParseCredentials( HTTPResponse_t * pxResponse,
     {
         /* Get sessionToken from HTTP response. */
         xJsonStatus = JSON_Search( ( char * ) pxResponse->pBody,
-                                  pxResponse->bodyLen,
-                                  CREDENTIALS_RESPONSE_SESSION_TOKEN_KEY,
-                                  strlen( CREDENTIALS_RESPONSE_SESSION_TOKEN_KEY ),
-                                  ( char ** ) &( pcSecurityToken ),
-                                  &( xSecurityTokenLen ) );
+                                   pxResponse->bodyLen,
+                                   CREDENTIALS_RESPONSE_SESSION_TOKEN_KEY,
+                                   strlen( CREDENTIALS_RESPONSE_SESSION_TOKEN_KEY ),
+                                   ( char ** ) &( pcSecurityToken ),
+                                   &( xSecurityTokenLen ) );
 
         if( xJsonStatus != JSONSuccess )
         {
@@ -1348,11 +1373,11 @@ static JSONStatus_t prvParseCredentials( HTTPResponse_t * pxResponse,
     {
         /* Get expiration date from HTTP response. */
         xJsonStatus = JSON_Search( ( char * ) pxResponse->pBody,
-                                  pxResponse->bodyLen,
-                                  CREDENTIALS_RESPONSE_EXPIRATION_DATE_KEY,
-                                  strlen( CREDENTIALS_RESPONSE_EXPIRATION_DATE_KEY ),
-                                  ( char ** ) &( pcExpiration ),
-                                  &( xExpirationLen ) );
+                                   pxResponse->bodyLen,
+                                   CREDENTIALS_RESPONSE_EXPIRATION_DATE_KEY,
+                                   strlen( CREDENTIALS_RESPONSE_EXPIRATION_DATE_KEY ),
+                                   ( char ** ) &( pcExpiration ),
+                                   &( xExpirationLen ) );
 
         if( xJsonStatus != JSONSuccess )
         {
@@ -1370,7 +1395,11 @@ static JSONStatus_t prvParseCredentials( HTTPResponse_t * pxResponse,
 static int32_t prvSha256Init( void * pxHashContext )
 {
     mbedtls_sha256_init( ( mbedtls_sha256_context * ) pxHashContext );
-    return mbedtls_sha256_starts_ret( ( mbedtls_sha256_context * ) pxHashContext, 0 );
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        return mbedtls_sha256_starts_ret( ( mbedtls_sha256_context * ) pxHashContext, 0 );
+    #else
+        return mbedtls_sha256_starts( ( mbedtls_sha256_context * ) pxHashContext, 0 );
+    #endif
 }
 
 /*-----------------------------------------------------------*/
@@ -1379,9 +1408,15 @@ static int32_t prvSha256Update( void * pxHashContext,
                                 const uint8_t * pucInput,
                                 size_t xInputLen )
 {
-    return mbedtls_sha256_update_ret( ( mbedtls_sha256_context * ) pxHashContext,
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        return mbedtls_sha256_update_ret( ( mbedtls_sha256_context * ) pxHashContext,
+                                          ( const unsigned char * ) pucInput,
+                                          xInputLen );
+    #else
+        return mbedtls_sha256_update( ( mbedtls_sha256_context * ) pxHashContext,
                                       ( const unsigned char * ) pucInput,
                                       xInputLen );
+    #endif
 }
 
 /*-----------------------------------------------------------*/
@@ -1394,8 +1429,13 @@ static int32_t prvSha256Final( void * pxHashContext,
 
     ( void ) xOutputLen;
 
-    return mbedtls_sha256_finish_ret( ( mbedtls_sha256_context * ) pxHashContext,
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        return mbedtls_sha256_finish_ret( ( mbedtls_sha256_context * ) pxHashContext,
+                                          ( unsigned char * ) pucOutput );
+    #else
+        return mbedtls_sha256_finish( ( mbedtls_sha256_context * ) pxHashContext,
                                       ( unsigned char * ) pucOutput );
+    #endif
 }
 
 static void prvGetHeaderStartLocFromHttpRequest( HTTPRequestHeaders_t * pxRequestHeaders,
@@ -1446,9 +1486,13 @@ static void prvSha256Encode( const char * pcInputStr,
     char * pcOutputChar = pcHexOutput;
     static uint8_t ucSha256[ SHA256_HASH_DIGEST_LENGTH ];
 
-    mbedtls_sha256_ret( pcInputStr, xInputStrLen, ucSha256, 0 );
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        mbedtls_sha256_ret( pcInputStr, xInputStrLen, ucSha256, 0 );
+    #else
+        mbedtls_sha256( pcInputStr, xInputStrLen, ucSha256, 0 );
+    #endif
 
-    for(size_t i = 0; i < SHA256_HASH_DIGEST_LENGTH; i++ )
+    for( size_t i = 0; i < SHA256_HASH_DIGEST_LENGTH; i++ )
     {
         *pcOutputChar = cHexChars[ ( ucSha256[ i ] & 0xF0 ) >> 4 ];
         pcOutputChar++;

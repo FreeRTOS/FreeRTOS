@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -204,6 +204,7 @@ static void prvCheckTask( void * pvParameters )
 {
     static const char * pcMessage = "PASS";
     unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+
     const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
     TickType_t xPreviousWakeTime;
     extern uint32_t ulNestCount;
@@ -404,3 +405,4 @@ static void prvRegTestTaskEntry2( void * pvParameters )
     vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
+

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,36 +19,37 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 
 #ifndef __CLIENTCREDENTIAL__H__
 #define __CLIENTCREDENTIAL__H__
 
-  /*
-   * @brief Wi-Fi network to join.
-   *
-   * @todo If you are using Wi-Fi, set this to your network name.
-   */
-#define clientcredentialWIFI_SSID       ""
+/*
+ * @brief Wi-Fi network to join.
+ *
+ * @todo If you are using Wi-Fi, set this to your network name.
+ */
+#define clientcredentialWIFI_SSID        ""
 
-   /*
-    * @brief Password needed to join Wi-Fi network.
-    *
-    * @todo If you are using WPA, set this to your network password.
-    */
-#define clientcredentialWIFI_PASSWORD   ""
+/*
+ * @brief Password needed to join Wi-Fi network.
+ *
+ * @todo If you are using WPA, set this to your network password.
+ */
+#define clientcredentialWIFI_PASSWORD    ""
 
-    /*
-     * @brief Wi-Fi network security type.
-     *
-     * @see WIFISecurity_t.
-     *
-     * @note Possible values are eWiFiSecurityOpen, eWiFiSecurityWEP, eWiFiSecurityWPA,
-     * eWiFiSecurityWPA2 (depending on the support of your device Wi-Fi radio).
-     */
-#define clientcredentialWIFI_SECURITY   eWiFiSecurityWPA2
+/*
+ * @brief Wi-Fi network security type.
+ *
+ * @see WIFISecurity_t.
+ *
+ * @note Possible values are eWiFiSecurityOpen, eWiFiSecurityWEP, eWiFiSecurityWPA,
+ * eWiFiSecurityWPA2 (depending on the support of your device Wi-Fi radio).
+ */
+#define clientcredentialWIFI_SECURITY    eWiFiSecurityWPA2
 
-#endif
+#endif /* ifndef __CLIENTCREDENTIAL__H__ */

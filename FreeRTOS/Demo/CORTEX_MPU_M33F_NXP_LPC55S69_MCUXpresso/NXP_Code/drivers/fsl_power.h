@@ -540,13 +540,6 @@ void POWER_EnterSleep(void);
  */
 void POWER_SetVoltageForFreq(uint32_t system_freq_hz);
 
-/*!
- * @brief Power Library API to return the library version.
- *
- * @return version number of the power library
- */
-uint32_t POWER_GetLibVersion(void);
-
 /**
  * @brief   Sets board-specific trim values for 16MHz XTAL
  * @param   pi32_16MfXtalIecLoadpF_x100 Load capacitance, pF x 100. For example, 6pF becomes 600, 1.2pF becomes 120
@@ -586,14 +579,6 @@ extern void POWER_Xtal32khzCapabankTrim(int32_t pi32_32kfXtalIecLoadpF_x100,
  * @return  none
  */
 extern void POWER_SetXtal16mhzLdo(void);
-
-/**
- * @brief   Set up 16-MHz XTAL Trimmings
- * @param       amp Amplitude
- * @param       gm  Transconductance
- * @return  none
- */
-extern void POWER_SetXtal16mhzTrim(uint32_t amp, uint32_t gm);
 
 /**
  * @brief   Return some key information related to the device reset causes / wake-up sources, for all power modes.

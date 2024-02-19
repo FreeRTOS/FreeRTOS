@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -101,20 +101,19 @@ void main( void )
     /* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
      * instructions. */
 
-
     /* Hardware initialisation.  printf() output uses the UART for IO. */
     prvUARTInit();
 
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-        {
-            main_blinky();
-        }
+    {
+        main_blinky();
+    }
     #else
-        {
-            main_full();
-        }
+    {
+        main_full();
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -178,17 +177,17 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationTickHook( void )
 {
     /* This function will be called by each tick interrupt if
-     * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-     * added here, but the tick hook is called from an interrupt context, so
-     * code must not attempt to block, and only the interrupt safe FreeRTOS API
-     * functions can be used (those that end in FromISR()). */
+    * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    * added here, but the tick hook is called from an interrupt context, so
+    * code must not attempt to block, and only the interrupt safe FreeRTOS API
+    * functions can be used (those that end in FromISR()). */
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-        {
-            extern void vFullDemoTickHookFunction( void );
+    {
+        extern void vFullDemoTickHookFunction( void );
 
-            vFullDemoTickHookFunction();
-        }
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/

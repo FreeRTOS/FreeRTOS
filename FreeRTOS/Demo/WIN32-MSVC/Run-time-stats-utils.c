@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -71,10 +71,10 @@ LARGE_INTEGER liPerformanceCounterFrequency, liInitialRunTimeValue;
 }
 /*-----------------------------------------------------------*/
 
-unsigned long ulGetRunTimeCounterValue( void )
+configRUN_TIME_COUNTER_TYPE ulGetRunTimeCounterValue( void )
 {
 LARGE_INTEGER liCurrentCount;
-unsigned long ulReturn;
+configRUN_TIME_COUNTER_TYPE ulReturn;
 
 	/* What is the performance counter value now? */
 	QueryPerformanceCounter( &liCurrentCount );
@@ -90,7 +90,7 @@ unsigned long ulReturn;
 	}
 	else
 	{
-		ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
+		ulReturn = ( configRUN_TIME_COUNTER_TYPE ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
 	}
 
 	return ulReturn;

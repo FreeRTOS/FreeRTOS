@@ -60,16 +60,16 @@ define symbol __region_ROM_Unprivileged_end__   = 0x1007FFFF;
 /* RAM Organization
  *  1. Privileged Data:
  *      Start   : 0x30008000
- *      End     : 0x30008FFF
- *      Size    : 4 Kbytes
+ *      End     : 0x3000FFFF
+ *      Size    : 32 Kbytes
  *  2. Unprivileged Data:
- *      Start   : 0x30009000
+ *      Start   : 0x30010000
  *      End     : 0x30017FFF
- *      Size    : 60 Kbytes
+ *      Size    : 32 Kbytes
  */
 define symbol __region_RAM_Privileged_start__   = 0x30008000;
-define symbol __region_RAM_Privileged_end__     = 0x30008FFF;
-define symbol __region_RAM_Unprivileged_start__ = 0x30009000;
+define symbol __region_RAM_Privileged_end__     = 0x3000FFFF;
+define symbol __region_RAM_Unprivileged_start__ = 0x30010000;
 define symbol __region_RAM_Unprivileged_end__   = 0x30017FFF;
 
 /* Memory Regions. */

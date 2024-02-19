@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -61,6 +61,7 @@
 #define blckqSTACK_SIZE       configMINIMAL_STACK_SIZE
 #define blckqNUM_TASK_SETS    ( 3 )
 
+#define blckqSHORT_DELAY      ( 5 )
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
     #error This example cannot be used if dynamic allocation is not allowed.
 #endif
@@ -200,9 +201,18 @@ static portTASK_FUNCTION( vBlockingQueueProducer, pvParameters )
              * consumer will expect the numbers to	follow in numerical order. */
             ++usValue;
 
-            #if configUSE_PREEMPTION == 0
+            #if ( configNUMBER_OF_CORES > 1 )
+            {
+                if( pxQueueParameters->xBlockTime == 0 )
+                {
+                    vTaskDelay( blckqSHORT_DELAY );
+                }
+            }
+            #elif configUSE_PREEMPTION == 0
+            {
                 taskYIELD();
-            #endif
+            }
+            #endif /* if ( configNUMBER_OF_CORES > 1 ) */
         }
     }
 }
@@ -241,14 +251,21 @@ static portTASK_FUNCTION( vBlockingQueueConsumer, pvParameters )
                 ++usExpectedValue;
             }
 
-            #if configUSE_PREEMPTION == 0
+            #if ( configNUMBER_OF_CORES > 1 )
+            {
+                if( pxQueueParameters->xBlockTime == 0 )
                 {
-                    if( pxQueueParameters->xBlockTime == 0 )
-                    {
-                        taskYIELD();
-                    }
+                    vTaskDelay( blckqSHORT_DELAY );
                 }
-            #endif
+            }
+            #elif configUSE_PREEMPTION == 0
+            {
+                if( pxQueueParameters->xBlockTime == 0 )
+                {
+                    taskYIELD();
+                }
+            }
+            #endif /* if ( configNUMBER_OF_CORES > 1 ) */
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -46,7 +46,7 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK		1
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 52 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 490 * 1024 ) ) /* This demo tests heap_5 so places multiple blocks within this total heap size.  See mainREGION_1_SIZE to mainREGION_3_SIZE definitions in main.c. */
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -75,7 +75,8 @@
 #define configMAX_PRIORITIES					( 7 )
 
 /* Run time stats gathering configuration options. */
-unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
+#define configRUN_TIME_COUNTER_TYPE				uint64_t
+configRUN_TIME_COUNTER_TYPE ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initialises the run time counter. */
 #define configGENERATE_RUN_TIME_STATS			1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
@@ -125,6 +126,12 @@ extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 	extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
 	#define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+#ifdef WIN32_LEAN_AND_MEAN
+    #include "winsock2.h"
+#else
+    #include <winsock.h>
+#endif /* WIN32_LEAN_AND_MEAN */
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #include "trcRecorder.h"

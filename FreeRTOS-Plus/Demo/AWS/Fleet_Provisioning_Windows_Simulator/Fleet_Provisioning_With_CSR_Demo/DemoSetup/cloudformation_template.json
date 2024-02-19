@@ -1,0 +1,183 @@
+{
+    "Resources": {
+        "FPDemoRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "CF_FleetProvisioningDemoRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "iot.amazonaws.com"
+                            }
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/service-role/AWSIoTThingsRegistration"
+                ]
+            }
+        },
+        "FPDemoThingPolicy": {
+            "Type": "AWS::IoT::Policy",
+            "Properties": {
+                "PolicyName": "CF_FleetProvisioningDemoThingPolicy",
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": "iot:Connect",
+                            "Resource": {
+                                "Fn::Join": [
+                                    ":",
+                                    [
+                                        "arn:aws:iot",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        "*"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "FPDemoTemplate": {
+            "Type": "AWS::IoT::ProvisioningTemplate",
+            "Properties": {
+                "TemplateName": "CF_FleetProvisioningDemoTemplate",
+                "Enabled": "true",
+                "ProvisioningRoleArn": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "arn:aws:iam::",
+                            {
+                                "Ref": "AWS::AccountId"
+                            },
+                            ":role/",
+                            {
+                                "Ref": "FPDemoRole"
+                            }
+                        ]
+                    ]
+                },
+                "TemplateBody": "{ \"Parameters\": { \"SerialNumber\": { \"Type\": \"String\" }, \"AWS::IoT::Certificate::Id\": { \"Type\": \"String\" } }, \"Resources\": { \"certificate\": { \"Properties\": { \"CertificateId\": { \"Ref\": \"AWS::IoT::Certificate::Id\" }, \"Status\": \"Active\" }, \"Type\": \"AWS::IoT::Certificate\" }, \"policy\": { \"Properties\": { \"PolicyName\": \"CF_FleetProvisioningDemoThingPolicy\" }, \"Type\": \"AWS::IoT::Policy\" }, \"thing\": { \"OverrideSettings\": { \"AttributePayload\": \"MERGE\", \"ThingGroups\": \"DO_NOTHING\" }, \"Properties\": { \"AttributePayload\": {}, \"ThingGroups\": [], \"ThingName\": { \"Fn::Join\": [ \"\", [ \"fp_demo_\", { \"Ref\": \"SerialNumber\" } ] ] } }, \"Type\": \"AWS::IoT::Thing\" } }, \"DeviceConfiguration\": { \"Foo\": \"Bar\" } }"
+            }
+        },
+        "FPDemoClaimPolicy": {
+            "Type": "AWS::IoT::Policy",
+            "Properties": {
+                "PolicyName": "CF_FleetProvisioningDemoClaimPolicy",
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "iot:Connect"
+                            ],
+                            "Resource": "*"
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "iot:Publish",
+                                "iot:Receive"
+                            ],
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:iot:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":topic/$aws/certificates/create-from-csr/*"
+                                        ]
+                                    ]
+                                },
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:iot:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":topic/$aws/provisioning-templates/",
+                                            {
+                                                "Ref": "FPDemoTemplate"
+                                            },
+                                            "/provision/*"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": "iot:Subscribe",
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:iot:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":topicfilter/$aws/certificates/create-from-csr/*"
+                                        ]
+                                    ]
+                                },
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:iot:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":topicfilter/$aws/provisioning-templates/",
+                                            {
+                                                "Ref": "FPDemoTemplate"
+                                            },
+                                            "/provision/*"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

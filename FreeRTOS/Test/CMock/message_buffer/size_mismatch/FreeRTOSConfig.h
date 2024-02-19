@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202111.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -109,11 +109,13 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xTaskGetSchedulerState            1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
 #define INCLUDE_xTaskGetIdleTaskHandle            1
+#define INCLUDE_xTaskGetCurrentTaskHandle         1
 #define INCLUDE_xTaskGetHandle                    1
 #define INCLUDE_eTaskGetState                     1
 #define INCLUDE_xSemaphoreGetMutexHolder          1
 #define INCLUDE_xTimerPendFunctionCall            1
 #define INCLUDE_xTaskAbortDelay                   1
+#define INCLUDE_xTaskGetCurrentTaskHandle         1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */

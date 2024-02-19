@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -50,24 +50,25 @@
  */
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+ * or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
-	extern void main_blinky( void );
+    extern void main_blinky( void );
 #else
-	extern void main_full( void );
+    extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file.  See https://www.freertos.org/a00016.html */
+ * within this file.  See https://www.freertos.org/a00016.html */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /* Prepare hardware to run the demo. */
@@ -86,107 +87,111 @@ static gpio_instance_t g_gpio_out;
 
 int main( void )
 {
-	prvSetupHardware();
+    prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+     * of this file. */
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	PLIC_init();
-	UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
+    PLIC_init();
+    UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
 }
 /*-----------------------------------------------------------*/
 
 void vToggleLED( void )
 {
-static uint32_t ulLEDState = 0;
+    static uint32_t ulLEDState = 0;
 
-	GPIO_set_outputs( &g_gpio_out, ulLEDState );
-	ulLEDState = !ulLEDState;
+    GPIO_set_outputs( &g_gpio_out, ulLEDState );
+    ulLEDState = !ulLEDState;
 }
 /*-----------------------------------------------------------*/
 
 void vSendString( const char * const pcString )
 {
-	UART_polled_tx_string( &g_uart, ( const uint8_t * ) pcString );
+    UART_polled_tx_string( &g_uart, ( const uint8_t * ) pcString );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	__asm volatile( "ebreak" );
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+     * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+     * function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+     * timer or semaphore is created.  It is also called by various parts of the
+     * demo application.  If heap_1.c or heap_2.c are used, then the size of the
+     * heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+     * FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+     * to query the size of free heap space that remains (although it does not
+     * provide information on how the remaining heap might be fragmented). */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
-	task.  It is essential that code added to this hook function never attempts
-	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+    /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+     * to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+     * task.  It is essential that code added to this hook function never attempts
+     * to block in any way (for example, call xQueueReceive() with a block time
+     * specified, or call vTaskDelay()).  If the application makes use of the
+     * vTaskDelete() API function (as this demo application does) then it is also
+     * important that vApplicationIdleHook() is permitted to return to its calling
+     * function, because it is the responsibility of the idle task to clean up
+     * memory allocated by the kernel to any task that has since been deleted. */
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	__asm volatile( "ebreak" );
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+     * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+     * function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* The tests in the full demo expect some interaction with interrupts. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-	{
-		extern void vFullDemoTickHook( void );
-		vFullDemoTickHook();
-	}
-	#endif
+    /* The tests in the full demo expect some interaction with interrupts. */
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    {
+        extern void vFullDemoTickHook( void );
+        vFullDemoTickHook();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
-void *_sbrk( ptrdiff_t incr )
+void * _sbrk( ptrdiff_t incr )
 {
-	/* Required to link, but force an assert to ensure it is never actually
-	called. */
-	configASSERT( ( void * ) incr == NULL );
-	return NULL;
+    /* Required to link, but force an assert to ensure it is never actually
+     * called. */
+    configASSERT( ( void * ) incr == NULL );
+    return NULL;
 }
-

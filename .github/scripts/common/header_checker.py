@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # /*
-# * FreeRTOS V202112.00
-# * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+# * FreeRTOS V202212.00
+# * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # *
 # * Permission is hereby granted, free of charge, to any person obtaining a copy of
 # * this software and associated documentation files (the "Software"), to deal in
@@ -67,9 +67,15 @@ class HeaderChecker:
         py_ext=None,
         asm_ext=None,
         third_party_patterns=None,
+        copyright_regex = None
     ):
         self.padding = padding
         self.header = header
+
+        if copyright_regex:
+            self.copyright_regex = re.compile(copyright_regex)
+        else:
+            self.copyright_regex = None
 
         # Construct mutated header for assembly files
         self.asm_header = [";" + line for line in header]
@@ -124,7 +130,12 @@ class HeaderChecker:
     def isValidHeaderSection(self, file_ext, section_name, section):
         """Validate a given section based on file extentions and section name"""
         valid = False
-        if file_ext in self.pyExtList:
+        if self.copyright_regex and section_name == "copyright":
+            valid = True
+            for line in section:
+                if not self.copyright_regex.match(line):
+                    valid = False
+        elif file_ext in self.pyExtList:
             valid = self.headers_py[section_name] == section
         elif file_ext in self.asmExtList:
             valid = self.headers[section_name] == section

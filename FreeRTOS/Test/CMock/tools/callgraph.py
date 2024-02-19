@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 ###############################################################################
 # FreeRTOS
-# Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+# Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -76,6 +76,10 @@ ret = subprocess.run(
     + target_files,
     capture_output=True,
 )
+
+if ret.stderr.decode("utf-8"):
+    print (ret.stderr.decode("utf-8"))
+    sys.exit(1)
 
 lineregex = (
     r"^{\s*(?P<level>\d+)} \s*"

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,7 +31,8 @@ void vFakePortYield( void );
 void vFakePortYieldFromISR( void );
 void vFakePortYieldWithinAPI( void );
 
-void vFakePortDisableInterrupts( void );
+void vFakePortRestoreInterrupts( UBaseType_t );
+uint32_t vFakePortDisableInterrupts( void );
 void vFakePortEnableInterrupts( void );
 void vFakePortClearInterruptMaskFromISR( UBaseType_t uxNewMaskValue );
 void vFakePortClearInterruptMask( UBaseType_t uxNewMaskValue );
@@ -42,5 +43,27 @@ void vFakePortAssertIfInterruptPriorityInvalid( void );
 
 void vFakePortEnterCriticalSection( void );
 void vFakePortExitCriticalSection( void );
+void vPortCurrentTaskDying( void * pxTaskToDelete,
+                            volatile BaseType_t * pxPendYield );
+
+void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+
+void portSetupTCB_CB( void * tcb );
+
+void vFakePortGetISRLock( void );
+void vFakePortReleaseISRLock( void );
+void vFakePortGetTaskLock( void );
+void vFakePortReleaseTaskLock( void );
+
+void vFakePortAssertIfISR();
+BaseType_t vFakePortCheckIfInISR( void );
+
+unsigned int vFakePortGetCoreID( void );
+void vFakePortYieldCore( int );
+
+portBASE_TYPE vFakePortEnterCriticalFromISR( void );
+void vFakePortExitCriticalFromISR( portBASE_TYPE uxSavedInterruptState );
+
+void vFakePortAllocateSecureContext( BaseType_t stackSize );
 
 #endif /* FAKE_PORT_H */

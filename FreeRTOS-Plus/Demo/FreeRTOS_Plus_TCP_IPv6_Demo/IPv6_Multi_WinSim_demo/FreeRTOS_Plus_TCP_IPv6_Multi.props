@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <COMMENT>
+	The following macros define the locations where the FreeRTOS kernel and
+	other libraries can be found. Note that an absolut path may also used.
+	Please try to avoid paths that contain whitespace.
+	</COMMENT>
+    <FREERTOS_SOURCE_DIR>..\..\..\..\FreeRTOS\Source</FREERTOS_SOURCE_DIR>
+    <FREERTOS_INCLUDE_DIR>..\..\..\..\FreeRTOS\Source\include</FREERTOS_INCLUDE_DIR>
+    <DEMO_COMMON_SOURCE_DIR>..\common</DEMO_COMMON_SOURCE_DIR>
+    <PLUS_TCP_SOURCE_DIR>..\..\..\Source\FreeRTOS-Plus-TCP\source</PLUS_TCP_SOURCE_DIR>
+    <PLUS_TCP_INCLUDE_DIR>..\..\..\Source\FreeRTOS-Plus-TCP\source\include</PLUS_TCP_INCLUDE_DIR>
+	<UTILITIES_SOURCE_DIR>..\..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities</UTILITIES_SOURCE_DIR>
+ </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="PLUS_TCP_SOURCE_DIR">
+      <Value>$(PLUS_TCP_SOURCE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PLUS_TCP_INCLUDE_DIR">
+      <Value>$(PLUS_TCP_INCLUDE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FREERTOS_SOURCE_DIR">
+      <Value>$(FREERTOS_SOURCE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FREERTOS_INCLUDE_DIR">
+      <Value>$(FREERTOS_INCLUDE_DIR)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

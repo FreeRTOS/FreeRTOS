@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -177,20 +177,20 @@ static void prvTakeAndGiveInTheSameOrder( void )
     /* Ensure the slave is suspended, and that this task is running at the
      * lower priority as expected as the start conditions. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Take the semaphore that is shared with the slave. */
     if( xSemaphoreTake( xMasterSlaveMutex, intsemNO_BLOCK ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* This task now has the mutex.  Unsuspend the slave so it too
@@ -200,16 +200,16 @@ static void prvTakeAndGiveInTheSameOrder( void )
     /* The slave has the higher priority so should now have executed and
      * blocked on the semaphore. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* This task should now have inherited the priority of the slave
      * task. */
     if( uxTaskPriorityGet( NULL ) != intsemSLAVE_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Now wait a little longer than the time between ISR gives to also
@@ -218,7 +218,7 @@ static void prvTakeAndGiveInTheSameOrder( void )
 
     if( xSemaphoreTake( xISRMutex, ( xInterruptGivePeriod * 2 ) ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     xOkToGiveMutex = pdFALSE;
@@ -227,13 +227,13 @@ static void prvTakeAndGiveInTheSameOrder( void )
      * already held. */
     if( xSemaphoreTake( xISRMutex, intsemNO_BLOCK ) != pdFAIL )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Should still be at the priority of the slave task. */
     if( uxTaskPriorityGet( NULL ) != intsemSLAVE_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Give back the ISR semaphore to ensure the priority is not
@@ -241,12 +241,12 @@ static void prvTakeAndGiveInTheSameOrder( void )
      * attempting to obtain) is still held. */
     if( xSemaphoreGive( xISRMutex ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     if( uxTaskPriorityGet( NULL ) != intsemSLAVE_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Finally give back the shared mutex.  This time the higher priority
@@ -255,18 +255,18 @@ static void prvTakeAndGiveInTheSameOrder( void )
      * suspended state again. */
     if( xSemaphoreGive( xMasterSlaveMutex ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* Reset the mutex ready for the next round. */
@@ -279,20 +279,20 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
     /* Ensure the slave is suspended, and that this task is running at the
      * lower priority as expected as the start conditions. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Take the semaphore that is shared with the slave. */
     if( xSemaphoreTake( xMasterSlaveMutex, intsemNO_BLOCK ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* This task now has the mutex.  Unsuspend the slave so it too
@@ -302,16 +302,16 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
     /* The slave has the higher priority so should now have executed and
      * blocked on the semaphore. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* This task should now have inherited the priority of the slave
      * task. */
     if( uxTaskPriorityGet( NULL ) != intsemSLAVE_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Now wait a little longer than the time between ISR gives to also
@@ -320,7 +320,7 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
 
     if( xSemaphoreTake( xISRMutex, ( xInterruptGivePeriod * 2 ) ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     xOkToGiveMutex = pdFALSE;
@@ -329,13 +329,13 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
      * already held. */
     if( xSemaphoreTake( xISRMutex, intsemNO_BLOCK ) != pdFAIL )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Should still be at the priority of the slave task. */
     if( uxTaskPriorityGet( NULL ) != intsemSLAVE_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Give back the shared semaphore to ensure the priority is not disinherited
@@ -343,7 +343,7 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
      * before this task runs again. */
     if( xSemaphoreGive( xMasterSlaveMutex ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Should still be at the priority of the slave task as this task still
@@ -351,19 +351,19 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
      * mechanism. */
     if( uxTaskPriorityGet( NULL ) != intsemSLAVE_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Give back the ISR semaphore, which should result in the priority being
      * disinherited as it was the last mutex held. */
     if( xSemaphoreGive( xISRMutex ) != pdPASS )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     /* Reset the mutex ready for the next round. */
@@ -387,12 +387,12 @@ static void vInterruptMutexSlaveTask( void * pvParameters )
          * state. */
         if( xSemaphoreTake( xMasterSlaveMutex, portMAX_DELAY ) != pdPASS )
         {
-            xErrorDetected = pdTRUE;
+            xErrorDetected = __LINE__;
         }
 
         if( xSemaphoreGive( xMasterSlaveMutex ) != pdPASS )
         {
-            xErrorDetected = pdTRUE;
+            xErrorDetected = __LINE__;
         }
     }
 }
@@ -410,7 +410,7 @@ static void vInterruptCountingSemaphoreTask( void * pvParameters )
         /* Expect to start with the counting semaphore empty. */
         if( uxQueueMessagesWaiting( ( QueueHandle_t ) xISRCountingSemaphore ) != 0 )
         {
-            xErrorDetected = pdTRUE;
+            xErrorDetected = __LINE__;
         }
 
         /* Wait until it is expected that the interrupt will have filled the
@@ -422,12 +422,12 @@ static void vInterruptCountingSemaphoreTask( void * pvParameters )
         /* Now it is expected that the counting semaphore is full. */
         if( uxQueueMessagesWaiting( ( QueueHandle_t ) xISRCountingSemaphore ) != intsemMAX_COUNT )
         {
-            xErrorDetected = pdTRUE;
+            xErrorDetected = __LINE__;
         }
 
         if( uxQueueSpacesAvailable( ( QueueHandle_t ) xISRCountingSemaphore ) != 0 )
         {
-            xErrorDetected = pdTRUE;
+            xErrorDetected = __LINE__;
         }
 
         ulCountingSemaphoreLoops++;
@@ -444,7 +444,7 @@ static void vInterruptCountingSemaphoreTask( void * pvParameters )
 
         if( xCount != intsemMAX_COUNT )
         {
-            xErrorDetected = pdTRUE;
+            xErrorDetected = __LINE__;
         }
 
         /* Now raise the priority of this task so it runs immediately that the
@@ -457,7 +457,7 @@ static void vInterruptCountingSemaphoreTask( void * pvParameters )
         xSemaphoreTake( xISRCountingSemaphore, portMAX_DELAY );
         xOkToGiveCountingSemaphore = pdFALSE;
 
-        /* Reset the priority so as not to disturbe other tests too much. */
+        /* Reset the priority so as not to disturb other tests too much. */
         vTaskPrioritySet( NULL, tskIDLE_PRIORITY );
 
         ulCountingSemaphoreLoops++;
@@ -506,25 +506,32 @@ void vInterruptSemaphorePeriodicTest( void )
 BaseType_t xAreInterruptSemaphoreTasksStillRunning( void )
 {
     static uint32_t ulLastMasterLoopCounter = 0, ulLastCountingSemaphoreLoops = 0;
+    BaseType_t xReturn;
 
     /* If the demo tasks are running then it is expected that the loop counters
      * will have changed since this function was last called. */
     if( ulLastMasterLoopCounter == ulMasterLoops )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     ulLastMasterLoopCounter = ulMasterLoops;
 
     if( ulLastCountingSemaphoreLoops == ulCountingSemaphoreLoops )
     {
-        xErrorDetected = pdTRUE;
+        xErrorDetected = __LINE__;
     }
 
     ulLastCountingSemaphoreLoops = ulCountingSemaphoreLoops++;
 
-    /* Errors detected in the task itself will have latched xErrorDetected
-     * to true. */
+    if( xErrorDetected != pdFALSE )
+    {
+        xReturn = pdFALSE;
+    }
+    else
+    {
+        xReturn = pdTRUE;
+    }
 
-    return ( BaseType_t ) !xErrorDetected;
+    return xReturn;
 }

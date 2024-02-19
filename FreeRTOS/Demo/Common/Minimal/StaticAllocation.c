@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -286,15 +286,15 @@
         vSemaphoreDelete( xSemaphore );
 
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-            {
-                /* Now do the same but using dynamically allocated buffers to ensure the
-                 * delete functions are working correctly in both the static and dynamic
-                 * allocation cases. */
-                xSemaphore = xSemaphoreCreateCounting( uxMaxCount, 0 );
-                configASSERT( xSemaphore != NULL );
-                prvSanityCheckCreatedSemaphore( xSemaphore, uxMaxCount );
-                vSemaphoreDelete( xSemaphore );
-            }
+        {
+            /* Now do the same but using dynamically allocated buffers to ensure the
+             * delete functions are working correctly in both the static and dynamic
+             * allocation cases. */
+            xSemaphore = xSemaphoreCreateCounting( uxMaxCount, 0 );
+            configASSERT( xSemaphore != NULL );
+            prvSanityCheckCreatedSemaphore( xSemaphore, uxMaxCount );
+            vSemaphoreDelete( xSemaphore );
+        }
         #endif
     }
 /*-----------------------------------------------------------*/
@@ -335,12 +335,12 @@
          * functions are working correctly in both the static and dynamic memory
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-            {
-                xSemaphore = xSemaphoreCreateRecursiveMutex();
-                configASSERT( xSemaphore != NULL );
-                prvSanityCheckCreatedRecursiveMutex( xSemaphore );
-                vSemaphoreDelete( xSemaphore );
-            }
+        {
+            xSemaphore = xSemaphoreCreateRecursiveMutex();
+            configASSERT( xSemaphore != NULL );
+            prvSanityCheckCreatedRecursiveMutex( xSemaphore );
+            vSemaphoreDelete( xSemaphore );
+        }
         #endif
     }
 /*-----------------------------------------------------------*/
@@ -362,7 +362,7 @@
  * items it is possible for the queue to hold at any one time, which equals the
  * queue length (in items, not bytes) multiplied by the size of each item.  In this
  * case the queue will hold staticQUEUE_LENGTH_IN_ITEMS 64-bit items.  See
- * https://www.FreeRTOS.org/Embedded-RTOS-Queues.html */
+ * http://www.freertos.org/Embedded-RTOS-Queues.html */
         static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_t ) ];
 
         /* Create the queue.  xQueueCreateStatic() has two more parameters than the
@@ -390,20 +390,20 @@
          * function is working correctly in both the static and dynamic memory
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-            {
-                xQueue = xQueueCreate( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
-                                       sizeof( uint64_t ) );        /* The size of each item. */
+        {
+            xQueue = xQueueCreate( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
+                                   sizeof( uint64_t ) );        /* The size of each item. */
 
-                /* The queue handle should equal the static queue structure passed into the
-                 * xQueueCreateStatic() function. */
-                configASSERT( xQueue != NULL );
+            /* The queue handle should equal the static queue structure passed into the
+             * xQueueCreateStatic() function. */
+            configASSERT( xQueue != NULL );
 
-                /* Ensure the queue passes a few sanity checks as a valid queue. */
-                prvSanityCheckCreatedQueue( xQueue );
+            /* Ensure the queue passes a few sanity checks as a valid queue. */
+            prvSanityCheckCreatedQueue( xQueue );
 
-                /* Delete the queue again so the buffers can be reused. */
-                vQueueDelete( xQueue );
-            }
+            /* Delete the queue again so the buffers can be reused. */
+            vQueueDelete( xQueue );
+        }
         #endif /* if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
     }
 /*-----------------------------------------------------------*/
@@ -440,7 +440,7 @@
 
         if( xReturned != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
@@ -453,28 +453,28 @@
          * function is working correctly in both the static and dynamic allocation
          * cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+        {
+            xSemaphore = xSemaphoreCreateMutex();
+
+            /* The semaphore handle should equal the static semaphore structure
+             * passed into the xSemaphoreCreateMutexStatic() function. */
+            configASSERT( xSemaphore != NULL );
+
+            /* Take the mutex so the mutex is in the state expected by the
+             * prvSanityCheckCreatedSemaphore() function. */
+            xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
+
+            if( xReturned != pdPASS )
             {
-                xSemaphore = xSemaphoreCreateMutex();
-
-                /* The semaphore handle should equal the static semaphore structure
-                 * passed into the xSemaphoreCreateMutexStatic() function. */
-                configASSERT( xSemaphore != NULL );
-
-                /* Take the mutex so the mutex is in the state expected by the
-                 * prvSanityCheckCreatedSemaphore() function. */
-                xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
-
-                if( xReturned != pdPASS )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
-
-                /* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-                prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
-
-                /* Delete the semaphore again so the buffers can be reused. */
-                vSemaphoreDelete( xSemaphore );
+                xErrorOccurred = __LINE__;
             }
+
+            /* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
+            prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+
+            /* Delete the semaphore again so the buffers can be reused. */
+            vSemaphoreDelete( xSemaphore );
+        }
         #endif /* if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
     }
 /*-----------------------------------------------------------*/
@@ -516,31 +516,31 @@
          * delete function is working correctly in both the static and dynamic
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-            {
-                xSemaphore = xSemaphoreCreateBinary();
-                configASSERT( xSemaphore != NULL );
-                prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
-                vSemaphoreDelete( xSemaphore );
-            }
+        {
+            xSemaphore = xSemaphoreCreateBinary();
+            configASSERT( xSemaphore != NULL );
+            prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+            vSemaphoreDelete( xSemaphore );
+        }
         #endif
 
         /* There isn't a static version of the old and deprecated
          * vSemaphoreCreateBinary() macro (because its deprecated!), but check it is
          * still functioning correctly. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+        {
+            vSemaphoreCreateBinary( xSemaphore );
+
+            /* The macro starts with the binary semaphore available, but the test
+             * function expects it to be unavailable. */
+            if( xSemaphoreTake( xSemaphore, staticDONT_BLOCK ) == pdFAIL )
             {
-                vSemaphoreCreateBinary( xSemaphore );
-
-                /* The macro starts with the binary semaphore available, but the test
-                 * function expects it to be unavailable. */
-                if( xSemaphoreTake( xSemaphore, staticDONT_BLOCK ) == pdFAIL )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
-
-                prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
-                vSemaphoreDelete( xSemaphore );
+                xErrorOccurred = __LINE__;
             }
+
+            prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+            vSemaphoreDelete( xSemaphore );
+        }
         #endif /* if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
     }
 /*-----------------------------------------------------------*/
@@ -563,12 +563,12 @@
         if( *puxVariableToIncrement == staticMAX_TIMER_CALLBACK_EXECUTIONS )
         {
             /* This is called from a timer callback so must not block.  See
-             * https://www.FreeRTOS.org/FreeRTOS-timers-xTimerStop.html */
+             * http://www.FreeRTOS.org/FreeRTOS-timers-xTimerStop.html */
             xReturned = xTimerStop( xExpiredTimer, staticDONT_BLOCK );
 
             if( xReturned != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
     }
@@ -615,7 +615,7 @@
 
         if( xReturned != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
@@ -624,7 +624,7 @@
          * times, and then stopped itself. */
         if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Finished with the timer, delete it. */
@@ -634,7 +634,7 @@
         * command will have been sent even without a block time being used. */
         if( xReturned != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Just to show the check task that this task is still executing. */
@@ -644,37 +644,37 @@
          * the delete function is working correctly in both the static and dynamic
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+        {
+            xTimer = xTimerCreate( "T1",                              /* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
+                                   xTimerPeriod,                      /* The period of the timer in ticks. */
+                                   pdTRUE,                            /* This is an auto-reload timer. */
+                                   ( void * ) &uxVariableToIncrement, /* The variable incremented by the test is passed into the timer callback using the timer ID. */
+                                   prvTimerCallback );                /* The function to execute when the timer expires. */
+
+            configASSERT( xTimer != NULL );
+
+            uxVariableToIncrement = 0;
+            xReturned = xTimerStart( xTimer, staticDONT_BLOCK );
+
+            if( xReturned != pdPASS )
             {
-                xTimer = xTimerCreate( "T1",                              /* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
-                                       xTimerPeriod,                      /* The period of the timer in ticks. */
-                                       pdTRUE,                            /* This is an auto-reload timer. */
-                                       ( void * ) &uxVariableToIncrement, /* The variable incremented by the test is passed into the timer callback using the timer ID. */
-                                       prvTimerCallback );                /* The function to execute when the timer expires. */
-
-                configASSERT( xTimer != NULL );
-
-                uxVariableToIncrement = 0;
-                xReturned = xTimerStart( xTimer, staticDONT_BLOCK );
-
-                if( xReturned != pdPASS )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
-
-                vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
-
-                if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
-
-                xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
-
-                if( xReturned != pdPASS )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
+                xErrorOccurred = __LINE__;
             }
+
+            vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
+
+            if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
+            {
+                xErrorOccurred = __LINE__;
+            }
+
+            xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
+
+            if( xReturned != pdPASS )
+            {
+                xErrorOccurred = __LINE__;
+            }
+        }
         #endif /* if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
     }
 /*-----------------------------------------------------------*/
@@ -713,12 +713,12 @@
          * delete function is working correctly in both the static and dynamic
          * allocation cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-            {
-                xEventGroup = xEventGroupCreate();
-                configASSERT( xEventGroup != NULL );
-                prvSanityCheckCreatedEventGroup( xEventGroup );
-                vEventGroupDelete( xEventGroup );
-            }
+        {
+            xEventGroup = xEventGroupCreate();
+            configASSERT( xEventGroup != NULL );
+            prvSanityCheckCreatedEventGroup( xEventGroup );
+            vEventGroupDelete( xEventGroup );
+        }
         #endif
     }
 /*-----------------------------------------------------------*/
@@ -757,13 +757,13 @@
         /* Check the task was created correctly, then delete the task. */
         if( xCreatedTask == NULL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
         else if( eTaskGetState( xCreatedTask ) != eSuspended )
         {
             /* The created task had a higher priority so should have executed and
              * suspended itself by now. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
         else
         {
@@ -774,31 +774,31 @@
          * function is working correctly in both the static and dynamic allocation
          * cases. */
         #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+        {
+            BaseType_t xReturned;
+
+            xReturned = xTaskCreate(
+                prvStaticallyAllocatedTask,    /* Function that implements the task - the same function is used but is actually dynamically allocated this time. */
+                "Static",                      /* Human readable name for the task. */
+                configMINIMAL_STACK_SIZE,      /* Task's stack size, in words (not bytes!). */
+                NULL,                          /* Parameter to pass into the task. */
+                uxTaskPriorityGet( NULL ) + 1, /* The priority of the task. */
+                &xCreatedTask );               /* Handle of the task being created. */
+
+            if( eTaskGetState( xCreatedTask ) != eSuspended )
             {
-                BaseType_t xReturned;
-
-                xReturned = xTaskCreate(
-                    prvStaticallyAllocatedTask,    /* Function that implements the task - the same function is used but is actually dynamically allocated this time. */
-                    "Static",                      /* Human readable name for the task. */
-                    configMINIMAL_STACK_SIZE,      /* Task's stack size, in words (not bytes!). */
-                    NULL,                          /* Parameter to pass into the task. */
-                    uxTaskPriorityGet( NULL ) + 1, /* The priority of the task. */
-                    &xCreatedTask );               /* Handle of the task being created. */
-
-                if( eTaskGetState( xCreatedTask ) != eSuspended )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
-
-                configASSERT( xReturned == pdPASS );
-
-                if( xReturned != pdPASS )
-                {
-                    xErrorOccurred = pdTRUE;
-                }
-
-                vTaskDelete( xCreatedTask );
+                xErrorOccurred = __LINE__;
             }
+
+            configASSERT( xReturned == pdPASS );
+
+            if( xReturned != pdPASS )
+            {
+                xErrorOccurred = __LINE__;
+            }
+
+            vTaskDelete( xCreatedTask );
+        }
         #endif /* if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
     }
 /*-----------------------------------------------------------*/
@@ -856,7 +856,7 @@
 
         if( xEventBits != ( EventBits_t ) 0 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Some some bits, then read them back to check they are as expected. */
@@ -866,7 +866,7 @@
 
         if( xEventBits != xFirstTestBits )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         xEventGroupSetBits( xEventGroup, xSecondTestBits );
@@ -875,7 +875,7 @@
 
         if( xEventBits != ( xFirstTestBits | xSecondTestBits ) )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Finally try clearing some bits too and check that operation proceeds as
@@ -886,7 +886,7 @@
 
         if( xEventBits != xSecondTestBits )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
     }
 /*-----------------------------------------------------------*/
@@ -907,12 +907,12 @@
         if( ( ( TickType_t ) ( xTaskGetTickCount() - xTickCount ) ) < xShortBlockTime )
         {
             /* Did not block on the semaphore as long as expected. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Should be possible to 'give' the semaphore up to a maximum of uxMaxCount
@@ -923,7 +923,7 @@
 
             if( xReturned == pdFAIL )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -932,7 +932,7 @@
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         configASSERT( uxSemaphoreGetCount( xSemaphore ) == uxMaxCount );
@@ -945,7 +945,7 @@
 
             if( xReturned == pdFAIL )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -957,12 +957,12 @@
         if( ( ( TickType_t ) ( xTaskGetTickCount() - xTickCount ) ) < xShortBlockTime )
         {
             /* Did not block on the semaphore as long as expected. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         configASSERT( uxSemaphoreGetCount( xSemaphore ) == 0 );
@@ -983,7 +983,7 @@
 
             if( xReturned != errQUEUE_EMPTY )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             /* Now it should be possible to write to the queue staticQUEUE_LENGTH_IN_ITEMS
@@ -994,7 +994,7 @@
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
             }
 
@@ -1003,7 +1003,7 @@
 
             if( xReturned != errQUEUE_FULL )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             /* Now read back from the queue to ensure the data read back matches that
@@ -1014,12 +1014,12 @@
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 if( ullRead != ull )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
             }
 
@@ -1028,7 +1028,7 @@
 
             if( xReturned != errQUEUE_EMPTY )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
     }
@@ -1046,7 +1046,7 @@
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Now it should be possible to take the mutex a number of times. */
@@ -1056,7 +1056,7 @@
 
             if( xReturned != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -1068,7 +1068,7 @@
 
             if( xReturned != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -1077,7 +1077,7 @@
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
     }
 /*-----------------------------------------------------------*/
@@ -1089,7 +1089,7 @@
 
         if( uxCycleCounter == uxLastCycleCounter )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
         else
         {

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP V2.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /* Standard includes. */
@@ -344,18 +345,18 @@ TEST( Full_FREERTOS_TCP, UDPPacketLength )
     uint16_t usPort = 65535;
     NetworkBufferDescriptor_t xNetworkBuffer;
 
-    /* This test fails now since there is an assert 
+    /* This test fails now since there is an assert
      * checking for NULL pucEthernetBuffer. Also, the
      * next tests do not run and this whole test case
      * is scrapped.
-
-    xNetworkBuffer.pucEthernetBuffer = NULL;
-    xNetworkBuffer.xDataLength = 0;
-
-    xReturn = xProcessReceivedUDPPacket( &xNetworkBuffer, usPort );
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE( pdFAIL, xReturn, "Failed to parse 0 size packet" );
+     *
+     * xNetworkBuffer.pucEthernetBuffer = NULL;
+     * xNetworkBuffer.xDataLength = 0;
+     *
+     * xReturn = xProcessReceivedUDPPacket( &xNetworkBuffer, usPort );
+     * TEST_ASSERT_EQUAL_UINT32_MESSAGE( pdFAIL, xReturn, "Failed to parse 0 size packet" );
      */
-    
+
 
     xNetworkBuffer.pucEthernetBuffer = ucBadUdpPacketA;
     xNetworkBuffer.xDataLength = sizeof( ucBadUdpPacketA );

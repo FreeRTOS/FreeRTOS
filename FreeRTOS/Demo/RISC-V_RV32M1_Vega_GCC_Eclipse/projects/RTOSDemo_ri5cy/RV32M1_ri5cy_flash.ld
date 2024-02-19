@@ -54,8 +54,7 @@ SECTIONS
     __VECTOR_TABLE = .;
     KEEP(*(.vectors))
   } > m_vector
-
-
+  
   /* The program code and other data goes into internal flash */
   .text :
   {
@@ -157,7 +156,7 @@ SECTIONS
 
   .stack :
   {
-    . = ALIGN(8);
+    . = ALIGN(16);
     __StackLimit = .;
     . += STACK_SIZE;
     __StackTop = .;

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 
@@ -92,20 +93,12 @@
  * https://www.FreeRTOS.org/Stacks-and-stack-overflow-checking.html. */
 #define ipconfigIP_TASK_STACK_SIZE_WORDS           ( configMINIMAL_STACK_SIZE * 5 )
 
-/* ipconfigRAND32() is called by the IP stack to generate random numbers for
- * things such as a DHCP transaction number or initial sequence number.  Random
- * number generation is performed via this macro to allow applications to use their
- * own random number generation method.  For example, it might be possible to
- * generate a random number by sampling noise on an analogue input. */
-extern uint32_t ulRand();
-#define ipconfigRAND32()    ulRand()
-
 /* If ipconfigUSE_NETWORK_EVENT_HOOK is set to 1 then FreeRTOS+TCP will call the
  * network event hook at the appropriate times.  If ipconfigUSE_NETWORK_EVENT_HOOK
  * is not set to 1 then the network event hook will never be called. See:
  * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/API/vApplicationIPNetworkEventHook.shtml.
  */
-#define ipconfigUSE_NETWORK_EVENT_HOOK           1
+#define ipconfigUSE_NETWORK_EVENT_HOOK             1
 
 /* Sockets have a send block time attribute.  If FreeRTOS_sendto() is called but
  * a network buffer cannot be obtained then the calling task is held in the Blocked
@@ -119,7 +112,7 @@ extern uint32_t ulRand();
  * ipconfigMAX_SEND_BLOCK_TIME_TICKS is specified in RTOS ticks.  A time in
  * milliseconds can be converted to a time in ticks by dividing the time in
  * milliseconds by portTICK_PERIOD_MS. */
-#define ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS    ( 5000U / portTICK_PERIOD_MS )
+#define ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS      ( 5000U / portTICK_PERIOD_MS )
 
 /* If ipconfigUSE_DHCP is 1 then FreeRTOS+TCP will attempt to retrieve an IP
  * address, netmask, DNS server address and gateway address from a DHCP server.  If
@@ -128,14 +121,14 @@ extern uint32_t ulRand();
  * set to 1 if a valid configuration cannot be obtained from a DHCP server for any
  * reason.  The static configuration used is that passed into the stack by the
  * FreeRTOS_IPInit() function call. */
-#define ipconfigUSE_DHCP                         1
-#define ipconfigDHCP_REGISTER_HOSTNAME           1
-#define ipconfigDHCP_USES_UNICAST                1
+#define ipconfigUSE_DHCP                           1
+#define ipconfigDHCP_REGISTER_HOSTNAME             1
+#define ipconfigDHCP_USES_UNICAST                  1
 
 /* If ipconfigDHCP_USES_USER_HOOK is set to 1 then the application writer must
  * provide an implementation of the DHCP callback function,
  * xApplicationDHCPUserHook(). */
-#define ipconfigUSE_DHCP_HOOK                    0
+#define ipconfigUSE_DHCP_HOOK                      0
 
 /* When ipconfigUSE_DHCP is set to 1, DHCP requests will be sent out at
  * increasing time intervals until either a reply is received from a DHCP server

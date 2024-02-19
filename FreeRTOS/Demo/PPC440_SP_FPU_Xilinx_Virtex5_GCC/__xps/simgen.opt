@@ -1,1 +1,0 @@
- -p virtex5 -lang vhdl   $(PPC440_0_BOOTLOOP)  -msg __xps/ise/xmsgprops.lst -s mti -X C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/PPC440_SP_FPU_Xilinx_Virtex5_GCC/

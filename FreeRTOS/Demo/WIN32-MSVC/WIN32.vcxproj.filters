@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -37,6 +37,9 @@
     </Filter>
     <Filter Include="Demo App Source\Blinky_Demo">
       <UniqueIdentifier>{fb86fa48-ac27-4f87-9215-ce9e1a1a85f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo App Source\FreeRTOS+Trace Recorder\include">
+      <UniqueIdentifier>{5cb8735d-498f-40aa-bf5c-9d41923b7968}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +142,7 @@
     <ClCompile Include="..\Common\Minimal\AbortDelay.c">
       <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernelPort.c">
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\trcKernelPort.c">
       <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c">
@@ -209,6 +212,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\include\stream_buffer.h">
       <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcKernelPortSnapshotConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\Include\trcRecorder.h">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h">
+      <Filter>Configuration Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

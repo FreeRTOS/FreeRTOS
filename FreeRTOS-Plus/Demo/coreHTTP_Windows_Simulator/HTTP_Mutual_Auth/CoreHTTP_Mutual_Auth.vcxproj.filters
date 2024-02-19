@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{e156fda7-59f1-4310-a0f4-85b40eca422a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{0347133f-5255-413b-8d5d-a9489cb1e627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{fb36667d-41d0-464b-8552-f2d5a6f8f676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{c1f8d2e2-2657-410e-a495-9685e11256f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{76510d77-541b-495e-85d8-6b6acfd9afbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{d137e0b2-9e17-4761-bcc1-173c86683e29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{a879abc4-abaa-4af5-aa21-e5a7ef677003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{bfcc0f67-cd4f-476a-be9a-50d691350f14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{538bc50d-9893-4afb-b6a4-8689e1b992cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{b7e58684-d363-462d-9c08-9793cba48f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp">
+      <UniqueIdentifier>{35684a01-947d-442d-81a0-59cdef11ec49}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\http_demo_utils.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\MutualAuthHTTPExample.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\http_demo_utils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

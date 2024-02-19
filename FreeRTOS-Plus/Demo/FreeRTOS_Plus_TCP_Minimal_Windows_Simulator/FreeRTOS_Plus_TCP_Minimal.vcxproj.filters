@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="DemoTasks">
+      <UniqueIdentifier>{8aa950a5-e2c0-4c9b-ba94-f66d96fdc70d}</UniqueIdentifier>
+      <Extensions>c</Extensions>
+    </Filter>
+    <Filter Include="DemoTasks\Include">
+      <UniqueIdentifier>{81f2ab97-f9d2-4dbe-a790-939e4bb7f7ae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DemoTasks\SimpleTCPEchoServer.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\SimpleUDPClientAndServer.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\TCPEchoClient_SingleTasks.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DemoTasks\include\TCPEchoClient_SingleTasks.h">
+      <Filter>DemoTasks\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoTasks\include\SimpleUDPClientAndServer.h">
+      <Filter>DemoTasks\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoTasks\include\SimpleTCPEchoServer.h">
+      <Filter>DemoTasks\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="tcp_echo_config.h" />
+  </ItemGroup>
+</Project>

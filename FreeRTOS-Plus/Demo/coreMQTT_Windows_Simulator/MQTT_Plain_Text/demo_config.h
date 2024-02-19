@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -103,6 +103,11 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
+
+/**
+ * @brief Size of the network buffer for MQTT packets.
+ */
+#define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
 
 #endif /* DEMO_CONFIG_H */

@@ -115,28 +115,20 @@ typedef enum phyTimeStamp
 extern uint32 Dp83640IDGet( uint32 mdioBaseAddr, uint32 phyAddr );
 extern void Dp83640Reset( uint32 mdioBaseAddr, uint32 phyAddr );
 extern boolean Dp83640AutoNegotiate( uint32 mdioBaseAddr, uint32 phyAddr, uint16 advVal );
-extern boolean Dp83640PartnerAbilityGet(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    uint16 * ptnerAblty
-);
-extern boolean Dp83640LinkStatusGet(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    volatile uint32 retries
-);
-extern uint64 Dp83640GetTimeStamp(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    phyTimeStamp_t type
-);
+extern boolean Dp83640PartnerAbilityGet( uint32 mdioBaseAddr,
+                                         uint32 phyAddr,
+                                         uint16 * ptnerAblty );
+extern boolean Dp83640LinkStatusGet( uint32 mdioBaseAddr,
+                                     uint32 phyAddr,
+                                     volatile uint32 retries );
+extern uint64 Dp83640GetTimeStamp( uint32 mdioBaseAddr,
+                                   uint32 phyAddr,
+                                   phyTimeStamp_t type );
 extern void Dp83640EnableLoopback( uint32 mdioBaseAddr, uint32 phyAddr );
 extern void Dp83640DisableLoopback( uint32 mdioBaseAddr, uint32 phyAddr );
-extern boolean Dp83640PartnerSpdGet(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    uint16 * ptnerAblty
-);
+extern boolean Dp83640PartnerSpdGet( uint32 mdioBaseAddr,
+                                     uint32 phyAddr,
+                                     uint16 * ptnerAblty );
 
 /* USER CODE BEGIN (2) */
 /* USER CODE END */

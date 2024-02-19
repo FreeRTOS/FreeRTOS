@@ -229,8 +229,8 @@ BaseType_t xCreateIRQTestTask( void )
 
     uint32_t ulSRAMBaseAddress = ( uint32_t ) __SRAM_segment_start__;
     uint32_t ulSRAMRegionSize = ( uint32_t ) __SRAM_segment_end__ - ulSRAMBaseAddress;
-    uint32_t ulSRAMRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulSRAMRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC
+                              | portMPU_NORMAL_OIWTNOWA_SHARED;
 
     BaseType_t xReturn = pdFAIL;
     /* Create the register check tasks, as described at the top of this file. */
@@ -278,10 +278,8 @@ BaseType_t xCreateIRQTestTask( void )
     };
 
     /* Create the first register test task as a privileged task */
-    xReturn = xTaskCreateRestrictedStatic(
-        &( xIRQTestTaskParameters ),
-        &( xIRQTaskHandle )
-    );
+    xReturn = xTaskCreateRestrictedStatic( &( xIRQTestTaskParameters ),
+                                           &( xIRQTaskHandle ) );
     if( pdPASS == xReturn )
     {
         sci_print( "Created the IRQ Test Task\r\n" );

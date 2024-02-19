@@ -185,632 +185,632 @@ typedef struct mibspi_config_reg
 } mibspi_config_reg_t;
 
 #define MIBSPI1_GCR1_CONFIGVALUE ( 0x01000000U | ( uint32 ) ( ( uint32 ) 1U << 1U ) | 1U )
-#define MIBSPI1_INT0_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI1_INT0_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define MIBSPI1_LVL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI1_PCFUN_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) )
 #define MIBSPI1_PCDIR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) )
 #define MIBSPI1_PCPDR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) )
 #define MIBSPI1_PCDIS_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) )
 #define MIBSPI1_PCPSL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) )
 
-#define MIBSPI1_DELAY_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI1_DELAY_CONFIGVALUE                                               \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI1_FMT0_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI1_FMT1_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI1_FMT2_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI1_FMT3_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 
 #define MIBSPI1_MIBSPIE_CONFIGVALUE 0x501U
 #define MIBSPI1_LTGPEND_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) - 1U ) << 8U ) )
 
-#define MIBSPI1_TGCTRL0_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
-#define MIBSPI1_TGCTRL1_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
-#define MIBSPI1_TGCTRL2_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
-#define MIBSPI1_TGCTRL3_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI1_TGCTRL4_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI1_TGCTRL5_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI1_TGCTRL6_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI1_TGCTRL7_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI1_TGCTRL0_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
+#define MIBSPI1_TGCTRL1_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
+#define MIBSPI1_TGCTRL2_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
+#define MIBSPI1_TGCTRL3_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI1_TGCTRL4_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI1_TGCTRL5_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI1_TGCTRL6_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI1_TGCTRL7_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
 
 #define MIBSPI1_PAR_ECC_CTRL_CONFIGVALUE ( 0x050A0000U | 0x00000005U )
 
 #define MIBSPI2_GCR1_CONFIGVALUE         ( 0x01000000U | ( uint32 ) ( ( uint32 ) 1U << 1U ) | 1U )
-#define MIBSPI2_INT0_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U ) )
+#define MIBSPI2_INT0_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) \
+      | ( uint32 ) ( ( uint32 ) 0U ) )
 #define MIBSPI2_LVL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U ) )
 
 #define MIBSPI2_PCFUN_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 #define MIBSPI2_PCDIR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI2_PCPDR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI2_PCDIS_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI2_PCPSL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 
-#define MIBSPI2_DELAY_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI2_DELAY_CONFIGVALUE                                               \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI2_FMT0_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI2_FMT1_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI2_FMT2_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI2_FMT3_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 
 #define MIBSPI2_MIBSPIE_CONFIGVALUE 0x501U
 #define MIBSPI2_LTGPEND_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) - 1U ) << 8U ) )
 
-#define MIBSPI2_TGCTRL0_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
-#define MIBSPI2_TGCTRL1_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
-#define MIBSPI2_TGCTRL2_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
-#define MIBSPI2_TGCTRL3_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI2_TGCTRL4_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI2_TGCTRL5_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI2_TGCTRL6_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI2_TGCTRL7_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI2_TGCTRL0_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
+#define MIBSPI2_TGCTRL1_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
+#define MIBSPI2_TGCTRL2_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
+#define MIBSPI2_TGCTRL3_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI2_TGCTRL4_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI2_TGCTRL5_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI2_TGCTRL6_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI2_TGCTRL7_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
 
 #define MIBSPI2_PAR_ECC_CTRL_CONFIGVALUE ( 0x050A0000U | 0x00000005U )
 
 #define MIBSPI3_GCR1_CONFIGVALUE         ( 0x01000000U | ( uint32 ) ( ( uint32 ) 1U << 1U ) | 1U )
-#define MIBSPI3_INT0_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI3_INT0_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define MIBSPI3_LVL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI3_PCFUN_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 #define MIBSPI3_PCDIR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI3_PCPDR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI3_PCDIS_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI3_PCPSL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 
-#define MIBSPI3_DELAY_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI3_DELAY_CONFIGVALUE                                               \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI3_FMT0_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI3_FMT1_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI3_FMT2_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI3_FMT3_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 
 #define MIBSPI3_MIBSPIE_CONFIGVALUE 0x501U
 #define MIBSPI3_LTGPEND_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) - 1U ) << 8U ) )
 
-#define MIBSPI3_TGCTRL0_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
-#define MIBSPI3_TGCTRL1_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
-#define MIBSPI3_TGCTRL2_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
-#define MIBSPI3_TGCTRL3_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI3_TGCTRL4_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI3_TGCTRL5_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI3_TGCTRL6_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI3_TGCTRL7_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI3_TGCTRL0_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
+#define MIBSPI3_TGCTRL1_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
+#define MIBSPI3_TGCTRL2_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
+#define MIBSPI3_TGCTRL3_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI3_TGCTRL4_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI3_TGCTRL5_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI3_TGCTRL6_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI3_TGCTRL7_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
 
 #define MIBSPI3_PAR_ECC_CTRL_CONFIGVALUE ( 0x050A0000U | 0x00000005U )
 
 #define MIBSPI4_GCR1_CONFIGVALUE         ( 0x01000000U | ( uint32 ) ( ( uint32 ) 1U << 1U ) | 1U )
-#define MIBSPI4_INT0_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U ) )
+#define MIBSPI4_INT0_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) \
+      | ( uint32 ) ( ( uint32 ) 0U ) )
 #define MIBSPI4_LVL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U ) )
 
 #define MIBSPI4_PCFUN_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 #define MIBSPI4_PCDIR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI4_PCPDR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI4_PCDIS_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) )
 #define MIBSPI4_PCPSL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 4U ) | ( uint32 ) ( ( uint32 ) 1U << 5U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) )
 
-#define MIBSPI4_DELAY_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI4_DELAY_CONFIGVALUE                                               \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI4_FMT0_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI4_FMT1_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI4_FMT2_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI4_FMT3_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 
 #define MIBSPI4_MIBSPIE_CONFIGVALUE 0x501U
 #define MIBSPI4_LTGPEND_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) - 1U ) << 8U ) )
 
-#define MIBSPI4_TGCTRL0_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
-#define MIBSPI4_TGCTRL1_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
-#define MIBSPI4_TGCTRL2_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
-#define MIBSPI4_TGCTRL3_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI4_TGCTRL4_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI4_TGCTRL5_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI4_TGCTRL6_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI4_TGCTRL7_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI4_TGCTRL0_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
+#define MIBSPI4_TGCTRL1_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
+#define MIBSPI4_TGCTRL2_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
+#define MIBSPI4_TGCTRL3_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI4_TGCTRL4_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI4_TGCTRL5_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI4_TGCTRL6_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI4_TGCTRL7_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
 
 #define MIBSPI4_PAR_ECC_CTRL_CONFIGVALUE ( 0x050A0000U | 0x00000005U )
 
 #define MIBSPI5_GCR1_CONFIGVALUE         ( 0x01000000U | ( uint32 ) ( ( uint32 ) 1U << 1U ) | 1U )
-#define MIBSPI5_INT0_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |  \
-      ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI5_INT0_CONFIGVALUE                                                \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )  \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 6U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 #define MIBSPI5_LVL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 9U ) | ( uint32 ) ( ( uint32 ) 0U << 8U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 6U ) | ( uint32 ) ( ( uint32 ) 0U << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 3U ) | ( uint32 ) ( ( uint32 ) 0U << 2U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 1U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI5_PCFUN_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 19U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 26U ) | ( uint32 ) ( ( uint32 ) 1U << 27U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 19U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 26U ) | ( uint32 ) ( ( uint32 ) 1U << 27U ) )
 #define MIBSPI5_PCDIR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) )
 #define MIBSPI5_PCPDR_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) )
 #define MIBSPI5_PCDIS_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 0U ) | ( uint32 ) ( ( uint32 ) 0U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 0U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 10U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 11U ) | ( uint32 ) ( ( uint32 ) 0U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 17U ) | ( uint32 ) ( ( uint32 ) 0U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 19U ) | ( uint32 ) ( ( uint32 ) 0U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 26U ) | ( uint32 ) ( ( uint32 ) 0U << 27U ) )
 #define MIBSPI5_PCPSL_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U ) |   \
-      ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 18U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 19U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) | \
-      ( uint32 ) ( ( uint32 ) 1U << 26U ) | ( uint32 ) ( ( uint32 ) 1U << 27U ) )
+    ( ( uint32 ) ( ( uint32 ) 1U << 0U ) | ( uint32 ) ( ( uint32 ) 1U << 1U )     \
+      | ( uint32 ) ( ( uint32 ) 1U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 3U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 8U ) | ( uint32 ) ( ( uint32 ) 1U << 9U )   \
+      | ( uint32 ) ( ( uint32 ) 1U << 10U ) | ( uint32 ) ( ( uint32 ) 1U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 11U ) | ( uint32 ) ( ( uint32 ) 1U << 24U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 17U ) | ( uint32 ) ( ( uint32 ) 1U << 18U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 19U ) | ( uint32 ) ( ( uint32 ) 1U << 25U ) \
+      | ( uint32 ) ( ( uint32 ) 1U << 26U ) | ( uint32 ) ( ( uint32 ) 1U << 27U ) )
 
-#define MIBSPI5_DELAY_CONFIGVALUE                                                 \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
+#define MIBSPI5_DELAY_CONFIGVALUE                                               \
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 8U ) | ( uint32 ) ( ( uint32 ) 0U << 0U ) )
 
 #define MIBSPI5_FMT0_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI5_FMT1_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI5_FMT2_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 #define MIBSPI5_FMT3_CONFIGVALUE                                                  \
-    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) | \
-      ( uint32 ) ( ( uint32 ) 16U << 0U ) )
+    ( ( uint32 ) ( ( uint32 ) 0U << 24U ) | ( uint32 ) ( ( uint32 ) 0U << 23U )   \
+      | ( uint32 ) ( ( uint32 ) 0U << 22U ) | ( uint32 ) ( ( uint32 ) 0U << 21U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 20U ) | ( uint32 ) ( ( uint32 ) 0U << 17U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 16U ) | ( uint32 ) ( ( uint32 ) 74U << 8U ) \
+      | ( uint32 ) ( ( uint32 ) 16U << 0U ) )
 
 #define MIBSPI5_MIBSPIE_CONFIGVALUE 0x501U
 #define MIBSPI5_LTGPEND_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) ( ( 8U + 0U + 0U + 0U + 0U + 0U + 0U + 0U ) - 1U ) << 8U ) )
 
-#define MIBSPI5_TGCTRL0_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
-#define MIBSPI5_TGCTRL1_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
-#define MIBSPI5_TGCTRL2_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
-#define MIBSPI5_TGCTRL3_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI5_TGCTRL4_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI5_TGCTRL5_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI5_TGCTRL6_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
-#define MIBSPI5_TGCTRL7_CONFIGVALUE                                                 \
-    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) | \
-        ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U ) |                               \
-        ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U ) |                             \
-        ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI5_TGCTRL0_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 0U << 8U ) ) )
+#define MIBSPI5_TGCTRL1_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) 8U << 8U ) ) )
+#define MIBSPI5_TGCTRL2_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U ) << 8U ) ) )
+#define MIBSPI5_TGCTRL3_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI5_TGCTRL4_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI5_TGCTRL5_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI5_TGCTRL6_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
+#define MIBSPI5_TGCTRL7_CONFIGVALUE                                               \
+    ( ( ( uint32 ) ( ( uint32 ) 1U << 30U ) | ( uint32 ) ( ( uint32 ) 0U << 29U ) \
+        | ( uint32 ) ( ( uint32 ) TRG_ALWAYS << 20U )                             \
+        | ( uint32 ) ( ( uint32 ) TRG_DISABLED << 16U )                           \
+        | ( uint32 ) ( ( uint32 ) ( 8U + 0U + 0U + 0U + 0U + 0U + 0U ) << 8U ) ) )
 
 #define MIBSPI5_PAR_ECC_CTRL_CONFIGVALUE ( 0x050A0000U | 0x00000005U )
 

@@ -270,9 +270,9 @@ boolean epcDiagnosticTest( void )
     epcREG1->CAM_CONTENT[ 0U ] = 0x1000U;
 
     /* The number of CAM entries must reduce by 1 */
-    if( ( ( esmREG->SR1[ 0U ] & 0x10U ) != 0x10U ) ||
-        ( epcREG1->CAMAVAILSTAT != ( camAvailable - 1U ) ) ||
-        ( epcCheckCAMEntry( 0U ) == true ) )
+    if( ( ( esmREG->SR1[ 0U ] & 0x10U ) != 0x10U )
+        || ( epcREG1->CAMAVAILSTAT != ( camAvailable - 1U ) )
+        || ( epcCheckCAMEntry( 0U ) == true ) )
     {
         status = false;
     }
@@ -350,8 +350,8 @@ boolean epcCheckCAMEntry( uint32 index )
     j = ( index % 4U ) * 8U;
 
     /* Check for availability of CAM Entry for future CAM usage. */
-    if( ( epcREG1->CAM_INDEX[ i ] & ( uint32 ) ( ( uint32 ) 0xFU << j ) ) ==
-        ( uint32 ) ( ( uint32 ) 0x5U << j ) )
+    if( ( epcREG1->CAM_INDEX[ i ] & ( uint32 ) ( ( uint32 ) 0xFU << j ) )
+        == ( uint32 ) ( ( uint32 ) 0x5U << j ) )
     {
         status = true;
     }

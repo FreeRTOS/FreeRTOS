@@ -99,46 +99,46 @@ void canInit( void )
      *     - Disable status interrupts
      *     - Enter initialization mode
      */
-    canREG1->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                   ( uint32 ) ( ( uint32 ) 0x00000005U << 10U ) | ( uint32 ) 0x00020043U;
+    canREG1->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                 | ( uint32 ) ( ( uint32 ) 0x00000005U << 10U ) | ( uint32 ) 0x00020043U;
 
     /** - Clear all pending error flags and reset current status */
     canREG1->ES |= 0xFFFFFFFFU;
 
     /** - Assign interrupt level for messages */
-    canREG1->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG1->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
-    canREG1->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG1->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup auto bus on timer period */
     canREG1->ABOTR = ( uint32 ) 0U;
@@ -172,25 +172,25 @@ void canInit( void )
      *     - Setup sample jump width
      *     - Setup baud rate prescaler
      */
-    canREG1->BTR = ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                   ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 12U ) |
-                   ( uint32 ) ( ( uint32 ) ( ( 6U + 4U ) - 1U ) << 8U ) |
-                   ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 6U ) | ( uint32 ) 9U;
+    canREG1->BTR = ( uint32 ) ( ( uint32 ) 0U << 16U )
+                 | ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 12U )
+                 | ( uint32 ) ( ( uint32 ) ( ( 6U + 4U ) - 1U ) << 8U )
+                 | ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 6U ) | ( uint32 ) 9U;
 
     /** - CAN1 Port output values */
-    canREG1->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG1->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
-    canREG1->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG1->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
     /** - Leave configuration and initialization mode  */
     canREG1->CTL &= ~( uint32 ) ( 0x00000041U );
@@ -214,46 +214,46 @@ void canInit( void )
      *     - Disable status interrupts
      *     - Enter initialization mode
      */
-    canREG2->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                   ( uint32 ) ( ( uint32 ) 0x00000005U << 10U ) | 0x00020043U;
+    canREG2->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                 | ( uint32 ) ( ( uint32 ) 0x00000005U << 10U ) | 0x00020043U;
 
     /** - Clear all pending error flags and reset current status */
     canREG2->ES |= 0xFFFFFFFFU;
 
     /** - Assign interrupt level for messages */
-    canREG2->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG2->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
-    canREG2->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG2->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup auto bus on timer period */
     canREG2->ABOTR = ( uint32 ) 0U;
@@ -287,25 +287,25 @@ void canInit( void )
      *     - Setup sample jump width
      *     - Setup baud rate prescaler
      */
-    canREG2->BTR = ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                   ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 12U ) |
-                   ( uint32 ) ( ( uint32 ) ( ( 6U + 4U ) - 1U ) << 8U ) |
-                   ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 6U ) | ( uint32 ) 9U;
+    canREG2->BTR = ( uint32 ) ( ( uint32 ) 0U << 16U )
+                 | ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 12U )
+                 | ( uint32 ) ( ( uint32 ) ( ( 6U + 4U ) - 1U ) << 8U )
+                 | ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 6U ) | ( uint32 ) 9U;
 
     /** - CAN2 Port output values */
-    canREG2->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG2->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
-    canREG2->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG2->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
     /** - Leave configuration and initialization mode  */
     canREG2->CTL &= ~( uint32 ) ( 0x00000041U );
@@ -329,45 +329,45 @@ void canInit( void )
      *     - Disable status interrupts
      *     - Enter initialization mode
      */
-    canREG3->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                   ( uint32 ) ( ( uint32 ) 0x00000005U << 10U ) | 0x00020043U;
+    canREG3->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                 | ( uint32 ) ( ( uint32 ) 0x00000005U << 10U ) | 0x00020043U;
 
     /** - Clear all pending error flags and reset current status */
     canREG3->ES |= 0xFFFFFFFFU;
 
     /** - Assign interrupt level for messages */
-    canREG3->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
-    canREG3->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG3->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG3->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup auto bus on timer period */
     canREG3->ABOTR = ( uint32 ) 0U;
@@ -401,25 +401,25 @@ void canInit( void )
      *     - Setup sample jump width
      *     - Setup baud rate prescaler
      */
-    canREG3->BTR = ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                   ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 12U ) |
-                   ( uint32 ) ( ( uint32 ) ( ( 6U + 4U ) - 1U ) << 8U ) |
-                   ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 6U ) | ( uint32 ) ( uint32 ) 9U;
+    canREG3->BTR = ( uint32 ) ( ( uint32 ) 0U << 16U )
+                 | ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 12U )
+                 | ( uint32 ) ( ( uint32 ) ( ( 6U + 4U ) - 1U ) << 8U )
+                 | ( uint32 ) ( ( uint32 ) ( 4U - 1U ) << 6U ) | ( uint32 ) ( uint32 ) 9U;
 
     /** - CAN3 Port output values */
-    canREG3->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG3->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
-    canREG3->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG3->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
     /** - Leave configuration and initialization mode  */
     canREG3->CTL &= ~( uint32 ) ( 0x00000041U );
@@ -443,46 +443,46 @@ void canInit( void )
      *     - Disable status interrupts
      *     - Enter initialization mode
      */
-    canREG4->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                   ( ( uint32 ) 0x00000005U << 10U ) | ( uint32 ) 0x00020043U;
+    canREG4->CTL = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                 | ( ( uint32 ) 0x00000005U << 10U ) | ( uint32 ) 0x00020043U;
 
     /** - Clear all pending error flags and reset current status */
     canREG4->ES |= 0xFFFFFFFFU;
 
     /** - Assign interrupt level for messages */
-    canREG4->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG4->INTMUXx[ 0U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
-    canREG4->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U |
-                             ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
+    canREG4->INTMUXx[ 1U ] = ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U
+                           | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U;
 
     /** - Setup auto bus on timer period */
     canREG4->ABOTR = ( uint32 ) 0U;
@@ -516,24 +516,24 @@ void canInit( void )
      *     - Setup sample jump width
      *     - Setup baud rate prescaler
      */
-    canREG4->BTR = ( ( uint32 ) 0U << 16U ) | ( ( ( uint32 ) 4U - 1U ) << 12U ) |
-                   ( ( ( ( uint32 ) 6U + ( uint32 ) 4U ) - 1U ) << 8U ) |
-                   ( ( ( uint32 ) 4U - 1U ) << 6U ) | ( uint32 ) 9U;
+    canREG4->BTR = ( ( uint32 ) 0U << 16U ) | ( ( ( uint32 ) 4U - 1U ) << 12U )
+                 | ( ( ( ( uint32 ) 6U + ( uint32 ) 4U ) - 1U ) << 8U )
+                 | ( ( ( uint32 ) 4U - 1U ) << 6U ) | ( uint32 ) 9U;
 
     /** - CAN4 Port output values */
-    canREG4->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG4->TIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
 
-    canREG4->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 17U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 16U ) |
-                    ( uint32 ) ( ( uint32 ) 1U << 3U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 2U ) |
-                    ( uint32 ) ( ( uint32 ) 0U << 1U );
+    canREG4->RIOC = ( uint32 ) ( ( uint32 ) 1U << 18U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 17U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 16U )
+                  | ( uint32 ) ( ( uint32 ) 1U << 3U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 2U )
+                  | ( uint32 ) ( ( uint32 ) 0U << 1U );
     /** - Leave configuration and initialization mode  */
     canREG4->CTL &= ~( uint32 ) ( 0x00000041U );
 

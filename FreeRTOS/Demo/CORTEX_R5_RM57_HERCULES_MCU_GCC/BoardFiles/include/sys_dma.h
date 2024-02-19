@@ -259,18 +259,14 @@ void dmaSetCtrlPacket( dmaChannel_t channel, g_dmaCTRL g_dmaCTRLPKT );
 void dmaSetChEnable( dmaChannel_t channel, dmaTriggerType_t type );
 void dmaReqAssign( dmaChannel_t channel, dmaRequest_t reqline );
 void dmaSetPriority( dmaChannel_t channel, dmaPriorityQueue_t priority );
-void dmaEnableInterrupt(
-    dmaChannel_t channel,
-    dmaInterrupt_t inttype,
-    dmaIntGroup_t group
-);
+void dmaEnableInterrupt( dmaChannel_t channel,
+                         dmaInterrupt_t inttype,
+                         dmaIntGroup_t group );
 void dmaDisableInterrupt( dmaChannel_t channel, dmaInterrupt_t inttype );
 void dmaDefineRegion( dmaMPURegion_t region, uint32 start_add, uint32 end_add );
-void dmaEnableRegion(
-    dmaMPURegion_t region,
-    dmaRegionAccess_t access,
-    dmaMPUInt_t intenable
-);
+void dmaEnableRegion( dmaMPURegion_t region,
+                      dmaRegionAccess_t access,
+                      dmaMPUInt_t intenable );
 void dmaDisableRegion( dmaMPURegion_t region );
 void dmaEnableECC( void );
 void dmaDisableECC( void );

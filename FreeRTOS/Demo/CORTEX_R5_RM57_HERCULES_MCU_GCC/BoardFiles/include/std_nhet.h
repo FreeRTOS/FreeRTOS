@@ -57,8 +57,8 @@ extern "C" {
         #define HET_v2 0
     #endif
 
-    #if( ( __little_endian__ == 0 ) || ( __LITTLE_ENDIAN__ == 0 ) || \
-         defined( _TMS470_BIG ) || defined( __big_endian__ ) )
+    #if( ( __little_endian__ == 0 ) || ( __LITTLE_ENDIAN__ == 0 ) \
+         || defined( _TMS470_BIG ) || defined( __big_endian__ ) )
 
         #ifndef HETBYTE
             #define HETBYTE uint8

@@ -262,87 +262,63 @@ typedef enum
 
 void peripheral_Memory_Protection_Set( pcrBASE_t * pcr, peripheral_Memory_t PCS );
 void peripheral_Memory_Protection_Clr( pcrBASE_t * pcr, peripheral_Memory_t PCS );
-void peripheral_Frame_Protection_Set(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-);
-void peripheral_Frame_Protection_Clr(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-);
+void peripheral_Frame_Protection_Set( pcrBASE_t * pcr,
+                                      peripheral_Frame_t PS,
+                                      uint32 quadrant );
+void peripheral_Frame_Protection_Clr( pcrBASE_t * pcr,
+                                      peripheral_Frame_t PS,
+                                      uint32 quadrant );
 
 void peripheral_Memory_PowerDown_Set( pcrBASE_t * pcr, peripheral_Memory_t PCS );
 void peripheral_Memory_PowerDown_Clr( pcrBASE_t * pcr, peripheral_Memory_t PCS );
-void peripheral_Frame_PowerDown_Set(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-);
-void peripheral_Frame_PowerDown_Clr(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-);
+void peripheral_Frame_PowerDown_Set( pcrBASE_t * pcr,
+                                     peripheral_Frame_t PS,
+                                     uint32 quadrant );
+void peripheral_Frame_PowerDown_Clr( pcrBASE_t * pcr,
+                                     peripheral_Frame_t PS,
+                                     uint32 quadrant );
 
-void peripheral_Frame_MasterIDFilter_Disable(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant,
-    master_ID_t master
-);
-void peripheral_Frame_MasterIDFilter_Enable(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant,
-    master_ID_t master
-);
-void privileged_Peripheral_Frame_MasterIDFilter_Disable(
-    pcrBASE_t * pcr,
-    privileged_Peripheral_Frame_t PPS,
-    uint32 quadrant,
-    master_ID_t master
-);
-void privileged_Peripheral_Frame_MasterIDFilter_Enable(
-    pcrBASE_t * pcr,
-    privileged_Peripheral_Frame_t PPS,
-    uint32 quadrant,
-    master_ID_t master
-);
+void peripheral_Frame_MasterIDFilter_Disable( pcrBASE_t * pcr,
+                                              peripheral_Frame_t PS,
+                                              uint32 quadrant,
+                                              master_ID_t master );
+void peripheral_Frame_MasterIDFilter_Enable( pcrBASE_t * pcr,
+                                             peripheral_Frame_t PS,
+                                             uint32 quadrant,
+                                             master_ID_t master );
+void privileged_Peripheral_Frame_MasterIDFilter_Disable( pcrBASE_t * pcr,
+                                                         privileged_Peripheral_Frame_t PPS,
+                                                         uint32 quadrant,
+                                                         master_ID_t master );
+void privileged_Peripheral_Frame_MasterIDFilter_Enable( pcrBASE_t * pcr,
+                                                        privileged_Peripheral_Frame_t PPS,
+                                                        uint32 quadrant,
+                                                        master_ID_t master );
 void privileged_Peripheral_Extended_Frame_MasterIDFilter_Disable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Extended_Frame_t PPSE,
     uint32 quadrant,
-    master_ID_t master
-);
+    master_ID_t master );
 void privileged_Peripheral_Extended_Frame_MasterIDFilter_Enable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Extended_Frame_t PPSE,
     uint32 quadrant,
-    master_ID_t master
-);
+    master_ID_t master );
 
-void peripheral_Memory_MasterIDFilter_Disable(
-    pcrBASE_t * pcr,
-    peripheral_Memory_t PCS,
-    master_ID_t master
-);
-void peripheral_Memory_MasterIDFilter_Enable(
-    pcrBASE_t * pcr,
-    peripheral_Memory_t PCS,
-    master_ID_t master
-);
+void peripheral_Memory_MasterIDFilter_Disable( pcrBASE_t * pcr,
+                                               peripheral_Memory_t PCS,
+                                               master_ID_t master );
+void peripheral_Memory_MasterIDFilter_Enable( pcrBASE_t * pcr,
+                                              peripheral_Memory_t PCS,
+                                              master_ID_t master );
 void privileged_Peripheral_Memory_MasterIDFilter_Disable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Memory_t PPCS,
-    master_ID_t master
-);
+    master_ID_t master );
 void privileged_Peripheral_Memory_MasterIDFilter_Enable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Memory_t PPCS,
-    master_ID_t master
-);
+    master_ID_t master );
 
 void pcrEnableMasterIDCheck( pcrBASE_t * pcr );
 void pcrDisableMasterIDCheck( pcrBASE_t * pcr );

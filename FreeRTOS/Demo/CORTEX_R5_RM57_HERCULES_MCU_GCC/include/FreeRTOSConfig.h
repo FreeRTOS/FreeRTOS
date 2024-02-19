@@ -26,13 +26,12 @@
 
 /* Section of the file that can't be included in ASM Pre-processor */
 #ifndef FREERTOS_ASSEMBLY
+    #include <stdint.h>
     #ifndef configASSERT
-        #include <stdint.h>
+
 /* debug ASSERT The first option calls a function that prints to UART
  * The second one loops for when using a debugger. */
 extern void vAssertCalled( const char * pcFileName, uint32_t ulLine );
-        /* Using __func__ for now to shorten message, as __FILE__ is adding in the full
-         * path */
         #define configASSERT( x )                    \
             if( ( x ) == pdFALSE )                   \
             {                                        \
@@ -67,8 +66,6 @@ extern void vMainSetupTimerInterrupt( void );
         #define NULL 0x0
     #endif
 
-    /* Ensure that all system calls are coming from the kernel
-     * Additionally allow unprivileged tasks to have critical sections. */
     #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY            1U
     #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS             0U
     #define configENABLE_ACCESS_CONTROL_LIST                       1U

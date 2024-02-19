@@ -273,9 +273,9 @@ typedef struct dcc_config_reg
 } dcc_config_reg_t;
 
 /* Configuration registers initial value */
-#define DCC1_GCTRL_CONFIGVALUE                                 \
-    ( ( uint32 ) 0xAU | ( uint32 ) ( ( uint32 ) 0xAU << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | ( uint32 ) ( ( uint32 ) 0xAU << 12U ) )
+#define DCC1_GCTRL_CONFIGVALUE                               \
+    ( ( uint32 ) 0xAU | ( uint32 ) ( ( uint32 ) 0xAU << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | ( uint32 ) ( ( uint32 ) 0xAU << 12U ) )
 #define DCC1_CNT0SEED_CONFIGVALUE   39204U
 #define DCC1_VALID0SEED_CONFIGVALUE 792U
 #define DCC1_CNT1SEED_CONFIGVALUE   742500U
@@ -284,9 +284,9 @@ typedef struct dcc_config_reg
 /*SAFETYMCUSW 79 S MR:19.4 <APPROVED> "Values come from GUI drop down option" */
 #define DCC1_CNT0CLKSRC_CONFIGVALUE ( ( uint32 ) DCC1_CNT0_OSCIN )
 
-#define DCC2_GCTRL_CONFIGVALUE                                 \
-    ( ( uint32 ) 0xAU | ( uint32 ) ( ( uint32 ) 0xAU << 4U ) | \
-      ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | ( uint32 ) ( ( uint32 ) 0xAU << 12U ) )
+#define DCC2_GCTRL_CONFIGVALUE                               \
+    ( ( uint32 ) 0xAU | ( uint32 ) ( ( uint32 ) 0xAU << 4U ) \
+      | ( uint32 ) ( ( uint32 ) 0x5U << 8U ) | ( uint32 ) ( ( uint32 ) 0xAU << 12U ) )
 #define DCC2_CNT0SEED_CONFIGVALUE   0U
 #define DCC2_VALID0SEED_CONFIGVALUE 0U
 #define DCC2_CNT1SEED_CONFIGVALUE   0U
@@ -321,11 +321,9 @@ void dccSetCounter0Seed( dccBASE_t * dcc, uint32 cnt0seed );
 void dccSetTolerance( dccBASE_t * dcc, uint32 valid0seed );
 void dccSetCounter1Seed( dccBASE_t * dcc, uint32 cnt1seed );
 void dccSetSeed( dccBASE_t * dcc, uint32 cnt0seed, uint32 valid0seed, uint32 cnt1seed );
-void dccSelectClockSource(
-    dccBASE_t * dcc,
-    uint32 cnt0_Clock_Source,
-    uint32 cnt1_Clock_Source
-);
+void dccSelectClockSource( dccBASE_t * dcc,
+                           uint32 cnt0_Clock_Source,
+                           uint32 cnt1_Clock_Source );
 void dccEnable( dccBASE_t * dcc );
 void dccDisable( dccBASE_t * dcc );
 uint32 dccGetErrStatus( dccBASE_t * dcc );

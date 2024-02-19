@@ -231,19 +231,17 @@ void dccSetSeed( dccBASE_t * dcc, uint32 cnt0seed, uint32 valid0seed, uint32 cnt
  *   DCC must be disabled using dccDisable API before calling this
  *   function.
  */
-void dccSelectClockSource(
-    dccBASE_t * dcc,
-    uint32 cnt0_Clock_Source,
-    uint32 cnt1_Clock_Source
-)
+void dccSelectClockSource( dccBASE_t * dcc,
+                           uint32 cnt0_Clock_Source,
+                           uint32 cnt1_Clock_Source )
 {
     /* USER CODE BEGIN (12) */
     /* USER CODE END */
 
-    dcc->CNT1CLKSRC =
-        ( ( uint32 ) ( ( uint32 ) 0xAU << 12U ) |           /** DCC Enable Key */
-          ( uint32 ) ( cnt1_Clock_Source & 0x0000000FU ) ); /* Configure Clock source 1 */
-    dcc->CNT0CLKSRC = cnt0_Clock_Source;                    /* Configure Clock source 0 */
+    dcc->CNT1CLKSRC = ( ( uint32 ) ( ( uint32 ) 0xAU << 12U ) | /** DCC Enable Key */
+                        ( uint32 ) ( cnt1_Clock_Source
+                                     & 0x0000000FU ) ); /* Configure Clock source 1 */
+    dcc->CNT0CLKSRC = cnt0_Clock_Source;                /* Configure Clock source 0 */
 
     /* USER CODE BEGIN (13) */
     /* USER CODE END */

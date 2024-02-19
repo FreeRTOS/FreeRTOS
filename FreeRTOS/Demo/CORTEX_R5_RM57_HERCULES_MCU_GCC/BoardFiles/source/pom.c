@@ -119,7 +119,8 @@ void POM_Enable( void )
 {
     /* USER CODE BEGIN (8) */
     /* USER CODE END */
-    pomREG->POMGLBCTRL = ( ( pomREG->POMGLBCTRL & 0xFFFFFFF0U ) | ( uint32 ) 0x0000000AU );
+    pomREG->POMGLBCTRL = ( ( pomREG->POMGLBCTRL & 0xFFFFFFF0U )
+                           | ( uint32 ) 0x0000000AU );
     /* USER CODE BEGIN (9) */
     /* USER CODE END */
 }

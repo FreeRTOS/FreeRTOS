@@ -154,9 +154,9 @@ extern "C" {
 #define EMAC_TXINTMASKCLEAR_CONFIGVALUE 0x00000001U
 #define EMAC_RXINTMASKSET_CONFIGVALUE   0x00000001U
 #define EMAC_RXINTMASKCLEAR_CONFIGVALUE 0x00000001U
-#define EMAC_MACSRCADDRHI_CONFIGVALUE                                                   \
-    ( ( uint32 ) ( ( uint32 ) 0xFFU << 24U ) | ( uint32 ) ( ( uint32 ) 0xFFU << 16U ) | \
-      ( uint32 ) ( ( uint32 ) 0xFFU << 8U ) | ( uint32 ) ( ( uint32 ) 0xFFU ) )
+#define EMAC_MACSRCADDRHI_CONFIGVALUE                                                 \
+    ( ( uint32 ) ( ( uint32 ) 0xFFU << 24U ) | ( uint32 ) ( ( uint32 ) 0xFFU << 16U ) \
+      | ( uint32 ) ( ( uint32 ) 0xFFU << 8U ) | ( uint32 ) ( ( uint32 ) 0xFFU ) )
 #define EMAC_MACSRCADDRLO_CONFIGVALUE \
     ( ( uint32 ) ( ( uint32 ) 0xFFU << 8U ) | ( uint32 ) ( ( uint32 ) 0xFFU ) )
 #define EMAC_MDIOCONTROL_CONFIGVALUE 0x4114001FU
@@ -356,30 +356,22 @@ typedef struct emac_config_reg_struct
 */
 extern uint32 EMACLinkSetup( hdkif_t * hdkif );
 extern void EMACInstConfig( hdkif_t * hdkif );
-extern void EMACTxIntPulseEnable(
-    uint32 emacBase,
-    uint32 emacCtrlBase,
-    uint32 ctrlCore,
-    uint32 channel
-);
-extern void EMACTxIntPulseDisable(
-    uint32 emacBase,
-    uint32 emacCtrlBase,
-    uint32 ctrlCore,
-    uint32 channel
-);
-extern void EMACRxIntPulseEnable(
-    uint32 emacBase,
-    uint32 emacCtrlBase,
-    uint32 ctrlCore,
-    uint32 channel
-);
-extern void EMACRxIntPulseDisable(
-    uint32 emacBase,
-    uint32 emacCtrlBase,
-    uint32 ctrlCore,
-    uint32 channel
-);
+extern void EMACTxIntPulseEnable( uint32 emacBase,
+                                  uint32 emacCtrlBase,
+                                  uint32 ctrlCore,
+                                  uint32 channel );
+extern void EMACTxIntPulseDisable( uint32 emacBase,
+                                   uint32 emacCtrlBase,
+                                   uint32 ctrlCore,
+                                   uint32 channel );
+extern void EMACRxIntPulseEnable( uint32 emacBase,
+                                  uint32 emacCtrlBase,
+                                  uint32 ctrlCore,
+                                  uint32 channel );
+extern void EMACRxIntPulseDisable( uint32 emacBase,
+                                   uint32 emacCtrlBase,
+                                   uint32 ctrlCore,
+                                   uint32 channel );
 extern void EMACRMIISpeedSet( uint32 emacBase, uint32 speed );
 extern void EMACDuplexSet( uint32 emacBase, uint32 duplexMode );
 extern void EMACTxEnable( uint32 emacBase );
@@ -391,12 +383,10 @@ extern void EMACTxHdrDescPtrWrite( uint32 emacBase, uint32 descHdr, uint32 chann
 extern void EMACRxHdrDescPtrWrite( uint32 emacBase, uint32 descHdr, uint32 channel );
 extern void EMACInit( uint32 emacCtrlBase, uint32 emacBase );
 extern void EMACMACSrcAddrSet( uint32 emacBase, uint8 macAddr[ 6 ] );
-extern void EMACMACAddrSet(
-    uint32 emacBase,
-    uint32 channel,
-    uint8 macAddr[ 6 ],
-    uint32 matchFilt
-);
+extern void EMACMACAddrSet( uint32 emacBase,
+                            uint32 channel,
+                            uint8 macAddr[ 6 ],
+                            uint32 matchFilt );
 extern void EMACMIIEnable( uint32 emacBase );
 extern void EMACMIIDisable( uint32 emacBase );
 extern void EMACRxUnicastSet( uint32 emacBase, uint32 channel );

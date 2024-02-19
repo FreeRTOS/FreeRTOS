@@ -178,11 +178,9 @@ Application must call the routine nmpuEnable to so the same.
 /* SourceId : NMPU_SourceId_005 */
 /* DesignId : NMPU_DesignId_005 */
 /* Requirements : CONQ_NMPU_SR5 */
-boolean nmpuEnableRegion(
-    nmpuBASE_t * nmpu,
-    nmpuReg_t region,
-    nmpuRegionAttributes_t config
-)
+boolean nmpuEnableRegion( nmpuBASE_t * nmpu,
+                          nmpuReg_t region,
+                          nmpuRegionAttributes_t config )
 {
     boolean status = TRUE;
     uint32 addrMask;

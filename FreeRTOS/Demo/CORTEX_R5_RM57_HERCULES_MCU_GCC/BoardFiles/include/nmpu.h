@@ -144,11 +144,9 @@ void nmpuEnable( nmpuBASE_t * nmpu );
 void nmpuDisable( nmpuBASE_t * nmpu );
 void nmpuEnableErrorGen( nmpuBASE_t * nmpu );
 void nmpuDisableErrorGen( nmpuBASE_t * nmpu );
-boolean nmpuEnableRegion(
-    nmpuBASE_t * nmpu,
-    nmpuReg_t region,
-    nmpuRegionAttributes_t config
-);
+boolean nmpuEnableRegion( nmpuBASE_t * nmpu,
+                          nmpuReg_t region,
+                          nmpuRegionAttributes_t config );
 boolean nmpuDisableRegion( nmpuBASE_t * nmpu, nmpuReg_t region );
 nmpuErr_t nmpuGetErrorStatus( nmpuBASE_t * nmpu );
 nmpuReg_t nmpuGetErrorRegion( nmpuBASE_t * nmpu );

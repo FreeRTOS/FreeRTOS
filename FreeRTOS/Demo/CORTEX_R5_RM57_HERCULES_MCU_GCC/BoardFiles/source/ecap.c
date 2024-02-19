@@ -70,27 +70,27 @@ void ecapInit( void )
      *     - Enable/Disable loading on a capture event
      *     - Setup Event Filter prescale
      */
-    ecapREG1->ECCTL1 =
-        ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on Capture
-                                                             Event 1 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on Capture
-                                                             Event 2 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on Capture
-                                                             Event 3 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on Capture
-                                                             Event 4 */
-          | ( uint16 ) ( ( uint16 ) 0U << 8U )            /* Enable/Disable loading on
-                                                             a capture event */
-          | ( uint16 ) ( ( uint16 ) 0U << 9U ) );         /* Setup Event Filter
-                                                             prescale */
+    ecapREG1
+        ->ECCTL1 = ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on
+                                                                        Capture Event 1 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on
+                                                                        Capture Event 2 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on
+                                                                        Capture Event 3 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on
+                                                                        Capture Event 4 */
+                     | ( uint16 ) ( ( uint16 ) 0U << 8U )    /* Enable/Disable loading on
+                                                                a capture event */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) ); /* Setup Event Filter
+                                                                prescale */
 
     /** - Setup control register 2
      *     - Set operating mode
@@ -118,27 +118,27 @@ void ecapInit( void )
      *     - Enable/Disable loading on a capture event
      *     - Setup Event Filter prescale
      */
-    ecapREG2->ECCTL1 =
-        ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on Capture
-                                                             Event 1 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on Capture
-                                                             Event 2 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on Capture
-                                                             Event 3 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on Capture
-                                                             Event 4 */
-          | ( uint16 ) ( ( uint16 ) 0U << 8U )            /* Enable/Disable loading on
-                                                             a capture event */
-          | ( uint16 ) ( ( uint16 ) 0U << 9U ) );         /* Setup Event Filter
-                                                             prescale */
+    ecapREG2
+        ->ECCTL1 = ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on
+                                                                        Capture Event 1 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on
+                                                                        Capture Event 2 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on
+                                                                        Capture Event 3 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on
+                                                                        Capture Event 4 */
+                     | ( uint16 ) ( ( uint16 ) 0U << 8U )    /* Enable/Disable loading on
+                                                                a capture event */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) ); /* Setup Event Filter
+                                                                prescale */
 
     /** - Setup control register 2
      *     - Set operating mode
@@ -166,27 +166,27 @@ void ecapInit( void )
      *     - Enable/Disable loading on a capture event
      *     - Setup Event Filter prescale
      */
-    ecapREG3->ECCTL1 =
-        ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on Capture
-                                                             Event 1 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on Capture
-                                                             Event 2 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on Capture
-                                                             Event 3 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on Capture
-                                                             Event 4 */
-          | ( uint16 ) ( ( uint16 ) 0U << 8U )            /* Enable/Disable loading on
-                                                             a capture event */
-          | ( uint16 ) ( ( uint16 ) 0U << 9U ) );         /* Setup Event Filter
-                                                             prescale */
+    ecapREG3
+        ->ECCTL1 = ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on
+                                                                        Capture Event 1 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on
+                                                                        Capture Event 2 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on
+                                                                        Capture Event 3 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on
+                                                                        Capture Event 4 */
+                     | ( uint16 ) ( ( uint16 ) 0U << 8U )    /* Enable/Disable loading on
+                                                                a capture event */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) ); /* Setup Event Filter
+                                                                prescale */
 
     /** - Setup control register 2
      *     - Set operating mode
@@ -214,27 +214,27 @@ void ecapInit( void )
      *     - Enable/Disable loading on a capture event
      *     - Setup Event Filter prescale
      */
-    ecapREG4->ECCTL1 =
-        ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on Capture
-                                                             Event 1 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on Capture
-                                                             Event 2 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on Capture
-                                                             Event 3 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on Capture
-                                                             Event 4 */
-          | ( uint16 ) ( ( uint16 ) 0U << 8U )            /* Enable/Disable loading on
-                                                             a capture event */
-          | ( uint16 ) ( ( uint16 ) 0U << 9U ) );         /* Setup Event Filter
-                                                             prescale */
+    ecapREG4
+        ->ECCTL1 = ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on
+                                                                        Capture Event 1 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on
+                                                                        Capture Event 2 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on
+                                                                        Capture Event 3 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on
+                                                                        Capture Event 4 */
+                     | ( uint16 ) ( ( uint16 ) 0U << 8U )    /* Enable/Disable loading on
+                                                                a capture event */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) ); /* Setup Event Filter
+                                                                prescale */
 
     /** - Setup control register 2
      *     - Set operating mode
@@ -262,27 +262,27 @@ void ecapInit( void )
      *     - Enable/Disable loading on a capture event
      *     - Setup Event Filter prescale
      */
-    ecapREG5->ECCTL1 =
-        ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on Capture
-                                                             Event 1 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on Capture
-                                                             Event 2 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on Capture
-                                                             Event 3 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on Capture
-                                                             Event 4 */
-          | ( uint16 ) ( ( uint16 ) 0U << 8U )            /* Enable/Disable loading on
-                                                             a capture event */
-          | ( uint16 ) ( ( uint16 ) 0U << 9U ) );         /* Setup Event Filter
-                                                             prescale */
+    ecapREG5
+        ->ECCTL1 = ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on
+                                                                        Capture Event 1 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on
+                                                                        Capture Event 2 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on
+                                                                        Capture Event 3 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on
+                                                                        Capture Event 4 */
+                     | ( uint16 ) ( ( uint16 ) 0U << 8U )    /* Enable/Disable loading on
+                                                                a capture event */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) ); /* Setup Event Filter
+                                                                prescale */
 
     /** - Setup control register 2
      *     - Set operating mode
@@ -310,27 +310,27 @@ void ecapInit( void )
      *     - Enable/Disable loading on a capture event
      *     - Setup Event Filter prescale
      */
-    ecapREG6->ECCTL1 =
-        ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on Capture
-                                                             Event 1 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on Capture
-                                                             Event 2 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on Capture
-                                                             Event 3 */
-          | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
-                                                             Polarity */
-          | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on Capture
-                                                             Event 4 */
-          | ( uint16 ) ( ( uint16 ) 0U << 8U )            /* Enable/Disable loading on
-                                                             a capture event */
-          | ( uint16 ) ( ( uint16 ) 0U << 9U ) );         /* Setup Event Filter
-                                                             prescale */
+    ecapREG6
+        ->ECCTL1 = ( ( uint16 ) ( ( uint16 ) RISING_EDGE << 0U )     /* Capture Event 1
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 1U ) /* Counter Reset on
+                                                                        Capture Event 1 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 2U )   /* Capture Event 2
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 3U ) /* Counter Reset on
+                                                                        Capture Event 2 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 4U )   /* Capture Event 3
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 5U ) /* Counter Reset on
+                                                                        Capture Event 3 */
+                     | ( uint16 ) ( ( uint16 ) RISING_EDGE << 6U )   /* Capture Event 4
+                                                                        Polarity */
+                     | ( uint16 ) ( ( uint16 ) RESET_DISABLE << 7U ) /* Counter Reset on
+                                                                        Capture Event 4 */
+                     | ( uint16 ) ( ( uint16 ) 0U << 8U )    /* Enable/Disable loading on
+                                                                a capture event */
+                     | ( uint16 ) ( ( uint16 ) 0U << 9U ) ); /* Setup Event Filter
+                                                                prescale */
 
     /** - Setup control register 2
      *     - Set operating mode
@@ -438,15 +438,13 @@ void ecapSetEventPrescaler( ecapBASE_t * ecap, ecapPrescale_t prescale )
 /* SourceId : ECAP_SourceId_006 */
 /* DesignId : ECAP_DesignId_006 */
 /* Requirements : CONQ_ECAP_SR9 */
-void ecapSetCaptureEvent1(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-)
+void ecapSetCaptureEvent1( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 0U );
-    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity
+                                   | ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
                                  << 0U );
 }
 
@@ -467,15 +465,13 @@ void ecapSetCaptureEvent1(
 /* SourceId : ECAP_SourceId_007 */
 /* DesignId : ECAP_DesignId_006 */
 /* Requirements : CONQ_ECAP_SR9 */
-void ecapSetCaptureEvent2(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-)
+void ecapSetCaptureEvent2( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 2U );
-    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity
+                                   | ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
                                  << 2U );
 }
 
@@ -496,15 +492,13 @@ void ecapSetCaptureEvent2(
 /* SourceId : ECAP_SourceId_008 */
 /* DesignId : ECAP_DesignId_006 */
 /* Requirements : CONQ_ECAP_SR9 */
-void ecapSetCaptureEvent3(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-)
+void ecapSetCaptureEvent3( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 4U );
-    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity
+                                   | ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
                                  << 4U );
 }
 
@@ -525,15 +519,13 @@ void ecapSetCaptureEvent3(
 /* SourceId : ECAP_SourceId_009 */
 /* DesignId : ECAP_DesignId_006 */
 /* Requirements : CONQ_ECAP_SR9 */
-void ecapSetCaptureEvent4(
-    ecapBASE_t * ecap,
-    ecapEdgePolarity_t edgePolarity,
-    ecapReset_t resetenable
-)
+void ecapSetCaptureEvent4( ecapBASE_t * ecap,
+                           ecapEdgePolarity_t edgePolarity,
+                           ecapReset_t resetenable )
 {
     ecap->ECCTL1 &= ( uint16 ) ~( uint16 ) ( ( uint16 ) 0x3U << 6U );
-    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity |
-                                   ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
+    ecap->ECCTL1 |= ( uint16 ) ( ( ( uint16 ) edgePolarity
+                                   | ( uint16 ) ( ( uint16 ) resetenable << 1U ) )
                                  << 6U );
 }
 
@@ -661,16 +653,14 @@ void ecapSetSyncOut( ecapBASE_t * ecap, ecapSyncOut_t syncOutSrc )
 /* SourceId : ECAP_SourceId_016 */
 /* DesignId : ECAP_DesignId_013 */
 /* Requirements : CONQ_ECAP_SR14 */
-void ecapEnableAPWMmode(
-    ecapBASE_t * ecap,
-    ecapAPWMPolarity_t pwmPolarity,
-    uint32 period,
-    uint32 duty
-)
+void ecapEnableAPWMmode( ecapBASE_t * ecap,
+                         ecapAPWMPolarity_t pwmPolarity,
+                         uint32 period,
+                         uint32 duty )
 {
     ecap->ECCTL2 &= ( uint16 ) ~( uint16 ) 0x0400U;
-    ecap->ECCTL2 |= ( uint16 ) ( ( uint16 ) pwmPolarity << 10U ) |
-                    ( uint16 ) ( ( uint16 ) 1U << 9U );
+    ecap->ECCTL2 |= ( uint16 ) ( ( uint16 ) pwmPolarity << 10U )
+                  | ( uint16 ) ( ( uint16 ) 1U << 9U );
     ecap->CAP1 = period - 1U;
     ecap->CAP2 = duty;
 }

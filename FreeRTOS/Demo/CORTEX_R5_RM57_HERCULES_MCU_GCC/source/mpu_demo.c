@@ -290,11 +290,11 @@ BaseType_t xCreateMPUTasks( void )
 
     BaseType_t xReturn = pdPASS;
 
-    uint32_t ulReadMemoryPermissions = portMPU_PRIV_RW_USER_RO_NOEXEC |
-                                       portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulReadMemoryPermissions = portMPU_PRIV_RW_USER_RO_NOEXEC
+                                     | portMPU_NORMAL_OIWTNOWA_SHARED;
 
-    uint32_t ulWriteMemoryPermissions = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                                        portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulWriteMemoryPermissions = portMPU_PRIV_RW_USER_RW_NOEXEC
+                                      | portMPU_NORMAL_OIWTNOWA_SHARED;
 
     ulStaticUnprotectedData = 0xC3;
 
@@ -438,8 +438,7 @@ BaseType_t xCreateMPUTasks( void )
 #endif /* ( mainDEMO_TYPE & MPU_DEMO ) */
 
 PRIVILEGED_FUNCTION portDONT_DISCARD void vHandleMemoryFault(
-    uint32_t * pulFaultStackAddress
-)
+    uint32_t * pulFaultStackAddress )
 {
     volatile uint32_t ulPC;
     volatile uint32_t ulOffendingInstruction;
@@ -467,8 +466,8 @@ PRIVILEGED_FUNCTION portDONT_DISCARD void vHandleMemoryFault(
         ulOffendingInstruction = ( ulOffendingInstruction >> 24 );
 
         /* Check if we were called by a load/store word instruction */
-        if( ( ulOffendingInstruction == 0x00E4 ) ||
-            ( ulOffendingInstruction == 0x00E5 ) || ( ulOffendingInstruction == 0x00E6 ) )
+        if( ( ulOffendingInstruction == 0x00E4 ) || ( ulOffendingInstruction == 0x00E5 )
+            || ( ulOffendingInstruction == 0x00E6 ) )
         {
             /* Increment the program counter to move to the next instruction */
             ulPC += 0x4;

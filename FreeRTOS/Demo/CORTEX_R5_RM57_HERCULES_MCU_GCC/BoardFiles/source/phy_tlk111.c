@@ -56,12 +56,10 @@ void Tlk111SwStrap( uint32 mdioBaseAddr, uint32 phyAddr )
     MDIOPhyRegWrite( mdioBaseAddr, phyAddr, ( uint32 ) PHY_SWSCR1, Tlk111_SWSCR1_Val );
     MDIOPhyRegWrite( mdioBaseAddr, phyAddr, ( uint32 ) PHY_SWSCR2, Tlk111_SWSCR2_Val );
     MDIOPhyRegWrite( mdioBaseAddr, phyAddr, ( uint32 ) PHY_SWSCR3, Tlk111_SWSCR3_Val );
-    MDIOPhyRegWrite(
-        mdioBaseAddr,
-        phyAddr,
-        ( uint32 ) PHY_SWSCR1,
-        ( Tlk111_SWSCR1_Val | Tlk111_SWStrapDone )
-    );
+    MDIOPhyRegWrite( mdioBaseAddr,
+                     phyAddr,
+                     ( uint32 ) PHY_SWSCR1,
+                     ( Tlk111_SWSCR1_Val | Tlk111_SWStrapDone ) );
 }
 
 /**
@@ -81,7 +79,9 @@ void Tlk111SwStrap( uint32 mdioBaseAddr, uint32 phyAddr )
 /* SourceId : ETH_SourceId_067 */
 /* DesignId : ETH_DesignId_067*/
 /* Requirements : ETH_SR47 */
-boolean Tlk111LinkStatusGet( uint32 mdioBaseAddr, uint32 phyAddr, volatile uint32 retries )
+boolean Tlk111LinkStatusGet( uint32 mdioBaseAddr,
+                             uint32 phyAddr,
+                             volatile uint32 retries )
 {
     volatile uint16 linkStatus = 0U;
     boolean retVal = TRUE;
@@ -181,7 +181,10 @@ boolean Tlk111AutoNegotiate( uint32 mdioBaseAddr, uint32 phyAddr, uint16 advVal 
     ( void ) MDIOPhyRegRead( mdioBaseAddr, phyAddr, ( uint32 ) PHY_AUTONEG_ADV, &anar );
     anar &= ( uint16 ) ( ~0xff10U );
     /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-    MDIOPhyRegWrite( mdioBaseAddr, phyAddr, ( uint32 ) PHY_AUTONEG_ADV, ( anar | advVal ) );
+    MDIOPhyRegWrite( mdioBaseAddr,
+                     phyAddr,
+                     ( uint32 ) PHY_AUTONEG_ADV,
+                     ( anar | advVal ) );
 
     data |= PHY_AUTONEG_RESTART;
 
@@ -197,9 +200,9 @@ boolean Tlk111AutoNegotiate( uint32 mdioBaseAddr, uint32 phyAddr, uint16 advVal 
     /* Wait till auto negotiation is complete */
     /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
     /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Hardware status bit read check" */
-    while( ( ( ( uint16 ) ( PHY_AUTONEG_INCOMPLETE ) ) ==
-             ( data & ( uint16 ) ( PHY_AUTONEG_STATUS ) ) ) &&
-           ( retVal == TRUE ) && ( phyNegTries > 0U ) )
+    while( ( ( ( uint16 ) ( PHY_AUTONEG_INCOMPLETE ) )
+             == ( data & ( uint16 ) ( PHY_AUTONEG_STATUS ) ) )
+           && ( retVal == TRUE ) && ( phyNegTries > 0U ) )
     {
         ( void ) MDIOPhyRegRead( mdioBaseAddr, phyAddr, ( uint32 ) PHY_BSR, &data );
         phyNegTries--;
@@ -233,10 +236,12 @@ boolean Tlk111AutoNegotiate( uint32 mdioBaseAddr, uint32 phyAddr, uint16 advVal 
 /* SourceId : ETH_SourceId_066 */
 /* DesignId : ETH_DesignId_066*/
 /* Requirements : ETH_SR48 */
-boolean Tlk111PartnerAbilityGet( uint32 mdioBaseAddr, uint32 phyAddr, uint16 * ptnerAblty )
+boolean Tlk111PartnerAbilityGet( uint32 mdioBaseAddr,
+                                 uint32 phyAddr,
+                                 uint16 * ptnerAblty )
 {
-    return ( MDIOPhyRegRead( mdioBaseAddr, phyAddr, PHY_LINK_PARTNER_ABLTY, ptnerAblty )
-    );
+    return (
+        MDIOPhyRegRead( mdioBaseAddr, phyAddr, PHY_LINK_PARTNER_ABLTY, ptnerAblty ) );
 }
 
 /**

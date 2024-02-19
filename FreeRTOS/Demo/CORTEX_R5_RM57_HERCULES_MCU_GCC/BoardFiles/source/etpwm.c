@@ -89,34 +89,31 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG1->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG1->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG1->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG1->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG1->DBCTL =
-        ( ( uint16 ) ( ( uint16 ) 0U << 5U )      /* Source for Falling edge
-                                                     delay(0-PWMA, 1-PWMB) */
-          | ( uint16 ) ( ( uint16 ) 0u << 4U )    /* Source for Rising edge
-                                                     delay(0-PWMA, 1-PWMB)  */
-          | ( uint16 ) ( ( uint16 ) 0U << 3U )    /* Enable/Disable EPWMxB
-                                                     invert       */
-          | ( uint16 ) ( ( uint16 ) 0U << 2U )    /* Enable/Disable EPWMxA
-                                                     invert       */
-          | ( uint16 ) ( ( uint16 ) 0U << 1U )    /* Enable/Disable Rising
-                                                     Edge Delay   */
-          | ( uint16 ) ( ( uint16 ) 0U << 0U ) ); /* Enable/Disable Falling
-                                                     Edge Delay  */
+    etpwmREG1->DBCTL = ( ( uint16 ) ( ( uint16 ) 0U << 5U )   /* Source for Falling edge
+                                                                 delay(0-PWMA, 1-PWMB) */
+                         | ( uint16 ) ( ( uint16 ) 0u << 4U ) /* Source for Rising edge
+                                                                 delay(0-PWMA, 1-PWMB)  */
+                         | ( uint16 ) ( ( uint16 ) 0U << 3U ) /* Enable/Disable EPWMxB
+                                                                 invert       */
+                         | ( uint16 ) ( ( uint16 ) 0U << 2U ) /* Enable/Disable EPWMxA
+                                                                 invert       */
+                         | ( uint16 ) ( ( uint16 ) 0U << 1U ) /* Enable/Disable Rising
+                                                                 Edge Delay   */
+                         | ( uint16 ) ( ( uint16 ) 0U << 0U ) ); /* Enable/Disable Falling
+                                                                    Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG1->DBRED = 1U;
@@ -129,14 +126,13 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG1->PCCTL =
-        ( ( uint16 ) ( ( uint16 ) 0U << 0U )      /* Enable/Disable chopper
-                                                     module */
-          | ( uint16 ) ( ( uint16 ) 1U << 1U )    /* One-shot Pulse Width */
-          | ( uint16 ) ( ( uint16 ) 3U << 8U )    /* Chopping Clock Duty Cycle
-                                                   */
-          | ( uint16 ) ( ( uint16 ) 0U << 5U ) ); /* Chopping Clock
-                                                     Frequency */
+    etpwmREG1->PCCTL = ( ( uint16 ) ( ( uint16 ) 0U << 0U )   /* Enable/Disable chopper
+                                                                 module */
+                         | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                         | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle
+                                                               */
+                         | ( uint16 ) ( ( uint16 ) 0U << 5U ) ); /* Chopping Clock
+                                                                    Frequency */
 
     /** - Set trip source enable */
     etpwmREG1->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
@@ -172,14 +168,13 @@ void etpwmInit( void )
     etpwmREG1->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG1->ETSEL |=
-        ( ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-          ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-          ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) );
+    etpwmREG1->ETSEL |= ( ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                          | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                          | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG1->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG1->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /** @b initialize @b ETPWM2 */
 
@@ -200,34 +195,31 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG2->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG2->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG2->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG2->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG2->DBCTL =
-        ( ( uint16 ) ( ( uint16 ) 0U << 5U )      /* Source for Falling edge
-                                                     delay(0-PWMA, 1-PWMB) */
-          | ( uint16 ) ( ( uint16 ) 0U << 4U )    /* Source for Rising edge
-                                                     delay(0-PWMA, 1-PWMB)  */
-          | ( uint16 ) ( ( uint16 ) 0U << 3U )    /* Enable/Disable EPWMxB
-                                                     invert       */
-          | ( uint16 ) ( ( uint16 ) 0U << 2U )    /* Enable/Disable EPWMxA
-                                                     invert       */
-          | ( uint16 ) ( ( uint16 ) 0U << 1U )    /* Enable/Disable Rising
-                                                     Edge Delay   */
-          | ( uint16 ) ( ( uint16 ) 0U << 0U ) ); /* Enable/Disable Falling
-                                                     Edge Delay  */
+    etpwmREG2->DBCTL = ( ( uint16 ) ( ( uint16 ) 0U << 5U )   /* Source for Falling edge
+                                                                 delay(0-PWMA, 1-PWMB) */
+                         | ( uint16 ) ( ( uint16 ) 0U << 4U ) /* Source for Rising edge
+                                                                 delay(0-PWMA, 1-PWMB)  */
+                         | ( uint16 ) ( ( uint16 ) 0U << 3U ) /* Enable/Disable EPWMxB
+                                                                 invert       */
+                         | ( uint16 ) ( ( uint16 ) 0U << 2U ) /* Enable/Disable EPWMxA
+                                                                 invert       */
+                         | ( uint16 ) ( ( uint16 ) 0U << 1U ) /* Enable/Disable Rising
+                                                                 Edge Delay   */
+                         | ( uint16 ) ( ( uint16 ) 0U << 0U ) ); /* Enable/Disable Falling
+                                                                    Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG2->DBRED = 1U;
@@ -240,14 +232,13 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG2->PCCTL =
-        ( ( uint16 ) ( ( uint16 ) 0U << 0U )      /* Enable/Disable chopper
-                                                     module */
-          | ( uint16 ) ( ( uint16 ) 1U << 1U )    /* One-shot Pulse Width */
-          | ( uint16 ) ( ( uint16 ) 3U << 8U )    /* Chopping Clock Duty Cycle
-                                                   */
-          | ( uint16 ) ( ( uint16 ) 0U << 5U ) ); /* Chopping Clock
-                                                     Frequency */
+    etpwmREG2->PCCTL = ( ( uint16 ) ( ( uint16 ) 0U << 0U )   /* Enable/Disable chopper
+                                                                 module */
+                         | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                         | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle
+                                                               */
+                         | ( uint16 ) ( ( uint16 ) 0U << 5U ) ); /* Chopping Clock
+                                                                    Frequency */
 
     /** - Set trip source enable */
     etpwmREG2->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
@@ -283,14 +274,13 @@ void etpwmInit( void )
     etpwmREG2->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG2->ETSEL |=
-        ( ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-          ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-          ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) );
+    etpwmREG2->ETSEL |= ( ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                          | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                          | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG2->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG2->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /** @b initialize @b ETPWM3 */
 
@@ -311,34 +301,31 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG3->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG3->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG3->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG3->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
      *     -Select the output mode for Dead Band Module
      *     -Select Polarity of the output PWMs
      */
-    etpwmREG3->DBCTL =
-        ( ( uint16 ) ( ( uint16 ) 0U << 5U )      /* Source for Falling edge
-                                                     delay(0-PWMA, 1-PWMB) */
-          | ( uint16 ) ( ( uint16 ) 0U << 4U )    /* Source for Rising edge
-                                                     delay(0-PWMA, 1-PWMB)  */
-          | ( uint16 ) ( ( uint16 ) 0U << 3U )    /* Enable/Disable EPWMxB
-                                                     invert       */
-          | ( uint16 ) ( ( uint16 ) 0U << 2U )    /* Enable/Disable EPWMxA
-                                                     invert       */
-          | ( uint16 ) ( ( uint16 ) 0U << 1U )    /* Enable/Disable Rising
-                                                     Edge Delay   */
-          | ( uint16 ) ( ( uint16 ) 0U << 0U ) ); /* Enable/Disable Falling
-                                                     Edge Delay  */
+    etpwmREG3->DBCTL = ( ( uint16 ) ( ( uint16 ) 0U << 5U )   /* Source for Falling edge
+                                                                 delay(0-PWMA, 1-PWMB) */
+                         | ( uint16 ) ( ( uint16 ) 0U << 4U ) /* Source for Rising edge
+                                                                 delay(0-PWMA, 1-PWMB)  */
+                         | ( uint16 ) ( ( uint16 ) 0U << 3U ) /* Enable/Disable EPWMxB
+                                                                 invert       */
+                         | ( uint16 ) ( ( uint16 ) 0U << 2U ) /* Enable/Disable EPWMxA
+                                                                 invert       */
+                         | ( uint16 ) ( ( uint16 ) 0U << 1U ) /* Enable/Disable Rising
+                                                                 Edge Delay   */
+                         | ( uint16 ) ( ( uint16 ) 0U << 0U ) ); /* Enable/Disable Falling
+                                                                    Edge Delay  */
 
     /** - Set the rising edge delay  */
     etpwmREG3->DBRED = 1U;
@@ -351,14 +338,13 @@ void etpwmInit( void )
      *     -Sets the dutycycle for the subsequent pulse train
      *     -Sets the period for the subsequent pulse train
      */
-    etpwmREG3->PCCTL =
-        ( ( uint16 ) ( ( uint16 ) 0U << 0U )      /* Enable/Disable chopper
-                                                     module */
-          | ( uint16 ) ( ( uint16 ) 1U << 1U )    /* One-shot Pulse Width */
-          | ( uint16 ) ( ( uint16 ) 3U << 8U )    /* Chopping Clock Duty Cycle
-                                                   */
-          | ( uint16 ) ( ( uint16 ) 0U << 5U ) ); /* Chopping Clock
-                                                     Frequency */
+    etpwmREG3->PCCTL = ( ( uint16 ) ( ( uint16 ) 0U << 0U )   /* Enable/Disable chopper
+                                                                 module */
+                         | ( uint16 ) ( ( uint16 ) 1U << 1U ) /* One-shot Pulse Width */
+                         | ( uint16 ) ( ( uint16 ) 3U << 8U ) /* Chopping Clock Duty Cycle
+                                                               */
+                         | ( uint16 ) ( ( uint16 ) 0U << 5U ) ); /* Chopping Clock
+                                                                    Frequency */
 
     /** - Set trip source enable */
     etpwmREG3->TZSEL = 0x0000U  /** - Enable/Disable TZ1 as a one-shot trip source */
@@ -394,14 +380,13 @@ void etpwmInit( void )
     etpwmREG3->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG3->ETSEL |=
-        ( ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-          ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-          ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) );
+    etpwmREG3->ETSEL |= ( ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                          | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                          | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U ) );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG3->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG3->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /** @b initialize @b ETPWM4 */
 
@@ -422,15 +407,13 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG4->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG4->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG4->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG4->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
@@ -501,13 +484,13 @@ void etpwmInit( void )
     etpwmREG4->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG4->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG4->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG4->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG4->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /** @b initialize @b ETPWM5 */
 
@@ -528,15 +511,13 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG5->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG5->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG5->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG5->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
@@ -607,13 +588,13 @@ void etpwmInit( void )
     etpwmREG5->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG5->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG5->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG5->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG5->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /** @b initialize @b ETPWM6 */
 
@@ -634,15 +615,13 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG6->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG6->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG6->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG6->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
@@ -713,13 +692,13 @@ void etpwmInit( void )
     etpwmREG6->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG6->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG6->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG6->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG6->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /** @b initialize @b ETPWM7 */
 
@@ -740,15 +719,13 @@ void etpwmInit( void )
 
     /** - Force EPWMxA output high when counter reaches zero and low when counter reaches
      * Compare A value */
-    etpwmREG7->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
+    etpwmREG7->AQCTLA = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 4U ) );
 
     /** - Force EPWMxB output high when counter reaches zero and low when counter reaches
      * Compare B value */
-    etpwmREG7->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U ) |
-          ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
+    etpwmREG7->AQCTLB = ( ( uint16 ) ( ( uint16 ) ActionQual_Set << 0U )
+                          | ( uint16 ) ( ( uint16 ) ActionQual_Clear << 8U ) );
 
     /** - Mode setting for Dead Band Module
      *     -Select the input mode for Dead Band Module
@@ -819,13 +796,13 @@ void etpwmInit( void )
     etpwmREG7->ETPS = 1U;
 
     /** - Sets up the ADC SOC interrupt */
-    etpwmREG7->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U ) |
-                        ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U ) |
-                        ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
+    etpwmREG7->ETSEL |= ( uint16 ) ( 0x0000U ) | ( uint16 ) ( 0x0000U )
+                      | ( uint16 ) ( ( uint16 ) DCAEVT1 << 8U )
+                      | ( uint16 ) ( ( uint16 ) DCBEVT1 << 12U );
 
     /** - Sets up the ADC SOC period */
-    etpwmREG7->ETPS |=
-        ( ( uint16 ) ( ( uint16 ) 1U << 8U ) | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
+    etpwmREG7->ETPS |= ( ( uint16 ) ( ( uint16 ) 1U << 8U )
+                         | ( uint16 ) ( ( uint16 ) 1U << 12U ) );
 
     /* USER CODE BEGIN (2) */
     /* USER CODE END */
@@ -845,9 +822,9 @@ void etpwmStartTBCLK( void )
     pinMuxReg->KICKER0 = 0x83E70B13U;
     pinMuxReg->KICKER1 = 0x95A4F1E0U;
 
-    pinMuxReg->PINMUX[ 166U ] = ( pinMuxReg->PINMUX[ 166U ] & PINMUX_ETPWM_TBCLK_SYNC_MASK
-                                ) |
-                                ( PINMUX_ETPWM_TBCLK_SYNC_ON );
+    pinMuxReg->PINMUX[ 166U ] = ( pinMuxReg->PINMUX[ 166U ]
+                                  & PINMUX_ETPWM_TBCLK_SYNC_MASK )
+                              | ( PINMUX_ETPWM_TBCLK_SYNC_ON );
 
     /* Disable Pin Muxing */
     pinMuxReg->KICKER0 = 0x00000000U;
@@ -868,9 +845,9 @@ void etpwmStopTBCLK( void )
     pinMuxReg->KICKER0 = 0x83E70B13U;
     pinMuxReg->KICKER1 = 0x95A4F1E0U;
 
-    pinMuxReg->PINMUX[ 166U ] = ( pinMuxReg->PINMUX[ 166U ] & PINMUX_ETPWM_TBCLK_SYNC_MASK
-                                ) |
-                                ( PINMUX_ETPWM_TBCLK_SYNC_OFF );
+    pinMuxReg->PINMUX[ 166U ] = ( pinMuxReg->PINMUX[ 166U ]
+                                  & PINMUX_ETPWM_TBCLK_SYNC_MASK )
+                              | ( PINMUX_ETPWM_TBCLK_SYNC_OFF );
 
     /* Disable Pin Muxing */
     pinMuxReg->KICKER0 = 0x00000000U;
@@ -907,7 +884,9 @@ void etpwmStopTBCLK( void )
 /* SourceId : ETPWM_SourceId_004 */
 /* DesignId : ETPWM_DesignId_004 */
 /* Requirements : CONQ_EPWM_SR3 */
-void etpwmSetClkDiv( etpwmBASE_t * etpwm, etpwmClkDiv_t clkdiv, etpwmHspClkDiv_t hspclkdiv )
+void etpwmSetClkDiv( etpwmBASE_t * etpwm,
+                     etpwmClkDiv_t clkdiv,
+                     etpwmHspClkDiv_t hspclkdiv )
 {
     etpwm->TBCTL &= ( uint16 ) ~( uint16 ) 0x1F80U;
     etpwm->TBCTL |= ( uint16 ) clkdiv | ( uint16 ) hspclkdiv;
@@ -1226,15 +1205,18 @@ void etpwmDisableCmpBShadowMode( etpwmBASE_t * etpwm )
 /* SourceId : ETPWM_SourceId_021 */
 /* DesignId : ETPWM_DesignId_021 */
 /* Requirements : CONQ_EPWM_SR20 */
-void etpwmSetActionQualPwmA( etpwmBASE_t * etpwm, etpwmActionQualConfig_t actionqualconfig )
+void etpwmSetActionQualPwmA( etpwmBASE_t * etpwm,
+                             etpwmActionQualConfig_t actionqualconfig )
 {
-    etpwm->AQCTLA =
-        ( ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqZero_Action << 0U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqPeriod_Action << 2U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpAUp_Action << 4U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpADown_Action << 6U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBUp_Action << 8U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBDown_Action << 10U ) );
+    etpwm
+        ->AQCTLA = ( ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqZero_Action << 0U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqPeriod_Action << 2U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpAUp_Action << 4U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpADown_Action
+                                    << 6U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBUp_Action << 8U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBDown_Action
+                                    << 10U ) );
 }
 
 /** @fn void etpwmSetActionQualPwmB(etpwmBASE_t *etpwm, etpwmActionQualConfig_t
@@ -1260,15 +1242,18 @@ void etpwmSetActionQualPwmA( etpwmBASE_t * etpwm, etpwmActionQualConfig_t action
 /* SourceId : ETPWM_SourceId_022 */
 /* DesignId : ETPWM_DesignId_022 */
 /* Requirements : CONQ_EPWM_SR21 */
-void etpwmSetActionQualPwmB( etpwmBASE_t * etpwm, etpwmActionQualConfig_t actionqualconfig )
+void etpwmSetActionQualPwmB( etpwmBASE_t * etpwm,
+                             etpwmActionQualConfig_t actionqualconfig )
 {
-    etpwm->AQCTLB =
-        ( ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqZero_Action << 0U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqPeriod_Action << 2U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpAUp_Action << 4U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpADown_Action << 6U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBUp_Action << 8U ) |
-          ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBDown_Action << 10U ) );
+    etpwm
+        ->AQCTLB = ( ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqZero_Action << 0U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqPeriod_Action << 2U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpAUp_Action << 4U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpADown_Action
+                                    << 6U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBUp_Action << 8U )
+                     | ( uint16 ) ( ( uint16 ) actionqualconfig.CtrEqCmpBDown_Action
+                                    << 10U ) );
 }
 
 /** @fn void etpwmEnableDeadBand(etpwmBASE_t *etpwm, etpwmDeadBandConfig_t deadbandconfig)
@@ -1285,11 +1270,11 @@ void etpwmSetActionQualPwmB( etpwmBASE_t * etpwm, etpwmActionQualConfig_t action
 /* Requirements : CONQ_EPWM_SR22 */
 void etpwmEnableDeadBand( etpwmBASE_t * etpwm, etpwmDeadBandConfig_t deadbandconfig )
 {
-    uint16 halfCycleMask = ( uint16 ) ( ( deadbandconfig.halfCycleEnable ) ? 0x8000U : 0U
-    );
-    etpwm->DBCTL =
-        ( ( uint16 ) deadbandconfig.inputmode | ( uint16 ) deadbandconfig.outputmode |
-          ( uint16 ) deadbandconfig.polarity | halfCycleMask );
+    uint16 halfCycleMask = ( uint16 ) ( ( deadbandconfig.halfCycleEnable ) ? 0x8000U
+                                                                           : 0U );
+    etpwm->DBCTL = ( ( uint16 ) deadbandconfig.inputmode
+                     | ( uint16 ) deadbandconfig.outputmode
+                     | ( uint16 ) deadbandconfig.polarity | halfCycleMask );
 }
 
 /** @fn void etpwmDisableDeadband(etpwmBASE_t *etpwm)
@@ -1339,9 +1324,8 @@ void etpwmSetDeadBandDelay( etpwmBASE_t * etpwm, uint16 Rdelay, uint16 Fdelay )
 /* Requirements : CONQ_EPWM_SR25 */
 void etpwmEnableChopping( etpwmBASE_t * etpwm, etpwmChoppingConfig_t choppingconfig )
 {
-    etpwm->PCCTL =
-        ( ( uint16 ) 0x0001U | ( uint16 ) choppingconfig.oswdth |
-          ( uint16 ) choppingconfig.freq | ( uint16 ) choppingconfig.duty );
+    etpwm->PCCTL = ( ( uint16 ) 0x0001U | ( uint16 ) choppingconfig.oswdth
+                     | ( uint16 ) choppingconfig.freq | ( uint16 ) choppingconfig.duty );
 }
 
 /** @fn void etpwmDisableChopping(etpwmBASE_t *etpwm)
@@ -1454,13 +1438,18 @@ void etpwmDisableTripZoneSources( etpwmBASE_t * etpwm, etpwmTripZoneSrc_t source
 /* Requirements : CONQ_EPWM_SR29 */
 void etpwmSetTripAction( etpwmBASE_t * etpwm, etpwmTripActionConfig_t tripactionconfig )
 {
-    etpwm->TZCTL =
-        ( ( uint16 ) ( ( uint16 ) tripactionconfig.TripEvent_ActionOnPWMA << 0U ) |
-          ( uint16 ) ( ( uint16 ) tripactionconfig.TripEvent_ActionOnPWMB << 2U ) |
-          ( uint16 ) ( ( uint16 ) tripactionconfig.DCAEVT1_ActionOnPWMA << 4U ) |
-          ( uint16 ) ( ( uint16 ) tripactionconfig.DCAEVT2_ActionOnPWMA << 6U ) |
-          ( uint16 ) ( ( uint16 ) tripactionconfig.DCBEVT1_ActionOnPWMB << 8U ) |
-          ( uint16 ) ( ( uint16 ) tripactionconfig.DCBEVT2_ActionOnPWMB << 10U ) );
+    etpwm->TZCTL = ( ( uint16 ) ( ( uint16 ) tripactionconfig.TripEvent_ActionOnPWMA
+                                  << 0U )
+                     | ( uint16 ) ( ( uint16 ) tripactionconfig.TripEvent_ActionOnPWMB
+                                    << 2U )
+                     | ( uint16 ) ( ( uint16 ) tripactionconfig.DCAEVT1_ActionOnPWMA
+                                    << 4U )
+                     | ( uint16 ) ( ( uint16 ) tripactionconfig.DCAEVT2_ActionOnPWMA
+                                    << 6U )
+                     | ( uint16 ) ( ( uint16 ) tripactionconfig.DCBEVT1_ActionOnPWMB
+                                    << 8U )
+                     | ( uint16 ) ( ( uint16 ) tripactionconfig.DCBEVT2_ActionOnPWMB
+                                    << 10U ) );
 }
 
 /** @fn void etpwmEnableTripInterrupt(etpwmBASE_t *etpwm, etpwmTrip_t interrupts)
@@ -1597,15 +1586,13 @@ void etpwmForceTripEvent( etpwmBASE_t * etpwm, etpwmTrip_t trip )
 /* SourceId : ETPWM_SourceId_036 */
 /* DesignId : ETPWM_DesignId_036 */
 /* Requirements : CONQ_EPWM_SR35 */
-void etpwmEnableSOCA(
-    etpwmBASE_t * etpwm,
-    etpwmEventSrc_t eventsource,
-    etpwmEventPeriod_t eventperiod
-)
+void etpwmEnableSOCA( etpwmBASE_t * etpwm,
+                      etpwmEventSrc_t eventsource,
+                      etpwmEventPeriod_t eventperiod )
 {
     etpwm->ETSEL &= 0xF0FFU;
-    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 11U ) |
-                    ( uint16 ) ( ( uint16 ) eventsource << 8U );
+    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 11U )
+                  | ( uint16 ) ( ( uint16 ) eventsource << 8U );
 
     etpwm->ETPS &= 0xF0FFU;
     etpwm->ETPS |= ( uint16 ) ( ( uint16 ) eventperiod << 8U );
@@ -1657,15 +1644,13 @@ void etpwmDisableSOCA( etpwmBASE_t * etpwm )
 /* SourceId : ETPWM_SourceId_038 */
 /* DesignId : ETPWM_DesignId_038 */
 /* Requirements : CONQ_EPWM_SR37 */
-void etpwmEnableSOCB(
-    etpwmBASE_t * etpwm,
-    etpwmEventSrc_t eventsource,
-    etpwmEventPeriod_t eventperiod
-)
+void etpwmEnableSOCB( etpwmBASE_t * etpwm,
+                      etpwmEventSrc_t eventsource,
+                      etpwmEventPeriod_t eventperiod )
 {
     etpwm->ETSEL &= 0x0FFFU;
-    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 15U ) |
-                    ( uint16 ) ( ( uint16 ) eventsource << 12U );
+    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 15U )
+                  | ( uint16 ) ( ( uint16 ) eventsource << 12U );
 
     etpwm->ETPS &= 0x0FFFU;
     etpwm->ETPS |= ( uint16 ) ( ( uint16 ) eventperiod << 12U );
@@ -1716,15 +1701,13 @@ void etpwmDisableSOCB( etpwmBASE_t * etpwm )
 /* SourceId : ETPWM_SourceId_040 */
 /* DesignId : ETPWM_DesignId_040 */
 /* Requirements : CONQ_EPWM_SR39 */
-void etpwmEnableInterrupt(
-    etpwmBASE_t * etpwm,
-    etpwmEventSrc_t eventsource,
-    etpwmEventPeriod_t eventperiod
-)
+void etpwmEnableInterrupt( etpwmBASE_t * etpwm,
+                           etpwmEventSrc_t eventsource,
+                           etpwmEventPeriod_t eventperiod )
 {
     etpwm->ETSEL &= 0xFFF0U;
-    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 3U ) |
-                    ( uint16 ) ( ( uint16 ) eventsource << 0U );
+    etpwm->ETSEL |= ( uint16 ) ( ( uint16 ) 1U << 3U )
+                  | ( uint16 ) ( ( uint16 ) eventsource << 0U );
 
     etpwm->ETPS &= 0xFFF0U;
     etpwm->ETPS |= ( uint16 ) ( ( uint16 ) eventperiod << 0U );
@@ -1828,22 +1811,22 @@ void etpwmTriggerEvent( etpwmBASE_t * etpwm, etpwmEvent_t events )
 /* SourceId : ETPWM_SourceId_045 */
 /* DesignId : ETPWM_DesignId_045 */
 /* Requirements : CONQ_EPWM_SR41 */
-void etpwmEnableDigitalCompareEvents(
-    etpwmBASE_t * etpwm,
-    etpwmDigitalCompareConfig_t digitalcompareconfig
-)
+void etpwmEnableDigitalCompareEvents( etpwmBASE_t * etpwm,
+                                      etpwmDigitalCompareConfig_t digitalcompareconfig )
 {
-    etpwm->DCTRIPSEL =
-        ( ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAH_src << 0U ) |
-          ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAL_src << 4U ) |
-          ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBH_src << 8U ) |
-          ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBL_src << 12U ) );
+    etpwm->DCTRIPSEL = ( ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAH_src << 0U )
+                         | ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAL_src << 4U )
+                         | ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBH_src << 8U )
+                         | ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBL_src
+                                        << 12U ) );
 
-    etpwm->TZDCSEL =
-        ( ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAEVT1_event << 0U ) |
-          ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAEVT2_event << 3U ) |
-          ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBEVT1_event << 6U ) |
-          ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBEVT2_event << 9U ) );
+    etpwm->TZDCSEL = ( ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAEVT1_event << 0U )
+                       | ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCAEVT2_event
+                                      << 3U )
+                       | ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBEVT1_event
+                                      << 6U )
+                       | ( uint16 ) ( ( uint16 ) digitalcompareconfig.DCBEVT2_event
+                                      << 9U ) );
 }
 
 /** @fn void etpwm1GetConfigValue(etpwm_config_reg_t *config_reg, config_value_type_t

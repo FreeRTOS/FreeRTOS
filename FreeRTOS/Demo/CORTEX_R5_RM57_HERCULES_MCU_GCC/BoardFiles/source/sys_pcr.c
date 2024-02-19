@@ -130,11 +130,9 @@ void peripheral_Memory_Protection_Clr( pcrBASE_t * pcr, peripheral_Memory_t PCS 
 /* SourceId : PCR_SourceId_003 */
 /* DesignId : PCR_DesignId_003 */
 /* Requirements : CONQ_PCR_SR3 */
-void peripheral_Frame_Protection_Set(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-)
+void peripheral_Frame_Protection_Set( pcrBASE_t * pcr,
+                                      peripheral_Frame_t PS,
+                                      uint32 quadrant )
 {
     /* USER CODE BEGIN (4) */
     /* USER CODE END */
@@ -182,11 +180,9 @@ void peripheral_Frame_Protection_Set(
 /* SourceId : PCR_SourceId_004 */
 /* DesignId : PCR_DesignId_004 */
 /* Requirements : CONQ_PCR_SR4 */
-void peripheral_Frame_Protection_Clr(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-)
+void peripheral_Frame_Protection_Clr( pcrBASE_t * pcr,
+                                      peripheral_Frame_t PS,
+                                      uint32 quadrant )
 {
     /* USER CODE BEGIN (6) */
     /* USER CODE END */
@@ -295,11 +291,9 @@ void peripheral_Memory_PowerDown_Clr( pcrBASE_t * pcr, peripheral_Memory_t PCS )
 /* SourceId : PCR_SourceId_007 */
 /* DesignId : PCR_DesignId_007 */
 /* Requirements : CONQ_PCR_SR7 */
-void peripheral_Frame_PowerDown_Set(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-)
+void peripheral_Frame_PowerDown_Set( pcrBASE_t * pcr,
+                                     peripheral_Frame_t PS,
+                                     uint32 quadrant )
 {
     /* USER CODE BEGIN (12) */
     /* USER CODE END */
@@ -346,11 +340,9 @@ void peripheral_Frame_PowerDown_Set(
 /* SourceId : PCR_SourceId_008*/
 /* DesignId : PCR_DesignId_008 */
 /* Requirements : CONQ_PCR_SR8 */
-void peripheral_Frame_PowerDown_Clr(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant
-)
+void peripheral_Frame_PowerDown_Clr( pcrBASE_t * pcr,
+                                     peripheral_Frame_t PS,
+                                     uint32 quadrant )
 {
     /* USER CODE BEGIN (14) */
     /* USER CODE END */
@@ -410,12 +402,10 @@ void peripheral_Frame_PowerDown_Clr(
 /* SourceId : PCR_SourceId_009 */
 /* DesignId : PCR_DesignId_010 */
 /* Requirements : CONQ_PCR_SR14 */
-void peripheral_Frame_MasterIDFilter_Enable(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant,
-    master_ID_t master
-)
+void peripheral_Frame_MasterIDFilter_Enable( pcrBASE_t * pcr,
+                                             peripheral_Frame_t PS,
+                                             uint32 quadrant,
+                                             master_ID_t master )
 {
     /* USER CODE BEGIN (16) */
     /* USER CODE END */
@@ -488,12 +478,10 @@ void peripheral_Frame_MasterIDFilter_Enable(
 /* SourceId : PCR_SourceId_010 */
 /* DesignId : PCR_DesignId_009 */
 /* Requirements : CONQ_PCR_SR13 */
-void peripheral_Frame_MasterIDFilter_Disable(
-    pcrBASE_t * pcr,
-    peripheral_Frame_t PS,
-    uint32 quadrant,
-    master_ID_t master
-)
+void peripheral_Frame_MasterIDFilter_Disable( pcrBASE_t * pcr,
+                                              peripheral_Frame_t PS,
+                                              uint32 quadrant,
+                                              master_ID_t master )
 {
     /* USER CODE BEGIN (18) */
     /* USER CODE END */
@@ -566,12 +554,10 @@ void peripheral_Frame_MasterIDFilter_Disable(
 /* SourceId : PCR_SourceId_011 */
 /* DesignId : PCR_DesignId_012 */
 /* Requirements : CONQ_PCR_SR16 */
-void privileged_Peripheral_Frame_MasterIDFilter_Enable(
-    pcrBASE_t * pcr,
-    privileged_Peripheral_Frame_t PPS,
-    uint32 quadrant,
-    master_ID_t master
-)
+void privileged_Peripheral_Frame_MasterIDFilter_Enable( pcrBASE_t * pcr,
+                                                        privileged_Peripheral_Frame_t PPS,
+                                                        uint32 quadrant,
+                                                        master_ID_t master )
 {
     /* USER CODE BEGIN (20) */
     /* USER CODE END */
@@ -644,12 +630,10 @@ void privileged_Peripheral_Frame_MasterIDFilter_Enable(
 /* SourceId : PCR_SourceId_012 */
 /* DesignId : PCR_DesignId_011 */
 /* Requirements : CONQ_PCR_SR15 */
-void privileged_Peripheral_Frame_MasterIDFilter_Disable(
-    pcrBASE_t * pcr,
-    privileged_Peripheral_Frame_t PPS,
-    uint32 quadrant,
-    master_ID_t master
-)
+void privileged_Peripheral_Frame_MasterIDFilter_Disable( pcrBASE_t * pcr,
+                                                         privileged_Peripheral_Frame_t PPS,
+                                                         uint32 quadrant,
+                                                         master_ID_t master )
 {
     /* USER CODE BEGIN (22) */
     /* USER CODE END */
@@ -726,8 +710,7 @@ void privileged_Peripheral_Extended_Frame_MasterIDFilter_Enable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Extended_Frame_t PPSE,
     uint32 quadrant,
-    master_ID_t master
-)
+    master_ID_t master )
 {
     /* USER CODE BEGIN (24) */
     /* USER CODE END */
@@ -804,8 +787,7 @@ void privileged_Peripheral_Extended_Frame_MasterIDFilter_Disable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Extended_Frame_t PPSE,
     uint32 quadrant,
-    master_ID_t master
-)
+    master_ID_t master )
 {
     /* USER CODE BEGIN (26) */
     /* USER CODE END */
@@ -873,11 +855,9 @@ void privileged_Peripheral_Extended_Frame_MasterIDFilter_Disable(
 /* SourceId : PCR_SourceId_015 */
 /* DesignId : PCR_DesignId_016 */
 /* Requirements : CONQ_PCR_SR20 */
-void peripheral_Memory_MasterIDFilter_Enable(
-    pcrBASE_t * pcr,
-    peripheral_Memory_t PCS,
-    master_ID_t master
-)
+void peripheral_Memory_MasterIDFilter_Enable( pcrBASE_t * pcr,
+                                              peripheral_Memory_t PCS,
+                                              master_ID_t master )
 {
     uint8 i, j;
 
@@ -927,11 +907,9 @@ void peripheral_Memory_MasterIDFilter_Enable(
 /* SourceId : PCR_SourceId_016 */
 /* DesignId : PCR_DesignId_015 */
 /* Requirements : CONQ_PCR_SR19 */
-void peripheral_Memory_MasterIDFilter_Disable(
-    pcrBASE_t * pcr,
-    peripheral_Memory_t PCS,
-    master_ID_t master
-)
+void peripheral_Memory_MasterIDFilter_Disable( pcrBASE_t * pcr,
+                                               peripheral_Memory_t PCS,
+                                               master_ID_t master )
 {
     uint8 i, j;
 
@@ -984,8 +962,7 @@ void peripheral_Memory_MasterIDFilter_Disable(
 void privileged_Peripheral_Memory_MasterIDFilter_Enable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Memory_t PPCS,
-    master_ID_t master
-)
+    master_ID_t master )
 {
     uint8 i, j;
 
@@ -1038,8 +1015,7 @@ void privileged_Peripheral_Memory_MasterIDFilter_Enable(
 void privileged_Peripheral_Memory_MasterIDFilter_Disable(
     pcrBASE_t * pcr,
     privileged_Peripheral_Memory_t PPCS,
-    master_ID_t master
-)
+    master_ID_t master )
 {
     uint8 i, j;
 

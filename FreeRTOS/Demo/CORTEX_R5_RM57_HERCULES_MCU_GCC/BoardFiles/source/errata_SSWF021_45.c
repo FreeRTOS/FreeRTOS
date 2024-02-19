@@ -92,16 +92,16 @@ uint32 _errata_SSWF021_45_both_plls( uint32 count )
         systemREG2->PLLCTL3 = 0x20001A00U;
         systemREG1->CSDISCLR = SYS_CLKSRC_PLL1 | SYS_CLKSRC_PLL2;
         /* Check for (PLL1 valid or PLL1 slip) and (PLL2 valid or PLL2 slip) */
-        while( ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL1 ) == 0U ) &&
-                 ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) == 0U ) ) ||
-               ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL2 ) == 0U ) &&
-                 ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) == 0U ) ) )
+        while( ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL1 ) == 0U )
+                 && ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) == 0U ) )
+               || ( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL2 ) == 0U )
+                    && ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) == 0U ) ) )
         {
             /* Wait */
         }
         /* If PLL1 valid, check the frequency */
-        if( ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) != 0U ) ||
-            ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
+        if( ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) != 0U )
+            || ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
         {
             failCode |= 1U;
         }
@@ -110,8 +110,8 @@ uint32 _errata_SSWF021_45_both_plls( uint32 count )
             failCode |= check_frequency( dcc1CNT1_CLKSRC_PLL1 );
         }
         /* If PLL2 valid, check the frequency */
-        if( ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) != 0U ) ||
-            ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
+        if( ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) != 0U )
+            || ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
         {
             failCode |= 2U;
         }
@@ -178,14 +178,14 @@ uint32 _errata_SSWF021_45_pll1( uint32 count )
         systemREG1->PLLCTL2 = 0x3FC0723DU;
         systemREG1->CSDISCLR = SYS_CLKSRC_PLL1;
         /* Check for PLL1 valid or PLL1 slip*/
-        while( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL1 ) == 0U ) &&
-               ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) == 0U ) )
+        while( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL1 ) == 0U )
+               && ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) == 0U ) )
         {
             /* Wait */
         }
         /* If PLL1 valid, check the frequency */
-        if( ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) != 0U ) ||
-            ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
+        if( ( ( esmREG->SR1[ 0U ] & ESM_SR1_PLL1SLIP ) != 0U )
+            || ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
         {
             failCode |= 1U;
         }
@@ -251,14 +251,14 @@ uint32 _errata_SSWF021_45_pll2( uint32 count )
         systemREG2->PLLCTL3 = 0x20001A00U;
         systemREG1->CSDISCLR = SYS_CLKSRC_PLL2;
         /* Check for PLL2 valid or PLL2 slip */
-        while( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL2 ) == 0U ) &&
-               ( ( esmREG->SR4[ 0 ] & ESM_SR4_PLL2SLIP ) == 0U ) )
+        while( ( ( systemREG1->CSVSTAT & SYS_CLKSRC_PLL2 ) == 0U )
+               && ( ( esmREG->SR4[ 0 ] & ESM_SR4_PLL2SLIP ) == 0U ) )
         {
             /* Wait */
         }
         /* If PLL2 valid, check the frequency */
-        if( ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) != 0U ) ||
-            ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
+        if( ( ( esmREG->SR4[ 0U ] & ESM_SR4_PLL2SLIP ) != 0U )
+            || ( ( systemREG1->GBLSTAT & 0x00000300U ) != 0U ) )
         {
             failCode |= 2U;
         }

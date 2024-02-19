@@ -202,21 +202,19 @@ typedef struct lin_config_reg
 
 /* Configuration registers initial value for LIN*/
 #define LIN1_GCR0_CONFIGVALUE 0x00000001U
-#define LIN1_GCR1_CONFIGVALUE                             \
-    ( 0x03000CC0U | ( uint32 ) ( ( uint32 ) 1U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) )
+#define LIN1_GCR1_CONFIGVALUE                           \
+    ( 0x03000CC0U | ( uint32 ) ( ( uint32 ) 1U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) )
 #define LIN1_GCR2_CONFIGVALUE 0x00000000U
-#define LIN1_SETINTLVL_CONFIGVALUE                                          \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U )
+#define LIN1_SETINTLVL_CONFIGVALUE                                                      \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U             \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 
-#define LIN1_SETINT_CONFIGVALUE                                             \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U )
+#define LIN1_SETINT_CONFIGVALUE                                                         \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U             \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 
 #define LIN1_FORMAT_CONFIGVALUE ( ( uint32 ) ( ( uint32 ) ( 8U - 1U ) << 16U ) )
 #define LIN1_BRSR_CONFIGVALUE   ( 233U )
@@ -232,21 +230,19 @@ typedef struct lin_config_reg
 
 /* Configuration registers initial value for LIN*/
 #define LIN2_GCR0_CONFIGVALUE  0x00000001U
-#define LIN2_GCR1_CONFIGVALUE                             \
-    ( 0x03000CC0U | ( uint32 ) ( ( uint32 ) 1U << 12U ) | \
-      ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) )
+#define LIN2_GCR1_CONFIGVALUE                           \
+    ( 0x03000CC0U | ( uint32 ) ( ( uint32 ) 1U << 12U ) \
+      | ( uint32 ) ( ( uint32 ) 0U << 2U ) | ( uint32 ) ( ( uint32 ) 1U << 5U ) )
 #define LIN2_GCR2_CONFIGVALUE 0x00000000U
-#define LIN2_SETINTLVL_CONFIGVALUE                                          \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U )
+#define LIN2_SETINTLVL_CONFIGVALUE                                                      \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U             \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 
-#define LIN2_SETINT_CONFIGVALUE                                             \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U )
+#define LIN2_SETINT_CONFIGVALUE                                                         \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U             \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 
 #define LIN2_FORMAT_CONFIGVALUE ( ( uint32 ) ( ( uint32 ) ( 8U - 1U ) << 16U ) )
 #define LIN2_BRSR_CONFIGVALUE   ( 233U )

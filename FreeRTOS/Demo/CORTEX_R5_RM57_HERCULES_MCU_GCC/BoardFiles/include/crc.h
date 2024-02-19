@@ -255,12 +255,12 @@ typedef struct crc_config_reg
 
 #define CRC1_CTRL0_CONFIGVALUE 0x00000000U
 #define CRC1_CTRL1_CONFIGVALUE 0x00000000U
-#define CRC1_CTRL2_CONFIGVALUE                                           \
-    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( CRC_FULL_CPU ) | \
-      ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U ) )
-#define CRC1_INTS_CONFIGVALUE                                               \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
+#define CRC1_CTRL2_CONFIGVALUE                                         \
+    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( CRC_FULL_CPU ) \
+      | ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U ) )
+#define CRC1_INTS_CONFIGVALUE                                                           \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 #define CRC1_PCOUNT_REG1_CONFIGVALUE ( 0x00000000U )
 #define CRC1_SCOUNT_REG1_CONFIGVALUE ( 0x00000000U )
 #define CRC1_WDTOPLD1_CONFIGVALUE    ( 0x00000000U )
@@ -272,12 +272,12 @@ typedef struct crc_config_reg
 
 #define CRC2_CTRL0_CONFIGVALUE       0x00000000U
 #define CRC2_CTRL1_CONFIGVALUE       0x00000000U
-#define CRC2_CTRL2_CONFIGVALUE                                           \
-    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( CRC_FULL_CPU ) | \
-      ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U ) )
-#define CRC2_INTS_CONFIGVALUE                                               \
-    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | \
-      0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
+#define CRC2_CTRL2_CONFIGVALUE                                         \
+    ( ( uint32 ) ( ( uint32 ) 0U << 4U ) | ( uint32 ) ( CRC_FULL_CPU ) \
+      | ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U ) )
+#define CRC2_INTS_CONFIGVALUE                                                           \
+    ( 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U \
+      | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U )
 #define CRC2_PCOUNT_REG1_CONFIGVALUE ( 0U )
 #define CRC2_SCOUNT_REG1_CONFIGVALUE ( 0U )
 #define CRC2_WDTOPLD1_CONFIGVALUE    ( 0U )

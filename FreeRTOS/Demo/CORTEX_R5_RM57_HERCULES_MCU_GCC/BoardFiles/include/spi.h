@@ -170,44 +170,32 @@ void spiInit( void );
 void spiSetFunctional( spiBASE_t * spi, uint32 port );
 void spiEnableNotification( spiBASE_t * spi, uint32 flags );
 void spiDisableNotification( spiBASE_t * spi, uint32 flags );
-uint32 spiTransmitData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff
-);
-void spiSendData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff
-);
-uint32 spiReceiveData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * destbuff
-);
-void spiGetData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * destbuff
-);
-uint32 spiTransmitAndReceiveData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff,
-    uint16 * destbuff
-);
-void spiSendAndGetData(
-    spiBASE_t * spi,
-    spiDAT1_t * dataconfig_t,
-    uint32 blocksize,
-    uint16 * srcbuff,
-    uint16 * destbuff
-);
+uint32 spiTransmitData( spiBASE_t * spi,
+                        spiDAT1_t * dataconfig_t,
+                        uint32 blocksize,
+                        uint16 * srcbuff );
+void spiSendData( spiBASE_t * spi,
+                  spiDAT1_t * dataconfig_t,
+                  uint32 blocksize,
+                  uint16 * srcbuff );
+uint32 spiReceiveData( spiBASE_t * spi,
+                       spiDAT1_t * dataconfig_t,
+                       uint32 blocksize,
+                       uint16 * destbuff );
+void spiGetData( spiBASE_t * spi,
+                 spiDAT1_t * dataconfig_t,
+                 uint32 blocksize,
+                 uint16 * destbuff );
+uint32 spiTransmitAndReceiveData( spiBASE_t * spi,
+                                  spiDAT1_t * dataconfig_t,
+                                  uint32 blocksize,
+                                  uint16 * srcbuff,
+                                  uint16 * destbuff );
+void spiSendAndGetData( spiBASE_t * spi,
+                        spiDAT1_t * dataconfig_t,
+                        uint32 blocksize,
+                        uint16 * srcbuff,
+                        uint16 * destbuff );
 void spiEnableLoopback( spiBASE_t * spi, loopBackType_t Loopbacktype );
 void spiDisableLoopback( spiBASE_t * spi );
 SpiDataStatus_t SpiTxStatus( spiBASE_t * spi );

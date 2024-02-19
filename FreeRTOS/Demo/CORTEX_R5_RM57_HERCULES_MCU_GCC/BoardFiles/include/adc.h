@@ -232,12 +232,12 @@ typedef struct adc_config_reg
 
 #define ADC1_G0MODECR_CONFIGVALUE \
     ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U )
-#define ADC1_G1MODECR_CONFIGVALUE                                               \
-    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | \
-      ( uint32 ) 0x00000000U )
-#define ADC1_G2MODECR_CONFIGVALUE                                               \
-    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | \
-      ( uint32 ) 0x00000000U )
+#define ADC1_G1MODECR_CONFIGVALUE                                             \
+    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U \
+      | ( uint32 ) 0x00000000U )
+#define ADC1_G2MODECR_CONFIGVALUE                                             \
+    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U \
+      | ( uint32 ) 0x00000000U )
 
 #define ADC1_G0SRC_CONFIGVALUE       ( ( uint32 ) 0x00000000U | ( uint32 ) ADC1_EVENT )
 #define ADC1_G1SRC_CONFIGVALUE       ( ( uint32 ) 0x00000000U | ( uint32 ) ADC1_EVENT )
@@ -261,12 +261,12 @@ typedef struct adc_config_reg
 
 #define ADC2_G0MODECR_CONFIGVALUE \
     ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U )
-#define ADC2_G1MODECR_CONFIGVALUE                                               \
-    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | \
-      ( uint32 ) 0x00000000U )
-#define ADC2_G2MODECR_CONFIGVALUE                                               \
-    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U | \
-      ( uint32 ) 0x00000000U )
+#define ADC2_G1MODECR_CONFIGVALUE                                             \
+    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U \
+      | ( uint32 ) 0x00000000U )
+#define ADC2_G2MODECR_CONFIGVALUE                                             \
+    ( ( uint32 ) ADC_12_BIT | ( uint32 ) 0x00000000U | ( uint32 ) 0x00000000U \
+      | ( uint32 ) 0x00000000U )
 
 #define ADC2_G0SRC_CONFIGVALUE       ( ( uint32 ) 0x00000000U | ( uint32 ) ADC2_EVENT )
 #define ADC2_G1SRC_CONFIGVALUE       ( ( uint32 ) 0x00000000U | ( uint32 ) ADC2_EVENT )

@@ -105,18 +105,17 @@ void QEPInit( void )
      *     - Enable / Disable Negate QEPI input
      *     - Enable / Disable Negate QEPS input
      */
-    eqepREG1->QDECCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_DIRECTION_COUNT
-                                                  << 14U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 13U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_INDEX_PIN << 12U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_RESOLUTION_1x << 11U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 10U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 9U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 8U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 7U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 6U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 5U ) |
-                                     ( uint16 ) 0x0000U );
+    eqepREG1->QDECCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_DIRECTION_COUNT << 14U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 13U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_INDEX_PIN << 12U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_RESOLUTION_1x << 11U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 10U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 9U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 8U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 7U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 6U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 5U )
+                                     | ( uint16 ) 0x0000U );
 
     /** - Setup eQEP Control Register
      *     - Select Position counter Reset Mode
@@ -127,19 +126,18 @@ void QEPInit( void )
      *     - Select Index event latch of position counter.
      *     - Select EQEP capture Latch mode
      */
-    eqepREG1->QEPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_MAX_POSITION << 12U ) |
-                                    ( uint16 ) ( ( uint16 ) 0U << 11U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_DIRECTON_DEPENDENT
-                                                 << 10U ) |
-                                    ( uint16 ) ( ( uint16 ) 0U << 9U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 8U ) |
-                                    ( uint16 ) ( ( uint16 ) 0U << 7U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 6U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_LATCH_RISING_EDGE
-                                                 << 4U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_ON_POSITION_COUNTER_READ
-                                                 << 2U ) |
-                                    ( uint16 ) 0x0000U );
+    eqepREG1
+        ->QEPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_MAX_POSITION << 12U )
+                                | ( uint16 ) ( ( uint16 ) 0U << 11U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_DIRECTON_DEPENDENT << 10U )
+                                | ( uint16 ) ( ( uint16 ) 0U << 9U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 8U )
+                                | ( uint16 ) ( ( uint16 ) 0U << 7U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 6U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_LATCH_RISING_EDGE << 4U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_ON_POSITION_COUNTER_READ
+                                               << 2U )
+                                | ( uint16 ) 0x0000U );
 
     /** - Setup eQEP Position Control Register
      *     - Enable / Disable Position compare shadow.
@@ -147,20 +145,20 @@ void QEPInit( void )
      *     - Select Polarity of Sync output.
      *     - Select Position compare sync output pulse width.
      */
-    eqepREG1->QPOSCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 15U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_QPOSCNT_EQ_QPSCMP
-                                                  << 14U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_ACTIVE_HIGH << 13U ) |
-                                     ( uint16 ) ( ( uint16 ) 0x000U ) |
-                                     ( uint16 ) 0x0000U );
+    eqepREG1->QPOSCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 15U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_QPOSCNT_EQ_QPSCMP
+                                                    << 14U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_ACTIVE_HIGH << 13U )
+                                     | ( uint16 ) ( ( uint16 ) 0x000U )
+                                     | ( uint16 ) 0x0000U );
 
     /** - Setup eQEP Capture Control Register
      *     - Select capture timer clock prescaler.
      *     - Select Unit position event prescaler.
      */
-    eqepREG1->QCAPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_PS_8 << 4U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_PS_512 ) |
-                                     ( uint16 ) 0x0000U );
+    eqepREG1->QCAPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_PS_8 << 4U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_PS_512 )
+                                     | ( uint16 ) 0x0000U );
 
     /* USER CODE BEGIN (3) */
     /* USER CODE END */
@@ -181,17 +179,17 @@ void QEPInit( void )
      *     Enable / Diable QPE Interrupt
      *     Enable / Diable PCE Interrupt
      */
-    eqepREG1->QEINT = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 11U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 10U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 9U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 8U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 7U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 6U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 5U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 4U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 3U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 2U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 1U ) );
+    eqepREG1->QEINT = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 11U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 10U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 9U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 8U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 7U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 6U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 5U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 4U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 3U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 2U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 1U ) );
 
     /** - Clear Capture Timer register  */
     eqepREG1->QCTMR = ( uint16 ) 0x0000U;
@@ -244,18 +242,17 @@ void QEPInit( void )
      *     - Enable / Disable Negate QEPI input
      *     - Enable / Disable Negate QEPS input
      */
-    eqepREG2->QDECCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_DIRECTION_COUNT
-                                                  << 14U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 13U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_INDEX_PIN << 12U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_RESOLUTION_1x << 11U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 10U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 9U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 8U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 7U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 6U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U << 5U ) |
-                                     ( uint16 ) 0x0000U );
+    eqepREG2->QDECCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_DIRECTION_COUNT << 14U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 13U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_INDEX_PIN << 12U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_RESOLUTION_1x << 11U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 10U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 9U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 8U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 7U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 6U )
+                                     | ( uint16 ) ( ( uint16 ) 0U << 5U )
+                                     | ( uint16 ) 0x0000U );
 
     /** - Setup eQEP Control Register
      *     - Select Position counter Reset Mode
@@ -266,19 +263,18 @@ void QEPInit( void )
      *     - Select Index event latch of position counter.
      *     - Select EQEP capture Latch mode
      */
-    eqepREG2->QEPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_MAX_POSITION << 12U ) |
-                                    ( uint16 ) ( ( uint16 ) 0U << 11U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_DIRECTON_DEPENDENT
-                                                 << 10U ) |
-                                    ( uint16 ) ( ( uint16 ) 0U << 9U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 8U ) |
-                                    ( uint16 ) ( ( uint16 ) 0U << 7U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 6U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_LATCH_RISING_EDGE
-                                                 << 4U ) |
-                                    ( uint16 ) ( ( uint16 ) eQEP_ON_POSITION_COUNTER_READ
-                                                 << 2U ) |
-                                    ( uint16 ) 0x0000U );
+    eqepREG2
+        ->QEPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_MAX_POSITION << 12U )
+                                | ( uint16 ) ( ( uint16 ) 0U << 11U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_DIRECTON_DEPENDENT << 10U )
+                                | ( uint16 ) ( ( uint16 ) 0U << 9U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 8U )
+                                | ( uint16 ) ( ( uint16 ) 0U << 7U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_RISING_EDGE << 6U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_LATCH_RISING_EDGE << 4U )
+                                | ( uint16 ) ( ( uint16 ) eQEP_ON_POSITION_COUNTER_READ
+                                               << 2U )
+                                | ( uint16 ) 0x0000U );
 
     /** - Setup eQEP Position Control Register
      *     - Enable / Disable Position compare shadow.
@@ -286,19 +282,20 @@ void QEPInit( void )
      *     - Select Polarity of Sync output.
      *     - Select Position compare sync output pulse width.
      */
-    eqepREG2->QPOSCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 15U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_QPOSCNT_EQ_QPSCMP
-                                                  << 14U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_ACTIVE_HIGH << 13U ) |
-                                     ( uint16 ) ( ( uint16 ) 0U ) | ( uint16 ) 0x0000U );
+    eqepREG2->QPOSCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 15U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_QPOSCNT_EQ_QPSCMP
+                                                    << 14U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_ACTIVE_HIGH << 13U )
+                                     | ( uint16 ) ( ( uint16 ) 0U )
+                                     | ( uint16 ) 0x0000U );
 
     /** - Setup eQEP Capture Control Register
      *     - Select capture timer clock prescaler.
      *     - Select Unit position event prescaler.
      */
-    eqepREG2->QCAPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_PS_8 << 4U ) |
-                                     ( uint16 ) ( ( uint16 ) eQEP_PS_512 ) |
-                                     ( uint16 ) 0x0000U );
+    eqepREG2->QCAPCTL = ( uint16 ) ( ( uint16 ) ( ( uint16 ) eQEP_PS_8 << 4U )
+                                     | ( uint16 ) ( ( uint16 ) eQEP_PS_512 )
+                                     | ( uint16 ) 0x0000U );
 
     /* USER CODE BEGIN (6) */
     /* USER CODE END */
@@ -319,17 +316,17 @@ void QEPInit( void )
      *     Enable / Diable QPE Interrupt
      *     Enable / Diable PCE Interrupt
      */
-    eqepREG2->QEINT = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 11U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 10U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 9U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 8U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 7U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 6U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 5U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 4U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 3U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 2U ) |
-                                   ( uint16 ) ( ( uint16 ) 0U << 1U ) );
+    eqepREG2->QEINT = ( uint16 ) ( ( uint16 ) ( ( uint16 ) 0U << 11U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 10U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 9U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 8U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 7U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 6U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 5U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 4U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 3U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 2U )
+                                   | ( uint16 ) ( ( uint16 ) 0U << 1U ) );
 
     /** - Clear Capture Timer register  */
     eqepREG2->QCTMR = ( uint16 ) 0x0000U;

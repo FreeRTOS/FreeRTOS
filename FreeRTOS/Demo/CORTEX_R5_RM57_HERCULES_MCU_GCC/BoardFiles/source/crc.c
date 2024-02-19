@@ -66,8 +66,8 @@ void crcInit( void )
     /* USER CODE END */
     /** @b initialize @b CRC1 */
     /** - Reset  PSA*/
-    crcREG1->CTRL0 = ( uint32 ) ( ( uint32 ) 1U << 0U ) |
-                     ( uint32 ) ( ( uint32 ) 1U << 8U );
+    crcREG1->CTRL0 = ( uint32 ) ( ( uint32 ) 1U << 0U )
+                   | ( uint32 ) ( ( uint32 ) 1U << 8U );
 
     /** - Pulling PSA out of reset */
     crcREG1->CTRL0 = 0x00000000U;
@@ -82,8 +82,8 @@ void crcInit( void )
      *     - Enable/Disable CRC fail interrupt
      *     - Enable/Disable compression interrupt
      */
-    crcREG1->INTS = 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U |
-                    0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U;
+    crcREG1->INTS = 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U
+                  | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U;
 
     /** - Setup pattern count preload register for channel 1 and channel 2*/
     crcREG1->PCOUNT_REG1 = 0x00000000U;
@@ -110,8 +110,8 @@ void crcInit( void )
     crcREG1->REGH2 = 0x00000000U;
 
     /** - Setup the Channel mode */
-    crcREG1->CTRL2 |= ( uint32 ) ( CRC_FULL_CPU ) |
-                      ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U );
+    crcREG1->CTRL2 |= ( uint32 ) ( CRC_FULL_CPU )
+                    | ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U );
 
     /* USER CODE BEGIN (3) */
     /* USER CODE END */
@@ -119,8 +119,8 @@ void crcInit( void )
     /** @b initialize @b CRC2 */
 
     /** - Reset  PSA*/
-    crcREG2->CTRL0 = ( uint32 ) ( ( uint32 ) 1U << 0U ) |
-                     ( uint32 ) ( ( uint32 ) 1U << 8U );
+    crcREG2->CTRL0 = ( uint32 ) ( ( uint32 ) 1U << 0U )
+                   | ( uint32 ) ( ( uint32 ) 1U << 8U );
 
     /** - Pulling PSA out of reset */
     crcREG2->CTRL0 = 0x00000000U;
@@ -135,8 +135,8 @@ void crcInit( void )
      *     - Enable/Disable CRC fail interrupt
      *     - Enable/Disable compression interrupt
      */
-    crcREG2->INTS = 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U |
-                    0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U;
+    crcREG2->INTS = 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U
+                  | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U | 0x00000000U;
 
     /** - Setup pattern count preload register for channel 1 and channel 2*/
     crcREG2->PCOUNT_REG1 = 0U;
@@ -163,8 +163,8 @@ void crcInit( void )
     crcREG2->REGH2 = 0U;
 
     /** - Setup the Channel mode */
-    crcREG2->CTRL2 |= ( uint32 ) ( CRC_FULL_CPU ) |
-                      ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U );
+    crcREG2->CTRL2 |= ( uint32 ) ( CRC_FULL_CPU )
+                    | ( uint32 ) ( ( uint32 ) CRC_FULL_CPU << 8U );
 
     /* USER CODE BEGIN (4) */
     /* USER CODE END */
@@ -211,8 +211,8 @@ void crcSignGen( crcBASE_t * crc, crcModConfig_t * param )
      * allowed in this driver" */
     /*SAFETYMCUSW 439 S MR:11.3 <APPROVED> "Pointer Manupulation required to find offset"
      */
-    psaSigx = ( uint32 ) ( &crc->PSA_SIGREGL1 ) +
-              ( ( uint32 ) ( param->crc_channel ) * 0x40U );
+    psaSigx = ( uint32 ) ( &crc->PSA_SIGREGL1 )
+            + ( ( uint32 ) ( param->crc_channel ) * 0x40U );
     psaSigx_ptr64 = ( uint64 * ) ( psaSigx );
 
     if( param->mode == CRC_AUTO )
@@ -326,15 +326,13 @@ uint64 crcGetSectorSig( crcBASE_t * crc, uint32 channel )
     {
         case 0U:
             /*SAFETYMCUSW 51 S MR:12.3 <APPROVED> "Needs shifting for 64-bit value" */
-            status =
-                ( ( ( uint64 ) ( CRC_PSA_SECSIGREGL1 ) << 32U ) |
-                  ( uint64 ) ( CRC_PSA_SECSIGREGH1 ) );
+            status = ( ( ( uint64 ) ( CRC_PSA_SECSIGREGL1 ) << 32U )
+                       | ( uint64 ) ( CRC_PSA_SECSIGREGH1 ) );
             break;
         case 1U:
             /*SAFETYMCUSW 51 S MR:12.3 <APPROVED> "Needs shifting for 64-bit value" */
-            status =
-                ( ( ( uint64 ) ( CRC_PSA_SECSIGREGL2 ) << 32U ) |
-                  ( uint64 ) ( CRC_PSA_SECSIGREGH2 ) );
+            status = ( ( ( uint64 ) ( CRC_PSA_SECSIGREGL2 ) << 32U )
+                       | ( uint64 ) ( CRC_PSA_SECSIGREGH2 ) );
             break;
         default:
             break;
@@ -528,15 +526,13 @@ uint64 crcGetPSASig( crcBASE_t * crc, uint32 channel )
     {
         case 0U:
             /*SAFETYMCUSW 51 S MR:12.3 <APPROVED> "Needs shifting for 64-bit value" */
-            status =
-                ( ( ( uint64 ) ( CRC_PSA_SIGREGL1 ) << 32U ) |
-                  ( uint64 ) ( CRC_PSA_SIGREGH1 ) );
+            status = ( ( ( uint64 ) ( CRC_PSA_SIGREGL1 ) << 32U )
+                       | ( uint64 ) ( CRC_PSA_SIGREGH1 ) );
             break;
         case 1U:
             /*SAFETYMCUSW 51 S MR:12.3 <APPROVED> "Needs shifting for 64-bit value" */
-            status =
-                ( ( ( uint64 ) ( CRC_PSA_SIGREGL2 ) << 32U ) |
-                  ( uint64 ) ( CRC_PSA_SIGREGH2 ) );
+            status = ( ( ( uint64 ) ( CRC_PSA_SIGREGL2 ) << 32U )
+                       | ( uint64 ) ( CRC_PSA_SIGREGH2 ) );
             break;
         default:
             break;

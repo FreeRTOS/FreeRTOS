@@ -233,9 +233,9 @@ void errata_PBIST_4( void )
             PBIST_wait_done_loop = ( ( sint32 ) pmuCount / 4 ) - 1000;
 
             /* Check PBIST status results (Address, Status, Count, etc...) */
-            if( ( pbistREG->FSRA0 | pbistREG->FSRA1 | pbistREG->FSRDL0 | pbistREG->rsvd3 |
-                  pbistREG->FSRDL1 | pbistREG->rsvd4[ 0U ] | pbistREG->rsvd4[ 1U ] ) !=
-                0U )
+            if( ( pbistREG->FSRA0 | pbistREG->FSRA1 | pbistREG->FSRDL0 | pbistREG->rsvd3
+                  | pbistREG->FSRDL1 | pbistREG->rsvd4[ 0U ] | pbistREG->rsvd4[ 1U ] )
+                != 0U )
             {
                 /* PBIST Failure for the Algorithm chosen above */
                 errataFailNotification( PBISTERRATA_FAIL1 );

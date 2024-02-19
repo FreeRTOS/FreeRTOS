@@ -156,8 +156,8 @@ BaseType_t prvCreateQueueTasks( void )
 
     BaseType_t xReturn = pdPASS;
 
-    uint32_t ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC |
-                            portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC
+                          | portMPU_NORMAL_OIWTNOWA_SHARED;
 
     /* Start the two tasks as described in the comments at the top of this file. */
     TaskParameters_t
@@ -251,19 +251,15 @@ BaseType_t prvCreateQueueTasks( void )
                                      } };
 
     /* Create an unprivileged task with RO access to ucSharedMemory. */
-    xReturn = xTaskCreateRestrictedStatic(
-        &( xQueueReceiveTaskParameters ),
-        &( xReceiveTaskHandle )
-    );
+    xReturn = xTaskCreateRestrictedStatic( &( xQueueReceiveTaskParameters ),
+                                           &( xReceiveTaskHandle ) );
 
     if( pdPASS == xReturn )
     {
         sci_print( "Created the Queue Receive Task\r\n" );
         /* Create an unprivileged task with RW access to ucSharedMemory. */
-        xReturn = xTaskCreateRestrictedStatic(
-            &( xQueueSendTaskParameters ),
-            &xSendTaskHandle
-        );
+        xReturn = xTaskCreateRestrictedStatic( &( xQueueSendTaskParameters ),
+                                               &xSendTaskHandle );
         if( pdPASS == xReturn )
         {
             sci_print( "Created the Queue Send Task\r\n" );
@@ -290,12 +286,10 @@ BaseType_t xCreateQueueTasks( void )
     configASSERT( demoQUEUE_RECEIVE_TASK_PRIORITY > demoQUEUE_SEND_TASK_PRIORITY );
 
     /* Create the queue used by the queue tasks . */
-    xQueue = xQueueCreateStatic(
-        queueQUEUE_LENGTH,
-        sizeof( uint32_t ),
-        xQueueStorage,
-        &xStaticQueue
-    );
+    xQueue = xQueueCreateStatic( queueQUEUE_LENGTH,
+                                 sizeof( uint32_t ),
+                                 xQueueStorage,
+                                 &xStaticQueue );
 
     if( xQueue != NULL )
     {
@@ -311,14 +305,12 @@ BaseType_t xCreateQueueTasks( void )
         TimerCallbackFunction_t pxCallbackFunction = prvQueueSendTimerCallback;
 
         /* Create a statically allocated timer */
-        xTimer = xTimerCreateStatic(
-            pcTimerName,
-            ( const TickType_t ) queueTIMER_SEND_FREQUENCY_MS,
-            xAutoReload,
-            pvTimerID,
-            pxCallbackFunction,
-            &( xStaticTimer )
-        );
+        xTimer = xTimerCreateStatic( pcTimerName,
+                                     ( const TickType_t ) queueTIMER_SEND_FREQUENCY_MS,
+                                     xAutoReload,
+                                     pvTimerID,
+                                     pxCallbackFunction,
+                                     &( xStaticTimer ) );
     }
     else
     {

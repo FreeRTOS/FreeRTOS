@@ -122,9 +122,9 @@ typedef enum phyTimeStamp
 #define Tlk111_FastLinkDownSigLoss     ( 1u << 0 )
 
 /* The Values for SWSCR Registers */
-#define Tlk111_SWSCR1_Val                                                        \
-    ( Tlk111_Auto_MDIX_Ena | Tlk111_Auto_Neg_Ena | Tlk111_Auto_AnMode_100BT_FD | \
-      Tlk111_Force_LEDMode1 | Tlk111_IntPdn_InterruptOut )
+#define Tlk111_SWSCR1_Val                                                      \
+    ( Tlk111_Auto_MDIX_Ena | Tlk111_Auto_Neg_Ena | Tlk111_Auto_AnMode_100BT_FD \
+      | Tlk111_Force_LEDMode1 | Tlk111_IntPdn_InterruptOut )
 #define Tlk111_SWSCR2_Val ( Tlk111_Rsv1 | Tlk111_RXERR_DuringIdle )
 #define Tlk111_SWSCR3_Val ( 0u )
 
@@ -135,28 +135,20 @@ extern uint32 Tlk111IDGet( uint32 mdioBaseAddr, uint32 phyAddr );
 extern void Tlk111SwStrap( uint32 mdioBaseAddr, uint32 phyAddr );
 extern void Tlk111Reset( uint32 mdioBaseAddr, uint32 phyAddr );
 extern boolean Tlk111AutoNegotiate( uint32 mdioBaseAddr, uint32 phyAddr, uint16 advVal );
-extern boolean Tlk111PartnerAbilityGet(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    uint16 * ptnerAblty
-);
-extern boolean Tlk111LinkStatusGet(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    volatile uint32 retries
-);
-extern uint64 Tlk111GetTimeStamp(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    phyTimeStamp_t type
-);
+extern boolean Tlk111PartnerAbilityGet( uint32 mdioBaseAddr,
+                                        uint32 phyAddr,
+                                        uint16 * ptnerAblty );
+extern boolean Tlk111LinkStatusGet( uint32 mdioBaseAddr,
+                                    uint32 phyAddr,
+                                    volatile uint32 retries );
+extern uint64 Tlk111GetTimeStamp( uint32 mdioBaseAddr,
+                                  uint32 phyAddr,
+                                  phyTimeStamp_t type );
 extern void Tlk111EnableLoopback( uint32 mdioBaseAddr, uint32 phyAddr );
 extern void Tlk111DisableLoopback( uint32 mdioBaseAddr, uint32 phyAddr );
-extern boolean Tlk111PartnerSpdGet(
-    uint32 mdioBaseAddr,
-    uint32 phyAddr,
-    uint16 * ptnerAblty
-);
+extern boolean Tlk111PartnerSpdGet( uint32 mdioBaseAddr,
+                                    uint32 phyAddr,
+                                    uint16 * ptnerAblty );
 
 #ifdef __cplusplus
 }

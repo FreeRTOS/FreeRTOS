@@ -441,11 +441,9 @@ void vApplicationIRQHandler( void )
 }
 /*---------------------------------------------------------------------------*/
 
-void vApplicationGetIdleTaskMemory(
-    StaticTask_t ** ppxIdleTaskTCBBuffer,
-    StackType_t ** ppxIdleTaskStackBuffer,
-    uint32_t * pulIdleTaskStackSize
-)
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    uint32_t * pulIdleTaskStackSize )
 {
     /* Pass out a pointer to the StaticTask_t structure in which the Idle
      * task's state will be stored. */
@@ -461,11 +459,9 @@ void vApplicationGetIdleTaskMemory(
 }
 /*---------------------------------------------------------------------------*/
 
-void vApplicationGetTimerTaskMemory(
-    StaticTask_t ** ppxTimerTaskTCBBuffer,
-    StackType_t ** ppxTimerTaskStackBuffer,
-    uint32_t * pulTimerTaskStackSize
-)
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     uint32_t * pulTimerTaskStackSize )
 {
     /* Pass out a pointer to the StaticTask_t structure in which the Timer
      * task's state will be stored. */

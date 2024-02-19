@@ -24,30 +24,50 @@
  *
  */
 
-#ifndef TEST_CONFIG_H
-#define TEST_CONFIG_H
+/**
+ * @file suspend_scheduler_test_runner.c
+ * @brief The implementation of main function to start test runner task.
+ *
+ * Procedure:
+ *   - Initialize environment.
+ *   - Run the test case.
+ */
 
-/* This file must be included at the end of the FreeRTOSConfig.h. It contains
- * any FreeRTOS specific configurations that the test requires. */
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#ifdef configRUN_MULTIPLE_PRIORITIES
-    #undef configRUN_MULTIPLE_PRIORITIES
-#endif /* ifdef configRUN_MULTIPLE_PRIORITIES */
+/* Unit testing support functions. */
+#include "unity.h"
 
-#ifdef configUSE_CORE_AFFINITY
-    #undef configUSE_CORE_AFFINITY
-#endif /* ifdef configUSE_CORE_AFFINITY */
+/* Pico includes. */
+#include "pico/multicore.h"
+#include "pico/stdlib.h"
 
-#ifdef configUSE_TASK_PREEMPTION_DISABLE
-    #undef configUSE_TASK_PREEMPTION_DISABLE
-#endif /* ifdef configUSE_TASK_PREEMPTION_DISABLE */
+/*-----------------------------------------------------------*/
 
-#ifdef configUSE_TIME_SLICING
-    #undef configUSE_TIME_SLICING
-#endif /* ifdef configUSE_TIME_SLICING */
+static void prvTestRunnerTask( void * pvParameters );
 
-#ifdef configUSE_PREEMPTION
-    #undef configUSE_PREEMPTION
-#endif /* ifdef configUSE_PREEMPTION */
+/*-----------------------------------------------------------*/
 
-#endif /* ifndef TEST_CONFIG_H */
+static void prvTestRunnerTask( void * pvParameters )
+{
+    ( void ) pvParameters;
+
+    /* Run test case. */
+    vRunSuspendSchedulerTest();
+
+    vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+void vRunTest( void )
+{
+    xTaskCreate( prvTestRunnerTask,
+                 "testRunner",
+                 configMINIMAL_STACK_SIZE,
+                 NULL,
+                 configMAX_PRIORITIES - 1,
+                 NULL );
+}
+/*-----------------------------------------------------------*/

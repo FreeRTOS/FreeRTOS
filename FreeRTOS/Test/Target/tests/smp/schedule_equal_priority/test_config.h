@@ -30,18 +30,6 @@
 /* This file must be included at the end of the FreeRTOSConfig.h. It contains
  * any FreeRTOS specific configurations that the test requires. */
 
-#ifdef configRUN_MULTIPLE_PRIORITIES
-    #undef configRUN_MULTIPLE_PRIORITIES
-#endif /* ifdef configRUN_MULTIPLE_PRIORITIES */
-
-#ifdef configUSE_CORE_AFFINITY
-    #undef configUSE_CORE_AFFINITY
-#endif /* ifdef configUSE_CORE_AFFINITY */
-
-#ifdef configUSE_TASK_PREEMPTION_DISABLE
-    #undef configUSE_TASK_PREEMPTION_DISABLE
-#endif /* ifdef configUSE_TASK_PREEMPTION_DISABLE */
-
 #ifdef configUSE_TIME_SLICING
     #undef configUSE_TIME_SLICING
 #endif /* ifdef configUSE_TIME_SLICING */
@@ -49,5 +37,17 @@
 #ifdef configUSE_PREEMPTION
     #undef configUSE_PREEMPTION
 #endif /* ifdef configUSE_PREEMPTION */
+
+#define configUSE_TIME_SLICING    1
+#define configUSE_PREEMPTION      1
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Entry point for test runner to run schedule equal priority test.
+ */
+void vRunScheduleEqualPriorityTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

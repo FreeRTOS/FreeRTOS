@@ -886,9 +886,11 @@ void test_xTaskCreate_fail_tcb_malloc( void )
 /* -------------------------- INCLUDE_vTaskDelete --------------------------- */
 void test_vTaskDelete_success_current_task( void )
 {
+    /* Setup */
     ptcb = ( TCB_t * ) create_task();
-
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+
+    xSchedulerRunning = pdTRUE;
 
     /* Expectations */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
@@ -908,6 +910,8 @@ void test_vTaskDelete_success_current_task_ready_empty( void )
     ptcb = ( TCB_t * ) create_task();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
+    xSchedulerRunning = pdTRUE;
+
     /* Expectations */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ], 0 );
@@ -923,9 +927,11 @@ void test_vTaskDelete_success_current_task_ready_empty( void )
 
 void test_vTaskDelete_success_current_task_ready_empty_null_task( void )
 {
+    /* Setup */
     ptcb = ( TCB_t * ) create_task();
-
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+
+    xSchedulerRunning = pdTRUE;
 
     /* Expectations */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
@@ -1122,8 +1128,44 @@ void test_vTaskStartScheduler_idle_fail( void )
 
 void test_vTaskEndScheduler_success()
 {
+    /* Setup. */
+    TCB_t * pIdleTaskTCB = ( TCB_t * ) create_task();
+    TCB_t * pTimerTaskTCB = ( TCB_t * ) create_task();
+
+    uxCurrentNumberOfTasks = 0;
+    pIdleTaskTCB = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+    xIdleTaskHandles[ 0 ] = ( TaskHandle_t ) pIdleTaskTCB;
+    pTimerTaskTCB = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 2, uxCurrentNumberOfTasks );
+    ptcb = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 3, uxCurrentNumberOfTasks );
+
+    xSchedulerRunning = pdTRUE;
+    uxDeletedTasksWaitingCleanUp = 0U; /* prvCheckTasksWaitingTermination function call. */
+
+    /* Expectations. */
+    /* Delete the timer task. */
+    xTimerGetTimerDaemonTaskHandle_ExpectAndReturn( pTimerTaskTCB );
+    uxListRemove_ExpectAndReturn( &pTimerTaskTCB->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &pTimerTaskTCB->xEventListItem, NULL );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vPortFree_ExpectAnyArgs();
+    vPortFree_ExpectAnyArgs();
+
+    /* Delete the idle task. */
+    uxListRemove_ExpectAndReturn( &pIdleTaskTCB->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &pIdleTaskTCB->xEventListItem, NULL );
+    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vPortFree_ExpectAnyArgs();
+    vPortFree_ExpectAnyArgs();
+
     vPortEndScheduler_Expect();
+
+    /* API call. */
     vTaskEndScheduler();
+
+    /* Verification. */
     TEST_ASSERT_EQUAL( pdFALSE, xSchedulerRunning );
 }
 
@@ -4429,8 +4471,8 @@ void test_xTaskGetSchedulerState_not_running( void )
 {
     BaseType_t ret_sched_state;
 
-    vPortEndScheduler_Expect();
-    vTaskEndScheduler();
+    xSchedulerRunning = pdFALSE;
+
     ret_sched_state = xTaskGetSchedulerState();
     TEST_ASSERT_EQUAL( taskSCHEDULER_NOT_STARTED, ret_sched_state );
 }
@@ -4886,6 +4928,8 @@ void test_ulTaskGenericNotifyTake_success( void )
     task_handle = create_task();
     task_handle->ulNotifiedValue[ uxIndexToWait ] = 0;
     /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -4906,6 +4950,8 @@ void test_ulTaskGenericNotifyTake_success2( void )
     task_handle = create_task();
     task_handle->ulNotifiedValue[ uxIndexToWait ] = 2;
     /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -4926,6 +4972,8 @@ void test_ulTaskGenericNotifyTake_success_clear_count( void )
     task_handle = create_task();
     task_handle->ulNotifiedValue[ uxIndexToWait ] = 5;
     /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdTRUE,
@@ -4951,7 +4999,8 @@ void test_ulTaskGenericNotifyTake_success_yield( void )
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem, xTickCount + 9 );
     vListInsert_Expect( pxDelayedTaskList, &ptcb->xStateListItem );
-    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -5565,16 +5614,21 @@ void test_xTaskGenericNotifyWait_success_notif_received( void )
 
     TaskHandle_t task_handle;
 
+    /* Setup */
     task_handle = create_task();
     ptcb = task_handle;
     ptcb->ucNotifyState[ uxIndexToWait ] = 2; /* taskNOTIFICATION_RECEIVED */
     ptcb->ulNotifiedValue[ uxIndexToWait ] = 5;
-
+    /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,
                                   ulBitsToClearOnExit,
                                   &pullNotificationValue,
                                   xTicksToWait );
+    /* Validations */
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 5, pullNotificationValue );
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
@@ -5625,12 +5679,14 @@ void test_xTaskGenericNotifyWait_success_notif_not_received_no_wait( void )
 
     TaskHandle_t task_handle;
 
+    /* Setup */
     task_handle = create_task();
     ptcb = task_handle;
     ptcb->ucNotifyState[ uxIndexToWait ] = 1; /* taskWAITING_NOTIFICATION */
     ptcb->ulNotifiedValue[ uxIndexToWait ] = 5;
     /* Expectations */
-
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,
@@ -5653,12 +5709,14 @@ void test_xTaskGenericNotifyWait_success_notif_not_received_pull_null( void )
 
     TaskHandle_t task_handle;
 
+    /* Setup */
     task_handle = create_task();
     ptcb = task_handle;
     ptcb->ucNotifyState[ uxIndexToWait ] = 1; /* taskWAITING_NOTIFICATION */
     ptcb->ulNotifiedValue[ uxIndexToWait ] = 5;
     /* Expectations */
-
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,

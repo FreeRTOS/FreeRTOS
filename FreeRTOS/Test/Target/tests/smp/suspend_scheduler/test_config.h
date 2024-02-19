@@ -34,14 +34,6 @@
     #undef configRUN_MULTIPLE_PRIORITIES
 #endif /* ifdef configRUN_MULTIPLE_PRIORITIES */
 
-#ifdef configUSE_CORE_AFFINITY
-    #undef configUSE_CORE_AFFINITY
-#endif /* ifdef configUSE_CORE_AFFINITY */
-
-#ifdef configUSE_TASK_PREEMPTION_DISABLE
-    #undef configUSE_TASK_PREEMPTION_DISABLE
-#endif /* ifdef configUSE_TASK_PREEMPTION_DISABLE */
-
 #ifdef configUSE_TIME_SLICING
     #undef configUSE_TIME_SLICING
 #endif /* ifdef configUSE_TIME_SLICING */
@@ -49,5 +41,18 @@
 #ifdef configUSE_PREEMPTION
     #undef configUSE_PREEMPTION
 #endif /* ifdef configUSE_PREEMPTION */
+
+#define configRUN_MULTIPLE_PRIORITIES    1
+#define configUSE_TIME_SLICING           1
+#define configUSE_PREEMPTION             1
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Entry point for test runner to run suspend scheduler test.
+ */
+void vRunSuspendSchedulerTest( void );
+
+/*-----------------------------------------------------------*/
 
 #endif /* ifndef TEST_CONFIG_H */

@@ -39,6 +39,9 @@
 * See http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
+#define configUSE_TRACE_FACILITY                 0
+#define configGENERATE_RUN_TIME_STATS            0
+
 #define configUSE_PREEMPTION                     1
 #define configUSE_IDLE_HOOK                      0
 #define configUSE_TICK_HOOK                      1
@@ -75,35 +78,35 @@
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet                         1
-#define INCLUDE_uxTaskPriorityGet                        1
-#define INCLUDE_vTaskDelete                              1
-#define INCLUDE_vTaskCleanUpResources                    0
-#define INCLUDE_vTaskSuspend                             1
-#define INCLUDE_vTaskDelayUntil                          1
-#define INCLUDE_vTaskDelay                               1
-#define INCLUDE_uxTaskGetStackHighWaterMark              1
-#define INCLUDE_xTaskGetSchedulerState                   1
-#define INCLUDE_xTimerGetTimerDaemonTaskHandle           1
-#define INCLUDE_xTaskGetIdleTaskHandle                   1
-#define INCLUDE_xSemaphoreGetMutexHolder                 1
-#define INCLUDE_eTaskGetState                            1
-#define INCLUDE_xTimerPendFunctionCall                   1
-#define INCLUDE_xTaskAbortDelay                          1
-#define INCLUDE_xTaskGetHandle                           1
+#define INCLUDE_vTaskPrioritySet                  1
+#define INCLUDE_uxTaskPriorityGet                 1
+#define INCLUDE_vTaskDelete                       1
+#define INCLUDE_vTaskCleanUpResources             0
+#define INCLUDE_vTaskSuspend                      1
+#define INCLUDE_vTaskDelayUntil                   1
+#define INCLUDE_vTaskDelay                        1
+#define INCLUDE_uxTaskGetStackHighWaterMark       1
+#define INCLUDE_xTaskGetSchedulerState            1
+#define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
+#define INCLUDE_xTaskGetIdleTaskHandle            1
+#define INCLUDE_xSemaphoreGetMutexHolder          1
+#define INCLUDE_eTaskGetState                     1
+#define INCLUDE_xTimerPendFunctionCall            1
+#define INCLUDE_xTaskAbortDelay                   1
+#define INCLUDE_xTaskGetHandle                    1
 
 /* This demo makes use of one or more example stats formatting functions. These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within
  * FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS             0
+#define configUSE_STATS_FORMATTING_FUNCTIONS      0
 
-#define configKERNEL_INTERRUPT_PRIORITY                  ( 255 ) /* All eight bits as QEMU doesn't model the priority bits. */
+#define configKERNEL_INTERRUPT_PRIORITY           ( 255 )        /* All eight bits as QEMU doesn't model the priority bits. */
 
 
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
-See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 4 )
+ * See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY             ( 4 )
 
 /* Use the Cortex-M3 optimised task selection rather than the generic C code
  * version. */

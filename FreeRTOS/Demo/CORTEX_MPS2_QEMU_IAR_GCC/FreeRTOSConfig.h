@@ -92,11 +92,11 @@
 #define INCLUDE_xTaskAbortDelay                          1
 #define INCLUDE_xTaskGetHandle                           1
 
-/* This demo makes use of one or more example stats formatting functions.  These
+/* This demo makes use of one or more example stats formatting functions. These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within
  * FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS             1
+#define configUSE_STATS_FORMATTING_FUNCTIONS             0
 
 #define configKERNEL_INTERRUPT_PRIORITY                  ( 255 ) /* All eight bits as QEMU doesn't model the priority bits. */
 

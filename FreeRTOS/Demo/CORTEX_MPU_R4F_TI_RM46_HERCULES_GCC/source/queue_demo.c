@@ -152,12 +152,12 @@ BaseType_t prvCreateQueueTasks( void )
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE_SHAREABLE;
 
     BaseType_t xReturn = pdPASS;
 
-    uint32_t ulRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC
-                          | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulRegionAttr = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC
+                          | portMPU_REGION_NORMAL_OIWTNOWA_SHARED;
 
     /* Start the two tasks as described in the comments at the top of this file. */
     TaskParameters_t

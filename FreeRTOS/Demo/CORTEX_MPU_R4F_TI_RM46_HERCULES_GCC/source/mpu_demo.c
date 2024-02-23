@@ -80,7 +80,6 @@ static volatile uint8_t ucSharedMemory4[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) );
 
     #if( configTOTAL_MPU_REGIONS == 16 )
-
 static volatile uint8_t ucSharedMemory5[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) );
 
@@ -92,7 +91,6 @@ static volatile uint8_t ucSharedMemory7[ SHARED_MEMORY_SIZE ]
 
 static volatile uint8_t ucSharedMemory8[ SHARED_MEMORY_SIZE ]
     __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) );
-
     #endif /* configTOTAL_MPU_REGIONS == 16 */
 
 /* These tasks will use over 288 bytes as of time of writing.
@@ -288,15 +286,15 @@ BaseType_t xCreateMPUTasks( void )
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE_SHAREABLE;
 
     BaseType_t xReturn = pdPASS;
 
-    uint32_t ulReadMemoryPermissions = portMPU_PRIV_RW_USER_RO_NOEXEC
-                                     | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulReadMemoryPermissions = portMPU_REGION_PRIV_RW_USER_RO_NOEXEC
+                                     | portMPU_REGION_NORMAL_OIWTNOWA_SHARED;
 
-    uint32_t ulWriteMemoryPermissions = portMPU_PRIV_RW_USER_RW_NOEXEC
-                                      | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulWriteMemoryPermissions = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC
+                                      | portMPU_REGION_NORMAL_OIWTNOWA_SHARED;
 
     ulStaticUnprotectedData = 0xC3;
 

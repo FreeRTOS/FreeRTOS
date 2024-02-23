@@ -150,7 +150,7 @@ BaseType_t xCreateRegisterTestTasks( void )
                     /* MPU Region 0 */
                     { loopCounter,
                       0x20,
-                      portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED,
+                      portMPU_REGION_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_NORMAL_OIWTNOWA_SHARED,
                     },
                     /* MPU Region 1 */
                     { 0, 0, 0 },
@@ -196,7 +196,7 @@ BaseType_t xCreateRegisterTestTasks( void )
                      /* MPU Region 0 */
                      { loopCounter,
                        0x20,
-                       portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_NORMAL_OIWTNOWA_SHARED,
+                       portMPU_REGION_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_NORMAL_OIWTNOWA_SHARED,
                      },
                     /* MPU Region 1 */
                     { 0, 0, 0 },

@@ -286,15 +286,15 @@ BaseType_t xCreateMPUTasks( void )
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE_SHAREABLE;
 
     BaseType_t xReturn = pdPASS;
 
-    uint32_t ulReadMemoryPermissions = portMPU_PRIV_RW_USER_RO_NOEXEC
-                                     | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulReadMemoryPermissions = portMPU_REGION_PRIV_RW_USER_RO_NOEXEC
+                                     | portMPU_REGION_NORMAL_OIWTNOWA_SHARED;
 
-    uint32_t ulWriteMemoryPermissions = portMPU_PRIV_RW_USER_RW_NOEXEC
-                                      | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulWriteMemoryPermissions = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC
+                                      | portMPU_REGION_NORMAL_OIWTNOWA_SHARED;
 
     ulStaticUnprotectedData = 0xC3;
 

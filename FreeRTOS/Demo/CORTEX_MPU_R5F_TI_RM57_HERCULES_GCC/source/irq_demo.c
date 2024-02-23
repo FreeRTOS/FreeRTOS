@@ -225,12 +225,12 @@ BaseType_t xCreateIRQTestTask( void )
 
     uint32_t ulPeriphRegionStart = ( uint32_t ) __peripherals_start__;
     uint32_t ulPeriphRegionSize = ( uint32_t ) __peripherals_end__ - ulPeriphRegionStart;
-    uint32_t ulPeriphRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE;
+    uint32_t ulPeriphRegionAttr = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC | portMPU_REGION_DEVICE_SHAREABLE;
 
     uint32_t ulSRAMBaseAddress = ( uint32_t ) __SRAM_segment_start__;
     uint32_t ulSRAMRegionSize = ( uint32_t ) __SRAM_segment_end__ - ulSRAMBaseAddress;
-    uint32_t ulSRAMRegionAttr = portMPU_PRIV_RW_USER_RW_NOEXEC
-                              | portMPU_NORMAL_OIWTNOWA_SHARED;
+    uint32_t ulSRAMRegionAttr = portMPU_REGION_PRIV_RW_USER_RW_NOEXEC
+                              | portMPU_REGION_NORMAL_OIWTNOWA_SHARED;
 
     BaseType_t xReturn = pdFAIL;
     /* Create the register check tasks, as described at the top of this file. */

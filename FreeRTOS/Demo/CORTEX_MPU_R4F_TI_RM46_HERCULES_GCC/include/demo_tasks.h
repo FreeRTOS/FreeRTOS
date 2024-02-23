@@ -100,7 +100,8 @@
 #define demoIRQ_TASK_PRIORITY              ( configTIMER_TASK_PRIORITY + 2UL )
 
 /** @brief Priority at which the Notification Demo Task is created. */
-#define demoNOTIFICATION_TASK_PRIORITY     ( configTIMER_TASK_PRIORITY + 1UL )
+#define demoNOTIFICATION_TASK_PRIORITY \
+    ( configTIMER_TASK_PRIORITY + 1UL ) | portPRIVILEGE_BIT
 
 /* -------------------------- Register Test Tasks -------------------------- */
 

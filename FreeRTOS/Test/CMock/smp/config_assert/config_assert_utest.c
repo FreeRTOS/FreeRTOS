@@ -406,19 +406,27 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
 }
 
 /**
- * @brief This test ensures that the code asserts when a task is suspended while
- *        the scheduler is suspended
+ * @brief vTaskSuspend - scheduler suspended assertion.
+ *
+ * This test ensures that the code asserts when a task is suspended while
+ * the scheduler is suspended
  *
  * <b>Coverage</b>
  * @code{c}
- * vTaskDelete( xTaskToDelete );
- *
- * configASSERT( uxSchedulerSuspended == 0 );
- *
+ * if( xSchedulerRunning != pdFALSE )
+ * {
+ *     if( pxTCB->xTaskRunState == ( BaseType_t ) portGET_CORE_ID() )
+ *     {
+ *         configASSERT( uxSchedulerSuspended == 0 );
+ *         vTaskYieldWithinAPI();
+ *     }
+ *     else
+ *     {
+ *         prvYieldCore( pxTCB->xTaskRunState );
+ *     }
+ * }
  * @endcode
- *
- * configNUMBER_OF_CORES > 1
- * INCLUDE_vTaskSuspend
+ * configASSERT( uxSchedulerSuspended == 0 ) is triggered.
  */
 void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
 {
@@ -575,6 +583,7 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();

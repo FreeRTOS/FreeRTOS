@@ -1,7 +1,7 @@
 # Intro
 
 This directory contains a FreeRTOS project to build either a Blinky, or MPU demo
-for the [RM46L852](https://www.ti.com/product/RM46L852) Target.
+for the [RM46L852](https://www.ti.com/product/RM46L852).
 
 It is set up to blink LEDs on the Texas Instruments
 [LAUNCHXL2-RM46](https://www.ti.com/tool/LAUNCHXL2-RM46)

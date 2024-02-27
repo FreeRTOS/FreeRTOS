@@ -70,7 +70,7 @@
     /** @brief Value sent from the timer to the receive task */
     #define queueVALUE_SENT_FROM_TIMER   ( 0x4321UL )
 
-/* --------------------- Task Function Decleration --------------------- */
+/* --------------------- Task Function Declaration --------------------- */
 
 /** @brief Function run by the task that receives data from the queue.
  * @note

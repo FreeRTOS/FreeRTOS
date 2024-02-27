@@ -112,7 +112,7 @@ static StackType_t xRWAccessTaskStack[ configMINIMAL_STACK_SIZE ]
 /** @brief Statically declared TCB Used by the Read Write Task */
 PRIVILEGED_DATA static StaticTask_t xRWAccessTaskTCB;
 
-/* ----------------------- Task Function Decleration ----------------------- */
+/* ----------------------- Task Function Declaration ----------------------- */
 
 /** @brief Task function used by the task with RO access to shared memory
  *

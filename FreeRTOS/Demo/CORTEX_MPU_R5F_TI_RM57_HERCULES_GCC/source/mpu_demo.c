@@ -447,7 +447,7 @@ PRIVILEGED_FUNCTION portDONT_DISCARD void vHandleMemoryFault(
     if( ( ucROTaskFaultTracker[ 0 ] == 1U ) || ( ucROTaskFaultTracker[ 1 ] == 1U ) )
     {
         /* Read program counter. */
-        ulPC = pulFaultStackAddress[ 13 ];
+        ulPC = pulFaultStackAddress[ 6 ];
 
         /* Read the offending instruction. */
         ulOffendingInstruction = *( uint32_t * ) ulPC;
@@ -479,7 +479,7 @@ PRIVILEGED_FUNCTION portDONT_DISCARD void vHandleMemoryFault(
         }
 
         /* Save the new program counter on the stack. */
-        pulFaultStackAddress[ 13 ] = ulPC;
+        pulFaultStackAddress[ 6 ] = ulPC;
 
         /* Mark the fault as handled. */
         if( ucROTaskFaultTracker[ 0 ] == 1U )

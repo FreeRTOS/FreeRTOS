@@ -62,27 +62,31 @@ noRAMerror:
         tst     r0, #0x80           @ check if bit 7 is set, this indicates uncorrectable ECC error on ATCM
         bne     flashErrorFound
 
-/* So currently this fault handler expects the LR to be the instruction that failed.
- * If this is hit pop off all the registers that got pushed, move the LR to be the
- * instruction that caused the abort. Save the return state, push the registers,
- * then call the vHandleMemoryFault. Once we return from it, the LR will be updated
- * on the stack, so pop the other registers off and leave the handler */
+/* Create a Exception Fault Stack similiar to the way it is created by the ARMvM
+ * architecture. The auto-pushed exception stack will contain:
+ * +-------+-----+----------+----------+------+
+ * | R0-R3 | R12 | LR (R14) | PC (R15) | CPSR |
+ * +-------+-----+----------+----------+------+
+ *
+ * <-------><----><---------><---------><----->
+ *     4      1        1         1         1
+*/
 MemManage_Handler:
         /* Pop the pushed values so we can re-do the stack the way we need it to be */
         LDMFD   R13!, {R0 - R12, LR}
-        /* Abort exceptions increment the LR to be 0x8 after the fault-inducing instruction */
+        /* Abort exceptions increment the LR 0x8 after the fault-inducing instruction */
         SUB     LR, #0x8
-        /* Save the return state onto the stack, this pushes the LR and the CPSR */
-        SRSDB   sp!, #0x17
-        /* Push R0-R12 onto the abort mode stack */
-        STMFD   SP!, {R0-R12}
+
+        SRSDB   SP!, #0x17              /* Save the pre-exception PC and CPSR */
+        STMDB   SP, { R0-R3, R12, LR }^ /* Save the user R0-R3, R12, and LR */
+        SUB     SP, SP, #0x18           /* Can't auto-increment SP with ^ operator */
         /* Need the SP in R0 */
         MOV     R0, SP
+
         /* Call vHandleMemoryFault - This will modify the return state if necessary */
         BLX     vHandleMemoryFault
-        /* Come back to here */
-        /* Pop the original values off the stack */
-        POP     { R0-R12 }
+
+        POP     { R0-R3, R12, LR }         /* Pop the original values off the stack */
         /* Return to the next instruction after the fault was generated */
         RFEIA   SP!
 

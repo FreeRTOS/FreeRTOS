@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.25)
 
 SET(CMAKE_CROSSCOMPILING "TRUE" CACHE STRING "Set Cross Compiling to true" FORCE)
 
@@ -38,14 +38,20 @@ GET_FILENAME_COMPONENT(BOARD_FILES_DIR ${BOARD_FILES_DIR_REL} ABSOLUTE)
 SET(FREERTOS_CONFIG_FILE_DIRECTORY "${DEMO_DIR}/include" CACHE STRING "Config File Path")
 SET(FREERTOS_PORT "GCC_ARM_CRX_MPU" CACHE STRING "FreeRTOS Port to Use")
 
+ADD_LIBRARY(freertos_config INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(freertos_config SYSTEM
+  INTERFACE
+    INCLUDE ${FREERTOS_CONFIG_FILE_DIRECTORY}
+)
+
 # Clone the tag of the FreeRTOS-Kernel last tested with this project.
 INCLUDE(FetchContent)
 
 FetchContent_Declare(
     FreeRTOS-Kernel
-    GIT_REPOSITORY https://github.com/Skptak/FreeRTOS-Kernel.git
-    GIT_TAG ARM_CRx_MPU
-    SOURCE_DIR "FreeRTOS-Kernel"
+    GIT_REPOSITORY https://github.com/FreeRTOS/FreeRTOS-Kernel.git
+    GIT_TAG main
+    SOURCE_DIR "${DEMO_DIR}/../../Source"
     USES_TERMINAL_DOWNLOAD YES
     USES_TERMINAL_UPDATE   YES
     BUILD_COMMAND "")
@@ -75,7 +81,7 @@ INCLUDE_DIRECTORIES(
 )
 
 # Source files used for the FreeRTOS Demos
-FILE(GLOB FREERTOS_DEMO_SOURCES
+SET(FREERTOS_DEMO_SOURCES
     ${DEMO_DIR}/source/main.c
     ${DEMO_DIR}/source/irq_demo.c
     ${DEMO_DIR}/source/mpu_demo.c

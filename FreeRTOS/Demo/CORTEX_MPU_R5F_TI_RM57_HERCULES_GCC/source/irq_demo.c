@@ -65,11 +65,10 @@ PRIVILEGED_DATA volatile static uint32_t ulIntNestTestVal;
 /** @brief Entry point for the Unprivileged IRQ Test Task.
  * @param pvParameters A test value to ensure the task's arguments are correctly set.
  * @note This task raises Software Interrupts (SWI) in the form of IRQs using the
- * Vectored Interrupt Manager (VIM) built into the RM46 by Texas Instrument (TI).
+ * Vectored Interrupt Manager (VIM) built into the RM57 by Texas Instrument (TI).
  * It does this through use of the Software Interrupt Registers (SSIRs).
- * More information about these can be found in the following documents:
- * SWI Info Section 6.15: https://www.ti.com/lit/ds/symlink/rm46l852.pdf?ts=1704878833799
- * VIM Info: https://www.ti.com/lit/pdf/spna218
+ * More information about these can be found in the following document:
+ * https://www.ti.com/document-viewer/RM57L843/datasheet#system_information_and_electrical_specifications/SPNS1607150
  */
 static void prvIRQTestTask( void * pvParameters )
 {

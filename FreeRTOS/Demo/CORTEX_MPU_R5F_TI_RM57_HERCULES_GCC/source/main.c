@@ -333,8 +333,8 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 void vApplicationIRQHandler( void )
 {
     /* Load the IRQ Channel Number and Function PTR from the VIM */
-    volatile uint32_t ulIRQChannelIndex = mainVIM_IRQ_INDEX;
-    volatile ISRFunction_t xIRQFncPtr = mainVIM_IRQ_VEC_REG;
+    volatile uint32_t ulIRQChannelIndex = portVIM_IRQ_INDEX;
+    volatile ISRFunction_t xIRQFncPtr = portVIM_IRQ_VEC_REG;
 
     /* Setup Bit Mask Clear Values */
     volatile uint32_t ulPendingIRQMask;
@@ -403,8 +403,8 @@ void vApplicationIRQHandler( void )
     else
     {
         /* Information about the mapping of Interrupts in the VIM to their
-         * causes can be found in the RM48L852 Data Sheet:
-         * https://www.ti.com/lit/ds/symlink/rm46l852.pdf?ts=1704878833799 */
+         * causes can be found in the RM57L843 Data Sheet:
+         * https://www.ti.com/document-viewer/RM57L843/datasheet#system_information_and_electrical_specifications/SPNS1607150 */
         /* An IRQ Raised by Channel Two of the VIM is RTI Compare Interrupt 0. */
         if( 2UL == ulIRQChannelIndex )
         {

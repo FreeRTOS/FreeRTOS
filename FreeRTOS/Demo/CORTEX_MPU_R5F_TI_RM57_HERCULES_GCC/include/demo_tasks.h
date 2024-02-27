@@ -27,7 +27,7 @@
 #ifndef DEMO_TASKS_H
 #define DEMO_TASKS_H
 
-/* ------------------------------ Demo Option ------------------------------ */
+/* ----------------------------------- Demo Option ----------------------------------- */
 
 /** @brief Create Tasks that are written in assembly to test context swaps */
 #define REGISTER_DEMO     0x1
@@ -103,9 +103,9 @@
 #define demoNOTIFICATION_TASK_PRIORITY \
     ( configTIMER_TASK_PRIORITY + 1UL ) | portPRIVILEGE_BIT
 
-/* -------------------------- Register Test Tasks -------------------------- */
+/* ------------------------------- Register Test Tasks ------------------------------- */
 
-/** @brief ASM function in reg_test_GCC.S that tests proper context swaps. */
+/* @brief ASM function in reg_test_GCC.S that tests proper context swaps. */
 void vRegTest1Implementation( void );
 
 /** @brief ASM function in reg_test_GCC.S that tests proper context swaps. */
@@ -116,9 +116,10 @@ void vRegTest2Implementation( void );
  */
 BaseType_t xCreateRegisterTestTasks( void );
 
-/* ------------------------ Demo Tasks Declarations ------------------------ */
+/* ----------------------------- Demo Tasks Declarations ----------------------------- */
 
-/** @brief Create two tasks, a queue, and a timer, which are used to blink an LED.
+/**
+ * @brief Create two tasks, a queue, and a timer, which are used to blink an LED.
  *
  * @return
  * pdPASS if all objects are created.
@@ -126,7 +127,8 @@ BaseType_t xCreateRegisterTestTasks( void );
  */
 BaseType_t xCreateQueueTasks( void );
 
-/** @brief Create the MPU Tasks that trigger data aborts.
+/**
+ * @brief Create the MPU Tasks that trigger data aborts.
  *
  * @note The MPU demo creates 2 unprivileged tasks - One of which has Read Only
  * access to a shared memory region while the other has Read Write access. The
@@ -142,14 +144,15 @@ BaseType_t xCreateMPUTasks( void );
 /** @brief Create a task that waits for a response from a nested IRQ
  *
  * @return pdPASS if tasks are created
- * pdFAIl if tasks are not created
+ * pdFAIL if tasks are not created
  */
 BaseType_t xCreateIRQTestTask( void );
 
-/** @brief Create tasks that send task notifications back and forth.
+/**
+ * @brief Create tasks that send task notifications back and forth.
  *
  * @return pdPASS if tasks are created
- * pdFAIl if tasks are not created
+ * pdFAIL if tasks are not created
  */
 BaseType_t xCreateNotificationTestTask( void );
 
@@ -168,12 +171,13 @@ PRIVILEGED_FUNCTION void vIRQDemoHandler( void );
 #define portRTI_SETINTENA_REG    ( *( ( volatile uint32_t * ) 0xFFFFFC80UL ) )
 #define portRTI_CLEARINTENA_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC84UL ) )
 #define portRTI_INTFLAG_REG      ( *( ( volatile uint32_t * ) 0xFFFFFC88UL ) )
-
 #define portEND_OF_INTERRUPT_REG ( ( ( volatile uint32_t * ) configEOI_ADDRESS ) )
+
+
 /* Registers used by the Vectored Interrupt Manager */
 typedef void ( *ISRFunction_t )( void );
-#define mainVIM_IRQ_INDEX     ( *( ( volatile uint32_t * ) 0xFFFFFE00 ) )
-#define mainVIM_IRQ_VEC_REG   ( *( ( volatile ISRFunction_t * ) 0xFFFFFE70 ) )
+#define portVIM_IRQ_INDEX     ( *( ( volatile uint32_t * ) 0xFFFFFE00 ) )
+#define portVIM_IRQ_VEC_REG   ( *( ( volatile ISRFunction_t * ) 0xFFFFFE70 ) )
 
 #define portSSI_INT_REG_BASE  ( ( ( volatile uint32_t * ) 0xFFFFFFB0 ) )
 
@@ -192,13 +196,13 @@ typedef void ( *ISRFunction_t )( void );
 #define portSSI_VEC_REG       ( *( ( volatile uint32_t * ) 0xFFFFFFF4 ) )
 #define portSSI_INTFLAG_REG   ( *( ( volatile uint32_t * ) 0xFFFFFFF8 ) )
 
-/* ---------------------- Shared Function Deceleration ---------------------- */
+/* --------------------------- Shared Function Deceleration --------------------------- */
 
 /** @brief Function to toggle LEDs on the RM57-XL2 Launchpad
  * @param ulLED Which LED to flicker
  */
 void vToggleLED( uint32_t ulLED );
 
-/* ------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 
 #endif /* DEMO_TASKS_H */

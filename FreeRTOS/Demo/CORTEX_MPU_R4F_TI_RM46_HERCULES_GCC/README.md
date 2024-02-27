@@ -22,10 +22,10 @@ or built using [CMake](https://cmake.org/).
 
 If building with CCS you need to install CCS, and then install the
 [ARM Compiler Tools](https://software-dl.ti.com/ccs/esd/documents/ccs_compiler-installation-selection.html#compiler-installation)
-as well as the RM46
+as well as the Hercules Safety MCUs
 [device support targets](https://software-dl.ti.com/ccs/esd/documents/users_guide/ccs_installation.html#device-support).
 
-After doing this you can then open this directory in CCS, which will load up the RM57
+After doing this, you can then open this directory in CCS, which will load up the
 project. If everything installed correctly you should then be able to build and flash
 to the board.
 
@@ -33,7 +33,7 @@ Please be aware there is a filter on [CMakeLists.txt](./CMakeLists.txt) and the 
 directory in the CCS project.
 
 This is to keep CCS from attempting to use resources generated with a CMAKE build.
-If a directory other than "build" is selected when building using CMAKE CCS will
+If a directory other than "build" is selected when building using CMAKE, CCS will
 attempt to use the the files in that directory, leading to build issues in CCS.
 At time of writing this can be fixed by right clicking the folder in CCS
 and selecting "Exclude from build".
@@ -44,12 +44,10 @@ When using CMake you will need to install a compatible version of the
 [Arm GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)
 and add this to your `PATH`.
 
-After doing this you can then build either a [Blinky](./source/main_blinky.c#L122),
-or the [MPU Demo](../Common/MPU_Demo/mpu_demo.c#L257).
-The two targets are the  RM57_FreeRTOS_Blinky_Demo.out, and RM57_FreeRTOS_MPU_Demo.out
-binaries.
+After doing this inspect the [demo_task.h](./include/demo_tasks.h#L30) file to see
+what the possible demo configurations are, and select your desired demo config.
 
-The `all` options builds both of these.
+The `all` options builds all combinations of these.
 Example Usage:
 
 ```sh

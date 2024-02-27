@@ -29,8 +29,6 @@
         "files.exclude": {
             "**/.launches/**": true,
             "**/.settings/**": true,
-            "**/build/**": true,
-            "**/Debug/**": true,
             "**/.ccsproject/**": true,
             "**/examples**": true,
             "**/.github**": true,

@@ -338,8 +338,8 @@ void vAssertCalled( const char * pcFuncName, uint32_t ulLine ) /* FREERTOS_SYSTE
 void vApplicationIRQHandler( void )
 {
     /* Load the IRQ Channel Number and Function PTR from the VIM */
-    volatile uint32_t ulIRQChannelIndex = mainVIM_IRQ_INDEX;
-    volatile ISRFunction_t xIRQFncPtr = mainVIM_IRQ_VEC_REG;
+    volatile uint32_t ulIRQChannelIndex = portVIM_IRQ_INDEX;
+    volatile ISRFunction_t xIRQFncPtr = portVIM_IRQ_VEC_REG;
 
     /* Setup Bit Mask Clear Values */
     volatile uint32_t ulPendingIRQMask;

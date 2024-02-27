@@ -405,6 +405,16 @@ static void prvCheckTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
+static void prvEndSchedulerTask( void * pvParameters )
+{
+    ( void ) pvParameters;
+
+    /* Calling vTaskEndScheduler in an application created task. */
+    vTaskEndScheduler();
+}
+
+/*-----------------------------------------------------------*/
+
 static void prvTestTask( void * pvParameters )
 {
     const unsigned long ulMSToSleep = 5;
@@ -428,6 +438,7 @@ void vFullDemoIdleFunction( void )
 {
     const unsigned long ulMSToSleep = 15;
     void * pvAllocated;
+    BaseType_t xReturn;
 
     /* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
      * tasks waiting to be terminated by the idle task. */
@@ -484,7 +495,10 @@ void vFullDemoIdleFunction( void )
 
         if( ( xTaskGetTickCount() - configINITIAL_TICK_COUNT ) >= xMaxRunTime )
         {
-            vTaskEndScheduler();
+            /* Creating another task to end the scheduler to prevent deleting idle
+             * task itself in vTaskEndScheduler. */
+            xReturn = xTaskCreate( prvEndSchedulerTask, "TestEnd", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+            configASSERT( xReturn == pdPASS );
         }
     }
     #endif /* if ( projCOVERAGE_TEST == 1 ) */

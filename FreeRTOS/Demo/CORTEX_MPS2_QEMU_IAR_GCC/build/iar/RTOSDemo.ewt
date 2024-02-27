@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <fileVersion>3</fileVersion>
+    <fileVersion>4</fileVersion>
     <configuration>
         <name>Debug</name>
         <toolchain>
@@ -9,9 +9,9 @@
         <debug>1</debug>
         <settings>
             <name>C-STAT</name>
-            <archiveVersion>515</archiveVersion>
+            <archiveVersion>518</archiveVersion>
             <data>
-                <version>515</version>
+                <version>518</version>
                 <cstatargs>
                     <useExtraArgs>0</useExtraArgs>
                     <extraArgs></extraArgs>
@@ -25,7 +25,7 @@
                     <outputDir>Debug\C-STAT</outputDir>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>2.3.1</cstat_version>
+                    <cstat_version>2.6.0</cstat_version>
                     <checks_tree>
                         <package enabled="true" name="STDCHECKS">
                             <group enabled="true" name="ARR">
@@ -356,6 +356,7 @@
                                 <check enabled="true" name="CERT-ERR30-C_b" />
                                 <check enabled="true" name="CERT-ERR30-C_c" />
                                 <check enabled="true" name="CERT-ERR30-C_d" />
+                                <check enabled="true" name="CERT-ERR30-C_e" />
                                 <check enabled="true" name="CERT-ERR32-C" />
                                 <check enabled="true" name="CERT-ERR33-C_a" />
                                 <check enabled="true" name="CERT-ERR33-C_b" />
@@ -798,6 +799,7 @@
                                 <check enabled="false" name="MISRAC2012-Dir-4.11_h" />
                                 <check enabled="false" name="MISRAC2012-Dir-4.11_i" />
                                 <check enabled="false" name="MISRAC2012-Dir-4.12" />
+                                <check enabled="false" name="MISRAC2012-Dir-4.13_a" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_b" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_c" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_d" />
@@ -817,6 +819,7 @@
                                 <check enabled="true" name="MISRAC2012-Dir-4.14_j" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.14_l" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.14_m" />
+                                <check enabled="false" name="MISRAC2012-Dir-4.15" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-1">
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_a" />
@@ -830,6 +833,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_i" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_j" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_k" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.3_l" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_m" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_n" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_o" />
@@ -840,7 +844,15 @@
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_t" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_u" />
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_v" />
-                                <check enabled="true" name="MISRAC2012-Rule-1.3_w" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.4_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.4_b" />
+                                <check enabled="false" name="MISRAC2012-Rule-1.5_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.5_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.5_c" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.5_d" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.5_e" />
+                                <check enabled="true" name="MISRAC2012-Rule-1.5_f" />
+                                <check enabled="false" name="MISRAC2012-Rule-1.5_g" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-2">
                                 <check enabled="true" name="MISRAC2012-Rule-2.1_a" />
@@ -876,6 +888,7 @@
                             <group enabled="true" name="MISRAC2012-Rule-6">
                                 <check enabled="true" name="MISRAC2012-Rule-6.1" />
                                 <check enabled="true" name="MISRAC2012-Rule-6.2" />
+                                <check enabled="true" name="MISRAC2012-Rule-6.3" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-7">
                                 <check enabled="true" name="MISRAC2012-Rule-7.1" />
@@ -883,6 +896,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-7.3" />
                                 <check enabled="true" name="MISRAC2012-Rule-7.4_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-7.4_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-7.5" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-8">
                                 <check enabled="true" name="MISRAC2012-Rule-8.1" />
@@ -900,6 +914,9 @@
                                 <check enabled="true" name="MISRAC2012-Rule-8.12" />
                                 <check enabled="false" name="MISRAC2012-Rule-8.13" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.14" />
+                                <check enabled="false" name="MISRAC2012-Rule-8.15" />
+                                <check enabled="false" name="MISRAC2012-Rule-8.16" />
+                                <check enabled="false" name="MISRAC2012-Rule-8.17" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-9">
                                 <check enabled="true" name="MISRAC2012-Rule-9.1_a" />
@@ -922,6 +939,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-10.1_R6" />
                                 <check enabled="true" name="MISRAC2012-Rule-10.1_R7" />
                                 <check enabled="true" name="MISRAC2012-Rule-10.1_R8" />
+                                <check enabled="false" name="MISRAC2012-Rule-10.1_R10" />
                                 <check enabled="true" name="MISRAC2012-Rule-10.2" />
                                 <check enabled="true" name="MISRAC2012-Rule-10.3" />
                                 <check enabled="true" name="MISRAC2012-Rule-10.4_a" />
@@ -946,6 +964,7 @@
                                 <check enabled="false" name="MISRAC2012-Rule-12.1" />
                                 <check enabled="true" name="MISRAC2012-Rule-12.2" />
                                 <check enabled="false" name="MISRAC2012-Rule-12.3" />
+                                <check enabled="false" name="MISRAC2012-Rule-12.4" />
                                 <check enabled="true" name="MISRAC2012-Rule-12.5" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-13">
@@ -1002,6 +1021,11 @@
                                 <check enabled="true" name="MISRAC2012-Rule-17.6" />
                                 <check enabled="true" name="MISRAC2012-Rule-17.7" />
                                 <check enabled="false" name="MISRAC2012-Rule-17.8" />
+                                <check enabled="false" name="MISRAC2012-Rule-17.9" />
+                                <check enabled="false" name="MISRAC2012-Rule-17.10" />
+                                <check enabled="false" name="MISRAC2012-Rule-17.11" />
+                                <check enabled="false" name="MISRAC2012-Rule-17.12" />
+                                <check enabled="true" name="MISRAC2012-Rule-17.13" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-18">
                                 <check enabled="true" name="MISRAC2012-Rule-18.1_a" />
@@ -1018,6 +1042,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-18.6_d" />
                                 <check enabled="true" name="MISRAC2012-Rule-18.7" />
                                 <check enabled="true" name="MISRAC2012-Rule-18.8" />
+                                <check enabled="true" name="MISRAC2012-Rule-18.9" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-19">
                                 <check enabled="true" name="MISRAC2012-Rule-19.1" />
@@ -1048,6 +1073,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-21.11" />
                                 <check enabled="false" name="MISRAC2012-Rule-21.12_a" />
                                 <check enabled="false" name="MISRAC2012-Rule-21.12_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.12_c" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.13" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.14" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.15" />
@@ -1063,6 +1089,10 @@
                                 <check enabled="true" name="MISRAC2012-Rule-21.19_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.19_b" />
                                 <check enabled="true" name="MISRAC2012-Rule-21.20" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.21" />
+                                <check enabled="false" name="MISRAC2012-Rule-21.22" />
+                                <check enabled="false" name="MISRAC2012-Rule-21.23" />
+                                <check enabled="false" name="MISRAC2012-Rule-21.24" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-22">
                                 <check enabled="true" name="MISRAC2012-Rule-22.1_a" />
@@ -1080,6 +1110,16 @@
                                 <check enabled="true" name="MISRAC2012-Rule-22.8" />
                                 <check enabled="true" name="MISRAC2012-Rule-22.9" />
                                 <check enabled="true" name="MISRAC2012-Rule-22.10" />
+                            </group>
+                            <group enabled="true" name="MISRAC2012-Rule-23">
+                                <check enabled="false" name="MISRAC2012-Rule-23.1" />
+                                <check enabled="false" name="MISRAC2012-Rule-23.2" />
+                                <check enabled="false" name="MISRAC2012-Rule-23.3" />
+                                <check enabled="true" name="MISRAC2012-Rule-23.4" />
+                                <check enabled="false" name="MISRAC2012-Rule-23.5" />
+                                <check enabled="false" name="MISRAC2012-Rule-23.6" />
+                                <check enabled="false" name="MISRAC2012-Rule-23.7" />
+                                <check enabled="true" name="MISRAC2012-Rule-23.8" />
                             </group>
                         </package>
                         <package enabled="false" name="MISRAC++2008">
@@ -1423,7 +1463,7 @@
     <group>
         <name>Blinky Demo</name>
         <file>
-            <name>$PROJ_DIR$\main_blinky.c</name>
+            <name>$PROJ_DIR$\..\..\main_blinky.c</name>
         </file>
     </group>
     <group>
@@ -1431,25 +1471,25 @@
         <group>
             <name>include</name>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\event_groups.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\event_groups.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\message_buffer.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\message_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\queue.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\queue.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\semphr.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\semphr.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\stream_buffer.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\stream_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\task.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\task.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\timers.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\timers.h</name>
             </file>
         </group>
         <group>
@@ -1459,37 +1499,37 @@
                 <group>
                     <name>ARM_CM3</name>
                     <file>
-                        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
                     </file>
                 </group>
             </group>
             <group>
                 <name>MemMang</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
+                    <name>$PROJ_DIR$\..\..\..\..\Source\portable\MemMang\heap_4.c</name>
                 </file>
             </group>
         </group>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\event_groups.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\list.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\stream_buffer.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\stream_buffer.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\tasks.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\timers.c</name>
         </file>
     </group>
     <group>
@@ -1497,89 +1537,92 @@
         <group>
             <name>Standard Demo Tasks</name>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\AbortDelay.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\AbortDelay.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\BlockQ.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\blocktim.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\countsem.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\death.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\dynamic.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\EventGroupsDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\GenQTest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\integer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\IntQueue.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\IntQueueTimer.c</name>
+                <name>$PROJ_DIR$\..\..\IntQueueTimer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\IntSemTest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\IntSemTest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferAMP.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\MessageBufferAMP.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\MessageBufferDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\PollQ.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QPeek.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueOverwrite.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueOverwrite.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueSet.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueSet.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueSetPolling.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueSetPolling.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\recmutex.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\semtest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StaticAllocation.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StaticAllocation.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StreamBufferDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferInterrupt.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StreamBufferInterrupt.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TaskNotify.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotifyArray.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TaskNotifyArray.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TimerDemo.c</name>
             </file>
         </group>
         <file>
-            <name>$PROJ_DIR$\main_full.c</name>
+            <name>$PROJ_DIR$\..\..\main_full.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\RegTest.S</name>
         </file>
     </group>
     <group>
@@ -1589,9 +1632,9 @@
         </file>
     </group>
     <file>
-        <name>$PROJ_DIR$\FreeRTOSConfig.h</name>
+        <name>$PROJ_DIR$\..\..\FreeRTOSConfig.h</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\main.c</name>
+        <name>$PROJ_DIR$\..\..\main.c</name>
     </file>
 </project>

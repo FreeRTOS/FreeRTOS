@@ -42,7 +42,8 @@ target_include_directories( freertos_config
     INTERFACE
         ./
         ./Trace_Recorder_Configuration
-        ${FREERTOS_PLUS_TRACE_PATH}/Include
+        ${FREERTOS_PLUS_TRACE_PATH}/include
+        ${FREERTOS_PLUS_TRACE_PATH}/kernelports/FreeRTOS/include
 )
 
 # Select the heap port
@@ -60,7 +61,7 @@ target_compile_options( freertos_kernel
         $<IF:${COVERAGE_TEST},,-Wno-pointer-to-int-cast>
 )
 
-file( GLOB FREERTOS_PLUS_TRACE_SOURCES ${FREERTOS_PLUS_TRACE_PATH}/*.c )
+file( GLOB FREERTOS_PLUS_TRACE_SOURCES ${FREERTOS_PLUS_TRACE_PATH}/*.c ${FREERTOS_PLUS_TRACE_PATH}/kernelports/FreeRTOS/*.c )
 
 add_executable( posix_demo
                 code_coverage_additions.c

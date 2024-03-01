@@ -56,14 +56,17 @@ FetchContent_Declare(
     USES_TERMINAL_UPDATE   YES
     BUILD_COMMAND "")
 
-FetchContent_MakeAvailable(FreeRTOS-Kernel)
+FetchContent_GetProperties(FreeRTOS-Kernel)
+if(NOT FreeRTOS-Kernel_POPULATED)
+    FetchContent_Populate(FreeRTOS-Kernel)
+endif()
 
 # Get the absolute path to the FreeRTOS-Kernel Directory
 SET(FREERTOS_KERNEL_DIR_REL "${freertos-kernel_SOURCE_DIR}")
 GET_FILENAME_COMPONENT(FREERTOS_KERNEL_DIR ${FREERTOS_KERNEL_DIR_REL} ABSOLUTE)
 
 # Get the absolute path to the Port Directory
-SET(PORT_DIR_REL "${freertos-kernel_SOURCE_DIR}/portable/GCC/ARM_CRx_MPU")
+SET(PORT_DIR_REL "${FREERTOS_KERNEL_DIR}/portable/GCC/ARM_CRx_MPU")
 GET_FILENAME_COMPONENT(PORT_DIR ${PORT_DIR_REL} ABSOLUTE)
 
 # Debug

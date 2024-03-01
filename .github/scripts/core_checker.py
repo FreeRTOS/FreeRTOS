@@ -335,6 +335,8 @@ FREERTOS_IGNORED_PATTERNS = [
 
 FREERTOS_IGNORED_FILES = [
     'cspell.config.yaml',
+    '.ccsproject',
+    '.clang-format',
     '.cproject',
     '.project',
     'requirements.txt',

@@ -10,7 +10,7 @@ else()
     add_compile_options( -DTRACE_ON_ENTER=0 )
 endif()
 
-if( COVERAGE_TEST )
+if( ( COVERAGE_TEST ) OR ( NO_TRACING ) )
     set( COVERAGE_TEST 1 )
     add_compile_options( -DprojCOVERAGE_TEST=1 )
 else()

@@ -142,7 +142,9 @@ static BaseType_t prvStaticAllocationsWithNullBuffers( void )
     return xReturn;
 }
 /*-----------------------------------------------------------*/
+
 #if( configUSE_TRACE_FACILITY == 1 )
+
     static BaseType_t prvTraceUtils( void )
     {
         EventGroupHandle_t xEventGroup;
@@ -202,8 +204,8 @@ static BaseType_t prvStaticAllocationsWithNullBuffers( void )
             xReturn = pdFAIL;
         }
 
-        /* Exercise the task trace utilities.  Value of 100 is arbitrary, just want
-        * to check the value that is set is also read back. */
+        /* Exercise the task trace utilities.  Value of 100 is arbitrary, just
+         * want to check the value that is set is also read back. */
         uxValue = 100;
         xTaskHandle = xTaskGetCurrentTaskHandle();
         vTaskSetTaskNumber( xTaskHandle, uxValue );
@@ -221,8 +223,8 @@ static BaseType_t prvStaticAllocationsWithNullBuffers( void )
         /* Timer trace util functions are exercised in prvTimerQuery(). */
 
 
-        /* Exercise the stream buffer utilities.  Try creating with a trigger level
-        * of 0, it should then get capped to 1. */
+        /* Exercise the stream buffer utilities.  Try creating with a trigger
+         * level of 0, it should then get capped to 1. */
         xStreamBuffer = xStreamBufferCreate( sizeof( uint32_t ), 0 );
 
         if( xStreamBuffer != NULL )
@@ -266,7 +268,8 @@ static BaseType_t prvStaticAllocationsWithNullBuffers( void )
 
         return xReturn;
     }
-#endif
+
+#endif /* #if( configUSE_TRACE_FACILITY == 1 ) */
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvPeekTimeout( void )
@@ -302,7 +305,6 @@ static BaseType_t prvPeekTimeout( void )
 
     return xReturn;
 }
-
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvQueueQueryFromISR( void )
@@ -371,7 +373,9 @@ static BaseType_t prvQueueQueryFromISR( void )
     return xReturn;
 }
 /*-----------------------------------------------------------*/
+
 #if( configUSE_TRACE_FACILITY == 1)
+
     static BaseType_t prvTaskQueryFunctions( void )
     {
         static TaskStatus_t xStatus, * pxStatusArray;
@@ -382,7 +386,7 @@ static BaseType_t prvQueueQueryFromISR( void )
         const uint32_t ulRunTimeTollerance = ( uint32_t ) 0xfff;
 
         /* Obtain task status with the stack high water mark and without the
-        * state. */
+         * state. */
         vTaskGetInfo( NULL, &xStatus, pdTRUE, eRunning );
 
         if( uxTaskGetStackHighWaterMark( NULL ) != xStatus.usStackHighWaterMark )
@@ -396,7 +400,7 @@ static BaseType_t prvQueueQueryFromISR( void )
         }
 
         /* Now obtain a task status without the high water mark but with the state,
-        * which in the case of the idle task should be Read. */
+         * which in the case of the idle task should be Read. */
         xTimerTask = xTimerGetTimerDaemonTaskHandle();
         vTaskSuspend( xTimerTask ); /* Should never suspend Timer task normally!. */
         vTaskGetInfo( xTimerTask, &xStatus, pdFALSE, eInvalid );
@@ -435,7 +439,7 @@ static BaseType_t prvQueueQueryFromISR( void )
         }
 
         /* Attempting to abort a delay in the idle task should be guaranteed to
-        * fail as the idle task should never block. */
+         * fail as the idle task should never block. */
         xIdleTask = xTaskGetIdleTaskHandle();
 
         if( xTaskAbortDelay( xIdleTask ) != pdFAIL )
@@ -444,15 +448,15 @@ static BaseType_t prvQueueQueryFromISR( void )
         }
 
         /* Create an array of task status objects large enough to hold information
-        * on the number of tasks at this time - note this may change at any time if
-        * higher priority tasks are executing and creating tasks. */
+         * on the number of tasks at this time - note this may change at any time if
+         * higher priority tasks are executing and creating tasks. */
         uxNumberOfTasks = uxTaskGetNumberOfTasks();
         pxStatusArray = ( TaskStatus_t * ) pvPortMalloc( uxNumberOfTasks * sizeof( TaskStatus_t ) );
 
         if( pxStatusArray != NULL )
         {
             /* Pass part of the array into uxTaskGetSystemState() to ensure it doesn't
-            * try using more space than there is available. */
+             * try using more space than there is available. */
             uxReturned = uxTaskGetSystemState( pxStatusArray, uxNumberOfTasks / ( UBaseType_t ) 2, NULL );
 
             if( uxReturned != ( UBaseType_t ) 0 )
@@ -461,7 +465,7 @@ static BaseType_t prvQueueQueryFromISR( void )
             }
 
             /* Now do the same but passing in the complete array size, this is done
-            * twice to check for a difference in the total run time. */
+             * twice to check for a difference in the total run time. */
             uxTaskGetSystemState( pxStatusArray, uxNumberOfTasks, &ulTotalRunTime1 );
             memset( ( void * ) pxStatusArray, 0xaa, uxNumberOfTasks * sizeof( TaskStatus_t ) );
             uxReturned = uxTaskGetSystemState( pxStatusArray, uxNumberOfTasks, &ulTotalRunTime2 );
@@ -471,7 +475,7 @@ static BaseType_t prvQueueQueryFromISR( void )
                 xReturn = pdFAIL;
             }
 
-            /* Basic santity check of array contents. */
+            /* Basic sanity check of array contents. */
             for( ux = 0; ux < uxReturned; ux++ )
             {
                 if( pxStatusArray[ ux ].eCurrentState >= ( UBaseType_t ) eInvalid )
@@ -494,7 +498,8 @@ static BaseType_t prvQueueQueryFromISR( void )
 
         return xReturn;
     }
-#endif
+
+#endif /* #if( configUSE_TRACE_FACILITY == 1) */
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvDummyTagFunction( void * pvParameter )
@@ -611,16 +616,18 @@ static BaseType_t prvTimerQuery( void )
         {
             xReturn = pdFAIL;
         }
-    #if( configUSE_TRACE_FACILITY == 1)
-    {
+
+        #if( configUSE_TRACE_FACILITY == 1 )
+        {
             vTimerSetTimerNumber( xTimer, uxTimerNumber );
 
             if( uxTimerGetTimerNumber( xTimer ) != uxTimerNumber )
             {
                 xReturn = pdFAIL;
             }
-    }
-    #endif
+        }
+        #endif /* #if( configUSE_TRACE_FACILITY == 1 ) */
+
         xTimerDelete( xTimer, portMAX_DELAY );
     }
     else
@@ -637,12 +644,14 @@ BaseType_t xRunCodeCoverageTestAdditions( void )
     BaseType_t xReturn = pdPASS;
 
     xReturn &= prvStaticAllocationsWithNullBuffers();
+
     #if( configUSE_TRACE_FACILITY == 1 )
     {
         xReturn &= prvTraceUtils();
         xReturn &= prvTaskQueryFunctions();
     }
     #endif
+
     xReturn &= prvPeekTimeout();
     xReturn &= prvQueueQueryFromISR();
     xReturn &= prvTaskTags();

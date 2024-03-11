@@ -11,9 +11,6 @@
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-[Bb]uild/
-.settings/
-.launches/
 
 # CodeWarrior temporary files
 *.tdt

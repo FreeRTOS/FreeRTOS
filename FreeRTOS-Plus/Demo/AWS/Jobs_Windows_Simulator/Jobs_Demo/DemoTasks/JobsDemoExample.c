@@ -388,7 +388,7 @@ static void prvSendUpdateForJob( char * pcJobId,
 static void prvProcessJobDocument( char * pcJobId,
                                    uint16_t usJobIdLength,
                                    char * pcJobDocument,
-                                   uint16_t jobDocumentLength );
+                                   size_t jobDocumentLength );
 
 /**
  * @brief The task used to demonstrate the Jobs library API.
@@ -398,6 +398,9 @@ static void prvProcessJobDocument( char * pcJobId,
  */
 void prvJobsDemoTask( void * pvParameters );
 
+/*-----------------------------------------------------------*/
+
+extern BaseType_t xPlatformIsNetworkUp( void );
 
 /*-----------------------------------------------------------*/
 
@@ -473,7 +476,7 @@ static void prvSendUpdateForJob( char * pcJobId,
 static void prvProcessJobDocument( char * pcJobId,
                                    uint16_t usJobIdLength,
                                    char * pcJobDocument,
-                                   uint16_t jobDocumentLength )
+                                   size_t jobDocumentLength )
 {
     char * pcAction = NULL;
     size_t uActionLength = 0U;
@@ -968,9 +971,9 @@ void prvJobsDemoTask( void * pvParameters )
             {
                 /* Handler function to process Jobs message payload. */
                 prvNextJobHandler( pxJobMessagePublishInfo );
-                vPortFree( pxJobMessagePublishInfo->pTopicName );
-                vPortFree( pxJobMessagePublishInfo->pPayload );
-                vPortFree( pxJobMessagePublishInfo );
+                vPortFree( ( char * )( pxJobMessagePublishInfo->pTopicName ) );
+                vPortFree( ( char * )( pxJobMessagePublishInfo->pPayload ) );
+                vPortFree( ( char * )( pxJobMessagePublishInfo ) );
             }
 
             if( xMqttStatus != MQTTSuccess )

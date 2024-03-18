@@ -68,7 +68,7 @@
 /* Local includes. */
 #include "console.h"
 
-#if ( projCOVERAGE_TEST != 1 )
+#if ( projENABLE_TRACING == 1 )
     #include <trcRecorder.h>
 #endif
 
@@ -140,7 +140,7 @@ static void handle_sigint( int signal );
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* Notes if the trace is running or not. */
-#if ( projCOVERAGE_TEST == 1 )
+#if ( projENABLE_TRACING == 0 )
     static BaseType_t xTraceRunning = pdFALSE;
 #else
     static BaseType_t xTraceRunning = pdTRUE;
@@ -155,8 +155,7 @@ int main( void )
     /* SIGINT is not blocked by the posix port */
     signal( SIGINT, handle_sigint );
 
-    /* Do not include trace code when performing a code coverage analysis. */
-    #if ( projCOVERAGE_TEST != 1 )
+    #if ( projENABLE_TRACING == 1 )
     {
         /* Initialise the trace recorder.  Use of the trace recorder is optional.
          * See http://www.FreeRTOS.org/trace for more information. */
@@ -170,7 +169,7 @@ int main( void )
             printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
         #endif
     }
-    #endif /* if ( projCOVERAGE_TEST != 1 ) */
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 
     console_init();
     #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
@@ -355,8 +354,7 @@ void vAssertCalled( const char * const pcFileName,
 
 static void prvSaveTraceFile( void )
 {
-    /* Tracing is not used when code coverage analysis is being performed. */
-    #if ( projCOVERAGE_TEST != 1 )
+    #if ( projENABLE_TRACING == 1 )
     {
         FILE * pxOutputFile;
 
@@ -375,7 +373,7 @@ static void prvSaveTraceFile( void )
             printf( "\r\nFailed to create trace dump file\r\n" );
         }
     }
-    #endif /* if ( projCOVERAGE_TEST != 1 ) */
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 }
 /*-----------------------------------------------------------*/
 

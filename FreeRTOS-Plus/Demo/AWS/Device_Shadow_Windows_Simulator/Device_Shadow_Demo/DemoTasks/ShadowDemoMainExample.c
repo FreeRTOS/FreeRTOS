@@ -375,7 +375,7 @@ static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext );
 
 /*-----------------------------------------------------------*/
 
-extern BaseType_t xPlatformIsNetworkUp(void);
+extern BaseType_t xPlatformIsNetworkUp( void );
 
 /*-----------------------------------------------------------*/
 

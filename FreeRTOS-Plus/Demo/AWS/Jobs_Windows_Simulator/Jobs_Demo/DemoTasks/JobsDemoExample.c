@@ -971,9 +971,9 @@ void prvJobsDemoTask( void * pvParameters )
             {
                 /* Handler function to process Jobs message payload. */
                 prvNextJobHandler( pxJobMessagePublishInfo );
-                vPortFree( ( char * )( pxJobMessagePublishInfo->pTopicName ) );
-                vPortFree( ( char * )( pxJobMessagePublishInfo->pPayload ) );
-                vPortFree( ( char * )( pxJobMessagePublishInfo ) );
+                vPortFree( ( char * ) ( pxJobMessagePublishInfo->pTopicName ) );
+                vPortFree( ( char * ) ( pxJobMessagePublishInfo->pPayload ) );
+                vPortFree( ( char * ) ( pxJobMessagePublishInfo ) );
             }
 
             if( xMqttStatus != MQTTSuccess )

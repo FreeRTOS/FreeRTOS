@@ -219,7 +219,7 @@ static uint32_t ulReportId = 0UL;
 
 /*-----------------------------------------------------------*/
 
-extern BaseType_t xPlatformIsNetworkUp(void);
+extern BaseType_t xPlatformIsNetworkUp( void );
 
 /*-----------------------------------------------------------*/
 

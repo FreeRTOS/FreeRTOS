@@ -142,9 +142,9 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 /* Notes if the trace is running or not. */
 #if ( projENABLE_TRACING == 0 )
     static BaseType_t xTraceRunning = pdFALSE;
-#else /* #if ( projENABLE_TRACING == 0 ) */
+#else /* if ( projENABLE_TRACING == 0 ) */
     static BaseType_t xTraceRunning = pdTRUE;
-#endif /* #if ( projENABLE_TRACING == 0 ) */
+#endif /* if ( projENABLE_TRACING == 0 ) */
 
 static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
@@ -167,7 +167,7 @@ int main( void )
 
         #if ( TRACE_ON_ENTER == 1 )
             printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-        #endif /* #if ( TRACE_ON_ENTER == 1 ) */
+        #endif /* if ( TRACE_ON_ENTER == 1 ) */
     }
     #endif /* if ( projENABLE_TRACING == 1 ) */
 

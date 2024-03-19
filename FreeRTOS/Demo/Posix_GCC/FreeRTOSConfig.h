@@ -160,7 +160,7 @@ extern void vAssertCalled( const char * const pcFileName,
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
     #if( projENABLE_TRACING == 1 )
         #include "trcRecorder.h"
-    #endif
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 #endif /* if ( projCOVERAGE_TEST == 1 ) */
 
 /* networking definitions */

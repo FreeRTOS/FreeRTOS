@@ -388,7 +388,7 @@ static void prvSendUpdateForJob( char * pcJobId,
 static void prvProcessJobDocument( char * pcJobId,
                                    uint16_t usJobIdLength,
                                    char * pcJobDocument,
-                                   size_t jobDocumentLength );
+                                   size_t uxJobDocumentLength );
 
 /**
  * @brief The task used to demonstrate the Jobs library API.
@@ -476,7 +476,7 @@ static void prvSendUpdateForJob( char * pcJobId,
 static void prvProcessJobDocument( char * pcJobId,
                                    uint16_t usJobIdLength,
                                    char * pcJobDocument,
-                                   size_t jobDocumentLength )
+                                   size_t uxJobDocumentLength )
 {
     char * pcAction = NULL;
     size_t uActionLength = 0U;
@@ -485,10 +485,10 @@ static void prvProcessJobDocument( char * pcJobId,
     configASSERT( pcJobId != NULL );
     configASSERT( usJobIdLength > 0 );
     configASSERT( pcJobDocument != NULL );
-    configASSERT( jobDocumentLength > 0 );
+    configASSERT( uxJobDocumentLength > 0 );
 
     xJsonStatus = JSON_Search( pcJobDocument,
-                               jobDocumentLength,
+                               uxJobDocumentLength,
                                jobsexampleQUERY_KEY_FOR_ACTION,
                                jobsexampleQUERY_KEY_FOR_ACTION_LENGTH,
                                &pcAction,
@@ -519,7 +519,7 @@ static void prvProcessJobDocument( char * pcJobId,
                 LogInfo( ( "Received job contains \"print\" action." ) );
 
                 xJsonStatus = JSON_Search( pcJobDocument,
-                                           jobDocumentLength,
+                                           uxJobDocumentLength,
                                            jobsexampleQUERY_KEY_FOR_MESSAGE,
                                            jobsexampleQUERY_KEY_FOR_MESSAGE_LENGTH,
                                            &pcMessage,
@@ -551,7 +551,7 @@ static void prvProcessJobDocument( char * pcJobId,
                 size_t ulTopicLength = 0U;
 
                 xJsonStatus = JSON_Search( pcJobDocument,
-                                           jobDocumentLength,
+                                           uxJobDocumentLength,
                                            jobsexampleQUERY_KEY_FOR_TOPIC,
                                            jobsexampleQUERY_KEY_FOR_TOPIC_LENGTH,
                                            &pcTopic,
@@ -566,7 +566,7 @@ static void prvProcessJobDocument( char * pcJobId,
                 else
                 {
                     xJsonStatus = JSON_Search( pcJobDocument,
-                                               jobDocumentLength,
+                                               uxJobDocumentLength,
                                                jobsexampleQUERY_KEY_FOR_MESSAGE,
                                                jobsexampleQUERY_KEY_FOR_MESSAGE_LENGTH,
                                                &pcMessage,

@@ -79,10 +79,10 @@ The proofs may take some time to run.
 The `make` command above generates a report in HTML and JSON format. Taking
 [TaskCreate](./proofs/Task/TaskCreate) as an example:
 
-* HTML report is generated at `./proofs/Task/TaskCreate/html`.
-* JSON report is generated at `./proofs/Task/TaskCreate/json`.
+* HTML report is generated at `./proofs/Task/TaskCreate/html/html`.
+* JSON report is generated at `./proofs/Task/TaskCreate/html/json`.
 
-You can open `./proofs/Task/TaskCreate/html/index.html` in any browser to view
+You can open `./proofs/Task/TaskCreate/html/html/index.html` in any browser to view
 the HTML report. You should see `None` under the `Errors` section in case of a
 successful run.
 

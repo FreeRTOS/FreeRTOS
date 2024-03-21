@@ -347,9 +347,8 @@ void vAssertCalled( const char * const pcFileName,
 }
 /*-----------------------------------------------------------*/
 
-static void prvSaveTraceFile( void )
-{
-    #if ( projENABLE_TRACING == 1 )
+#if ( projENABLE_TRACING == 1 )
+    static void prvSaveTraceFile( void )
     {
         FILE * pxOutputFile;
 
@@ -368,8 +367,7 @@ static void prvSaveTraceFile( void )
             printf( "\r\nFailed to create trace dump file\r\n" );
         }
     }
-    #endif /* if ( projENABLE_TRACING == 1 ) */
-}
+#endif /* if ( projENABLE_TRACING == 1 ) */
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an

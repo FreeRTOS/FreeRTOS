@@ -78,6 +78,123 @@ The proofs may take some time to run; they eventually write their output to
 The make command will also generate a report in html and json format which makes
 understanding the failures easier.
 
+#### CBMC results
+
+As a result, a CBMC report will be generated for every test case. Taking [TaskCreate](./proofs/Task/TaskCreate) as an example, an html folder is generated, such as `./proofs/Task/TaskCreate/html`. Within this folder, both HTML and JSON formats are available to indicate the CBMC result for better readability. The `html/index.html` file in TaskCreate, generated after running the proofs, is provided below. Note that it is expected to see `None` under the `Errors` section.
+
+<div style="padding: 10px;">
+  <h4>CBMC report</h4>
+  <div class="coverage">
+      <h5>Coverage</h5>
+      <p>
+        Coverage: 0.99 (reached 140 of 141 reachable lines)
+      </p>
+      <table class="coverage">
+        <tr>
+          <th class="coverage">Coverage</th>
+          <th class="function">Function</th>
+          <th class="file">File</th>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (6/6)</td>
+          <td class="function">vListInitialise</td>
+          <td class="file">Source/list.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (2/2)</td>
+          <td class="function">vListInitialiseItem</td>
+          <td class="file">Source/list.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (20/20)</td>
+          <td class="function">prvAddNewTaskToReadyList</td>
+          <td class="file">Source/tasks.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (17/17)</td>
+          <td class="function">prvCreateTask</td>
+          <td class="file">Source/tasks.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (11/11)</td>
+          <td class="function">prvInitialiseTaskLists</td>
+          <td class="file">Source/tasks.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (9/9)</td>
+          <td class="function">xTaskCreate</td>
+          <td class="file">Source/tasks.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (4/4)</td>
+          <td class="function">pvPortMalloc</td>
+          <td class="file">Test/CBMC/include/cbmc.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (3/3)</td>
+          <td class="function">vPortFree</td>
+          <td class="file">Test/CBMC/include/cbmc.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (19/19)</td>
+          <td class="function">harness</td>
+          <td class="file">Test/CBMC/proofs/Task/TaskCreate/TaskCreate_harness.c</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (8/8)</td>
+          <td class="function">pcNondetSetString</td>
+          <td class="file">Test/CBMC/proofs/Task/TaskCreate/tasks_test_access_functions.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (3/3)</td>
+          <td class="function">pxNondetSetTaskHandle</td>
+          <td class="file">Test/CBMC/proofs/Task/TaskCreate/tasks_test_access_functions.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (2/2)</td>
+          <td class="function">vNondetSetCurrentTCB</td>
+          <td class="file">Test/CBMC/proofs/Task/TaskCreate/tasks_test_access_functions.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (3/3)</td>
+          <td class="function">vPrepareTaskLists</td>
+          <td class="file">Test/CBMC/proofs/Task/TaskCreate/tasks_test_access_functions.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">1.00 (3/3)</td>
+          <td class="function">vSetGlobalVariables</td>
+          <td class="file">Test/CBMC/proofs/Task/TaskCreate/tasks_test_access_functions.h</td>
+        </tr>
+        <tr>
+          <td class="coverage">0.97 (30/31)</td>
+          <td class="function">prvInitialiseNewTask</td>
+          <td class="file">Source/tasks.c</td>
+        </tr>
+      </table>
+    </div>
+    <div class="warnings">
+      <h5> Warnings</h5>
+      <p>
+      Functions omitted from test (expected):
+      </p>
+      <ul>
+        <li> pxPortInitialiseStack </li>
+        <li> vPortEnterCritical </li>
+        <li> vPortExitCritical </li>
+        <li> vPortGenerateSimulatedInterrupt </li>
+      </ul>
+      <p>
+      Other warnings:
+      </p>
+      <ul>
+        <li> loop identifier prvInitialiseNewTask.1 provided with unwindset does not match any loop </li>
+      </ul>
+    <div class="errors">
+      <h5>Errors</h5>
+      None
+    </div>
+</div>
+
 ### Proof directory structure
 
 This directory contains the following subdirectories:

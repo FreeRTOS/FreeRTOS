@@ -139,13 +139,6 @@ static void handle_sigint( int signal );
  * in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-/* Notes if the trace is running or not. */
-#if ( projENABLE_TRACING == 0 )
-    static BaseType_t xTraceRunning = pdFALSE;
-#else /* if ( projENABLE_TRACING == 0 ) */
-    static BaseType_t xTraceRunning = pdTRUE;
-#endif /* if ( projENABLE_TRACING == 0 ) */
-
 static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
 /*-----------------------------------------------------------*/
@@ -280,10 +273,11 @@ void traceOnEnter()
 
         if( xReturn > 0 )
         {
-            if( xTraceRunning == pdTRUE )
+            #if ( projENABLE_TRACING == 1 )
             {
                 prvSaveTraceFile();
             }
+            #endif /* if ( projENABLE_TRACING == 1 ) */
 
             /* clear the buffer */
             char buffer[ 1 ];
@@ -333,10 +327,11 @@ void vAssertCalled( const char * const pcFileName,
         {
             xPrinted = pdTRUE;
 
-            if( xTraceRunning == pdTRUE )
+            #if ( projENABLE_TRACING == 1 )
             {
                 prvSaveTraceFile();
             }
+            #endif /* if ( projENABLE_TRACING == 0 ) */
         }
 
         /* You can step out of this function to debug the assertion by using

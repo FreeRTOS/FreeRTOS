@@ -973,7 +973,7 @@ void prvJobsDemoTask( void * pvParameters )
                 prvNextJobHandler( pxJobMessagePublishInfo );
                 vPortFree( ( char * ) ( pxJobMessagePublishInfo->pTopicName ) );
                 vPortFree( ( char * ) ( pxJobMessagePublishInfo->pPayload ) );
-                vPortFree( ( char * ) ( pxJobMessagePublishInfo ) );
+                vPortFree( pxJobMessagePublishInfo );
             }
 
             if( xMqttStatus != MQTTSuccess )

@@ -129,6 +129,8 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         }                                             \
     } while( 0 )
 
+#define mtCOVERAGE_TEST_MARKER()              __asm volatile ( "NOP" )
+
 extern void vDefaultSendCompletedStub( void * xStreamBuffer );
 #define sbSEND_COMPLETED( pxStreamBuffer )    vDefaultSendCompletedStub( pxStreamBuffer )
 

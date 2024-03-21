@@ -699,7 +699,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0 );
     listSET_LIST_ITEM_VALUE_Expect( &( ptcb->xEventListItem ),
                                     configMAX_PRIORITIES - 5 );
-    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 5 ],
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 4 ],
                                              &( ptcb->xStateListItem ),
                                              pdTRUE );
     uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -74,33 +74,33 @@
 #include "demo_specific_io.h"
 
 /* Priorities at which the tasks are created. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY        ( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_SEND_TASK_PRIORITY           ( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS            ( 200 / portTICK_PERIOD_MS )
+ * to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS        ( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
-will remove items as they are added, meaning the send task should always find
-the queue empty. */
-#define mainQUEUE_LENGTH                       ( 1 )
+ * will remove items as they are added, meaning the send task should always find
+ * the queue empty. */
+#define mainQUEUE_LENGTH                   ( 1 )
 
 /* Used to check the task parameter passing in both supported memory models. */
 #if __DATA_MODEL__ == __DATA_MODEL_FAR__
-    #define mainQUEUE_SEND_PARAMETER           ( ( void * ) 0x12345678UL )
-    #define mainQUEUE_RECEIVE_PARAMETER        ( ( void * ) 0x11223344UL )
+    #define mainQUEUE_SEND_PARAMETER       ( ( void * ) 0x12345678UL )
+    #define mainQUEUE_RECEIVE_PARAMETER    ( ( void * ) 0x11223344UL )
 #else
-    #define mainQUEUE_SEND_PARAMETER           ( ( void * ) 0x1234U )
-    #define mainQUEUE_RECEIVE_PARAMETER        ( ( void * ) 0x1122U )
+    #define mainQUEUE_SEND_PARAMETER       ( ( void * ) 0x1234U )
+    #define mainQUEUE_RECEIVE_PARAMETER    ( ( void * ) 0x1122U )
 #endif
 /*-----------------------------------------------------------*/
 
 /*
  * The tasks as described in the comments at the top of this file.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvQueueReceiveTask( void * pvParameters );
+static void prvQueueSendTask( void * pvParameters );
 
 /*
  * Called by main() to create the simply blinky style application if
@@ -123,13 +123,13 @@ void main_blinky( void )
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this
-        file. */
+         * file. */
         xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
-                    "Rx",                             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-                    configMINIMAL_STACK_SIZE,         /* The size of the stack to allocate to the task. */
-                    mainQUEUE_RECEIVE_PARAMETER,      /* The parameter passed to the task - just used to check the port in this case. */
-                    mainQUEUE_RECEIVE_TASK_PRIORITY,  /* The priority assigned to the task. */
-                    NULL );                           /* The task handle is not required, so NULL is passed. */
+                     "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+                     configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task. */
+                     mainQUEUE_RECEIVE_PARAMETER,     /* The parameter passed to the task - just used to check the port in this case. */
+                     mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
+                     NULL );                          /* The task handle is not required, so NULL is passed. */
 
         xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
@@ -138,18 +138,20 @@ void main_blinky( void )
     }
 
     /* If all is well, the scheduler will now be running, and the following
-    line will never be reached.  If the following line does execute, then
-    there was insufficient FreeRTOS heap memory available for the idle and/or
-    timer tasks    to be created.  See the memory management section on the
-    FreeRTOS web site for more details.  http://www.freertos.org/a00111.html. */
-    for( ;; );
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the idle and/or
+     * timer tasks    to be created.  See the memory management section on the
+     * FreeRTOS web site for more details.  http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask( void * pvParameters )
 {
-TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
+    TickType_t xNextWakeTime;
+    const unsigned long ulValueToSend = 100UL;
 
     /* Check the parameter was passed in correctly. */
     configASSERT( pvParameters == mainQUEUE_SEND_PARAMETER )
@@ -157,7 +159,7 @@ const unsigned long ulValueToSend = 100UL;
     /* Initialise xNextWakeTime - this only needs to be done once. */
     xNextWakeTime = xTaskGetTickCount();
 
-    for( ;; )
+    for( ; ; )
     {
         /* Place this task in the blocked state until it is time to run again. */
         vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
@@ -173,15 +175,15 @@ const unsigned long ulValueToSend = 100UL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+static void prvQueueReceiveTask( void * pvParameters )
 {
-unsigned long ulReceivedValue;
-const unsigned long ulExpectedValue = 100UL;
+    unsigned long ulReceivedValue;
+    const unsigned long ulExpectedValue = 100UL;
 
     /* Check the parameter was passed in correctly. */
     configASSERT( pvParameters == mainQUEUE_RECEIVE_PARAMETER )
 
-    for( ;; )
+    for( ; ; )
     {
         /*
          * Wait until something arrives in the queue - this task will block

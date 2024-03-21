@@ -24,6 +24,11 @@
  *
  */
 
+/*
+ * The purpose of this header file is to cover configASSERT. struct xSTATIC_TCB is
+ * updated to cause configASSERT. The rest of this file should be the same as FreeRTOS.h.
+ */
+
 #ifndef INC_FREERTOS_H
 #define INC_FREERTOS_H
 
@@ -514,6 +519,10 @@
 
 #ifndef portSETUP_TCB
     #define portSETUP_TCB( pxTCB )    ( void ) ( pxTCB )
+#endif
+
+#ifndef portTASK_SWITCH_HOOK
+    #define portTASK_SWITCH_HOOK( pxTCB )    ( void ) ( pxTCB )
 #endif
 
 #ifndef configQUEUE_REGISTRY_SIZE
@@ -1884,14 +1893,20 @@
     #ifndef traceENTER_xTaskGetIdleTaskHandle
         #define traceENTER_xTaskGetIdleTaskHandle()
     #endif
-#else
-    #ifndef traceENTER_xTaskGetIdleTaskHandle
-        #define traceENTER_xTaskGetIdleTaskHandle( xCoreID )
+#endif
+
+#if ( configNUMBER_OF_CORES == 1 )
+    #ifndef traceRETURN_xTaskGetIdleTaskHandle
+        #define traceRETURN_xTaskGetIdleTaskHandle( xIdleTaskHandle )
     #endif
 #endif
 
-#ifndef traceRETURN_xTaskGetIdleTaskHandle
-    #define traceRETURN_xTaskGetIdleTaskHandle( xIdleTaskHandle )
+#ifndef traceENTER_xTaskGetIdleTaskHandleForCore
+    #define traceENTER_xTaskGetIdleTaskHandleForCore( xCoreID )
+#endif
+
+#ifndef traceRETURN_xTaskGetIdleTaskHandleForCore
+    #define traceRETURN_xTaskGetIdleTaskHandleForCore( xIdleTaskHandle )
 #endif
 
 #ifndef traceENTER_vTaskStepTick
@@ -2118,12 +2133,12 @@
     #define traceRETURN_xTaskGetCurrentTaskHandle( xReturn )
 #endif
 
-#ifndef traceENTER_xTaskGetCurrentTaskHandleCPU
-    #define traceENTER_xTaskGetCurrentTaskHandleCPU( xCoreID )
+#ifndef traceENTER_xTaskGetCurrentTaskHandleForCore
+    #define traceENTER_xTaskGetCurrentTaskHandleForCore( xCoreID )
 #endif
 
-#ifndef traceRETURN_xTaskGetCurrentTaskHandleCPU
-    #define traceRETURN_xTaskGetCurrentTaskHandleCPU( xReturn )
+#ifndef traceRETURN_xTaskGetCurrentTaskHandleForCore
+    #define traceRETURN_xTaskGetCurrentTaskHandleForCore( xReturn )
 #endif
 
 #ifndef traceENTER_xTaskGetSchedulerState
@@ -3225,6 +3240,7 @@ typedef struct xSTATIC_STREAM_BUFFER
     #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
         void * pvDummy5[ 2 ];
     #endif
+    UBaseType_t uxDummy6;
 } StaticStreamBuffer_t;
 
 /* Message buffers are built on stream buffers. */

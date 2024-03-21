@@ -5,25 +5,9 @@
       <Configuration>Debug_with_Libslirp</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_with_Libslirp|x64">
-      <Configuration>Debug_with_Libslirp</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +26,12 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cipher.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cmac.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\compat-2.x.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_adjust_legacy_crypto.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_adjust_legacy_from_psa.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_adjust_psa_from_legacy.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_adjust_psa_superset_legacy.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_adjust_ssl.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_adjust_x509.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config_psa.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\constant_time.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ctr_drbg.h" />
@@ -57,6 +47,7 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\gcm.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hkdf.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hmac_drbg.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\lms.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\mbedtls_config.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md5.h" />
@@ -68,6 +59,7 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pk.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs12.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs5.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs7.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_time.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_util.h" />
@@ -78,6 +70,7 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\rsa.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha1.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha256.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha3.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha512.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cache.h" />
@@ -91,32 +84,47 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_crl.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_crt.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_csr.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\build_info.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_adjust_auto_enabled.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_adjust_config_key_pair_types.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_adjust_config_synonyms.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_builtin_composites.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_builtin_key_derivation.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_builtin_primitives.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_compat.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_config.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_driver_common.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_driver_contexts_composites.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_driver_contexts_key_derivation.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_driver_contexts_primitives.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_extra.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_legacy.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_platform.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_se_driver.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_sizes.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_struct.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_types.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\psa\crypto_values.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\aesce.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\aesni.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\alignment.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\base64_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_core.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\bn_mul.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\check_crypto_config.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\cipher_wrap.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\common.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\constant_time_impl.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\constant_time_internal.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\constant_time_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ecp_internal_alt.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ecp_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\entropy_poll.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\lmots.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\md_psa.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\md_wrap.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\mps_common.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\mps_error.h" />
@@ -124,39 +132,49 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\mps_trace.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\padlock.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\pkwrite.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\pk_internal.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\pk_wrap.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_aead.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_cipher.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core_common.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers_no_static.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ffdh.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_hash.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_its.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_mac.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_pake.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_random_impl.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_util_internal.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\rsa_alt_helpers.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_client.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_debug_helpers.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_misc.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.h" />
-    <ClInclude Include="mbedtls_config_v3.2.1.h" />
+    <ClInclude Include="mbedtls_config_v3.5.1.h" />
     <ClInclude Include="mbedtls_freertos_port.h" />
     <ClInclude Include="threading_alt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesce.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aria.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1parse.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1write.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\base64.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_core.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_mod.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum_mod_raw.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\camellia.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ccm.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\chacha20.c" />
@@ -174,12 +192,15 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecjpake.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp_curves.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp_curves_new.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy_poll.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\gcm.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\hkdf.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\hmac_drbg.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\lmots.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\lms.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\md.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\md5.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c" />
@@ -193,6 +214,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs12.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs5.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs7.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkparse.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkwrite.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_wrap.c" />
@@ -203,20 +225,24 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_aead.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_cipher.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_client.c" />
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers_no_static.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ffdh.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_hash.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_mac.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_pake.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_its_file.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_util.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ripemd160.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\rsa.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\rsa_alt_helpers.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha1.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha256.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha3.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha512.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cache.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ciphersuites.c" />
@@ -237,6 +263,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\version.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\version_features.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_crt.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_csr.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_create.c" />
@@ -272,32 +299,6 @@
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_Libslirp|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -307,18 +308,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_Libslirp|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_Libslirp|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -335,7 +324,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -349,77 +338,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.5.1.h";_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_Libslirp|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\ThirdParty\mbedtls\library;..\..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>

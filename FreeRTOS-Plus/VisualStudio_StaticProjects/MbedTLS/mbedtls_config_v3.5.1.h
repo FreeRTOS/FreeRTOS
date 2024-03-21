@@ -25,6 +25,9 @@
  *  limitations under the License.
  */
 
+#ifndef __FREERTOS_MBEDTLS_CONFIG__
+#define __FREERTOS_MBEDTLS_CONFIG__
+
 /**
  * This is an optional version symbol that enables compatibility handling of
  * config files.
@@ -32,7 +35,7 @@
  * It is equal to the #MBEDTLS_VERSION_NUMBER of the Mbed TLS version that
  * introduced the config format we want to be compatible with.
  */
-/*#define MBEDTLS_CONFIG_VERSION 0x03000000 */
+/* #define MBEDTLS_CONFIG_VERSION 0x03000000 */
 
 /**
  * \name SECTION: System support
@@ -49,11 +52,15 @@
  * Requires support for asm() in compiler.
  *
  * Used in:
+ *      library/aesni.h
  *      library/aria.c
  *      library/bn_mul.h
+ *      library/constant_time.c
+ *      library/padlock.h
  *
  * Required by:
- *      MBEDTLS_AESNI_C
+ *      MBEDTLS_AESCE_C
+ *      MBEDTLS_AESNI_C (on some platforms)
  *      MBEDTLS_PADLOCK_C
  *
  * Comment to disable the use of assembly code.
@@ -86,7 +93,7 @@
  * example, if double-width division is implemented in software, disabling
  * it can reduce code size in some embedded targets.
  */
-/*#define MBEDTLS_NO_UDBL_DIVISION */
+/* #define MBEDTLS_NO_UDBL_DIVISION */
 
 /**
  * \def MBEDTLS_NO_64BIT_MULTIPLICATION
@@ -108,7 +115,7 @@
  * Note that depending on the compiler, this may decrease performance compared
  * to using the library function provided by the toolchain.
  */
-/*#define MBEDTLS_NO_64BIT_MULTIPLICATION */
+/* #define MBEDTLS_NO_64BIT_MULTIPLICATION */
 
 /**
  * \def MBEDTLS_HAVE_SSE2
@@ -117,7 +124,7 @@
  *
  * Uncomment if the CPU supports SSE2 (IA-32 specific).
  */
-/*#define MBEDTLS_HAVE_SSE2 */
+/* #define MBEDTLS_HAVE_SSE2 */
 
 /**
  * \def MBEDTLS_HAVE_TIME
@@ -137,7 +144,7 @@
  *       regardless of the setting of MBEDTLS_HAVE_TIME, unless
  *       MBEDTLS_TIMING_ALT is used. See timing.c for more information.
  */
-/*#define MBEDTLS_HAVE_TIME */
+/* #define MBEDTLS_HAVE_TIME */
 
 /**
  * \def MBEDTLS_HAVE_TIME_DATE
@@ -158,25 +165,57 @@
  * mbedtls_platform_gmtime_r() at compile-time by using the macro
  * MBEDTLS_PLATFORM_GMTIME_R_ALT.
  */
-/*#define MBEDTLS_HAVE_TIME_DATE */
+/* #define MBEDTLS_HAVE_TIME_DATE */
 
 /**
  * \def MBEDTLS_PLATFORM_MEMORY
  *
  * Enable the memory allocation layer.
  *
- * By default mbed TLS uses the system-provided calloc() and free().
+ * By default Mbed TLS uses the system-provided calloc() and free().
  * This allows different allocators (self-implemented or provided) to be
  * provided to the platform abstraction layer.
  *
- * Enabling MBEDTLS_PLATFORM_MEMORY without the
+ * Enabling #MBEDTLS_PLATFORM_MEMORY without the
  * MBEDTLS_PLATFORM_{FREE,CALLOC}_MACROs will provide
  * "mbedtls_platform_set_calloc_free()" allowing you to set an alternative calloc() and
  * free() function pointer at runtime.
  *
- * Enabling MBEDTLS_PLATFORM_MEMORY and specifying
+ * Enabling #MBEDTLS_PLATFORM_MEMORY and specifying
  * MBEDTLS_PLATFORM_{CALLOC,FREE}_MACROs will allow you to specify the
  * alternate function at compile time.
+ *
+ * An overview of how the value of mbedtls_calloc is determined:
+ *
+ * - if !MBEDTLS_PLATFORM_MEMORY
+ *     - mbedtls_calloc = calloc
+ * - if MBEDTLS_PLATFORM_MEMORY
+ *     - if (MBEDTLS_PLATFORM_CALLOC_MACRO && MBEDTLS_PLATFORM_FREE_MACRO):
+ *         - mbedtls_calloc = MBEDTLS_PLATFORM_CALLOC_MACRO
+ *     - if !(MBEDTLS_PLATFORM_CALLOC_MACRO && MBEDTLS_PLATFORM_FREE_MACRO):
+ *         - Dynamic setup via mbedtls_platform_set_calloc_free is now possible with a default value MBEDTLS_PLATFORM_STD_CALLOC.
+ *         - How is MBEDTLS_PLATFORM_STD_CALLOC handled?
+ *         - if MBEDTLS_PLATFORM_NO_STD_FUNCTIONS:
+ *             - MBEDTLS_PLATFORM_STD_CALLOC is not set to anything;
+ *             - MBEDTLS_PLATFORM_STD_MEM_HDR can be included if present;
+ *         - if !MBEDTLS_PLATFORM_NO_STD_FUNCTIONS:
+ *             - if MBEDTLS_PLATFORM_STD_CALLOC is present:
+ *                 - User-defined MBEDTLS_PLATFORM_STD_CALLOC is respected;
+ *             - if !MBEDTLS_PLATFORM_STD_CALLOC:
+ *                 - MBEDTLS_PLATFORM_STD_CALLOC = calloc
+ *
+ *         - At this point the presence of MBEDTLS_PLATFORM_STD_CALLOC is checked.
+ *         - if !MBEDTLS_PLATFORM_STD_CALLOC
+ *             - MBEDTLS_PLATFORM_STD_CALLOC = uninitialized_calloc
+ *
+ *         - mbedtls_calloc = MBEDTLS_PLATFORM_STD_CALLOC.
+ *
+ * Defining MBEDTLS_PLATFORM_CALLOC_MACRO and #MBEDTLS_PLATFORM_STD_CALLOC at the same time is not possible.
+ * MBEDTLS_PLATFORM_CALLOC_MACRO and MBEDTLS_PLATFORM_FREE_MACRO must both be defined or undefined at the same time.
+ * #MBEDTLS_PLATFORM_STD_CALLOC and #MBEDTLS_PLATFORM_STD_FREE do not have to be defined at the same time, as, if they are used,
+ * dynamic setup of these functions is possible. See the tree above to see how are they handled in all cases.
+ * An uninitialized #MBEDTLS_PLATFORM_STD_CALLOC always fails, returning a null pointer.
+ * An uninitialized #MBEDTLS_PLATFORM_STD_FREE does not do anything.
  *
  * Requires: MBEDTLS_PLATFORM_C
  *
@@ -206,15 +245,15 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment to prevent default assignment of standard functions in the
  * platform layer.
  */
-/*#define MBEDTLS_PLATFORM_NO_STD_FUNCTIONS */
+/* #define MBEDTLS_PLATFORM_NO_STD_FUNCTIONS */
 
 /**
  * \def MBEDTLS_PLATFORM_EXIT_ALT
  *
- * MBEDTLS_PLATFORM_XXX_ALT: Uncomment a macro to let mbed TLS support the
+ * MBEDTLS_PLATFORM_XXX_ALT: Uncomment a macro to let Mbed TLS support the
  * function in the platform abstraction layer.
  *
- * Example: In case you uncomment MBEDTLS_PLATFORM_PRINTF_ALT, mbed TLS will
+ * Example: In case you uncomment MBEDTLS_PLATFORM_PRINTF_ALT, Mbed TLS will
  * provide a function "mbedtls_platform_set_printf()" that allows you to set an
  * alternative printf function pointer.
  *
@@ -231,15 +270,58 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment a macro to enable alternate implementation of specific base
  * platform function
  */
-/*#define MBEDTLS_PLATFORM_SETBUF_ALT */
-/*#define MBEDTLS_PLATFORM_EXIT_ALT */
-/*#define MBEDTLS_PLATFORM_TIME_ALT */
-/*#define MBEDTLS_PLATFORM_FPRINTF_ALT */
-/*#define MBEDTLS_PLATFORM_PRINTF_ALT */
-/*#define MBEDTLS_PLATFORM_SNPRINTF_ALT */
-/*#define MBEDTLS_PLATFORM_VSNPRINTF_ALT */
-/*#define MBEDTLS_PLATFORM_NV_SEED_ALT */
-/*#define MBEDTLS_PLATFORM_SETUP_TEARDOWN_ALT */
+/* #define MBEDTLS_PLATFORM_SETBUF_ALT */
+/* #define MBEDTLS_PLATFORM_EXIT_ALT */
+/* #define MBEDTLS_PLATFORM_TIME_ALT */
+/* #define MBEDTLS_PLATFORM_FPRINTF_ALT */
+/* #define MBEDTLS_PLATFORM_PRINTF_ALT */
+/* #define MBEDTLS_PLATFORM_SNPRINTF_ALT */
+/* #define MBEDTLS_PLATFORM_VSNPRINTF_ALT */
+/* #define MBEDTLS_PLATFORM_NV_SEED_ALT */
+/* #define MBEDTLS_PLATFORM_SETUP_TEARDOWN_ALT */
+/* #define MBEDTLS_PLATFORM_MS_TIME_ALT */
+
+/**
+ * Uncomment the macro to let Mbed TLS use your alternate implementation of
+ * mbedtls_platform_gmtime_r(). This replaces the default implementation in
+ * platform_util.c.
+ *
+ * gmtime() is not a thread-safe function as defined in the C standard. The
+ * library will try to use safer implementations of this function, such as
+ * gmtime_r() when available. However, if Mbed TLS cannot identify the target
+ * system, the implementation of mbedtls_platform_gmtime_r() will default to
+ * using the standard gmtime(). In this case, calls from the library to
+ * gmtime() will be guarded by the global mutex mbedtls_threading_gmtime_mutex
+ * if MBEDTLS_THREADING_C is enabled. We recommend that calls from outside the
+ * library are also guarded with this mutex to avoid race conditions. However,
+ * if the macro MBEDTLS_PLATFORM_GMTIME_R_ALT is defined, Mbed TLS will
+ * unconditionally use the implementation for mbedtls_platform_gmtime_r()
+ * supplied at compile time.
+ */
+/* #define MBEDTLS_PLATFORM_GMTIME_R_ALT */
+
+/**
+ * Uncomment the macro to let Mbed TLS use your alternate implementation of
+ * mbedtls_platform_zeroize(), to wipe sensitive data in memory. This replaces
+ * the default implementation in platform_util.c.
+ *
+ * By default, the library uses a system function such as memset_s()
+ * (optional feature of C11), explicit_bzero() (BSD and compatible), or
+ * SecureZeroMemory (Windows). If no such function is detected, the library
+ * falls back to a plain C implementation. Compilers are technically
+ * permitted to optimize this implementation out, meaning that the memory is
+ * not actually wiped. The library tries to prevent that, but the C language
+ * makes it impossible to guarantee that the memory will always be wiped.
+ *
+ * If your platform provides a guaranteed method to wipe memory which
+ * `platform_util.c` does not detect, define this macro to the name of
+ * a function that takes two arguments, a `void *` pointer and a length,
+ * and wipes that many bytes starting at the specified address. For example,
+ * if your platform has explicit_bzero() but `platform_util.c` does not
+ * detect its presence, define `MBEDTLS_PLATFORM_ZEROIZE_ALT` to be
+ * `explicit_bzero` to use that function as mbedtls_platform_zeroize().
+ */
+/* #define MBEDTLS_PLATFORM_ZEROIZE_ALT */
 
 /**
  * \def MBEDTLS_DEPRECATED_WARNING
@@ -268,12 +350,12 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to get errors on using deprecated functions and features.
  */
-/*#define MBEDTLS_DEPRECATED_REMOVED */
+/* #define MBEDTLS_DEPRECATED_REMOVED */
 
 /** \} name SECTION: System support */
 
 /**
- * \name SECTION: mbed TLS feature support
+ * \name SECTION: Mbed TLS feature support
  *
  * This section sets support for features that are or are not needed
  * within the modules that are enabled.
@@ -291,12 +373,12 @@ void mbedtls_platform_free( void * ptr );
  * You will need to provide a header "timing_alt.h" and an implementation at
  * compile time.
  */
-/*#define MBEDTLS_TIMING_ALT */
+/* #define MBEDTLS_TIMING_ALT */
 
 /**
  * \def MBEDTLS_AES_ALT
  *
- * MBEDTLS__MODULE_NAME__ALT: Uncomment a macro to let mbed TLS use your
+ * MBEDTLS__MODULE_NAME__ALT: Uncomment a macro to let Mbed TLS use your
  * alternate core implementation of a symmetric crypto, an arithmetic or hash
  * module (e.g. platform specific assembly optimized implementations). Keep
  * in mind that the function prototypes should remain the same.
@@ -304,7 +386,7 @@ void mbedtls_platform_free( void * ptr );
  * This replaces the whole module. If you only want to replace one of the
  * functions, use one of the MBEDTLS__FUNCTION_NAME__ALT flags.
  *
- * Example: In case you uncomment MBEDTLS_AES_ALT, mbed TLS will no longer
+ * Example: In case you uncomment MBEDTLS_AES_ALT, Mbed TLS will no longer
  * provide the "struct mbedtls_aes_context" definition and omit the base
  * function declarations and implementations. "aes_alt.h" will be included from
  * "aes.h" to include the new function definitions.
@@ -318,25 +400,25 @@ void mbedtls_platform_free( void * ptr );
  *            digests and ciphers instead.
  *
  */
-/*#define MBEDTLS_AES_ALT */
-/*#define MBEDTLS_ARIA_ALT */
-/*#define MBEDTLS_CAMELLIA_ALT */
-/*#define MBEDTLS_CCM_ALT */
-/*#define MBEDTLS_CHACHA20_ALT */
-/*#define MBEDTLS_CHACHAPOLY_ALT */
-/*#define MBEDTLS_CMAC_ALT */
-/*#define MBEDTLS_DES_ALT */
-/*#define MBEDTLS_DHM_ALT */
-/*#define MBEDTLS_ECJPAKE_ALT */
-/*#define MBEDTLS_GCM_ALT */
-/*#define MBEDTLS_NIST_KW_ALT */
-/*#define MBEDTLS_MD5_ALT */
-/*#define MBEDTLS_POLY1305_ALT */
-/*#define MBEDTLS_RIPEMD160_ALT */
-/*#define MBEDTLS_RSA_ALT */
-/*#define MBEDTLS_SHA1_ALT */
-/*#define MBEDTLS_SHA256_ALT */
-/*#define MBEDTLS_SHA512_ALT */
+/* #define MBEDTLS_AES_ALT */
+/* #define MBEDTLS_ARIA_ALT */
+/* #define MBEDTLS_CAMELLIA_ALT */
+/* #define MBEDTLS_CCM_ALT */
+/* #define MBEDTLS_CHACHA20_ALT */
+/* #define MBEDTLS_CHACHAPOLY_ALT */
+/* #define MBEDTLS_CMAC_ALT */
+/* #define MBEDTLS_DES_ALT */
+/* #define MBEDTLS_DHM_ALT */
+/* #define MBEDTLS_ECJPAKE_ALT */
+/* #define MBEDTLS_GCM_ALT */
+/* #define MBEDTLS_NIST_KW_ALT */
+/* #define MBEDTLS_MD5_ALT */
+/* #define MBEDTLS_POLY1305_ALT */
+/* #define MBEDTLS_RIPEMD160_ALT */
+/* #define MBEDTLS_RSA_ALT */
+/* #define MBEDTLS_SHA1_ALT */
+/* #define MBEDTLS_SHA256_ALT */
+/* #define MBEDTLS_SHA512_ALT */
 
 /*
  * When replacing the elliptic curve module, please consider, that it is
@@ -347,19 +429,19 @@ void mbedtls_platform_free( void * ptr );
  * macros as described above. The only difference is that you have to make sure
  * that you provide functionality for both .c files.
  */
-/*#define MBEDTLS_ECP_ALT */
+/* #define MBEDTLS_ECP_ALT */
 
 /**
  * \def MBEDTLS_SHA256_PROCESS_ALT
  *
- * MBEDTLS__FUNCTION_NAME__ALT: Uncomment a macro to let mbed TLS use you
+ * MBEDTLS__FUNCTION_NAME__ALT: Uncomment a macro to let Mbed TLS use you
  * alternate core implementation of symmetric crypto or hash function. Keep in
  * mind that function prototypes should remain the same.
  *
- * This replaces only one function. The header file from mbed TLS is still
+ * This replaces only one function. The header file from Mbed TLS is still
  * used, in contrast to the MBEDTLS__MODULE_NAME__ALT flags.
  *
- * Example: In case you uncomment MBEDTLS_SHA256_PROCESS_ALT, mbed TLS will
+ * Example: In case you uncomment MBEDTLS_SHA256_PROCESS_ALT, Mbed TLS will
  * no longer provide the mbedtls_sha1_process() function, but it will still provide
  * the other function (using your mbedtls_sha1_process() function) and the definition
  * of mbedtls_sha1_context, so your implementation of mbedtls_sha1_process must be compatible
@@ -386,34 +468,34 @@ void mbedtls_platform_free( void * ptr );
  *            implementation should be provided for mbedtls_ecdsa_sign_det_ext().
  *
  */
-/*#define MBEDTLS_MD5_PROCESS_ALT */
-/*#define MBEDTLS_RIPEMD160_PROCESS_ALT */
-/*#define MBEDTLS_SHA1_PROCESS_ALT */
-/*#define MBEDTLS_SHA256_PROCESS_ALT */
-/*#define MBEDTLS_SHA512_PROCESS_ALT */
-/*#define MBEDTLS_DES_SETKEY_ALT */
-/*#define MBEDTLS_DES_CRYPT_ECB_ALT */
-/*#define MBEDTLS_DES3_CRYPT_ECB_ALT */
-/*#define MBEDTLS_AES_SETKEY_ENC_ALT */
-/*#define MBEDTLS_AES_SETKEY_DEC_ALT */
-/*#define MBEDTLS_AES_ENCRYPT_ALT */
-/*#define MBEDTLS_AES_DECRYPT_ALT */
-/*#define MBEDTLS_ECDH_GEN_PUBLIC_ALT */
-/*#define MBEDTLS_ECDH_COMPUTE_SHARED_ALT */
-/*#define MBEDTLS_ECDSA_VERIFY_ALT */
-/*#define MBEDTLS_ECDSA_SIGN_ALT */
-/*#define MBEDTLS_ECDSA_GENKEY_ALT */
+/* #define MBEDTLS_MD5_PROCESS_ALT */
+/* #define MBEDTLS_RIPEMD160_PROCESS_ALT */
+/* #define MBEDTLS_SHA1_PROCESS_ALT */
+/* #define MBEDTLS_SHA256_PROCESS_ALT */
+/* #define MBEDTLS_SHA512_PROCESS_ALT */
+/* #define MBEDTLS_DES_SETKEY_ALT */
+/* #define MBEDTLS_DES_CRYPT_ECB_ALT */
+/* #define MBEDTLS_DES3_CRYPT_ECB_ALT */
+/* #define MBEDTLS_AES_SETKEY_ENC_ALT */
+/* #define MBEDTLS_AES_SETKEY_DEC_ALT */
+/* #define MBEDTLS_AES_ENCRYPT_ALT */
+/* #define MBEDTLS_AES_DECRYPT_ALT */
+/* #define MBEDTLS_ECDH_GEN_PUBLIC_ALT */
+/* #define MBEDTLS_ECDH_COMPUTE_SHARED_ALT */
+/* #define MBEDTLS_ECDSA_VERIFY_ALT */
+/* #define MBEDTLS_ECDSA_SIGN_ALT */
+/* #define MBEDTLS_ECDSA_GENKEY_ALT */
 
 /**
  * \def MBEDTLS_ECP_INTERNAL_ALT
  *
  * Expose a part of the internal interface of the Elliptic Curve Point module.
  *
- * MBEDTLS_ECP__FUNCTION_NAME__ALT: Uncomment a macro to let mbed TLS use your
+ * MBEDTLS_ECP__FUNCTION_NAME__ALT: Uncomment a macro to let Mbed TLS use your
  * alternative core implementation of elliptic curve arithmetic. Keep in mind
  * that function prototypes should remain the same.
  *
- * This partially replaces one function. The header file from mbed TLS is still
+ * This partially replaces one function. The header file from Mbed TLS is still
  * used, in contrast to the MBEDTLS_ECP_ALT flag. The original implementation
  * is still present and it is used for group structures not supported by the
  * alternative.
@@ -437,11 +519,11 @@ void mbedtls_platform_free( void * ptr );
  * implement optimized set up and tear down instructions.
  *
  * Example: In case you set MBEDTLS_ECP_INTERNAL_ALT and
- * MBEDTLS_ECP_DOUBLE_JAC_ALT, mbed TLS will still provide the ecp_double_jac()
+ * MBEDTLS_ECP_DOUBLE_JAC_ALT, Mbed TLS will still provide the ecp_double_jac()
  * function, but will use your mbedtls_internal_ecp_double_jac() if the group
  * for the operation is supported by your implementation (i.e. your
  * mbedtls_internal_ecp_grp_capable() function returns 1 for this group). If the
- * group is not supported by your implementation, then the original mbed TLS
+ * group is not supported by your implementation, then the original Mbed TLS
  * implementation of ecp_double_jac() is used instead, unless this fallback
  * behaviour is disabled by setting MBEDTLS_ECP_NO_FALLBACK (in which case
  * ecp_double_jac() will return MBEDTLS_ERR_ECP_FEATURE_UNAVAILABLE).
@@ -455,24 +537,24 @@ void mbedtls_platform_free( void * ptr );
  * function.
  */
 /* Required for all the functions in this section */
-/*#define MBEDTLS_ECP_INTERNAL_ALT */
+/* #define MBEDTLS_ECP_INTERNAL_ALT */
 /* Turn off software fallback for curves not supported in hardware */
-/*#define MBEDTLS_ECP_NO_FALLBACK */
+/* #define MBEDTLS_ECP_NO_FALLBACK */
 /* Support for Weierstrass curves with Jacobi representation */
-/*#define MBEDTLS_ECP_RANDOMIZE_JAC_ALT */
-/*#define MBEDTLS_ECP_ADD_MIXED_ALT */
-/*#define MBEDTLS_ECP_DOUBLE_JAC_ALT */
-/*#define MBEDTLS_ECP_NORMALIZE_JAC_MANY_ALT */
-/*#define MBEDTLS_ECP_NORMALIZE_JAC_ALT */
+/* #define MBEDTLS_ECP_RANDOMIZE_JAC_ALT */
+/* #define MBEDTLS_ECP_ADD_MIXED_ALT */
+/* #define MBEDTLS_ECP_DOUBLE_JAC_ALT */
+/* #define MBEDTLS_ECP_NORMALIZE_JAC_MANY_ALT */
+/* #define MBEDTLS_ECP_NORMALIZE_JAC_ALT */
 /* Support for curves with Montgomery arithmetic */
-/*#define MBEDTLS_ECP_DOUBLE_ADD_MXZ_ALT */
-/*#define MBEDTLS_ECP_RANDOMIZE_MXZ_ALT */
-/*#define MBEDTLS_ECP_NORMALIZE_MXZ_ALT */
+/* #define MBEDTLS_ECP_DOUBLE_ADD_MXZ_ALT */
+/* #define MBEDTLS_ECP_RANDOMIZE_MXZ_ALT */
+/* #define MBEDTLS_ECP_NORMALIZE_MXZ_ALT */
 
 /**
  * \def MBEDTLS_ENTROPY_HARDWARE_ALT
  *
- * Uncomment this macro to let mbed TLS use your own implementation of a
+ * Uncomment this macro to let Mbed TLS use your own implementation of a
  * hardware entropy collector.
  *
  * Your function must be called \c mbedtls_hardware_poll(), have the same
@@ -499,7 +581,6 @@ void mbedtls_platform_free( void * ptr );
  * performance if ROM access is slower than RAM access.
  *
  * This option is independent of \c MBEDTLS_AES_FEWER_TABLES.
- *
  */
 #define MBEDTLS_AES_ROM_TABLES
 
@@ -521,9 +602,39 @@ void mbedtls_platform_free( void * ptr );
  * depends on the system and memory details.
  *
  * This option is independent of \c MBEDTLS_AES_ROM_TABLES.
- *
  */
-/*#define MBEDTLS_AES_FEWER_TABLES */
+/* #define MBEDTLS_AES_FEWER_TABLES */
+
+/**
+ * \def MBEDTLS_AES_ONLY_128_BIT_KEY_LENGTH
+ *
+ * Use only 128-bit keys in AES operations to save ROM.
+ *
+ * Uncomment this macro to remove support for AES operations that use 192-
+ * or 256-bit keys.
+ *
+ * Uncommenting this macro reduces the size of AES code by ~300 bytes
+ * on v8-M/Thumb2.
+ *
+ * Module:  library/aes.c
+ *
+ * Requires: MBEDTLS_AES_C
+ */
+/* #define MBEDTLS_AES_ONLY_128_BIT_KEY_LENGTH */
+
+/*
+ * Disable plain C implementation for AES.
+ *
+ * When the plain C implementation is enabled, and an implementation using a
+ * special CPU feature (such as MBEDTLS_AESCE_C) is also enabled, runtime
+ * detection will be used to select between them.
+ *
+ * If only one implementation is present, runtime detection will not be used.
+ * This configuration will crash at runtime if running on a CPU without the
+ * necessary features. It will not build unless at least one of MBEDTLS_AESCE_C
+ * and/or MBEDTLS_AESNI_C is enabled & present in the build.
+ */
+/* #define MBEDTLS_AES_USE_HARDWARE_ONLY */
 
 /**
  * \def MBEDTLS_CAMELLIA_SMALL_MEMORY
@@ -532,7 +643,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this macro to use less memory for Camellia.
  */
-/*#define MBEDTLS_CAMELLIA_SMALL_MEMORY */
+/* #define MBEDTLS_CAMELLIA_SMALL_MEMORY */
 
 /**
  * \def MBEDTLS_CHECK_RETURN_WARNING
@@ -555,7 +666,7 @@ void mbedtls_platform_free( void * ptr );
  *        macro is not defined. To completely disable return value check
  *        warnings, define #MBEDTLS_CHECK_RETURN with an empty expansion.
  */
-/*#define MBEDTLS_CHECK_RETURN_WARNING */
+/* #define MBEDTLS_CHECK_RETURN_WARNING */
 
 /**
  * \def MBEDTLS_CIPHER_MODE_CBC
@@ -622,7 +733,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this macro to enable the NULL cipher and ciphersuites
  */
-/*#define MBEDTLS_CIPHER_NULL_CIPHER */
+/* #define MBEDTLS_CIPHER_NULL_CIPHER */
 
 /**
  * \def MBEDTLS_CIPHER_PADDING_PKCS7
@@ -643,9 +754,19 @@ void mbedtls_platform_free( void * ptr );
 /** \def MBEDTLS_CTR_DRBG_USE_128_BIT_KEY
  *
  * Uncomment this macro to use a 128-bit key in the CTR_DRBG module.
- * By default, CTR_DRBG uses a 256-bit key.
+ * Without this, CTR_DRBG uses a 256-bit key
+ * unless \c MBEDTLS_AES_ONLY_128_BIT_KEY_LENGTH is set.
  */
-/*#define MBEDTLS_CTR_DRBG_USE_128_BIT_KEY */
+/* #define MBEDTLS_CTR_DRBG_USE_128_BIT_KEY */
+
+/**
+ * Enable the verified implementations of ECDH primitives from Project Everest
+ * (currently only Curve25519). This feature changes the layout of ECDH
+ * contexts and therefore is a compatibility break for applications that access
+ * fields of a mbedtls_ecdh_context structure directly. See also
+ * MBEDTLS_ECDH_LEGACY_CONTEXT in include/mbedtls/ecdh.h.
+ */
+/* #define MBEDTLS_ECDH_VARIANT_EVEREST_ENABLED */
 
 /**
  * \def MBEDTLS_ECP_DP_SECP192R1_ENABLED
@@ -656,17 +777,17 @@ void mbedtls_platform_free( void * ptr );
  * Comment macros to disable the curve and functions for it
  */
 /* Short Weierstrass curves (supporting ECP, ECDH, ECDSA) */
-/*#define MBEDTLS_ECP_DP_SECP192R1_ENABLED */
-/*#define MBEDTLS_ECP_DP_SECP224R1_ENABLED */
+/* #define MBEDTLS_ECP_DP_SECP192R1_ENABLED */
+/* #define MBEDTLS_ECP_DP_SECP224R1_ENABLED */
 #define MBEDTLS_ECP_DP_SECP256R1_ENABLED
 #define MBEDTLS_ECP_DP_SECP384R1_ENABLED
 #define MBEDTLS_ECP_DP_SECP521R1_ENABLED
-/*#define MBEDTLS_ECP_DP_SECP192K1_ENABLED */
-/*#define MBEDTLS_ECP_DP_SECP224K1_ENABLED */
-/*#define MBEDTLS_ECP_DP_SECP256K1_ENABLED */
-/*#define MBEDTLS_ECP_DP_BP256R1_ENABLED */
-/*#define MBEDTLS_ECP_DP_BP384R1_ENABLED */
-/*#define MBEDTLS_ECP_DP_BP512R1_ENABLED */
+/* #define MBEDTLS_ECP_DP_SECP192K1_ENABLED */
+/* #define MBEDTLS_ECP_DP_SECP224K1_ENABLED */
+/* #define MBEDTLS_ECP_DP_SECP256K1_ENABLED */
+/* #define MBEDTLS_ECP_DP_BP256R1_ENABLED */
+/* #define MBEDTLS_ECP_DP_BP384R1_ENABLED */
+/* #define MBEDTLS_ECP_DP_BP512R1_ENABLED */
 /* Montgomery curves (supporting ECP) */
 #define MBEDTLS_ECP_DP_CURVE25519_ENABLED
 #define MBEDTLS_ECP_DP_CURVE448_ENABLED
@@ -698,13 +819,52 @@ void mbedtls_platform_free( void * ptr );
  * This is useful in non-threaded environments if you want to avoid blocking
  * for too long on ECC (and, hence, X.509 or SSL/TLS) operations.
  *
- * Uncomment this macro to enable restartable ECC computations.
+ * This option:
+ * - Adds xxx_restartable() variants of existing operations in the
+ *   following modules, with corresponding restart context types:
+ *   - ECP (for Short Weierstrass curves only): scalar multiplication (mul),
+ *     linear combination (muladd);
+ *   - ECDSA: signature generation & verification;
+ *   - PK: signature generation & verification;
+ *   - X509: certificate chain verification.
+ * - Adds mbedtls_ecdh_enable_restart() in the ECDH module.
+ * - Changes the behaviour of TLS 1.2 clients (not servers) when using the
+ *   ECDHE-ECDSA key exchange (not other key exchanges) to make all ECC
+ *   computations restartable:
+ *   - ECDH operations from the key exchange, only for Short Weierstrass
+ *     curves, only when MBEDTLS_USE_PSA_CRYPTO is not enabled.
+ *   - verification of the server's key exchange signature;
+ *   - verification of the server's certificate chain;
+ *   - generation of the client's signature if client authentication is used,
+ *     with an ECC key/certificate.
+ *
+ * \note  In the cases above, the usual SSL/TLS functions, such as
+ *        mbedtls_ssl_handshake(), can now return
+ *        MBEDTLS_ERR_SSL_CRYPTO_IN_PROGRESS.
+ *
+ * \note  When this option and MBEDTLS_USE_PSA_CRYPTO are both enabled,
+ *        restartable operations in PK, X.509 and TLS (see above) are not
+ *        using PSA. On the other hand, ECDH computations in TLS are using
+ *        PSA, and are not restartable. These are temporary limitations that
+ *        should be lifted in the future.
  *
  * \note  This option only works with the default software implementation of
  *        elliptic curve functionality. It is incompatible with
  *        MBEDTLS_ECP_ALT, MBEDTLS_ECDH_XXX_ALT, MBEDTLS_ECDSA_XXX_ALT.
+ *
+ * Requires: MBEDTLS_ECP_C
+ *
+ * Uncomment this macro to enable restartable ECC computations.
  */
-/*#define MBEDTLS_ECP_RESTARTABLE */
+/* #define MBEDTLS_ECP_RESTARTABLE */
+
+/**
+ * Uncomment to enable using new bignum code in the ECC modules.
+ *
+ * \warning This is currently experimental, incomplete and therefore should not
+ * be used in production.
+ */
+/* #define MBEDTLS_ECP_WITH_MPI_UINT */
 
 /**
  * \def MBEDTLS_ECDSA_DETERMINISTIC
@@ -738,7 +898,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_PSK_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/*#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED
@@ -767,14 +927,14 @@ void mbedtls_platform_free( void * ptr );
  *             See dhm.h for more details.
  *
  */
-/*#define MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED */
+/* #define MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED */
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
  *
  * Enable the ECDHE-PSK based ciphersuite modes in SSL / TLS.
  *
- * Requires: MBEDTLS_ECDH_C
+ * Requires: MBEDTLS_ECDH_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDH)
  *
  * This enables the following ciphersuites (if other requisites are
  * enabled as well):
@@ -785,7 +945,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/*#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
@@ -808,7 +968,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_RSA_PSK_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/*#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
@@ -865,14 +1025,16 @@ void mbedtls_platform_free( void * ptr );
  *             See dhm.h for more details.
  *
  */
-/*#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED */
+/* #define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED */
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
  *
  * Enable the ECDHE-RSA based ciphersuite modes in SSL / TLS.
  *
- * Requires: MBEDTLS_ECDH_C, MBEDTLS_RSA_C, MBEDTLS_PKCS1_V15,
+ * Requires: MBEDTLS_ECDH_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDH)
+ *           MBEDTLS_RSA_C
+ *           MBEDTLS_PKCS1_V15
  *           MBEDTLS_X509_CRT_PARSE_C
  *
  * This enables the following ciphersuites (if other requisites are
@@ -895,7 +1057,9 @@ void mbedtls_platform_free( void * ptr );
  *
  * Enable the ECDHE-ECDSA based ciphersuite modes in SSL / TLS.
  *
- * Requires: MBEDTLS_ECDH_C, MBEDTLS_ECDSA_C, MBEDTLS_X509_CRT_PARSE_C,
+ * Requires: MBEDTLS_ECDH_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDH)
+ *           MBEDTLS_ECDSA_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDSA)
+ *           MBEDTLS_X509_CRT_PARSE_C
  *
  * This enables the following ciphersuites (if other requisites are
  * enabled as well):
@@ -917,7 +1081,9 @@ void mbedtls_platform_free( void * ptr );
  *
  * Enable the ECDH-ECDSA based ciphersuite modes in SSL / TLS.
  *
- * Requires: MBEDTLS_ECDH_C, MBEDTLS_ECDSA_C, MBEDTLS_X509_CRT_PARSE_C
+ * Requires: MBEDTLS_ECDH_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDH)
+ *           MBEDTLS_ECDSA_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDSA)
+ *           MBEDTLS_X509_CRT_PARSE_C
  *
  * This enables the following ciphersuites (if other requisites are
  * enabled as well):
@@ -932,14 +1098,16 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDH_ECDSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDH_ECDSA_WITH_CAMELLIA_256_GCM_SHA384
  */
-/*#define MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
+/* #define MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
  *
  * Enable the ECDH-RSA based ciphersuite modes in SSL / TLS.
  *
- * Requires: MBEDTLS_ECDH_C, MBEDTLS_RSA_C, MBEDTLS_X509_CRT_PARSE_C
+ * Requires: MBEDTLS_ECDH_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDH)
+ *           MBEDTLS_RSA_C
+ *           MBEDTLS_X509_CRT_PARSE_C
  *
  * This enables the following ciphersuites (if other requisites are
  * enabled as well):
@@ -954,7 +1122,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384
  */
-/*#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED */
+#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
@@ -965,15 +1133,19 @@ void mbedtls_platform_free( void * ptr );
  * Thread v1.0.0 specification; incompatible changes to the specification
  * might still happen. For this reason, this is disabled by default.
  *
- * Requires: MBEDTLS_ECJPAKE_C
- *           MBEDTLS_SHA256_C
+ * Requires: MBEDTLS_ECJPAKE_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_JPAKE)
+ *           SHA-256 (via MBEDTLS_SHA256_C or a PSA driver)
  *           MBEDTLS_ECP_DP_SECP256R1_ENABLED
+ *
+ * \warning If SHA-256 is provided only by a PSA driver, you must call
+ * psa_crypto_init() before the first hanshake (even if
+ * MBEDTLS_USE_PSA_CRYPTO is disabled).
  *
  * This enables the following ciphersuites (if other requisites are
  * enabled as well):
  *      MBEDTLS_TLS_ECJPAKE_WITH_AES_128_CCM_8
  */
-/*#define MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
+/* #define MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
 
 /**
  * \def MBEDTLS_PK_PARSE_EC_EXTENDED
@@ -988,6 +1160,19 @@ void mbedtls_platform_free( void * ptr );
  * Disable if you only need to support RFC 5915 + 5480 key formats.
  */
 #define MBEDTLS_PK_PARSE_EC_EXTENDED
+
+/**
+ * \def MBEDTLS_PK_PARSE_EC_COMPRESSED
+ *
+ * Enable the support for parsing public keys of type Short Weierstrass
+ * (MBEDTLS_ECP_DP_SECP_XXX and MBEDTLS_ECP_DP_BP_XXX) which are using the
+ * compressed point format. This parsing is done through ECP module's functions.
+ *
+ * \note As explained in the description of MBEDTLS_ECP_PF_COMPRESSED (in ecp.h)
+ *       the only unsupported curves are MBEDTLS_ECP_DP_SECP224R1 and
+ *       MBEDTLS_ECP_DP_SECP224K1.
+ */
+#define MBEDTLS_PK_PARSE_EC_COMPRESSED
 
 /**
  * \def MBEDTLS_ERROR_STRERROR_DUMMY
@@ -1018,7 +1203,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Enable functions that use the filesystem.
  */
-/*#define MBEDTLS_FS_IO */
+/* #define MBEDTLS_FS_IO */
 
 /**
  * \def MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
@@ -1030,7 +1215,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this macro to prevent loading of default entropy functions.
  */
-/*#define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES */
+/* #define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES */
 
 /**
  * \def MBEDTLS_NO_PLATFORM_ENTROPY
@@ -1057,7 +1242,7 @@ void mbedtls_platform_free( void * ptr );
  * This option is only useful if both MBEDTLS_SHA256_C and
  * MBEDTLS_SHA512_C are defined. Otherwise the available hash module is used.
  */
-/*#define MBEDTLS_ENTROPY_FORCE_SHA256 */
+/* #define MBEDTLS_ENTROPY_FORCE_SHA256 */
 
 /**
  * \def MBEDTLS_ENTROPY_NV_SEED
@@ -1085,7 +1270,7 @@ void mbedtls_platform_free( void * ptr );
  * \note The entropy collector will write to the seed file before entropy is
  *       given to an external source, to update it.
  */
-/*#define MBEDTLS_ENTROPY_NV_SEED */
+/* #define MBEDTLS_ENTROPY_NV_SEED */
 
 /* MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER
  *
@@ -1097,7 +1282,7 @@ void mbedtls_platform_free( void * ptr );
  * Note that this option is meant for internal use only and may be removed
  * without notice.
  */
-/*#define MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER */
+/* #define MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER */
 
 /**
  * \def MBEDTLS_MEMORY_DEBUG
@@ -1110,7 +1295,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this macro to let the buffer allocator print out error messages.
  */
-/*#define MBEDTLS_MEMORY_DEBUG */
+/* #define MBEDTLS_MEMORY_DEBUG */
 
 /**
  * \def MBEDTLS_MEMORY_BACKTRACE
@@ -1118,11 +1303,11 @@ void mbedtls_platform_free( void * ptr );
  * Include backtrace information with each allocated block.
  *
  * Requires: MBEDTLS_MEMORY_BUFFER_ALLOC_C
- *           GLIBC-compatible backtrace() an backtrace_symbols() support
+ *           GLIBC-compatible backtrace() and backtrace_symbols() support
  *
  * Uncomment this macro to include backtrace information
  */
-/*#define MBEDTLS_MEMORY_BACKTRACE */
+/* #define MBEDTLS_MEMORY_BACKTRACE */
 
 /**
  * \def MBEDTLS_PK_RSA_ALT_SUPPORT
@@ -1131,14 +1316,14 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for external private RSA keys.
  */
-/*#define MBEDTLS_PK_RSA_ALT_SUPPORT */
+/* #define MBEDTLS_PK_RSA_ALT_SUPPORT */
 
 /**
  * \def MBEDTLS_PKCS1_V15
  *
  * Enable support for PKCS#1 v1.5 encoding.
  *
- * Requires: MBEDTLS_MD_C, MBEDTLS_RSA_C
+ * Requires: MBEDTLS_RSA_C
  *
  * This enables support for PKCS#1 v1.5 operations.
  */
@@ -1149,7 +1334,10 @@ void mbedtls_platform_free( void * ptr );
  *
  * Enable support for PKCS#1 v2.1 encoding.
  *
- * Requires: MBEDTLS_MD_C, MBEDTLS_RSA_C
+ * Requires: MBEDTLS_RSA_C
+ *
+ * \warning If using a hash that is only provided by PSA drivers, you must
+ * call psa_crypto_init() before doing any PKCS#1 v2.1 operation.
  *
  * This enables support for RSAES-OAEP and RSASSA-PSS operations.
  */
@@ -1169,7 +1357,7 @@ void mbedtls_platform_free( void * ptr );
  * \warning This interface is experimental and may change or be removed
  * without notice.
  */
-/*#define MBEDTLS_PSA_CRYPTO_BUILTIN_KEYS */
+/* #define MBEDTLS_PSA_CRYPTO_BUILTIN_KEYS */
 
 /** \def MBEDTLS_PSA_CRYPTO_CLIENT
  *
@@ -1185,19 +1373,7 @@ void mbedtls_platform_free( void * ptr );
  * \warning This interface is experimental and may change or be removed
  * without notice.
  */
-/*#define MBEDTLS_PSA_CRYPTO_CLIENT */
-
-/** \def MBEDTLS_PSA_CRYPTO_DRIVERS
- *
- * Enable support for the experimental PSA crypto driver interface.
- *
- * Requires: MBEDTLS_PSA_CRYPTO_C
- *
- * \warning This interface is experimental. We intend to maintain backward
- *          compatibility with application code that relies on drivers,
- *          but the driver interfaces may change without notice.
- */
-/*#define MBEDTLS_PSA_CRYPTO_DRIVERS */
+/* #define MBEDTLS_PSA_CRYPTO_CLIENT */
 
 /** \def MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG
  *
@@ -1223,8 +1399,8 @@ void mbedtls_platform_free( void * ptr );
  * );
  * ```
  * The \c context value is initialized to 0 before the first call.
- * The function must fill the \c output buffer with \p output_size bytes
- * of random data and set \c *output_length to \p output_size.
+ * The function must fill the \c output buffer with \c output_size bytes
+ * of random data and set \c *output_length to \c output_size.
  *
  * Requires: MBEDTLS_PSA_CRYPTO_C
  *
@@ -1235,7 +1411,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * \note This option is experimental and may be removed without notice.
  */
-/*#define MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG */
+/* #define MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG */
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_SPM
@@ -1245,11 +1421,59 @@ void mbedtls_platform_free( void * ptr );
  * NSPE (Non-Secure Process Environment) and an SPE (Secure Process
  * Environment).
  *
+ * If you enable this option, your build environment must include a header
+ * file `"crypto_spe.h"` (either in the `psa` subdirectory of the Mbed TLS
+ * header files, or in another directory on the compiler's include search
+ * path). Alternatively, your platform may customize the header
+ * `psa/crypto_platform.h`, in which case it can skip or replace the
+ * inclusion of `"crypto_spe.h"`.
+ *
  * Module:  library/psa_crypto.c
  * Requires: MBEDTLS_PSA_CRYPTO_C
  *
  */
-/*#define MBEDTLS_PSA_CRYPTO_SPM */
+/* #define MBEDTLS_PSA_CRYPTO_SPM */
+
+/**
+ * Uncomment to enable p256-m. This is an alternative implementation of
+ * key generation, ECDH and (randomized) ECDSA on the curve SECP256R1.
+ * Compared to the default implementation:
+ *
+ * - p256-m has a much smaller code size and RAM footprint.
+ * - p256-m is only available via the PSA API. This includes the pk module
+ *   when #MBEDTLS_USE_PSA_CRYPTO is enabled.
+ * - p256-m does not support deterministic ECDSA, EC-JPAKE, custom protocols
+ *   over the core arithmetic, or deterministic derivation of keys.
+ *
+ * We recommend enabling this option if your application uses the PSA API
+ * and the only elliptic curve support it needs is ECDH and ECDSA over
+ * SECP256R1.
+ *
+ * If you enable this option, you do not need to enable any ECC-related
+ * MBEDTLS_xxx option. You do need to separately request support for the
+ * cryptographic mechanisms through the PSA API:
+ * - #MBEDTLS_PSA_CRYPTO_C and #MBEDTLS_PSA_CRYPTO_CONFIG for PSA-based
+ *   configuration;
+ * - #MBEDTLS_USE_PSA_CRYPTO if you want to use p256-m from PK, X.509 or TLS;
+ * - #PSA_WANT_ECC_SECP_R1_256;
+ * - #PSA_WANT_ALG_ECDH and/or #PSA_WANT_ALG_ECDSA as needed;
+ * - #PSA_WANT_KEY_TYPE_ECC_PUBLIC_KEY, #PSA_WANT_KEY_TYPE_ECC_KEY_PAIR_BASIC,
+ *   #PSA_WANT_KEY_TYPE_ECC_KEY_PAIR_IMPORT,
+ *   #PSA_WANT_KEY_TYPE_ECC_KEY_PAIR_EXPORT and/or
+ *   #PSA_WANT_KEY_TYPE_ECC_KEY_PAIR_GENERATE as needed.
+ *
+ * \note To benefit from the smaller code size of p256-m, make sure that you
+ *       do not enable any ECC-related option not supported by p256-m: this
+ *       would cause the built-in ECC implementation to be built as well, in
+ *       order to provide the required option.
+ *       Make sure #PSA_WANT_ALG_DETERMINISTIC_ECDSA, #PSA_WANT_ALG_JPAKE and
+ *       #PSA_WANT_KEY_TYPE_ECC_KEY_PAIR_DERIVE, and curves other than
+ *       SECP256R1 are disabled as they are not supported by this driver.
+ *       Also, avoid defining #MBEDTLS_PK_PARSE_EC_COMPRESSED or
+ *       #MBEDTLS_PK_PARSE_EC_EXTENDED as those currently require a subset of
+ *       the built-in ECC implementation, see docs/driver-only-builds.md.
+ */
+/* #define MBEDTLS_PSA_P256M_DRIVER_ENABLED */
 
 /**
  * \def MBEDTLS_PSA_INJECT_ENTROPY
@@ -1262,7 +1486,7 @@ void mbedtls_platform_free( void * ptr );
  * Requires: MBEDTLS_PSA_CRYPTO_STORAGE_C, MBEDTLS_ENTROPY_NV_SEED
  *
  */
-/*#define MBEDTLS_PSA_INJECT_ENTROPY */
+/* #define MBEDTLS_PSA_INJECT_ENTROPY */
 
 /**
  * \def MBEDTLS_RSA_NO_CRT
@@ -1273,14 +1497,14 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment this macro to disable the use of CRT in RSA.
  *
  */
-/*#define MBEDTLS_RSA_NO_CRT */
+/* #define MBEDTLS_RSA_NO_CRT */
 
 /**
  * \def MBEDTLS_SELF_TEST
  *
  * Enable the checkup functions (*_self_test).
  */
-/*#define MBEDTLS_SELF_TEST */
+/* #define MBEDTLS_SELF_TEST */
 
 /**
  * \def MBEDTLS_SHA256_SMALLER
@@ -1296,7 +1520,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to enable the smaller implementation of SHA256.
  */
-/*#define MBEDTLS_SHA256_SMALLER */
+/* #define MBEDTLS_SHA256_SMALLER */
 
 /**
  * \def MBEDTLS_SHA512_SMALLER
@@ -1306,13 +1530,13 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to enable the smaller implementation of SHA512.
  */
-/*#define MBEDTLS_SHA512_SMALLER */
+/* #define MBEDTLS_SHA512_SMALLER */
 
 /**
  * \def MBEDTLS_SSL_ALL_ALERT_MESSAGES
  *
  * Enable sending of alert messages in case of encountered errors as per RFC.
- * If you choose not to send the alert messages, mbed TLS can still communicate
+ * If you choose not to send the alert messages, Mbed TLS can still communicate
  * with other servers, only debugging of failures is harder.
  *
  * The advantage of not sending alert messages, is that no information is given
@@ -1325,20 +1549,15 @@ void mbedtls_platform_free( void * ptr );
 /**
  * \def MBEDTLS_SSL_DTLS_CONNECTION_ID
  *
- * Enable support for the DTLS Connection ID extension
- * (version draft-ietf-tls-dtls-connection-id-05,
- * https://tools.ietf.org/html/draft-ietf-tls-dtls-connection-id-05)
+ * Enable support for the DTLS Connection ID (CID) extension,
  * which allows to identify DTLS connections across changes
- * in the underlying transport.
+ * in the underlying transport. The CID functionality is described
+ * in RFC 9146.
  *
  * Setting this option enables the SSL APIs `mbedtls_ssl_set_cid()`,
  * mbedtls_ssl_get_own_cid()`, `mbedtls_ssl_get_peer_cid()` and
  * `mbedtls_ssl_conf_cid()`. See the corresponding documentation for
  * more information.
- *
- * \warning The Connection ID extension is still in draft state.
- *          We make no stability promises for the availability
- *          or the shape of the API controlled by this option.
  *
  * The maximum lengths of outgoing and incoming CIDs can be configured
  * through the options
@@ -1349,7 +1568,30 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to enable the Connection ID extension.
  */
-/*#define MBEDTLS_SSL_DTLS_CONNECTION_ID */
+/* #define MBEDTLS_SSL_DTLS_CONNECTION_ID */
+
+
+/**
+ * \def MBEDTLS_SSL_DTLS_CONNECTION_ID_COMPAT
+ *
+ * Defines whether RFC 9146 (default) or the legacy version
+ * (version draft-ietf-tls-dtls-connection-id-05,
+ * https://tools.ietf.org/html/draft-ietf-tls-dtls-connection-id-05)
+ * is used.
+ *
+ * Set the value to 0 for the standard version, and
+ * 1 for the legacy draft version.
+ *
+ * \deprecated Support for the legacy version of the DTLS
+ *             Connection ID feature is deprecated. Please
+ *             switch to the standardized version defined
+ *             in RFC 9146 enabled by utilizing
+ *             MBEDTLS_SSL_DTLS_CONNECTION_ID without use
+ *             of MBEDTLS_SSL_DTLS_CONNECTION_ID_COMPAT.
+ *
+ * Requires: MBEDTLS_SSL_DTLS_CONNECTION_ID
+ */
+/* #define MBEDTLS_SSL_DTLS_CONNECTION_ID_COMPAT 0 */
 
 /**
  * \def MBEDTLS_SSL_ASYNC_PRIVATE
@@ -1359,8 +1601,9 @@ void mbedtls_platform_free( void * ptr );
  * module to perform private key operations instead of performing the
  * operation inside the library.
  *
+ * Requires: MBEDTLS_X509_CRT_PARSE_C
  */
-/*#define MBEDTLS_SSL_ASYNC_PRIVATE */
+/* #define MBEDTLS_SSL_ASYNC_PRIVATE */
 
 /**
  * \def MBEDTLS_SSL_CONTEXT_SERIALIZATION
@@ -1385,9 +1628,11 @@ void mbedtls_platform_free( void * ptr );
  * saved after the handshake to allow for more efficient serialization, so if
  * you don't need this feature you'll save RAM by disabling it.
  *
+ * Requires: MBEDTLS_GCM_C or MBEDTLS_CCM_C or MBEDTLS_CHACHAPOLY_C
+ *
  * Comment to disable the context serialization APIs.
  */
-/*#define MBEDTLS_SSL_CONTEXT_SERIALIZATION */
+/* #define MBEDTLS_SSL_CONTEXT_SERIALIZATION */
 
 /**
  * \def MBEDTLS_SSL_DEBUG_ALL
@@ -1403,7 +1648,7 @@ void mbedtls_platform_free( void * ptr );
  * a timing side-channel.
  *
  */
-/*#define MBEDTLS_SSL_DEBUG_ALL */
+/* #define MBEDTLS_SSL_DEBUG_ALL */
 
 /** \def MBEDTLS_SSL_ENCRYPT_THEN_MAC
  *
@@ -1419,7 +1664,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for Encrypt-then-MAC
  */
-#define MBEDTLS_SSL_ENCRYPT_THEN_MAC
+/* #define MBEDTLS_SSL_ENCRYPT_THEN_MAC */
 
 /** \def MBEDTLS_SSL_EXTENDED_MASTER_SECRET
  *
@@ -1435,7 +1680,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for Extended Master Secret.
  */
-#define MBEDTLS_SSL_EXTENDED_MASTER_SECRET
+/* #define MBEDTLS_SSL_EXTENDED_MASTER_SECRET */
 
 /**
  * \def MBEDTLS_SSL_KEEP_PEER_CERTIFICATE
@@ -1472,6 +1717,8 @@ void mbedtls_platform_free( void * ptr );
  * it has been associated with security issues in the past and is easy to
  * misuse/misunderstand.
  *
+ * Requires: MBEDTLS_SSL_PROTO_TLS1_2
+ *
  * Comment this to disable support for renegotiation.
  *
  * \note   Even if this option is disabled, both client and server are aware
@@ -1481,7 +1728,7 @@ void mbedtls_platform_free( void * ptr );
  *          configuration of this extension).
  *
  */
-/*#define MBEDTLS_SSL_RENEGOTIATION */
+/* #define MBEDTLS_SSL_RENEGOTIATION */
 
 /**
  * \def MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
@@ -1490,14 +1737,36 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for the max_fragment_length extension
  */
+/* #define MBEDTLS_SSL_MAX_FRAGMENT_LENGTH */
+
+/**
+ * \def MBEDTLS_SSL_RECORD_SIZE_LIMIT
+ *
+ * Enable support for RFC 8449 record_size_limit extension in SSL (TLS 1.3 only).
+ *
+ * \warning This extension is currently in development and must NOT be used except
+ *          for testing purposes.
+ *
+ * Requires: MBEDTLS_SSL_PROTO_TLS1_3
+ *
+ * Uncomment this macro to enable support for the record_size_limit extension
+ */
+/* #define MBEDTLS_SSL_RECORD_SIZE_LIMIT */
 
 /**
  * \def MBEDTLS_SSL_PROTO_TLS1_2
  *
  * Enable support for TLS 1.2 (and DTLS 1.2 if DTLS is enabled).
  *
- * Requires: MBEDTLS_SHA1_C or MBEDTLS_SHA256_C or MBEDTLS_SHA512_C
- *           (Depends on ciphersuites)
+ * Requires: Without MBEDTLS_USE_PSA_CRYPTO: MBEDTLS_MD_C and
+ *              (MBEDTLS_SHA256_C or MBEDTLS_SHA384_C or
+ *               SHA-256 or SHA-512 provided by a PSA driver)
+ *           With MBEDTLS_USE_PSA_CRYPTO:
+ *              PSA_WANT_ALG_SHA_256 or PSA_WANT_ALG_SHA_384
+ *
+ * \warning If building with MBEDTLS_USE_PSA_CRYPTO, or if the hash(es) used
+ * are only provided by PSA drivers, you must call psa_crypto_init() before
+ * doing any TLS operations.
  *
  * Comment this macro to disable support for TLS 1.2 / DTLS 1.2
  */
@@ -1508,23 +1777,24 @@ void mbedtls_platform_free( void * ptr );
  *
  * Enable support for TLS 1.3.
  *
- * \note The support for TLS 1.3 is not comprehensive yet, in particular
- *       pre-shared keys are not supported.
- *       See docs/architecture/tls13-support.md for a description of the TLS
+ * \note See docs/architecture/tls13-support.md for a description of the TLS
  *       1.3 support that this option enables.
  *
  * Requires: MBEDTLS_SSL_KEEP_PEER_CERTIFICATE
  * Requires: MBEDTLS_PSA_CRYPTO_C
  *
- * Note: even though TLS 1.3 depends on PSA Crypto, if you want it to only use
- * PSA for all crypto operations, you need to also enable
- * MBEDTLS_USE_PSA_CRYPTO; otherwise X.509 operations, and functions that are
- * common with TLS 1.2 (record protection, running handshake hash) will still
- * use non-PSA crypto.
+ * \note TLS 1.3 uses PSA crypto for cryptographic operations that are
+ *       directly performed by TLS 1.3 code. As a consequence, you must
+ *       call psa_crypto_init() before the first TLS 1.3 handshake.
+ *
+ * \note Cryptographic operations performed indirectly via another module
+ *       (X.509, PK) or by code shared with TLS 1.2 (record protection,
+ *       running handshake hash) only use PSA crypto if
+ *       #MBEDTLS_USE_PSA_CRYPTO is enabled.
  *
  * Uncomment this macro to enable the support for TLS 1.3.
  */
-/*#define MBEDTLS_SSL_PROTO_TLS1_3 */
+#define MBEDTLS_SSL_PROTO_TLS1_3
 
 /**
  * \def MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE
@@ -1546,7 +1816,72 @@ void mbedtls_platform_free( void * ptr );
  * effect on the build.
  *
  */
-/*#define MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE */
+#define MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE
+
+/**
+ * \def MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_ENABLED
+ *
+ * Enable TLS 1.3 PSK key exchange mode.
+ *
+ * Comment to disable support for the PSK key exchange mode in TLS 1.3. If
+ * MBEDTLS_SSL_PROTO_TLS1_3 is not enabled, this option does not have any
+ * effect on the build.
+ *
+ */
+#define MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_ENABLED
+
+/**
+ * \def MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_EPHEMERAL_ENABLED
+ *
+ * Enable TLS 1.3 ephemeral key exchange mode.
+ *
+ * Requires: PSA_WANT_ALG_ECDH or PSA_WANT_ALG_FFDH
+ *           MBEDTLS_X509_CRT_PARSE_C
+ *           and at least one of:
+ *               MBEDTLS_ECDSA_C or (MBEDTLS_USE_PSA_CRYPTO and PSA_WANT_ALG_ECDSA)
+ *               MBEDTLS_PKCS1_V21
+ *
+ * Comment to disable support for the ephemeral key exchange mode in TLS 1.3.
+ * If MBEDTLS_SSL_PROTO_TLS1_3 is not enabled, this option does not have any
+ * effect on the build.
+ *
+ */
+#define MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_EPHEMERAL_ENABLED
+
+/**
+ * \def MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
+ *
+ * Enable TLS 1.3 PSK ephemeral key exchange mode.
+ *
+ * Requires: PSA_WANT_ALG_ECDH or PSA_WANT_ALG_FFDH
+ *
+ * Comment to disable support for the PSK ephemeral key exchange mode in
+ * TLS 1.3. If MBEDTLS_SSL_PROTO_TLS1_3 is not enabled, this option does not
+ * have any effect on the build.
+ *
+ */
+#define MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
+
+/**
+ * \def MBEDTLS_SSL_EARLY_DATA
+ *
+ * Enable support for RFC 8446 TLS 1.3 early data.
+ *
+ * Requires: MBEDTLS_SSL_SESSION_TICKETS and either
+ *           MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_ENABLED or
+ *           MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
+ *
+ * Comment this to disable support for early data. If MBEDTLS_SSL_PROTO_TLS1_3
+ * is not enabled, this option does not have any effect on the build.
+ *
+ * This feature is experimental, not completed and thus not ready for
+ * production.
+ *
+ * \note The maximum amount of early data can be set with
+ *       MBEDTLS_SSL_MAX_EARLY_DATA_SIZE.
+ *
+ */
+/* #define MBEDTLS_SSL_EARLY_DATA */
 
 /**
  * \def MBEDTLS_SSL_PROTO_DTLS
@@ -1559,7 +1894,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for DTLS
  */
-#define MBEDTLS_SSL_PROTO_DTLS
+/* #define MBEDTLS_SSL_PROTO_DTLS */
 
 /**
  * \def MBEDTLS_SSL_ALPN
@@ -1583,7 +1918,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this to disable anti-replay in DTLS.
  */
-#define MBEDTLS_SSL_DTLS_ANTI_REPLAY
+/* #define MBEDTLS_SSL_DTLS_ANTI_REPLAY */
 
 /**
  * \def MBEDTLS_SSL_DTLS_HELLO_VERIFY
@@ -1601,7 +1936,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this to disable support for HelloVerifyRequest.
  */
-#define MBEDTLS_SSL_DTLS_HELLO_VERIFY
+/* #define MBEDTLS_SSL_DTLS_HELLO_VERIFY */
 
 /**
  * \def MBEDTLS_SSL_DTLS_SRTP
@@ -1632,7 +1967,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this to enable support for use_srtp extension.
  */
-/*#define MBEDTLS_SSL_DTLS_SRTP */
+/* #define MBEDTLS_SSL_DTLS_SRTP */
 
 /**
  * \def MBEDTLS_SSL_DTLS_CLIENT_PORT_REUSE
@@ -1648,7 +1983,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this to disable support for clients reusing the source port.
  */
-#define MBEDTLS_SSL_DTLS_CLIENT_PORT_REUSE
+/* #define MBEDTLS_SSL_DTLS_CLIENT_PORT_REUSE */
 
 /**
  * \def MBEDTLS_SSL_SESSION_TICKETS
@@ -1683,6 +2018,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Requires: MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
  */
+/* #define MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH */
 
 /**
  * \def MBEDTLS_TEST_CONSTANT_FLOW_MEMSAN
@@ -1699,7 +2035,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to enable testing of the constant-flow nature of selected code.
  */
-/*#define MBEDTLS_TEST_CONSTANT_FLOW_MEMSAN */
+/* #define MBEDTLS_TEST_CONSTANT_FLOW_MEMSAN */
 
 /**
  * \def MBEDTLS_TEST_CONSTANT_FLOW_VALGRIND
@@ -1718,7 +2054,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to enable testing of the constant-flow nature of selected code.
  */
-/*#define MBEDTLS_TEST_CONSTANT_FLOW_VALGRIND */
+/* #define MBEDTLS_TEST_CONSTANT_FLOW_VALGRIND */
 
 /**
  * \def MBEDTLS_TEST_HOOKS
@@ -1738,7 +2074,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to enable invasive tests.
  */
-/*#define MBEDTLS_TEST_HOOKS */
+/* #define MBEDTLS_TEST_HOOKS */
 
 /**
  * \def MBEDTLS_THREADING_ALT
@@ -1749,7 +2085,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this to allow your own alternate threading implementation.
  */
-/*#define MBEDTLS_THREADING_ALT */
+/* #define MBEDTLS_THREADING_ALT */
 
 /**
  * \def MBEDTLS_THREADING_PTHREAD
@@ -1760,31 +2096,37 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment this to enable pthread mutexes.
  */
-/*#define MBEDTLS_THREADING_PTHREAD */
+/* #define MBEDTLS_THREADING_PTHREAD */
 
 /**
  * \def MBEDTLS_USE_PSA_CRYPTO
  *
- * Make the X.509 and TLS library use PSA for cryptographic operations, and
- * enable new APIs for using keys handled by PSA Crypto.
+ * Make the X.509 and TLS libraries use PSA for cryptographic operations as
+ * much as possible, and enable new APIs for using keys handled by PSA Crypto.
  *
  * \note Development of this option is currently in progress, and parts of Mbed
  * TLS's X.509 and TLS modules are not ported to PSA yet. However, these parts
  * will still continue to work as usual, so enabling this option should not
  * break backwards compatibility.
  *
- * \note See docs/use-psa-crypto.md for a complete description of what this
- * option currently does, and of parts that are not affected by it so far.
- *
  * \warning If you enable this option, you need to call `psa_crypto_init()`
- * before calling any function from the SSL/TLS, X.509 or PK modules.
+ * before calling any function from the SSL/TLS, X.509 or PK modules, except
+ * for the various mbedtls_xxx_init() functions which can be called at any time.
+ *
+ * \note An important and desirable effect of this option is that it allows
+ * PK, X.509 and TLS to take advantage of PSA drivers. For example, enabling
+ * this option is what allows use of drivers for ECDSA, ECDH and EC J-PAKE in
+ * those modules. However, note that even with this option disabled, some code
+ * in PK, X.509, TLS or the crypto library might still use PSA drivers, if it
+ * can determine it's safe to do so; currently that's the case for hashes.
+ *
+ * \note See docs/use-psa-crypto.md for a complete description this option.
  *
  * Requires: MBEDTLS_PSA_CRYPTO_C.
- * Conflicts with: MBEDTLS_ECP_RESTARTABLE
  *
  * Uncomment this to enable internal use of PSA Crypto and new associated APIs.
  */
-/*#define MBEDTLS_USE_PSA_CRYPTO */
+#define MBEDTLS_USE_PSA_CRYPTO
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_CONFIG
@@ -1806,10 +2148,17 @@ void mbedtls_platform_free( void * ptr );
  * If the symbol #MBEDTLS_PSA_CRYPTO_CONFIG_FILE is defined, it specifies
  * an alternative header to include instead of include/psa/crypto_config.h.
  *
- * This feature is still experimental and is not ready for production since
- * it is not completed.
+ * \warning This option is experimental, in that the set of `PSA_WANT_XXX`
+ *          symbols is not completely finalized yet, and the configuration
+ *          tooling is not ideally adapted to having two separate configuration
+ *          files.
+ *          Future minor releases of Mbed TLS may make minor changes to those
+ *          symbols, but we will endeavor to provide a transition path.
+ *          Nonetheless, this option is considered mature enough to use in
+ *          production, as long as you accept that you may need to make
+ *          minor changes to psa/crypto_config.h when upgrading Mbed TLS.
  */
-/*#define MBEDTLS_PSA_CRYPTO_CONFIG */
+/* #define MBEDTLS_PSA_CRYPTO_CONFIG */
 
 /**
  * \def MBEDTLS_VERSION_FEATURES
@@ -1822,7 +2171,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this to disable run-time checking and save ROM space
  */
-/*#define MBEDTLS_VERSION_FEATURES */
+#define MBEDTLS_VERSION_FEATURES
 
 /**
  * \def MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK
@@ -1839,9 +2188,11 @@ void mbedtls_platform_free( void * ptr );
  * See the documentation of `mbedtls_x509_crt_verify_with_ca_cb()` and
  * `mbedtls_ssl_conf_ca_cb()` for more information.
  *
+ * Requires: MBEDTLS_X509_CRT_PARSE_C
+ *
  * Uncomment to enable trusted certificate callbacks.
  */
-#define MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK
+/* #define MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK */
 
 /**
  * \def MBEDTLS_X509_REMOVE_INFO
@@ -1852,7 +2203,7 @@ void mbedtls_platform_free( void * ptr );
  * and other functions/constants only used by these functions, thus reducing
  * the code footprint by several KB.
  */
-/*#define MBEDTLS_X509_REMOVE_INFO */
+/* #define MBEDTLS_X509_REMOVE_INFO */
 
 /**
  * \def MBEDTLS_X509_RSASSA_PSS_SUPPORT
@@ -1863,28 +2214,70 @@ void mbedtls_platform_free( void * ptr );
  * Comment this macro to disallow using RSASSA-PSS in certificates.
  */
 #define MBEDTLS_X509_RSASSA_PSS_SUPPORT
-/** \} name SECTION: mbed TLS feature support */
+/** \} name SECTION: Mbed TLS feature support */
 
 /**
- * \name SECTION: mbed TLS modules
+ * \name SECTION: Mbed TLS modules
  *
- * This section enables or disables entire modules in mbed TLS
+ * This section enables or disables entire modules in Mbed TLS
  * \{
  */
 
 /**
  * \def MBEDTLS_AESNI_C
  *
- * Enable AES-NI support on x86-64.
+ * Enable AES-NI support on x86-64 or x86-32.
+ *
+ * \note AESNI is only supported with certain compilers and target options:
+ * - Visual Studio 2013: supported.
+ * - GCC, x86-64, target not explicitly supporting AESNI:
+ *   requires MBEDTLS_HAVE_ASM.
+ * - GCC, x86-32, target not explicitly supporting AESNI:
+ *   not supported.
+ * - GCC, x86-64 or x86-32, target supporting AESNI: supported.
+ *   For this assembly-less implementation, you must currently compile
+ *   `library/aesni.c` and `library/aes.c` with machine options to enable
+ *   SSE2 and AESNI instructions: `gcc -msse2 -maes -mpclmul` or
+ *   `clang -maes -mpclmul`.
+ * - Non-x86 targets: this option is silently ignored.
+ * - Other compilers: this option is silently ignored.
+ *
+ * \note
+ * Above, "GCC" includes compatible compilers such as Clang.
+ * The limitations on target support are likely to be relaxed in the future.
  *
  * Module:  library/aesni.c
  * Caller:  library/aes.c
  *
- * Requires: MBEDTLS_HAVE_ASM
+ * Requires: MBEDTLS_HAVE_ASM (on some platforms, see note)
  *
- * This modules adds support for the AES-NI instructions on x86-64
+ * This modules adds support for the AES-NI instructions on x86.
  */
-/*#define MBEDTLS_AESNI_C */
+/* #define MBEDTLS_AESNI_C */
+
+/**
+ * \def MBEDTLS_AESCE_C
+ *
+ * Enable AES cryptographic extension support on 64-bit Arm.
+ *
+ * Module:  library/aesce.c
+ * Caller:  library/aes.c
+ *
+ * Requires: MBEDTLS_AES_C
+ *
+ * \warning Runtime detection only works on Linux. For non-Linux operating
+ *          system, Armv8-A Cryptographic Extensions must be supported by
+ *          the CPU when this option is enabled.
+ *
+ * \note    Minimum compiler versions for this feature are Clang 4.0,
+ *          armclang 6.6, GCC 6.0 or MSVC 2019 version 16.11.2.
+ *
+ * \note \c CFLAGS must be set to a minimum of \c -march=armv8-a+crypto for
+ * armclang <= 6.9
+ *
+ * This module adds support for the AES Armv8-A Cryptographic Extensions on Aarch64 systems.
+ */
+/* #define MBEDTLS_AESCE_C */
 
 /**
  * \def MBEDTLS_AES_C
@@ -2007,6 +2400,9 @@ void mbedtls_platform_free( void * ptr );
  * Enable the multi-precision integer library.
  *
  * Module:  library/bignum.c
+ *          library/bignum_core.c
+ *          library/bignum_mod.c
+ *          library/bignum_mod_raw.c
  * Caller:  library/dhm.c
  *          library/ecp.c
  *          library/ecdsa.c
@@ -2071,7 +2467,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_PSK_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-/*#define MBEDTLS_CAMELLIA_C */
+/* #define MBEDTLS_CAMELLIA_C */
 
 /**
  * \def MBEDTLS_ARIA_C
@@ -2123,7 +2519,7 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_ARIA_128_CBC_SHA256
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_ARIA_256_CBC_SHA384
  */
-/*#define MBEDTLS_ARIA_C */
+/* #define MBEDTLS_ARIA_C */
 
 /**
  * \def MBEDTLS_CCM_C
@@ -2138,7 +2534,7 @@ void mbedtls_platform_free( void * ptr );
  * This module enables the AES-CCM ciphersuites, if other requisites are
  * enabled as well.
  */
-/*#define MBEDTLS_CCM_C */
+/* #define MBEDTLS_CCM_C */
 
 /**
  * \def MBEDTLS_CHACHA20_C
@@ -2207,6 +2603,8 @@ void mbedtls_platform_free( void * ptr );
  * The CTR_DRBG generator uses AES-256 by default.
  * To use AES-128 instead, enable \c MBEDTLS_CTR_DRBG_USE_128_BIT_KEY above.
  *
+ * \note AES-128 will be used if \c MBEDTLS_AES_ONLY_128_BIT_KEY_LENGTH is set.
+ *
  * \note To achieve a 256-bit security strength with CTR_DRBG,
  *       you must use AES-256 *and* use sufficient entropy.
  *       See ctr_drbg.h for more details.
@@ -2233,7 +2631,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * This module provides debugging functions.
  */
-/*#define MBEDTLS_DEBUG_C */
+/* #define MBEDTLS_DEBUG_C */
 
 /**
  * \def MBEDTLS_DES_C
@@ -2246,10 +2644,10 @@ void mbedtls_platform_free( void * ptr );
  *
  * PEM_PARSE uses DES/3DES for decrypting encrypted keys.
  *
- * \warning   DES is considered a weak cipher and its use constitutes a
+ * \warning   DES/3DES are considered weak ciphers and their use constitutes a
  *            security risk. We recommend considering stronger ciphers instead.
  */
-/*#define MBEDTLS_DES_C */
+/* #define MBEDTLS_DES_C */
 
 /**
  * \def MBEDTLS_DHM_C
@@ -2323,9 +2721,12 @@ void mbedtls_platform_free( void * ptr );
  * This module is used by the following key exchanges:
  *      ECJPAKE
  *
- * Requires: MBEDTLS_ECP_C, MBEDTLS_MD_C
+ * Requires: MBEDTLS_ECP_C and either MBEDTLS_MD_C or MBEDTLS_PSA_CRYPTO_C
+ *
+ * \warning If using a hash that is only provided by PSA drivers, you must
+ * call psa_crypto_init() before doing any EC J-PAKE operations.
  */
-/*#define MBEDTLS_ECJPAKE_C */
+/* #define MBEDTLS_ECJPAKE_C */
 
 /**
  * \def MBEDTLS_ECP_C
@@ -2412,6 +2813,32 @@ void mbedtls_platform_free( void * ptr );
 #define MBEDTLS_HMAC_DRBG_C
 
 /**
+ * \def MBEDTLS_LMS_C
+ *
+ * Enable the LMS stateful-hash asymmetric signature algorithm.
+ *
+ * Module:  library/lms.c
+ * Caller:
+ *
+ * Requires: MBEDTLS_PSA_CRYPTO_C
+ *
+ * Uncomment to enable the LMS verification algorithm and public key operations.
+ */
+#define MBEDTLS_LMS_C
+
+/**
+ * \def MBEDTLS_LMS_PRIVATE
+ *
+ * Enable LMS private-key operations and signing code. Functions enabled by this
+ * option are experimental, and should not be used in production.
+ *
+ * Requires: MBEDTLS_LMS_C
+ *
+ * Uncomment to enable the LMS signature algorithm and private key operations.
+ */
+/* #define MBEDTLS_LMS_PRIVATE */
+
+/**
  * \def MBEDTLS_NIST_KW_C
  *
  * Enable the Key Wrapping mode for 128-bit block ciphers,
@@ -2427,8 +2854,12 @@ void mbedtls_platform_free( void * ptr );
 /**
  * \def MBEDTLS_MD_C
  *
- * Enable the generic message digest layer.
+ * Enable the generic layer for message digest (hashing) and HMAC.
  *
+ * Requires: one of: MBEDTLS_MD5_C, MBEDTLS_RIPEMD160_C, MBEDTLS_SHA1_C,
+ *                   MBEDTLS_SHA224_C, MBEDTLS_SHA256_C, MBEDTLS_SHA384_C,
+ *                   MBEDTLS_SHA512_C, or MBEDTLS_PSA_CRYPTO_C with at least
+ *                   one hash.
  * Module:  library/md.c
  * Caller:  library/constant_time.c
  *          library/ecdsa.c
@@ -2484,11 +2915,11 @@ void mbedtls_platform_free( void * ptr );
  * Module:  library/memory_buffer_alloc.c
  *
  * Requires: MBEDTLS_PLATFORM_C
- *           MBEDTLS_PLATFORM_MEMORY (to use it within mbed TLS)
+ *           MBEDTLS_PLATFORM_MEMORY (to use it within Mbed TLS)
  *
  * Enable this module to enable the buffer memory allocator.
  */
-/*#define MBEDTLS_MEMORY_BUFFER_ALLOC_C */
+/* #define MBEDTLS_MEMORY_BUFFER_ALLOC_C */
 
 /**
  * \def MBEDTLS_NET_C
@@ -2501,13 +2932,13 @@ void mbedtls_platform_free( void * ptr );
  *
  * \note See also our Knowledge Base article about porting to a new
  * environment:
- * https://tls.mbed.org/kb/how-to/how-do-i-port-mbed-tls-to-a-new-environment-OS
+ * https://mbed-tls.readthedocs.io/en/latest/kb/how-to/how-do-i-port-mbed-tls-to-a-new-environment-OS
  *
  * Module:  library/net_sockets.c
  *
  * This module provides networking routines.
  */
-/*#define MBEDTLS_NET_C */
+/* #define MBEDTLS_NET_C */
 
 /**
  * \def MBEDTLS_OID_C
@@ -2544,7 +2975,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * This modules adds support for the VIA PadLock on x86.
  */
-/*#define MBEDTLS_PADLOCK_C */
+/* #define MBEDTLS_PADLOCK_C */
 
 /**
  * \def MBEDTLS_PEM_PARSE_C
@@ -2559,6 +2990,10 @@ void mbedtls_platform_free( void * ptr );
  *          library/x509_csr.c
  *
  * Requires: MBEDTLS_BASE64_C
+ *           optionally MBEDTLS_MD5_C, or PSA Crypto with MD5 (see below)
+ *
+ * \warning When parsing password-protected files, if MD5 is provided only by
+ * a PSA driver, you must call psa_crypto_init() before the first file.
  *
  * This modules adds support for decoding / parsing PEM files.
  */
@@ -2634,11 +3069,31 @@ void mbedtls_platform_free( void * ptr );
  *
  * Module:  library/pkcs5.c
  *
- * Requires: MBEDTLS_CIPHER_C, MBEDTLS_MD_C
+ * Requires: MBEDTLS_CIPHER_C
+ * Auto-enables: MBEDTLS_MD_C
+ *
+ * \warning If using a hash that is only provided by PSA drivers, you must
+ * call psa_crypto_init() before doing any PKCS5 operations.
  *
  * This module adds support for the PKCS#5 functions.
  */
 #define MBEDTLS_PKCS5_C
+
+/**
+ * \def MBEDTLS_PKCS7_C
+ *
+ * Enable PKCS #7 core for using PKCS #7-formatted signatures.
+ * RFC Link - https://tools.ietf.org/html/rfc2315
+ *
+ * Module:  library/pkcs7.c
+ *
+ * Requires: MBEDTLS_ASN1_PARSE_C, MBEDTLS_OID_C, MBEDTLS_PK_PARSE_C,
+ *           MBEDTLS_X509_CRT_PARSE_C MBEDTLS_X509_CRL_PARSE_C,
+ *           MBEDTLS_BIGNUM_C, MBEDTLS_MD_C
+ *
+ * This module is required for the PKCS #7 parsing modules.
+ */
+/* #define MBEDTLS_PKCS7_C */
 
 /**
  * \def MBEDTLS_PKCS12_C
@@ -2649,7 +3104,11 @@ void mbedtls_platform_free( void * ptr );
  * Module:  library/pkcs12.c
  * Caller:  library/pkparse.c
  *
- * Requires: MBEDTLS_ASN1_PARSE_C, MBEDTLS_CIPHER_C, MBEDTLS_MD_C
+ * Requires: MBEDTLS_ASN1_PARSE_C, MBEDTLS_CIPHER_C and either
+ * MBEDTLS_MD_C or MBEDTLS_PSA_CRYPTO_C.
+ *
+ * \warning If using a hash that is only provided by PSA drivers, you must
+ * call psa_crypto_init() before doing any PKCS12 operations.
  *
  * This module enables PKCS#12 functions.
  */
@@ -2666,7 +3125,7 @@ void mbedtls_platform_free( void * ptr );
  * above to be specified at runtime or compile time respectively.
  *
  * \note This abstraction layer must be enabled on Windows (including MSYS2)
- * as other module rely on it for a fixed snprintf implementation.
+ * as other modules rely on it for a fixed snprintf implementation.
  *
  * Module:  library/platform.c
  * Caller:  Most other .c files
@@ -2698,7 +3157,7 @@ void mbedtls_platform_free( void * ptr );
  *           or MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG.
  *
  */
-/*#define MBEDTLS_PSA_CRYPTO_C */
+#define MBEDTLS_PSA_CRYPTO_C
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_SE_C
@@ -2706,15 +3165,15 @@ void mbedtls_platform_free( void * ptr );
  * Enable dynamic secure element support in the Platform Security Architecture
  * cryptography API.
  *
- * \deprecated This feature is deprecated. Please switch to the driver
- *             interface enabled by #MBEDTLS_PSA_CRYPTO_DRIVERS.
+ * \deprecated This feature is deprecated. Please switch to the PSA driver
+ *             interface.
  *
  * Module:  library/psa_crypto_se.c
  *
  * Requires: MBEDTLS_PSA_CRYPTO_C, MBEDTLS_PSA_CRYPTO_STORAGE_C
  *
  */
-/*#define MBEDTLS_PSA_CRYPTO_SE_C */
+/* #define MBEDTLS_PSA_CRYPTO_SE_C */
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_STORAGE_C
@@ -2727,7 +3186,7 @@ void mbedtls_platform_free( void * ptr );
  *           either MBEDTLS_PSA_ITS_FILE_C or a native implementation of
  *           the PSA ITS interface
  */
-/*#define MBEDTLS_PSA_CRYPTO_STORAGE_C */
+/* #define MBEDTLS_PSA_CRYPTO_STORAGE_C */
 
 /**
  * \def MBEDTLS_PSA_ITS_FILE_C
@@ -2739,7 +3198,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Requires: MBEDTLS_FS_IO
  */
-/*#define MBEDTLS_PSA_ITS_FILE_C */
+/* #define MBEDTLS_PSA_ITS_FILE_C */
 
 /**
  * \def MBEDTLS_RIPEMD160_C
@@ -2796,9 +3255,6 @@ void mbedtls_platform_free( void * ptr );
  *
  * Enable the SHA-224 cryptographic hash algorithm.
  *
- * Requires: MBEDTLS_SHA256_C. The library does not currently support enabling
- *           SHA-224 without SHA-256.
- *
  * Module:  library/sha256.c
  * Caller:  library/md.c
  *          library/ssl_cookie.c
@@ -2811,9 +3267,6 @@ void mbedtls_platform_free( void * ptr );
  * \def MBEDTLS_SHA256_C
  *
  * Enable the SHA-256 cryptographic hash algorithm.
- *
- * Requires: MBEDTLS_SHA224_C. The library does not currently support enabling
- *           SHA-256 without SHA-224.
  *
  * Module:  library/sha256.c
  * Caller:  library/entropy.c
@@ -2837,8 +3290,11 @@ void mbedtls_platform_free( void * ptr );
  * \note If MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT is defined when building
  * for a non-Aarch64 build it will be silently ignored.
  *
- * \note The code uses Neon intrinsics, so \c CFLAGS must be set to a minimum
- * of \c -march=armv8-a+crypto.
+ * \note    Minimum compiler versions for this feature are Clang 4.0,
+ * armclang 6.6 or GCC 6.0.
+ *
+ * \note \c CFLAGS must be set to a minimum of \c -march=armv8-a+crypto for
+ * armclang <= 6.9
  *
  * \warning MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT cannot be defined at the
  * same time as MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY.
@@ -2850,7 +3306,7 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment to have the library check for the A64 SHA-256 crypto extensions
  * and use them if available.
  */
-/*#define MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT */
+/* #define MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT */
 
 /**
  * \def MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY
@@ -2862,8 +3318,11 @@ void mbedtls_platform_free( void * ptr );
  * \note This allows builds with a smaller code size than with
  * MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT
  *
- * \note The code uses Neon intrinsics, so \c CFLAGS must be set to a minimum
- * of \c -march=armv8-a+crypto.
+ * \note    Minimum compiler versions for this feature are Clang 4.0,
+ * armclang 6.6 or GCC 6.0.
+ *
+ * \note \c CFLAGS must be set to a minimum of \c -march=armv8-a+crypto for
+ * armclang <= 6.9
  *
  * \warning MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY cannot be defined at the same
  * time as MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT.
@@ -2875,14 +3334,12 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment to have the library use the A64 SHA-256 crypto extensions
  * unconditionally.
  */
-/*#define MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY */
+/* #define MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY */
 
 /**
  * \def MBEDTLS_SHA384_C
  *
  * Enable the SHA-384 cryptographic hash algorithm.
- *
- * Requires: MBEDTLS_SHA512_C
  *
  * Module:  library/sha512.c
  * Caller:  library/md.c
@@ -2911,6 +3368,17 @@ void mbedtls_platform_free( void * ptr );
 #define MBEDTLS_SHA512_C
 
 /**
+ * \def MBEDTLS_SHA3_C
+ *
+ * Enable the SHA3 cryptographic hash algorithm.
+ *
+ * Module:  library/sha3.c
+ *
+ * This module adds support for SHA3.
+ */
+#define MBEDTLS_SHA3_C
+
+/**
  * \def MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT
  *
  * Enable acceleration of the SHA-512 and SHA-384 cryptographic hash algorithms
@@ -2920,10 +3388,11 @@ void mbedtls_platform_free( void * ptr );
  * \note If MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT is defined when building
  * for a non-Aarch64 build it will be silently ignored.
  *
- * \note The code uses the SHA-512 Neon intrinsics, so requires GCC >= 8 or
- * Clang >= 7, and \c CFLAGS must be set to a minimum of
- * \c -march=armv8.2-a+sha3. An optimisation level of \c -O3 generates the
- * fastest code.
+ * \note    Minimum compiler versions for this feature are Clang 7.0,
+ * armclang 6.9 or GCC 8.0.
+ *
+ * \note \c CFLAGS must be set to a minimum of \c -march=armv8.2-a+sha3 for
+ * armclang 6.9
  *
  * \warning MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT cannot be defined at the
  * same time as MBEDTLS_SHA512_USE_A64_CRYPTO_ONLY.
@@ -2935,7 +3404,7 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment to have the library check for the A64 SHA-512 crypto extensions
  * and use them if available.
  */
-/*#define MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT */
+/* #define MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT */
 
 /**
  * \def MBEDTLS_SHA512_USE_A64_CRYPTO_ONLY
@@ -2947,10 +3416,11 @@ void mbedtls_platform_free( void * ptr );
  * \note This allows builds with a smaller code size than with
  * MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT
  *
- * \note The code uses the SHA-512 Neon intrinsics, so requires GCC >= 8 or
- * Clang >= 7, and \c CFLAGS must be set to a minimum of
- * \c -march=armv8.2-a+sha3. An optimisation level of \c -O3 generates the
- * fastest code.
+ * \note    Minimum compiler versions for this feature are Clang 7.0,
+ * armclang 6.9 or GCC 8.0.
+ *
+ * \note \c CFLAGS must be set to a minimum of \c -march=armv8.2-a+sha3 for
+ * armclang 6.9
  *
  * \warning MBEDTLS_SHA512_USE_A64_CRYPTO_ONLY cannot be defined at the same
  * time as MBEDTLS_SHA512_USE_A64_CRYPTO_IF_PRESENT.
@@ -2962,7 +3432,7 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment to have the library use the A64 SHA-512 crypto extensions
  * unconditionally.
  */
-/*#define MBEDTLS_SHA512_USE_A64_CRYPTO_ONLY */
+/* #define MBEDTLS_SHA512_USE_A64_CRYPTO_ONLY */
 
 /**
  * \def MBEDTLS_SSL_CACHE_C
@@ -2994,7 +3464,8 @@ void mbedtls_platform_free( void * ptr );
  * Module:  library/ssl_ticket.c
  * Caller:
  *
- * Requires: MBEDTLS_CIPHER_C || MBEDTLS_USE_PSA_CRYPTO
+ * Requires: (MBEDTLS_CIPHER_C || MBEDTLS_USE_PSA_CRYPTO) &&
+ *           (MBEDTLS_GCM_C || MBEDTLS_CCM_C || MBEDTLS_CHACHAPOLY_C)
  */
 #define MBEDTLS_SSL_TICKET_C
 
@@ -3024,7 +3495,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * This module is required for SSL/TLS server support.
  */
-/*#define MBEDTLS_SSL_SRV */
+/* #define MBEDTLS_SSL_SRV */
 
 /**
  * \def MBEDTLS_SSL_TLS_C
@@ -3046,11 +3517,11 @@ void mbedtls_platform_free( void * ptr );
  * \def MBEDTLS_THREADING_C
  *
  * Enable the threading abstraction layer.
- * By default mbed TLS assumes it is used in a non-threaded environment or that
+ * By default Mbed TLS assumes it is used in a non-threaded environment or that
  * contexts are not shared between threads. If you do intend to use contexts
  * between threads, you will need to enable this layer to prevent race
  * conditions. See also our Knowledge Base article about threading:
- * https://tls.mbed.org/kb/development/thread-safety-and-multi-threading
+ * https://mbed-tls.readthedocs.io/en/latest/kb/development/thread-safety-and-multi-threading
  *
  * Module:  library/threading.c
  *
@@ -3060,7 +3531,7 @@ void mbedtls_platform_free( void * ptr );
  * You will have to enable either MBEDTLS_THREADING_ALT or
  * MBEDTLS_THREADING_PTHREAD.
  *
- * Enable this layer to allow use of mutexes within mbed TLS
+ * Enable this layer to allow use of mutexes within Mbed TLS
  */
 #define MBEDTLS_THREADING_C
 #define MBEDTLS_THREADING_IMPL
@@ -3084,11 +3555,11 @@ void mbedtls_platform_free( void * ptr );
  *
  * \note See also our Knowledge Base article about porting to a new
  * environment:
- * https://tls.mbed.org/kb/how-to/how-do-i-port-mbed-tls-to-a-new-environment-OS
+ * https://mbed-tls.readthedocs.io/en/latest/kb/how-to/how-do-i-port-mbed-tls-to-a-new-environment-OS
  *
  * Module:  library/timing.c
  */
-/*#define MBEDTLS_TIMING_C */
+/* #define MBEDTLS_TIMING_C */
 
 /**
  * \def MBEDTLS_VERSION_C
@@ -3099,7 +3570,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * This module provides run-time version information.
  */
-/*#define MBEDTLS_VERSION_C */
+#define MBEDTLS_VERSION_C
 
 /**
  * \def MBEDTLS_X509_USE_C
@@ -3111,8 +3582,11 @@ void mbedtls_platform_free( void * ptr );
  *          library/x509_crt.c
  *          library/x509_csr.c
  *
- * Requires: MBEDTLS_ASN1_PARSE_C, MBEDTLS_BIGNUM_C, MBEDTLS_OID_C,
- *           MBEDTLS_PK_PARSE_C
+ * Requires: MBEDTLS_ASN1_PARSE_C, MBEDTLS_BIGNUM_C, MBEDTLS_OID_C, MBEDTLS_PK_PARSE_C,
+ *           (MBEDTLS_MD_C or MBEDTLS_USE_PSA_CRYPTO)
+ *
+ * \warning If building with MBEDTLS_USE_PSA_CRYPTO, you must call
+ * psa_crypto_init() before doing any X.509 operation.
  *
  * This module is required for the X.509 parsing modules.
  */
@@ -3169,7 +3643,11 @@ void mbedtls_platform_free( void * ptr );
  *
  * Module:  library/x509_create.c
  *
- * Requires: MBEDTLS_BIGNUM_C, MBEDTLS_OID_C, MBEDTLS_PK_WRITE_C
+ * Requires: MBEDTLS_BIGNUM_C, MBEDTLS_OID_C, MBEDTLS_PK_PARSE_C,
+ *           (MBEDTLS_MD_C or MBEDTLS_USE_PSA_CRYPTO)
+ *
+ * \warning If building with MBEDTLS_USE_PSA_CRYPTO, you must call
+ * psa_crypto_init() before doing any X.509 create operation.
  *
  * This module is the basis for creating X.509 certificates and CSRs.
  */
@@ -3201,7 +3679,7 @@ void mbedtls_platform_free( void * ptr );
  */
 #define MBEDTLS_X509_CSR_WRITE_C
 
-/** \} name SECTION: mbed TLS modules */
+/** \} name SECTION: Mbed TLS modules */
 
 /**
  * \name SECTION: General configuration options
@@ -3229,7 +3707,9 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-/*#define MBEDTLS_CONFIG_FILE "mbedtls/mbedtls_config.h" */
+#ifndef MBEDTLS_CONFIG_FILE
+    #define MBEDTLS_CONFIG_FILE    "mbedtls_config_v3.5.1.h"
+#endif /* MBEDTLS_CONFIG_FILE */
 
 /**
  * \def MBEDTLS_USER_CONFIG_FILE
@@ -3246,7 +3726,7 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-/*#define MBEDTLS_USER_CONFIG_FILE "/dev/null" */
+/* #define MBEDTLS_USER_CONFIG_FILE "/dev/null" */
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_CONFIG_FILE
@@ -3264,7 +3744,7 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-/*#define MBEDTLS_PSA_CRYPTO_CONFIG_FILE "psa/crypto_config.h" */
+/* #define MBEDTLS_PSA_CRYPTO_CONFIG_FILE "psa/crypto_config.h" */
 
 /**
  * \def MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE
@@ -3281,7 +3761,54 @@ void mbedtls_platform_free( void * ptr );
  * The value of this symbol is typically a path in double quotes, either
  * absolute or relative to a directory on the include search path.
  */
-/*#define MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE "/dev/null" */
+/* #define MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE "/dev/null" */
+
+/**
+ * \def MBEDTLS_PSA_CRYPTO_PLATFORM_FILE
+ *
+ * If defined, this is a header which will be included instead of
+ * `"psa/crypto_platform.h"`. This file should declare the same identifiers
+ * as the one in Mbed TLS, but with definitions adapted to the platform on
+ * which the library code will run.
+ *
+ * \note The required content of this header can vary from one version of
+ *       Mbed TLS to the next. Integrators who provide an alternative file
+ *       should review the changes in the original file whenever they
+ *       upgrade Mbed TLS.
+ *
+ * This macro is expanded after an <tt>\#include</tt> directive. This is a popular but
+ * non-standard feature of the C language, so this feature is only available
+ * with compilers that perform macro expansion on an <tt>\#include</tt> line.
+ *
+ * The value of this symbol is typically a path in double quotes, either
+ * absolute or relative to a directory on the include search path.
+ */
+/* #define MBEDTLS_PSA_CRYPTO_PLATFORM_FILE "psa/crypto_platform_alt.h" */
+
+/**
+ * \def MBEDTLS_PSA_CRYPTO_STRUCT_FILE
+ *
+ * If defined, this is a header which will be included instead of
+ * `"psa/crypto_struct.h"`. This file should declare the same identifiers
+ * as the one in Mbed TLS, but with definitions adapted to the environment
+ * in which the library code will run. The typical use for this feature
+ * is to provide alternative type definitions on the client side in
+ * client-server integrations of PSA crypto, where operation structures
+ * contain handles instead of cryptographic data.
+ *
+ * \note The required content of this header can vary from one version of
+ *       Mbed TLS to the next. Integrators who provide an alternative file
+ *       should review the changes in the original file whenever they
+ *       upgrade Mbed TLS.
+ *
+ * This macro is expanded after an <tt>\#include</tt> directive. This is a popular but
+ * non-standard feature of the C language, so this feature is only available
+ * with compilers that perform macro expansion on an <tt>\#include</tt> line.
+ *
+ * The value of this symbol is typically a path in double quotes, either
+ * absolute or relative to a directory on the include search path.
+ */
+/* #define MBEDTLS_PSA_CRYPTO_STRUCT_FILE "psa/crypto_struct_alt.h" */
 
 /** \} name SECTION: General configuration options */
 
@@ -3306,66 +3833,89 @@ void mbedtls_platform_free( void * ptr );
  * comment in the specific module. */
 
 /* MPI / BIGNUM options */
-/*#define MBEDTLS_MPI_WINDOW_SIZE            6 / **< Maximum window size used. * / */
-/*#define MBEDTLS_MPI_MAX_SIZE            1024 / **< Maximum number of bytes for usable MPIs. * / */
+/* #define MBEDTLS_MPI_WINDOW_SIZE            2 /**< Maximum window size used. */
+/* #define MBEDTLS_MPI_MAX_SIZE            1024 /**< Maximum number of bytes for usable MPIs. */
 
 /* CTR_DRBG options */
-/*#define MBEDTLS_CTR_DRBG_ENTROPY_LEN               48 / **< Amount of entropy used per seed by default (48 with SHA-512, 32 with SHA-256) * / */
-/*#define MBEDTLS_CTR_DRBG_RESEED_INTERVAL        10000 / **< Interval before reseed is performed by default * / */
-/*#define MBEDTLS_CTR_DRBG_MAX_INPUT                256 / **< Maximum number of additional input bytes * / */
-/*#define MBEDTLS_CTR_DRBG_MAX_REQUEST             1024 / **< Maximum number of requested bytes per call * / */
-/*#define MBEDTLS_CTR_DRBG_MAX_SEED_INPUT           384 / **< Maximum size of (re)seed buffer * / */
+/* #define MBEDTLS_CTR_DRBG_ENTROPY_LEN               48 /**< Amount of entropy used per seed by default (48 with SHA-512, 32 with SHA-256) */
+/* #define MBEDTLS_CTR_DRBG_RESEED_INTERVAL        10000 /**< Interval before reseed is performed by default */
+/* #define MBEDTLS_CTR_DRBG_MAX_INPUT                256 /**< Maximum number of additional input bytes */
+/* #define MBEDTLS_CTR_DRBG_MAX_REQUEST             1024 /**< Maximum number of requested bytes per call */
+/* #define MBEDTLS_CTR_DRBG_MAX_SEED_INPUT           384 /**< Maximum size of (re)seed buffer */
 
 /* HMAC_DRBG options */
-/*#define MBEDTLS_HMAC_DRBG_RESEED_INTERVAL   10000 / **< Interval before reseed is performed by default * / */
-/*#define MBEDTLS_HMAC_DRBG_MAX_INPUT           256 / **< Maximum number of additional input bytes * / */
-/*#define MBEDTLS_HMAC_DRBG_MAX_REQUEST        1024 / **< Maximum number of requested bytes per call * / */
-/*#define MBEDTLS_HMAC_DRBG_MAX_SEED_INPUT      384 / **< Maximum size of (re)seed buffer * / */
+/* #define MBEDTLS_HMAC_DRBG_RESEED_INTERVAL   10000 /**< Interval before reseed is performed by default */
+/* #define MBEDTLS_HMAC_DRBG_MAX_INPUT           256 /**< Maximum number of additional input bytes */
+/* #define MBEDTLS_HMAC_DRBG_MAX_REQUEST        1024 /**< Maximum number of requested bytes per call */
+/* #define MBEDTLS_HMAC_DRBG_MAX_SEED_INPUT      384 /**< Maximum size of (re)seed buffer */
 
 /* ECP options */
-/*#define MBEDTLS_ECP_WINDOW_SIZE            4 / **< Maximum window size used * / */
-/*#define MBEDTLS_ECP_FIXED_POINT_OPTIM      1 / **< Enable fixed-point speed-up * / */
+/* #define MBEDTLS_ECP_WINDOW_SIZE            4 /**< Maximum window size used */
+/* #define MBEDTLS_ECP_FIXED_POINT_OPTIM      1 /**< Enable fixed-point speed-up */
 
 /* Entropy options */
-/*#define MBEDTLS_ENTROPY_MAX_SOURCES                20 / **< Maximum number of sources supported * / */
-/*#define MBEDTLS_ENTROPY_MAX_GATHER                128 / **< Maximum amount requested from entropy sources * / */
-/*#define MBEDTLS_ENTROPY_MIN_HARDWARE               32 / **< Default minimum number of bytes required for the hardware entropy source mbedtls_hardware_poll() before entropy is released * / */
+/* #define MBEDTLS_ENTROPY_MAX_SOURCES                20 /**< Maximum number of sources supported */
+/* #define MBEDTLS_ENTROPY_MAX_GATHER                128 /**< Maximum amount requested from entropy sources */
+/* #define MBEDTLS_ENTROPY_MIN_HARDWARE               32 /**< Default minimum number of bytes required for the hardware entropy source mbedtls_hardware_poll() before entropy is released */
 
 /* Memory buffer allocator options */
-/*#define MBEDTLS_MEMORY_ALIGN_MULTIPLE      4 / **< Align on multiples of this value * / */
+/* #define MBEDTLS_MEMORY_ALIGN_MULTIPLE      4 /**< Align on multiples of this value */
 
 /* Platform options */
-/*#define MBEDTLS_PLATFORM_STD_MEM_HDR   <stdlib.h> / **< Header to include if MBEDTLS_PLATFORM_NO_STD_FUNCTIONS is defined. Don't define if no header is needed. * / */
-/*#define MBEDTLS_PLATFORM_STD_CALLOC        calloc / **< Default allocator to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_FREE            free / **< Default free to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_SETBUF      setbuf / **< Default setbuf to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_EXIT            exit / **< Default exit to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_TIME            time / **< Default time to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled * / */
-/*#define MBEDTLS_PLATFORM_STD_FPRINTF      fprintf / **< Default fprintf to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_PRINTF        printf / **< Default printf to use, can be undefined * / */
-/* Note: your snprintf must correctly zero-terminate the buffer! */
-/*#define MBEDTLS_PLATFORM_STD_SNPRINTF    snprintf / **< Default snprintf to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_EXIT_SUCCESS       0 / **< Default exit value to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_EXIT_FAILURE       1 / **< Default exit value to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_NV_SEED_READ   mbedtls_platform_std_nv_seed_read / **< Default nv_seed_read function to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_NV_SEED_WRITE  mbedtls_platform_std_nv_seed_write / **< Default nv_seed_write function to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_STD_NV_SEED_FILE  "seedfile" / **< Seed file to read/write with default implementation * / */
+/* #define MBEDTLS_PLATFORM_STD_MEM_HDR   <stdlib.h> /**< Header to include if MBEDTLS_PLATFORM_NO_STD_FUNCTIONS is defined. Don't define if no header is needed. */
 
-/* To Use Function Macros MBEDTLS_PLATFORM_C must be enabled */
-/* MBEDTLS_PLATFORM_XXX_MACRO and MBEDTLS_PLATFORM_XXX_ALT cannot both be defined */
-#define MBEDTLS_PLATFORM_CALLOC_MACRO    mbedtls_platform_calloc /**< Default allocator macro to use, can be undefined */
-#define MBEDTLS_PLATFORM_FREE_MACRO      mbedtls_platform_free   /**< Default free macro to use, can be undefined */
-/*#define MBEDTLS_PLATFORM_EXIT_MACRO            exit / **< Default exit macro to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_SETBUF_MACRO      setbuf / **< Default setbuf macro to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_TIME_MACRO            time / **< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled * / */
-/*#define MBEDTLS_PLATFORM_TIME_TYPE_MACRO       time_t / **< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled * / */
-/*#define MBEDTLS_PLATFORM_FPRINTF_MACRO      fprintf / **< Default fprintf macro to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_PRINTF_MACRO        printf / **< Default printf macro to use, can be undefined * / */
+/** \def MBEDTLS_PLATFORM_STD_CALLOC
+ *
+ * Default allocator to use, can be undefined.
+ * It must initialize the allocated buffer memory to zeroes.
+ * The size of the buffer is the product of the two parameters.
+ * The calloc function returns either a null pointer or a pointer to the allocated space.
+ * If the product is 0, the function may either return NULL or a valid pointer to an array of size 0 which is a valid input to the deallocation function.
+ * An uninitialized #MBEDTLS_PLATFORM_STD_CALLOC always fails, returning a null pointer.
+ * See the description of #MBEDTLS_PLATFORM_MEMORY for more details.
+ * The corresponding deallocation function is #MBEDTLS_PLATFORM_STD_FREE.
+ */
+/* #define MBEDTLS_PLATFORM_STD_CALLOC        calloc */
+
+/** \def MBEDTLS_PLATFORM_STD_FREE
+ *
+ * Default free to use, can be undefined.
+ * NULL is a valid parameter, and the function must do nothing.
+ * A non-null parameter will always be a pointer previously returned by #MBEDTLS_PLATFORM_STD_CALLOC and not yet freed.
+ * An uninitialized #MBEDTLS_PLATFORM_STD_FREE does not do anything.
+ * See the description of #MBEDTLS_PLATFORM_MEMORY for more details (same principles as for MBEDTLS_PLATFORM_STD_CALLOC apply).
+ */
+/* #define MBEDTLS_PLATFORM_STD_FREE            free */
+/* #define MBEDTLS_PLATFORM_STD_SETBUF      setbuf /**< Default setbuf to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_EXIT            exit /**< Default exit to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_TIME            time /**< Default time to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled */
+/* #define MBEDTLS_PLATFORM_STD_FPRINTF      fprintf /**< Default fprintf to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_PRINTF        printf /**< Default printf to use, can be undefined */
 /* Note: your snprintf must correctly zero-terminate the buffer! */
-/*#define MBEDTLS_PLATFORM_SNPRINTF_MACRO    snprintf / **< Default snprintf macro to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_VSNPRINTF_MACRO    vsnprintf / **< Default vsnprintf macro to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_NV_SEED_READ_MACRO   mbedtls_platform_std_nv_seed_read / **< Default nv_seed_read function to use, can be undefined * / */
-/*#define MBEDTLS_PLATFORM_NV_SEED_WRITE_MACRO  mbedtls_platform_std_nv_seed_write / **< Default nv_seed_write function to use, can be undefined * / */
+/* #define MBEDTLS_PLATFORM_STD_SNPRINTF    snprintf /**< Default snprintf to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_EXIT_SUCCESS       0 /**< Default exit value to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_EXIT_FAILURE       1 /**< Default exit value to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_NV_SEED_READ   mbedtls_platform_std_nv_seed_read /**< Default nv_seed_read function to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_NV_SEED_WRITE  mbedtls_platform_std_nv_seed_write /**< Default nv_seed_write function to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_STD_NV_SEED_FILE  "seedfile" /**< Seed file to read/write with default implementation */
+
+/* To use the following function macros, MBEDTLS_PLATFORM_C must be enabled. */
+/* MBEDTLS_PLATFORM_XXX_MACRO and MBEDTLS_PLATFORM_XXX_ALT cannot both be defined */
+#define MBEDTLS_PLATFORM_CALLOC_MACRO    mbedtls_platform_calloc     /**< Default allocator macro to use, can be undefined. See MBEDTLS_PLATFORM_STD_CALLOC for requirements. */
+#define MBEDTLS_PLATFORM_FREE_MACRO      mbedtls_platform_free       /**< Default free macro to use, can be undefined. See MBEDTLS_PLATFORM_STD_FREE for requirements. */
+/* #define MBEDTLS_PLATFORM_EXIT_MACRO            exit /**< Default exit macro to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_SETBUF_MACRO      setbuf /**< Default setbuf macro to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_TIME_MACRO            time /**< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled */
+/* #define MBEDTLS_PLATFORM_TIME_TYPE_MACRO       time_t /**< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled */
+/* #define MBEDTLS_PLATFORM_FPRINTF_MACRO      fprintf /**< Default fprintf macro to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_PRINTF_MACRO        printf /**< Default printf macro to use, can be undefined */
+/* Note: your snprintf must correctly zero-terminate the buffer! */
+/* #define MBEDTLS_PLATFORM_SNPRINTF_MACRO    snprintf /**< Default snprintf macro to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_VSNPRINTF_MACRO    vsnprintf /**< Default vsnprintf macro to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_NV_SEED_READ_MACRO   mbedtls_platform_std_nv_seed_read /**< Default nv_seed_read function to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_NV_SEED_WRITE_MACRO  mbedtls_platform_std_nv_seed_write /**< Default nv_seed_write function to use, can be undefined */
+/* #define MBEDTLS_PLATFORM_MS_TIME_TYPE_MACRO   int64_t //#define MBEDTLS_PLATFORM_MS_TIME_TYPE_MACRO   int64_t /**< Default milliseconds time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled. It must be signed, and at least 64 bits. If it is changed from the default, MBEDTLS_PRINTF_MS_TIME must be updated to match.*/
+/* #define MBEDTLS_PRINTF_MS_TIME    PRId64 /**< Default fmt for printf. That's avoid compiler warning if mbedtls_ms_time_t is redefined */
 
 /** \def MBEDTLS_CHECK_RETURN
  *
@@ -3380,7 +3930,7 @@ void mbedtls_platform_free( void * ptr );
  * If the implementation here is empty, this will effectively disable the
  * checking of functions' return values.
  */
-/*#define MBEDTLS_CHECK_RETURN __attribute__((__warn_unused_result__)) */
+/* #define MBEDTLS_CHECK_RETURN __attribute__((__warn_unused_result__)) */
 
 /** \def MBEDTLS_IGNORE_RETURN
  *
@@ -3388,7 +3938,7 @@ void mbedtls_platform_free( void * ptr );
  * If that function call would cause a #MBEDTLS_CHECK_RETURN warning, this
  * warning is suppressed.
  */
-/*#define MBEDTLS_IGNORE_RETURN( result ) ((void) !(result)) */
+/* #define MBEDTLS_IGNORE_RETURN( result ) ((void) !(result)) */
 
 /* PSA options */
 
@@ -3402,7 +3952,7 @@ void mbedtls_platform_free( void * ptr );
  *   #MBEDTLS_MD_SHA512 or #MBEDTLS_MD_SHA256 based on availability and
  *   on unspecified heuristics.
  */
-/*#define MBEDTLS_PSA_HMAC_DRBG_MD_TYPE MBEDTLS_MD_SHA256 */
+/* #define MBEDTLS_PSA_HMAC_DRBG_MD_TYPE MBEDTLS_MD_SHA256 */
 
 /** \def MBEDTLS_PSA_KEY_SLOT_COUNT
  * Restrict the PSA library to supporting a maximum amount of simultaneously
@@ -3413,11 +3963,14 @@ void mbedtls_platform_free( void * ptr );
  * If this option is unset, the library will fall back to a default value of
  * 32 keys.
  */
-/*#define MBEDTLS_PSA_KEY_SLOT_COUNT 32 */
+/* #define MBEDTLS_PSA_KEY_SLOT_COUNT 32 */
+
+/* RSA OPTIONS */
+/* #define MBEDTLS_RSA_GEN_KEY_MIN_BITS            1024 /**<  Minimum RSA key size that can be generated in bits (Minimum possible value is 128 bits) */
 
 /* SSL Cache options */
-/*#define MBEDTLS_SSL_CACHE_DEFAULT_TIMEOUT       86400 / **< 1 day  * / */
-/*#define MBEDTLS_SSL_CACHE_DEFAULT_MAX_ENTRIES      50 / **< Maximum entries in cache * / */
+/* #define MBEDTLS_SSL_CACHE_DEFAULT_TIMEOUT       86400 /**< 1 day  */
+/* #define MBEDTLS_SSL_CACHE_DEFAULT_MAX_ENTRIES      50 /**< Maximum entries in cache */
 
 /* SSL options */
 
@@ -3440,21 +3993,21 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to set the maximum plaintext size of the incoming I/O buffer.
  */
-/*#define MBEDTLS_SSL_IN_CONTENT_LEN              16384 */
+/* #define MBEDTLS_SSL_IN_CONTENT_LEN              16384 */
 
 /** \def MBEDTLS_SSL_CID_IN_LEN_MAX
  *
  * The maximum length of CIDs used for incoming DTLS messages.
  *
  */
-/*#define MBEDTLS_SSL_CID_IN_LEN_MAX 32 */
+/* #define MBEDTLS_SSL_CID_IN_LEN_MAX 32 */
 
 /** \def MBEDTLS_SSL_CID_OUT_LEN_MAX
  *
  * The maximum length of CIDs used for outgoing DTLS messages.
  *
  */
-/*#define MBEDTLS_SSL_CID_OUT_LEN_MAX 32 */
+/* #define MBEDTLS_SSL_CID_OUT_LEN_MAX 32 */
 
 /** \def MBEDTLS_SSL_CID_TLS1_3_PADDING_GRANULARITY
  *
@@ -3470,7 +4023,7 @@ void mbedtls_platform_free( void * ptr );
  * Note: On systems lacking division instructions,
  *       a power of two should be preferred.
  */
-/*#define MBEDTLS_SSL_CID_TLS1_3_PADDING_GRANULARITY 16 */
+/* #define MBEDTLS_SSL_CID_TLS1_3_PADDING_GRANULARITY 16 */
 
 /** \def MBEDTLS_SSL_OUT_CONTENT_LEN
  *
@@ -3490,7 +4043,7 @@ void mbedtls_platform_free( void * ptr );
  *
  * Uncomment to set the maximum plaintext size of the outgoing I/O buffer.
  */
-/*#define MBEDTLS_SSL_OUT_CONTENT_LEN             16384 */
+/* #define MBEDTLS_SSL_OUT_CONTENT_LEN             16384 */
 
 /** \def MBEDTLS_SSL_DTLS_MAX_BUFFERING
  *
@@ -3507,21 +4060,10 @@ void mbedtls_platform_free( void * ptr );
  * while buffering multiple smaller handshake messages.
  *
  */
-/*#define MBEDTLS_SSL_DTLS_MAX_BUFFERING             32768 */
+/* #define MBEDTLS_SSL_DTLS_MAX_BUFFERING             32768 */
 
-/*#define MBEDTLS_PSK_MAX_LEN               32 / **< Max size of TLS pre-shared keys, in bytes (default 256 bits) * / */
-/*#define MBEDTLS_SSL_COOKIE_TIMEOUT        60 / **< Default expiration delay of DTLS cookies, in seconds if HAVE_TIME, or in number of cookies issued * / */
-
-/** \def MBEDTLS_TLS_EXT_CID
- *
- * At the time of writing, the CID extension has not been assigned its
- * final value. Set this configuration option to make Mbed TLS use a
- * different value.
- *
- * A future minor revision of Mbed TLS may change the default value of
- * this option to match evolving standards and usage.
- */
-/*#define MBEDTLS_TLS_EXT_CID                        254 */
+/* #define MBEDTLS_PSK_MAX_LEN               32 /**< Max size of TLS pre-shared keys, in bytes (default 256 or 384 bits) */
+/* #define MBEDTLS_SSL_COOKIE_TIMEOUT        60 /**< Default expiration delay of DTLS cookies, in seconds if HAVE_TIME, or in number of cookies issued */
 
 /**
  * Complete list of ciphersuites to use, in order of preference.
@@ -3535,58 +4077,128 @@ void mbedtls_platform_free( void * ptr );
  *
  * The value below is only an example, not the default.
  */
-/*#define MBEDTLS_SSL_CIPHERSUITES MBEDTLS_TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,MBEDTLS_TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 */
+/* #define MBEDTLS_SSL_CIPHERSUITES MBEDTLS_TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,MBEDTLS_TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 */
+
+/**
+ * \def MBEDTLS_SSL_MAX_EARLY_DATA_SIZE
+ *
+ * The default maximum amount of 0-RTT data. See the documentation of
+ * \c mbedtls_ssl_tls13_conf_max_early_data_size() for more information.
+ *
+ * It must be positive and smaller than UINT32_MAX.
+ *
+ * If MBEDTLS_SSL_EARLY_DATA is not defined, this default value does not
+ * have any impact on the build.
+ *
+ * This feature is experimental, not completed and thus not ready for
+ * production.
+ *
+ */
+/* #define MBEDTLS_SSL_MAX_EARLY_DATA_SIZE        1024 */
+
+/**
+ * \def MBEDTLS_SSL_TLS1_3_TICKET_AGE_TOLERANCE
+ *
+ * Maximum time difference in milliseconds tolerated between the age of a
+ * ticket from the server and client point of view.
+ * From the client point of view, the age of a ticket is the time difference
+ * between the time when the client proposes to the server to use the ticket
+ * (time of writing of the Pre-Shared Key Extension including the ticket) and
+ * the time the client received the ticket from the server.
+ * From the server point of view, the age of a ticket is the time difference
+ * between the time when the server receives a proposition from the client
+ * to use the ticket and the time when the ticket was created by the server.
+ * The server age is expected to be always greater than the client one and
+ * MBEDTLS_SSL_TLS1_3_TICKET_AGE_TOLERANCE defines the
+ * maximum difference tolerated for the server to accept the ticket.
+ * This is not used in TLS 1.2.
+ *
+ */
+/* #define MBEDTLS_SSL_TLS1_3_TICKET_AGE_TOLERANCE 6000 */
+
+/**
+ * \def MBEDTLS_SSL_TLS1_3_TICKET_NONCE_LENGTH
+ *
+ * Size in bytes of a ticket nonce. This is not used in TLS 1.2.
+ *
+ * This must be less than 256.
+ */
+/* #define MBEDTLS_SSL_TLS1_3_TICKET_NONCE_LENGTH 32 */
+
+/**
+ * \def MBEDTLS_SSL_TLS1_3_DEFAULT_NEW_SESSION_TICKETS
+ *
+ * Default number of NewSessionTicket messages to be sent by a TLS 1.3 server
+ * after handshake completion. This is not used in TLS 1.2 and relevant only if
+ * the MBEDTLS_SSL_SESSION_TICKETS option is enabled.
+ *
+ */
+/* #define MBEDTLS_SSL_TLS1_3_DEFAULT_NEW_SESSION_TICKETS 1 */
 
 /* X509 options */
-/*#define MBEDTLS_X509_MAX_INTERMEDIATE_CA   8   / **< Maximum number of intermediate CAs in a verification chain. * / */
-/*#define MBEDTLS_X509_MAX_FILE_PATH_LEN     512 / **< Maximum length of a path/filename string in bytes including the null terminator character ('\0'). * / */
-
-/**
- * Uncomment the macro to let mbed TLS use your alternate implementation of
- * mbedtls_platform_zeroize(). This replaces the default implementation in
- * platform_util.c.
- *
- * mbedtls_platform_zeroize() is a widely used function across the library to
- * zero a block of memory. The implementation is expected to be secure in the
- * sense that it has been written to prevent the compiler from removing calls
- * to mbedtls_platform_zeroize() as part of redundant code elimination
- * optimizations. However, it is difficult to guarantee that calls to
- * mbedtls_platform_zeroize() will not be optimized by the compiler as older
- * versions of the C language standards do not provide a secure implementation
- * of memset(). Therefore, MBEDTLS_PLATFORM_ZEROIZE_ALT enables users to
- * configure their own implementation of mbedtls_platform_zeroize(), for
- * example by using directives specific to their compiler, features from newer
- * C standards (e.g using memset_s() in C11) or calling a secure memset() from
- * their system (e.g explicit_bzero() in BSD).
- */
-/*#define MBEDTLS_PLATFORM_ZEROIZE_ALT */
-
-/**
- * Uncomment the macro to let Mbed TLS use your alternate implementation of
- * mbedtls_platform_gmtime_r(). This replaces the default implementation in
- * platform_util.c.
- *
- * gmtime() is not a thread-safe function as defined in the C standard. The
- * library will try to use safer implementations of this function, such as
- * gmtime_r() when available. However, if Mbed TLS cannot identify the target
- * system, the implementation of mbedtls_platform_gmtime_r() will default to
- * using the standard gmtime(). In this case, calls from the library to
- * gmtime() will be guarded by the global mutex mbedtls_threading_gmtime_mutex
- * if MBEDTLS_THREADING_C is enabled. We recommend that calls from outside the
- * library are also guarded with this mutex to avoid race conditions. However,
- * if the macro MBEDTLS_PLATFORM_GMTIME_R_ALT is defined, Mbed TLS will
- * unconditionally use the implementation for mbedtls_platform_gmtime_r()
- * supplied at compile time.
- */
-/*#define MBEDTLS_PLATFORM_GMTIME_R_ALT */
-
-/**
- * Enable the verified implementations of ECDH primitives from Project Everest
- * (currently only Curve25519). This feature changes the layout of ECDH
- * contexts and therefore is a compatibility break for applications that access
- * fields of a mbedtls_ecdh_context structure directly. See also
- * MBEDTLS_ECDH_LEGACY_CONTEXT in include/mbedtls/ecdh.h.
- */
-/*#define MBEDTLS_ECDH_VARIANT_EVEREST_ENABLED */
+/* #define MBEDTLS_X509_MAX_INTERMEDIATE_CA   8   /**< Maximum number of intermediate CAs in a verification chain. */
+/* #define MBEDTLS_X509_MAX_FILE_PATH_LEN     512 /**< Maximum length of a path/filename string in bytes including the null terminator character ('\0'). */
 
 /** \} name SECTION: Module configuration options */
+
+#if 0
+    #ifndef MBEDTLS_SSL_PROTO_TLS1_2
+        #ifdef MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_RSA_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_PSK_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED */
+
+        #ifdef MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
+            #error This option is undef'd in build_info.h
+        #endif /* MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
+    #endif /* MBEDTLS_SSL_PROTO_TLS1_2*/
+#endif /* if 0 */
+
+#ifdef MBEDTLS_USE_PSA_CRYPTO
+    #ifdef MBEDTLS_PSA_CRYPTO_CONFIG
+        #include MBEDTLS_PSA_CRYPTO_CONFIG
+    #else
+        #include "mbedtls/config_psa.h"
+    #endif /* MBEDTLS_PSA_CRYPTO_CONFIG */
+#endif /* MBEDTLS_USE_PSA_CRYPTO */
+
+#include "mbedtls/config_adjust_legacy_crypto.h"
+
+#include "mbedtls/check_config.h"
+
+#endif /* __FREERTOS_MBEDTLS_CONFIG__*/

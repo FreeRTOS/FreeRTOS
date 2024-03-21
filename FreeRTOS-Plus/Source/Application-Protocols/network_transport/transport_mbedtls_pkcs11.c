@@ -30,19 +30,38 @@
  * mbedTLS.
  */
 
+/* Standard includes. */
+#include <string.h>
+
 #include "logging_levels.h"
 
-#define LIBRARY_LOG_NAME     "PkcsTlsTransport"
-#define LIBRARY_LOG_LEVEL    LOG_INFO
+#define LIBRARY_LOG_NAME         "PkcsTlsTransport"
+
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif /* LIBRARY_LOG_LEVEL */
 
 #include "logging_stack.h"
 
-#define MBEDTLS_ALLOW_PRIVATE_ACCESS
+#ifndef MBEDTLS_ALLOW_PRIVATE_ACCESS
+    #define MBEDTLS_ALLOW_PRIVATE_ACCESS
+    #include "mbedtls/private_access.h"
+#endif /* MBEDTLS_ALLOW_PRIVATE_ACCESS */
 
-#include "mbedtls/private_access.h"
+/* MBedTLS Includes */
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
 
-/* Standard includes. */
-#include <string.h>
+#ifdef MBEDTLS_PSA_CRYPTO_C
+    /* MbedTLS PSA Includes */
+    #include "psa/crypto.h"
+    #include "psa/crypto_values.h"
+#endif /* MBEDTLS_PSA_CRYPTO_C */
+
+#include "mbedtls/debug.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -207,6 +226,22 @@ static int32_t privateKeySigningCallback( void * pvContext,
 
 /*-----------------------------------------------------------*/
 
+#ifdef MBEDTLS_DEBUG_C
+    void mbedtls_string_printf( void * sslContext,
+                                int level,
+                                const char * file,
+                                int line,
+                                const char * str )
+    {
+        if( ( str != NULL ) && ( file != NULL ) )
+        {
+            LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        }
+    }
+#endif /* MBEDTLS_DEBUG_C */
+
+/*-----------------------------------------------------------*/
+
 static void sslContextInit( SSLContext_t * pSslContext )
 {
     configASSERT( pSslContext != NULL );
@@ -215,6 +250,12 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_x509_crt_init( &( pSslContext->rootCa ) );
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
+    #ifdef MBEDTLS_DEBUG_C
+        mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
+        mbedtls_ssl_conf_dbg( &( pSslContext->config ),
+                              mbedtls_string_printf,
+                              NULL );
+    #endif /* MBEDTLS_DEBUG_C */
 
     xInitializePkcs11Session( &( pSslContext->xP11Session ) );
     C_GetFunctionList( &( pSslContext->pxP11FunctionList ) );
@@ -273,6 +314,20 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Per mbed TLS docs, mbedtls_ssl_config_defaults only fails on memory allocation. */
         returnStatus = TLS_TRANSPORT_INSUFFICIENT_MEMORY;
     }
+
+    #ifdef MBEDTLS_PSA_CRYPTO_C
+        mbedtlsError = psa_crypto_init();
+
+        if( mbedtlsError != PSA_SUCCESS )
+        {
+            LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
+            returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
+        }
+        else
+        {
+            LogDebug( ( "Initialized the PSA Crypto Engine" ) );
+        }
+    #endif /* MBEDTLS_PSA_CRYPTO_C */
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
@@ -448,15 +503,23 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         {
             mbedtlsError = mbedtls_ssl_handshake( &( pTlsTransportParams->sslContext.context ) );
         } while( ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_READ ) ||
-                 ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_WRITE ) );
+                 ( mbedtlsError == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+                 ( mbedtlsError == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) );
 
         if( mbedtlsError != 0 )
         {
-            LogError( ( "Failed to perform TLS handshake: mbedTLSError= %s : %s.",
-                        mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
-                        mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
+            if( mbedtlsError == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_handshake." ) );
+            }
+            else
+            {
+                LogError( ( "Failed to perform TLS handshake: mbedTLSError= %s : %s.",
+                            mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
+                            mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
-            returnStatus = TLS_TRANSPORT_HANDSHAKE_FAILED;
+                returnStatus = TLS_TRANSPORT_HANDSHAKE_FAILED;
+            }
         }
     }
 
@@ -633,7 +696,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     if( ( CKR_OK == xResult ) && ( pxCtx->xP11PrivateKey == CK_INVALID_HANDLE ) )
     {
         xResult = CK_INVALID_HANDLE;
-        LogError( ( "Could not find private key." ) );
+        LogError( ( "Could not find private key: %s", pcLabelName ) );
     }
 
     if( xResult == CKR_OK )
@@ -808,8 +871,14 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_read." ) );
+            }
+
             LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),
@@ -867,8 +936,14 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_write." ) );
+            }
+
             LogDebug( ( "Failed to send data. However, send can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),

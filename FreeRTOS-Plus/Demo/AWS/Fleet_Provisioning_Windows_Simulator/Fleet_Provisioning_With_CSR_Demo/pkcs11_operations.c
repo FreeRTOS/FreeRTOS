@@ -256,8 +256,10 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
         {
             mbedtls_x509write_csr_set_key( &xReq, &xPrivKey );
 
-            ulMbedtlsRet = mbedtls_x509write_csr_pem( &xReq, ( unsigned char * ) pcCsrBuffer,
-                                                      xCsrBufferLength, &lMbedCryptoRngCallbackPKCS11,
+            ulMbedtlsRet = mbedtls_x509write_csr_pem( &xReq,
+                                                      ( unsigned char * ) pcCsrBuffer,
+                                                      xCsrBufferLength,
+                                                      &lMbedCryptoRngCallbackPKCS11,
                                                       &xP11Session );
         }
 

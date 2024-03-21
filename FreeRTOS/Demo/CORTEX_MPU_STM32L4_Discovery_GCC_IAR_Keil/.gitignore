@@ -1,0 +1,16 @@
+# STM32Cube IDE.
+.settings/
+Debug/
+
+# Keil uVision.
+DebugConfig/
+RTE/
+EventRecorderStub.scvd
+*.uvguix.*
+
+# IAR
+settings
+Listings
+Objects
+BuildLogs
+BrowseInfo

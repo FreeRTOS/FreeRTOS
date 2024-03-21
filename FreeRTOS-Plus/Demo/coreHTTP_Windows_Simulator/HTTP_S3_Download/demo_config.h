@@ -79,13 +79,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Server's root CA certificate for TLS authentication with S3.
  *
- * The Baltimore Cybertrust root CA certificate is often used for authentication
- * with S3. It can be found at:
- * https://baltimore-cybertrust-root.chain-demos.digicert.com/info/index.html.
- *
- * S3 has started migrating certificates to Amazon Trust Services. If
- * authentication errors persist, re-attempt the connection with an Amazon root
- * CA certificate: https://www.amazontrust.com/repository.
+ * The CA can be found at https://www.amazontrust.com/repository.
  *
  * @note This certificate should be PEM-encoded.
  *
@@ -207,7 +201,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 5000 )
+#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 10000 )
 
 /**
  * @brief The length in bytes of the user buffer.

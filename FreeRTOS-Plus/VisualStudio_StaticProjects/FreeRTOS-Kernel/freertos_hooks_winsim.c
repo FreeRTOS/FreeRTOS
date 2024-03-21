@@ -32,8 +32,16 @@
  * should an assert get hit. */
 #include <intrin.h>
 
-/* Windows Crypt api for uxRand() */
+
+#ifdef WIN32_LEAN_AND_MEAN
+    #include <winsock2.h>
+#else
+    #include <winsock.h>
+#endif /* WIN32_LEAN_AND_MEAN */
+
 #include <windows.h>
+
+/* Windows Crypt api for uxRand() */
 #include <wincrypt.h>
 
 /* FreeRTOS includes. */
@@ -52,7 +60,7 @@ void vAssertCalled( const char * pcFile,
     ( void ) pcFileName;
     ( void ) ulLineNumber;
 
-    printf( "vAssertCalled( %s, %u\n", pcFile, ulLine );
+    printf( "vAssertCalled( %s, %u )\n", pcFile, ulLine );
 
     /* Setting ulBlockVariable to a non-zero value in the debugger will allow
      * this function to be exited. */

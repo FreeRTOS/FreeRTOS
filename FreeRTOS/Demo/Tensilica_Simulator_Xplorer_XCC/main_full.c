@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -95,28 +95,28 @@
 /**
  * Priorities at which the tasks are created.
  */
-#define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
-#define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY			( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY			( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
-#define mainINTEGER_TASK_PRIORITY		( tskIDLE_PRIORITY )
-#define mainGEN_QUEUE_TASK_PRIORITY		( tskIDLE_PRIORITY )
-#define mainFLOP_TASK_PRIORITY			( tskIDLE_PRIORITY )
-#define mainQUEUE_OVERWRITE_PRIORITY	( tskIDLE_PRIORITY )
+#define mainCHECK_TASK_PRIORITY          ( configMAX_PRIORITIES - 2 )
+#define mainQUEUE_POLL_PRIORITY          ( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY            ( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY             ( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY          ( tskIDLE_PRIORITY + 1 )
+#define mainINTEGER_TASK_PRIORITY        ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY      ( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY           ( tskIDLE_PRIORITY )
+#define mainQUEUE_OVERWRITE_PRIORITY     ( tskIDLE_PRIORITY )
 
 /**
  * Period used in timer tests.
  */
-#define mainTIMER_TEST_PERIOD			( 50 )
+#define mainTIMER_TEST_PERIOD            ( 50 )
 
 /**
  * Parameters that are passed into the register check tasks solely for the
  * purpose of ensuring parameters are passed into tasks correctly.
  */
-#define mainREG_TEST_TASK_1_PARAMETER	( ( void * ) 0x12345678 )
-#define mainREG_TEST_TASK_2_PARAMETER	( ( void * ) 0x87654321 )
+#define mainREG_TEST_TASK_1_PARAMETER    ( ( void * ) 0x12345678 )
+#define mainREG_TEST_TASK_2_PARAMETER    ( ( void * ) 0x87654321 )
 
 /**
  * Determines whether to enable interrupt queue tests.
@@ -130,20 +130,20 @@
  * * When mainENABLE_INT_QUEUE_TESTS is set to 0, interrupt queue tests are
  *   disabled and every other test is enabled.
  */
-#define mainENABLE_INT_QUEUE_TESTS		( 0 )
+#define mainENABLE_INT_QUEUE_TESTS       ( 0 )
 /*-----------------------------------------------------------*/
 
 /**
  * The task that periodically checks that all the standard demo tasks are
  * still executing and error free.
  */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /**
  * Tasks that implement register tests.
  */
-static void prvRegTest1Task( void *pvParameters );
-static void prvRegTest2Task( void *pvParameters );
+static void prvRegTest1Task( void * pvParameters );
+static void prvRegTest2Task( void * pvParameters );
 
 /**
  * Functions that implement register tests.
@@ -157,7 +157,7 @@ extern void vRegTest2( void );
 /**
  * The variable into which error messages are latched.
  */
-static char *pcStatusMessage = "No errors";
+static char * pcStatusMessage = "No errors";
 
 /**
  * The following two variables are used to communicate the status of the
@@ -178,304 +178,304 @@ volatile BaseType_t xTimerForQueueTestInitialized = pdFALSE;
 
 int main_full( void )
 {
-	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Start the check task as described at the top of this file. */
+    xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	#if( mainENABLE_INT_QUEUE_TESTS == 0 )
-	{
-		/* Create the standard demo tasks. */
-		vStartTaskNotifyTask();
-		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
-		vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+    #if ( mainENABLE_INT_QUEUE_TESTS == 0 )
+    {
+        /* Create the standard demo tasks. */
+        vStartTaskNotifyTask();
+        vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+        vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+        vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+        vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+        vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 
-		vStartQueuePeekTasks();
-		vStartMathTasks( mainFLOP_TASK_PRIORITY );
-		vStartRecursiveMutexTasks();
-		vStartCountingSemaphoreTasks();
-		vStartQueueSetTasks();
+        vStartQueuePeekTasks();
+        vStartMathTasks( mainFLOP_TASK_PRIORITY );
+        vStartRecursiveMutexTasks();
+        vStartCountingSemaphoreTasks();
+        vStartQueueSetTasks();
 
-		vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-		vStartEventGroupTasks();
-		vStartInterruptSemaphoreTasks();
-		vStartQueueSetPollingTask();
-		vCreateBlockTimeTasks();
+        vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
+        vStartEventGroupTasks();
+        vStartInterruptSemaphoreTasks();
+        vStartQueueSetPollingTask();
+        vCreateBlockTimeTasks();
 
-		#if( configUSE_PREEMPTION != 0  )
-		{
-			/* Don't expect these tasks to pass when preemption is not used. */
-			vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-		}
-		#endif
+        #if ( configUSE_PREEMPTION != 0 )
+        {
+            /* Don't expect these tasks to pass when preemption is not used. */
+            vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+        }
+        #endif
 
-		vCreateAbortDelayTasks();
-		vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
+        vCreateAbortDelayTasks();
+        vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 
-		vStartStreamBufferTasks();
-		vStartStreamBufferInterruptDemo();
+        vStartStreamBufferTasks();
+        vStartStreamBufferInterruptDemo();
 
-		/* Create the register check tasks, as described at the top of this	file */
-		xTaskCreate( prvRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( prvRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+        /* Create the register check tasks, as described at the top of this	file */
+        xTaskCreate( prvRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
+        xTaskCreate( prvRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
-		/* The suicide tasks must be created last as they need to know how many
-		 * tasks were running prior to their creation.  This then allows them to
-		 * ascertain whether or not the correct/expected number of tasks are
-		 * running at any given time. */
-		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	}
-	#else /* mainENABLE_INT_QUEUE_TESTS */
-	{
-		/* Start interrupt queue test tasks. */
-		vStartInterruptQueueTasks();
-	}
-	#endif /* mainENABLE_INT_QUEUE_TESTS */
+        /* The suicide tasks must be created last as they need to know how many
+         * tasks were running prior to their creation.  This then allows them to
+         * ascertain whether or not the correct/expected number of tasks are
+         * running at any given time. */
+        vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    }
+    #else /* mainENABLE_INT_QUEUE_TESTS */
+    {
+        /* Start interrupt queue test tasks. */
+        vStartInterruptQueueTasks();
+    }
+    #endif /* mainENABLE_INT_QUEUE_TESTS */
 
-	/* Start the scheduler itself. */
-	vTaskStartScheduler();
+    /* Start the scheduler itself. */
+    vTaskStartScheduler();
 
-	/* Should never get here unless there was not enough heap space to create
-	 * the idle and other system tasks. */
-	return 0;
+    /* Should never get here unless there was not enough heap space to create
+     * the idle and other system tasks. */
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = pdMS_TO_TICKS( 5000UL );
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+    TickType_t xNextWakeTime;
+    const TickType_t xCycleFrequency = pdMS_TO_TICKS( 5000UL );
+    static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 
-	/* Just to remove compiler warning. */
-	( void ) pvParameters;
+    /* Just to remove compiler warning. */
+    ( void ) pvParameters;
 
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+    for( ; ; )
+    {
+        /* Place this task in the blocked state until it is time to run again. */
+        vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
-		#if( mainENABLE_INT_QUEUE_TESTS == 0 )
-		{
-			/* Check the standard demo tasks are running without error. */
-			#if( configUSE_PREEMPTION != 0 )
-			{
-				/* These tasks are only created when preemption is used. */
-				if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
-				{
-					pcStatusMessage = "Error: TimerDemo";
-				}
-			}
-			#endif
+        #if ( mainENABLE_INT_QUEUE_TESTS == 0 )
+        {
+            /* Check the standard demo tasks are running without error. */
+            #if ( configUSE_PREEMPTION != 0 )
+            {
+                /* These tasks are only created when preemption is used. */
+                if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
+                {
+                    pcStatusMessage = "Error: TimerDemo";
+                }
+            }
+            #endif
 
-			if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error:  Notification";
-			}
-			else if( xAreBlockingQueuesStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: BlockQueue";
-			}
-			else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: SemTest";
-			}
-			else if( xArePollingQueuesStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: PollQueue";
-			}
-			else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: IntMath";
-			}
-			else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: GenQueue";
-			}
-			else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: QueuePeek";
-			}
-			else if( xAreMathsTaskStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Flop";
-			}
-			else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: RecMutex";
-			}
-			else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: CountSem";
-			}
-			else if( xAreQueueSetTasksStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Queue set";
-			}
-			else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Queue overwrite";
-			}
-			else if( xAreEventGroupTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: EventGroup";
-			}
-			else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: IntSem";
-			}
-			else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Queue set polling";
-			}
-			else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Block time";
-			}
-			else if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Abort delay";
-			}
-			else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error:  MessageBuffer";
-			}
-			else if( xAreStreamBufferTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error:  StreamBuffer";
-			}
-			else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
-			{
-				pcStatusMessage = "Error: Stream buffer interrupt";
-			}
-			else if( xIsCreateTaskStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: Death";
-			}
-			else if( ulLastRegTest1Value == ulRegTest1Counter )
-			{
-				pcStatusMessage = "Error: Reg Test 1";
-			}
-			else if( ulLastRegTest2Value == ulRegTest2Counter )
-			{
-				pcStatusMessage = "Error: Reg Test 2";
-			}
+            if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error:  Notification";
+            }
+            else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: BlockQueue";
+            }
+            else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: SemTest";
+            }
+            else if( xArePollingQueuesStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: PollQueue";
+            }
+            else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: IntMath";
+            }
+            else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: GenQueue";
+            }
+            else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: QueuePeek";
+            }
+            else if( xAreMathsTaskStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Flop";
+            }
+            else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: RecMutex";
+            }
+            else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: CountSem";
+            }
+            else if( xAreQueueSetTasksStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Queue set";
+            }
+            else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Queue overwrite";
+            }
+            else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: EventGroup";
+            }
+            else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: IntSem";
+            }
+            else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Queue set polling";
+            }
+            else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Block time";
+            }
+            else if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Abort delay";
+            }
+            else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error:  MessageBuffer";
+            }
+            else if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error:  StreamBuffer";
+            }
+            else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
+            {
+                pcStatusMessage = "Error: Stream buffer interrupt";
+            }
+            else if( xIsCreateTaskStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: Death";
+            }
+            else if( ulLastRegTest1Value == ulRegTest1Counter )
+            {
+                pcStatusMessage = "Error: Reg Test 1";
+            }
+            else if( ulLastRegTest2Value == ulRegTest2Counter )
+            {
+                pcStatusMessage = "Error: Reg Test 2";
+            }
 
-			/* Update register test counters. */
-			ulLastRegTest1Value = ulRegTest1Counter;
-			ulLastRegTest2Value = ulRegTest2Counter;
-		}
-		#else /* mainENABLE_INT_QUEUE_TESTS */
-		{
-			if( xAreIntQueueTasksStillRunning() != pdTRUE )
-			{
-				pcStatusMessage = "Error: IntQueue";
-			}
-		}
-		#endif /* mainENABLE_INT_QUEUE_TESTS */
+            /* Update register test counters. */
+            ulLastRegTest1Value = ulRegTest1Counter;
+            ulLastRegTest2Value = ulRegTest2Counter;
+        }
+        #else /* mainENABLE_INT_QUEUE_TESTS */
+        {
+            if( xAreIntQueueTasksStillRunning() != pdTRUE )
+            {
+                pcStatusMessage = "Error: IntQueue";
+            }
+        }
+        #endif /* mainENABLE_INT_QUEUE_TESTS */
 
-		/* This is the only task that uses stdout so its ok to call printf()
-		 * directly. Do not call printf from any other task. */
-		printf( "%s - tick count %zu - free heap %zu - min free heap %zu\r\n", pcStatusMessage,
-																			   xTaskGetTickCount(),
-																			   xPortGetFreeHeapSize(),
-																			   xPortGetMinimumEverFreeHeapSize() );
-	}
+        /* This is the only task that uses stdout so its ok to call printf()
+         * directly. Do not call printf from any other task. */
+        printf( "%s - tick count %zu - free heap %zu - min free heap %zu\r\n", pcStatusMessage,
+                xTaskGetTickCount(),
+                xPortGetFreeHeapSize(),
+                xPortGetMinimumEverFreeHeapSize() );
+    }
 }
 /*-----------------------------------------------------------*/
 
 /* Called by vApplicationTickHook(), which is defined in main.c. */
 void vFullDemoTickHookFunction( void )
 {
-TaskHandle_t xTimerTask;
+    TaskHandle_t xTimerTask;
 
-	#if( mainENABLE_INT_QUEUE_TESTS == 0 )
-	{
-		/* Exercise using task notifications from an interrupt. */
-		xNotifyTaskFromISR();
+    #if ( mainENABLE_INT_QUEUE_TESTS == 0 )
+    {
+        /* Exercise using task notifications from an interrupt. */
+        xNotifyTaskFromISR();
 
-		/* Write to a queue that is in use as part of the queue set demo to
-		 * demonstrate using queue sets from an ISR. */
-		vQueueSetAccessQueueSetFromISR();
+        /* Write to a queue that is in use as part of the queue set demo to
+         * demonstrate using queue sets from an ISR. */
+        vQueueSetAccessQueueSetFromISR();
 
-		/* Call the periodic queue overwrite from ISR demo. */
-		vQueueOverwritePeriodicISRDemo();
+        /* Call the periodic queue overwrite from ISR demo. */
+        vQueueOverwritePeriodicISRDemo();
 
-		/* Exercise event groups from interrupts. */
-		vPeriodicEventGroupsProcessing();
+        /* Exercise event groups from interrupts. */
+        vPeriodicEventGroupsProcessing();
 
-		/* Exercise giving mutexes from an interrupt. */
-		vInterruptSemaphorePeriodicTest();
+        /* Exercise giving mutexes from an interrupt. */
+        vInterruptSemaphorePeriodicTest();
 
-		/* Queue set access from interrupt. */
-		vQueueSetPollingInterruptAccess();
+        /* Queue set access from interrupt. */
+        vQueueSetPollingInterruptAccess();
 
-		/* Call the periodic timer test, which tests the timer API functions that
-		 * can be called from an ISR. */
-		#if( configUSE_PREEMPTION != 0 )
-		{
-			/* Only created when preemption is used. */
-			vTimerPeriodicISRTests();
-		}
-		#endif
+        /* Call the periodic timer test, which tests the timer API functions that
+         * can be called from an ISR. */
+        #if ( configUSE_PREEMPTION != 0 )
+        {
+            /* Only created when preemption is used. */
+            vTimerPeriodicISRTests();
+        }
+        #endif
 
-		/* Writes to stream buffer byte by byte to test the stream buffer trigger
-		 * level functionality. */
-		vPeriodicStreamBufferProcessing();
+        /* Writes to stream buffer byte by byte to test the stream buffer trigger
+         * level functionality. */
+        vPeriodicStreamBufferProcessing();
 
-		/* Writes a string to a string buffer four bytes at a time to demonstrate
-		 * a stream being sent from an interrupt to a task. */
-		vBasicStreamBufferSendFromISR();
-	}
-	#else /* mainENABLE_INT_QUEUE_TESTS */
-	{
-		/* Access queues from interrupt. Make sure to access after the queues have
-		 * been created. */
-		if( xTimerForQueueTestInitialized == pdTRUE )
-		{
-			portYIELD_FROM_ISR( xFirstTimerHandler() );
-		}
-	}
-	#endif /* mainENABLE_INT_QUEUE_TESTS */
+        /* Writes a string to a string buffer four bytes at a time to demonstrate
+         * a stream being sent from an interrupt to a task. */
+        vBasicStreamBufferSendFromISR();
+    }
+    #else /* mainENABLE_INT_QUEUE_TESTS */
+    {
+        /* Access queues from interrupt. Make sure to access after the queues have
+         * been created. */
+        if( xTimerForQueueTestInitialized == pdTRUE )
+        {
+            portYIELD_FROM_ISR( xFirstTimerHandler() );
+        }
+    }
+    #endif /* mainENABLE_INT_QUEUE_TESTS */
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTest1Task( void *pvParameters )
+static void prvRegTest1Task( void * pvParameters )
 {
-	/* Although the regtest task is written in assembly, its entry point is
-	 * written in C for convenience of checking the task parameter is being
-	 * passed in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembly. */
-		vRegTest1();
-	}
+    /* Although the regtest task is written in assembly, its entry point is
+     * written in C for convenience of checking the task parameter is being
+     * passed in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembly. */
+        vRegTest1();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	 * be incorrect. The check task will detect that the regtest loop counter is
-	 * not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+     * be incorrect. The check task will detect that the regtest loop counter is
+     * not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTest2Task( void *pvParameters )
+static void prvRegTest2Task( void * pvParameters )
 {
-	/* Although the regtest task is written in assembly, its entry point is
-	 * written in C for convenience of checking the task parameter is being
-	 * passed in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembly. */
-		vRegTest2();
-	}
+    /* Although the regtest task is written in assembly, its entry point is
+     * written in C for convenience of checking the task parameter is being
+     * passed in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembly. */
+        vRegTest2();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	 * be incorrect. The check task will detect that the regtest loop counter is
-	 * not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+     * be incorrect. The check task will detect that the regtest loop counter is
+     * not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/

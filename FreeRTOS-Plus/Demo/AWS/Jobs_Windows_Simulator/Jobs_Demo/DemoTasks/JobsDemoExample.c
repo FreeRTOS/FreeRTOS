@@ -971,8 +971,8 @@ void prvJobsDemoTask( void * pvParameters )
             {
                 /* Handler function to process Jobs message payload. */
                 prvNextJobHandler( pxJobMessagePublishInfo );
-                vPortFree( ( char * ) ( pxJobMessagePublishInfo->pTopicName ) );
-                vPortFree( ( char * ) ( pxJobMessagePublishInfo->pPayload ) );
+                vPortFree( ( void * ) ( pxJobMessagePublishInfo->pTopicName ) );
+                vPortFree( ( void * ) ( pxJobMessagePublishInfo->pPayload ) );
                 vPortFree( pxJobMessagePublishInfo );
             }
 

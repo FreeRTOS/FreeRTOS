@@ -75,8 +75,14 @@ endif
 
 ifeq ($(COVERAGE_TEST),1)
   CPPFLAGS              += -DprojCOVERAGE_TEST=1
+  CPPFLAGS              += -DprojENABLE_TRACING=0
   CFLAGS                += -Werror
 else
+  ifeq ($(NO_TRACING),1)
+    CPPFLAGS              += -DprojENABLE_TRACING=0
+  else
+    CPPFLAGS              += -DprojENABLE_TRACING=1
+  endif
   CPPFLAGS              += -DprojCOVERAGE_TEST=0
 # Trace library.
   SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/trcKernelPort.c

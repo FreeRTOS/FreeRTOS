@@ -128,6 +128,10 @@ extern void vAssertCalled( const char * const pcFileName,
     #error projCOVERAGE_TEST should be defined to 1 or 0 on the command line.
 #endif
 
+#ifndef projENABLE_TRACING
+    #error projENABLE_TRACING should be defined to 1 or 0 on the command line.
+#endif
+
 #if ( projCOVERAGE_TEST == 1 )
 
 /* Insert NOPs in empty decision paths to ensure both true and false paths
@@ -154,7 +158,9 @@ extern void vAssertCalled( const char * const pcFileName,
     #define configUSE_MALLOC_FAILED_HOOK    1
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-    #include "trcRecorder.h"
+    #if( projENABLE_TRACING == 1 )
+        #include "trcRecorder.h"
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 #endif /* if ( projCOVERAGE_TEST == 1 ) */
 
 /* networking definitions */

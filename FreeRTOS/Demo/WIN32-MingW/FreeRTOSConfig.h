@@ -142,7 +142,7 @@ used with multiple project configurations.  If it is
 	#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
 
 	/* Ensure the tick count overflows during the coverage test. */
-	#if configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_64_BITS
+	#if( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_64_BITS )
 		#define configINITIAL_TICK_COUNT 0xffffffffffffd800ULL
 	#else
 		#define configINITIAL_TICK_COUNT 0xffffd800UL

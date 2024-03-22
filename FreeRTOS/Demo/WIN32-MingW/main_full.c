@@ -555,10 +555,11 @@ void vFullDemoTickHookFunction( void )
 static void prvPendedFunction( void * pvParameter1,
                                uint32_t ulParameter2 )
 {
-    static uint32_t ulLastParameter1 = 1000UL, ulLastParameter2 = 0UL;
+    static UBaseType_t ulLastParameter1 = 1000UL;
+    static uint32_t ulLastParameter2 = 0UL;
     uint32_t ulParameter1;
 
-    ulParameter1 = ( uint32_t ) pvParameter1;
+    ulParameter1 = ( UBaseType_t ) pvParameter1;
 
     /* Ensure the parameters are as expected. */
     configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );
@@ -623,7 +624,8 @@ static void prvDemonstrateTimerQueryFunctions( void )
 
 static void prvDemonstratePendingFunctionCall( void )
 {
-    static uint32_t ulParameter1 = 1000UL, ulParameter2 = 0UL;
+    static UBaseType_t ulParameter1 = 1000UL;
+    static uint32_t ulParameter2 = 0UL;
     const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
 
     /* prvPendedFunction() just expects the parameters to be incremented by one
@@ -870,10 +872,10 @@ static void prvPermanentlyBlockingNotificationTask( void * pvParameters )
 
 static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer )
 {
-    uint32_t ulTimerID;
+	UBaseType_t ulTimerID;
 
     /* Increment the timer's ID to show the callback has executed. */
-    ulTimerID = ( uint32_t ) pvTimerGetTimerID( xTimer );
+    ulTimerID = ( UBaseType_t ) pvTimerGetTimerID( xTimer );
     ulTimerID++;
     vTimerSetTimerID( xTimer, ( void * ) ulTimerID );
 }

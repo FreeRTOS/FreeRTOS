@@ -737,7 +737,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
         xErrorCount++;
     }
 
-    #if( configUSE_TRACE_FACILITY == 1 )
+    #if( ( configUSE_TRACE_FACILITY == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
     {
         /* Also with the vTaskGetInfo() function. */
         vTaskGetInfo( xTimerTaskHandle, /* The task being queried. */
@@ -756,7 +756,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
             xErrorCount++;
         }
     }
-    #endif /* #if( configUSE_TRACE_FACILITY == 1 ) */
+    #endif /* if( ( configUSE_TRACE_FACILITY == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) ) */
 
     /* Other tests that should only be performed once follow.  The test task
      * is not created on each iteration because to do so would cause the death

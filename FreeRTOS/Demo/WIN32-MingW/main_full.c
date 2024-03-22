@@ -386,19 +386,20 @@ static void prvCheckTask( void * pvParameters )
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
         /* This is the only task that uses stdout so its ok to call printf()
-         * directly. */
+         * directly. %llu(long long unsigned) type format is used here
+         * to support both of 32bit values on MinGW32 and 64bit values on MinGW64.  */
         vPortGetHeapStats( &xHeapStats );
 
         configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xPortGetFreeHeapSize() );
         configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xPortGetMinimumEverFreeHeapSize() );
 
-        printf( "%s - tick count %u - free heap %u - min free heap %u - largest free block %u - number of free blocks %u\r\n",
+        printf( "%s - tick count %llu - free heap %llu - min free heap %llu - largest free block %llu - number of free blocks %llu\r\n",
                 pcStatusMessage,
-                xTaskGetTickCount(),
-                xHeapStats.xAvailableHeapSpaceInBytes,
-                xHeapStats.xMinimumEverFreeBytesRemaining,
-                xHeapStats.xSizeOfLargestFreeBlockInBytes,
-                xHeapStats.xNumberOfFreeBlocks );
+                (uint64_t)xTaskGetTickCount(),
+                (uint64_t)xHeapStats.xAvailableHeapSpaceInBytes,
+                (uint64_t)xHeapStats.xMinimumEverFreeBytesRemaining,
+                (uint64_t)xHeapStats.xSizeOfLargestFreeBlockInBytes,
+                (uint64_t)xHeapStats.xNumberOfFreeBlocks );
 
         fflush( stdout );
     }

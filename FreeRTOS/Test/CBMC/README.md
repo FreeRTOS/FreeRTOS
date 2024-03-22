@@ -72,11 +72,19 @@ Each of the leaf directories under `proofs` is a proof of the memory
 safety of a single entry point in FreeRTOS. The scripts that you ran in the
 previous step will have left a Makefile in each of those directories. To
 run a proof, change into the directory for that proof and run `make`.
-The proofs may take some time to run; they eventually write their output to
-`cbmc.txt`, which should have the text `VERIFICATION SUCCESSFUL` at the end.
+The proofs may take some time to run.
 
-The make command will also generate a report in html and json format which makes
-understanding the failures easier.
+### Proof results
+
+The `make` command above generates a report in HTML and JSON format. Taking
+[TaskCreate](./proofs/Task/TaskCreate) as an example:
+
+* HTML report is generated at `./proofs/Task/TaskCreate/html/html`.
+* JSON report is generated at `./proofs/Task/TaskCreate/html/json`.
+
+You can open `./proofs/Task/TaskCreate/html/html/index.html` in any browser to view
+the HTML report. You should see `None` under the `Errors` section in case of a
+successful run.
 
 ### Proof directory structure
 

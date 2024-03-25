@@ -557,7 +557,7 @@ static void prvPendedFunction( void * pvParameter1,
 {
     static UBaseType_t ulLastParameter1 = 1000UL;
     static uint32_t ulLastParameter2 = 0UL;
-    uint32_t ulParameter1;
+    UBaseType_t ulParameter1;
 
     ulParameter1 = ( UBaseType_t ) pvParameter1;
 

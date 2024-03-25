@@ -58,16 +58,23 @@
 #define configUSE_ALTERNATIVE_API                  0
 #define configUSE_QUEUE_SETS                       1
 #define configUSE_TASK_NOTIFICATIONS               1
-/* For static memory allocation , set configSUPPORT_STATIC_ALLOCATION to 1 .
- * Since heap_3.c is used in this demo, configSUPPORT_DYNAMIC_ALLOCATION value 
- * cannot be set to 0. The user can either leave it as it is defined, or remove 
- * the definition from the file.
+
+/* The following 2  memory allocation schemes are possible for this demo:
+ *
+ * 1. Dynamic Only.
+ *    #define configSUPPORT_STATIC_ALLOCATION  0
+ *    #define configSUPPORT_DYNAMIC_ALLOCATION 1
+ *
+ * 2. Static and Dynamic.
+ *    #define configSUPPORT_STATIC_ALLOCATION  1
+ *    #define configSUPPORT_DYNAMIC_ALLOCATION 1
+ *
+ * Static only configuration is not possible for this demo as it utilizes
+ * dynamic allocation.
  */
 #define configSUPPORT_STATIC_ALLOCATION            1
-/* For dynamic memory allocation , set configSUPPORT_STATIC_ALLOCATION to 0 
- * and configSUPPORT_DYNAMIC_ALLOCATION to 1.  
- */
 #define configSUPPORT_DYNAMIC_ALLOCATION           1
+
 #define configRECORD_STACK_HIGH_ADDRESS            1
 
 /* Software timer related configuration options.  The maximum possible task

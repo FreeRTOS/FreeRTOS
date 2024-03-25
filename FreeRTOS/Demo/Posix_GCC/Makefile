@@ -82,7 +82,7 @@ else
     CPPFLAGS              += -DprojENABLE_TRACING=0
   else
     CPPFLAGS              += -DprojENABLE_TRACING=1
-# Trace Library.
+    # Trace Library.
     SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/kernelports/FreeRTOS/trcKernelPort.c
     SOURCE_FILES          += $(wildcard ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/*.c )
   endif

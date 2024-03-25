@@ -18,7 +18,7 @@ jobs:
       - env:
           stepName: Checkout Repository
         name: ${{ env.stepName }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         with:
           submodules: false
 
@@ -62,7 +62,7 @@ jobs:
       - env:
           stepName: Checkout Repository
         name: ${{ env.stepName }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         with:
           submodules: false
 

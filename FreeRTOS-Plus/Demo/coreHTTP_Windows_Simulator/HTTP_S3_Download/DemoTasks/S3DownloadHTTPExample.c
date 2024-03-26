@@ -476,7 +476,7 @@ static JSONStatus_t prvParseCredentials( HTTPResponse_t * pxResponse,
  * @return pdPASS on success, pdFAIL on failure.
  */
 static BaseType_t prvGetTemporaryCredentials( TransportInterface_t * pxTransportInterface,
-                                              const char * pcDateISO8601,
+                                              char * pcDateISO8601,
                                               size_t xDateISO8601Len,
                                               HTTPResponse_t * pxResponse,
                                               SigV4Credentials_t * pxSigvCreds );
@@ -579,6 +579,10 @@ void vStartSimpleHTTPDemo( void )
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
                  NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
 }
+
+/*-----------------------------------------------------------*/
+
+extern BaseType_t xPlatformIsNetworkUp( void );
 
 /*-----------------------------------------------------------*/
 
@@ -1177,7 +1181,7 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
 }
 
 static BaseType_t prvGetTemporaryCredentials( TransportInterface_t * pxTransportInterface,
-                                              const char * pcDateISO8601,
+                                              char * pcDateISO8601,
                                               size_t xDateISO8601Len,
                                               HTTPResponse_t * pxResponse,
                                               SigV4Credentials_t * pxSigvCreds )

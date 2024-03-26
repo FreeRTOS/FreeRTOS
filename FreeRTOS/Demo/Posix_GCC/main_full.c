@@ -749,7 +749,9 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
         if( ( xTaskInfo.eCurrentState != eBlocked ) ||
             ( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 ) ||
             ( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
-            ( xTaskInfo.pxStackBase != uxTimerTaskStack ) ||
+            #if( configSUPPORT_STATIC_ALLOCATION == 1 )
+                ( xTaskInfo.pxStackBase != uxTimerTaskStack ) ||
+            #endif
             ( xTaskInfo.xHandle != xTimerTaskHandle ) )
         {
             pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";

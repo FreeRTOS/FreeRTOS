@@ -555,22 +555,22 @@ void vFullDemoTickHookFunction( void )
 static void prvPendedFunction( void * pvParameter1,
                                uint32_t ulParameter2 )
 {
-    static UBaseType_t ulLastParameter1 = 1000UL;
+    static UBaseType_t uxLastParameter1 = 1000UL;
     static uint32_t ulLastParameter2 = 0UL;
-    UBaseType_t ulParameter1;
+    UBaseType_t uxParameter1;
 
-    ulParameter1 = ( UBaseType_t ) pvParameter1;
+    uxParameter1 = ( UBaseType_t ) pvParameter1;
 
     /* Ensure the parameters are as expected. */
-    configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );
+    configASSERT( uxParameter1 == ( uxLastParameter1 + 1 ) );
     configASSERT( ulParameter2 == ( ulLastParameter2 + 1 ) );
 
     /* Remember the parameters for the next time the function is called. */
-    ulLastParameter1 = ulParameter1;
+    uxLastParameter1 = uxParameter1;
     ulLastParameter2 = ulParameter2;
 
     /* Remove compiler warnings in case configASSERT() is not defined. */
-    ( void ) ulLastParameter1;
+    ( void ) uxLastParameter1;
     ( void ) ulLastParameter2;
 }
 /*-----------------------------------------------------------*/

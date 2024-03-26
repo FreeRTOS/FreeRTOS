@@ -86,19 +86,19 @@ static BaseType_t prvTimerQuery( void );
 
 static BaseType_t prvStaticAllocationsWithNullBuffers( void )
 {
-UBaseType_t ulReturned = 0;
+UBaseType_t uxReturned = 0;
 BaseType_t xReturn = pdPASS;
 UBaseType_t uxDummy = 10;
 
 	/* Don't expect to create any of the objects as a NULL parameter is always
 	passed in place of a required buffer.  Hence if all passes then none of the
-	|= will be against 0, and ulReturned will still be zero at the end of this
+	|= will be against 0, and uxReturned will still be zero at the end of this
 	function. */
-	ulReturned |= ( UBaseType_t ) xEventGroupCreateStatic( NULL );
+	uxReturned |= ( UBaseType_t ) xEventGroupCreateStatic( NULL );
 
 	/* Try creating a task twice, once with puxStackBuffer NULL, and once with
 	pxTaskBuffer NULL. */
-	ulReturned |= ( UBaseType_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
+	uxReturned |= ( UBaseType_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
 											   	  "Dummy", /* Task name. */
 												  configMINIMAL_STACK_SIZE,
 												  NULL,
@@ -106,7 +106,7 @@ UBaseType_t uxDummy = 10;
 												  NULL,
 												  ( StaticTask_t * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
 
-	ulReturned |= ( UBaseType_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
+	uxReturned |= ( UBaseType_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
 											   	  "Dummy", /* Task name. */
 												  configMINIMAL_STACK_SIZE,
 												  NULL,
@@ -114,19 +114,19 @@ UBaseType_t uxDummy = 10;
 												  ( StackType_t  * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
 												  NULL );
 
-	ulReturned |= ( UBaseType_t ) xQueueCreateStatic( uxDummy,
+	uxReturned |= ( UBaseType_t ) xQueueCreateStatic( uxDummy,
 												   uxDummy,
 												   ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
 												   NULL );
 
 	/* Try creating a stream buffer twice, once with pucStreamBufferStorageArea
 	set to NULL, and once with pxStaticStreamBuffer set to NULL. */
-	ulReturned |= ( UBaseType_t ) xStreamBufferCreateStatic( uxDummy,
+	uxReturned |= ( UBaseType_t ) xStreamBufferCreateStatic( uxDummy,
 														  uxDummy,
 														  NULL,
 														  ( StaticStreamBuffer_t  * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
 
-	ulReturned |= ( UBaseType_t ) xStreamBufferCreateStatic( uxDummy,
+	uxReturned |= ( UBaseType_t ) xStreamBufferCreateStatic( uxDummy,
 														  uxDummy,
 														  ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
 														  NULL );
@@ -137,7 +137,7 @@ UBaseType_t uxDummy = 10;
 		xReturn = pdFAIL;
 	}
 
-	if( ulReturned != 0 )
+	if( uxReturned != 0 )
 	{
 		/* Something returned a non-NULL value. */
 		xReturn = pdFAIL;

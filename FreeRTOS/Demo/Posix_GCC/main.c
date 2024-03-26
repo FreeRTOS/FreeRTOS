@@ -68,7 +68,7 @@
 /* Local includes. */
 #include "console.h"
 
-#if ( projCOVERAGE_TEST != 1 )
+#if ( projENABLE_TRACING == 1 )
     #include <trcRecorder.h>
 #endif
 
@@ -139,13 +139,6 @@ static void handle_sigint( int signal );
  * in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-/* Notes if the trace is running or not. */
-#if ( projCOVERAGE_TEST == 1 )
-    static BaseType_t xTraceRunning = pdFALSE;
-#else
-    static BaseType_t xTraceRunning = pdTRUE;
-#endif
-
 static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
 /*-----------------------------------------------------------*/
@@ -155,8 +148,7 @@ int main( void )
     /* SIGINT is not blocked by the posix port */
     signal( SIGINT, handle_sigint );
 
-    /* Do not include trace code when performing a code coverage analysis. */
-    #if ( projCOVERAGE_TEST != 1 )
+    #if ( projENABLE_TRACING == 1 )
     {
         /* Initialise the trace recorder.  Use of the trace recorder is optional.
          * See http://www.FreeRTOS.org/trace for more information. */
@@ -168,9 +160,9 @@ int main( void )
 
         #if ( TRACE_ON_ENTER == 1 )
             printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-        #endif
+        #endif /* if ( TRACE_ON_ENTER == 1 ) */
     }
-    #endif /* if ( projCOVERAGE_TEST != 1 ) */
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 
     console_init();
     #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
@@ -281,10 +273,11 @@ void traceOnEnter()
 
         if( xReturn > 0 )
         {
-            if( xTraceRunning == pdTRUE )
+            #if ( projENABLE_TRACING == 1 )
             {
                 prvSaveTraceFile();
             }
+            #endif /* if ( projENABLE_TRACING == 1 ) */
 
             /* clear the buffer */
             char buffer[ 1 ];
@@ -334,10 +327,11 @@ void vAssertCalled( const char * const pcFileName,
         {
             xPrinted = pdTRUE;
 
-            if( xTraceRunning == pdTRUE )
+            #if ( projENABLE_TRACING == 1 )
             {
                 prvSaveTraceFile();
             }
+            #endif /* if ( projENABLE_TRACING == 0 ) */
         }
 
         /* You can step out of this function to debug the assertion by using
@@ -353,10 +347,8 @@ void vAssertCalled( const char * const pcFileName,
 }
 /*-----------------------------------------------------------*/
 
-static void prvSaveTraceFile( void )
-{
-    /* Tracing is not used when code coverage analysis is being performed. */
-    #if ( projCOVERAGE_TEST != 1 )
+#if ( projENABLE_TRACING == 1 )
+    static void prvSaveTraceFile( void )
     {
         FILE * pxOutputFile;
 
@@ -375,8 +367,7 @@ static void prvSaveTraceFile( void )
             printf( "\r\nFailed to create trace dump file\r\n" );
         }
     }
-    #endif /* if ( projCOVERAGE_TEST != 1 ) */
-}
+#endif /* if ( projENABLE_TRACING == 1 ) */
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an

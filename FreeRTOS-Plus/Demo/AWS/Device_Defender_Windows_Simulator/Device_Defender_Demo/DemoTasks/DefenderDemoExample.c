@@ -219,6 +219,10 @@ static uint32_t ulReportId = 0UL;
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Callback to receive the incoming publish messages from the MQTT broker.
  *

@@ -54,6 +54,7 @@
 
 extern void prvJobsDemoTask( void * pvParameters );
 extern void vPlatformInitLogging( void );
+extern void vPlatformInitIpStack( void );
 
 /*-----------------------------------------------------------*/
 

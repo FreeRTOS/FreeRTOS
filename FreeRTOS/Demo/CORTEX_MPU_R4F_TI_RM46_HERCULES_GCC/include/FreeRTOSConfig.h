@@ -97,6 +97,7 @@ extern void vMainSetupTimerInterrupt( void );
     #define configUSE_CO_ROUTINES                                  0
     #define configUSE_MUTEXES                                      1U
     #define configUSE_RECURSIVE_MUTEXES                            1U
+    #define configUSE_EVENT_GROUPS                                 0U
     #define configCHECK_FOR_STACK_OVERFLOW                         0
     #define configUSE_QUEUE_SETS                                   1U
     #define configUSE_COUNTING_SEMAPHORES                          1U

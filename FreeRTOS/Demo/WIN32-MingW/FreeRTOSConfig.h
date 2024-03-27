@@ -60,11 +60,11 @@
 #define configUSE_TASK_NOTIFICATIONS			1
 #define configSUPPORT_STATIC_ALLOCATION			1
 
-/* Tick type width is defined based on the compiler type.(32bit or 64bit) */
+/* Tick type width is defined based on the compiler type (32bit or 64bit). */
 #ifdef __x86_64__
-	#define configTICK_TYPE_WIDTH_IN_BITS			TICK_TYPE_WIDTH_64_BITS
+	#define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_64_BITS
 #else
-	#define configTICK_TYPE_WIDTH_IN_BITS			TICK_TYPE_WIDTH_32_BITS
+	#define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_32_BITS
 #endif
 
 

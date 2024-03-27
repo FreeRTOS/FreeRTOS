@@ -386,8 +386,9 @@ static void prvCheckTask( void * pvParameters )
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
         /* This is the only task that uses stdout so its ok to call printf()
-         * directly. %llu(long long unsigned) type format is used here
-         * to support both of 32bit values on MinGW32 and 64bit values on MinGW64.  */
+         * directly. %llu (long long unsigned) format specifier is used here
+         * to support both 32-bit values on MinGW32 and 64-bit values on
+         * MinGW64. */
         vPortGetHeapStats( &xHeapStats );
 
         configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xPortGetFreeHeapSize() );
@@ -395,11 +396,11 @@ static void prvCheckTask( void * pvParameters )
 
         printf( "%s - tick count %llu - free heap %llu - min free heap %llu - largest free block %llu - number of free blocks %llu\r\n",
                 pcStatusMessage,
-                (uint64_t)xTaskGetTickCount(),
-                (uint64_t)xHeapStats.xAvailableHeapSpaceInBytes,
-                (uint64_t)xHeapStats.xMinimumEverFreeBytesRemaining,
-                (uint64_t)xHeapStats.xSizeOfLargestFreeBlockInBytes,
-                (uint64_t)xHeapStats.xNumberOfFreeBlocks );
+                ( uint64_t ) xTaskGetTickCount(),
+                ( uint64_t ) xHeapStats.xAvailableHeapSpaceInBytes,
+                ( uint64_t ) xHeapStats.xMinimumEverFreeBytesRemaining,
+                ( uint64_t ) xHeapStats.xSizeOfLargestFreeBlockInBytes,
+                ( uint64_t ) xHeapStats.xNumberOfFreeBlocks );
 
         fflush( stdout );
     }
@@ -624,18 +625,18 @@ static void prvDemonstrateTimerQueryFunctions( void )
 
 static void prvDemonstratePendingFunctionCall( void )
 {
-    static UBaseType_t ulParameter1 = 1000UL;
+    static UBaseType_t uxParameter1 = 1000UL;
     static uint32_t ulParameter2 = 0UL;
     const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
 
     /* prvPendedFunction() just expects the parameters to be incremented by one
      * each time it is called. */
 
-    ulParameter1++;
+    uxParameter1++;
     ulParameter2++;
 
     /* Pend the function call, sending the parameters. */
-    xTimerPendFunctionCall( prvPendedFunction, ( void * ) ulParameter1, ulParameter2, xDontBlock );
+    xTimerPendFunctionCall( prvPendedFunction, ( void * ) uxParameter1, ulParameter2, xDontBlock );
 }
 /*-----------------------------------------------------------*/
 
@@ -872,12 +873,12 @@ static void prvPermanentlyBlockingNotificationTask( void * pvParameters )
 
 static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer )
 {
-	UBaseType_t ulTimerID;
+	UBaseType_t uxTimerID;
 
     /* Increment the timer's ID to show the callback has executed. */
-    ulTimerID = ( UBaseType_t ) pvTimerGetTimerID( xTimer );
-    ulTimerID++;
-    vTimerSetTimerID( xTimer, ( void * ) ulTimerID );
+    uxTimerID = ( UBaseType_t ) pvTimerGetTimerID( xTimer );
+    uxTimerID++;
+    vTimerSetTimerID( xTimer, ( void * ) uxTimerID );
 }
 /*-----------------------------------------------------------*/
 
@@ -933,3 +934,4 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     xTimerDelete( xTimer, portMAX_DELAY );
     vTaskDelete( NULL );
 }
+/*-----------------------------------------------------------*/

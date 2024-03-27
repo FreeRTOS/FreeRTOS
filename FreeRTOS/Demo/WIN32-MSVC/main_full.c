@@ -463,7 +463,7 @@ void vFullDemoIdleFunction( void )
 
     /* Exercise heap_5 a bit.  The malloc failed hook will trap failed
      * allocations so there is no need to test here. */
-    pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
+    pvAllocated = pvPortMalloc( ( size_t )( rand() % 500 ) + 1 );
     vPortFree( pvAllocated );
 }
 /*-----------------------------------------------------------*/

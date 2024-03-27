@@ -5,7 +5,7 @@ license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "625b24a10"
+    version: "e8289dfee"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"

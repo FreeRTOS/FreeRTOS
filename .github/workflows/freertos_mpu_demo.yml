@@ -1,0 +1,119 @@
+name: FreeRTOS MPU Demo
+on:
+    push:
+    pull_request:
+    workflow_dispatch:
+
+env:
+  bashPass: \033[32;1mPASSED -
+  bashInfo: \033[33;1mINFO -
+  bashFail: \033[31;1mFAILED -
+  bashEnd:  \033[0m
+
+jobs:
+  Cortex-R4:
+    name: Texas Instruments RM46
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          stepName: Checkout Repository
+        name: ${{ env.stepName }}
+        uses: actions/checkout@v4.1.1
+        with:
+          submodules: false
+
+      - env:
+          stepName: Install GNU ARM Toolchain
+        name: Install GNU ARM Toolchain
+        shell: bash
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          sudo apt-get -y update
+          sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
+          echo -e "::endgroup::"
+          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+      - env:
+          stepName: Build CORTEX R4 MPU Demo
+        name: ${{ env.stepName }}
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_MPU_R4F_TI_RM46_HERCULES_GCC
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          set +e
+          cmake -S . -B build;
+          make -C build all;
+          exitStatus=$?
+          set -e
+          echo -e "::endgroup::"
+          if [ $exitStatus -eq 0 ]; then
+            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          else
+            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
+            exit 1
+          fi
+
+  Cortex-R5:
+    name: Texas Instruments RM57
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          stepName: Checkout Repository
+        name: ${{ env.stepName }}
+        uses: actions/checkout@v4.1.1
+        with:
+          submodules: false
+
+      - env:
+          stepName: Install GNU ARM Toolchain
+        name: Install GNU ARM Toolchain
+        shell: bash
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          sudo apt-get -y update
+          sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
+          echo -e "::endgroup::"
+          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+      - env:
+          stepName: Fetch Kernel Submodule
+        name: ${{ env.stepName }}
+        shell: bash
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group:: ${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          set +e
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+          exitStatus=$?
+          set -e
+          echo -e "::endgroup::"
+          if [ $exitStatus -eq 0 ]; then
+            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          else
+            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
+            exit 1
+          fi
+
+      - env:
+          stepName: Build CORTEX R5 MPU Demo
+        name: ${{ env.stepName }}
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_MPU_R5F_TI_RM57_HERCULES_GCC
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          set +e
+          cmake -S . -B build;
+          make -C build all;
+          exitStatus=$?
+          set -e
+          echo -e "::endgroup::"
+          if [ $exitStatus -eq 0 ]; then
+            echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          else
+            echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
+            exit 1
+          fi

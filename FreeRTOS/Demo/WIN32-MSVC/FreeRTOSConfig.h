@@ -65,11 +65,11 @@
 #define configINITIAL_TICK_COUNT				( ( TickType_t ) 0 ) /* For test. */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN 1 /* As there are a lot of tasks running. */
 
- /* Tick type width is defined based on the target platform.(32bit or 64bit) */
+ /* Tick type width is defined based on the target platform(32bit or 64bit). */
 #ifdef _M_X64
-    #define configTICK_TYPE_WIDTH_IN_BITS			TICK_TYPE_WIDTH_64_BITS
+    #define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_64_BITS
 #else
-    #define configTICK_TYPE_WIDTH_IN_BITS			TICK_TYPE_WIDTH_32_BITS
+    #define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_32_BITS
 #endif
 
 /* Software timer related configuration options. */

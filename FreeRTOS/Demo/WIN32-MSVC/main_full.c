@@ -521,18 +521,18 @@ void vFullDemoTickHookFunction( void )
 static void prvPendedFunction( void * pvParameter1,
                                uint32_t ulParameter2 )
 {
-    static UBaseType_t ulLastParameter1 = 1000UL;
+    static UBaseType_t uxLastParameter1 = 1000UL;
     static uint32_t ulLastParameter2 = 0UL;
-    UBaseType_t ulParameter1;
+    UBaseType_t uxParameter1;
 
-    ulParameter1 = ( UBaseType_t ) pvParameter1;
+    uxParameter1 = ( UBaseType_t ) pvParameter1;
 
     /* Ensure the parameters are as expected. */
-    configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );
+    configASSERT( uxParameter1 == ( uxLastParameter1 + 1 ) );
     configASSERT( ulParameter2 == ( ulLastParameter2 + 1 ) );
 
     /* Remember the parameters for the next time the function is called. */
-    ulLastParameter1 = ulParameter1;
+    uxLastParameter1 = uxParameter1;
     ulLastParameter2 = ulParameter2;
 }
 /*-----------------------------------------------------------*/
@@ -586,18 +586,18 @@ static void prvDemonstrateTimerQueryFunctions( void )
 
 static void prvDemonstratePendingFunctionCall( void )
 {
-    static UBaseType_t ulParameter1 = 1000UL;
+    static UBaseType_t uxParameter1 = 1000UL;
     static uint32_t ulParameter2 = 0UL;
     const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
 
     /* prvPendedFunction() just expects the parameters to be incremented by one
      * each time it is called. */
 
-    ulParameter1++;
+    uxParameter1++;
     ulParameter2++;
 
     /* Pend the function call, sending the parameters. */
-    xTimerPendFunctionCall( prvPendedFunction, ( void * ) ulParameter1, ulParameter2, xDontBlock );
+    xTimerPendFunctionCall( prvPendedFunction, ( void * ) uxParameter1, ulParameter2, xDontBlock );
 }
 /*-----------------------------------------------------------*/
 

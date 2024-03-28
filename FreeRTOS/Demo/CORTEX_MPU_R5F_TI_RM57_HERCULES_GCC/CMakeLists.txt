@@ -50,19 +50,23 @@ INCLUDE(FetchContent)
 FetchContent_Declare(
     FreeRTOS-Kernel
     GIT_REPOSITORY https://github.com/FreeRTOS/FreeRTOS-Kernel.git
-    GIT_TAG main
+    # Last tested FreeRTOS-Kernel Commit
+    GIT_TAG e8289dfee6e00660b5ad028e9f931ffb76c95840
     SOURCE_DIR "${DEMO_DIR}/../../Source"
     USES_TERMINAL_DOWNLOAD YES
     USES_TERMINAL_UPDATE   YES
-    BUILD_COMMAND "")
+    BUILD_COMMAND ""
+)
 
-FetchContent_GetProperties(FreeRTOS-Kernel)
-if(NOT FreeRTOS-Kernel_POPULATED)
-    FetchContent_Populate(FreeRTOS-Kernel)
-endif()
+# Uncomment the following lines to use Fetch-Content to clone Kernel.
+# FetchContent_GetProperties(FreeRTOS-Kernel)
+# if(NOT FreeRTOS-Kernel_POPULATED)
+#     FetchContent_Populate(FreeRTOS-Kernel)
+# endif()
+
 
 # Get the absolute path to the FreeRTOS-Kernel Directory
-SET(FREERTOS_KERNEL_DIR_REL "${freertos-kernel_SOURCE_DIR}")
+SET(FREERTOS_KERNEL_DIR_REL "${DEMO_DIR}/../../Source")
 GET_FILENAME_COMPONENT(FREERTOS_KERNEL_DIR ${FREERTOS_KERNEL_DIR_REL} ABSOLUTE)
 
 # Get the absolute path to the Port Directory

@@ -100,8 +100,7 @@
 #define demoIRQ_TASK_PRIORITY              ( configTIMER_TASK_PRIORITY + 2UL )
 
 /** @brief Priority at which the Notification Demo Task is created. */
-#define demoNOTIFICATION_TASK_PRIORITY \
-    ( configTIMER_TASK_PRIORITY + 1UL ) | portPRIVILEGE_BIT
+#define demoNOTIFICATION_TASK_PRIORITY     ( configTIMER_TASK_PRIORITY + 1UL )
 
 /* ------------------------------- Register Test Tasks ------------------------------- */
 
@@ -172,7 +171,6 @@ PRIVILEGED_FUNCTION void vIRQDemoHandler( void );
 #define portRTI_CLEARINTENA_REG  ( *( ( volatile uint32_t * ) 0xFFFFFC84UL ) )
 #define portRTI_INTFLAG_REG      ( *( ( volatile uint32_t * ) 0xFFFFFC88UL ) )
 #define portEND_OF_INTERRUPT_REG ( ( ( volatile uint32_t * ) configEOI_ADDRESS ) )
-
 
 /* Registers used by the Vectored Interrupt Manager */
 typedef void ( *ISRFunction_t )( void );

@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <io.h>
 #include <ctype.h>
 
@@ -209,7 +210,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
 
             /* Create the Windows event. */
-            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
+            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, L"StdoutLoggingEvent" );
 
             /* Create the thread itself. */
             Win32Thread = CreateThread(

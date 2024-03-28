@@ -86,50 +86,50 @@ static BaseType_t prvTimerQuery( void );
 
 static BaseType_t prvStaticAllocationsWithNullBuffers( void )
 {
-uint32_t ulReturned = 0;
+UBaseType_t uxReturned = 0;
 BaseType_t xReturn = pdPASS;
 UBaseType_t uxDummy = 10;
 
 	/* Don't expect to create any of the objects as a NULL parameter is always
 	passed in place of a required buffer.  Hence if all passes then none of the
-	|= will be against 0, and ulReturned will still be zero at the end of this
+	|= will be against 0, and uxReturned will still be zero at the end of this
 	function. */
-	ulReturned |= ( uint32_t ) xEventGroupCreateStatic( NULL );
+	uxReturned |= ( UBaseType_t ) xEventGroupCreateStatic( NULL );
 
 	/* Try creating a task twice, once with puxStackBuffer NULL, and once with
 	pxTaskBuffer NULL. */
-	ulReturned |= ( uint32_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
-											   	  "Dummy", /* Task name. */
-												  configMINIMAL_STACK_SIZE,
-												  NULL,
-												  tskIDLE_PRIORITY,
-												  NULL,
-												  ( StaticTask_t * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
+	uxReturned |= ( UBaseType_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
+													 "Dummy", /* Task name. */
+													 configMINIMAL_STACK_SIZE,
+													 NULL,
+													 tskIDLE_PRIORITY,
+													 NULL,
+													 ( StaticTask_t * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
 
-	ulReturned |= ( uint32_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
-											   	  "Dummy", /* Task name. */
-												  configMINIMAL_STACK_SIZE,
-												  NULL,
-												  tskIDLE_PRIORITY,
-												  ( StackType_t  * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
-												  NULL );
+	uxReturned |= ( UBaseType_t ) xTaskCreateStatic( NULL, /* Task to run, not needed as the task is not created. */
+													 "Dummy", /* Task name. */
+													 configMINIMAL_STACK_SIZE,
+													 NULL,
+													 tskIDLE_PRIORITY,
+													 ( StackType_t  * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
+													 NULL );
 
-	ulReturned |= ( uint32_t ) xQueueCreateStatic( uxDummy,
-												   uxDummy,
-												   ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
-												   NULL );
+	uxReturned |= ( UBaseType_t ) xQueueCreateStatic( uxDummy,
+													  uxDummy,
+													  ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
+													  NULL );
 
 	/* Try creating a stream buffer twice, once with pucStreamBufferStorageArea
 	set to NULL, and once with pxStaticStreamBuffer set to NULL. */
-	ulReturned |= ( uint32_t ) xStreamBufferCreateStatic( uxDummy,
-														  uxDummy,
-														  NULL,
-														  ( StaticStreamBuffer_t  * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
+	uxReturned |= ( UBaseType_t ) xStreamBufferCreateStatic( uxDummy,
+															 uxDummy,
+															 NULL,
+															 ( StaticStreamBuffer_t  * ) &xReturn ); /* Dummy value just to pass a non NULL value in - won't get used. */
 
-	ulReturned |= ( uint32_t ) xStreamBufferCreateStatic( uxDummy,
-														  uxDummy,
-														  ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
-														  NULL );
+	uxReturned |= ( UBaseType_t ) xStreamBufferCreateStatic( uxDummy,
+															 uxDummy,
+															 ( uint8_t * ) &xReturn, /* Dummy value just to pass a non NULL value in - won't get used. */
+															 NULL );
 
 	/* Try to create a task with a stack that is too large to be allocated. */
 	if( xTaskCreate( NULL, "TooLarge", configTOTAL_HEAP_SIZE, NULL, tskIDLE_PRIORITY, NULL ) != errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY )
@@ -137,7 +137,7 @@ UBaseType_t uxDummy = 10;
 		xReturn = pdFAIL;
 	}
 
-	if( ulReturned != 0 )
+	if( uxReturned != 0 )
 	{
 		/* Something returned a non-NULL value. */
 		xReturn = pdFAIL;

@@ -2949,6 +2949,9 @@ void test_xtaskGetHandle_success( void )
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                                              1 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, ptcb );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
@@ -2965,19 +2968,26 @@ void test_xtaskGetHandle_success_2elements( void )
 
     task_handle = create_task();
     task_handle2 = create_task();
+    strcpy( task_handle2->pcTaskName, "task2" );
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                         list_item, list_item2,
                         ptcb, task_handle2 );
+
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
-                                             1 );
+                                             2 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, task_handle );
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item2, task_handle2 );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
     /* API Call */
-    ret_task_handle = xTaskGetHandle( "create_task" );
+    ret_task_handle = xTaskGetHandle( "task2" );
+
     /* Validations */
     TEST_ASSERT_EQUAL_PTR( task_handle2, ret_task_handle );
 }
@@ -2989,6 +2999,7 @@ void test_xtaskGetHandle_success_2elements_set_index( void )
 
     task_handle = create_task();
     task_handle2 = create_task();
+    strcpy( task_handle2->pcTaskName, "task2" );
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                         list_item, list_item2,
@@ -2999,15 +3010,20 @@ void test_xtaskGetHandle_success_2elements_set_index( void )
     /* advance index */
     pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex =
         pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex->pxNext;
+
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                                              1 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, task_handle );
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item2, task_handle2 );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
     /* API Call */
-    ret_task_handle = xTaskGetHandle( "create_task" );
+    ret_task_handle = xTaskGetHandle( "task2" );
     /* Validations */
     TEST_ASSERT_EQUAL_PTR( task_handle2, ret_task_handle );
 }
@@ -3028,6 +3044,10 @@ void test_xtaskGetHandle_fail_no_task_found( void )
     listCURRENT_LIST_LENGTH_ExpectAndReturn(
         &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
         2 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, task_handle );
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item2, task_handle2 );
+
     int i = configMAX_PRIORITIES - 1;
 
     do
@@ -3041,6 +3061,7 @@ void test_xtaskGetHandle_fail_no_task_found( void )
     listCURRENT_LIST_LENGTH_ExpectAndReturn( pxOverflowDelayedTaskList, 0 );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList, 0 );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 0 );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 

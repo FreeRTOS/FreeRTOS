@@ -43,6 +43,11 @@ else
     CFLAGS += -O2
 endif
 
+ifeq ($(PICOLIBC), 1)
+    CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
+   LDFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
+endif
+
 SRCS = main.c main_blinky.c riscv-virt.c ns16550.c \
 	$(DEMO_SOURCE_DIR)/EventGroupsDemo.c \
 	$(DEMO_SOURCE_DIR)/TaskNotify.c \

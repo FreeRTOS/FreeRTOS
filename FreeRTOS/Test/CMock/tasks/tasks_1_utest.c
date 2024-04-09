@@ -2949,6 +2949,9 @@ void test_xtaskGetHandle_success( void )
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                                              1 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, ptcb );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
@@ -2965,19 +2968,26 @@ void test_xtaskGetHandle_success_2elements( void )
 
     task_handle = create_task();
     task_handle2 = create_task();
+    strcpy( task_handle2->pcTaskName, "task2" );
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                         list_item, list_item2,
                         ptcb, task_handle2 );
+
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
-                                             1 );
+                                             2 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, task_handle );
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item2, task_handle2 );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
     /* API Call */
-    ret_task_handle = xTaskGetHandle( "create_task" );
+    ret_task_handle = xTaskGetHandle( "task2" );
+
     /* Validations */
     TEST_ASSERT_EQUAL_PTR( task_handle2, ret_task_handle );
 }
@@ -2989,6 +2999,7 @@ void test_xtaskGetHandle_success_2elements_set_index( void )
 
     task_handle = create_task();
     task_handle2 = create_task();
+    strcpy( task_handle2->pcTaskName, "task2" );
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                         list_item, list_item2,
@@ -2999,15 +3010,20 @@ void test_xtaskGetHandle_success_2elements_set_index( void )
     /* advance index */
     pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex =
         pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex->pxNext;
+
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
                                              1 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, task_handle );
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item2, task_handle2 );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
     /* API Call */
-    ret_task_handle = xTaskGetHandle( "create_task" );
+    ret_task_handle = xTaskGetHandle( "task2" );
     /* Validations */
     TEST_ASSERT_EQUAL_PTR( task_handle2, ret_task_handle );
 }
@@ -3028,6 +3044,10 @@ void test_xtaskGetHandle_fail_no_task_found( void )
     listCURRENT_LIST_LENGTH_ExpectAndReturn(
         &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
         2 );
+
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, task_handle );
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item2, task_handle2 );
+
     int i = configMAX_PRIORITIES - 1;
 
     do
@@ -3041,6 +3061,7 @@ void test_xtaskGetHandle_fail_no_task_found( void )
     listCURRENT_LIST_LENGTH_ExpectAndReturn( pxOverflowDelayedTaskList, 0 );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList, 0 );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 0 );
+
     /* vTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
@@ -4928,6 +4949,8 @@ void test_ulTaskGenericNotifyTake_success( void )
     task_handle = create_task();
     task_handle->ulNotifiedValue[ uxIndexToWait ] = 0;
     /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -4948,6 +4971,8 @@ void test_ulTaskGenericNotifyTake_success2( void )
     task_handle = create_task();
     task_handle->ulNotifiedValue[ uxIndexToWait ] = 2;
     /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -4968,6 +4993,8 @@ void test_ulTaskGenericNotifyTake_success_clear_count( void )
     task_handle = create_task();
     task_handle->ulNotifiedValue[ uxIndexToWait ] = 5;
     /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdTRUE,
@@ -4993,7 +5020,8 @@ void test_ulTaskGenericNotifyTake_success_yield( void )
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listSET_LIST_ITEM_VALUE_Expect( &ptcb->xStateListItem, xTickCount + 9 );
     vListInsert_Expect( pxDelayedTaskList, &ptcb->xStateListItem );
-    listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret_gen_notify_take = ulTaskGenericNotifyTake( uxIndexToWait,
                                                    pdFALSE,
@@ -5607,16 +5635,21 @@ void test_xTaskGenericNotifyWait_success_notif_received( void )
 
     TaskHandle_t task_handle;
 
+    /* Setup */
     task_handle = create_task();
     ptcb = task_handle;
     ptcb->ucNotifyState[ uxIndexToWait ] = 2; /* taskNOTIFICATION_RECEIVED */
     ptcb->ulNotifiedValue[ uxIndexToWait ] = 5;
-
+    /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
+    /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,
                                   ulBitsToClearOnExit,
                                   &pullNotificationValue,
                                   xTicksToWait );
+    /* Validations */
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 5, pullNotificationValue );
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
@@ -5667,12 +5700,14 @@ void test_xTaskGenericNotifyWait_success_notif_not_received_no_wait( void )
 
     TaskHandle_t task_handle;
 
+    /* Setup */
     task_handle = create_task();
     ptcb = task_handle;
     ptcb->ucNotifyState[ uxIndexToWait ] = 1; /* taskWAITING_NOTIFICATION */
     ptcb->ulNotifiedValue[ uxIndexToWait ] = 5;
     /* Expectations */
-
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,
@@ -5695,12 +5730,14 @@ void test_xTaskGenericNotifyWait_success_notif_not_received_pull_null( void )
 
     TaskHandle_t task_handle;
 
+    /* Setup */
     task_handle = create_task();
     ptcb = task_handle;
     ptcb->ucNotifyState[ uxIndexToWait ] = 1; /* taskWAITING_NOTIFICATION */
     ptcb->ulNotifiedValue[ uxIndexToWait ] = 5;
     /* Expectations */
-
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
     /* API Call */
     ret = xTaskGenericNotifyWait( uxIndexToWait,
                                   ulBitsToClearOnEntry,

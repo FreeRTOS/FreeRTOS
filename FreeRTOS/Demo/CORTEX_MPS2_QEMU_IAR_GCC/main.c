@@ -43,7 +43,7 @@
  * Use the following commands to start the application running in a way that
  * enables the debugger to connect, omit the "-s -S" to run the project without
  * the debugger:
- * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
+ * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -monitor none -nographic -serial stdio -s -S
  */
 
 /* FreeRTOS includes. */

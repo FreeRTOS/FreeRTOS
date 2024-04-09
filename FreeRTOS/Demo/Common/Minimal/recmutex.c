@@ -144,7 +144,7 @@ static void prvRecursiveMutexControllingTask( void * pvParameters )
          * polling task. */
         if( xSemaphoreGiveRecursive( xMutex ) == pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         for( ux = 0; ux < recmuMAX_COUNT; ux++ )
@@ -161,7 +161,7 @@ static void prvRecursiveMutexControllingTask( void * pvParameters )
              * flag will be set here. */
             if( xSemaphoreTakeRecursive( xMutex, recmu15ms_DELAY ) != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             /* Ensure the other task attempting to access the mutex (and the
@@ -185,7 +185,7 @@ static void prvRecursiveMutexControllingTask( void * pvParameters )
              * as it too has a lower priority than this task. */
             if( xSemaphoreGiveRecursive( xMutex ) != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             #if ( configUSE_PREEMPTION == 0 )
@@ -197,7 +197,7 @@ static void prvRecursiveMutexControllingTask( void * pvParameters )
          * should no longer be the mutex owner, so the next give should fail. */
         if( xSemaphoreGiveRecursive( xMutex ) == pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Keep count of the number of cycles this task has performed so a
@@ -232,7 +232,7 @@ static void prvRecursiveMutexBlockingTask( void * pvParameters )
             {
                 /* Did not expect to execute until the controlling task was
                  * suspended. */
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
             else
             {
@@ -240,7 +240,7 @@ static void prvRecursiveMutexBlockingTask( void * pvParameters )
                  * the polling task to obtain the mutex. */
                 if( xSemaphoreGiveRecursive( xMutex ) != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 xBlockingIsSuspended = pdTRUE;
@@ -252,13 +252,13 @@ static void prvRecursiveMutexBlockingTask( void * pvParameters )
         {
             /* We should not leave the xSemaphoreTakeRecursive() function
              * until the mutex was obtained. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* The controlling and blocking tasks should be in lock step. */
         if( uxControllingCycles != ( UBaseType_t ) ( uxBlockingCycles + 1 ) )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Keep count of the number of cycles this task has performed so a
@@ -290,7 +290,7 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
             /* Is the blocking task suspended? */
             if( ( xBlockingIsSuspended != pdTRUE ) || ( xControllingIsSuspended != pdTRUE ) )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
             else
             {
@@ -321,7 +321,7 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
                  * be suspended. */
                 if( ( xBlockingIsSuspended == pdTRUE ) || ( xControllingIsSuspended == pdTRUE ) )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 #if ( INCLUDE_uxTaskPriorityGet == 1 )
@@ -341,7 +341,7 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
                 /* Release the mutex, disinheriting the higher priority again. */
                 if( xSemaphoreGiveRecursive( xMutex ) != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 #if ( INCLUDE_uxTaskPriorityGet == 1 )
@@ -371,7 +371,7 @@ BaseType_t xAreRecursiveMutexTasksStillRunning( void )
     /* Is the controlling task still cycling? */
     if( uxLastControllingCycles == uxControllingCycles )
     {
-        xErrorOccurred = pdTRUE;
+        xErrorOccurred = __LINE__;
     }
     else
     {
@@ -381,7 +381,7 @@ BaseType_t xAreRecursiveMutexTasksStillRunning( void )
     /* Is the blocking task still cycling? */
     if( uxLastBlockingCycles == uxBlockingCycles )
     {
-        xErrorOccurred = pdTRUE;
+        xErrorOccurred = __LINE__;
     }
     else
     {
@@ -391,14 +391,14 @@ BaseType_t xAreRecursiveMutexTasksStillRunning( void )
     /* Is the polling task still cycling? */
     if( uxLastPollingCycles == uxPollingCycles )
     {
-        xErrorOccurred = pdTRUE;
+        xErrorOccurred = __LINE__;
     }
     else
     {
         uxLastPollingCycles = uxPollingCycles;
     }
 
-    if( xErrorOccurred == pdTRUE )
+    if( xErrorOccurred != pdFALSE )
     {
         xReturn = pdFAIL;
     }

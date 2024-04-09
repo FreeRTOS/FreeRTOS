@@ -12,7 +12,7 @@ MAKE = make
 
 
 CFLAGS += $(INCLUDE_DIRS) -nostartfiles -ffreestanding -mthumb -mcpu=cortex-m3 \
-		  -Wall -Wextra -g3 -O0 -ffunction-sections -fdata-sections \
+		  -Wall -Wextra -g3 -Os -ffunction-sections -fdata-sections \
 		  -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
 
 #
@@ -79,6 +79,7 @@ SOURCE_FILES += (DEMO_PROJECT)/main.c
 SOURCE_FILES += (DEMO_PROJECT)/main_blinky.c
 SOURCE_FILES += (DEMO_PROJECT)/main_full.c
 SOURCE_FILES += ./startup_gcc.c
+SOURCE_FILES += ./RegTest.c
 # Lightweight print formatting to use in place of the heavier GCC equivalent.
 SOURCE_FILES += ./printf-stdarg.c
 

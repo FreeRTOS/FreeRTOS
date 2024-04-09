@@ -67,7 +67,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="FreeRTOS+Trace Recorder/extras|FreeRTOS+Trace Recorder/kernelports/Zephyr|FreeRTOS+Trace Recorder/kernelports/ThreadX|FreeRTOS+Trace Recorder/kernelports/ESP-IDF_FreeRTOS|FreeRTOS+Trace Recorder/kernelports/BareMetal|FreeRTOS_Source/examples|FreeRTOS+Trace Recorder/streamports" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -141,7 +141,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="FreeRTOS_Source/examples|FreeRTOS+Trace Recorder|FreeRTOS+Trace Recorder/streamports" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="FreeRTOS+Trace Recorder" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

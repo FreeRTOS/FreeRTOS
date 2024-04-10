@@ -157,7 +157,7 @@ static void * pvLoggingThreadExitEvent = NULL;
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvStrEndedWithLineBreak( const char* pcStr )
+static BaseType_t prvStrEndedWithLineBreak( const char * pcStr )
 {
     BaseType_t xReturn;
     size_t uxStrLen = strlen( pcStr );
@@ -244,7 +244,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, L"StdoutLoggingEvent" );
 
             /* Create logging thread exit event to notify the logging thread. */
-            pvLoggingThreadExitEvent = CreateEvent(NULL, FALSE, TRUE, L"LoggingThreadExitEvent");
+            pvLoggingThreadExitEvent = CreateEvent( NULL, FALSE, TRUE, L"LoggingThreadExitEvent" );
 
             /* Create the thread itself. */
             hLoggingThread = CreateThread(
@@ -618,12 +618,12 @@ void vPlatformInitLogging( void )
 
 void vPlatformStopLoggingThreadAndFlush( void )
 {
-#if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
-    SetEvent( pvLoggingThreadExitEvent );
+    #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
+        SetEvent( pvLoggingThreadExitEvent );
 
-    WaitForSingleObject( hLoggingThread, INFINITE );
+        WaitForSingleObject( hLoggingThread, INFINITE );
 
-    prvLoggingFlushBuffer();
-#endif
+        prvLoggingFlushBuffer();
+    #endif /* #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
 }
 /*-----------------------------------------------------------*/

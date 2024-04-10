@@ -341,6 +341,8 @@ void vLoggingPrintf( const char * pcFormat,
                                 ( unsigned long ) xTaskGetTickCount(),
                                 pcTaskName );
 
+            /* Print meta data for next message if this message is endedd with line
+             * break. */
             if( prvStrEndedWithLineBreak( pcFormat ) != pdFALSE )
             {
                 xAfterLineBreak = pdTRUE;
@@ -545,7 +547,7 @@ static DWORD WINAPI prvWin32LoggingThread( void * pvParameter )
         }
     }
 
-    /* Enable direct push to flush buffer after logging thread exit. */
+    /* Enable direct print after logging thread exit. */
     xDirectPrint = pdTRUE;
 
     return 0;

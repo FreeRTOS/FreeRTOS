@@ -800,8 +800,8 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     /* prvCheckForRunStateChange */
     vFakePortAssertIfISR_Expect();
@@ -906,8 +906,8 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Stub( port_assert_if_isr_cb );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     /* prvCheckForRunStateChange */
     vFakePortGetCoreID_ExpectAndReturn( 0 );

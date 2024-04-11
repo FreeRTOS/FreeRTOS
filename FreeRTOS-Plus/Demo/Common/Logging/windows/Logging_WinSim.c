@@ -150,7 +150,7 @@ Socket_t xPrintSocket = FREERTOS_INVALID_SOCKET;
 struct freertos_sockaddr xPrintUDPAddress;
 
 /* The logging thread handle. */
-HANDLE hLoggingThread = NULL;
+HANDLE pvLoggingThread = NULL;
 
 /* Windows event used to stop the logging thread and flush the logging buffer. */
 static void * pvLoggingThreadExitEvent = NULL;
@@ -247,7 +247,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             pvLoggingThreadExitEvent = CreateEvent( NULL, FALSE, TRUE, L"LoggingThreadExitEvent" );
 
             /* Create the thread itself. */
-            hLoggingThread = CreateThread(
+            pvLoggingThread = CreateThread(
                 NULL,                  /* Pointer to thread security attributes. */
                 0,                     /* Initial thread stack size, in bytes. */
                 prvWin32LoggingThread, /* Pointer to thread function. */
@@ -256,9 +256,9 @@ void vLoggingInit( BaseType_t xLogToStdout,
                 NULL );
 
             /* Use the cores that are not used by the FreeRTOS tasks. */
-            SetThreadAffinityMask( hLoggingThread, ~0x01u );
-            SetThreadPriorityBoost( hLoggingThread, TRUE );
-            SetThreadPriority( hLoggingThread, THREAD_PRIORITY_IDLE );
+            SetThreadAffinityMask( pvLoggingThread, ~0x01u );
+            SetThreadPriorityBoost( pvLoggingThread, TRUE );
+            SetThreadPriority( pvLoggingThread, THREAD_PRIORITY_IDLE );
         }
     }
     #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
@@ -623,7 +623,7 @@ void vPlatformStopLoggingThreadAndFlush( void )
     #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
         SetEvent( pvLoggingThreadExitEvent );
 
-        WaitForSingleObject( hLoggingThread, INFINITE );
+        WaitForSingleObject( pvLoggingThread, INFINITE );
 
         prvLoggingFlushBuffer();
     #endif /* #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */

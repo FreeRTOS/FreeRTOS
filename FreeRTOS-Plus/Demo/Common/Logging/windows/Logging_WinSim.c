@@ -160,7 +160,7 @@ static void * pvLoggingThreadExitEvent = NULL;
 static BaseType_t prvStrEndedWithLineBreak( const char * pcStr )
 {
     BaseType_t xReturn;
-    size_t uxStrLen = strlen( pcStr );
+    size_t uxStrLen = strnlen( pcStr, dlMAX_PRINT_STRING_LENGTH );
 
     if( uxStrLen < 2 )
     {

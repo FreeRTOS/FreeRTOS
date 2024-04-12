@@ -242,9 +242,11 @@ void vLoggingInit( BaseType_t xLogToStdout,
 
             /* Create the Windows event. */
             pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, L"StdoutLoggingEvent" );
+            configASSERT( pvLoggingThreadEvent != NULL );
 
             /* Create logging thread exit event to notify the logging thread. */
             pvLoggingThreadExitEvent = CreateEvent( NULL, FALSE, TRUE, L"LoggingThreadExitEvent" );
+            configASSERT( pvLoggingThreadExitEvent != NULL );
 
             /* Create the thread itself. */
             pvLoggingThread = CreateThread(
@@ -254,6 +256,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
                 NULL,                  /* Argument for new thread. */
                 0,                     /* Creation flags. */
                 NULL );
+            configASSERT( pvLoggingThread != NULL );
 
             /* Use the cores that are not used by the FreeRTOS tasks. */
             SetThreadAffinityMask( pvLoggingThread, ~0x01u );
@@ -332,7 +335,7 @@ void vLoggingPrintf( const char * pcFormat,
             pcTaskName = pcNoTask;
         }
 
-        /* Print meta data only after line break. Meta data won't be printed in string
+        /* Print metadata only after line break. Metadata won't be printed in string
          * contains line break only. */
         if( ( xAfterLineBreak == pdTRUE ) && ( strcmp( pcFormat, "\r\n" ) != 0 ) )
         {
@@ -341,23 +344,16 @@ void vLoggingPrintf( const char * pcFormat,
                                 ( unsigned long ) xTaskGetTickCount(),
                                 pcTaskName );
 
-            /* Print meta data for next message if this message is endedd with line
+            /* Print metadata for next message if this message ends with line
              * break. */
-            if( prvStrEndedWithLineBreak( pcFormat ) != pdFALSE )
-            {
-                xAfterLineBreak = pdTRUE;
-            }
-            else
-            {
-                xAfterLineBreak = pdFALSE;
-            }
+            xAfterLineBreak = prvStrEndedWithLineBreak( pcFormat );
         }
         else
         {
             xLength = 0;
             memset( cPrintString, 0x00, dlMAX_PRINT_STRING_LENGTH );
 
-            /* Continue to print without meta data if string is not ended with line
+            /* Continue to print without metadata if the string doesn't end with line
              * break. */
             if( prvStrEndedWithLineBreak( pcFormat ) != pdFALSE )
             {
@@ -621,11 +617,14 @@ void vPlatformInitLogging( void )
 void vPlatformStopLoggingThreadAndFlush( void )
 {
     #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
-        SetEvent( pvLoggingThreadExitEvent );
+        if( xLogStreamBuffer != NULL )
+        {
+            SetEvent( pvLoggingThreadExitEvent );
 
-        WaitForSingleObject( pvLoggingThread, INFINITE );
+            WaitForSingleObject( pvLoggingThread, INFINITE );
 
-        prvLoggingFlushBuffer();
+            prvLoggingFlushBuffer();
+        }
     #endif /* #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
 }
 /*-----------------------------------------------------------*/

@@ -386,19 +386,21 @@ static void prvCheckTask( void * pvParameters )
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
         /* This is the only task that uses stdout so its ok to call printf()
-         * directly. */
+         * directly. %llu (long long unsigned) format specifier is used here
+         * to support both 32-bit values on MinGW32 and 64-bit values on
+         * MinGW64. */
         vPortGetHeapStats( &xHeapStats );
 
         configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xPortGetFreeHeapSize() );
         configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xPortGetMinimumEverFreeHeapSize() );
 
-        printf( "%s - tick count %u - free heap %u - min free heap %u - largest free block %u - number of free blocks %u\r\n",
+        printf( "%s - tick count %llu - free heap %llu - min free heap %llu - largest free block %llu - number of free blocks %llu\r\n",
                 pcStatusMessage,
-                xTaskGetTickCount(),
-                xHeapStats.xAvailableHeapSpaceInBytes,
-                xHeapStats.xMinimumEverFreeBytesRemaining,
-                xHeapStats.xSizeOfLargestFreeBlockInBytes,
-                xHeapStats.xNumberOfFreeBlocks );
+                ( uint64_t ) xTaskGetTickCount(),
+                ( uint64_t ) xHeapStats.xAvailableHeapSpaceInBytes,
+                ( uint64_t ) xHeapStats.xMinimumEverFreeBytesRemaining,
+                ( uint64_t ) xHeapStats.xSizeOfLargestFreeBlockInBytes,
+                ( uint64_t ) xHeapStats.xNumberOfFreeBlocks );
 
         fflush( stdout );
     }
@@ -554,21 +556,22 @@ void vFullDemoTickHookFunction( void )
 static void prvPendedFunction( void * pvParameter1,
                                uint32_t ulParameter2 )
 {
-    static uint32_t ulLastParameter1 = 1000UL, ulLastParameter2 = 0UL;
-    uint32_t ulParameter1;
+    static UBaseType_t uxLastParameter1 = 1000UL;
+    static uint32_t ulLastParameter2 = 0UL;
+    UBaseType_t uxParameter1;
 
-    ulParameter1 = ( uint32_t ) pvParameter1;
+    uxParameter1 = ( UBaseType_t ) pvParameter1;
 
     /* Ensure the parameters are as expected. */
-    configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );
+    configASSERT( uxParameter1 == ( uxLastParameter1 + 1 ) );
     configASSERT( ulParameter2 == ( ulLastParameter2 + 1 ) );
 
     /* Remember the parameters for the next time the function is called. */
-    ulLastParameter1 = ulParameter1;
+    uxLastParameter1 = uxParameter1;
     ulLastParameter2 = ulParameter2;
 
     /* Remove compiler warnings in case configASSERT() is not defined. */
-    ( void ) ulLastParameter1;
+    ( void ) uxLastParameter1;
     ( void ) ulLastParameter2;
 }
 /*-----------------------------------------------------------*/
@@ -622,17 +625,18 @@ static void prvDemonstrateTimerQueryFunctions( void )
 
 static void prvDemonstratePendingFunctionCall( void )
 {
-    static uint32_t ulParameter1 = 1000UL, ulParameter2 = 0UL;
+    static UBaseType_t uxParameter1 = 1000UL;
+    static uint32_t ulParameter2 = 0UL;
     const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
 
     /* prvPendedFunction() just expects the parameters to be incremented by one
      * each time it is called. */
 
-    ulParameter1++;
+    uxParameter1++;
     ulParameter2++;
 
     /* Pend the function call, sending the parameters. */
-    xTimerPendFunctionCall( prvPendedFunction, ( void * ) ulParameter1, ulParameter2, xDontBlock );
+    xTimerPendFunctionCall( prvPendedFunction, ( void * ) uxParameter1, ulParameter2, xDontBlock );
 }
 /*-----------------------------------------------------------*/
 
@@ -869,12 +873,12 @@ static void prvPermanentlyBlockingNotificationTask( void * pvParameters )
 
 static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer )
 {
-    uint32_t ulTimerID;
+	UBaseType_t uxTimerID;
 
     /* Increment the timer's ID to show the callback has executed. */
-    ulTimerID = ( uint32_t ) pvTimerGetTimerID( xTimer );
-    ulTimerID++;
-    vTimerSetTimerID( xTimer, ( void * ) ulTimerID );
+    uxTimerID = ( UBaseType_t ) pvTimerGetTimerID( xTimer );
+    uxTimerID++;
+    vTimerSetTimerID( xTimer, ( void * ) uxTimerID );
 }
 /*-----------------------------------------------------------*/
 
@@ -906,7 +910,7 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, portMAX_DELAY );
     vTaskDelay( 3UL * x50ms );
-    configASSERT( ( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
+    configASSERT( ( ( UBaseType_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
 
     /* Now change the timer to be an auto-reload timer and check it executes
      * the expected number of times. */
@@ -914,7 +918,7 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     vTimerSetTimerID( xTimer, ( void * ) 0 );
     xTimerStart( xTimer, 0 );
     vTaskDelay( ( 3UL * x50ms ) + ( x50ms / 2UL ) ); /* Three full periods. */
-    configASSERT( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) == 3UL );
+    configASSERT( ( UBaseType_t ) ( pvTimerGetTimerID( xTimer ) ) == 3UL );
     configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
 
     /* Now change the timer back to be a one-shot timer and check it only
@@ -924,9 +928,10 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
     xTimerStart( xTimer, 0 );
     vTaskDelay( 3UL * x50ms );
     configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
-    configASSERT( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) == 1UL );
+    configASSERT( ( UBaseType_t ) ( pvTimerGetTimerID( xTimer ) ) == 1UL );
 
     /* Clean up at the end. */
     xTimerDelete( xTimer, portMAX_DELAY );
     vTaskDelete( NULL );
 }
+/*-----------------------------------------------------------*/

@@ -1,0 +1,69 @@
+name: FreeRTOS MPU Demo
+on:
+    push:
+    pull_request:
+    workflow_dispatch:
+
+env:
+  bashPass: \033[32;1mPASSED -
+  bashInfo: \033[33;1mINFO -
+  bashFail: \033[31;1mFAILED -
+  bashEnd:  \033[0m
+
+jobs:
+  Cortex-Rx-MPU-Demos:
+    name: TI-Hercules RM46 and RM57 MPU Demos
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          stepName: Checkout Repository
+        name: ${{ env.stepName }}
+        uses: actions/checkout@v4.1.1
+        with:
+          submodules: true
+
+      - env:
+          stepName: Fetch FreeRTOS-Kernel
+        name: ${{ env.stepName }}
+        shell: bash
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source
+          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+      - env:
+          stepName: Install GNU ARM Toolchain
+        name: Install GNU ARM Toolchain
+        shell: bash
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          sudo apt-get -y update
+          sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
+          echo -e "::endgroup::"
+          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+      - env:
+          stepName: Build CORTEX R5 MPU Demo
+        name: ${{ env.stepName }}
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_MPU_R5F_TI_RM57_HERCULES_GCC
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          cmake -S . -B build && make -j -C build all
+          echo -e "::endgroup::"
+          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+      - env:
+          stepName: Build CORTEX R4 MPU Demo
+        name: ${{ env.stepName }}
+        shell: bash
+        working-directory: FreeRTOS/Demo/CORTEX_MPU_R4F_TI_RM46_HERCULES_GCC
+        run: |
+          # ${{ env.stepName }}
+          echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
+          cmake -S . -B build && make -j -C build all
+          echo -e "::endgroup::"
+          echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"

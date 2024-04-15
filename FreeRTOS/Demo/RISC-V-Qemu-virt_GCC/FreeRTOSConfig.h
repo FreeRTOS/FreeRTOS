@@ -45,6 +45,10 @@
 #define configMTIME_BASE_ADDRESS		( CLINT_ADDR + CLINT_MTIME )
 #define configMTIMECMP_BASE_ADDRESS		( CLINT_ADDR + CLINT_MTIMECMP )
 
+#ifdef PICOLIBC_TLS
+#define configUSE_PICOLIBC_TLS			1
+#endif
+
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1

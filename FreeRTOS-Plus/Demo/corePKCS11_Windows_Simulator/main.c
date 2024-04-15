@@ -51,6 +51,11 @@
 
 /*-----------------------------------------------------------*/
 
+extern void vPlatformInitLogging( void );
+extern void vPlatformStopLoggingThreadAndFlush( void );
+
+/*-----------------------------------------------------------*/
+
 static void prvPKCS11DemoTask( void * pvParameters )
 {
     configPRINTF( ( "---------STARTING DEMO---------\r\n" ) );
@@ -68,6 +73,7 @@ static void prvPKCS11DemoTask( void * pvParameters )
     #endif
     configPRINTF( ( "---------Finished DEMO---------\r\n" ) );
 
+    vPlatformStopLoggingThreadAndFlush();
     exit( 0 );
 }
 

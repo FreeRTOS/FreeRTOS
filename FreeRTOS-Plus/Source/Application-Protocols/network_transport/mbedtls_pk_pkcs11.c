@@ -849,7 +849,7 @@ static int p11_ecdsa_check_pair( const void * pvPub,
         };
         unsigned char pucTestSignature[ MBEDTLS_ECDSA_MAX_SIG_LEN( 256 ) ] = { 0 };
         size_t uxSigLen = 0;
-        lResult = p11_ecdsa_sign( pxMbedtlsPkCtx, MBEDTLS_MD_SHA256,
+        lResult = p11_ecdsa_sign( ( mbedtls_pk_context * ) pxMbedtlsPkCtx, MBEDTLS_MD_SHA256,
                                   pucTestHash, sizeof( pucTestHash ),
                                   pucTestSignature, sizeof( pucTestSignature ), &uxSigLen,
                                   NULL, NULL );
@@ -883,7 +883,7 @@ static size_t p11_rsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 
     configASSERT( mbedtls_rsa_info.get_bitlen );
 
-    return mbedtls_rsa_info.get_bitlen( pxMbedtlsPkCtx );
+    return mbedtls_rsa_info.get_bitlen( ( mbedtls_pk_context * ) pxMbedtlsPkCtx );
 }
 
 /*-----------------------------------------------------------*/
@@ -1009,8 +1009,8 @@ static int p11_rsa_check_pair( const void * pvPub,
 {
     configASSERT( mbedtls_rsa_info.check_pair_func );
 
-    return mbedtls_rsa_info.check_pair_func( pvPub,
-                                             pxMbedtlsPkCtx,
+    return mbedtls_rsa_info.check_pair_func( ( void * ) pvPub,
+                                             ( mbedtls_pk_context * ) pxMbedtlsPkCtx,
                                              lFRng,
                                              pvPRng );
 }
@@ -1112,7 +1112,7 @@ static void p11_rsa_debug( const mbedtls_pk_context * pxMbedtlsPkCtx,
 {
     configASSERT( mbedtls_rsa_info.debug_func );
 
-    mbedtls_rsa_info.debug_func( pxMbedtlsPkCtx, pxItems );
+    mbedtls_rsa_info.debug_func( ( mbedtls_pk_context * ) pxMbedtlsPkCtx, pxItems );
 }
 
 /*-----------------------------------------------------------*/

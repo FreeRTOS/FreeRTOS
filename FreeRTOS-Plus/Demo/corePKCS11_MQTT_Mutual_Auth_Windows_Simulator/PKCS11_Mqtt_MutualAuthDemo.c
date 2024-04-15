@@ -304,6 +304,10 @@ static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 /* @brief Static buffer used to hold MQTT messages being sent and received. */
 static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
 

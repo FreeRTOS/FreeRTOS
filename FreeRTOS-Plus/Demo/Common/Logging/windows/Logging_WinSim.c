@@ -149,6 +149,39 @@ static size_t ulSizeOfLoggingFile = 0ul;
 Socket_t xPrintSocket = FREERTOS_INVALID_SOCKET;
 struct freertos_sockaddr xPrintUDPAddress;
 
+/* The logging thread handle. */
+HANDLE pvLoggingThread = NULL;
+
+/* Windows event used to stop the logging thread and flush the logging buffer. */
+static void * pvLoggingThreadExitEvent = NULL;
+
+/*-----------------------------------------------------------*/
+
+static BaseType_t prvStrEndedWithLineBreak( const char * pcStr )
+{
+    BaseType_t xReturn;
+    size_t uxStrLen = strnlen( pcStr, dlMAX_PRINT_STRING_LENGTH );
+
+    if( uxStrLen < 2 )
+    {
+        xReturn = pdFALSE;
+    }
+    else if( pcStr[ uxStrLen - 2 ] != '\r' )
+    {
+        xReturn = pdFALSE;
+    }
+    else if( pcStr[ uxStrLen - 1 ] != '\n' )
+    {
+        xReturn = pdFALSE;
+    }
+    else
+    {
+        xReturn = pdTRUE;
+    }
+
+    return xReturn;
+}
+
 /*-----------------------------------------------------------*/
 
 void vLoggingInit( BaseType_t xLogToStdout,
@@ -162,8 +195,6 @@ void vLoggingInit( BaseType_t xLogToStdout,
 
     #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
     {
-        HANDLE Win32Thread;
-
         /* Record which output methods are to be used. */
         xStdoutLoggingUsed = xLogToStdout;
         xDiskFileLoggingUsed = xLogToFile;
@@ -211,20 +242,26 @@ void vLoggingInit( BaseType_t xLogToStdout,
 
             /* Create the Windows event. */
             pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, L"StdoutLoggingEvent" );
+            configASSERT( pvLoggingThreadEvent != NULL );
+
+            /* Create logging thread exit event to notify the logging thread. */
+            pvLoggingThreadExitEvent = CreateEvent( NULL, FALSE, TRUE, L"LoggingThreadExitEvent" );
+            configASSERT( pvLoggingThreadExitEvent != NULL );
 
             /* Create the thread itself. */
-            Win32Thread = CreateThread(
+            pvLoggingThread = CreateThread(
                 NULL,                  /* Pointer to thread security attributes. */
                 0,                     /* Initial thread stack size, in bytes. */
                 prvWin32LoggingThread, /* Pointer to thread function. */
                 NULL,                  /* Argument for new thread. */
                 0,                     /* Creation flags. */
                 NULL );
+            configASSERT( pvLoggingThread != NULL );
 
             /* Use the cores that are not used by the FreeRTOS tasks. */
-            SetThreadAffinityMask( Win32Thread, ~0x01u );
-            SetThreadPriorityBoost( Win32Thread, TRUE );
-            SetThreadPriority( Win32Thread, THREAD_PRIORITY_IDLE );
+            SetThreadAffinityMask( pvLoggingThread, ~0x01u );
+            SetThreadPriorityBoost( pvLoggingThread, TRUE );
+            SetThreadPriority( pvLoggingThread, THREAD_PRIORITY_IDLE );
         }
     }
     #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
@@ -298,19 +335,30 @@ void vLoggingPrintf( const char * pcFormat,
             pcTaskName = pcNoTask;
         }
 
+        /* Print metadata only after line break. Metadata won't be printed in string
+         * contains line break only. */
         if( ( xAfterLineBreak == pdTRUE ) && ( strcmp( pcFormat, "\r\n" ) != 0 ) )
         {
             xLength = snprintf( cPrintString, dlMAX_PRINT_STRING_LENGTH, "%lu %lu [%s] ",
                                 xMessageNumber++,
                                 ( unsigned long ) xTaskGetTickCount(),
                                 pcTaskName );
-            xAfterLineBreak = pdFALSE;
+
+            /* Print metadata for next message if this message ends with line
+             * break. */
+            xAfterLineBreak = prvStrEndedWithLineBreak( pcFormat );
         }
         else
         {
             xLength = 0;
             memset( cPrintString, 0x00, dlMAX_PRINT_STRING_LENGTH );
-            xAfterLineBreak = pdTRUE;
+
+            /* Continue to print without metadata if the string doesn't end with line
+             * break. */
+            if( prvStrEndedWithLineBreak( pcFormat ) != pdFALSE )
+            {
+                xAfterLineBreak = pdTRUE;
+            }
         }
 
         xLength2 = vsnprintf( cPrintString + xLength, dlMAX_PRINT_STRING_LENGTH - xLength, pcFormat, args );
@@ -487,7 +535,18 @@ static DWORD WINAPI prvWin32LoggingThread( void * pvParameter )
 
         /* Write out all waiting messages. */
         prvLoggingFlushBuffer();
+
+        /* Check if the exit event is signaled. */
+        if( WaitForSingleObject( pvLoggingThreadExitEvent, 0 ) == WAIT_OBJECT_0 )
+        {
+            break;
+        }
     }
+
+    /* Enable direct print after logging thread exit. */
+    xDirectPrint = pdTRUE;
+
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -552,5 +611,20 @@ static void prvLogToFile( const char * pcMessage,
 void vPlatformInitLogging( void )
 {
     vLoggingInit( pdTRUE, pdFALSE, pdFALSE, 0U, 0U );
+}
+/*-----------------------------------------------------------*/
+
+void vPlatformStopLoggingThreadAndFlush( void )
+{
+    #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
+        if( xLogStreamBuffer != NULL )
+        {
+            SetEvent( pvLoggingThreadExitEvent );
+
+            WaitForSingleObject( pvLoggingThread, INFINITE );
+
+            prvLoggingFlushBuffer();
+        }
+    #endif /* #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
 }
 /*-----------------------------------------------------------*/

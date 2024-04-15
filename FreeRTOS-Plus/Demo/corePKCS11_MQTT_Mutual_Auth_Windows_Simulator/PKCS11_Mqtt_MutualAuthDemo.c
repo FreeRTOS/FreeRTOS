@@ -416,6 +416,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     for( ; ; )
     {
         LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
         /****************************** Connect. ******************************/
         /* Wait for Networking */
         if( xPlatformIsNetworkUp() == pdFALSE )

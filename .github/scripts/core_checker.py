@@ -44,8 +44,10 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.cfg',
     '.cgp',
     '.checksum',
+    '.clang-format',
     '.cmake',
     '.cmd',
+    '.code-workspace',
     '.config',
     '.cpp',
     '.cproj',
@@ -303,6 +305,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'FreeRTOS/Demo/CORTEX_STM32L152_Discovery_IAR/include/.*',
     r'FreeRTOS/Demo/CORTEX_M0_Infineon_XMC1000_IAR_Keil_GCC/.*',
     r'FreeRTOS/Demo/CORTEX_M4F_Infineon_XMC4000_Keil/.*',
+    r'FreeRTOS/Demo/CORTEX_MPU_R4F_TI_RM46_HERCULES_GCC/BoardFiles/.*',
+    r'FreeRTOS/Demo/CORTEX_MPU_R5F_TI_RM57_HERCULES_GCC/BoardFiles/.*',
     r'FreeRTOS/Demo/AVR_ATMega4809_Atmel_Studio/RTOSDemo/.*',
     r'FreeRTOS/Demo/AVR32_UC3/.*',
     r'FreeRTOS/Demo/AVR_ATMega4809_IAR/.*',
@@ -331,6 +335,8 @@ FREERTOS_IGNORED_PATTERNS = [
 
 FREERTOS_IGNORED_FILES = [
     'cspell.config.yaml',
+    '.ccsproject',
+    '.clang-format',
     '.cproject',
     '.project',
     'requirements.txt',

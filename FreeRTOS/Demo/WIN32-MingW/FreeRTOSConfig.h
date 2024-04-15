@@ -48,7 +48,6 @@
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 100 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
-#define configUSE_16_BIT_TICKS					0
 #define configIDLE_SHOULD_YIELD					1
 #define configUSE_MUTEXES						1
 #define configCHECK_FOR_STACK_OVERFLOW			0
@@ -60,6 +59,14 @@
 #define configUSE_QUEUE_SETS					1
 #define configUSE_TASK_NOTIFICATIONS			1
 #define configSUPPORT_STATIC_ALLOCATION			1
+
+/* Tick type width is defined based on the compiler type (32bit or 64bit). */
+#ifdef __x86_64__
+	#define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_64_BITS
+#else
+	#define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_32_BITS
+#endif
+
 
 /* Software timer related configuration options.  The maximum possible task
 priority is configMAX_PRIORITIES - 1.  The priority of the timer task is
@@ -135,7 +142,11 @@ used with multiple project configurations.  If it is
 	#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
 
 	/* Ensure the tick count overflows during the coverage test. */
-	#define configINITIAL_TICK_COUNT 0xffffd800UL
+	#if( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_64_BITS )
+		#define configINITIAL_TICK_COUNT 0xffffffffffffd800ULL
+	#else
+		#define configINITIAL_TICK_COUNT 0xffffd800UL
+	#endif
 
 	/* Allows tests of trying to allocate more than the heap has free. */
 	#define configUSE_MALLOC_FAILED_HOOK			0

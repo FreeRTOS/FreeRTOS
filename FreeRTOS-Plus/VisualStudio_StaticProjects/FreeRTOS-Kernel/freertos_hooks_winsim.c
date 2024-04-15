@@ -50,6 +50,10 @@
 
 /*-----------------------------------------------------------*/
 
+extern void vPlatformStopLoggingThreadAndFlush( void );
+
+/*-----------------------------------------------------------*/
+
 void vAssertCalled( const char * pcFile,
                     uint32_t ulLine )
 {
@@ -59,6 +63,10 @@ void vAssertCalled( const char * pcFile,
 
     ( void ) pcFileName;
     ( void ) ulLineNumber;
+
+    /* Stop the windows logging thread and flush the log buffer. This function does
+     * nothing if the logging is not initialized before. */
+    vPlatformStopLoggingThreadAndFlush();
 
     printf( "vAssertCalled( %s, %u )\n", pcFile, ulLine );
 

@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <io.h>
 #include <ctype.h>
 
@@ -209,7 +210,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
             xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
 
             /* Create the Windows event. */
-            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
+            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, L"StdoutLoggingEvent" );
 
             /* Create the thread itself. */
             Win32Thread = CreateThread(
@@ -221,9 +222,17 @@ void vLoggingInit( BaseType_t xLogToStdout,
                 NULL );
 
             /* Use the cores that are not used by the FreeRTOS tasks. */
-            SetThreadAffinityMask( Win32Thread, ~0x01u );
-            SetThreadPriorityBoost( Win32Thread, TRUE );
-            SetThreadPriority( Win32Thread, THREAD_PRIORITY_IDLE );
+            if (Win32Thread != 0)
+            {
+                SetThreadAffinityMask(Win32Thread, ~0x01u);
+                SetThreadPriorityBoost(Win32Thread, TRUE);
+                SetThreadPriority(Win32Thread, THREAD_PRIORITY_IDLE);
+            }
+            else
+            {
+                configASSERT(0);
+            }
+
         }
     }
     #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
@@ -348,7 +357,7 @@ void vLoggingPrintf( const char * pcFormat,
                     pcTarget--;
                 }
 
-                sscanf( pcTarget, "%8X", &ulIPAddress );
+                ( void ) sscanf( pcTarget, "%8X", &ulIPAddress );
                 rc = sprintf( pcTarget, "%lu.%lu.%lu.%lu",
                               ( unsigned long ) ( ulIPAddress >> 24UL ),
                               ( unsigned long ) ( ( ulIPAddress >> 16UL ) & 0xffUL ),
@@ -541,7 +550,7 @@ static void prvLogToFile( const char * pcMessage,
                 remove( pcFullLogFileName );
             }
 
-            rename( pcLogFileName, pcFullLogFileName );
+            ( void ) rename( pcLogFileName, pcFullLogFileName );
             ulSizeOfLoggingFile = 0;
         }
     }

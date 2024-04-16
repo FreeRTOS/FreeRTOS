@@ -259,16 +259,9 @@ void vLoggingInit( BaseType_t xLogToStdout,
             configASSERT( pvLoggingThread != NULL );
 
             /* Use the cores that are not used by the FreeRTOS tasks. */
-            if (Win32Thread != 0)
-            {
-                SetThreadAffinityMask(Win32Thread, ~0x01u);
-                SetThreadPriorityBoost(Win32Thread, TRUE);
-                SetThreadPriority(Win32Thread, THREAD_PRIORITY_IDLE);
-            }
-            else
-            {
-                configASSERT(0);
-            }
+            SetThreadAffinityMask( pvLoggingThread, ~0x01u );
+            SetThreadPriorityBoost( pvLoggingThread, TRUE );
+            SetThreadPriority( pvLoggingThread, THREAD_PRIORITY_IDLE );
 
         }
     }

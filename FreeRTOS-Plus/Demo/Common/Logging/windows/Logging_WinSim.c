@@ -262,7 +262,6 @@ void vLoggingInit( BaseType_t xLogToStdout,
             SetThreadAffinityMask( pvLoggingThread, ~0x01u );
             SetThreadPriorityBoost( pvLoggingThread, TRUE );
             SetThreadPriority( pvLoggingThread, THREAD_PRIORITY_IDLE );
-
         }
     }
     #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */

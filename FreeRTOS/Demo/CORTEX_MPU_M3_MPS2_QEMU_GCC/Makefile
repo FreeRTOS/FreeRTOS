@@ -63,6 +63,11 @@ else
     CFLAGS                +=     -O3
 endif
 
+ifeq ($(PICOLIBC), 1)
+    CFLAGS                +=     --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
+   LDFLAGS                +=     --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
+endif
+
 OBJ_FILES             :=    $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
 .PHONY: clean

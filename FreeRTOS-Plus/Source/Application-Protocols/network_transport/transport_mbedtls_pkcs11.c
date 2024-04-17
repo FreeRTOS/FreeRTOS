@@ -569,7 +569,7 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
 
     /* Get the handle of the certificate. */
     xResult = xFindObjectWithLabelAndClass( pSslContext->xP11Session,
-                                            pcLabelName,
+                                            ( char * ) pcLabelName,
                                             strnlen( pcLabelName,
                                                      pkcs11configMAX_LABEL_LENGTH ),
                                             xClass,
@@ -643,7 +643,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     CK_RV xResult = CKR_OK;
     CK_SLOT_ID * pxSlotIds = NULL;
     CK_ULONG xCount = 0;
-    CK_ATTRIBUTE xTemplate[ 2 ];
     mbedtls_pk_type_t xKeyAlgo = ( mbedtls_pk_type_t ) ~0;
 
     /* Get the PKCS #11 module/token slot count. */
@@ -686,7 +685,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     {
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
-                                                pcLabelName,
+                                                ( char * ) pcLabelName,
                                                 strnlen( pcLabelName,
                                                          pkcs11configMAX_LABEL_LENGTH ),
                                                 CKO_PRIVATE_KEY,

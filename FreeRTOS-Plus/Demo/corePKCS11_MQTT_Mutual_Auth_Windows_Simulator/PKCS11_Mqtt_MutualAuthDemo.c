@@ -304,6 +304,10 @@ static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 /* @brief Static buffer used to hold MQTT messages being sent and received. */
 static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
 
@@ -416,7 +420,18 @@ static void prvMQTTDemoTask( void * pvParameters )
     for( ; ; )
     {
         LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
         /****************************** Connect. ******************************/
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
 
         /* Establish a TLS connection with the MQTT broker. This example connects
          * to the MQTT broker as specified by democonfigMQTT_BROKER_ENDPOINT and

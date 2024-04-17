@@ -52,6 +52,8 @@
 
 extern void vPlatformInitIpStack( void );
 
+extern void vStartPKCSMutualAuthDemo( void );
+
 /*-----------------------------------------------------------*/
 
 int main( void )

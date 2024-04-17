@@ -463,7 +463,7 @@ void vFullDemoIdleFunction( void )
 
     /* Exercise heap_5 a bit.  The malloc failed hook will trap failed
      * allocations so there is no need to test here. */
-    pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
+    pvAllocated = pvPortMalloc( ( size_t )( rand() % 500 ) + 1 );
     vPortFree( pvAllocated );
 }
 /*-----------------------------------------------------------*/
@@ -521,17 +521,18 @@ void vFullDemoTickHookFunction( void )
 static void prvPendedFunction( void * pvParameter1,
                                uint32_t ulParameter2 )
 {
-    static uint32_t ulLastParameter1 = 1000UL, ulLastParameter2 = 0UL;
-    uint32_t ulParameter1;
+    static UBaseType_t uxLastParameter1 = 1000UL;
+    static uint32_t ulLastParameter2 = 0UL;
+    UBaseType_t uxParameter1;
 
-    ulParameter1 = ( uint32_t ) pvParameter1;
+    uxParameter1 = ( UBaseType_t ) pvParameter1;
 
     /* Ensure the parameters are as expected. */
-    configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );
+    configASSERT( uxParameter1 == ( uxLastParameter1 + 1 ) );
     configASSERT( ulParameter2 == ( ulLastParameter2 + 1 ) );
 
     /* Remember the parameters for the next time the function is called. */
-    ulLastParameter1 = ulParameter1;
+    uxLastParameter1 = uxParameter1;
     ulLastParameter2 = ulParameter2;
 }
 /*-----------------------------------------------------------*/
@@ -585,17 +586,18 @@ static void prvDemonstrateTimerQueryFunctions( void )
 
 static void prvDemonstratePendingFunctionCall( void )
 {
-    static uint32_t ulParameter1 = 1000UL, ulParameter2 = 0UL;
+    static UBaseType_t uxParameter1 = 1000UL;
+    static uint32_t ulParameter2 = 0UL;
     const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
 
     /* prvPendedFunction() just expects the parameters to be incremented by one
      * each time it is called. */
 
-    ulParameter1++;
+    uxParameter1++;
     ulParameter2++;
 
     /* Pend the function call, sending the parameters. */
-    xTimerPendFunctionCall( prvPendedFunction, ( void * ) ulParameter1, ulParameter2, xDontBlock );
+    xTimerPendFunctionCall( prvPendedFunction, ( void * ) uxParameter1, ulParameter2, xDontBlock );
 }
 /*-----------------------------------------------------------*/
 

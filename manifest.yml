@@ -5,7 +5,7 @@ license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "625b24a10"
+    version: "4d4f8d0d5"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -54,7 +54,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "cb865c1"
+    version: "59875a9"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"

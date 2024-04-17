@@ -47,39 +47,57 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1712588963851</id>
+			<id>1713338225157</id>
 			<name>FreeRTOS+Trace Recorder</name>
-			<type>10</type>
+			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-ConfigurationTemplate</arguments>
+				<arguments>1.0-name-matches-false-false-include</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1712588963861</id>
+			<id>1713338225174</id>
 			<name>FreeRTOS+Trace Recorder</name>
-			<type>10</type>
+			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-streamports</arguments>
+				<arguments>1.0-name-matches-false-false-kernelports</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1712588963870</id>
+			<id>1713338225189</id>
 			<name>FreeRTOS+Trace Recorder</name>
-			<type>10</type>
+			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-extras</arguments>
+				<arguments>1.0-name-matches-false-false-config</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1712588889456</id>
+			<id>1713338266068</id>
 			<name>FreeRTOS_Source</name>
-			<type>10</type>
+			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-examples</arguments>
+				<arguments>1.0-name-matches-false-false-*.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338266079</id>
+			<name>FreeRTOS_Source</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-include</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338266087</id>
+			<name>FreeRTOS_Source</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-portable</arguments>
 			</matcher>
 		</filter>
 		<filter>

@@ -118,11 +118,13 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
                                      uint32_t * pulTimerTaskStackSize );
 
+#if ( projENABLE_TRACING == 1 )
 /*
  * Writes trace data to a disk file when the trace recording is stopped.
  * This function will simply overwrite any trace files that already exist.
  */
 static void prvSaveTraceFile( void );
+#endif /* if ( projENABLE_TRACING == 1 ) */
 
 /*
  * Signal handler for Ctrl_C to cause the program to exit, and generate the
@@ -138,8 +140,6 @@ static void handle_sigint( int signal );
  * declared here, as a global, so it can be checked by a test that is implemented
  * in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
-
-static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
 /*-----------------------------------------------------------*/
 
@@ -425,6 +425,8 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
 void handle_sigint( int signal )
 {
     int xReturn;
+
+    (void) signal;
 
     xReturn = chdir( BUILD ); /* changing dir to place gmon.out inside build */
 

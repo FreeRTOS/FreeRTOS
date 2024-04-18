@@ -269,7 +269,6 @@ static void prvCheckTask( void * pvParameters )
 {
     TickType_t xNextWakeTime;
     const TickType_t xCycleFrequency = pdMS_TO_TICKS( 10000UL );
-    HeapStats_t xHeapStats;
 
     /* Just to remove compiler warning. */
     ( void ) pvParameters;

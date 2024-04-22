@@ -131,4 +131,6 @@
 #define bktPRIMARY_PRIORITY      ( configMAX_PRIORITIES - 3 )
 #define bktSECONDARY_PRIORITY    ( configMAX_PRIORITIES - 4 )
 
+#define configENABLE_BACKWARD_COMPATIBILITY 0
+
 #endif /* FREERTOS_CONFIG_H */

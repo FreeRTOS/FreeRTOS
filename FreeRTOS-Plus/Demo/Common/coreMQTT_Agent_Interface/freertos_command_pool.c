@@ -41,7 +41,7 @@
 #include "freertos_command_pool.h"
 #include "freertos_agent_message.h"
 
-/* Demo Config */
+/* Demo config include. */
 #include "demo_config.h"
 
 /*-----------------------------------------------------------*/

@@ -1,9 +1,8 @@
 OUTPUT_DIR := ./output
 IMAGE := RTOSDemo.out
-SUB_MAKEFILE_DIR = ./library-makefiles
 
 # The directory that contains the /source and /demo sub directories.
-FREERTOS_ROOT = ./../../../../
+FREERTOS_ROOT = ./../../../..
 
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
@@ -14,6 +13,9 @@ MAKE = make
 CFLAGS += $(INCLUDE_DIRS) -nostartfiles -ffreestanding -mthumb -mcpu=cortex-m3 \
 		  -Wall -Wextra -g3 -Os -ffunction-sections -fdata-sections \
 		  -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
+
+#CFLAGS += -Wpedantic -Wshadow -fanalyzer
+#CFLAGS += -flto
 
 #
 # Kernel build.

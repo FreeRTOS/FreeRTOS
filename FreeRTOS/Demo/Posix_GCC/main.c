@@ -91,6 +91,7 @@
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
 /*-----------------------------------------------------------*/
+
 extern void main_blinky( void );
 extern void main_full( void );
 static void traceOnEnter( void );
@@ -118,11 +119,15 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
                                      uint32_t * pulTimerTaskStackSize );
 
-/*
- * Writes trace data to a disk file when the trace recording is stopped.
- * This function will simply overwrite any trace files that already exist.
- */
-static void prvSaveTraceFile( void );
+#if ( projENABLE_TRACING == 1 )
+
+    /*
+     * Writes trace data to a disk file when the trace recording is stopped.
+     * This function will simply overwrite any trace files that already exist.
+     */
+    static void prvSaveTraceFile( void );
+
+#endif /* if ( projENABLE_TRACING == 1 ) */
 
 /*
  * Signal handler for Ctrl_C to cause the program to exit, and generate the
@@ -138,8 +143,6 @@ static void handle_sigint( int signal );
  * declared here, as a global, so it can be checked by a test that is implemented
  * in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
-
-static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
 /*-----------------------------------------------------------*/
 
@@ -183,6 +186,7 @@ int main( void )
 
     return 0;
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
@@ -201,6 +205,7 @@ void vApplicationMallocFailedHook( void )
      * information. */
     vAssertCalled( __FILE__, __LINE__ );
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
@@ -227,6 +232,7 @@ void vApplicationIdleHook( void )
     }
     #endif
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask,
@@ -242,6 +248,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
      * when running the FreeRTOS POSIX port. */
     vAssertCalled( __FILE__, __LINE__ );
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
@@ -258,6 +265,8 @@ void vApplicationTickHook( void )
     }
     #endif /* mainSELECTED_APPLICATION */
 }
+
+/*-----------------------------------------------------------*/
 
 void traceOnEnter()
 {
@@ -286,6 +295,8 @@ void traceOnEnter()
     #endif /* if ( TRACE_ON_ENTER == 1 ) */
 }
 
+/*-----------------------------------------------------------*/
+
 void vLoggingPrintf( const char * pcFormat,
                      ... )
 {
@@ -295,15 +306,17 @@ void vLoggingPrintf( const char * pcFormat,
     vprintf( pcFormat, arg );
     va_end( arg );
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationDaemonTaskStartupHook( void )
 {
     /* This function will be called once only, when the daemon task starts to
-     * execute    (sometimes called the timer task).  This is useful if the
+     * execute (sometimes called the timer task).  This is useful if the
      * application includes initialisation code that would benefit from executing
      * after the scheduler has been started. */
 }
+
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( const char * const pcFileName,
@@ -345,9 +358,11 @@ void vAssertCalled( const char * const pcFileName,
     }
     taskEXIT_CRITICAL();
 }
+
 /*-----------------------------------------------------------*/
 
 #if ( projENABLE_TRACING == 1 )
+
     static void prvSaveTraceFile( void )
     {
         FILE * pxOutputFile;
@@ -367,7 +382,9 @@ void vAssertCalled( const char * const pcFileName,
             printf( "\r\nFailed to create trace dump file\r\n" );
         }
     }
+
 #endif /* if ( projENABLE_TRACING == 1 ) */
+
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
@@ -377,9 +394,9 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
                                     uint32_t * pulIdleTaskStackSize )
 {
-/* If the buffers to be provided to the Idle task are declared inside this
- * function then they must be declared static - otherwise they will be allocated on
- * the stack and so not exists after this function exits. */
+    /* If the buffers to be provided to the Idle task are declared inside this
+     * function then they must be declared static - otherwise they will be allocated on
+     * the stack and so not exists after this function exits. */
     static StaticTask_t xIdleTaskTCB;
     static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
@@ -395,6 +412,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
+
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
@@ -404,9 +422,9 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
                                      uint32_t * pulTimerTaskStackSize )
 {
-/* If the buffers to be provided to the Timer task are declared inside this
- * function then they must be declared static - otherwise they will be allocated on
- * the stack and so not exists after this function exits. */
+    /* If the buffers to be provided to the Timer task are declared inside this
+     * function then they must be declared static - otherwise they will be allocated on
+     * the stack and so not exists after this function exits. */
     static StaticTask_t xTimerTaskTCB;
 
     /* Pass out a pointer to the StaticTask_t structure in which the Timer
@@ -422,11 +440,15 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
+/*-----------------------------------------------------------*/
+
 void handle_sigint( int signal )
 {
     int xReturn;
 
-    xReturn = chdir( BUILD ); /* changing dir to place gmon.out inside build */
+    ( void ) signal;
+
+    xReturn = chdir( BUILD ); /* Changing dir to place gmon.out inside build. */
 
     if( xReturn == -1 )
     {
@@ -436,6 +458,8 @@ void handle_sigint( int signal )
     exit( 2 );
 }
 
+/*-----------------------------------------------------------*/
+
 static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )
@@ -443,12 +467,18 @@ void vTraceTimerReset( void )
     ulEntryTime = xTaskGetTickCount();
 }
 
+/*-----------------------------------------------------------*/
+
 uint32_t uiTraceTimerGetFrequency( void )
 {
     return configTICK_RATE_HZ;
 }
 
+/*-----------------------------------------------------------*/
+
 uint32_t uiTraceTimerGetValue( void )
 {
     return( xTaskGetTickCount() - ulEntryTime );
 }
+
+/*-----------------------------------------------------------*/

@@ -53,7 +53,7 @@ extern unsigned long g_ulBase;
 /**
  * @brief initializes the UART emulated hardware
  */
-void uart_init()
+void uart_init(void)
 {
     UART0_ADDR->BAUDDIV = 16;
     UART0_ADDR->CTRL = UART_CTRL_TX_EN;
@@ -85,7 +85,7 @@ FILE *const stdout = &__stdio;
 
 #else
 
-static void * heap_end = 0;
+static char * heap_end = ( char * ) &_heap_bottom;
 
 /**
  * @brief not used anywhere in the code
@@ -139,16 +139,9 @@ int _write( __attribute__( ( unused ) ) int file,
  */
 void * _sbrk( int incr )
 {
-    char * prev_heap_end;
+    void * prev_heap_end = heap_end;
 
-    if( heap_end == 0 )
-    {
-        heap_end = ( void * ) &_heap_bottom;
-    }
-
-    prev_heap_end = heap_end;
-
-    if( ( heap_end + incr ) > ( void * ) &_heap_top )
+    if( ( heap_end + incr ) > ( char * ) &_heap_top )
     {
         return ( void * ) -1;
     }
@@ -202,7 +195,7 @@ void _kill( pid_t pid,
     ( void ) sig;
 }
 
-int _getpid()
+int _getpid( void )
 {
     return 1;
 }

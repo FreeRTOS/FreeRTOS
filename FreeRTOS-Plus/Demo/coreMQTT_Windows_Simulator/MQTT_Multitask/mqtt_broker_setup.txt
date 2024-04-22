@@ -13,8 +13,8 @@ TLS mutual authentication for use with this MQTT demo.
       vi.   .\openssl.exe genrsa -out $home\Documents\certs\client.key 2048
       vii.  .\openssl.exe req -new -out $home\Documents\certs\client.csr -key $home\Documents\certs\client.key
       viii. .\openssl.exe x509 -req -in $home\Documents\certs\client.csr -CA $home\Documents\certs\ca.crt -CAkey $home\Documents\certs\ca.key -CAcreateserial -out $home\Documents\certs\client.crt -days 365
-      ix.   [Optional]  .\openssl.exe verify -CAfile ca.crt server.crt # verify the server certificate is correctly signed
-      x.    [Optional]  .\openssl.exe verify -CAfile ca.crt client.crt # verify the client certificate is correctly signed
+      ix.   [Optional]  .\openssl.exe verify -CAfile $home\Documents\certs\ca.crt $home\Documents\certs\server.crt # verify the server certificate is correctly signed
+      x.    [Optional]  .\openssl.exe verify -CAfile $home\Documents\certs\ca.crt $home\Documents\certs\client.crt # verify the client certificate is correctly signed
 2. Download Mosquitto from https://mosquitto.org/download/
 3. Install Mosquitto as a Windows service by running the installer.
 4. Go to the path where Mosquitto was installed. The default path is C:\Program Files\mosquitto.

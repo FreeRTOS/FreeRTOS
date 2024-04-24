@@ -87,9 +87,82 @@ Launch Echo Server on the host machine.
     nc -l -p 7
     ```
 
-## Enable Networking in QEMU
+
+## Enable User Networking in QEMU
+
+The User Networking is implemented using *slirp*, which provides a full TCP/IP stack within QEMU and uses that stack to implement a virtual NAT network. It does not require Administrator privileges. 
+
+The virtual network configuration is the following:
+
+```
++-------------------------------------------------------------------------+
+|                                                                         |
+|     guest (10.0.2.15)  <------>  Firewall/DHCP Server <----> Internet   |
+|                            |                                            |
+|                            |                                            |
+|                            --->  DNS Server (10.0.2.3)                  |
+|                            |                                            |
+|                            --->  SMB Server (10.0.2.4)                  |
++-------------------------------------------------------------------------+
+```
+
+Do the following steps:
+
+1. Set `configMAC_ADDR0`-`configMAC_ADDR5` in `FreeRTOSConfig.h` to the value
+of `QEMU_MAC_ADDRESS`:
+```shell
+echo $QEMU_MAC_ADDRESS
+```
+```c
+#define configMAC_ADDR0         0x52
+#define configMAC_ADDR1         0x54
+#define configMAC_ADDR2         0x00
+#define configMAC_ADDR3         0x12
+#define configMAC_ADDR4         0x34
+#define configMAC_ADDR5         0xAD
+```
+
+2. Set `configECHO_SERVER_ADDR0`-`configECHO_SERVER_ADDR3` in `FreeRTOSConfig.h`
+to the value of `ECHO_SERVER_IP_ADDRESS`:
+
+```c
+#define configECHO_SERVER_ADDR0 192
+#define configECHO_SERVER_ADDR1 168
+#define configECHO_SERVER_ADDR2 76
+#define configECHO_SERVER_ADDR3 2
+```
+
+3. Build:
+```shell
+   make
+```
+
+4. Run:
+```shell
+      qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel 
+      build/freertos_tcp_mps2_demo.axf -monitor null -semihosting 
+      -semihosting-config enable=on,target=native -serial stdio -nographic 
+      -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net 
+      nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0
+```
+Adding the following 
+`-netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9` to the qemu command line changes the network configuration to use 192.168.76.0/24 instead of the default (10.0.2.0/24) and starts guest DHCP allocation from 9 (instead of 15).
+
+5. You should see that following output on the terminal of the Echo Server (which
+is running `sudo nc -l 7` or `netcat -l 7` depending on your OS):
+```
+0FGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=> ?
+@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
+@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
+@ABCDEFGHIJKLM
+```
+
+## Enable Tap Networking in QEMU
+
+The Tap Networking backend makes use of a tap networking device in the host. It offers very good performance and can be configured to create virtually any type of network topology. 
+
 The Echo Client in this demo runs in QEMU inside the VM. We need to enable
-networking in QEMU to enable the Echo Client to be able to reach the Echo
+tap networking in QEMU to enable the Echo Client to be able to reach the Echo
 Server. Do the following steps in the VM:
 
 

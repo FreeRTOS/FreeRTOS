@@ -90,7 +90,7 @@ Launch Echo Server on the host machine.
 
 ## Enable User Networking in QEMU
 
-The User Networking is implemented using *slirp*, which provides a full TCP/IP stack within QEMU and uses that stack to implement a virtual NAT network. It does not require Administrator privileges. 
+The User Networking is implemented using *slirp*, which provides a full TCP/IP stack within QEMU and uses that stack to implement a virtual NAT network. It does not require Administrator privileges.
 
 The virtual network configuration is the following:
 
@@ -139,13 +139,13 @@ to the value of `ECHO_SERVER_IP_ADDRESS`:
 
 4. Run:
 ```shell
-      qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel 
-      build/freertos_tcp_mps2_demo.axf -monitor null -semihosting 
-      -semihosting-config enable=on,target=native -serial stdio -nographic 
-      -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net 
+      qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel
+      build/freertos_tcp_mps2_demo.axf -monitor null -semihosting
+      -semihosting-config enable=on,target=native -serial stdio -nographic
+      -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net
       nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0
 ```
-Adding the following 
+Adding the following
 `-netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9` to the qemu command line changes the network configuration to use 192.168.76.0/24 instead of the default (10.0.2.0/24) and starts guest DHCP allocation from 9 (instead of 15).
 
 5. You should see that following output on the terminal of the Echo Server (which
@@ -159,7 +159,7 @@ is running `sudo nc -l 7` or `netcat -l 7` depending on your OS):
 
 ## Enable Tap Networking in QEMU
 
-The Tap Networking backend makes use of a tap networking device in the host. It offers very good performance and can be configured to create virtually any type of network topology. 
+The Tap Networking backend makes use of a tap networking device in the host. It offers very good performance and can be configured to create virtually any type of network topology.
 
 The Echo Client in this demo runs in QEMU inside the VM. We need to enable
 tap networking in QEMU to enable the Echo Client to be able to reach the Echo

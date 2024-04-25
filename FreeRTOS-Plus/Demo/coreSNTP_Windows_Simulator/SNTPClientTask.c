@@ -1014,7 +1014,7 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
     };
 
     /* Update the attributes array with the key of AES-CMAC operation. */
-    aes_cmac_template[ 6 ].pValue = (uint8_t *) ( pAuthContext->pAuthKey );
+    aes_cmac_template[ 6 ].pValue = ( uint8_t * ) ( pAuthContext->pAuthKey );
     aes_cmac_template[ 6 ].ulValueLen = sizeof( pAuthContext->pAuthKey );
 
     result = xInitializePkcs11Session( pPkcs11Session );

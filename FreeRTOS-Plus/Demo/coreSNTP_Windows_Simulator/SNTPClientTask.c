@@ -680,7 +680,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
         /* Slew Adjustment = Slew Rate ( Milliseconds/seconds )
          *                                      x
          *                   No. of seconds since last synchronization. */
-        msElapsedSinceLastSync = msElapsedSinceLastSync + ( uint32_t )( slewRate * ( msElapsedSinceLastSync / 1000 ) );
+        msElapsedSinceLastSync = msElapsedSinceLastSync + ( uint32_t ) ( slewRate * ( msElapsedSinceLastSync / 1000 ) );
     }
 
     /* Set the current UTC time in the output parameter. */
@@ -977,7 +977,7 @@ static void populateAuthContextForServer( const char * pServer,
         for( index = 0; index < strlen( pKeyHexString ); index += 2 )
         {
             char byteString[ 3 ] = { pKeyHexString[ index ], pKeyHexString[ index + 1 ], '\0' };
-            uint8_t byteVal = ( uint8_t )( strtoul( byteString, NULL, 16 ) );
+            uint8_t byteVal = ( uint8_t ) ( strtoul( byteString, NULL, 16 ) );
             pAuthContext->pAuthKey[ index / 2 ] = byteVal;
         }
     }
@@ -1014,7 +1014,7 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
     };
 
     /* Update the attributes array with the key of AES-CMAC operation. */
-    aes_cmac_template[ 6 ].pValue = (uint8_t *)( pAuthContext->pAuthKey );
+    aes_cmac_template[ 6 ].pValue = (uint8_t *) ( pAuthContext->pAuthKey );
     aes_cmac_template[ 6 ].ulValueLen = sizeof( pAuthContext->pAuthKey );
 
     result = xInitializePkcs11Session( pPkcs11Session );
@@ -1279,7 +1279,7 @@ static uint32_t generateRandomNumber()
     if( pkcs11Status == CKR_OK )
     {
         if( pFunctionList->C_GenerateRandom( session,
-                                             ( uint8_t * )( &randomNum ),
+                                             ( uint8_t * ) ( &randomNum ),
                                              sizeof( randomNum ) ) != CKR_OK )
         {
             LogError( ( "Failed to generate random number. "

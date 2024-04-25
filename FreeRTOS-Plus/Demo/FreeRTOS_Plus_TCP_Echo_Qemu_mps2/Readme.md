@@ -92,6 +92,13 @@ Launch Echo Server on the host machine.
 
 The User Networking is implemented using *slirp*, which provides a full TCP/IP stack within QEMU and uses that stack to implement a virtual NAT network. It does not require Administrator privileges.
 
+User Mode Networking has the following limitations:
+
+ - There is a lot of overhead, so the performance is poor.
+ - In general, ICMP traffic does not work (so you cannot use ping within a guest).
+ - On Linux hosts, ping does work from within the guest, but it needs initial setup by root (once per host).
+ - The guest is not directly accessible from the host or the external network.
+
 The virtual network configuration is the following:
 
 ```

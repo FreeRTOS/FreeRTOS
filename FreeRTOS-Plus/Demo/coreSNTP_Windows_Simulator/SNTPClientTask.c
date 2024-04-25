@@ -550,7 +550,7 @@ static void populateAuthContextForServer( const char * pServer,
 static SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                        const SntpServerInfo_t * pTimeServer,
                                        void * pRequestBuffer,
-                                       uint16_t bufferSize,
+                                       size_t bufferSize,
                                        uint16_t * pAuthCodeSize );
 
 
@@ -667,7 +667,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
                            uint64_t slewRate,
                            UTCTime_t * pCurrentTime )
 {
-    uint64_t msElapsedSinceLastSync = 0;
+    uint32_t msElapsedSinceLastSync = 0;
     TickType_t ticksElapsedSinceLastSync = xTaskGetTickCount() - lastSyncTickCount;
 
     /* Calculate time elapsed since last synchronization according to the number
@@ -680,7 +680,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
         /* Slew Adjustment = Slew Rate ( Milliseconds/seconds )
          *                                      x
          *                   No. of seconds since last synchronization. */
-        msElapsedSinceLastSync += slewRate * ( msElapsedSinceLastSync / 1000 );
+        msElapsedSinceLastSync = msElapsedSinceLastSync + ( uint32_t )( slewRate * ( msElapsedSinceLastSync / 1000 ) );
     }
 
     /* Set the current UTC time in the output parameter. */
@@ -842,7 +842,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
 {
     UTCTime_t currentTime;
-    uint64_t ntpSecs;
+    uint32_t ntpSecs;
 
     /* Obtain mutex for accessing system clock variables */
     xSemaphoreTake( xMutex, portMAX_DELAY );
@@ -977,7 +977,7 @@ static void populateAuthContextForServer( const char * pServer,
         for( index = 0; index < strlen( pKeyHexString ); index += 2 )
         {
             char byteString[ 3 ] = { pKeyHexString[ index ], pKeyHexString[ index + 1 ], '\0' };
-            uint8_t byteVal = strtoul( byteString, NULL, 16 );
+            uint8_t byteVal = ( uint8_t )( strtoul( byteString, NULL, 16 ) );
             pAuthContext->pAuthKey[ index / 2 ] = byteVal;
         }
     }
@@ -1014,7 +1014,7 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
     };
 
     /* Update the attributes array with the key of AES-CMAC operation. */
-    aes_cmac_template[ 6 ].pValue = pAuthContext->pAuthKey;
+    aes_cmac_template[ 6 ].pValue = (uint8_t *)( pAuthContext->pAuthKey );
     aes_cmac_template[ 6 ].ulValueLen = sizeof( pAuthContext->pAuthKey );
 
     result = xInitializePkcs11Session( pPkcs11Session );
@@ -1056,7 +1056,7 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
 SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                 const SntpServerInfo_t * pTimeServer,
                                 void * pRequestBuffer,
-                                uint16_t bufferSize,
+                                size_t bufferSize,
                                 uint16_t * pAuthCodeSize )
 {
     CK_RV result = CKR_OK;
@@ -1158,7 +1158,7 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
 SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
                                  const SntpServerInfo_t * pTimeServer,
                                  const void * pResponseData,
-                                 uint16_t responseSize )
+                                 size_t responseSize )
 {
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
@@ -1279,7 +1279,7 @@ static uint32_t generateRandomNumber()
     if( pkcs11Status == CKR_OK )
     {
         if( pFunctionList->C_GenerateRandom( session,
-                                             &randomNum,
+                                             ( uint8_t * )( &randomNum ),
                                              sizeof( randomNum ) ) != CKR_OK )
         {
             LogError( ( "Failed to generate random number. "
@@ -1304,7 +1304,7 @@ static uint32_t generateRandomNumber()
 void initializeSystemClock( void )
 {
     /* On boot-up initialize the system time as the first second in the configured year. */
-    int64_t startupTimeInUnixSecs = translateYearToUnixSeconds( democonfigSYSTEM_START_YEAR );
+    uint32_t startupTimeInUnixSecs = translateYearToUnixSeconds( democonfigSYSTEM_START_YEAR );
 
     systemClock.baseTime.secs = startupTimeInUnixSecs;
     systemClock.baseTime.msecs = 0;
@@ -1429,7 +1429,6 @@ static bool createUdpSocket( Socket_t * pSocket )
 static void closeUdpSocket( Socket_t * pSocket )
 {
     bool status = false;
-    struct freertos_sockaddr bindAddress;
 
     configASSERT( pSocket != NULL );
 
@@ -1455,7 +1454,7 @@ static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pBackoffCon
     if( shouldInitializeContext == true )
     {
         /* Initialize reconnect attempts and interval.*/
-        BackoffAlgorithm_InitializeParams( &pBackoffContext,
+        BackoffAlgorithm_InitializeParams( pBackoffContext,
                                            minPollPeriod,
                                            SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC,
                                            SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES );
@@ -1463,7 +1462,7 @@ static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pBackoffCon
 
     /* Generate a random number and calculate the new backoff poll period to wait before the next
      * time poll attempt. */
-    status = BackoffAlgorithm_GetNextBackoff( &pBackoffContext, generateRandomNumber(), &newPollPeriod );
+    status = BackoffAlgorithm_GetNextBackoff( pBackoffContext, generateRandomNumber(), &newPollPeriod );
 
     if( status == BackoffAlgorithmRetriesExhausted )
     {

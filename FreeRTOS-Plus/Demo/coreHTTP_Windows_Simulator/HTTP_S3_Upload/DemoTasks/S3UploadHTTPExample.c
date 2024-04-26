@@ -295,6 +295,10 @@ static BaseType_t prvVerifyS3ObjectFileSize( const TransportInterface_t * pxTran
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 /*
  * @brief Create the task that demonstrates the HTTP API Demo over a
  * server-authenticated network connection with an HTTP server.

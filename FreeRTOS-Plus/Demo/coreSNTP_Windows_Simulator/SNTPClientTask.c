@@ -842,7 +842,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
 {
     UTCTime_t currentTime;
-    uint64_t ntpSecs;
+    uint32_t ntpSecs;
 
     /* Obtain mutex for accessing system clock variables */
     xSemaphoreTake( xMutex, portMAX_DELAY );
@@ -856,20 +856,9 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
     xSemaphoreGive( xMutex );
 
     /* Convert UTC time from UNIX timescale to SNTP timestamp format. */
-    ntpSecs = ( uint64_t ) ( currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS );
+    ntpSecs = currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS;
 
-    /* Support case of SNTP timestamp rollover on 7 February 2036 when
-     * converting from UNIX time to SNTP timestamp. */
-    if( ntpSecs > UINT32_MAX )
-    {
-        /* Subtract an extra second as timestamp 0 represents the epoch for
-         * NTP era 1. */
-        pCurrentTime->seconds = ( uint32_t ) ( ntpSecs - UINT32_MAX - 1 );
-    }
-    else
-    {
-        pCurrentTime->seconds = ( uint32_t ) ( ntpSecs );
-    }
+    pCurrentTime->seconds = ntpSecs;
 
     pCurrentTime->fractions = MILLISECONDS_TO_SNTP_FRACTIONS( currentTime.msecs );
 }

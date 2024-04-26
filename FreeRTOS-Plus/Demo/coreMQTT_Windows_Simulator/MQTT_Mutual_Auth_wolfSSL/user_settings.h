@@ -103,6 +103,8 @@
 #define NO_MD4
 #define NO_PWDBASED
 
+#define WOLFSSL_ALT_CERT_CHAINS
+
 /*-- Debugging options  ------------------------------------------------------
  *
  * "DEBUG_WOLFSSL" definition enables log to output into stdout.

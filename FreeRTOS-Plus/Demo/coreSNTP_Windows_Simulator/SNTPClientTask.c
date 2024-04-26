@@ -692,7 +692,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     else
     {
         pCurrentTime->secs = pBaseTime->secs;
-        pCurrentTime->msecs = ( uint32_t )( msElapsedSinceLastSync );
+        pCurrentTime->msecs = ( uint32_t ) ( msElapsedSinceLastSync );
     }
 }
 

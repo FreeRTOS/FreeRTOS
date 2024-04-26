@@ -586,7 +586,7 @@ static SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
 static SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
                                         const SntpServerInfo_t * pTimeServer,
                                         const void * pResponseData,
-                                        size_t responseSize );
+                                        uint16_t responseSize );
 
 /**
  * @brief Generates a random number using PKCS#11.
@@ -667,7 +667,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
                            uint64_t slewRate,
                            UTCTime_t * pCurrentTime )
 {
-    uint32_t msElapsedSinceLastSync = 0;
+    uint64_t msElapsedSinceLastSync = 0;
     TickType_t ticksElapsedSinceLastSync = xTaskGetTickCount() - lastSyncTickCount;
 
     /* Calculate time elapsed since last synchronization according to the number
@@ -680,19 +680,19 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
         /* Slew Adjustment = Slew Rate ( Milliseconds/seconds )
          *                                      x
          *                   No. of seconds since last synchronization. */
-        msElapsedSinceLastSync = msElapsedSinceLastSync + ( uint32_t ) ( slewRate * ( msElapsedSinceLastSync / 1000 ) );
+        msElapsedSinceLastSync += slewRate * ( msElapsedSinceLastSync / 1000 );
     }
 
     /* Set the current UTC time in the output parameter. */
     if( msElapsedSinceLastSync >= 1000 )
     {
-        pCurrentTime->secs = pBaseTime->secs + msElapsedSinceLastSync / 1000;
+        pCurrentTime->secs = ( uint32_t ) ( pBaseTime->secs + msElapsedSinceLastSync / 1000 );
         pCurrentTime->msecs = msElapsedSinceLastSync % 1000;
     }
     else
     {
         pCurrentTime->secs = pBaseTime->secs;
-        pCurrentTime->msecs = msElapsedSinceLastSync;
+        pCurrentTime->msecs = ( uint32_t )( msElapsedSinceLastSync );
     }
 }
 
@@ -842,7 +842,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
 {
     UTCTime_t currentTime;
-    uint32_t ntpSecs;
+    uint64_t ntpSecs;
 
     /* Obtain mutex for accessing system clock variables */
     xSemaphoreTake( xMutex, portMAX_DELAY );
@@ -856,7 +856,7 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
     xSemaphoreGive( xMutex );
 
     /* Convert UTC time from UNIX timescale to SNTP timestamp format. */
-    ntpSecs = currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS;
+    ntpSecs = ( uint64_t ) ( currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS );
 
     /* Support case of SNTP timestamp rollover on 7 February 2036 when
      * converting from UNIX time to SNTP timestamp. */
@@ -864,11 +864,11 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
     {
         /* Subtract an extra second as timestamp 0 represents the epoch for
          * NTP era 1. */
-        pCurrentTime->seconds = ntpSecs - UINT32_MAX - 1;
+        pCurrentTime->seconds = ( uint32_t ) ( ntpSecs - UINT32_MAX - 1 );
     }
     else
     {
-        pCurrentTime->seconds = ntpSecs;
+        pCurrentTime->seconds = ( uint32_t ) ( ntpSecs );
     }
 
     pCurrentTime->fractions = MILLISECONDS_TO_SNTP_FRACTIONS( currentTime.msecs );
@@ -1158,7 +1158,7 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
 SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
                                  const SntpServerInfo_t * pTimeServer,
                                  const void * pResponseData,
-                                 size_t responseSize )
+                                 uint16_t responseSize )
 {
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;

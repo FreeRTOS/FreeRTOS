@@ -668,6 +668,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
                            UTCTime_t * pCurrentTime )
 {
     uint64_t msElapsedSinceLastSync = 0;
+    uint64_t currentTimeSecs;
     TickType_t ticksElapsedSinceLastSync = xTaskGetTickCount() - lastSyncTickCount;
 
     /* Calculate time elapsed since last synchronization according to the number
@@ -686,13 +687,30 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     /* Set the current UTC time in the output parameter. */
     if( msElapsedSinceLastSync >= 1000 )
     {
-        pCurrentTime->secs = ( uint32_t ) ( pBaseTime->secs + msElapsedSinceLastSync / 1000 );
+        currentTimeSecs = ( uint64_t ) ( pBaseTime->secs ) + ( msElapsedSinceLastSync / 1000 );
+
+        /* Support case of UTC timestamp rollover on 7 Februrary 2038. */
+        if( currentTimeSecs > UINT32_MAX )
+        {
+            /* Assert when the UTC timestamp rollover. */
+            configASSERT( currentTimeSecs > UINT32_MAX );
+
+            /* Subtract an extra second as timestamp 0 represents the epoch for 
+             * UTC era 1. */
+            LogError( ( "UTC timestamp rollover." ) );
+            pCurrentTime->secs = ( uint32_t ) ( currentTimeSecs - UINT32_MAX - 1 );
+
+        }
+        else
+        {
+            pCurrentTime->secs = ( uint32_t ) ( currentTimeSecs );
+        }
         pCurrentTime->msecs = msElapsedSinceLastSync % 1000;
     }
     else
     {
         pCurrentTime->secs = pBaseTime->secs;
-        pCurrentTime->msecs = ( uint32_t ) ( msElapsedSinceLastSync );
+        pCurrentTime->msecs = msElapsedSinceLastSync;
     }
 }
 
@@ -858,7 +876,21 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
     /* Convert UTC time from UNIX timescale to SNTP timestamp format. */
     ntpSecs = currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS;
 
-    pCurrentTime->seconds = ntpSecs;
+    /* Support case of SNTP timestamp rollover on 7 February 2036 when
+     * converting from UNIX time to SNTP timestamp. */
+    if( ntpSecs > UINT32_MAX )
+    {
+        /* Assert when SNTP time rollover. */
+        configASSERT( ntpSecs > UINT32_MAX );
+
+        /* Subtract an extra second as timestamp 0 represents the epoch for
+         * NTP era 1. */
+        pCurrentTime->seconds = ntpSecs - UINT32_MAX - 1;
+    }
+    else
+    {
+        pCurrentTime->seconds = ntpSecs;
+    }
 
     pCurrentTime->fractions = MILLISECONDS_TO_SNTP_FRACTIONS( currentTime.msecs );
 }

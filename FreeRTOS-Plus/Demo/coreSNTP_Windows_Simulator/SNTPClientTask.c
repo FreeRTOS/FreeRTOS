@@ -695,7 +695,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
             /* Assert when the UTC timestamp rollover. */
             configASSERT( currentTimeSecs > UINT32_MAX );
 
-            /* Subtract an extra second as timestamp 0 represents the epoch for 
+            /* Subtract an extra second as timestamp 0 represents the epoch for
              * UTC era 1. */
             LogError( ( "UTC timestamp rollover." ) );
             pCurrentTime->secs = ( uint32_t ) ( currentTimeSecs - UINT32_MAX - 1 );

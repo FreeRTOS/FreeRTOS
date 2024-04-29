@@ -699,12 +699,12 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
              * UTC era 1. */
             LogError( ( "UTC timestamp rollover." ) );
             pCurrentTime->secs = ( uint32_t ) ( currentTimeSecs - UINT32_MAX - 1 );
-
         }
         else
         {
             pCurrentTime->secs = ( uint32_t ) ( currentTimeSecs );
         }
+
         pCurrentTime->msecs = msElapsedSinceLastSync % 1000;
     }
     else

@@ -689,7 +689,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     {
         currentTimeSecs = ( uint64_t ) ( pBaseTime->secs ) + ( msElapsedSinceLastSync / 1000 );
 
-        /* Support case of UTC timestamp rollover on 7 Februrary 2038. */
+        /* Support case of UTC timestamp rollover on 7 February 2038. */
         if( currentTimeSecs > UINT32_MAX )
         {
             /* Assert when the UTC timestamp rollover. */

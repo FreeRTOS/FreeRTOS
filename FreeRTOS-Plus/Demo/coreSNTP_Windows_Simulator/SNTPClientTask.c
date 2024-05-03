@@ -693,11 +693,11 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
         if( currentTimeSecs > UINT32_MAX )
         {
             /* Assert when the UTC timestamp rollover. */
-            configASSERT( currentTimeSecs > UINT32_MAX );
+            configASSERT( !( currentTimeSecs > UINT32_MAX ));
 
             /* Subtract an extra second as timestamp 0 represents the epoch for
              * UTC era 1. */
-            LogError( ( "UTC timestamp rollover." ) );
+            LogWarn( ( "UTC timestamp rollover." ) );
             pCurrentTime->secs = ( uint32_t ) ( currentTimeSecs - UINT32_MAX - 1 );
         }
         else
@@ -710,7 +710,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     else
     {
         pCurrentTime->secs = pBaseTime->secs;
-        pCurrentTime->msecs = msElapsedSinceLastSync;
+        pCurrentTime->msecs = ( uint32_t ) ( msElapsedSinceLastSync );
     }
 }
 
@@ -881,10 +881,11 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
     if( ntpSecs > UINT32_MAX )
     {
         /* Assert when SNTP time rollover. */
-        configASSERT( ntpSecs > UINT32_MAX );
+        configASSERT( !( ntpSecs > UINT32_MAX ) );
 
         /* Subtract an extra second as timestamp 0 represents the epoch for
          * NTP era 1. */
+        LogWarn( ( "SNTP timestamp rollover." ) );
         pCurrentTime->seconds = ntpSecs - UINT32_MAX - 1;
     }
     else

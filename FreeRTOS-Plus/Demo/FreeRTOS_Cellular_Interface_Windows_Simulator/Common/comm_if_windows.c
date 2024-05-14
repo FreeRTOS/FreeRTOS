@@ -48,28 +48,28 @@
 #ifndef CELLULAR_COMM_INTERFACE_PORT
     #error "Define CELLULAR_COMM_INTERFACE_PORT in cellular_config.h"
 #endif
-#define CELLULAR_COMM_PATH                   "\\\\.\\"CELLULAR_COMM_INTERFACE_PORT
+#define CELLULAR_COMM_PATH              "\\\\.\\"CELLULAR_COMM_INTERFACE_PORT
 
 /* Define the simulated UART interrupt number. */
-#define appINTERRUPT_UART                    portINTERRUPT_APPLICATION_DEFINED_START
+#define appINTERRUPT_UART               portINTERRUPT_APPLICATION_DEFINED_START
 
 /* Define the read write buffer size. */
-#define COMM_TX_BUFFER_SIZE                  ( 8192 )
-#define COMM_RX_BUFFER_SIZE                  ( 8192 )
+#define COMM_TX_BUFFER_SIZE             ( 8192 )
+#define COMM_RX_BUFFER_SIZE             ( 8192 )
 
 /* Receive thread timeout in ms. */
-#define COMM_RECV_THREAD_TIMEOUT             ( 5000 )
+#define COMM_RECV_THREAD_TIMEOUT        ( 5000 )
 
 /* Write operation timeout in ms. */
-#define COMM_WRITE_OPERATION_TIMEOUT         ( 500 )
+#define COMM_WRITE_OPERATION_TIMEOUT    ( 500 )
 
 /* Comm status. */
-#define CELLULAR_COMM_OPEN_BIT               ( 0x01U )
+#define CELLULAR_COMM_OPEN_BIT          ( 0x01U )
 
 /* Comm task event. */
-#define COMMTASK_EVT_MASK_STARTED            ( 0x0001UL )
-#define COMMTASK_EVT_MASK_ABORT              ( 0x0002UL )
-#define COMMTASK_EVT_MASK_ABORTED            ( 0x0004UL )
+#define COMMTASK_EVT_MASK_STARTED       ( 0x0001UL )
+#define COMMTASK_EVT_MASK_ABORT         ( 0x0002UL )
+#define COMMTASK_EVT_MASK_ABORTED       ( 0x0004UL )
 #define COMMTASK_EVT_MASK_ALL_EVENTS \
     ( COMMTASK_EVT_MASK_STARTED      \
       | COMMTASK_EVT_MASK_ABORT      \
@@ -227,7 +227,7 @@ static DWORD WINAPI prvCellularCommReceiveCBThreadFunc( LPVOID pArgument )
 
             if( ( retWait != FALSE ) && ( ( dwCommStatus & EV_RXCHAR ) != 0 ) )
             {
-                /* Generate a simulated interrupt when data is received in the input buffer in driver. 
+                /* Generate a simulated interrupt when data is received in the input buffer in driver.
                  * The interrupt handler prvProcessUartInt() will be called in prvProcessSimulatedInterrupts().
                  * This ensures no other task or ISR is running. */
                 vPortGenerateSimulatedInterruptFromWindowsThread( appINTERRUPT_UART );
@@ -407,6 +407,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
     {
         pCellularCommContext->commOverlapped.hEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
+
         if( pCellularCommContext->commOverlapped.hEvent == NULL )
         {
             LogError( ( "Cellular CreateEvent fail %d", GetLastError() ) );
@@ -576,6 +577,7 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
         hComm = pCellularCommContext->commFileHandle;
 
         Status = WriteFile( hComm, pData, dataLength, &dwWritten, &pCellularCommContext->commOverlapped );
+
         if( Status == TRUE )
         {
             /* Write to the COM port success. */
@@ -659,6 +661,7 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
         hComm = pCellularCommContext->commFileHandle;
 
         Status = ReadFile( hComm, pBuffer, bufferLength, &dwRead, pCellularCommContext->commOverlapped.hEvent );
+
         if( Status == TRUE )
         {
             /* Receive from the COM port success. */

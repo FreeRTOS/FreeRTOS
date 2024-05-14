@@ -210,8 +210,7 @@ static uint32_t prvProcessUartInt( void )
 static DWORD WINAPI prvCellularCommReceiveCBThreadFunc( LPVOID pArgument )
 {
     DWORD dwCommStatus = 0;
-    cellularCommContext_t * pCellularCommContext = ( cellularCommContext_t * ) pArgument;
-    HANDLE hComm = pCellularCommContext->commFileHandle;
+    HANDLE hComm = ( HANDLE ) pArgument;
     BOOL retWait = FALSE;
     DWORD retValue = 0;
 
@@ -223,7 +222,7 @@ static DWORD WINAPI prvCellularCommReceiveCBThreadFunc( LPVOID pArgument )
     {
         for( ; ; )
         {
-            retWait = WaitCommEvent( hComm, &dwCommStatus, pCellularCommContext->commOverlapped.hEvent );
+            retWait = WaitCommEvent( hComm, &dwCommStatus, NULL );
 
             if( ( retWait != FALSE ) && ( ( dwCommStatus & EV_RXCHAR ) != 0 ) )
             {
@@ -421,7 +420,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
 
         vPortSetInterruptHandler( appINTERRUPT_UART, prvProcessUartInt );
         pCellularCommContext->commReceiveCallbackThread =
-            CreateThread( NULL, 0, prvCellularCommReceiveCBThreadFunc, pCellularCommContext, 0, NULL );
+            CreateThread( NULL, 0, prvCellularCommReceiveCBThreadFunc, hComm, 0, NULL );
 
         /* CreateThread return NULL for error. */
         if( pCellularCommContext->commReceiveCallbackThread == NULL )
@@ -660,7 +659,7 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
     {
         hComm = pCellularCommContext->commFileHandle;
 
-        Status = ReadFile( hComm, pBuffer, bufferLength, &dwRead, pCellularCommContext->commOverlapped.hEvent );
+        Status = ReadFile( hComm, pBuffer, bufferLength, &dwRead, &pCellularCommContext->commOverlapped );
 
         if( Status == TRUE )
         {
@@ -689,7 +688,7 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
         {
             case WAIT_OBJECT_0:
 
-                if( GetOverlappedResult( hComm, pCellularCommContext->commOverlapped.hEvent, &dwRead, FALSE ) == FALSE )
+                if( GetOverlappedResult( hComm, &pCellularCommContext->commOverlapped, &dwRead, FALSE ) == FALSE )
                 {
                     LogError( ( "Cellular receive GetOverlappedResult fail %d", GetLastError() ) );
                     commIntRet = IOT_COMM_INTERFACE_FAILURE;

@@ -611,7 +611,7 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
                 }
                 else
                 {
-                    *pDataSentLength = ( uint32_t ) dwWritten;
+                    *pDataSentLength = ( uint32_t ) dataLength;
                 }
 
                 break;

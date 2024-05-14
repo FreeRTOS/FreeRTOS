@@ -51,7 +51,7 @@
 #define CELLULAR_COMM_PATH                   "\\\\.\\"CELLULAR_COMM_INTERFACE_PORT
 
 /* Define the simulated UART interrupt number. */
-#define portINTERRUPT_UART                   portINTERRUPT_USER_DEFINED_START
+#define appINTERRUPT_UART                    portINTERRUPT_APPLICATION_DEFINED_START
 
 /* Define the read write buffer size. */
 #define COMM_TX_BUFFER_SIZE                  ( 8192 )
@@ -74,11 +74,6 @@
     ( COMMTASK_EVT_MASK_STARTED      \
       | COMMTASK_EVT_MASK_ABORT      \
       | COMMTASK_EVT_MASK_ABORTED )
-#define COMMTASK_POLLING_TIME_MS             ( 1UL )
-
-/* Platform thread stack size and priority. */
-#define COMM_IF_THREAD_DEFAULT_STACK_SIZE    ( 2048U )
-#define COMM_IF_THREAD_DEFAULT_PRIORITY      ( tskIDLE_PRIORITY + 5U )
 
 /*-----------------------------------------------------------*/
 
@@ -89,6 +84,7 @@ typedef struct cellularCommContext
     uint8_t commStatus;
     void * pUserData;
     HANDLE commFileHandle;
+    OVERLAPPED commOverlapped;
     CellularCommInterface_t * pCommInterface;
     bool commTaskThreadStarted;
 } cellularCommContext_t;
@@ -159,7 +155,7 @@ static CellularCommInterfaceError_t prvSetupCommTimeout( HANDLE hComm );
  * @return On success, IOT_COMM_INTERFACE_SUCCESS is returned. If an error occurred, error code defined
  * in CellularCommInterfaceError_t is returned.
  */
-static CellularCommInterfaceError_t prvSetupCommSettings( HANDLE hComm );
+static CellularCommInterfaceError_t prvSetupCommState( HANDLE hComm );
 
 /*-----------------------------------------------------------*/
 
@@ -177,6 +173,7 @@ static cellularCommContext_t uxCellularCommContext =
     .commReceiveCallbackThread = NULL,
     .pCommInterface            = &CellularCommInterface,
     .commFileHandle            = NULL,
+    .commOverlapped            = { 0 },
     .pUserData                 = NULL,
     .commStatus                = 0U,
     .commTaskThreadStarted     = false
@@ -213,7 +210,8 @@ static uint32_t prvProcessUartInt( void )
 static DWORD WINAPI prvCellularCommReceiveCBThreadFunc( LPVOID pArgument )
 {
     DWORD dwCommStatus = 0;
-    HANDLE hComm = ( HANDLE ) pArgument;
+    cellularCommContext_t * pCellularCommContext = ( cellularCommContext_t * ) pArgument;
+    HANDLE hComm = pCellularCommContext->commFileHandle;
     BOOL retWait = FALSE;
     DWORD retValue = 0;
 
@@ -221,33 +219,35 @@ static DWORD WINAPI prvCellularCommReceiveCBThreadFunc( LPVOID pArgument )
     {
         retValue = ERROR_INVALID_HANDLE;
     }
-
-    while( retValue == 0 )
+    else
     {
-        retWait = WaitCommEvent( hComm, &dwCommStatus, NULL );
+        for( ; ; )
+        {
+            retWait = WaitCommEvent( hComm, &dwCommStatus, pCellularCommContext->commOverlapped.hEvent );
 
-        if( ( retWait != FALSE ) && ( ( dwCommStatus & EV_RXCHAR ) != 0 ) )
-        {
-            if( ( dwCommStatus & EV_RXCHAR ) != 0 )
+            if( ( retWait != FALSE ) && ( ( dwCommStatus & EV_RXCHAR ) != 0 ) )
             {
-                vPortGenerateSimulatedInterruptFromNative( portINTERRUPT_UART );
-            }
-        }
-        else
-        {
-            if( ( GetLastError() == ERROR_INVALID_HANDLE ) || ( GetLastError() == ERROR_OPERATION_ABORTED ) )
-            {
-                /* COM port closed. */
-                LogInfo( ( "Cellular COM port %p closed", hComm ) );
+                /* Generate a simulated interrupt when data is received in the input buffer in driver. 
+                 * The interrupt handler prvProcessUartInt() will be called in prvProcessSimulatedInterrupts().
+                 * This ensures no other task or ISR is running. */
+                vPortGenerateSimulatedInterruptFromWindowsThread( appINTERRUPT_UART );
             }
             else
             {
-                LogInfo( ( "Cellular receiver thread wait comm error %p %d", hComm, GetLastError() ) );
+                retValue = GetLastError();
+
+                if( ( retValue == ERROR_INVALID_HANDLE ) || ( retValue == ERROR_OPERATION_ABORTED ) )
+                {
+                    /* COM port closed. */
+                    LogInfo( ( "Cellular COM port %p closed", hComm ) );
+                }
+                else
+                {
+                    LogInfo( ( "Cellular receiver thread wait comm error %p %d", hComm, retValue ) );
+                }
+
+                break;
             }
-
-            retValue = GetLastError();
-
-            break;
         }
     }
 
@@ -283,7 +283,7 @@ static CellularCommInterfaceError_t prvSetupCommTimeout( HANDLE hComm )
 
 /*-----------------------------------------------------------*/
 
-static CellularCommInterfaceError_t prvSetupCommSettings( HANDLE hComm )
+static CellularCommInterfaceError_t prvSetupCommState( HANDLE hComm )
 {
     CellularCommInterfaceError_t commIntRet = IOT_COMM_INTERFACE_SUCCESS;
     DCB dcbSerialParams = { 0 };
@@ -331,7 +331,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     }
     else if( ( pCellularCommContext->commStatus & CELLULAR_COMM_OPEN_BIT ) != 0 )
     {
-        LogError( ( "Cellular comm interface opened already" ) );
+        LogError( ( "Cellular comm interface opened already." ) );
         commIntRet = IOT_COMM_INTERFACE_FAILURE;
     }
     else
@@ -351,7 +351,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     }
 
     /* Comm port is just closed. Wait 1 second and retry. */
-    if( ( hComm == ( HANDLE ) INVALID_HANDLE_VALUE ) && ( GetLastError() == 5 ) )
+    if( ( hComm == ( HANDLE ) INVALID_HANDLE_VALUE ) && ( GetLastError() == ERROR_ACCESS_DENIED ) )
     {
         vTaskDelay( pdMS_TO_TICKS( 1000UL ) );
         hComm = CreateFile( TEXT( CELLULAR_COMM_PATH ),
@@ -372,7 +372,11 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     {
         Status = SetupComm( hComm, COMM_TX_BUFFER_SIZE, COMM_RX_BUFFER_SIZE );
 
-        if( Status == FALSE )
+        if( Status != FALSE )
+        {
+            pCellularCommContext->commFileHandle = hComm;
+        }
+        else
         {
             LogError( ( "Cellular setup COM port fail %d", GetLastError() ) );
             commIntRet = IOT_COMM_INTERFACE_FAILURE;
@@ -386,7 +390,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
 
     if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
     {
-        commIntRet = prvSetupCommSettings( hComm );
+        commIntRet = prvSetupCommState( hComm );
     }
 
     if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
@@ -402,11 +406,21 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
 
     if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
     {
+        pCellularCommContext->commOverlapped.hEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
+        if( pCellularCommContext->commOverlapped.hEvent == NULL )
+        {
+            LogError( ( "Cellular CreateEvent fail %d", GetLastError() ) );
+            commIntRet = IOT_COMM_INTERFACE_FAILURE;
+        }
+    }
+
+    if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
+    {
         pCellularCommContext->commReceiveCallback = receiveCallback;
 
-        vPortSetInterruptHandler( portINTERRUPT_UART, prvProcessUartInt );
+        vPortSetInterruptHandler( appINTERRUPT_UART, prvProcessUartInt );
         pCellularCommContext->commReceiveCallbackThread =
-            CreateThread( NULL, 0, prvCellularCommReceiveCBThreadFunc, hComm, 0, NULL );
+            CreateThread( NULL, 0, prvCellularCommReceiveCBThreadFunc, pCellularCommContext, 0, NULL );
 
         /* CreateThread return NULL for error. */
         if( pCellularCommContext->commReceiveCallbackThread == NULL )
@@ -419,7 +433,6 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
     {
         pCellularCommContext->pUserData = pUserData;
-        pCellularCommContext->commFileHandle = hComm;
         *pCommInterfaceHandle = ( CellularCommInterfaceHandle_t ) pCellularCommContext;
         pCellularCommContext->commStatus |= CELLULAR_COMM_OPEN_BIT;
     }
@@ -431,6 +444,12 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
             ( void ) CloseHandle( hComm );
             hComm = INVALID_HANDLE_VALUE;
             commIntRet = IOT_COMM_INTERFACE_FAILURE;
+        }
+
+        if( pCellularCommContext->commOverlapped.hEvent != NULL )
+        {
+            ( void ) CloseHandle( pCellularCommContext->commOverlapped.hEvent );
+            pCellularCommContext->commOverlapped.hEvent = NULL;
         }
 
         /* Wait for the commReceiveCallbackThread exit. */
@@ -495,6 +514,13 @@ static CellularCommInterfaceError_t prvCommIntfClose( CellularCommInterfaceHandl
 
         pCellularCommContext->commFileHandle = NULL;
 
+        /* Close the OVERLAPPED event. */
+        if( pCellularCommContext->commOverlapped.hEvent != NULL )
+        {
+            ( void ) CloseHandle( pCellularCommContext->commOverlapped.hEvent );
+            pCellularCommContext->commOverlapped.hEvent = NULL;
+        }
+
         /* Wait for the thread exit. */
         if( pCellularCommContext->commReceiveCallbackThread != NULL )
         {
@@ -532,7 +558,6 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
     CellularCommInterfaceError_t commIntRet = IOT_COMM_INTERFACE_SUCCESS;
     cellularCommContext_t * pCellularCommContext = ( cellularCommContext_t * ) commInterfaceHandle;
     HANDLE hComm = NULL;
-    OVERLAPPED osWrite = { 0 };
     DWORD dwRes = 0;
     DWORD dwWritten = 0;
     BOOL Status = TRUE;
@@ -549,45 +574,43 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
     else
     {
         hComm = pCellularCommContext->commFileHandle;
-        osWrite.hEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
 
-        if( osWrite.hEvent == NULL )
+        Status = WriteFile( hComm, pData, dataLength, &dwWritten, &pCellularCommContext->commOverlapped );
+        if( Status == TRUE )
         {
-            LogError( ( "Cellular CreateEvent fail %d", GetLastError() ) );
-            commIntRet = IOT_COMM_INTERFACE_FAILURE;
+            /* Write to the COM port success. */
+            *pDataSentLength = ( uint32_t ) dwWritten;
         }
-    }
-
-    if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
-    {
-        Status = WriteFile( hComm, pData, dataLength, &dwWritten, &osWrite );
-
-        /* WriteFile fail and error is not the ERROR_IO_PENDING. */
-        if( ( Status == FALSE ) && ( GetLastError() != ERROR_IO_PENDING ) )
+        else if( GetLastError() != ERROR_IO_PENDING )
         {
+            /* Write to the COM port fail and error code is not ERROR_IO_PENDING. */
             LogError( ( "Cellular WriteFile fail %d", GetLastError() ) );
             commIntRet = IOT_COMM_INTERFACE_FAILURE;
         }
-
-        if( Status == TRUE )
+        else
         {
-            *pDataSentLength = ( uint32_t ) dwWritten;
+            /* Error code ERROR_IO_PENDING is returned. Handle pending IO with
+             * the OVERLAPPED structure. */
         }
     }
 
     /* Handle pending I/O. */
     if( ( commIntRet == IOT_COMM_INTERFACE_SUCCESS ) && ( Status == FALSE ) )
     {
-        dwRes = WaitForSingleObject( osWrite.hEvent, timeoutMilliseconds );
+        dwRes = WaitForSingleObject( pCellularCommContext->commOverlapped.hEvent, timeoutMilliseconds );
 
         switch( dwRes )
         {
             case WAIT_OBJECT_0:
 
-                if( GetOverlappedResult( hComm, &osWrite, &dwWritten, FALSE ) == FALSE )
+                if( GetOverlappedResult( hComm, &pCellularCommContext->commOverlapped, &dwWritten, FALSE ) == FALSE )
                 {
                     LogError( ( "Cellular GetOverlappedResult fail %d", GetLastError() ) );
                     commIntRet = IOT_COMM_INTERFACE_FAILURE;
+                }
+                else
+                {
+                    *pDataSentLength = ( uint32_t ) dwWritten;
                 }
 
                 break;
@@ -601,18 +624,6 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
                 LogError( ( "Cellular WaitForSingleObject fail %d", dwRes ) );
                 commIntRet = IOT_COMM_INTERFACE_FAILURE;
                 break;
-        }
-
-        *pDataSentLength = ( uint32_t ) dwWritten;
-    }
-
-    if( osWrite.hEvent != NULL )
-    {
-        Status = CloseHandle( osWrite.hEvent );
-
-        if( Status == FALSE )
-        {
-            LogDebug( ( "Cellular send CloseHandle fail" ) );
         }
     }
 
@@ -630,7 +641,6 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
     CellularCommInterfaceError_t commIntRet = IOT_COMM_INTERFACE_SUCCESS;
     cellularCommContext_t * pCellularCommContext = ( cellularCommContext_t * ) commInterfaceHandle;
     HANDLE hComm = NULL;
-    OVERLAPPED osRead = { 0 };
     BOOL Status = TRUE;
     DWORD dwRes = 0;
     DWORD dwRead = 0;
@@ -647,44 +657,43 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
     else
     {
         hComm = pCellularCommContext->commFileHandle;
-        osRead.hEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
 
-        if( osRead.hEvent == NULL )
+        Status = ReadFile( hComm, pBuffer, bufferLength, &dwRead, pCellularCommContext->commOverlapped.hEvent );
+        if( Status == TRUE )
         {
-            LogError( ( "Cellular CreateEvent fail %d", GetLastError() ) );
-            commIntRet = IOT_COMM_INTERFACE_FAILURE;
+            /* Receive from the COM port success. */
+            *pDataReceivedLength = ( uint32_t ) dwRead;
         }
-    }
-
-    if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )
-    {
-        Status = ReadFile( hComm, pBuffer, bufferLength, &dwRead, &osRead );
-
-        if( ( Status == FALSE ) && ( GetLastError() != ERROR_IO_PENDING ) )
+        else if( GetLastError() != ERROR_IO_PENDING )
         {
+            /* Receive from the COM port failed and error code is not ERROR_IO_PENDING. */
             LogError( ( "Cellular ReadFile fail %d", GetLastError() ) );
             commIntRet = IOT_COMM_INTERFACE_FAILURE;
         }
-
-        if( Status == TRUE )
+        else
         {
-            *pDataReceivedLength = ( uint32_t ) dwRead;
+            /* Error code ERROR_IO_PENDING is returned. Handle pending IO with
+             * the OVERLAPPED structure. */
         }
     }
 
     /* Handle pending I/O. */
     if( ( commIntRet == IOT_COMM_INTERFACE_SUCCESS ) && ( Status == FALSE ) )
     {
-        dwRes = WaitForSingleObject( osRead.hEvent, timeoutMilliseconds );
+        dwRes = WaitForSingleObject( pCellularCommContext->commOverlapped.hEvent, timeoutMilliseconds );
 
         switch( dwRes )
         {
             case WAIT_OBJECT_0:
 
-                if( GetOverlappedResult( hComm, &osRead, &dwRead, FALSE ) == FALSE )
+                if( GetOverlappedResult( hComm, pCellularCommContext->commOverlapped.hEvent, &dwRead, FALSE ) == FALSE )
                 {
                     LogError( ( "Cellular receive GetOverlappedResult fail %d", GetLastError() ) );
                     commIntRet = IOT_COMM_INTERFACE_FAILURE;
+                }
+                else
+                {
+                    *pDataReceivedLength = ( uint32_t ) dwRead;
                 }
 
                 break;
@@ -698,18 +707,6 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
                 LogError( ( "Cellular receive WaitForSingleObject fail %d", dwRes ) );
                 commIntRet = IOT_COMM_INTERFACE_FAILURE;
                 break;
-        }
-
-        *pDataReceivedLength = ( uint32_t ) dwRead;
-    }
-
-    if( osRead.hEvent != NULL )
-    {
-        Status = CloseHandle( osRead.hEvent );
-
-        if( Status == FALSE )
-        {
-            LogDebug( ( "Cellular recv CloseHandle fail" ) );
         }
     }
 

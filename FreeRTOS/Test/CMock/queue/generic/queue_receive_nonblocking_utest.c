@@ -74,6 +74,18 @@ int suiteTearDown( int numFailures )
 
 /* ==========================  Helper functions =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* =============================  Test Cases ============================== */
 
 /**
@@ -287,6 +299,8 @@ void test_xQueuePeek_noop_waiting_higher_priority( void )
     /* peek from the queue */
     uint32_t checkVal = INVALID_UINT32;
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 
     TEST_ASSERT_EQUAL( pdTRUE, xQueuePeek( xQueue, &checkVal, 0 ) );
@@ -325,6 +339,7 @@ void test_xQueuePeek_xQueuePeek_waiting_higher_priority( void )
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
 
     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueuePeek_Stub );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xStubExpectedReturnValue = pdTRUE;
 
@@ -369,6 +384,7 @@ void test_xQueuePeek_xQueueReceive_waiting_higher_priority( void )
     td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
 
     vFakePortYieldWithinAPI_Stub( &vPortYieldWithinAPI_xQueueReceive_Stub );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xStubExpectedReturnValue = pdTRUE;
 
@@ -804,6 +820,8 @@ void test_xQueueReceive_noop_waiting_higher_priority( void )
     td_task_addFakeTaskWaitingToSendToQueue( xQueue );
 
     uint32_t checkVal = INVALID_UINT32;
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
 

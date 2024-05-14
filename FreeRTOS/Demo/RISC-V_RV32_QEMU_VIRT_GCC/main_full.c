@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -97,23 +97,23 @@
 /*-----------------------------------------------------------*/
 
 /* Task priorities. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
-#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainQUEUE_POLL_PRIORITY          ( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY          ( tskIDLE_PRIORITY + 3 )
+#define mainSEM_TEST_PRIORITY            ( tskIDLE_PRIORITY + 1 )
+#define mainCREATOR_TASK_PRIORITY        ( tskIDLE_PRIORITY + 3 )
+#define mainGEN_QUEUE_TASK_PRIORITY      ( tskIDLE_PRIORITY )
 
 /* Stack sizes are defined relative to configMINIMAL_STACK_SIZE so they scale
-across projects that have that constant set differently - in this case the
-constant is different depending on the compiler in use. */
-#define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
-#define mainCHECK_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
-#define mainREG_TEST_STACK_SIZE_WORDS 		90
+ * across projects that have that constant set differently - in this case the
+ * constant is different depending on the compiler in use. */
+#define mainMESSAGE_BUFFER_STACK_SIZE    ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#define mainCHECK_TASK_STACK_SIZE        ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#define mainREG_TEST_STACK_SIZE_WORDS    90
 
 /* Parameters that are passed into the register check tasks solely for the
-purpose of ensuring parameters are passed into tasks correctly. */
-#define mainREG_TEST_TASK_1_PARAMETER		( ( void * ) 0x12345678 )
-#define mainREG_TEST_TASK_2_PARAMETER		( ( void * ) 0x87654321 )
+ * purpose of ensuring parameters are passed into tasks correctly. */
+#define mainREG_TEST_TASK_1_PARAMETER    ( ( void * ) 0x12345678 )
+#define mainREG_TEST_TASK_2_PARAMETER    ( ( void * ) 0x87654321 )
 
 /*-----------------------------------------------------------*/
 
@@ -123,279 +123,282 @@ purpose of ensuring parameters are passed into tasks correctly. */
  * entry points are kept in the C file for the convenience of checking the task
  * parameter.
  */
-static void prvRegTestTaskEntry1( void *pvParameters );
+static void prvRegTestTaskEntry1( void * pvParameters );
 extern void vRegTest1Implementation( void );
-static void prvRegTestTaskEntry2( void *pvParameters );
+static void prvRegTestTaskEntry2( void * pvParameters );
 extern void vRegTest2Implementation( void );
 
 /* The task that checks the operation of all the other standard demo tasks, as
  * described at the top of this file. */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
-register check tasks to the check task.  If the variables keep incrementing,
-then the register check tasks have not discovered any errors.  If a variable
-stops incrementing, then an error has been found. */
+ * register check tasks to the check task.  If the variables keep incrementing,
+ * then the register check tasks have not discovered any errors.  If a variable
+ * stops incrementing, then an error has been found. */
 uint32_t ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
-volatile uint32_t *pulRegTest1LoopCounter = &ulRegTest1LoopCounter;
-volatile uint32_t *pulRegTest2LoopCounter = &ulRegTest2LoopCounter;
+volatile uint32_t * pulRegTest1LoopCounter = &ulRegTest1LoopCounter;
+volatile uint32_t * pulRegTest2LoopCounter = &ulRegTest2LoopCounter;
 
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-	/* Start the standard demo tasks. */
-	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vCreateBlockTimeTasks();
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartQueueSetTasks();
-	vStartEventGroupTasks();
-	vStartMessageBufferTasks( mainMESSAGE_BUFFER_STACK_SIZE );
-	vStartStreamBufferTasks();
-	vCreateAbortDelayTasks();
-	vStartCountingSemaphoreTasks();
-	vStartDynamicPriorityTasks();
-	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
-	vStartQueueOverwriteTask( tskIDLE_PRIORITY );
-	vStartQueueSetPollingTask();
-	vStartStaticallyAllocatedTasks();
-	vStartTaskNotifyTask();
-	vStartTaskNotifyArrayTask();
-	vStartTimerDemoTask( 50 );
-	vStartStreamBufferInterruptDemo();
-	vStartInterruptSemaphoreTasks();
+    /* Start the standard demo tasks. */
+    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+    vStartRecursiveMutexTasks();
+    vCreateBlockTimeTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartQueuePeekTasks();
+    vStartQueueSetTasks();
+    vStartEventGroupTasks();
+    vStartMessageBufferTasks( mainMESSAGE_BUFFER_STACK_SIZE );
+    vStartStreamBufferTasks();
+    vCreateAbortDelayTasks();
+    vStartCountingSemaphoreTasks();
+    vStartDynamicPriorityTasks();
+    vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
+    vStartQueueOverwriteTask( tskIDLE_PRIORITY );
+    vStartQueueSetPollingTask();
+    vStartStaticallyAllocatedTasks();
+    vStartTaskNotifyTask();
+    vStartTaskNotifyArrayTask();
+    vStartTimerDemoTask( 50 );
+    vStartStreamBufferInterruptDemo();
+    vStartInterruptSemaphoreTasks();
 
-	/* Create the register check tasks, as described at the top of this	file.
-	Use xTaskCreateStatic() to create a task using only statically allocated
-	memory. */
-	xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
-				 "Reg1", 						/* The name of the task. */
-				 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
-				 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
-				 tskIDLE_PRIORITY, 				/* Priority of the task. */
-				 NULL );						/* Can be used to pass out a handle to the created task. */
-	xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+    /* Create the register check tasks, as described at the top of this	file.
+     * Use xTaskCreateStatic() to create a task using only statically allocated
+     * memory. */
+    xTaskCreate( prvRegTestTaskEntry1,          /* The function that implements the task. */
+                 "Reg1",                        /* The name of the task. */
+                 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
+                 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
+                 tskIDLE_PRIORITY,              /* Priority of the task. */
+                 NULL );                        /* Can be used to pass out a handle to the created task. */
+    xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    /* The suicide tasks must be created last as they need to know how many
+     * tasks were running prior to their creation in order to ascertain whether
+     * or not the correct/expected number of tasks are running at any given time. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* If configSUPPORT_STATIC_ALLOCATION was false then execution would only
-	get here if there was insufficient heap memory to create either the idle or
-	timer tasks.  As static allocation is used execution should never be able
-	to reach here. */
-	for( ;; );
+    /* If configSUPPORT_STATIC_ALLOCATION was false then execution would only
+     * get here if there was insufficient heap memory to create either the idle or
+     * timer tasks.  As static allocation is used execution should never be able
+     * to reach here. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestTaskEntry1( void *pvParameters )
+static void prvRegTestTaskEntry1( void * pvParameters )
 {
-	/* Although the regtest task is written in assembler, its entry point is
-	written in C for convenience of checking the task parameter is being passed
-	in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembler. */
-		vRegTest1Implementation();
-	}
+    /* Although the regtest task is written in assembler, its entry point is
+     * written in C for convenience of checking the task parameter is being passed
+     * in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest1Implementation();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check task will detect that the regtest loop counter is
-	not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+     * be incorrect.  The check task will detect that the regtest loop counter is
+     * not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestTaskEntry2( void *pvParameters )
+static void prvRegTestTaskEntry2( void * pvParameters )
 {
-	/* Although the regtest task is written in assembler, its entry point is
-	written in C for convenience of checking the task parameter is being passed
-	in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembler. */
-		vRegTest2Implementation();
-	}
+    /* Although the regtest task is written in assembler, its entry point is
+     * written in C for convenience of checking the task parameter is being passed
+     * in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest2Implementation();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check task will detect that the regtest loop counter is
-	not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+     * be incorrect.  The check task will detect that the regtest loop counter is
+     * not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
 /* See the comments at the top of this file. */
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTask( void * pvParameters )
 {
-static const char * pcMessage = "FreeRTOS Demo SUCCESS:";
-const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
-TickType_t xPreviousWakeTime;
-uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+    static const char * pcMessage = "FreeRTOS Demo SUCCESS:";
+    const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
+    TickType_t xPreviousWakeTime;
+    uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 
     /* Avoid warning about unused parameter. */
     ( void ) pvParameters;
 
-	/* Demo start marker. */
-	printf( "FreeRTOS Demo Start\r\n" );
+    /* Demo start marker. */
+    printf( "FreeRTOS Demo Start\r\n" );
 
-	xPreviousWakeTime = xTaskGetTickCount();
+    xPreviousWakeTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		vTaskDelayUntil( &xPreviousWakeTime, xTaskPeriod );
+    for( ; ; )
+    {
+        vTaskDelayUntil( &xPreviousWakeTime, xTaskPeriod );
 
-		/* Has an error been found in any task? */
-		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreStreamBufferTasksStillRunning() returned false";
-		}
-		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreMessageBufferTasksStillRunning() returned false";
-		}
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreGenericQueueTasksStillRunning() returned false";
-		}
-	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-	    {
-	        pcMessage = "FreeRTOS Demo ERROR: xIsCreateTaskStillRunning() returned false";
-	    }
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreBlockTimeTestTasksStillRunning() returned false";
-		}
-		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreSemaphoreTasksStillRunning() returned false";
-		}
-		else if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xArePollingQueuesStillRunning() returned false";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreQueuePeekTasksStillRunning() returned false";
-		}
-		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreRecursiveMutexTasksStillRunning() returned false";
-		}
-		else if( xAreQueueSetTasksStillRunning() != pdPASS )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreQueueSetTasksStillRunning() returned false";
-		}
-		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreEventGroupTasksStillRunning() returned false";
-		}
-		else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreAbortDelayTestTasksStillRunning() returned false";
-		}
-		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreCountingSemaphoreTasksStillRunning() returned false";
-		}
-		else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreDynamicPriorityTasksStillRunning() returned false";
-		}
-		else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreMessageBufferAMPTasksStillRunning() returned false";
-		}
-		else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xIsQueueOverwriteTaskStillRunning() returned false";
-		}
-		else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreQueueSetPollTasksStillRunning() returned false";
-		}
-		else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreStaticAllocationTasksStillRunning() returned false";
-		}
-		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreTaskNotificationTasksStillRunning() returned false";
-		}
-		else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreTaskNotificationArrayTasksStillRunning() returned false";
-		}
-		else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreTimerDemoTasksStillRunning() returned false";
-		}
-		else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xIsInterruptStreamBufferDemoStillRunning() returned false";
-		}
-		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "FreeRTOS Demo ERROR: xAreInterruptSemaphoreTasksStillRunning() returned false";
-		}
-		else if( ulLastRegTest1Value == ulRegTest1LoopCounter ) /* Check that the register test 1 task is still running. */
-		{
-			pcMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
-		}
-		else if( ulLastRegTest2Value == ulRegTest2LoopCounter ) /* Check that the register test 2 task is still running. */
-		{
-			pcMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
-		}
+        /* Has an error been found in any task? */
+        if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreStreamBufferTasksStillRunning() returned false";
+        }
+        else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreMessageBufferTasksStillRunning() returned false";
+        }
 
-		ulLastRegTest1Value = ulRegTest1LoopCounter;
-		ulLastRegTest2Value = ulRegTest2LoopCounter;
+        if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreGenericQueueTasksStillRunning() returned false";
+        }
+        else if( xIsCreateTaskStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xIsCreateTaskStillRunning() returned false";
+        }
+        else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreBlockTimeTestTasksStillRunning() returned false";
+        }
+        else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreSemaphoreTasksStillRunning() returned false";
+        }
+        else if( xArePollingQueuesStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xArePollingQueuesStillRunning() returned false";
+        }
+        else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreQueuePeekTasksStillRunning() returned false";
+        }
+        else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreRecursiveMutexTasksStillRunning() returned false";
+        }
+        else if( xAreQueueSetTasksStillRunning() != pdPASS )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreQueueSetTasksStillRunning() returned false";
+        }
+        else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreEventGroupTasksStillRunning() returned false";
+        }
+        else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreAbortDelayTestTasksStillRunning() returned false";
+        }
+        else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreCountingSemaphoreTasksStillRunning() returned false";
+        }
+        else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreDynamicPriorityTasksStillRunning() returned false";
+        }
+        else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreMessageBufferAMPTasksStillRunning() returned false";
+        }
+        else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xIsQueueOverwriteTaskStillRunning() returned false";
+        }
+        else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreQueueSetPollTasksStillRunning() returned false";
+        }
+        else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreStaticAllocationTasksStillRunning() returned false";
+        }
+        else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreTaskNotificationTasksStillRunning() returned false";
+        }
+        else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreTaskNotificationArrayTasksStillRunning() returned false";
+        }
+        else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreTimerDemoTasksStillRunning() returned false";
+        }
+        else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xIsInterruptStreamBufferDemoStillRunning() returned false";
+        }
+        else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+        {
+            pcMessage = "FreeRTOS Demo ERROR: xAreInterruptSemaphoreTasksStillRunning() returned false";
+        }
+        else if( ulLastRegTest1Value == ulRegTest1LoopCounter ) /* Check that the register test 1 task is still running. */
+        {
+            pcMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
+        }
+        else if( ulLastRegTest2Value == ulRegTest2LoopCounter ) /* Check that the register test 2 task is still running. */
+        {
+            pcMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
+        }
 
-		/* It is normally not good to call printf() from an embedded system,
-		although it is ok in this simulated case. */
-		printf( "%s : %d\r\n", pcMessage, (int) xTaskGetTickCount() );
-	}
+        ulLastRegTest1Value = ulRegTest1LoopCounter;
+        ulLastRegTest2Value = ulRegTest2LoopCounter;
+
+        /* It is normally not good to call printf() from an embedded system,
+         * although it is ok in this simulated case. */
+        printf( "%s : %d\r\n", pcMessage, ( int ) xTaskGetTickCount() );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vFullDemoTickHookFunction( void )
 {
-	/* Write to a queue that is in use as part of the queue set demo to
-	demonstrate using queue sets from an ISR. */
-	vQueueSetAccessQueueSetFromISR();
+    /* Write to a queue that is in use as part of the queue set demo to
+     * demonstrate using queue sets from an ISR. */
+    vQueueSetAccessQueueSetFromISR();
 
-	/* Call the event group ISR tests. */
-	vPeriodicEventGroupsProcessing();
+    /* Call the event group ISR tests. */
+    vPeriodicEventGroupsProcessing();
 
-	/* Exercise stream buffers from interrupts. */
-	vPeriodicStreamBufferProcessing();
+    /* Exercise stream buffers from interrupts. */
+    vPeriodicStreamBufferProcessing();
 
-	/* Exercise using queue overwrites from interrupts. */
-	vQueueOverwritePeriodicISRDemo();
+    /* Exercise using queue overwrites from interrupts. */
+    vQueueOverwritePeriodicISRDemo();
 
-	/* Exercise using Queue Sets from interrupts. */
-	vQueueSetPollingInterruptAccess();
+    /* Exercise using Queue Sets from interrupts. */
+    vQueueSetPollingInterruptAccess();
 
-	/* Exercise using task notifications from interrupts. */
-	xNotifyTaskFromISR();
-	xNotifyArrayTaskFromISR();
+    /* Exercise using task notifications from interrupts. */
+    xNotifyTaskFromISR();
+    xNotifyArrayTaskFromISR();
 
-	/* Exercise software timers from interrupts. */
-	vTimerPeriodicISRTests();
+    /* Exercise software timers from interrupts. */
+    vTimerPeriodicISRTests();
 
-	/* Exercise stream buffers from interrupts. */
-	vBasicStreamBufferSendFromISR();
+    /* Exercise stream buffers from interrupts. */
+    vBasicStreamBufferSendFromISR();
 
-	/* Exercise semaphores from interrupts. */
-	vInterruptSemaphorePeriodicTest();
+    /* Exercise semaphores from interrupts. */
+    vInterruptSemaphorePeriodicTest();
 }
 /*-----------------------------------------------------------*/

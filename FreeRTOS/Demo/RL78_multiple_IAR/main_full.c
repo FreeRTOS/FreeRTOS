@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -92,30 +92,30 @@
 #include "demo_specific_io.h"
 
 /* The period at which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS                ( 3000UL / portTICK_PERIOD_MS )
+ * have been reported by any of the standard demo tasks.  ms are converted to the
+ * equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS                            ( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks, the check tasks, or the demo timer.
-ms are converted to the equivalent in ticks using the portTICK_PERIOD_MS
-constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS    ( 200UL / portTICK_PERIOD_MS )
+ * reported in one of the standard demo tasks, the check tasks, or the demo timer.
+ * ms are converted to the equivalent in ticks using the portTICK_PERIOD_MS
+ * constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS                      ( 200UL / portTICK_PERIOD_MS )
 
 /* These two definitions are used to set the period of the demo timer.  The demo
-timer period is always relative to the check timer period, so the check timer
-can determine if the demo timer has expired the expected number of times between
-its own executions. */
+ * timer period is always relative to the check timer period, so the check timer
+ * can determine if the demo timer has expired the expected number of times between
+ * its own executions. */
 #define mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT    ( 100UL )
-#define mainDEMO_TIMER_PERIOD_MS            ( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT )
+#define mainDEMO_TIMER_PERIOD_MS                             ( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK    ( 0U )
+#define mainDONT_BLOCK                                       ( 0U )
 
 /* Values that are passed as parameters into the reg test tasks (purely to
-ensure task parameters are passed correctly). */
-#define mainREG_TEST_1_PARAMETER    ( ( void * ) 0x1234 )
-#define mainREG_TEST_2_PARAMETER    ( ( void * ) 0x5678 )
+ * ensure task parameters are passed correctly). */
+#define mainREG_TEST_1_PARAMETER                             ( ( void * ) 0x1234 )
+#define mainREG_TEST_2_PARAMETER                             ( ( void * ) 0x5678 )
 
 /*-----------------------------------------------------------*/
 
@@ -137,8 +137,8 @@ static void prvDemoTimerCallback( TimerHandle_t xTimer );
  */
 extern void vRegTest1Task( void );
 extern void vRegTest2Task( void );
-static void prvRegTest1Entry( void *pvParameters );
-static void prvRegTest2Entry( void *pvParameters );
+static void prvRegTest1Entry( void * pvParameters );
+static void prvRegTest2Entry( void * pvParameters );
 
 /*
  * Called if a RegTest task discovers an error as a mechanism to stop the
@@ -156,11 +156,11 @@ void main_full( void );
 /*-----------------------------------------------------------*/
 
 /* Variables that are incremented on each cycle of the two reg tests to allow
-the check timer to know that they are still executing. */
+ * the check timer to know that they are still executing. */
 unsigned short usRegTest1LoopCounter = 0, usRegTest2LoopCounter;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
-function. */
+ * function. */
 static TimerHandle_t xCheckTimer = NULL;
 
 /* The demo timer.  This uses prvDemoTimerCallback() as its callback function. */
@@ -176,40 +176,40 @@ void main_full( void )
     /* Creates all the tasks and timers, then starts the scheduler. */
 
     /* First create the 'standard demo' tasks.  These are used to demonstrate
-    API functions being used and also to test the kernel port.  More information
-    is provided on the FreeRTOS.org WEB site. */
+     * API functions being used and also to test the kernel port.  More information
+     * is provided on the FreeRTOS.org WEB site. */
     vStartDynamicPriorityTasks();
     vStartPolledQueueTasks( tskIDLE_PRIORITY );
     vCreateBlockTimeTasks();
 
     /* Create the RegTest tasks as described at the top of this file. */
-    xTaskCreate( prvRegTest1Entry,            /* The function that implements the task. */
-                 "Reg1",                      /* Text name for the task - to assist debugging only, not used by the kernel. */
-                 configMINIMAL_STACK_SIZE,    /* The size of the stack allocated to the task (in words, not bytes). */
-                 mainREG_TEST_1_PARAMETER,    /* The parameter passed into the task. */
-                 tskIDLE_PRIORITY,            /* The priority at which the task will execute. */
-                 NULL );                      /* Used to pass the handle of the created task out to the function caller - not used in this case. */
+    xTaskCreate( prvRegTest1Entry,         /* The function that implements the task. */
+                 "Reg1",                   /* Text name for the task - to assist debugging only, not used by the kernel. */
+                 configMINIMAL_STACK_SIZE, /* The size of the stack allocated to the task (in words, not bytes). */
+                 mainREG_TEST_1_PARAMETER, /* The parameter passed into the task. */
+                 tskIDLE_PRIORITY,         /* The priority at which the task will execute. */
+                 NULL );                   /* Used to pass the handle of the created task out to the function caller - not used in this case. */
 
     xTaskCreate( prvRegTest2Entry, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
     /* Create the software timer that performs the 'check' functionality,
-    as described at the top of this file. */
-    xCheckTimer = xTimerCreate( "CheckTimer",                     /* A text name, purely to help debugging. */
-                                ( mainCHECK_TIMER_PERIOD_MS ),    /* The timer period, in this case 3000ms (3s). */
-                                pdTRUE,                           /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-                                ( void * ) 0,                     /* The ID is not used, so can be set to anything. */
-                                prvCheckTimerCallback );          /* The callback function that inspects the status of all the other tasks. */
+     * as described at the top of this file. */
+    xCheckTimer = xTimerCreate( "CheckTimer",                  /* A text name, purely to help debugging. */
+                                ( mainCHECK_TIMER_PERIOD_MS ), /* The timer period, in this case 3000ms (3s). */
+                                pdTRUE,                        /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                                ( void * ) 0,                  /* The ID is not used, so can be set to anything. */
+                                prvCheckTimerCallback );       /* The callback function that inspects the status of all the other tasks. */
 
     /* Create the software timer that just increments a variable for demo
-    purposes. */
-    xDemoTimer = xTimerCreate( "DemoTimer",/* A text name, purely to help debugging. */
-                               ( mainDEMO_TIMER_PERIOD_MS ),    /* The timer period, in this case it is always calculated relative to the check timer period (see the definition of mainDEMO_TIMER_PERIOD_MS). */
-                               pdTRUE,                          /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-                               ( void * ) 0,                    /* The ID is not used, so can be set to anything. */
-                               prvDemoTimerCallback );          /* The callback function that inspects the status of all the other tasks. */
+     * purposes. */
+    xDemoTimer = xTimerCreate( "DemoTimer",                  /* A text name, purely to help debugging. */
+                               ( mainDEMO_TIMER_PERIOD_MS ), /* The timer period, in this case it is always calculated relative to the check timer period (see the definition of mainDEMO_TIMER_PERIOD_MS). */
+                               pdTRUE,                       /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+                               ( void * ) 0,                 /* The ID is not used, so can be set to anything. */
+                               prvDemoTimerCallback );       /* The callback function that inspects the status of all the other tasks. */
 
     /* Start both the check timer and the demo timer.  The timers won't actually
-    start until the scheduler is started. */
+     * start until the scheduler is started. */
     xTimerStart( xCheckTimer, mainDONT_BLOCK );
     xTimerStart( xDemoTimer, mainDONT_BLOCK );
 
@@ -217,10 +217,12 @@ void main_full( void )
     vTaskStartScheduler();
 
     /* If all is well execution will never reach here as the scheduler will be
-    running.  If this null loop is reached then it is likely there was
-    insufficient FreeRTOS heap available for the idle task and/or timer task to
-    be created.  See http://www.freertos.org/a00111.html. */
-    for( ;; );
+     * running.  If this null loop is reached then it is likely there was
+     * insufficient FreeRTOS heap available for the idle task and/or timer task to
+     * be created.  See http://www.freertos.org/a00111.html. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -230,17 +232,17 @@ static void prvDemoTimerCallback( TimerHandle_t xTimer )
     ( void ) xTimer;
 
     /* The demo timer has expired.  All it does is increment a variable.  The
-    period of the demo timer is relative to that of the check timer, so the
-    check timer knows how many times this variable should have been incremented
-    between each execution of the check timer's own callback. */
+     * period of the demo timer is relative to that of the check timer, so the
+     * check timer knows how many times this variable should have been incremented
+     * between each execution of the check timer's own callback. */
     ulDemoSoftwareTimerCounter++;
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
-static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
-static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
+    static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
+    static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 
     /* Remove compiler warning about unused parameter. */
     ( void ) xTimer;
@@ -262,7 +264,7 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
     }
 
     /* Indicate an error if either of the reg test loop counters have not
-    incremented since the last time this function was called. */
+     * incremented since the last time this function was called. */
     if( usLastRegTest1Counter == usRegTest1LoopCounter )
     {
         xErrorStatus = pdFAIL;
@@ -282,14 +284,14 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
     }
 
     /* Ensure that the demo software timer has expired
-    mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT times in between
-    each call of this function.  A critical section is not required to access
-    ulDemoSoftwareTimerCounter as the variable is only accessed from another
-    software timer callback, and only one software timer callback can be
-    executing at any time. */
+     * mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT times in between
+     * each call of this function.  A critical section is not required to access
+     * ulDemoSoftwareTimerCounter as the variable is only accessed from another
+     * software timer callback, and only one software timer callback can be
+     * executing at any time. */
     if( ( ulDemoSoftwareTimerCounter < ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT - 1 ) ) ||
         ( ulDemoSoftwareTimerCounter > ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT + 1 ) )
-      )
+        )
     {
         xErrorStatus = pdFAIL;
     }
@@ -301,19 +303,19 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
     if( ( xErrorStatus == pdFAIL ) && ( xChangedTimerPeriodAlready == pdFALSE ) )
     {
         /* An error has occurred, but the timer's period has not yet been changed,
-        change it now, and remember that it has been changed.  Shortening the
-        timer's period means the LED will toggle at a faster rate, giving a
-        visible indication that something has gone wrong. */
+         * change it now, and remember that it has been changed.  Shortening the
+         * timer's period means the LED will toggle at a faster rate, giving a
+         * visible indication that something has gone wrong. */
         xChangedTimerPeriodAlready = pdTRUE;
 
         /* This call to xTimerChangePeriod() uses a zero block time.  Functions
-        called from inside of a timer callback function must *never* attempt to
-        block. */
+         * called from inside of a timer callback function must *never* attempt to
+         * block. */
         xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
     }
 
     /* Toggle the LED.  The toggle rate will depend on whether or not an error
-    has been found in any tasks. */
+     * has been found in any tasks. */
     LED_BIT = !LED_BIT;
 }
 /*-----------------------------------------------------------*/
@@ -321,17 +323,19 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 void vRegTestError( void )
 {
     /* Called by both reg test tasks if an error is found.  There is no way out
-    of this function so the loop counter of the calling task will stop
-    incrementing, which will result in the check timer signaling an error. */
-    for( ;; );
+    * of this function so the loop counter of the calling task will stop
+    * incrementing, which will result in the check timer signaling an error. */
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTest1Entry( void *pvParameters )
+static void prvRegTest1Entry( void * pvParameters )
 {
     /* If the parameter has its expected value then start the first reg test
-    task (this is only done to test that the RTOS port is correctly handling
-    task parameters. */
+     * task (this is only done to test that the RTOS port is correctly handling
+     * task parameters. */
     if( pvParameters == mainREG_TEST_1_PARAMETER )
     {
         vRegTest1Task();
@@ -342,15 +346,15 @@ static void prvRegTest1Entry( void *pvParameters )
     }
 
     /* It is not possible to get here as neither of the two functions called
-    above will ever return. */
+     * above will ever return. */
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTest2Entry( void *pvParameters )
+static void prvRegTest2Entry( void * pvParameters )
 {
     /* If the parameter has its expected value then start the first reg test
-    task (this is only done to test that the RTOS port is correctly handling
-    task parameters. */
+     * task (this is only done to test that the RTOS port is correctly handling
+     * task parameters. */
     if( pvParameters == mainREG_TEST_2_PARAMETER )
     {
         vRegTest2Task();
@@ -361,7 +365,6 @@ static void prvRegTest2Entry( void *pvParameters )
     }
 
     /* It is not possible to get here as neither of the two functions called
-    above will ever return. */
+     * above will ever return. */
 }
 /*-----------------------------------------------------------*/
-

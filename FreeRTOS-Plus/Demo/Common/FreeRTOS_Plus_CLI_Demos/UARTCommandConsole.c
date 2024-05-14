@@ -69,6 +69,7 @@
 static void prvUARTCommandConsoleTask( void * pvParameters );
 void vUARTCommandConsoleStart( uint16_t usStackSize,
                                UBaseType_t uxPriority );
+void vOutputString( const char * const pcMessage );
 
 /*-----------------------------------------------------------*/
 
@@ -110,7 +111,6 @@ static void prvUARTCommandConsoleTask( void * pvParameters )
     char * pcOutputString;
     static char cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
     BaseType_t xReturned;
-    xComPortHandle xPort;
 
     ( void ) pvParameters;
 

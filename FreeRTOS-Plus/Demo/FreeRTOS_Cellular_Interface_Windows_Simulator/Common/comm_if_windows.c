@@ -331,7 +331,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     }
     else if( ( pCellularCommContext->commStatus & CELLULAR_COMM_OPEN_BIT ) != 0 )
     {
-        LogError( ( "Cellular comm interface opened already." ) );
+        LogError( ( "Cellular comm interface opened already" ) );
         commIntRet = IOT_COMM_INTERFACE_FAILURE;
     }
     else

@@ -58,10 +58,10 @@
     </folder>
     <folder Name="FreeRTOS">
       <folder Name="include">
-        <file file_name="../../Source/include/FreeRTOS.h" />
         <file file_name="../../Source/include/atomic.h" />
         <file file_name="../../Source/include/deprecated_definitions.h" />
         <file file_name="../../Source/include/event_groups.h" />
+        <file file_name="../../Source/include/FreeRTOS.h" />
         <file file_name="../../Source/include/list.h" />
         <file file_name="../../Source/include/message_buffer.h" />
         <file file_name="../../Source/include/mpu_prototypes.h" />
@@ -82,9 +82,9 @@
         </folder>
         <folder Name="GCC">
           <folder Name="ARM_CM33">
+            <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/mpu_wrappers_v2_asm.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/port.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/portasm.c" />
-            <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/mpu_wrappers_v2_asm.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/portasm.h" />
             <file file_name="../../Source/portable/GCC/ARM_CM33/non_secure/portmacro.h" />
           </folder>
@@ -107,7 +107,8 @@
           <configuration
             Name="Common"
             default_code_section=".init"
-            default_const_section=".init_rodata" />
+            default_const_section=".init_rodata"
+            gcc_strict_prototypes_warning="No" />
         </file>
       </folder>
       <folder Name="Script Files">
@@ -116,10 +117,10 @@
         </file>
       </folder>
       <folder Name="System Files">
-        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
         <file file_name="Nordic_Code/nRF/Source/nrf9160_Vectors.s">
           <configuration Name="Common" file_type="Assembly" />
         </file>
+        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
         <file file_name="Nordic_Code/nRF/Source/thumb_crt0.s" />
       </folder>
     </folder>
@@ -189,12 +190,6 @@
         <file file_name="../../Source/portable/GCC/ARM_CM33/secure/secure_init.h" />
       </folder>
     </folder>
-    <folder Name="NSCFunctions">
-      <file file_name="../Common/ARMv8M/tz_demo/nsc_functions.c" />
-      <file file_name="../Common/ARMv8M/tz_demo/nsc_functions.h" />
-      <file file_name="../Common/ARMv8M/reg_tests/GCC/ARM_CM33/secure/secure_reg_test_asm.c" />
-      <file file_name="../Common/ARMv8M/reg_tests/GCC/ARM_CM33/secure/secure_reg_test_asm.h" />
-    </folder>
     <folder Name="Nordic_Code">
       <folder Name="CMSIS Files">
         <file file_name="Nordic_Code/nRF/Device/Include/nrf.h" />
@@ -202,7 +197,8 @@
           <configuration
             Name="Common"
             default_code_section=".init"
-            default_const_section=".init_rodata" />
+            default_const_section=".init_rodata"
+            gcc_strict_prototypes_warning="No" />
         </file>
       </folder>
       <folder Name="Script Files">
@@ -211,12 +207,18 @@
         </file>
       </folder>
       <folder Name="System Files">
-        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
         <file file_name="Nordic_Code/nRF/Source/nrf9160_Vectors.s">
           <configuration Name="Common" file_type="Assembly" />
         </file>
+        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
         <file file_name="Nordic_Code/nRF/Source/thumb_crt0.s" />
       </folder>
+    </folder>
+    <folder Name="NSCFunctions">
+      <file file_name="../Common/ARMv8M/tz_demo/nsc_functions.c" />
+      <file file_name="../Common/ARMv8M/tz_demo/nsc_functions.h" />
+      <file file_name="../Common/ARMv8M/reg_tests/GCC/ARM_CM33/secure/secure_reg_test_asm.c" />
+      <file file_name="../Common/ARMv8M/reg_tests/GCC/ARM_CM33/secure/secure_reg_test_asm.h" />
     </folder>
     <folder Name="User">
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />

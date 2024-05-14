@@ -26,11 +26,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>CommonDemoSource</name>
-			<type>2</type>
-			<locationURI>FREERTOS_ROOT/Demo/Common/Minimal</locationURI>
-		</link>
-		<link>
 			<name>FreeRTOS_kernel</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/Source</locationURI>
@@ -41,19 +36,19 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Source/Blinky_Demo</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Source/FreeRTOSConfig.h</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/FreeRTOSConfig.h</locationURI>
 		</link>
 		<link>
-			<name>Source/IntQueueTimer.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/IntQueueTimer.c</locationURI>
-		</link>
-		<link>
-			<name>Source/IntQueueTimer.h</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/IntQueueTimer.h</locationURI>
+			<name>Source/Full_Demo</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Source/main.c</name>
@@ -61,14 +56,29 @@
 			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/main.c</locationURI>
 		</link>
 		<link>
-			<name>Source/main_blinky.c</name>
+			<name>Source/Blinky_Demo/main_blinky.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/main_blinky.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/main_blinky.c</locationURI>
 		</link>
 		<link>
-			<name>Source/main_full.c</name>
+			<name>Source/Full_Demo/CommonDemoSource</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo/IntQueueTimer.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/main_full.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/IntQueueTimer.c</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo/IntQueueTimer.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/IntQueueTimer.h</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo/main_full.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/main_full.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>

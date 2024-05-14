@@ -35,9 +35,11 @@
 #include "mock_list_macros.h"
 #include "mock_timers.h"
 #include "mock_portable.h"
+#include "mock_fake_assert.h"
 
 /* Test includes. */
 #include "unity.h"
+#include "CException.h"
 #include "global_vars.h"
 
 /* C runtime includes. */
@@ -64,7 +66,6 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-
 #ifdef configNUMBER_OF_CORES
     extern volatile BaseType_t xYieldPendings[];
     #define xYieldPending    xYieldPendings[ 0 ]
@@ -75,15 +76,18 @@ extern volatile TickType_t xPendedTicks;
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-
 #ifdef configNUMBER_OF_CORES
     extern TaskHandle_t xIdleTaskHandles[];
     #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
 #else
     extern TaskHandle_t xIdleTaskHandle;
 #endif
-
 extern volatile UBaseType_t uxSchedulerSuspended;
+
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E    0xAA101
 
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
@@ -118,6 +122,16 @@ static bool port_allocate_secure_context_called = false;
 static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
+
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
+static int assertionFailed = 0;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion = pdFALSE;
 
 /* ===========================  Static Functions  =========================== */
 static void start_scheduler()
@@ -325,10 +339,11 @@ void vFakePortYieldFromISR()
     HOOK_DIAG();
 }
 
-void vFakePortDisableInterrupts()
+uint32_t vFakePortDisableInterrupts()
 {
     port_disable_interrupts_called = true;
     HOOK_DIAG();
+    return 0;
 }
 
 void vFakePortEnableInterrupts()
@@ -389,6 +404,48 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
     vApplicationStackOverflowHook_called = true;
 }
 
+unsigned int vFakePortGetCoreID( void )
+{
+    HOOK_DIAG();
+    return 0;
+}
+
+void vFakePortReleaseTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortReleaseISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
+{
+    if( !x )
+    {
+        assertionFailed++;
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            Throw( configASSERT_E );
+        }
+    }
+}
+
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
@@ -427,8 +484,9 @@ void setUp( void )
     /*ulTotalRunTime = 0UL; */
     is_first_task = true;
     created_tasks = 0;
-
     py_operation = dummy_operation;
+
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
 }
 
 /*! called after each testcase */
@@ -641,7 +699,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0 );
     listSET_LIST_ITEM_VALUE_Expect( &( ptcb->xEventListItem ),
                                     configMAX_PRIORITIES - 5 );
-    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 5 ],
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 4 ],
                                              &( ptcb->xStateListItem ),
                                              pdTRUE );
     uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );

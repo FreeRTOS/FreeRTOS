@@ -110,9 +110,6 @@
     {
         BaseType_t x;
 
-        /* Set Ethernet interrupt priority to configMAC_INTERRUPT_PRIORITY. */
-        NVIC_SetPriority( ETHERNET_IRQn, configMAC_INTERRUPT_PRIORITY );
-
         /* Create the echo client tasks. */
         for( x = 0; x < echoNUM_ECHO_CLIENTS; x++ )
         {
@@ -394,5 +391,23 @@
 
         return xReturn;
     }
+
+
+    #if ( ipconfigUSE_DHCP_HOOK != 0 )
+
+        #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+            eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
+                                                        uint32_t ulIPAddress )
+        #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+            eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
+                                                              struct xNetworkEndPoint * pxEndPoint,
+                                                              IP_Address_t * pxIPAddress )
+        #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+        {
+            /* Provide a stub for this function. */
+            return eDHCPContinue;
+        }
+
+    #endif /* if ( ipconfigUSE_DHCP_HOOK != 0 )*/
 
 #endif /* ipconfigUSE_TCP */

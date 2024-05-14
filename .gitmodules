@@ -82,3 +82,6 @@
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4
 	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
+	url = https://github.com/percepio/TraceRecorderSource.git

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -58,7 +58,23 @@
 #define configUSE_ALTERNATIVE_API                  0
 #define configUSE_QUEUE_SETS                       1
 #define configUSE_TASK_NOTIFICATIONS               1
+
+/* The following 2  memory allocation schemes are possible for this demo:
+ *
+ * 1. Dynamic Only.
+ *    #define configSUPPORT_STATIC_ALLOCATION  0
+ *    #define configSUPPORT_DYNAMIC_ALLOCATION 1
+ *
+ * 2. Static and Dynamic.
+ *    #define configSUPPORT_STATIC_ALLOCATION  1
+ *    #define configSUPPORT_DYNAMIC_ALLOCATION 1
+ *
+ * Static only configuration is not possible for this demo as it utilizes
+ * dynamic allocation.
+ */
 #define configSUPPORT_STATIC_ALLOCATION            1
+#define configSUPPORT_DYNAMIC_ALLOCATION           1
+
 #define configRECORD_STACK_HIGH_ADDRESS            1
 
 /* Software timer related configuration options.  The maximum possible task
@@ -128,6 +144,10 @@ extern void vAssertCalled( const char * const pcFileName,
     #error projCOVERAGE_TEST should be defined to 1 or 0 on the command line.
 #endif
 
+#ifndef projENABLE_TRACING
+    #error projENABLE_TRACING should be defined to 1 or 0 on the command line.
+#endif
+
 #if ( projCOVERAGE_TEST == 1 )
 
 /* Insert NOPs in empty decision paths to ensure both true and false paths
@@ -154,7 +174,9 @@ extern void vAssertCalled( const char * const pcFileName,
     #define configUSE_MALLOC_FAILED_HOOK    1
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-    #include "trcRecorder.h"
+    #if( projENABLE_TRACING == 1 )
+        #include "trcRecorder.h"
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 #endif /* if ( projCOVERAGE_TEST == 1 ) */
 
 /* networking definitions */

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -68,7 +68,7 @@
 /* Local includes. */
 #include "console.h"
 
-#if ( projCOVERAGE_TEST != 1 )
+#if ( projENABLE_TRACING == 1 )
     #include <trcRecorder.h>
 #endif
 
@@ -91,6 +91,7 @@
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
 /*-----------------------------------------------------------*/
+
 extern void main_blinky( void );
 extern void main_full( void );
 static void traceOnEnter( void );
@@ -118,11 +119,15 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
                                      uint32_t * pulTimerTaskStackSize );
 
-/*
- * Writes trace data to a disk file when the trace recording is stopped.
- * This function will simply overwrite any trace files that already exist.
- */
-static void prvSaveTraceFile( void );
+#if ( projENABLE_TRACING == 1 )
+
+    /*
+     * Writes trace data to a disk file when the trace recording is stopped.
+     * This function will simply overwrite any trace files that already exist.
+     */
+    static void prvSaveTraceFile( void );
+
+#endif /* if ( projENABLE_TRACING == 1 ) */
 
 /*
  * Signal handler for Ctrl_C to cause the program to exit, and generate the
@@ -139,15 +144,6 @@ static void handle_sigint( int signal );
  * in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-/* Notes if the trace is running or not. */
-#if ( projCOVERAGE_TEST == 1 )
-    static BaseType_t xTraceRunning = pdFALSE;
-#else
-    static BaseType_t xTraceRunning = pdTRUE;
-#endif
-
-static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
-
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -155,42 +151,42 @@ int main( void )
     /* SIGINT is not blocked by the posix port */
     signal( SIGINT, handle_sigint );
 
-    /* Do not include trace code when performing a code coverage analysis. */
-    #if ( projCOVERAGE_TEST != 1 )
-        {
-            /* Initialise the trace recorder.  Use of the trace recorder is optional.
-             * See http://www.FreeRTOS.org/trace for more information. */
-            vTraceEnable( TRC_START );
+    #if ( projENABLE_TRACING == 1 )
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+         * See http://www.FreeRTOS.org/trace for more information. */
+        vTraceEnable( TRC_START );
 
-            /* Start the trace recording - the recording is written to a file if
-             * configASSERT() is called. */
-            printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+        /* Start the trace recording - the recording is written to a file if
+         * configASSERT() is called. */
+        printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
 
-            #if ( TRACE_ON_ENTER == 1 )
-                printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-            #endif
-        }
-    #endif /* if ( projCOVERAGE_TEST != 1 ) */
+        #if ( TRACE_ON_ENTER == 1 )
+            printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+        #endif /* if ( TRACE_ON_ENTER == 1 ) */
+    }
+    #endif /* if ( projENABLE_TRACING == 1 ) */
 
     console_init();
     #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
-        {
-            console_print( "Starting echo blinky demo\n" );
-            main_blinky();
-        }
+    {
+        console_print( "Starting echo blinky demo\n" );
+        main_blinky();
+    }
     #elif ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            console_print( "Starting full demo\n" );
-            main_full();
-        }
+    {
+        console_print( "Starting full demo\n" );
+        main_full();
+    }
     #else
-        {
-            #error "The selected demo is not valid"
-        }
+    {
+        #error "The selected demo is not valid"
+    }
     #endif /* if ( mainSELECTED_APPLICATION ) */
 
     return 0;
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
@@ -209,6 +205,7 @@ void vApplicationMallocFailedHook( void )
      * information. */
     vAssertCalled( __FILE__, __LINE__ );
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
@@ -228,13 +225,14 @@ void vApplicationIdleHook( void )
     traceOnEnter();
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            /* Call the idle task processing used by the full demo.  The simple
-             * blinky demo does not use the idle task hook. */
-            vFullDemoIdleFunction();
-        }
+    {
+        /* Call the idle task processing used by the full demo.  The simple
+         * blinky demo does not use the idle task hook. */
+        vFullDemoIdleFunction();
+    }
     #endif
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask,
@@ -250,6 +248,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
      * when running the FreeRTOS POSIX port. */
     vAssertCalled( __FILE__, __LINE__ );
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
@@ -261,11 +260,13 @@ void vApplicationTickHook( void )
     * functions can be used (those that end in FromISR()). */
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-        {
-            vFullDemoTickHookFunction();
-        }
+    {
+        vFullDemoTickHookFunction();
+    }
     #endif /* mainSELECTED_APPLICATION */
 }
+
+/*-----------------------------------------------------------*/
 
 void traceOnEnter()
 {
@@ -281,10 +282,11 @@ void traceOnEnter()
 
         if( xReturn > 0 )
         {
-            if( xTraceRunning == pdTRUE )
+            #if ( projENABLE_TRACING == 1 )
             {
                 prvSaveTraceFile();
             }
+            #endif /* if ( projENABLE_TRACING == 1 ) */
 
             /* clear the buffer */
             char buffer[ 1 ];
@@ -292,6 +294,8 @@ void traceOnEnter()
         }
     #endif /* if ( TRACE_ON_ENTER == 1 ) */
 }
+
+/*-----------------------------------------------------------*/
 
 void vLoggingPrintf( const char * pcFormat,
                      ... )
@@ -302,15 +306,17 @@ void vLoggingPrintf( const char * pcFormat,
     vprintf( pcFormat, arg );
     va_end( arg );
 }
+
 /*-----------------------------------------------------------*/
 
 void vApplicationDaemonTaskStartupHook( void )
 {
     /* This function will be called once only, when the daemon task starts to
-     * execute    (sometimes called the timer task).  This is useful if the
+     * execute (sometimes called the timer task).  This is useful if the
      * application includes initialisation code that would benefit from executing
      * after the scheduler has been started. */
 }
+
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( const char * const pcFileName,
@@ -334,10 +340,11 @@ void vAssertCalled( const char * const pcFileName,
         {
             xPrinted = pdTRUE;
 
-            if( xTraceRunning == pdTRUE )
+            #if ( projENABLE_TRACING == 1 )
             {
                 prvSaveTraceFile();
             }
+            #endif /* if ( projENABLE_TRACING == 0 ) */
         }
 
         /* You can step out of this function to debug the assertion by using
@@ -351,32 +358,33 @@ void vAssertCalled( const char * const pcFileName,
     }
     taskEXIT_CRITICAL();
 }
+
 /*-----------------------------------------------------------*/
 
-static void prvSaveTraceFile( void )
-{
-    /* Tracing is not used when code coverage analysis is being performed. */
-    #if ( projCOVERAGE_TEST != 1 )
+#if ( projENABLE_TRACING == 1 )
+
+    static void prvSaveTraceFile( void )
+    {
+        FILE * pxOutputFile;
+
+        vTraceStop();
+
+        pxOutputFile = fopen( "Trace.dump", "wb" );
+
+        if( pxOutputFile != NULL )
         {
-            FILE * pxOutputFile;
-
-            vTraceStop();
-
-            pxOutputFile = fopen( "Trace.dump", "wb" );
-
-            if( pxOutputFile != NULL )
-            {
-                fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-                fclose( pxOutputFile );
-                printf( "\r\nTrace output saved to Trace.dump\r\n" );
-            }
-            else
-            {
-                printf( "\r\nFailed to create trace dump file\r\n" );
-            }
+            fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+            fclose( pxOutputFile );
+            printf( "\r\nTrace output saved to Trace.dump\r\n" );
         }
-    #endif /* if ( projCOVERAGE_TEST != 1 ) */
-}
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+        }
+    }
+
+#endif /* if ( projENABLE_TRACING == 1 ) */
+
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
@@ -386,9 +394,9 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
                                     uint32_t * pulIdleTaskStackSize )
 {
-/* If the buffers to be provided to the Idle task are declared inside this
- * function then they must be declared static - otherwise they will be allocated on
- * the stack and so not exists after this function exits. */
+    /* If the buffers to be provided to the Idle task are declared inside this
+     * function then they must be declared static - otherwise they will be allocated on
+     * the stack and so not exists after this function exits. */
     static StaticTask_t xIdleTaskTCB;
     static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
@@ -404,6 +412,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
+
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
@@ -413,9 +422,9 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
                                      uint32_t * pulTimerTaskStackSize )
 {
-/* If the buffers to be provided to the Timer task are declared inside this
- * function then they must be declared static - otherwise they will be allocated on
- * the stack and so not exists after this function exits. */
+    /* If the buffers to be provided to the Timer task are declared inside this
+     * function then they must be declared static - otherwise they will be allocated on
+     * the stack and so not exists after this function exits. */
     static StaticTask_t xTimerTaskTCB;
 
     /* Pass out a pointer to the StaticTask_t structure in which the Timer
@@ -431,11 +440,15 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
+/*-----------------------------------------------------------*/
+
 void handle_sigint( int signal )
 {
     int xReturn;
 
-    xReturn = chdir( BUILD ); /* changing dir to place gmon.out inside build */
+    ( void ) signal;
+
+    xReturn = chdir( BUILD ); /* Changing dir to place gmon.out inside build. */
 
     if( xReturn == -1 )
     {
@@ -445,6 +458,8 @@ void handle_sigint( int signal )
     exit( 2 );
 }
 
+/*-----------------------------------------------------------*/
+
 static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )
@@ -452,12 +467,18 @@ void vTraceTimerReset( void )
     ulEntryTime = xTaskGetTickCount();
 }
 
+/*-----------------------------------------------------------*/
+
 uint32_t uiTraceTimerGetFrequency( void )
 {
     return configTICK_RATE_HZ;
 }
 
+/*-----------------------------------------------------------*/
+
 uint32_t uiTraceTimerGetValue( void )
 {
     return( xTaskGetTickCount() - ulEntryTime );
 }
+
+/*-----------------------------------------------------------*/

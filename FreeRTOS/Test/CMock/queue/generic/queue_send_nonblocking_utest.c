@@ -44,6 +44,18 @@
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* ============================= Unity Fixtures ============================= */
 
 void setUp( void )
@@ -245,6 +257,8 @@ void test_macro_xQueueSend_task_waiting_equal_priority_success( void )
 void test_macro_xQueueSend_task_waiting_higher_priority_success( void )
 {
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Insert an item into the event list */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );

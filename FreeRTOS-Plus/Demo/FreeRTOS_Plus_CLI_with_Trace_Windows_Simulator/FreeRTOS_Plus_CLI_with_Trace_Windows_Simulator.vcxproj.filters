@@ -36,7 +36,7 @@
     <ClCompile Include="UDPCommandServer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcKernelPort.c">
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\kernelPorts\FreeRTOS\trcKernelPort.c">
       <Filter>FreeRTOS+Trace</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c">

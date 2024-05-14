@@ -38,7 +38,7 @@
   "CBMCFLAGS":
   [
       "--unwind 1",
-      "--unwindset prvInitialiseTaskLists.0:8,prvInitialiseNewTask.0:16,prvInitialiseNewTask.1:4"
+      "--unwindset prvInitialiseTaskLists.0:8,prvInitialiseNewTask.0:16,prvInitialiseNewTask.1:4,prvCreateIdleTasks.0:20,prvCreateIdleTasks.1:2"
   ],
   "OBJS":
   [

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -39,7 +39,15 @@ StaticSemaphore_t xStdioMutexBuffer;
 
 void console_init( void )
 {
-    xStdioMutex = xSemaphoreCreateMutexStatic( &xStdioMutexBuffer );
+    #if( configSUPPORT_STATIC_ALLOCATION == 1 )
+    {
+        xStdioMutex = xSemaphoreCreateMutexStatic( &xStdioMutexBuffer );
+    }
+    #else /* if( configSUPPORT_STATIC_ALLOCATION == 1 ) */
+    {
+        xStdioMutex = xSemaphoreCreateMutex( );
+    }
+    #endif /* if( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 }
 
 void console_print( const char * fmt,

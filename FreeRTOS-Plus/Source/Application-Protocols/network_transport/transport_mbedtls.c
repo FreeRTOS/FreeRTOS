@@ -25,15 +25,20 @@
  */
 
 /**
- * @file tls_freertos.c
+ * @file transport_mbedtls.c
  * @brief TLS transport interface implementations. This implementation uses
  * mbedTLS.
  */
 
 #include "logging_levels.h"
 
-#define LIBRARY_LOG_NAME     "MbedtlsTransport"
-#define LIBRARY_LOG_LEVEL    LOG_INFO
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME    "MbedtlsTransport"
+#endif /* LIBRARY_LOG_NAME */
+
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif /* LIBRARY_LOG_LEVEL*/
 
 #include "logging_stack.h"
 
@@ -43,7 +48,24 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* MbedTLS Bio TCP sockets wrapper include. */
+/* MBedTLS Includes */
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "mbedtls/mbedtls_config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
+
+#ifdef MBEDTLS_PSA_CRYPTO_C
+    /* MbedTLS PSA Includes */
+    #include "psa/crypto.h"
+    #include "psa/crypto_values.h"
+#endif /* MBEDTLS_PSA_CRYPTO_C */
+
+#ifdef MBEDTLS_DEBUG_C
+    #include "mbedtls/debug.h"
+#endif /* MBEDTLS_DEBUG_C */
+
+/* MBedTLS Bio TCP sockets wrapper include. */
 #include "mbedtls_bio_tcp_sockets_wrapper.h"
 
 /* TLS transport header. */
@@ -219,6 +241,22 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
 
 /*-----------------------------------------------------------*/
 
+#ifdef MBEDTLS_DEBUG_C
+    void mbedtls_string_printf( void * sslContext,
+                                int level,
+                                const char * file,
+                                int line,
+                                const char * str )
+    {
+        if( ( str != NULL ) && ( file != NULL ) )
+        {
+            LogDebug( ( "%s:%d: [%d] %s", file, line, level, str ) );
+        }
+    }
+#endif /* MBEDTLS_DEBUG_C */
+
+/*-----------------------------------------------------------*/
+
 static void sslContextInit( SSLContext_t * pSslContext )
 {
     configASSERT( pSslContext != NULL );
@@ -228,6 +266,12 @@ static void sslContextInit( SSLContext_t * pSslContext )
     mbedtls_pk_init( &( pSslContext->privKey ) );
     mbedtls_x509_crt_init( &( pSslContext->clientCert ) );
     mbedtls_ssl_init( &( pSslContext->context ) );
+    #ifdef MBEDTLS_DEBUG_C
+        mbedtls_debug_set_threshold( LIBRARY_LOG_LEVEL + 1U );
+        mbedtls_ssl_conf_dbg( &( pSslContext->config ),
+                              mbedtls_string_printf,
+                              NULL );
+    #endif /* MBEDTLS_DEBUG_C */
 }
 /*-----------------------------------------------------------*/
 
@@ -597,6 +641,19 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
         returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
     }
 
+    #ifdef MBEDTLS_PSA_CRYPTO_C
+        if( returnStatus == TLS_TRANSPORT_SUCCESS )
+        {
+            mbedtlsError = psa_crypto_init();
+
+            if( mbedtlsError != PSA_SUCCESS )
+            {
+                LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
+                returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
+            }
+        }
+    #endif /* MBEDTLS_PSA_CRYPTO_C */
+
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Seed the random number generator. */
@@ -809,8 +866,14 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_read." ) );
+            }
+
             LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),
@@ -868,8 +931,14 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 
         if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
             ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET ) )
         {
+            if( tlsStatus == MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET )
+            {
+                LogDebug( ( "Received a MBEDTLS_ERR_SSL_RECEIVED_NEW_SESSION_TICKET return code from mbedtls_ssl_write." ) );
+            }
+
             LogDebug( ( "Failed to send data. However, send can be retried on this error. "
                         "mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( tlsStatus ),

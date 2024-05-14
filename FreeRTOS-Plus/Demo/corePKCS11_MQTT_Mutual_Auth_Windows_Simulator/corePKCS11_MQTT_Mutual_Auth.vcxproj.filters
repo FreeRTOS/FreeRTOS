@@ -72,6 +72,7 @@
     <ClCompile Include="PKCS11_Mqtt_MutualAuthDemo.c">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_rng_pkcs11.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">

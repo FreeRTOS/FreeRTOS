@@ -118,6 +118,15 @@
 			</matcher>
 		</filter>
 		<filter>
+			<id>1701338096747</id>
+			<name>FreeRTOS</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-true-false-examples</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1682451751797</id>
 			<name>NXP_Code</name>
 			<type>10</type>

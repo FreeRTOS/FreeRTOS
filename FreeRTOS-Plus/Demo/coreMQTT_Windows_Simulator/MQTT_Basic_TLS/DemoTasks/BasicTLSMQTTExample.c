@@ -125,7 +125,7 @@
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
  */
-#define mqttexampleCONNACK_RECV_TIMEOUT_MS                ( 1000U )
+#define mqttexampleCONNACK_RECV_TIMEOUT_MS                ( 2000U )
 
 /**
  * @brief The prefix to the topic(s) subscribe(d) to and publish(ed) to in the example.
@@ -160,7 +160,7 @@
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
  * Refer to FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/readme.txt for more details.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 2000U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 5000U )
 
 /**
  * @brief The keep-alive timeout period reported to the broker while establishing
@@ -443,11 +443,12 @@ void vStartSimpleMQTTDemo( void )
      * state or call the MQTT_ProcessLoop() API function. Using an agent task
      * also enables multiple application tasks to more easily share a single
      * MQTT connection. */
+
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
                  "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 tskIDLE_PRIORITY + 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
                  NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
 }
 /*-----------------------------------------------------------*/

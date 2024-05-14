@@ -429,6 +429,10 @@ static BaseType_t prvDownloadLoop( void );
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 /*
  * @brief Create task to demonstrate the HTTP API over a server-authenticated
  * network connection with a server.

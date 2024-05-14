@@ -288,6 +288,7 @@ static void prvMiscInitialisation( void )
     ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 1 ] );
     ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 2 ] );
     ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 3 ] );
+
     FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\n",
                              ulRandomNumbers[ 0 ],
                              ulRandomNumbers[ 1 ],

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -57,19 +57,19 @@
 #include "drivers/mss/mss_mmuart/mss_uart.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  0
+ * or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 
 /* Set to 1 to use direct mode and set to 0 to use vectored mode.
-
-VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
-vector base address (BASE) in the mtvec register.
-
-VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
-pc to be set to the BASE, whereas interrupts cause the pc to be set to the
-address BASE plus four times the interrupt cause number.
-*/
-#define mainVECTOR_MODE_DIRECT	0
+ *
+ * VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
+ * vector base address (BASE) in the mtvec register.
+ *
+ * VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
+ * pc to be set to the BASE, whereas interrupts cause the pc to be set to the
+ * address BASE plus four times the interrupt cause number.
+ */
+#define mainVECTOR_MODE_DIRECT                0
 
 /*-----------------------------------------------------------*/
 
@@ -92,7 +92,8 @@ extern void freertos_vector_table( void );
  */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /*
@@ -110,7 +111,7 @@ void e51( void )
 
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
-    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
     {
         main_blinky();
     }
@@ -126,25 +127,25 @@ static void prvSetupHardware( void )
 {
     /* Configure UART0. */
     SYSREG->SUBBLK_CLOCK_CR |= SUBBLK_CLOCK_CR_MMUART0_MASK;
-    SYSREG->SOFT_RESET_CR   &= ~SOFT_RESET_CR_MMUART0_MASK;
+    SYSREG->SOFT_RESET_CR &= ~SOFT_RESET_CR_MMUART0_MASK;
     MSS_UART_init( &( g_mss_uart0_lo ),
                    MSS_UART_115200_BAUD,
                    MSS_UART_DATA_8_BITS | MSS_UART_NO_PARITY | MSS_UART_ONE_STOP_BIT );
 
     /* Configure the LED. */
-    mss_config_clk_rst( MSS_PERIPH_GPIO2, ( uint8_t )MPFS_HAL_FIRST_HART, PERIPHERAL_ON );
+    mss_config_clk_rst( MSS_PERIPH_GPIO2, ( uint8_t ) MPFS_HAL_FIRST_HART, PERIPHERAL_ON );
     MSS_GPIO_config( GPIO2_LO, MSS_GPIO_16, MSS_GPIO_OUTPUT_MODE ); /* Red Led (LED1). */
     MSS_GPIO_config( GPIO2_LO, MSS_GPIO_18, MSS_GPIO_OUTPUT_MODE ); /* Yellow Led (LED3). */
 
-    #if( mainVECTOR_MODE_DIRECT == 1 )
-	{
-		__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
-	}
-	#else
-	{
-		__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
-	}
-	#endif
+    #if ( mainVECTOR_MODE_DIRECT == 1 )
+    {
+        __asm__ volatile ( "csrw mtvec, %0" : : "r" ( freertos_risc_v_trap_handler ) );
+    }
+    #else
+    {
+        __asm__ volatile ( "csrw mtvec, %0" : : "r" ( ( uintptr_t ) freertos_vector_table | 0x1 ) );
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -161,7 +162,10 @@ void vApplicationMallocFailedHook( void )
      * to query the size of free heap space that remains (although it does not
      * provide information on how the remaining heap might be fragmented). */
     taskDISABLE_INTERRUPTS();
-    for( ;; );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -179,7 +183,8 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
     ( void ) pcTaskName;
     ( void ) pxTask;
@@ -188,14 +193,17 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
      * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
      * function is called if a stack overflow is detected. */
     taskDISABLE_INTERRUPTS();
-    for( ;; );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
     /* The tests in the full demo expect some interaction with interrupts. */
-    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
     {
         extern void vFullDemoTickHook( void );
         vFullDemoTickHook();
@@ -206,7 +214,7 @@ void vApplicationTickHook( void )
 
 void vToggleLED( void )
 {
-static volatile uint8_t value = 0u;
+    static volatile uint8_t value = 0u;
 
     value = ( value == 0u ) ? 1u : 0u;
     MSS_GPIO_set_output( GPIO2_LO, MSS_GPIO_18, value );
@@ -215,20 +223,20 @@ static volatile uint8_t value = 0u;
 
 void vAssertCalled( void )
 {
-volatile uint32_t ul;
-const uint32_t ulNullLoopDelay = 0x1ffffUL;
-static volatile uint8_t value = 0u;
+    volatile uint32_t ul;
+    const uint32_t ulNullLoopDelay = 0x1ffffUL;
+    static volatile uint8_t value = 0u;
 
     taskDISABLE_INTERRUPTS();
 
     /* Flash the red LED to indicate that assert was hit - interrupts are off
      * here to prevent any further tick interrupts or context switches, so the
      * delay is implemented as a crude loop instead of a peripheral timer. */
-    for( ;; )
+    for( ; ; )
     {
         for( ul = 0; ul < ulNullLoopDelay; ul++ )
         {
-            __asm volatile( "nop" );
+            __asm volatile ( "nop" );
         }
 
         value = ( value == 0u ) ? 1u : 0u;

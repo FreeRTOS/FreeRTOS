@@ -375,6 +375,10 @@ static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext );
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext )
 {
     uint8_t ucCount = 0U;
@@ -390,7 +394,7 @@ static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext )
         /* Event callback will set #xDeleteResponseReceived when receiving an
          * incoming publish on either `/delete/accepted` or `/delete/rejected`
          * Shadow topics. */
-        xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext, MQTT_PROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext );
     }
 
     if( ( xMQTTStatus != MQTTSuccess ) || ( xDeleteResponseReceived != pdTRUE ) )

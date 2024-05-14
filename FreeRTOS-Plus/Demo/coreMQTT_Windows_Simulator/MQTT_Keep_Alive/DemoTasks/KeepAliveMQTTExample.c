@@ -71,6 +71,9 @@
 /* Transport interface include. */
 #include "transport_plaintext.h"
 
+/* FreeRTOS+TCP IP config include. */
+#include "FreeRTOSIPConfig.h"
+
 /*-----------------------------------------------------------*/
 
 /* Compile time error for undefined configs. */

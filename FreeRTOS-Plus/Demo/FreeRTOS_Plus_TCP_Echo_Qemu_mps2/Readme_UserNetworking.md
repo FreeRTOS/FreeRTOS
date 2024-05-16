@@ -1,7 +1,4 @@
 # TCP Echo Client Demo for MPS2 Cortex-M3 AN385 emulated using QEMU with UserMode Networking
-This FreeRTOS+TCP example demonstrates a TCP Echo Client which sends
-echo requests to an Echo Server and then receives the echo reply. The
-Echo Client runs on the MPS2 Cortex-M3 AN385 platform emulated using QEMU.
 
 ## Setup Description
 The demo requires 2 components -

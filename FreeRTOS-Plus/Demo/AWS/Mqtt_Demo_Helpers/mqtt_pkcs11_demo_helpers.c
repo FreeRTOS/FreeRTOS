@@ -359,7 +359,7 @@ static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
 
 /*-----------------------------------------------------------*/
 
-extern UBaseType_t uxRand(void);
+extern UBaseType_t uxRand( void );
 
 /*-----------------------------------------------------------*/
 

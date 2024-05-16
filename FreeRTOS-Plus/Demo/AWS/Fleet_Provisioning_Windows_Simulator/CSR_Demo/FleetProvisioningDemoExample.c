@@ -293,7 +293,7 @@ static int prvFleetProvisioningTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xPlatformIsNetworkUp(void);
+BaseType_t xPlatformIsNetworkUp( void );
 
 /*-----------------------------------------------------------*/
 

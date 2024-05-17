@@ -359,6 +359,10 @@ static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
 
 /*-----------------------------------------------------------*/
 
+extern UBaseType_t uxRand( void );
+
+/*-----------------------------------------------------------*/
+
 static int32_t prvGenerateRandomNumber()
 {
     return( uxRand() & INT32_MAX );

@@ -214,7 +214,6 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
     CK_OBJECT_HANDLE xPubKeyHandle;
     CK_RV xPkcs11Ret = CKR_OK;
     mbedtls_pk_context xPrivKey;
-    mbedtls_ecdsa_context xEcdsaContext;
     mbedtls_x509write_csr xReq;
     int32_t ulMbedtlsRet = -1;
     const mbedtls_pk_info_t * pxHeader = mbedtls_pk_info_from_type( MBEDTLS_PK_ECKEY );

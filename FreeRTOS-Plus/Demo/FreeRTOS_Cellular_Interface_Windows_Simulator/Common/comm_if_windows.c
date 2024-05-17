@@ -418,12 +418,6 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
             commIntRet = IOT_COMM_INTERFACE_FAILURE;
         }
 
-        if( pCellularCommContext->commOverlapped.hEvent != NULL )
-        {
-            ( void ) CloseHandle( pCellularCommContext->commOverlapped.hEvent );
-            pCellularCommContext->commOverlapped.hEvent = NULL;
-        }
-
         /* Wait for the commReceiveCallbackThread exit. */
         if( pCellularCommContext->commReceiveCallbackThread != NULL )
         {

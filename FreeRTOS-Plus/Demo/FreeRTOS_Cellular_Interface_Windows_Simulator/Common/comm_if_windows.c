@@ -360,8 +360,11 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
     {
         Status = SetupComm( hComm, COMM_TX_BUFFER_SIZE, COMM_RX_BUFFER_SIZE );
 
-        LogError( ( "Cellular setup COM port fail %d", GetLastError() ) );
-        commIntRet = IOT_COMM_INTERFACE_FAILURE;
+        if( Status == FALSE )
+        {
+            LogError( ( "Cellular setup COM port fail %d", GetLastError() ) );
+            commIntRet = IOT_COMM_INTERFACE_FAILURE;
+        }
     }
 
     if( commIntRet == IOT_COMM_INTERFACE_SUCCESS )

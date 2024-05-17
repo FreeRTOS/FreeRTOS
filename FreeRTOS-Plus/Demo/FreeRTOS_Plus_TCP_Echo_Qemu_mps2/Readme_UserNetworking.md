@@ -1,4 +1,4 @@
-# TCP Echo Client Demo for MPS2 Cortex-M3 AN385 emulated using QEMU with UserMode Networking
+# TCP Echo Client Demo for MPS2 Cortex-M3 AN385 emulated using QEMU with User Mode Networking
 
 ## Setup Description
 The demo requires 2 components -
@@ -12,7 +12,7 @@ The demo requires 2 components -
 |  Runs - Echo Server                                    |
 |                          +--------------------------+  |
 |                          |                          |  |
-|                          | OS - Any                 |  |
+|                          | QEMU                     |  |
 |                          | Runs - Echo Client       |  |
 |                          |                          |  |
 |  +----------------+      |    +----------------+    |  |
@@ -30,6 +30,7 @@ The demo requires 2 components -
 
 ## Launch Echo Server
 Launch Echo Server on the host machine.
+
 ### Host OS is Linux
 * Install `netcat`:
    ```
@@ -57,18 +58,21 @@ Launch Echo Server on the host machine.
     nc -l -p 7
     ```
 
-## Enable User Networking in QEMU
+## Enable User Mode Networking in QEMU
 
-The User Networking is implemented using *slirp*, which provides a full TCP/IP stack within QEMU and uses that stack to implement a virtual NAT network. It does not require Administrator privileges.
+The User Mode Networking is implemented using *slirp*, which provides a full
+TCP/IP stack within QEMU and uses it to implement a virtual NAT network. It does
+not require Administrator privileges.
 
 User Mode Networking has the following limitations:
 
- - There is a lot of overhead, so the performance is poor.
- - In general, ICMP traffic does not work (so you cannot use ping within a guest).
- - On Linux hosts, ping does work from within the guest, but it needs initial setup by root (once per host).
+ - The performance is not very good because of the overhead involved..
+ - ICMP does not work out of the box i.e. you cannot use ping within the guest.
+   Linux hosts require one time setup by root to make ICMP work within the
+   guest.
  - The guest is not directly accessible from the host or the external network.
 
-Do the following steps:
+Do the following steps on the host machine:
 
 1. Pick a MAC address for the QEMU. Define a shell variable `QEMU_MAC_ADDRESS`
 and set its value to the picked MAC Address. For example, run the following
@@ -77,7 +81,18 @@ command if you picked `52:54:00:12:34:AD`:
 export QEMU_MAC_ADDRESS=52:54:00:12:34:AD
 ```
 
-2. Set `configMAC_ADDR0`-`configMAC_ADDR5` in `FreeRTOSConfig.h` to the value
+2. Define a shell variable `ECHO_SERVER_IP_ADDRESS` and set its value to the
+IP address of the Echo Server which is running on the host. For example,
+run the following command if the IP address of the Echo Server is
+`192.168.76.2`:
+```shell
+export ECHO_SERVER_IP_ADDRESS=192.168.76.2
+```
+
+## Build and Run
+Do the following steps on the host machine:
+
+1. Set `configMAC_ADDR0`-`configMAC_ADDR5` in `FreeRTOSConfig.h` to the value
 of `QEMU_MAC_ADDRESS`:
 ```shell
 echo $QEMU_MAC_ADDRESS
@@ -91,17 +106,11 @@ echo $QEMU_MAC_ADDRESS
 #define configMAC_ADDR5         0xAD
 ```
 
-3. Define a shell variable `ECHO_SERVER_IP_ADDRESS` and set its value to the
-IP address of the Echo Server which is running on the host. For example,
-run the following command if the IP address of the Echo Server is
-`192.168.76.2`:
-```shell
-export ECHO_SERVER_IP_ADDRESS=192.168.76.2
-```
-
-4. Set `configECHO_SERVER_ADDR0`-`configECHO_SERVER_ADDR3` in `FreeRTOSConfig.h`
+2. Set `configECHO_SERVER_ADDR0`-`configECHO_SERVER_ADDR3` in `FreeRTOSConfig.h`
 to the value of `ECHO_SERVER_IP_ADDRESS`:
-
+```shell
+echo $ECHO_SERVER_IP_ADDRESS
+```
 ```c
 #define configECHO_SERVER_ADDR0 192
 #define configECHO_SERVER_ADDR1 168
@@ -109,27 +118,59 @@ to the value of `ECHO_SERVER_IP_ADDRESS`:
 #define configECHO_SERVER_ADDR3 2
 ```
 
-5. Build:
+3. Build:
 ```shell
    make
 ```
 
-6. Run:
+4. Run:
 ```shell
-      qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel
+   qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel
       build/freertos_tcp_mps2_demo.axf -monitor null -semihosting
       -semihosting-config enable=on,target=native -serial stdio -nographic
       -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net
       nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0
 ```
-Adding the following
-`-netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9` to the qemu command line changes the network configuration to use 192.168.76.0/24 instead of the default (10.0.2.0/24) and starts guest DHCP allocation from 9 (instead of 15).
+Adding `-netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9` to
+the qemu command line changes the network configuration to use 192.168.76.0/24
+instead of the default (10.0.2.0/24) and starts guest DHCP allocation from
+9 (instead of 15).
 
-7. You should see that following output on the terminal of the Echo Server (which
+5. You should see that following output on the terminal of the Echo Server (which
 is running `sudo nc -l 7` or `netcat -l 7` depending on your OS):
 ```
 0FGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=> ?
 @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
 @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
 @ABCDEFGHIJKLM
+```
+
+## Debug
+1. Build with debugging symbols:
+```
+make DEBUG=1
+```
+
+2. Start QEMU in the paused state waiting for GDB connection:
+```shell
+   qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel -s -S
+      build/freertos_tcp_mps2_demo.axf -monitor null -semihosting
+      -semihosting-config enable=on,target=native -serial stdio -nographic
+      -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net
+      nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0
+```
+
+3. Run GDB:
+```shell
+$ arm-none-eabi-gdb -q ./build/freertos_tcp_mps2_demo.axf
+
+(gdb) target remote :1234
+(gdb) break main
+(gdb) c
+```
+
+4. The above QEMU command creates a network packet dump in the file
+`/tmp/qemu_tap_dump` which you can examine using `tcpdump` or WireShark:
+```shell
+sudo tcpdump -r /tmp/qemu_tap_dump  | less
 ```

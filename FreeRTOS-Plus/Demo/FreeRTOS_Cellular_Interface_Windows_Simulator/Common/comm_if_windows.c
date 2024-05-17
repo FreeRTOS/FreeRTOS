@@ -577,10 +577,6 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
                     LogError( ( "Cellular GetOverlappedResult fail %d", GetLastError() ) );
                     commIntRet = IOT_COMM_INTERFACE_FAILURE;
                 }
-                else
-                {
-                    *pDataSentLength = ( uint32_t ) dataLength;
-                }
 
                 break;
 
@@ -594,6 +590,8 @@ static CellularCommInterfaceError_t prvCommIntfSend( CellularCommInterfaceHandle
                 commIntRet = IOT_COMM_INTERFACE_FAILURE;
                 break;
         }
+
+        *pDataSentLength = ( uint32_t ) dwWritten;
     }
 
     if( osWrite.hEvent != NULL )
@@ -676,10 +674,6 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
                     LogError( ( "Cellular receive GetOverlappedResult fail %d", GetLastError() ) );
                     commIntRet = IOT_COMM_INTERFACE_FAILURE;
                 }
-                else
-                {
-                    *pDataReceivedLength = ( uint32_t ) dwRead;
-                }
 
                 break;
 
@@ -693,6 +687,8 @@ static CellularCommInterfaceError_t prvCommIntfReceive( CellularCommInterfaceHan
                 commIntRet = IOT_COMM_INTERFACE_FAILURE;
                 break;
         }
+
+        *pDataReceivedLength = ( uint32_t ) dwRead;
     }
 
     if( osRead.hEvent != NULL )

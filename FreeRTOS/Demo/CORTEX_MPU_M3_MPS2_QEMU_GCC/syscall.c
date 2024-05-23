@@ -45,11 +45,6 @@ typedef struct UART_t
 #define UART_CTRL_TX_EN      ( 1 << 0 )
 #define UART_CTRL_RX_EN      ( 1 << 1 )
 
-
-extern unsigned long _heap_bottom;
-extern unsigned long _heap_top;
-extern unsigned long g_ulBase;
-
 /**
  * @brief initializes the UART emulated hardware
  */
@@ -84,6 +79,9 @@ static FILE __stdio = FDEV_SETUP_STREAM(_uart_putc, NULL, NULL, _FDEV_SETUP_WRIT
 FILE *const stdout = &__stdio;
 
 #else
+
+extern unsigned long _heap_bottom;
+extern unsigned long _heap_top;
 
 static char * heap_end = ( char * ) &_heap_bottom;
 
@@ -150,6 +148,7 @@ void * _sbrk( int incr )
 
     return prev_heap_end;
 }
+
 void _close( int fd )
 {
     ( void ) fd;

@@ -180,7 +180,7 @@ void main_tcp_echo_client_tasks( void )
         }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
 
-        memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
+        //memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
 
         FreeRTOS_IPInit_Multi();
     #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
@@ -223,6 +223,10 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
     uint32_t ulGatewayAddress;
     uint32_t ulDNSServerAddress;
     char cBuffer[ 16 ];
+
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    (void) pxEndPoint;
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     /* If the network has just come up...*/
     if( eNetworkEvent == eNetworkUp )
@@ -334,6 +338,10 @@ static void prvMiscInitialisation( void )
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	(void) pxEndPoint;
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
         /* Determine if a name lookup is for this node.  Two names are given
          * to this node: that returned by pcApplicationHostnameHook() and that set

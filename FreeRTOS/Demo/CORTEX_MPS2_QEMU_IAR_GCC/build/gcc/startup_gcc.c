@@ -27,22 +27,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-/* UART peripheral register addresses and bits. */
-#define UART0_ADDR             ( ( UART_t * ) ( 0x40004000 ) )
-#define UART_DR( baseaddr )    ( *( uint32_t * ) ( baseaddr ) )
-#define UART_STATE( baseaddr ) ( *( uint32_t * ) ( baseaddr + 4 ) )
-#define UART_STATE_TXFULL      ( 1 << 0 )
-
-typedef struct UART_t
-{
-    volatile uint32_t DATA;
-    volatile uint32_t STATE;
-    volatile uint32_t CTRL;
-    volatile uint32_t INTSTATUS;
-    volatile uint32_t BAUDDIV;
-} UART_t;
-
-
 /* FreeRTOS interrupt handlers. */
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
@@ -99,7 +83,7 @@ void Reset_Handler( void )
 }
 
 /* Variables used to store the value of registers at the time a hardfault
- * occurs.  These are volatile to try and prevent the compiler/linker optimising
+ * occurs.  These are volatile to try and prevent the compiler/linker optimizing
  * them away as the variables never actually get used. */
 volatile uint32_t r0;
 volatile uint32_t r1;

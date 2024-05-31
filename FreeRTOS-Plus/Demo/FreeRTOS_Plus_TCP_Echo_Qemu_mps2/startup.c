@@ -222,5 +222,5 @@ __attribute__( ( naked ) ) void exit( int status )
         "end: b end\n"
         );
 
-    (void) status;
+    ( void ) status;
 }

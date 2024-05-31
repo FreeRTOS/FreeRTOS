@@ -406,11 +406,11 @@
         {
             /* Provide a stub for this function. */
 
-        #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-	    (void) eDHCPPhase;
-	    (void) pxEndPoint;
-	    (void) pxIPAddress;
-        #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+            #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+	        ( void ) eDHCPPhase;
+	        ( void ) pxEndPoint;
+	        ( void ) pxIPAddress;
+            #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
             return eDHCPContinue;
         }

@@ -38,10 +38,10 @@ typedef struct UART_t
     volatile uint32_t BAUDDIV;
 } UART_t;
 
-#define UART0_ADDR           ( ( UART_t * ) ( 0x40004000 ) )
+#define UART0_ADDR         ( ( UART_t * ) ( 0x40004000 ) )
 #define UART_DR( baseaddr )    ( *( unsigned int * ) ( baseaddr ) )
 
-#define UART_CTRL_TX_EN      ( 1 << 0 )
+#define UART_CTRL_TX_EN    ( 1 << 0 )
 
 
 extern unsigned long _heap_bottom;
@@ -65,7 +65,7 @@ void uart_init( void )
  */
 int _fstat( int file )
 {
-    (void) file;
+    ( void ) file;
     return 0;
 }
 
@@ -78,9 +78,9 @@ int _read( int file,
            char * buf,
            int len )
 {
-    (void) file;
-    (void) buf;
-    (void) len;
+    ( void ) file;
+    ( void ) buf;
+    ( void ) len;
     return -1;
 }
 
@@ -98,7 +98,7 @@ int _write( int file,
 {
     int todo;
 
-    (void) file;
+    ( void ) file;
 
     for( todo = 0; todo < len; todo++ )
     {

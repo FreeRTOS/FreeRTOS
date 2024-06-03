@@ -173,7 +173,7 @@ void main_tcp_echo_client_tasks( void )
 
         /* === End-point 0 === */
         FreeRTOS_FillEndPoint( &( xInterfaces[ 0 ] ), &( xEndPoints[ 0 ] ), ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
-        #if ( ipconfigUSE_DHCP != 0 )
+    #if ( ipconfigUSE_DHCP != 0 )
         {
             /* End-point 0 wants to use DHCPv4. */
             xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;

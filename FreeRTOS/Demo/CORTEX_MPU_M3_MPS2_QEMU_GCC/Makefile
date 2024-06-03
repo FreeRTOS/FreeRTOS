@@ -49,9 +49,9 @@ LDFLAGS               +=    -Xlinker --gc-sections
 LDFLAGS               +=    -nostartfiles -nostdlib -nolibc -nodefaultlibs
 
 ifeq ($(DEBUG), 1)
-    CFLAGS                +=     -g3 -Os -ffunction-sections -fdata-sections -save-temps=obj
+    CFLAGS                +=     -g3 -Og -ffunction-sections -fdata-sections -save-temps=obj
 else
-    CFLAGS                +=     -g3 -Os -ffunction-sections -fdata-sections
+    CFLAGS                +=     -Os -ffunction-sections -fdata-sections
 endif
 
 ifeq ($(PICOLIBC), 1)

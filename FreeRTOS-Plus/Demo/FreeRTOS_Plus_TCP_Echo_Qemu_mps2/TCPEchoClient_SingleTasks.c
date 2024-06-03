@@ -398,22 +398,24 @@
         #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
             eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
                                                         uint32_t ulIPAddress )
+            {
+                ( void ) eDHCPPhase;
+                ( void ) ulIPAddress;
+
+                return eDHCPContinue;
+            }
         #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
             eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
                                                               struct xNetworkEndPoint * pxEndPoint,
                                                               IP_Address_t * pxIPAddress )
+            {
+                ( void ) eDHCPPhase;
+                ( void ) pxEndPoint;
+                ( void ) pxIPAddress;
+
+                return eDHCPContinue;
+            }
         #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
-        {
-            /* Provide a stub for this function. */
-
-            #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
-	        ( void ) eDHCPPhase;
-	        ( void ) pxEndPoint;
-	        ( void ) pxIPAddress;
-            #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
-
-            return eDHCPContinue;
-        }
 
     #endif /* if ( ipconfigUSE_DHCP_HOOK != 0 )*/
 

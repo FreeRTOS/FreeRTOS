@@ -34,8 +34,8 @@ extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
 extern void uart_init( void );
 extern int main( void );
-extern void _start( void );
 
+void _start( void );
 void __attribute__( ( weak ) ) EthernetISR( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
@@ -95,7 +95,7 @@ void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
     {
     }
 
-    /* remove the warning: variable <x> is set but not used */
+    /* Remove the warning about unused variables. */
     ( void ) r0;
     ( void ) r1;
     ( void ) r2;

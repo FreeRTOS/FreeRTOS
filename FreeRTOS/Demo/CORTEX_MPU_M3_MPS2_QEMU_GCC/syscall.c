@@ -69,7 +69,7 @@ void uart_init(void)
 int
 _uart_putc(char c, FILE *file)
 {
-    (void) file;
+    ( void ) file;
     UART_DR( UART0_ADDR ) = c;
     return (unsigned char) c;
 }
@@ -92,7 +92,7 @@ static char * heap_end = ( char * ) &_heap_bottom;
  */
 int _fstat( int file )
 {
-    (void) file;
+    ( void ) file;
     return 0;
 }
 
@@ -105,9 +105,9 @@ int _read( int file,
            char * buf,
            int len )
 {
-    (void) file;
-    (void) buf;
-    (void) len;
+    ( void ) file;
+    ( void ) buf;
+    ( void ) len;
     return -1;
 }
 
@@ -125,7 +125,7 @@ int _write( int file,
 {
     int todo;
 
-    (void) file;
+    ( void ) file;
 
     for( todo = 0; todo < len; todo++ )
     {

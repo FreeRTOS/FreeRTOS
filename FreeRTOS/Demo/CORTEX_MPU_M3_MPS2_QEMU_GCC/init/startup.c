@@ -36,7 +36,8 @@ extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
 extern void uart_init( void );
 extern int main( void );
-extern void _start( void );
+
+void _start( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
@@ -251,5 +252,6 @@ void exit( int status )
         "bkpt 0xab\n"
         "end: b end\n"
         );
-    (void) status;
+
+    ( void ) status;
 }

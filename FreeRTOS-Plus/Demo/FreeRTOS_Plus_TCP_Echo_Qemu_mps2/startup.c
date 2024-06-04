@@ -28,15 +28,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "CMSIS/CMSDK_CM3.h"
-#include "CMSIS/core_cm3.h"
 
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
-extern void uart_init();
-extern int main();
+extern void uart_init( void );
+extern int main( void );
 
+void _start( void );
 void __attribute__( ( weak ) ) EthernetISR( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
@@ -63,7 +62,6 @@ void Reset_Handler( void )
     }
 
     /* jump to board initialisation */
-    void _start( void );
     _start();
 }
 
@@ -96,6 +94,16 @@ void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
     for( ; ; )
     {
     }
+
+    /* Remove the warning about unused variables. */
+    ( void ) r0;
+    ( void ) r1;
+    ( void ) r2;
+    ( void ) r3;
+    ( void ) r12;
+    ( void ) lr;
+    ( void ) pc;
+    ( void ) psr;
 }
 
 static void Default_Handler( void ) __attribute__( ( naked ) );
@@ -114,7 +122,8 @@ void Default_Handler( void )
         "NVIC_INT_CTRL_CONST: .word 0xe000ed04\n"
     );
 }
-static void HardFault_Handler( void ) __attribute__( ( naked ) );
+
+static void Default_Handler2( void ) __attribute__( ( naked ) );
 void Default_Handler2( void )
 {
     __asm volatile
@@ -158,7 +167,7 @@ void Default_Handler6( void )
     }
 }
 
-const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
+const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
 {
     ( uint32_t * ) &_estack,
     ( uint32_t * ) &Reset_Handler,       /* Reset                -15  */
@@ -195,7 +204,7 @@ const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
 void _start( void )
 {
     uart_init();
-    main( 0, 0 );
+    main();
     exit( 0 );
 }
 
@@ -212,4 +221,6 @@ __attribute__( ( naked ) ) void exit( int status )
         "bkpt 0xab\n"
         "end: b end\n"
         );
+
+    ( void ) status;
 }

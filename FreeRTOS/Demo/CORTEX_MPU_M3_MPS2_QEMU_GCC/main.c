@@ -37,7 +37,7 @@
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 
-int main()
+int main( void )
 {
     app_main();
     return 0;

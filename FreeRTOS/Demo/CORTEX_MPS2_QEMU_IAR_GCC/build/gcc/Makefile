@@ -9,13 +9,20 @@ LD = arm-none-eabi-gcc
 SIZE = arm-none-eabi-size
 MAKE = make
 
-
-CFLAGS += $(INCLUDE_DIRS) -nostartfiles -ffreestanding -mthumb -mcpu=cortex-m3 \
-		  -Wall -Wextra -g3 -Os -ffunction-sections -fdata-sections \
-		  -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
-
-#CFLAGS += -Wpedantic -Wshadow -fanalyzer
+CFLAGS += -ffreestanding -mthumb -mcpu=cortex-m3
+CFLAGS += -Wall -Wextra -Wshadow
+CFLAGS += -g3 -Os -ffunction-sections -fdata-sections
+CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
+#CFLAGS += -std=c99
+#CFLAGS += -Wpedantic -fanalyzer
 #CFLAGS += -flto
+CFLAGS += $(INCLUDE_DIRS)
+
+LDFLAGS = -T ./mps2_m3.ld
+LDFLAGS += -Xlinker -Map=$(OUTPUT_DIR)/RTOSDemo.map
+LDFLAGS += -Xlinker --gc-sections
+LDFLAGS += -nostartfiles
+LDFLAGS += -specs=nano.specs -specs=nosys.specs # -specs=rdimon.specs
 
 #
 # Kernel build.
@@ -106,9 +113,7 @@ $(IMAGE): ./mps2_m3.ld $(OBJS_OUTPUT) Makefile
 	@echo ""
 	@echo "--- Final linking ---"
 	@echo ""
-	$(LD) $(OBJS_OUTPUT) $(CFLAGS) -Xlinker --gc-sections -Xlinker -T ./mps2_m3.ld \
-		-Xlinker -Map=$(OUTPUT_DIR)/RTOSDemo.map -specs=nano.specs \
-		-specs=nosys.specs -specs=rdimon.specs -o $(IMAGE)
+	$(LD) $(CFLAGS) $(LDFLAGS) $(OBJS_OUTPUT) -o $(IMAGE)
 	$(SIZE) $(IMAGE)
 
 $(DEP_OUTPUT):

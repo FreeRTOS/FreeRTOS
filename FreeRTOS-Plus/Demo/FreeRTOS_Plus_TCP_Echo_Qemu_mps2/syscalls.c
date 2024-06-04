@@ -38,24 +38,21 @@ typedef struct UART_t
     volatile uint32_t BAUDDIV;
 } UART_t;
 
-#define UART0_ADDR           ( ( UART_t * ) ( 0x40004000 ) )
+#define UART0_ADDR         ( ( UART_t * ) ( 0x40004000 ) )
 #define UART_DR( baseaddr )    ( *( unsigned int * ) ( baseaddr ) )
 
-#define UART_STATE_TXFULL    ( 1 << 0 )
-#define UART_CTRL_TX_EN      ( 1 << 0 )
-#define UART_CTRL_RX_EN      ( 1 << 1 )
+#define UART_CTRL_TX_EN    ( 1 << 0 )
 
 
 extern unsigned long _heap_bottom;
 extern unsigned long _heap_top;
-extern unsigned long g_ulBase;
 
-static void * heap_end = 0;
+static char * heap_end = ( char * ) &_heap_bottom;
 
 /**
  * @brief initializes the UART emulated hardware
  */
-void uart_init()
+void uart_init( void )
 {
     UART0_ADDR->BAUDDIV = 16;
     UART0_ADDR->CTRL = UART_CTRL_TX_EN;
@@ -68,6 +65,7 @@ void uart_init()
  */
 int _fstat( int file )
 {
+    ( void ) file;
     return 0;
 }
 
@@ -80,6 +78,9 @@ int _read( int file,
            char * buf,
            int len )
 {
+    ( void ) file;
+    ( void ) buf;
+    ( void ) len;
     return -1;
 }
 
@@ -97,6 +98,8 @@ int _write( int file,
 {
     int todo;
 
+    ( void ) file;
+
     for( todo = 0; todo < len; todo++ )
     {
         UART_DR( UART0_ADDR ) = *buf++;
@@ -113,16 +116,9 @@ int _write( int file,
  */
 void * _sbrk( int incr )
 {
-    char * prev_heap_end;
+    void * prev_heap_end = heap_end;
 
-    if( heap_end == 0 )
-    {
-        heap_end = ( void * ) &_heap_bottom;
-    }
-
-    prev_heap_end = heap_end;
-
-    if( ( heap_end + incr ) > ( void * ) &_heap_top )
+    if( ( heap_end + incr ) > ( char * ) &_heap_top )
     {
         return ( void * ) -1;
     }

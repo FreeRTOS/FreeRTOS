@@ -4,6 +4,14 @@ project( posix_demo )
 
 add_compile_options( -D_WINDOWS_ )
 
+add_compile_options( -g3 -O2 -Wall -Wextra -Wpedantic )
+
+#add_compile_options( -Wshadow )
+
+#add_compile_options( -fanalyzer )
+
+#add_compile_options( -flto )
+
 if( TRACE_ON_ENTER )
     add_compile_options( -DTRACE_ON_ENTER=1 )
 else()

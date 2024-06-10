@@ -4,6 +4,8 @@ project( posix_demo )
 
 add_compile_options( -D_WINDOWS_ )
 
+add_compile_options( -Wall -Wextra -Wpedantic )
+
 if( TRACE_ON_ENTER )
     add_compile_options( -DTRACE_ON_ENTER=1 )
 else()
@@ -32,6 +34,9 @@ if( PROFILE )
 else()
     set( CMAKE_BUILD_TYPE "debug" )
 endif()
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
 
 if( SANITIZE_ADDRESS )
     add_compile_options( -fsanitize=address -fsanitize=alignment )

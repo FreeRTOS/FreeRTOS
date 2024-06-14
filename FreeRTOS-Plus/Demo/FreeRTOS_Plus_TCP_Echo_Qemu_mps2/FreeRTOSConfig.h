@@ -57,11 +57,8 @@ extern void vAssertCalled( void );
 #define configUSE_16_BIT_TICKS              0
 #define configIDLE_SHOULD_YIELD             0
 #define configMAX_PRIORITIES                ( 10 )
-#define configTIMER_QUEUE_LENGTH            20
-#define configTIMER_TASK_PRIORITY           ( configMAX_PRIORITIES - 3 )
 #define configUSE_COUNTING_SEMAPHORES       1
 #define configSUPPORT_DYNAMIC_ALLOCATION    1
-#define  configNUM_TX_DESCRIPTORS           15
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
@@ -74,7 +71,7 @@ extern void vAssertCalled( void );
 #define INCLUDE_vTaskDelete                     0
 #define INCLUDE_vTaskCleanUpResources           0
 #define INCLUDE_vTaskSuspend                    0
-#define INCLUDE_vTaskDelayUntil                 1
+#define INCLUDE_vTaskDelayUntil                 0
 #define INCLUDE_vTaskDelay                      1
 
 
@@ -89,7 +86,6 @@ extern void vAssertCalled( void );
 /* networking definitions */
 #define configMAC_ISR_SIMULATOR_PRIORITY    ( configMAX_PRIORITIES - 2 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK      1
-/*#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000) */
 #define configNETWORK_INTERFACE_TO_USE      1L
 
 /* The address of an echo server that will be used by the two demo echo client
@@ -115,16 +111,16 @@ extern void vAssertCalled( void );
 #define configMAC_ADDR4    0x34
 #define configMAC_ADDR5    0xAD
 
-/* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
- * ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+/* Default IP address configuration.  Used if ipconfigUSE_DHCP is set to 0, or
+ * ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be contacted. */
 
 #define configIP_ADDR0    10
 #define configIP_ADDR1    211
 #define configIP_ADDR2    55
 #define configIP_ADDR3    5
 
-/* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
- * 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+/* Default gateway IP address configuration.  Used if ipconfigUSE_DHCP is set to
+ * 0, or ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be contacted. */
 
 #define configGATEWAY_ADDR0    10
 #define configGATEWAY_ADDR1    211
@@ -132,16 +128,16 @@ extern void vAssertCalled( void );
 #define configGATEWAY_ADDR3    1
 
 /* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and
- * 208.67.220.220.  Used in ipconfigUSE_DNS is set to 0, or ipconfigUSE_DNS is set
- * to 1 but a DNS server cannot be contacted.*/
+ * 208.67.220.220.  Used if ipconfigUSE_DHCP is set to 0, or ipconfigUSE_DHCP is set
+ * to 1 but a DHCP server cannot be contacted.*/
 
 #define configDNS_SERVER_ADDR0    127
 #define configDNS_SERVER_ADDR1    0
 #define configDNS_SERVER_ADDR2    0
 #define configDNS_SERVER_ADDR3    53
 
-/* Default netmask configuration.  Used in ipconfigUSE_DNS is set to 0, or
- * ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+/* Default netmask configuration.  Used if ipconfigUSE_DHCP is set to 0, or
+ * ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be contacted. */
 #define configNET_MASK0           255
 #define configNET_MASK1           255
 #define configNET_MASK2           255

@@ -10,7 +10,15 @@
                 "MSYSTEM": "MSYS",
                 "CHERE_INVOKING": "1",
             }
+        },
+        "Cygwin": {
+            "path": "C:\\cygwin64\\bin\\bash.exe",
+            "args": ["--login", "-i"],
+            "env": {
+                "MSYSTEM": "Cygwin",
+                "CHERE_INVOKING": "1",
+            }
         }
     },
-    "terminal.integrated.defaultProfile.windows": "MSYS2",
+    "terminal.integrated.defaultProfile.windows": "Cygwin", //    "terminal.integrated.defaultProfile.windows": "MSYS2",
 }

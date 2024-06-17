@@ -4,8 +4,8 @@ on: [pull_request]
 
 jobs:
   core-checker:
-    name: FreeRTOS Core Checks
-    runs-on: ubuntu-latest
+    name: Check File Headers
+    runs-on: ubuntu-20.04
     steps:
       # Install python 3
       - name: Tool Setup
@@ -18,14 +18,14 @@ jobs:
 
       # Use the checks as defined by the user, so they can locally adjust as needed
       - name: Checkout FreeRTOS Tools
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref:  ${{ github.event.pull_request.head.sha }}
           path: tools
 
       # Checkout user pull request changes
       - name: Checkout Pull Request
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref:  ${{ github.event.pull_request.head.sha }}
           path: inspect
@@ -44,22 +44,3 @@ jobs:
           export PYTHONPATH=tools/.github/scripts:${PYTHONPATH}
           .github/scripts/core_checker.py --json ${HOME}/files_modified.json ${HOME}/files_added.json ${HOME}/files_renamed.json
           exit $?
-  build-checker:
-    name: FreeRTOS Posix Build Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone This Repo
-        uses: actions/checkout@v2
-        with:
-            path: ./workspace
-            submodules: 'recursive'
-            fetch-depth: 1
-      - name: Posix Build Checker
-        run: |
-            bash workspace/.github/scripts/posix_build_checker.sh workspace
-      - name: Install lib pcap dev
-        run: |
-          sudo apt-get install libpcap-dev
-      - name: Posix Network Build Checker
-        run: |
-            bash workspace/.github/scripts/posix_network_build_checker.sh workspace

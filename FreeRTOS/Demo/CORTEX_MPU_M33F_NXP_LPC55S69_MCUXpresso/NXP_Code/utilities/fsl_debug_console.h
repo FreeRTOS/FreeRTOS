@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018, 2020 NXP
+ * Copyright 2017-2018, 2020, 2022 NXP
  * All rights reserved.
  *
  *
@@ -24,8 +24,8 @@
 
 #include "fsl_common.h"
 
-/*
- * @addtogroup debugconsole
+/*!
+ * @addtogroup debugconsolelite
  * @{
  */
 
@@ -45,6 +45,8 @@
 
 #if defined(SDK_DEBUGCONSOLE) && !(SDK_DEBUGCONSOLE)
 #include <stdio.h>
+#else
+#include <stdarg.h>
 #endif
 
 /*! @brief Definition to printf the float number. */
@@ -74,10 +76,14 @@
  *  if SDK_DEBUGCONSOLE defined to 2,it represents disable debugconsole function.
  */
 #if SDK_DEBUGCONSOLE == DEBUGCONSOLE_DISABLE /* Disable debug console */
-#define PRINTF
-#define SCANF
-#define PUTCHAR
-#define GETCHAR
+static inline int DbgConsole_Disabled(void)
+{
+    return -1;
+}
+#define PRINTF(...)  DbgConsole_Disabled()
+#define SCANF(...)   DbgConsole_Disabled()
+#define PUTCHAR(...) DbgConsole_Disabled()
+#define GETCHAR()    DbgConsole_Disabled()
 #elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK /* Select printf, scanf, putchar, getchar of SDK version. */
 #define PRINTF  DbgConsole_Printf
 #define SCANF   DbgConsole_Scanf
@@ -90,13 +96,33 @@
 #define PUTCHAR putchar
 #define GETCHAR getchar
 #endif /* SDK_DEBUGCONSOLE */
+/*! @} */
 
+/*! @brief serial port type
+ *
+ *  The serial port type aligned with the definition in serial manager, but please note
+ *  only kSerialPort_Uart can be supported in debug console lite.
+ */
+#ifndef _SERIAL_PORT_T_
+#define _SERIAL_PORT_T_
 typedef enum _serial_port_type
 {
     kSerialPort_None = 0U, /*!< Serial port is none */
     kSerialPort_Uart = 1U, /*!< Serial port UART */
+    kSerialPort_UsbCdc,    /*!< Serial port USB CDC */
+    kSerialPort_Swo,       /*!< Serial port SWO */
+    kSerialPort_Virtual,   /*!< Serial port Virtual */
+    kSerialPort_Rpmsg,     /*!< Serial port RPMSG */
+    kSerialPort_UartDma,   /*!< Serial port UART DMA*/
+    kSerialPort_SpiMaster, /*!< Serial port SPIMASTER*/
+    kSerialPort_SpiSlave,  /*!< Serial port SPISLAVE*/
 } serial_port_type_t;
+#endif
 
+/*!
+ * @addtogroup debugconsolelite
+ * @{
+ */
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -171,7 +197,7 @@ static inline status_t DbgConsole_Deinit(void)
 
 #endif /* ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART)) */
 
-#if SDK_DEBUGCONSOLE
+#if (defined(SDK_DEBUGCONSOLE) && (SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK))
 /*!
  * @brief Writes formatted output to the standard output stream.
  *
@@ -181,6 +207,17 @@ static inline status_t DbgConsole_Deinit(void)
  * @return  Returns the number of characters printed or a negative value if an error occurs.
  */
 int DbgConsole_Printf(const char *fmt_s, ...);
+
+/*!
+ * @brief Writes formatted output to the standard output stream.
+ *
+ * Call this function to write a formatted output to the standard output stream.
+ *
+ * @param   fmt_s Format control string.
+ * @param   formatStringArg Format arguments.
+ * @return  Returns the number of characters printed or a negative value if an error occurs.
+ */
+int DbgConsole_Vprintf(const char *fmt_s, va_list formatStringArg);
 
 /*!
  * @brief Writes a character to stdout.
@@ -197,10 +234,10 @@ int DbgConsole_Putchar(int ch);
  *
  * Call this function to read formatted data from the standard input stream.
  *
- * @param   fmt_ptr Format control string.
+ * @param   fmt_s Format control string.
  * @return  Returns the number of fields successfully converted and assigned.
  */
-int DbgConsole_Scanf(char *fmt_ptr, ...);
+int DbgConsole_Scanf(char *fmt_s, ...);
 
 /*!
  * @brief Reads a character from standard input.
@@ -220,5 +257,4 @@ int DbgConsole_Getchar(void);
 #endif /* __cplusplus */
 
 /*! @} */
-
 #endif /* _FSL_DEBUGCONSOLE_H_ */

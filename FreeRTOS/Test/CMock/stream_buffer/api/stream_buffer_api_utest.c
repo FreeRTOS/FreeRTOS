@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -48,36 +48,41 @@
  * @brief Sample size in bytes of the stream buffer used for test.
  * The size is kept short enough so that the buffer can be allocated on stack.
  */
-#define TEST_STREAM_BUFFER_SIZE             ( 64U )
+#define TEST_STREAM_BUFFER_SIZE                  ( 64U )
 
 /**
  * @brief Sample trigger level in bytes used for stream buffer tests.
  * When a receiver task is blocked waiting for data, trigger level determines how much bytes should
  * be available before which receiver task can be unblocked.
  */
-#define TEST_STREAM_BUFFER_TRIGGER_LEVEL    ( 32U )
+#define TEST_STREAM_BUFFER_TRIGGER_LEVEL         ( 32U )
 
 /**
  * @brief Maximum unsigned long value that can be passed as a stream buffer size so as to
  * trigger an integer overflow.
  */
-#define TEST_STREAM_BUFFER_MAX_UINT_SIZE    ( ~( size_t ) ( 0UL ) )
+#define TEST_STREAM_BUFFER_MAX_UINT_SIZE         ( ~( size_t ) ( 0UL ) )
 
 /**
  * @brief A value used to test setting and getting stream buffer number.
  */
-#define TEST_STREAM_BUFFER_NUMBER           ( 0xFFU )
+#define TEST_STREAM_BUFFER_NUMBER                ( 0xFFU )
+
+/**
+ * @brief A value used to test setting and getting stream buffer notification index.
+ */
+#define TEST_STREAM_BUFFER_NOTIFICATION_INDEX    ( 0x2 )
 
 /**
  * @brief Wait ticks passed into from tests if the stream buffer is full while sending data or
  * empty while receiving data.
  */
-#define TEST_STREAM_BUFFER_WAIT_TICKS       ( 1000U )
+#define TEST_STREAM_BUFFER_WAIT_TICKS            ( 1000U )
 
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                      0xAA101
+#define configASSERT_E                           0xAA101
 
 /**
  * @brief Expect a configASSERT from the function called.
@@ -118,6 +123,11 @@ static int senderTaskWoken = 0;
  * @brief Global counter to keep track of how many times a receiver task was woken up by a task sending to the buffer.
  */
 static int receiverTaskWoken = 0;
+
+/**
+ * @brief Global variable to keep track of the last notification index we are waiting on
+ */
+static UBaseType_t notificationIndex = -1;
 
 /**
  * @brief Dummy sender task handle to which the stream buffer receive APIs will send notification.
@@ -182,6 +192,7 @@ static BaseType_t streamBufferReceiveCallback( UBaseType_t uxIndexToWaitOn,
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ] = { 0 };
     size_t dataReceived = 0;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Receive enough bytes (full size) from stream buffer to wake up sender task. */
     dataReceived = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, dataReceived );
@@ -199,6 +210,7 @@ static BaseType_t streamBufferReceiveFromISRCallback( UBaseType_t uxIndexToWaitO
     size_t dataReceived = 0;
     BaseType_t senderTaskWokenFromISR = pdFALSE;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Receive enough bytes (full size) from stream buffer to wake up sender task. */
     dataReceived = xStreamBufferReceiveFromISR( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, &senderTaskWokenFromISR );
     TEST_ASSERT_EQUAL( pdTRUE, senderTaskWokenFromISR );
@@ -215,6 +227,7 @@ static BaseType_t resetWhenBlockedCallback( UBaseType_t uxIndexToWaitOn,
 {
     BaseType_t status;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Reset when the task is blocked on stream buffer, should fail and return pdFAIL. */
     status = xStreamBufferReset( xStreamBuffer );
     TEST_ASSERT_EQUAL( pdFAIL, status );
@@ -230,6 +243,7 @@ static BaseType_t sendCompletedFromISRCallback( UBaseType_t uxIndexToWaitOn,
 {
     BaseType_t status = pdFALSE, highPriorityTaskWoken = pdFALSE;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Executing the send completed API from ISR should unblock a high priority task waiting to receive from stream buffer. */
     status = xStreamBufferSendCompletedFromISR( xStreamBuffer, &highPriorityTaskWoken );
     TEST_ASSERT_EQUAL( pdTRUE, status );
@@ -246,6 +260,7 @@ static BaseType_t receiveCompletedFromISRCallback( UBaseType_t uxIndexToWaitOn,
 {
     BaseType_t status = pdFALSE, highPriorityTaskWoken = pdFALSE;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Executing the receive completed API from ISR should unblock a high priority task waiting to send to stream buffer. */
     status = xStreamBufferReceiveCompletedFromISR( xStreamBuffer, &highPriorityTaskWoken );
     TEST_ASSERT_EQUAL( pdTRUE, status );
@@ -261,7 +276,12 @@ static BaseType_t senderTaskNotificationCallback( TaskHandle_t xTaskToNotify,
                                                   int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( senderTask, xTaskToNotify );
-    senderTaskWoken++;
+
+    if( uxIndexToNotify == notificationIndex )
+    {
+        senderTaskWoken++;
+    }
+
     return pdTRUE;
 }
 
@@ -274,7 +294,12 @@ static BaseType_t senderTaskNotificationFromISRCallback( TaskHandle_t xTaskToNot
                                                          int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( senderTask, xTaskToNotify );
-    senderTaskWoken++;
+
+    if( uxIndexToNotify == notificationIndex )
+    {
+        senderTaskWoken++;
+    }
+
     *pxHigherPriorityTaskWoken = pdTRUE;
 
     return pdTRUE;
@@ -290,6 +315,7 @@ static BaseType_t streamBufferSendCallback( UBaseType_t uxIndexToWaitOn,
     uint8_t data[ TEST_STREAM_BUFFER_TRIGGER_LEVEL ] = { 0 };
     size_t dataSent = 0;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Send enough (trigger level) bytes to stream buffer to wake up the receiver Task. */
     dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL, dataSent );
@@ -307,6 +333,7 @@ static BaseType_t streamBufferSendFromISRCallback( UBaseType_t uxIndexToWaitOn,
     size_t dataSent = 0;
     BaseType_t receiverTaskWokenFromISR = pdFALSE;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Send enough (trigger level) bytes to stream buffer to wake up the receiver Task. */
     dataSent = xStreamBufferSendFromISR( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL, &receiverTaskWokenFromISR );
     TEST_ASSERT_EQUAL( pdTRUE, receiverTaskWokenFromISR );
@@ -324,6 +351,7 @@ static BaseType_t sendLessThanTriggerLevelBytesCallback( UBaseType_t uxIndexToWa
     uint8_t data[ TEST_STREAM_BUFFER_TRIGGER_LEVEL ] = { 0 };
     size_t dataSent = 0;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Sending less than trigger level bytes should not wake up the receiver Task. */
     dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL - 1, 0 );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL - 1, dataSent );
@@ -341,6 +369,7 @@ static BaseType_t sendLessThanTriggerLevelBytesFromISRCallback( UBaseType_t uxIn
     size_t dataSent = 0;
     BaseType_t receiverTaskWokenFromISR = pdFALSE;
 
+    notificationIndex = uxIndexToWaitOn;
     /* Sending less than trigger level bytes should not wake up the receiver Task. */
     dataSent = xStreamBufferSendFromISR( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL - 1, &receiverTaskWokenFromISR );
     TEST_ASSERT_EQUAL( pdFALSE, receiverTaskWokenFromISR );
@@ -357,7 +386,12 @@ static BaseType_t receiverTaskNotificationFromISRCallback( TaskHandle_t xTaskToN
                                                            int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( receiverTask, xTaskToNotify );
-    receiverTaskWoken++;
+
+    if( uxIndexToNotify == notificationIndex )
+    {
+        receiverTaskWoken++;
+    }
+
     *pxHigherPriorityTaskWoken = pdTRUE;
 
     return pdTRUE;
@@ -371,7 +405,12 @@ static BaseType_t receiverTaskNotificationCallback( TaskHandle_t xTaskToNotify,
                                                     int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( receiverTask, xTaskToNotify );
-    receiverTaskWoken++;
+
+    if( uxIndexToNotify == notificationIndex )
+    {
+        receiverTaskWoken++;
+    }
+
     return pdTRUE;
 }
 
@@ -384,6 +423,7 @@ void setUp( void )
     xStreamBuffer = NULL;
     senderTaskWoken = 0;
     receiverTaskWoken = 0;
+    notificationIndex = -1;
     shouldAbortOnAssertion = pdTRUE;
     dynamicMemoryAllocated = 0;
 
@@ -434,6 +474,7 @@ static void validate_stream_buffer_init_state( StreamBufferHandle_t xStreamBuffe
     TEST_ASSERT_EQUAL( 0U, xStreamBufferBytesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 0U, xStreamBufferNextMessageLengthBytes( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 0, ucStreamBufferGetStreamBufferType( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( tskDEFAULT_INDEX_TO_NOTIFY, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
 }
 
 static void validate_and_clear_assertions( void )
@@ -459,6 +500,10 @@ void test_xStreamBufferCreate_success( void )
     /* Set a stream buffer number and get it. */
     vStreamBufferSetStreamBufferNumber( xStreamBuffer, TEST_STREAM_BUFFER_NUMBER );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NUMBER, uxStreamBufferGetStreamBufferNumber( xStreamBuffer ) );
+
+    /* Set a notification index and get it. */
+    vStreamBufferSetStreamBufferNotificationIndex( xStreamBuffer, TEST_STREAM_BUFFER_NOTIFICATION_INDEX );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
 
     vStreamBufferDelete( xStreamBuffer );
 }
@@ -669,6 +714,7 @@ void test_xStreamBufferSend_blocking( void )
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( tskDEFAULT_INDEX_TO_NOTIFY, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
 
     /* Sending upto size of stream buffer should not block. */
     sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE - 1, TEST_STREAM_BUFFER_WAIT_TICKS );
@@ -708,6 +754,39 @@ void test_xStreamBufferSend_blocking( void )
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 2, senderTaskWoken );
+
+
+    /*
+     * A task trying to send to a stream buffer without any space available should block for upto TEST_STREAM_BUFFER_WAIT_TICKS.
+     * Sender task should be notified and woken up when bytes are consumed by a receiver task during the wait period,
+     * also with different notification index.
+     */
+    vStreamBufferSetStreamBufferNotificationIndex( xStreamBuffer, TEST_STREAM_BUFFER_NOTIFICATION_INDEX );
+    xTaskGenericNotifyWait_AddCallback( streamBufferReceiveCallback );
+    xTaskGenericNotify_StubWithCallback( senderTaskNotificationCallback );
+    xTaskGenericNotifyWait_ExpectAndReturn( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, 0, 0, NULL, TEST_STREAM_BUFFER_WAIT_TICKS, pdTRUE );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 3, senderTaskWoken );
+
+    /*
+     * A task trying to send to a stream buffer without any space available should block for upto TEST_STREAM_BUFFER_WAIT_TICKS.
+     * Sender task should be notified and woken up when bytes are consumed by an ISR during the wait period,
+     * also with different notification index. (restore default index after this run)
+     */
+    vStreamBufferSetStreamBufferNotificationIndex( xStreamBuffer, TEST_STREAM_BUFFER_NOTIFICATION_INDEX );
+    xTaskGenericNotifyWait_AddCallback( streamBufferReceiveFromISRCallback );
+    xTaskGenericNotifyWait_ExpectAndReturn( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, 0, 0, NULL, TEST_STREAM_BUFFER_WAIT_TICKS, pdTRUE );
+    xTaskGenericNotifyFromISR_StubWithCallback( senderTaskNotificationFromISRCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 4, senderTaskWoken );
 
     vStreamBufferDelete( xStreamBuffer );
 }
@@ -839,6 +918,7 @@ void test_xStreamBufferReceive_blocking( void )
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( tskDEFAULT_INDEX_TO_NOTIFY, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
 
     /*
      * Receiving from an empty buffer causes the task to wait for TEST_STREAM_BUFFER_WAIT_TICKS period.
@@ -884,6 +964,36 @@ void test_xStreamBufferReceive_blocking( void )
     xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
     receivedBytes = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 2, receiverTaskWoken );
+
+
+    /*
+     * Sending at least trigger level bytes, should notify and wake up the receiver task,
+     * also with different notification index.
+     */
+    vStreamBufferSetStreamBufferNotificationIndex( xStreamBuffer, TEST_STREAM_BUFFER_NOTIFICATION_INDEX );
+    xTaskGenericNotifyWait_AddCallback( streamBufferSendCallback );
+    xTaskGenericNotifyWait_ExpectAndReturn( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, 0, 0, NULL, TEST_STREAM_BUFFER_WAIT_TICKS, pdTRUE );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    receivedBytes = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL, receivedBytes );
+    TEST_ASSERT_EQUAL( 3, receiverTaskWoken );
+    TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable( xStreamBuffer ) );
+
+    /*
+     * Sending at least trigger level bytes from ISR, should notify and wake up the receiver task,
+     * also with different notification index. (restore default index after this run)
+     */
+    xTaskGenericNotifyWait_AddCallback( streamBufferSendFromISRCallback );
+    xTaskGenericNotifyWait_ExpectAndReturn( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, 0, 0, NULL, TEST_STREAM_BUFFER_WAIT_TICKS, pdTRUE );
+    xTaskGenericNotifyFromISR_StubWithCallback( receiverTaskNotificationFromISRCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    receivedBytes = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NOTIFICATION_INDEX, uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL, receivedBytes );
+    TEST_ASSERT_EQUAL( 4, receiverTaskWoken );
+    TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable( xStreamBuffer ) );
+    vStreamBufferSetStreamBufferNotificationIndex( xStreamBuffer, tskDEFAULT_INDEX_TO_NOTIFY );
 
     vStreamBufferDelete( xStreamBuffer );
 }
@@ -1187,7 +1297,7 @@ void test_xStreamBufferReset_while_blocked( void )
 /**
  * @brief Validates that a receiver task is able to receive data after lowering the stream buffer trigger level.
  */
-void test_xStreamBufferSetTrigerLevel_success( void )
+void test_xStreamBufferSetTriggerLevel_success( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ] = { 0xAA };
     BaseType_t status;
@@ -1222,7 +1332,7 @@ void test_xStreamBufferSetTrigerLevel_success( void )
 /**
  * @brief Validate setting trigger level with invalid parameters fails.
  */
-void test_xStreamBufferSetTrigerLevel_larger_than_buffer_size( void )
+void test_xStreamBufferSetTriggerLevel_larger_than_buffer_size( void )
 {
     BaseType_t status;
 
@@ -1240,7 +1350,7 @@ void test_xStreamBufferSetTrigerLevel_larger_than_buffer_size( void )
 /**
  * @brief Set the trigger level to 0 should pass but internally set trigger level to 1.
  */
-void test_xStreamBufferSetTrigerLevel_zero( void )
+void test_xStreamBufferSetTriggerLevel_zero( void )
 {
     BaseType_t status;
 
@@ -1452,6 +1562,118 @@ void test_xStreamBufferSend_WrapOver( void )
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, received );
     TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers with a null xStreamBuffer argument
+ * @details Test that xStreamBufferGetStaticBuffers asserts when a null StreamBufferHandle_t is given.
+ */
+void test_xStreamBufferGetStaticBuffers_null_xStreamBuffer( void )
+{
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    EXPECT_ASSERT_BREAK( xStreamBufferGetStaticBuffers( NULL, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+
+    validate_and_clear_assertions();
+
+    /* Assert that pucStreamBufferStorageAreaRet and pxStaticStreamBufferRet were not modified */
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
+}
+
+/**
+ * @brief Test xStreamBufferGetStaticBuffers with a null ppxStaticStreamBuffer argument
+ * @details Test that xStreamBufferGetStaticBuffers asserts when a null ppxStaticStreamBuffer is given.
+ */
+void test_xStreamBufferGetStaticBuffers_null_ppxStaticStreamBuffer( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    EXPECT_ASSERT_BREAK( xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, NULL ) );
+
+    validate_and_clear_assertions();
+
+    /* Assert that pucStreamBufferStorageAreaRet was not modified */
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief Test xStreamBufferGetStaticBuffers with a null ppucStreamBufferStorageArea argument
+ * @details Test that xStreamBufferGetStaticBuffers asserts when a null ppucStreamBufferStorageArea is given.
+ */
+void test_xStreamBufferGetStaticBuffers_null_ppucStreamBufferStorageArea( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    EXPECT_ASSERT_BREAK( xStreamBufferGetStaticBuffers( xStreamBuffer, NULL, &pxStaticStreamBufferRet ) );
+
+    validate_and_clear_assertions();
+
+    /* Assert that pxStaticStreamBufferRet was not modified */
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers on a statically created stream buffer
+ * @details Test xStreamBufferGetStaticBuffers returns the buffers of a statically created stream buffer
+ */
+void test_xStreamBufferGetStaticBuffers_static( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    StaticStreamBuffer_t streamBufferStruct;
+
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+    TEST_ASSERT_EQUAL( streamBufferArray, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( &streamBufferStruct, pxStaticStreamBufferRet );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief validate xStreamBufferGetStaticBuffers on a dynamically created stream buffer
+ * @details Test xStreamBufferGetStaticBuffers returns an error when called on a dynamically created stream buffer
+ */
+void test_xStreamBufferGetStaticBuffers_dynamic( void )
+{
+    StreamBufferHandle_t xStreamBuffer = NULL;
+    uint8_t * pucStreamBufferStorageAreaRet = NULL;
+    StaticStreamBuffer_t * pxStaticStreamBufferRet = NULL;
+
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_EQUAL( NULL, xStreamBuffer );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xStreamBufferGetStaticBuffers( xStreamBuffer, &pucStreamBufferStorageAreaRet, &pxStaticStreamBufferRet ) );
+    TEST_ASSERT_EQUAL( NULL, pucStreamBufferStorageAreaRet );
+    TEST_ASSERT_EQUAL( NULL, pxStaticStreamBufferRet );
 
     vStreamBufferDelete( xStreamBuffer );
 }

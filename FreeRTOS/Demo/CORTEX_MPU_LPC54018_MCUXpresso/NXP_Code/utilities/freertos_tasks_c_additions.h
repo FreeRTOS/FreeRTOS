@@ -96,15 +96,15 @@ const uint8_t FreeRTOSDebugConfig[] =
     configFRTOS_MEMORY_SCHEME,
     offsetof(struct tskTaskControlBlock, pxTopOfStack),
 #if (tskKERNEL_VERSION_MAJOR > 8)
-    offsetof(struct tskTaskControlBlock, xStateListItem),
+    (uint8_t)offsetof(struct tskTaskControlBlock, xStateListItem),
 #else
     offsetof(struct tskTaskControlBlock, xGenericListItem),
 #endif
-    offsetof(struct tskTaskControlBlock, xEventListItem),
-    offsetof(struct tskTaskControlBlock, pxStack),
-    offsetof(struct tskTaskControlBlock, pcTaskName),
-    offsetof(struct tskTaskControlBlock, uxTCBNumber),
-    offsetof(struct tskTaskControlBlock, uxTaskNumber),
+	(uint8_t)offsetof(struct tskTaskControlBlock, xEventListItem),
+	(uint8_t)offsetof(struct tskTaskControlBlock, pxStack),
+	(uint8_t)offsetof(struct tskTaskControlBlock, pcTaskName),
+	(uint8_t)offsetof(struct tskTaskControlBlock, uxTCBNumber),
+	(uint8_t)offsetof(struct tskTaskControlBlock, uxTaskNumber),
     configMAX_TASK_NAME_LEN,
     configMAX_PRIORITIES,
     configENABLE_MPU,

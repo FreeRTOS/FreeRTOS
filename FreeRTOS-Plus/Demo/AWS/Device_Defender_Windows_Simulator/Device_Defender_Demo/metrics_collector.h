@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -51,10 +51,10 @@ typedef enum
  */
 typedef struct NetworkStats
 {
-    uint32_t ulBytesReceived;   /**< Number of bytes received. */
-    uint32_t ulBytesSent;       /**< Number of bytes sent. */
-    uint32_t ulPacketsReceived; /**< Number of packets (ethernet frames) received. */
-    uint32_t ulPacketsSent;     /**< Number of packets (ethernet frames) sent. */
+    size_t uxBytesReceived;   /**< Number of bytes received. */
+    size_t uxBytesSent;       /**< Number of bytes sent. */
+    size_t uxPacketsReceived; /**< Number of packets (ethernet frames) received. */
+    size_t uxPacketsSent;     /**< Number of packets (ethernet frames) sent. */
 } NetworkStats_t;
 
 /**

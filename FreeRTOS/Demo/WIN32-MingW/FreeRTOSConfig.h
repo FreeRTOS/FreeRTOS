@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,9 +20,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
+
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -44,10 +45,9 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK		1
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 65 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 100 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
-#define configUSE_16_BIT_TICKS					0
 #define configIDLE_SHOULD_YIELD					1
 #define configUSE_MUTEXES						1
 #define configCHECK_FOR_STACK_OVERFLOW			0
@@ -59,6 +59,14 @@
 #define configUSE_QUEUE_SETS					1
 #define configUSE_TASK_NOTIFICATIONS			1
 #define configSUPPORT_STATIC_ALLOCATION			1
+
+/* Tick type width is defined based on the compiler type (32bit or 64bit). */
+#ifdef __x86_64__
+	#define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_64_BITS
+#else
+	#define configTICK_TYPE_WIDTH_IN_BITS		TICK_TYPE_WIDTH_32_BITS
+#endif
+
 
 /* Software timer related configuration options.  The maximum possible task
 priority is configMAX_PRIORITIES - 1.  The priority of the timer task is
@@ -134,7 +142,11 @@ used with multiple project configurations.  If it is
 	#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
 
 	/* Ensure the tick count overflows during the coverage test. */
-	#define configINITIAL_TICK_COUNT 0xffffd800UL
+	#if( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_64_BITS )
+		#define configINITIAL_TICK_COUNT 0xffffffffffffd800ULL
+	#else
+		#define configINITIAL_TICK_COUNT 0xffffd800UL
+	#endif
 
 	/* Allows tests of trying to allocate more than the heap has free. */
 	#define configUSE_MALLOC_FAILED_HOOK			0

@@ -56,6 +56,7 @@ Then click `Verify` and `Verify Program` (or press F5). Note that the following
 proofs require arithmetic overflow checking to be turned off (click `Verify`
 and uncheck `Check arithmetic overflow`).
 
+  - `queue/create.c`
   - `queue/prvCopyDataToQueue.c`
   - `queue/xQueueGenericSendFromISR.c`
   - `queue/xQueueReceiveFromISR.c`

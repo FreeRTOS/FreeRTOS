@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202212.00
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -142,9 +142,7 @@ reg1_loop:
     jal reg1_loop
 
 reg1_error_loop:
-    /* Jump here if a register contains an uxpected value.  This stops the loop
-     * counter being incremented so the check task knows an error was found. */
-    ebreak
+    /* Busy loop which holds the task. */
     jal reg1_error_loop
 
 .align( 4 )
@@ -254,9 +252,7 @@ Reg2_loop:
     jal Reg2_loop
 
 reg2_error_loop:
-    /* Jump here if a register contains an uxpected value.  This stops the loop
-     * counter being incremented so the check task knows an error was found. */
-    ebreak
+    /* Busy loop which holds the task. */
     jal reg2_error_loop
 
 .align( 4 )

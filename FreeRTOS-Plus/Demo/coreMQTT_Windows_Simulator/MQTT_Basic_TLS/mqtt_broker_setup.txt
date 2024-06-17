@@ -51,7 +51,7 @@ TLS server-only authentication for use with this MQTT demo.
             "-----BEGIN CERTIFICATE-----\n" \
             "...base64 data...\n" \
             "-----END CERTIFICATE-----\n"
-11. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be 
+11. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be
     configured this way because the local MQTT broker will only have an IP
     address but not a hostname. However, SNI (Server name indication) should
     be enabled whenever possible.

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,32 +24,31 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #include "proof/queuecontracts.h"
 
 BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue,
                                  void * const pvBuffer,
                                  BaseType_t * const pxHigherPriorityTaskWoken )
-
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == true &*&
- *  chars(pvBuffer, M, ?x) &*&
- *  pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _);@*/
-
+    chars(pvBuffer, M, ?x) &*&
+    pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _);@*/
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
- *  (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x)) &*&
- *  (pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _));@*/
+    (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x)) &*&
+    (pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _));@*/
 {
     BaseType_t xReturn;
     UBaseType_t uxSavedInterruptStatus;
+#ifdef VERIFAST /*< const pointer declaration */
+    Queue_t * pxQueue = xQueue;
+#else
+    Queue_t * const pxQueue = xQueue;
 
-    #ifdef VERIFAST /*< const pointer declaration */
-        Queue_t * pxQueue = xQueue;
-    #else
-        Queue_t * const pxQueue = xQueue;
-
-        configASSERT( pxQueue );
-        configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-    #endif
+    configASSERT( pxQueue );
+    configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+#endif
 
     /* RTOS ports that support interrupt nesting have the concept of a maximum
      * system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -141,3 +140,5 @@ BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue,
 
     return xReturn;
 }
+
+/* *INDENT-ON* */

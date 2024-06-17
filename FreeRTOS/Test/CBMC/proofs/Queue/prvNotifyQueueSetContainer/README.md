@@ -1,8 +1,8 @@
-This harness proves the memory safety of the prvNotifyQueuSetContainer method.
+This harness proves the memory safety of the prvNotifyQueueSetContainer method.
 It assumes that the queue is initalized to a valid datastructure and added
 to a QueueSet. The concurrency functions and task pool functions are abstracted
 away. prvCopyDataToQueue is replaced with a stub checking the preconditions
-for prvCopyDataToQueue to be sucessful.
+for prvCopyDataToQueue to be successful.
 
 This proof is a work-in-progress.  Proof assumptions are described in
 the harness.  The proof also assumes the following functions are

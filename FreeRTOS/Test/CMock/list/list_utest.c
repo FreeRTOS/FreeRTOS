@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -887,7 +887,7 @@ void test_macro_listGET_OWNER_OF_HEAD_ENTRY( void )
 /*!
  * @brief test macro listIS_CONTAINED_WITHIN normal case
  * @details This test ensures that the macro is returning whether the list item
- *          is contained witin the list
+ *          is contained within the list
  */
 void test_macro_listIS_CONTAINED_WITHIN( void )
 {

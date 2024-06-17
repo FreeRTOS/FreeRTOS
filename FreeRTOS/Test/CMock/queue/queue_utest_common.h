@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -144,7 +144,7 @@ void tearDown( void );
 void suiteSetUp();
 
 /**
- * @brief Setup function called afer this test suite (file) has completed.
+ * @brief Setup function called after this test suite (file) has completed.
  */
 int suiteTearDown( int numFailures );
 
@@ -262,7 +262,7 @@ void queue_common_receive_sequential_from_queue( QueueHandle_t xQueue,
                                                  uint32_t expectedFirstValue );
 
 /**
- * @brief Adds a given number of itesm to the given queue with sequential values in each item.
+ * @brief Adds a given number of items to the given queue with sequential values in each item.
  */
 void queue_common_add_sequential_to_queue( QueueHandle_t xQueue,
                                            uint32_t numberOfItems );

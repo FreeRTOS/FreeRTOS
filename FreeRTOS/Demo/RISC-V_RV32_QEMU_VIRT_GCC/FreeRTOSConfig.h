@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -54,7 +54,7 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 80 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_CO_ROUTINES 			0
@@ -105,7 +105,7 @@ to exclude the API function. */
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
 /* The QEMU target is capable of running all the tests tasks at the same
  * time. */
@@ -122,5 +122,9 @@ machine on which the test is developed). */
 #define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 5 )
 #define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 4 )
 #define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 5 )
+
+#ifdef PICOLIBC_TLS
+#define configUSE_PICOLIBC_TLS                  1
+#endif
 
 #endif /* FREERTOS_CONFIG_H */

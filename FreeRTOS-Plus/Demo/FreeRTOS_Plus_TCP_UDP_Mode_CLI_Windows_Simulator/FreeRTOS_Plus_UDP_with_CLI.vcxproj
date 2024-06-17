@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{66422066-d458-449a-ae2a-0a44d4bde94b}</ProjectGuid>
+    <RootNamespace>FreeRTOSPlusUDPwithCLI</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>.\DemoTasks\include;..\Common\WinPCap;..\..\Source\FreeRTOS-Plus-CLI;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c" />
+    <ClCompile Include="DemoTasks\CLI-commands.c" />
+    <ClCompile Include="DemoTasks\SimpleClientAndServer.c" />
+    <ClCompile Include="DemoTasks\TwoEchoClients.c" />
+    <ClCompile Include="DemoTasks\UDPCommandServer.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="Run-time-stats-utils.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.h" />
+    <ClInclude Include="DemoTasks\include\SimpleClientAndServer.h" />
+    <ClInclude Include="DemoTasks\include\TwoEchoClients.h" />
+    <ClInclude Include="DemoTasks\include\UDPCommandInterpreter.h" />
+    <ClInclude Include="DemoTasks\include\user_settings.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">
+      <Project>{c90e6cc5-818b-4c97-8876-0986d989387c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">
+      <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj">
+      <Project>{be362ac0-b10b-4276-b84e-6304652ba228}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

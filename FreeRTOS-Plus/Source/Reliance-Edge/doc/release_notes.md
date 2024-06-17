@@ -48,7 +48,7 @@ recent releases and a list of known issues.
 
 - Added support for static memory allocation configuration in FreeRTOS
   version 9.  No common code changes.
-  
+
 ### Reliance Edge v1.0.2, February 2016
 
 #### Common Code Changes
@@ -72,7 +72,7 @@ recent releases and a list of known issues.
   Essentials API was selected in the configuration.
 - Fixed a bug which would have returned an uninitialized value from
   `RedOsBDevFlush()` for block devices that support flushing.
-  
+
 ### Reliance Edge v1.0.1, October 2015
 
 - Added MQX RTOS support in the commercial kit, with example projects for

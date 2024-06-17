@@ -13,7 +13,7 @@ GENERATED_DIR       :=  $(BUILD_DIR)/generated
 LIB_DIR             :=  $(BUILD_DIR)/lib
 TOOLS_DIR           :=  $(UT_ROOT_DIR)/tools
 
-FREERTOS_DIR        :=  $(abspath $(UT_ROOT_DIR)../../../FreeRTOS)
+FREERTOS_DIR        :=  $(abspath $(UT_ROOT_DIR)/../../../FreeRTOS)
 KERNEL_DIR          :=  $(abspath $(UT_ROOT_DIR)/../../../FreeRTOS/Source)
 
 CMOCK_DIR           :=  $(UT_ROOT_DIR)/CMock

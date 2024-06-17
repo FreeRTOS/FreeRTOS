@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -38,11 +38,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <io.h>
 #include <ctype.h>
 
 /* FreeRTOS includes. */
-#include <FreeRTOS.h>
+#include "FreeRTOS.h"
 #include "task.h"
 
 /* FreeRTOS+TCP includes. */
@@ -148,6 +149,39 @@ static size_t ulSizeOfLoggingFile = 0ul;
 Socket_t xPrintSocket = FREERTOS_INVALID_SOCKET;
 struct freertos_sockaddr xPrintUDPAddress;
 
+/* The logging thread handle. */
+HANDLE pvLoggingThread = NULL;
+
+/* Windows event used to stop the logging thread and flush the logging buffer. */
+static void * pvLoggingThreadExitEvent = NULL;
+
+/*-----------------------------------------------------------*/
+
+static BaseType_t prvStrEndedWithLineBreak( const char * pcStr )
+{
+    BaseType_t xReturn;
+    size_t uxStrLen = strnlen( pcStr, dlMAX_PRINT_STRING_LENGTH );
+
+    if( uxStrLen < 2 )
+    {
+        xReturn = pdFALSE;
+    }
+    else if( pcStr[ uxStrLen - 2 ] != '\r' )
+    {
+        xReturn = pdFALSE;
+    }
+    else if( pcStr[ uxStrLen - 1 ] != '\n' )
+    {
+        xReturn = pdFALSE;
+    }
+    else
+    {
+        xReturn = pdTRUE;
+    }
+
+    return xReturn;
+}
+
 /*-----------------------------------------------------------*/
 
 void vLoggingInit( BaseType_t xLogToStdout,
@@ -160,71 +194,86 @@ void vLoggingInit( BaseType_t xLogToStdout,
     configASSERT( xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED );
 
     #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
+    {
+        /* Record which output methods are to be used. */
+        xStdoutLoggingUsed = xLogToStdout;
+        xDiskFileLoggingUsed = xLogToFile;
+        xUDPLoggingUsed = xLogToUDP;
+
+        /* If a disk file is used then initialize it now. */
+        if( xDiskFileLoggingUsed != pdFALSE )
         {
-            HANDLE Win32Thread;
+            prvFileLoggingInit();
+        }
 
-            /* Record which output methods are to be used. */
-            xStdoutLoggingUsed = xLogToStdout;
-            xDiskFileLoggingUsed = xLogToFile;
-            xUDPLoggingUsed = xLogToUDP;
+        /* If UDP logging is used then store the address to which the log data
+         * will be sent - but don't create the socket yet because the network is
+         * not initialized. */
+        if( xUDPLoggingUsed != pdFALSE )
+        {
+            /* Set the address to which the print messages are sent. */
+            xPrintUDPAddress.sin_port = FreeRTOS_htons( usRemotePort );
 
-            /* If a disk file is used then initialize it now. */
-            if( xDiskFileLoggingUsed != pdFALSE )
+            #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
             {
-                prvFileLoggingInit();
+                xPrintUDPAddress.sin_address.ulIP_IPv4 = ulRemoteIPAddress;
             }
-
-            /* If UDP logging is used then store the address to which the log data
-             * will be sent - but don't create the socket yet because the network is
-             * not initialized. */
-            if( xUDPLoggingUsed != pdFALSE )
+            #else
             {
-                /* Set the address to which the print messages are sent. */
-                xPrintUDPAddress.sin_port = FreeRTOS_htons( usRemotePort );
                 xPrintUDPAddress.sin_addr = ulRemoteIPAddress;
             }
+            #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
-            /* If a disk file or stdout are to be used then Win32 system calls will
-             * have to be made.  Such system calls cannot be made from FreeRTOS tasks
-             * so create a stream buffer to pass the messages to a Win32 thread, then
-             * create the thread itself, along with a Win32 event that can be used to
-             * unblock the thread. */
-            if( ( xStdoutLoggingUsed != pdFALSE ) || ( xDiskFileLoggingUsed != pdFALSE ) )
-            {
-                /* Create the buffer. */
-                xLogStreamBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) + dlLOGGING_STREAM_BUFFER_SIZE + 1 );
-                configASSERT( xLogStreamBuffer );
-                memset( xLogStreamBuffer, '\0', sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) );
-                xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
-
-                /* Create the Windows event. */
-                pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
-
-                /* Create the thread itself. */
-                Win32Thread = CreateThread(
-                    NULL,                  /* Pointer to thread security attributes. */
-                    0,                     /* Initial thread stack size, in bytes. */
-                    prvWin32LoggingThread, /* Pointer to thread function. */
-                    NULL,                  /* Argument for new thread. */
-                    0,                     /* Creation flags. */
-                    NULL );
-
-                /* Use the cores that are not used by the FreeRTOS tasks. */
-                SetThreadAffinityMask( Win32Thread, ~0x01u );
-                SetThreadPriorityBoost( Win32Thread, TRUE );
-                SetThreadPriority( Win32Thread, THREAD_PRIORITY_IDLE );
-            }
+            xPrintUDPAddress.sin_family = FREERTOS_AF_INET;
         }
-    #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
+
+        /* If a disk file or stdout are to be used then Win32 system calls will
+         * have to be made.  Such system calls cannot be made from FreeRTOS tasks
+         * so create a stream buffer to pass the messages to a Win32 thread, then
+         * create the thread itself, along with a Win32 event that can be used to
+         * unblock the thread. */
+        if( ( xStdoutLoggingUsed != pdFALSE ) || ( xDiskFileLoggingUsed != pdFALSE ) )
         {
-            /* FreeRTOSIPConfig is set such that no print messages will be output.
-             * Avoid compiler warnings about unused parameters. */
-            ( void ) xLogToStdout;
-            ( void ) xLogToFile;
-            ( void ) xLogToUDP;
-            ( void ) usRemotePort;
-            ( void ) ulRemoteIPAddress;
+            /* Create the buffer. */
+            xLogStreamBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) + dlLOGGING_STREAM_BUFFER_SIZE + 1 );
+            configASSERT( xLogStreamBuffer );
+            memset( xLogStreamBuffer, '\0', sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) );
+            xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
+
+            /* Create the Windows event. */
+            pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, L"StdoutLoggingEvent" );
+            configASSERT( pvLoggingThreadEvent != NULL );
+
+            /* Create logging thread exit event to notify the logging thread. */
+            pvLoggingThreadExitEvent = CreateEvent( NULL, FALSE, TRUE, L"LoggingThreadExitEvent" );
+            configASSERT( pvLoggingThreadExitEvent != NULL );
+
+            /* Create the thread itself. */
+            pvLoggingThread = CreateThread(
+                NULL,                  /* Pointer to thread security attributes. */
+                0,                     /* Initial thread stack size, in bytes. */
+                prvWin32LoggingThread, /* Pointer to thread function. */
+                NULL,                  /* Argument for new thread. */
+                0,                     /* Creation flags. */
+                NULL );
+            configASSERT( pvLoggingThread != NULL );
+
+            /* Use the cores that are not used by the FreeRTOS tasks. */
+            SetThreadAffinityMask( pvLoggingThread, ~0x01u );
+            SetThreadPriorityBoost( pvLoggingThread, TRUE );
+            SetThreadPriority( pvLoggingThread, THREAD_PRIORITY_IDLE );
         }
+    }
+    #else /* if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
+    {
+        /* FreeRTOSIPConfig is set such that no print messages will be output.
+         * Avoid compiler warnings about unused parameters. */
+        ( void ) xLogToStdout;
+        ( void ) xLogToFile;
+        ( void ) xLogToUDP;
+        ( void ) usRemotePort;
+        ( void ) ulRemoteIPAddress;
+    }
     #endif /* ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 )  */
 }
 /*-----------------------------------------------------------*/
@@ -286,19 +335,30 @@ void vLoggingPrintf( const char * pcFormat,
             pcTaskName = pcNoTask;
         }
 
+        /* Print metadata only after line break. Metadata won't be printed in string
+         * contains line break only. */
         if( ( xAfterLineBreak == pdTRUE ) && ( strcmp( pcFormat, "\r\n" ) != 0 ) )
         {
             xLength = snprintf( cPrintString, dlMAX_PRINT_STRING_LENGTH, "%lu %lu [%s] ",
                                 xMessageNumber++,
                                 ( unsigned long ) xTaskGetTickCount(),
                                 pcTaskName );
-            xAfterLineBreak = pdFALSE;
+
+            /* Print metadata for next message if this message ends with line
+             * break. */
+            xAfterLineBreak = prvStrEndedWithLineBreak( pcFormat );
         }
         else
         {
             xLength = 0;
             memset( cPrintString, 0x00, dlMAX_PRINT_STRING_LENGTH );
-            xAfterLineBreak = pdTRUE;
+
+            /* Continue to print without metadata if the string doesn't end with line
+             * break. */
+            if( prvStrEndedWithLineBreak( pcFormat ) != pdFALSE )
+            {
+                xAfterLineBreak = pdTRUE;
+            }
         }
 
         xLength2 = vsnprintf( cPrintString + xLength, dlMAX_PRINT_STRING_LENGTH - xLength, pcFormat, args );
@@ -337,7 +397,7 @@ void vLoggingPrintf( const char * pcFormat,
                     pcTarget--;
                 }
 
-                sscanf( pcTarget, "%8X", &ulIPAddress );
+                ( void ) sscanf( pcTarget, "%8X", &ulIPAddress );
                 rc = sprintf( pcTarget, "%lu.%lu.%lu.%lu",
                               ( unsigned long ) ( ulIPAddress >> 24UL ),
                               ( unsigned long ) ( ( ulIPAddress >> 16UL ) & 0xffUL ),
@@ -475,7 +535,18 @@ static DWORD WINAPI prvWin32LoggingThread( void * pvParameter )
 
         /* Write out all waiting messages. */
         prvLoggingFlushBuffer();
+
+        /* Check if the exit event is signaled. */
+        if( WaitForSingleObject( pvLoggingThreadExitEvent, 0 ) == WAIT_OBJECT_0 )
+        {
+            break;
+        }
     }
+
+    /* Enable direct print after logging thread exit. */
+    xDirectPrint = pdTRUE;
+
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -530,9 +601,30 @@ static void prvLogToFile( const char * pcMessage,
                 remove( pcFullLogFileName );
             }
 
-            rename( pcLogFileName, pcFullLogFileName );
+            ( void ) rename( pcLogFileName, pcFullLogFileName );
             ulSizeOfLoggingFile = 0;
         }
     }
+}
+/*-----------------------------------------------------------*/
+
+void vPlatformInitLogging( void )
+{
+    vLoggingInit( pdTRUE, pdFALSE, pdFALSE, 0U, 0U );
+}
+/*-----------------------------------------------------------*/
+
+void vPlatformStopLoggingThreadAndFlush( void )
+{
+    #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) )
+        if( xLogStreamBuffer != NULL )
+        {
+            SetEvent( pvLoggingThreadExitEvent );
+
+            WaitForSingleObject( pvLoggingThread, INFINITE );
+
+            prvLoggingFlushBuffer();
+        }
+    #endif /* #if ( ( ipconfigHAS_DEBUG_PRINTF == 1 ) || ( ipconfigHAS_PRINTF == 1 ) ) */
 }
 /*-----------------------------------------------------------*/

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /**
@@ -160,7 +161,12 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+    void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
+                                               struct xNetworkEndPoint * pxEndPoint )
+#else
+    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
+#endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 {
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
@@ -207,7 +213,12 @@ static LONG CALLBACK prvExceptionHandler( _In_ PEXCEPTION_POINTERS ExceptionInfo
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        BaseType_t xApplicationDNSQueryHook_Multi( struct xNetworkEndPoint * pxEndPoint,
+                                                   const char * pcName )
+    #else
+        BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
 

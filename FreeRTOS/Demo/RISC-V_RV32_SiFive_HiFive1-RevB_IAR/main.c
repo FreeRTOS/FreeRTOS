@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -55,49 +55,63 @@
 #include <stdio.h>
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  0
+ * or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
+
+/* Set to 1 to use direct mode and set to 0 to use vectored mode.
+ *
+ * VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
+ * vector base address (BASE) in the mtvec register.
+ *
+ * VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
+ * pc to be set to the BASE, whereas interrupts cause the pc to be set to the
+ * address BASE plus four times the interrupt cause number.
+ */
+#define mainVECTOR_MODE_DIRECT                0
 
 /* UART hardware constants. */
-#define mainUART_BASE_ADDRESS               ( *( volatile uint32_t * ) 0x20000000UL )
-#define mainUART_TX_DATA                    0x00
-#define mainUART_TX_CTRL                    0x08
-#define mainUART_RX_CTRL                    0x0c
-#define mainUART_CLOCK_DIV                  0x18
-#define mainUART_TX_ENABLE_BIT              (1UL <<  0UL)
-#define mainUART_RX_ENABLE_BIT              (1UL <<  0UL)
-#define mainUART_TX_FULL_BIT                (1UL << 31UL)
+#define mainUART_BASE_ADDRESS                 ( *( volatile uint32_t * ) 0x20000000UL )
+#define mainUART_TX_DATA                      0x00
+#define mainUART_TX_CTRL                      0x08
+#define mainUART_RX_CTRL                      0x0c
+#define mainUART_CLOCK_DIV                    0x18
+#define mainUART_TX_ENABLE_BIT                ( 1UL << 0UL )
+#define mainUART_RX_ENABLE_BIT                ( 1UL << 0UL )
+#define mainUART_TX_FULL_BIT                  ( 1UL << 31UL )
 #define mainUART_REGISTER( offset )         ( ( mainUART_BASE_ADDRESS + offset ) )
 #define mainUART_REGISTER_WORD( offset )    ( *( ( uint32_t * ) mainUART_REGISTER( offset ) ) )
 
 /* Hardware LED specifics. */
-#define mainRED_LED_PIN                     ( 1UL << 0x16UL )
-#define mainLED_IO_BASE_ADDRESS             ( 0x10012000UL )
-#define mainRED_LED_INPUT_ENABLE_REG        ( * ( uint32_t * ) ( mainLED_IO_BASE_ADDRESS + 4UL ) )
-#define mainRED_LED_OUTPUT_ENABLE_REG       ( * ( uint32_t * ) ( mainLED_IO_BASE_ADDRESS + 8UL ) )
+#define mainRED_LED_PIN                  ( 1UL << 0x16UL )
+#define mainLED_IO_BASE_ADDRESS          ( 0x10012000UL )
+#define mainRED_LED_INPUT_ENABLE_REG     ( *( uint32_t * ) ( mainLED_IO_BASE_ADDRESS + 4UL ) )
+#define mainRED_LED_OUTPUT_ENABLE_REG    ( *( uint32_t * ) ( mainLED_IO_BASE_ADDRESS + 8UL ) )
 
 /* Hardware LED specifics. */
-#define mainUART_PINMUX_BASE_ADDRESS        ( 0x10012000 )
-#define mainUART0_BASE_ADDRESS              0x10013000UL
-#define mainUART_CLOCK_RATE                 16000000UL
-#define mainUART_BAUD_RATE                  115200UL
-#define mainUART0_TX_DATA_REG               ( * ( uint32_t * ) ( mainUART0_BASE_ADDRESS + 0UL ) )
-#define mainUART0_TX_DATA_BYTE_REG          ( * ( uint8_t * ) ( mainUART0_BASE_ADDRESS + 0UL ) )
-#define mainUART0_DIV_REG                   ( * ( uint32_t * ) ( mainUART0_BASE_ADDRESS + 24UL ) )
-#define mainUART0_TXCTRL_REG                ( * ( uint32_t * ) ( mainUART0_BASE_ADDRESS + 8UL ) )
-#define mainUART0_RXCTRL_REG                ( * ( uint32_t * ) ( mainUART0_BASE_ADDRESS + 12UL ) )
-#define mainUART0_GPIO_SEL_REG              ( * ( uint32_t * ) ( mainUART_PINMUX_BASE_ADDRESS + 60UL ) )
-#define mainUART0_GPIO_SEL_EN               ( * ( uint32_t * ) ( mainUART_PINMUX_BASE_ADDRESS + 56UL ) )
-#define mainUART_TXEN_BIT                   ( 1UL )
-#define mainUART0_PIN                       ( 0x30000UL )
+#define mainUART_PINMUX_BASE_ADDRESS     ( 0x10012000 )
+#define mainUART0_BASE_ADDRESS           0x10013000UL
+#define mainUART_CLOCK_RATE              16000000UL
+#define mainUART_BAUD_RATE               115200UL
+#define mainUART0_TX_DATA_REG            ( *( uint32_t * ) ( mainUART0_BASE_ADDRESS + 0UL ) )
+#define mainUART0_TX_DATA_BYTE_REG       ( *( uint8_t * ) ( mainUART0_BASE_ADDRESS + 0UL ) )
+#define mainUART0_DIV_REG                ( *( uint32_t * ) ( mainUART0_BASE_ADDRESS + 24UL ) )
+#define mainUART0_TXCTRL_REG             ( *( uint32_t * ) ( mainUART0_BASE_ADDRESS + 8UL ) )
+#define mainUART0_RXCTRL_REG             ( *( uint32_t * ) ( mainUART0_BASE_ADDRESS + 12UL ) )
+#define mainUART0_GPIO_SEL_REG           ( *( uint32_t * ) ( mainUART_PINMUX_BASE_ADDRESS + 60UL ) )
+#define mainUART0_GPIO_SEL_EN            ( *( uint32_t * ) ( mainUART_PINMUX_BASE_ADDRESS + 56UL ) )
+#define mainUART_TXEN_BIT                ( 1UL )
+#define mainUART0_PIN                    ( 0x30000UL )
 
 /* Registers used to initialise the PLIC. */
-#define mainPLIC_PENDING_0                  ( * ( ( volatile uint32_t * ) 0x0C001000UL ) )
-#define mainPLIC_PENDING_1                  ( * ( ( volatile uint32_t * ) 0x0C001004UL ) )
-#define mainPLIC_ENABLE_0                   ( * ( ( volatile uint32_t * ) 0x0C002000UL ) )
-#define mainPLIC_ENABLE_1                   ( * ( ( volatile uint32_t * ) 0x0C002004UL ) )
+#define mainPLIC_PENDING_0               ( *( ( volatile uint32_t * ) 0x0C001000UL ) )
+#define mainPLIC_PENDING_1               ( *( ( volatile uint32_t * ) 0x0C001004UL ) )
+#define mainPLIC_ENABLE_0                ( *( ( volatile uint32_t * ) 0x0C002000UL ) )
+#define mainPLIC_ENABLE_1                ( *( ( volatile uint32_t * ) 0x0C002004UL ) )
 
 /*-----------------------------------------------------------*/
+
+extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -115,7 +129,8 @@ or 0 to run the more comprehensive test and demo application. */
  */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName );
 void vApplicationTickHook( void );
 
 /*
@@ -137,7 +152,7 @@ int main( void )
 
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
-    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
     {
         main_blinky();
     }
@@ -172,12 +187,22 @@ static void prvSetupHardware( void )
     mainUART0_TXCTRL_REG |= mainUART_TXEN_BIT;
     mainUART0_GPIO_SEL_REG &= mainUART0_PIN;
     mainUART0_GPIO_SEL_EN |= mainUART0_PIN;
+
+    #if ( mainVECTOR_MODE_DIRECT == 1 )
+    {
+        __asm__ volatile ( "csrw mtvec, %0" : : "r" ( freertos_risc_v_trap_handler ) );
+    }
+    #else
+    {
+        __asm__ volatile ( "csrw mtvec, %0" : : "r" ( ( uintptr_t ) freertos_vector_table | 0x1 ) );
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 void vToggleLED( void )
 {
-static uint32_t ulLEDState = 0;
+    static uint32_t ulLEDState = 0;
 
     if( ulLEDState == 0 )
     {
@@ -187,18 +212,22 @@ static uint32_t ulLEDState = 0;
     {
         mainRED_LED_OUTPUT_ENABLE_REG &= ~mainRED_LED_PIN;
     }
+
     ulLEDState = !ulLEDState;
 }
 /*-----------------------------------------------------------*/
 
 void vSendString( const char * const pcString )
 {
-uint32_t ulIndex = 0;
+    uint32_t ulIndex = 0;
 
     /* Crude polling UART Tx. */
     while( pcString[ ulIndex ] != 0x00 )
     {
-        while( ( mainUART0_TX_DATA_REG & mainUART_TX_FULL_BIT ) != 0UL );
+        while( ( mainUART0_TX_DATA_REG & mainUART_TX_FULL_BIT ) != 0UL )
+        {
+        }
+
         mainUART0_TX_DATA_BYTE_REG = pcString[ ulIndex ];
         ulIndex++;
     }
@@ -218,8 +247,10 @@ void vApplicationMallocFailedHook( void )
      * to query the size of free heap space that remains (although it does not
      * provide information on how the remaining heap might be fragmented). */
     taskDISABLE_INTERRUPTS();
-    __asm volatile( "ebreak" );
-    for( ;; );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -237,7 +268,8 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask,
+                                    char * pcTaskName )
 {
     ( void ) pcTaskName;
     ( void ) pxTask;
@@ -246,15 +278,17 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
      * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
      * function is called if a stack overflow is detected. */
     taskDISABLE_INTERRUPTS();
-    __asm volatile( "ebreak" );
-    for( ;; );
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
     /* The tests in the full demo expect some interaction with interrupts. */
-    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
     {
         extern void vFullDemoTickHook( void );
         vFullDemoTickHook();
@@ -263,22 +297,29 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Called from the kernel's port layer to handle device specific external
- * interrupts. */
-void vApplicationHandleTrap( uint32_t mcause )
+void freertos_risc_v_application_interrupt_handler( uint32_t ulMcause )
 {
-char pcCause[ 20 ];
+    char pcCause[ 20 ];
 
-    #warning vApplicationHandleTrap not implemented.
     /* Not implemented yet! */
-    sprintf( pcCause, "%u", mcause );
-    vSendString( pcCause );
-    configASSERT( mcause == 0 );
+    sprintf( pcCause, "%u", ulMcause );
+    configPRINT_STRING( pcCause );
+    configASSERT( ulMcause == 0 );
 }
-
 /*-----------------------------------------------------------*/
 
-void *malloc( size_t xSize )
+void freertos_risc_v_application_exception_handler( uint32_t ulMcause )
+{
+    char pcCause[ 20 ];
+
+    /* Not implemented yet! */
+    sprintf( pcCause, "%u", ulMcause );
+    configPRINT_STRING( pcCause );
+    configASSERT( ulMcause == 0 );
+}
+/*-----------------------------------------------------------*/
+
+void * malloc( size_t xSize )
 {
     /* The linker script does not define a heap so artificially force an assert()
      * if something unexpectedly uses the C library heap.  See

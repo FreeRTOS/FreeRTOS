@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,21 +24,22 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue )
 /*@requires queue(xQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
-
 /*@ensures queue(xQueue, Storage, N, M, W, R, K, is_locked, abs) &*&
- *  result == ((K == 0) ? pdTRUE : pdFALSE);@*/
+    result == ((K == 0) ? pdTRUE : pdFALSE);@*/
 {
     BaseType_t xReturn;
 
-    #ifdef VERIFAST /*< const pointer declaration */
-        Queue_t * pxQueue = xQueue;
-    #else
-        Queue_t * const pxQueue = xQueue;
-    #endif
+#ifdef VERIFAST /*< const pointer declaration */
+    Queue_t * pxQueue = xQueue;
+#else
+    Queue_t * const pxQueue = xQueue;
+#endif
 
     configASSERT( pxQueue );
 
@@ -53,3 +54,5 @@ BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue )
 
     return xReturn;
 } /*lint !e818 xQueue could not be pointer to const because it is a typedef. */
+
+/* *INDENT-ON* */

@@ -1,1 +1,0 @@
-This directory contains tests projects for FreeRTOS third party Community Supported ports.

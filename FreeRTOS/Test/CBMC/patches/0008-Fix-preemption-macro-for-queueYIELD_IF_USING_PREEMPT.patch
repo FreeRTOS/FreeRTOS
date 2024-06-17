@@ -1,0 +1,25 @@
+diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
+index e87db0f45..a5f1ac9d0 100644
+--- a/FreeRTOS/Source/queue.c
++++ b/FreeRTOS/Source/queue.c
+@@ -88,12 +88,14 @@ typedef struct SemaphoreData
+ /* If the cooperative scheduler is being used then a yield should not be
+  * performed just because a higher priority task has been woken. */
+     #define queueYIELD_IF_USING_PREEMPTION()
+-#else
+-    #if ( configNUMBER_OF_CORES == 1 )
+-        #define queueYIELD_IF_USING_PREEMPTION()    portYIELD_WITHIN_API()
+-    #else /* #if ( configNUMBER_OF_CORES == 1 ) */
+-        #define queueYIELD_IF_USING_PREEMPTION()    vTaskYieldWithinAPI()
+-    #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
++#endif
++
++#if ( configNUMBER_OF_CORES == 1 ) && ( configUSE_PREEMPTION == 1 )
++    #define queueYIELD_IF_USING_PREEMPTION()    portYIELD_WITHIN_API()
++#endif
++
++#if ( configNUMBER_OF_CORES > 1 ) && ( configUSE_PREEMPTION == 1 )
++    #define queueYIELD_IF_USING_PREEMPTION()    vTaskYieldWithinAPI()
+ #endif
+ 
+ /*

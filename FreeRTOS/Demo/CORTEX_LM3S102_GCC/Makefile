@@ -28,7 +28,7 @@ include makedefs
 RTOS_SOURCE_DIR=../../Source
 DEMO_SOURCE_DIR=../Common/Minimal
 
-CFLAGS+=-I hw_include -I . -I ${RTOS_SOURCE_DIR}/include -I ${RTOS_SOURCE_DIR}/portable/GCC/ARM_CM3 -I ../Common/include -D GCC_ARMCM3_LM3S102 -D inline=
+CFLAGS+=-I hw_include -I . -I ${RTOS_SOURCE_DIR}/include -I ${RTOS_SOURCE_DIR}/portable/GCC/ARM_CM3 -I ../Common/include -D GCC_ARMCM3_LM3S102
 
 VPATH=${RTOS_SOURCE_DIR}:${RTOS_SOURCE_DIR}/portable/MemMang:${RTOS_SOURCE_DIR}/portable/GCC/ARM_CM3:${DEMO_SOURCE_DIR}:init:ParTest:hw_include
 
@@ -55,14 +55,14 @@ LIBS= hw_include/libdriver.a
 #
 all: ${COMPILER}           \
      ${COMPILER}/RTOSDemo.axf \
-	 
+
 #
 # The rule to clean out all the build products
 #
 
 clean:
 	@rm -rf ${COMPILER} ${wildcard *.bin} RTOSDemo.axf
-	
+
 #
 # The rule to create the target directory
 #
@@ -80,7 +80,7 @@ ENTRY_RTOSDemo=ResetISR
 -include ${wildcard ${COMPILER}/*.d} __dummy__
 
 
-	 
+
 
 
 

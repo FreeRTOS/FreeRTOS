@@ -1,53 +1,55 @@
 /*             ----> DO NOT REMOVE THE FOLLOWING NOTICE <----
+ *
+ *                 Copyright (c) 2014-2015 Datalight, Inc.
+ *                     All Rights Reserved Worldwide.
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; use version 2 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but "AS-IS," WITHOUT ANY WARRANTY; without even the implied warranty
+ *  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
-                   Copyright (c) 2014-2015 Datalight, Inc.
-                       All Rights Reserved Worldwide.
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; use version 2 of the License.
-
-    This program is distributed in the hope that it will be useful,
-    but "AS-IS," WITHOUT ANY WARRANTY; without even the implied warranty
-    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 /*  Businesses and individuals that for commercial or other reasons cannot
-    comply with the terms of the GPLv2 license may obtain a commercial license
-    before incorporating Reliance Edge into proprietary software for
-    distribution in any form.  Visit http://www.datalight.com/reliance-edge for
-    more information.
-*/
+ *  comply with the terms of the GPLv2 license may obtain a commercial license
+ *  before incorporating Reliance Edge into proprietary software for
+ *  distribution in any form.  Visit http://www.datalight.com/reliance-edge for
+ *  more information.
+ */
+
 /** @file
-    @brief Error values for Reliance Edge APIs
-*/
+ *  @brief Error values for Reliance Edge APIs
+ */
 #ifndef REDERRNO_H
 #define REDERRNO_H
 
 
 /** @brief Return type for Reliance Edge error values.
-*/
+ */
 typedef int32_t REDSTATUS;
 
 
 /*  The errno numbers are the same as Linux.
-*/
+ */
 
 /** Operation not permitted. */
-#define RED_EPERM            1
+#define RED_EPERM           1
 
 /** No such file or directory. */
-#define RED_ENOENT           2
+#define RED_ENOENT          2
 
 /** I/O error. */
-#define RED_EIO              5
+#define RED_EIO             5
 
 /** Bad file number. */
-#define RED_EBADF            9
+#define RED_EBADF           9
 
 /** Out of memory */
 #define RED_ENOMEM          12
@@ -110,5 +112,4 @@ typedef int32_t REDSTATUS;
 #define RED_EFUBAR          RED_EINVAL
 
 
-#endif
-
+#endif /* ifndef REDERRNO_H */

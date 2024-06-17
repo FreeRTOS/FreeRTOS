@@ -11,7 +11,7 @@ This project is a version of the standard FreeRTOS demos that includes the
 integration tests of +TCP. It tests 4 functions in the TCP source code. To Run this
 project, make sure that the computer is connected to a network via ethernet cable.
 Open the project (using file named "FreeRTOS_Plus_TCP_Integration_Tests.sln") and
-choose the required network interface by modifying this line #define 
+choose the required network interface by modifying this line #define
 configNETWORK_INTERFACE_TO_USE in FreeRTOSConfig.h.
 
 Once these changes are made, just build and run the project. It should run 4 test

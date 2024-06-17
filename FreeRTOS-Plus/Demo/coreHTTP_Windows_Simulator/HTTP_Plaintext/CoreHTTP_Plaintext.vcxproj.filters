@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{974da2c2-4a98-4d03-9709-ebbc11166411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{48ad2020-f5e0-4c88-9199-885413a730a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{ed60704f-0706-4005-9d3e-c65dfd650e12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{af400ce1-c43c-43c2-a18f-4d934efd7458}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{487d3378-667b-4997-90b5-7b60172eb0ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{00c38d6f-69fc-4d58-a8a4-81315540c860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{5a7e238c-1d42-4c18-82c5-93f591d3a61b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{039fee04-1fe8-493b-9506-0f9ac72cb811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp">
+      <UniqueIdentifier>{924fc03e-08be-443d-9f0e-469526c3ea95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + Plaintext Transport">
+      <UniqueIdentifier>{e225cc96-8260-4a13-ae6f-2c1970d544f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + Plaintext Transport\include">
+      <UniqueIdentifier>{4e2690c7-d179-411d-b2db-59142d92d985}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\http_demo_utils.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\PlainTextHTTPExample.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + Plaintext Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\http_demo_utils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + Plaintext Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

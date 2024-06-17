@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{e28cc02c-0b9d-45da-8c3e-b47d1fe1efaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\backoff_algorithm">
+      <UniqueIdentifier>{a287c69d-43f4-4df6-9a13-f59eb70cd4a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\backoff_algorithm\include">
+      <UniqueIdentifier>{a536fa15-908b-4702-b7d9-d104bdddf43f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT">
+      <UniqueIdentifier>{77d5b871-432c-4302-85ec-248ced5a5240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT\include">
+      <UniqueIdentifier>{c26f536c-96d0-4d97-90c2-eecbba863ee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT-Agent">
+      <UniqueIdentifier>{2f73859a-4f36-4e0f-8c47-f960b35a3489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT-Agent\include">
+      <UniqueIdentifier>{b00537c2-88cc-4f13-bdef-09b5f7b77a37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT-Agent\interface">
+      <UniqueIdentifier>{2cbd459d-09be-4169-9880-5eeec1539a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{eba01140-0f72-4f5d-a8c2-431c6c426c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{21c3aeda-e0b6-41cd-9017-e21d1c34d696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{3fccb3e5-6ba5-4c3f-bc83-5026714db790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{a88db31a-aa38-42b0-bf70-fdc9f16791cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{44686a65-b104-4af3-8855-28bbbaf9772e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{1e2c2c93-0989-45f3-aa58-a05a2ebc9e40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{4202753e-a139-4b7b-a7d3-00d97c2fd4f6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="subscription-manager\subscription_manager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\core_mqtt_config.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent.h">
+      <Filter>Additional Libraries\coreMQTT-Agent\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent_command_functions.h">
+      <Filter>Additional Libraries\coreMQTT-Agent\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent_message_interface.h">
+      <Filter>Additional Libraries\coreMQTT-Agent\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\backoff_algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\coreMQTT_Agent_Interface\include\freertos_agent_message.h">
+      <Filter>Additional Libraries\coreMQTT-Agent\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\coreMQTT_Agent_Interface\include\freertos_command_pool.h">
+      <Filter>Additional Libraries\coreMQTT-Agent\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="subscription-manager\subscription_manager.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\mqtt-agent-task.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\simple_sub_pub_demo.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\core_mqtt_agent.c">
+      <Filter>Additional Libraries\coreMQTT-Agent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\core_mqtt_agent_command_functions.c">
+      <Filter>Additional Libraries\coreMQTT-Agent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\backoff_algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\coreMQTT_Agent_Interface\freertos_agent_message.c">
+      <Filter>Additional Libraries\coreMQTT-Agent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\coreMQTT_Agent_Interface\freertos_command_pool.c">
+      <Filter>Additional Libraries\coreMQTT-Agent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

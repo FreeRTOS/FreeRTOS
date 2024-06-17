@@ -1,17 +1,17 @@
 diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
-index 17a6964e..24a40c29 100644
+index e87db0f45..ec9cc78a9 100644
 --- a/FreeRTOS/Source/queue.c
 +++ b/FreeRTOS/Source/queue.c
-@@ -207,7 +207,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
- 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
- 	 * the queue set that the queue contains data.
- 	 */
--	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
-+	BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+@@ -213,7 +213,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue,
+  * Checks to see if a queue is a member of a queue set, and if so, notifies
+  * the queue set that the queue contains data.
+  */
+-    static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
++    BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
  #endif
-
+ 
  /*
-@@ -2957,7 +2957,7 @@ BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
+@@ -3121,7 +3121,7 @@ BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
  
  #if ( configUSE_QUEUE_SETS == 1 )
  

@@ -23,7 +23,7 @@ LR_APP 0x08000000 0x100000 ; load region size_region
         *(privileged_functions)
     }
 
-    ER_IROM_FREERTOS_SYSTEM_CALLS 0x08008000 FIXED
+    ER_IROM_FREERTOS_SYSTEM_CALLS 0x08010000 FIXED
     {
         *(freertos_system_calls)
     }

@@ -4,4 +4,4 @@ Directories:
   contains a FreeRTOS windows simulator demo project for both FreeRTOS+CLI and
   FreeRTOS+Trace.  See http://www.FreeRTOS.org/trace for information on using
   the project.
-  
+

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -71,9 +71,9 @@
  * that synchronise with the xEventGroupSync() function. */
 #define ebSET_BIT_TASK_SYNC_BIT                  ebBIT_0
 #define ebWAIT_BIT_TASK_SYNC_BIT                 ebBIT_1
-#define ebRENDESVOUS_TASK_1_SYNC_BIT             ebBIT_2
-#define ebRENDESVOUS_TASK_2_SYNC_BIT             ebBIT_3
-#define ebALL_SYNC_BITS                          ( ebSET_BIT_TASK_SYNC_BIT | ebWAIT_BIT_TASK_SYNC_BIT | ebRENDESVOUS_TASK_1_SYNC_BIT | ebRENDESVOUS_TASK_2_SYNC_BIT )
+#define ebRENDEZVOUS_TASK_1_SYNC_BIT             ebBIT_2
+#define ebRENDEZVOUS_TASK_2_SYNC_BIT             ebBIT_3
+#define ebALL_SYNC_BITS                          ( ebSET_BIT_TASK_SYNC_BIT | ebWAIT_BIT_TASK_SYNC_BIT | ebRENDEZVOUS_TASK_1_SYNC_BIT | ebRENDEZVOUS_TASK_2_SYNC_BIT )
 
 /* A block time of zero simply means "don't block". */
 #define ebDONT_BLOCK                             ( 0 )
@@ -86,8 +86,8 @@
 #define ebSELECTIVE_BITS_1                       0x03
 #define ebSELECTIVE_BITS_2                       0x05
 
-#ifndef ebRENDESVOUS_TEST_TASK_STACK_SIZE
-    #define ebRENDESVOUS_TEST_TASK_STACK_SIZE    configMINIMAL_STACK_SIZE
+#ifndef ebRENDEZVOUS_TEST_TASK_STACK_SIZE
+    #define ebRENDEZVOUS_TEST_TASK_STACK_SIZE    configMINIMAL_STACK_SIZE
 #endif
 
 #ifndef ebEVENT_GROUP_SET_BITS_TEST_TASK_STACK_SIZE
@@ -187,10 +187,10 @@ void vStartEventGroupTasks( void )
      *
      * Create the test tasks as described at the top of this file.
      */
-    xTaskCreate( prvTestSlaveTask, "WaitO", ebRENDESVOUS_TEST_TASK_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xTestSlaveTaskHandle );
+    xTaskCreate( prvTestSlaveTask, "WaitO", ebRENDEZVOUS_TEST_TASK_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xTestSlaveTaskHandle );
     xTaskCreate( prvTestMasterTask, "SetB", ebEVENT_GROUP_SET_BITS_TEST_TASK_STACK_SIZE, ( void * ) xTestSlaveTaskHandle, ebSET_BIT_TASK_PRIORITY, NULL );
-    xTaskCreate( prvSyncTask, "Rndv", ebRENDESVOUS_TEST_TASK_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_1_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask1 );
-    xTaskCreate( prvSyncTask, "Rndv", ebRENDESVOUS_TEST_TASK_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_2_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask2 );
+    xTaskCreate( prvSyncTask, "Rndv", ebRENDEZVOUS_TEST_TASK_STACK_SIZE, ( void * ) ebRENDEZVOUS_TASK_1_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask1 );
+    xTaskCreate( prvSyncTask, "Rndv", ebRENDEZVOUS_TEST_TASK_STACK_SIZE, ( void * ) ebRENDEZVOUS_TASK_2_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask2 );
 
     /* If the last task was created then the others will have been too. */
     configASSERT( xSyncTask2 );
@@ -425,7 +425,7 @@ static void prvTestSlaveTask( void * pvParameters )
          * when it is time for the next test. */
         vTaskSuspend( NULL );
 
-        /* Now peform a synchronisation with all the other tasks.  At this point
+        /* Now perform a synchronisation with all the other tasks.  At this point
          * the 'test master' task has the lowest priority so will get to the sync
          * point after all the other synchronising tasks. */
         uxReturned = xEventGroupSync( xEventGroup,              /* The event group used for the sync. */

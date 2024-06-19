@@ -88,8 +88,8 @@
  * connections on the standard echo port (port 7), then echos back any data
  * received on that connection.
  */
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     1
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE              0
+#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS     0
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE              1
 #define mainCREATE_TCP_ECHO_SERVER_TASK               0
 /*-----------------------------------------------------------*/
 

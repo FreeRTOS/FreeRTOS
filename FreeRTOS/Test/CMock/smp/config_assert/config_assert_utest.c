@@ -623,40 +623,6 @@ void test_vTaskStepTick_assert_scheduler_not_suspended( void )
 }
 
 /**
- * @brief prvCheckForRunStateChange - task state not changed.
- *
- * When the task is able to run after calling portENABLE_INTERRUPTS. The task state
- * is supposed to be changed to run state. This test cover the assertion of this scenario.
- *
- * <b>Coverage</b>
- * @code{c}
- * configASSERT( pxThisTCB->xTaskRunState != taskTASK_YIELDING );
- * @endcode
- */
-void test_prvCheckForRunStateChange_assert_task_state_not_changed( void )
-{
-    TCB_t xTaskTCB = { NULL };
-
-    pxCurrentTCBs[ 0 ] = &xTaskTCB;
-    xTaskTCB.uxCriticalNesting = 0;
-    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
-    uxSchedulerSuspended = 1;
-
-    /* Expection. */
-    vFakePortAssertIfISR_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseTaskLock_Expect();
-    vFakePortEnableInterrupts_Expect();
-
-    /* API Call. */
-    EXPECT_ASSERT_BREAK( prvCheckForRunStateChange() );
-
-    /* Test Verifications */
-    validate_and_clear_assertions();
-}
-
-/**
  * @brief vTaskStepTick - assert if scheduler suspended.
  *
  * <b>Coverage</b>

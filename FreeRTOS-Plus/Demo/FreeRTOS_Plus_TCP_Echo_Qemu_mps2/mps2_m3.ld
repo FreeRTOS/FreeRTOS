@@ -128,7 +128,7 @@ SECTIONS
         _heap_top = .;
         . = . + _Min_Stack_Size;
         . = ALIGN(8);
-       } >RAM
+    } >RAM
 
    /* Set stack top to end of RAM, and stack limit move down by
     * size of stack_dummy section */

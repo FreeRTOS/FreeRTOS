@@ -455,7 +455,7 @@ void handle_sigint( int signal )
         printf( "chdir into %s error is %d\n", BUILD, errno );
     }
 
-    exit( 2 );
+    _exit( 2 );
 }
 
 /*-----------------------------------------------------------*/

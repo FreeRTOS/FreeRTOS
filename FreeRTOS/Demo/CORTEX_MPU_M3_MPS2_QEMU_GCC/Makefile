@@ -1,4 +1,5 @@
 CC                     =    arm-none-eabi-gcc
+SIZE                   =    arm-none-eabi-size
 BIN                   :=    RTOSDemo.axf
 
 BUILD_DIR             :=    build
@@ -34,33 +35,23 @@ INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC/C
 INCLUDE_DIRS          +=    -I$(KERNEL_DIR)/include
 INCLUDE_DIRS          +=    -I$(KERNEL_DIR)/portable/GCC/ARM_CM3_MPU
 
-DEFINES               :=    -DQEMU_SOC_MPS2
 DEFINES               :=    -DHEAP4
-
 CPPFLAGS              +=    $(DEFINES)
 
-CFLAGS                +=    -mcpu=cortex-m3
-CFLAGS                +=    -Wno-error=implicit-function-declaration
-CFLAGS                +=    -Wno-builtin-declaration-mismatch
-CFLAGS                +=    -Werror
-CFLAGS                +=    -Wall
-CFLAGS                +=    -Wextra
-CFLAGS                +=    -fstrict-aliasing
-CFLAGS                +=    -Wstrict-aliasing
-CFLAGS                +=    -Wno-error=address-of-packed-member
-CFLAGS                +=    -Wno-unused-parameter
+CFLAGS                +=    -mthumb -mcpu=cortex-m3
+CFLAGS                +=    -Wall -Wextra -Wshadow -Wno-unused-parameter
+#CFLAGS                +=    -Wpedantic -fanalyzer
 CFLAGS                +=    $(INCLUDE_DIRS)
 
 LDFLAGS                =    -T ./scripts/mps2_m3.ld
-LDFLAGS               +=    -mthumb
-
 LDFLAGS               +=    -Xlinker -Map=${BUILD_DIR}/output.map
+LDFLAGS               +=    -Xlinker --gc-sections
 LDFLAGS               +=    -nostartfiles -nostdlib -nolibc -nodefaultlibs
 
 ifeq ($(DEBUG), 1)
-    CFLAGS                +=     -ggdb3 -Og -save-temps=obj
+    CFLAGS                +=     -g3 -Og -ffunction-sections -fdata-sections -save-temps=obj
 else
-    CFLAGS                +=     -O3
+    CFLAGS                +=     -Os -ffunction-sections -fdata-sections
 endif
 
 ifeq ($(PICOLIBC), 1)
@@ -73,7 +64,8 @@ OBJ_FILES             :=    $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 .PHONY: clean
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
-	$(CC) -ffunction-sections -fdata-sections $(LDFLAGS) $+ -o $(@)
+	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o $(@)
+	$(SIZE) $(@)
 
 %.d: %.c
 	@set -e; rm -f $@; \

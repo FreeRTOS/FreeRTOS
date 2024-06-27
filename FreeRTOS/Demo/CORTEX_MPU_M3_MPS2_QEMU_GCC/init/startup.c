@@ -35,7 +35,9 @@ extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
 extern void uart_init( void );
-extern int main();
+extern int main( void );
+
+void _start( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
@@ -61,13 +63,12 @@ void Reset_Handler( void )
     }
 
     /* jump to board initialisation */
-    void _start( void );
     _start();
 }
 
 void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
 {
-/* These are volatile to try and prevent the compiler/linker optimising them
+/* These are volatile to try and prevent the compiler/linker optimizing them
  * away as the variables never actually get used.  If the debugger won't show the
  * values of the variables, make them global my moving their declaration outside
  * of this function. */
@@ -122,6 +123,7 @@ void Default_Handler( void )
         "NVIC_INT_CTRL_CONST: .word 0xe000ed04\n"
     );
 }
+
 static void HardFault_Handler( void ) __attribute__( ( naked ) );
 void HardFault_Handler( void )
 {
@@ -232,12 +234,12 @@ const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ) ) 
 void _start( void )
 {
     uart_init();
-    main( 0, 0 );
+    main();
     exit( 0 );
 }
 
 __attribute__( ( naked ) )
-void exit( __attribute__( ( unused ) ) int status )
+void exit( int status )
 {
     /* Force qemu to exit using ARM Semihosting */
     __asm volatile (
@@ -250,4 +252,6 @@ void exit( __attribute__( ( unused ) ) int status )
         "bkpt 0xab\n"
         "end: b end\n"
         );
+
+    ( void ) status;
 }

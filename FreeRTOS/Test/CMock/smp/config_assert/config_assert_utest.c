@@ -281,9 +281,6 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskRemoveFromUnorderedEventList( &xEventListItem,

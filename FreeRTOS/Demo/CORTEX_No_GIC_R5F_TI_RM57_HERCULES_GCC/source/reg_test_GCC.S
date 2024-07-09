@@ -236,7 +236,7 @@ reg1_loopf_pass:
 reg1_error_loop:
     /* If this line is hit then there was an error in a core register value.
     The loop ensures the loop counter stops incrementing. */
-    B       0xDEACFD
+    B       reg1_error_loop
     NOP
 
 /*-----------------------------------------------------------*/
@@ -381,7 +381,7 @@ reg2_loop:
 reg2_error_loopf:
     /* If this line is hit then a VFP register value was found to be
     incorrect. */
-    B        0xDEACFE
+    B        reg2_error_loopf
 
 reg2_loopf_pass:
 
@@ -436,7 +436,7 @@ reg2_loopf_pass:
 reg2_error_loop:
     /* If this line is hit then there was an error in a core register value.
     The loop ensures the loop counter stops incrementing. */
-    B     0xDEACFF
+    B     reg2_error_loop
     NOP
 
 /* End of file */

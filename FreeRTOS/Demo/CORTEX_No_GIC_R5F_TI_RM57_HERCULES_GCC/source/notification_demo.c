@@ -52,8 +52,7 @@
      static StaticTask_t xNotificationTestTaskTCB;
 
 /** @brief MPU Region Aligned Stack used by the Notification Test Task */
-    static StackType_t uxNotificationTestTaskStack[ configMINIMAL_STACK_SIZE ]
-    __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x4UL ) ) );
+    static StackType_t uxNotificationTestTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Statically allocated task handle for the Notification Test task. */
     static TaskHandle_t xNotificationTaskOneHandle;

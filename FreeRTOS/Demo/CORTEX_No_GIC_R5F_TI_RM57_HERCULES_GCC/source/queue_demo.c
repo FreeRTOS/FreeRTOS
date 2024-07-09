@@ -96,13 +96,13 @@
 /*-------------------- Static Task Memory Allocation ------------------- */
 
 /** @brief Statically allocated, and MPU aligned, Queue object */
-    static StaticQueue_t xStaticQueue __attribute__( ( aligned( 0x80 ) ) );
+    static StaticQueue_t xStaticQueue;
 
 /** @brief Statically allocated, and MPU aligned, Storage for the Queue */
-    static uint8_t xQueueStorage[ 0x20 ] __attribute__( ( aligned( 0x80 ) ) );
+    static uint8_t xQueueStorage[ 0x20 ];
 
 /** @brief Statically allocated, and MPU aligned, QueueHandle */
-    static QueueHandle_t xQueue __attribute__( ( aligned( 0x20 ) ) );
+    static QueueHandle_t xQueue;
 
 /* Each task needs to know the other tasks handle so they can send signals to
  * each other. The handle is obtained from the task's name. */
@@ -114,15 +114,13 @@
     static const char * pcReceiveTaskName = "ReceiveTaskName";
 
 /** @brief Static MPU aligned stack used by the Queue Send Task */
-    static StackType_t xQueueSendTaskStack[ configMINIMAL_STACK_SIZE / 2U ]
-    __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x2U ) ) );
+    static StackType_t xQueueSendTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /** @brief Static TCB Used by the Queue Send Task */
      static StaticTask_t xQueueSendTaskTCB;
 
 /** @brief Static MPU aligned stack used by the Queue Receive Task */
-    static StackType_t xQueueReceiveTaskStack[ configMINIMAL_STACK_SIZE / 2U ]
-    __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x2U ) ) );
+    static StackType_t xQueueReceiveTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /** @brief Static TCB Used by the Queue Receive Task */
      static StaticTask_t xQueueReceiveTaskTCB;

@@ -46,8 +46,7 @@
 
 /** @brief MPU Region Aligned Stack used by the IRQ Test Task */
 
-     static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ]
-    __attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x4UL ) ) );
+     static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Parameters that are passed into the IRQ test task solely for
  * the purpose of ensuring parameters are passed into tasks correctly. */

@@ -75,15 +75,13 @@ void vApplicationIRQHandler( void );
  static StaticTask_t xTimerTaskTCB;
 
 /** @brief Statically declared MPU aligned stack used by the timer task */
- static StackType_t uxTimerTaskStack[ configMINIMAL_STACK_SIZE ]
-__attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x4U ) ) );
+ static StackType_t uxTimerTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Statically declared TCB Used by the Idle Task */
  static StaticTask_t xIdleTaskTCB;
 
 /** @brief Statically declared MPU aligned stack used by the idle task */
- static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ]
-__attribute__( ( aligned( configMINIMAL_STACK_SIZE * 0x4U ) ) );
+ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Simple variable to show how the idle tick hook can be used */
  static volatile TickType_t ulIdleTickHookCount = 0x0;

@@ -44,13 +44,13 @@
 /** @brief TCB used by Register Test Task One */
 static StaticTask_t xRegTestOneTaskTCB;
 
-/** @brief Small MPU Region Aligned Stack used by Register Test Task One */
+/** @brief Stack used by Register Test Task One */
 static StackType_t uxRegTestOneTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /** @brief TCB used by Register Test Two Task */
 static StaticTask_t xRegTestTwoTaskTCB;
 
-/** @brief Small MPU Region Aligned Stack used by Register Test Task Two */
+/** @brief Stack used by Register Test Task Two */
 static StackType_t uxRegTestTwoTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /* Parameters that are passed into the register check tasks solely for the
@@ -62,7 +62,6 @@ static StackType_t uxRegTestTwoTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /** @brief Array to track the number of loops the register test tasks have run.
  *
- * @note Smallest valid MPU region size for Armv7-R is 32 bytes.
  * Register Test One will use loopCount[0];
  * Register Test Two Will use loopCount[1];
  */
@@ -84,10 +83,6 @@ static TaskHandle_t xRegisterTaskTwoHandle;
  */
 static void prvRegTestTaskEntry1( void * pvParameters )
 {
-    /** 
-     * Intialize the FPU context of the task.
-     */
-    vPortTaskUsesFPU();
     /** Although the Register Test task is written in assembly, its entry point
      * is written in C for convenience of checking the task parameter is being
      * passed in correctly. */
@@ -115,10 +110,6 @@ static void prvRegTestTaskEntry1( void * pvParameters )
  */
 static void prvRegTestTaskEntry2( void * pvParameters )
 {
-    /** 
-     * Intialize the FPU context of the task.
-     */
-    vPortTaskUsesFPU();
     /** Although the Register Test task is written in assembly, its entry point
      * is written in C for convenience of checking the task parameter is being
      * passed in correctly. */

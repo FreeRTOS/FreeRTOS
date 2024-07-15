@@ -30,6 +30,7 @@
 
     .global vRegTest1Implementation
     .global vRegTest2Implementation
+    .extern vPortYield
     .extern
     .extern loopCounter
     .text
@@ -79,7 +80,7 @@ vRegTest1Implementation:
 reg1_loop:
     /* Perform a yield to increase test coverage */
     PUSH    {R0, R14}
-/*    BLX     vPortYield */
+    BLX     vPortYield
     POP     {R0, R14}
 
     /* Check all the VFP registers still contain the values set above.
@@ -225,7 +226,6 @@ reg1_loopf_pass:
     /* Delay for 0x100 ticks before running again */
     PUSH    { R0-R4, R12, R14 }
     MOV     R0, #0x100
-    /* As this is a privileged task, it can directly call vTaskDelay */
     LDR     R1, =vTaskDelay
     BLX     R1
     POP     { R0-R4, R12, R14 }
@@ -284,7 +284,7 @@ reg2_loop:
 
     /* Yield to increase test coverage */
     PUSH    {R0, R14}
-/*    BLX     vPortYield */
+    BLX     vPortYield
     POP     {R0, R14}
 
     /* Check all the VFP registers still contain the values set above.
@@ -425,8 +425,6 @@ reg2_loopf_pass:
     /* Delay for 0x200 ticks before running again */
     PUSH    { R0-R4, R12, R14 }
     MOV     R0, #0x200
-    /* Unprivileged tasks need to use the MPU wrapped functions.
-     * Change this to be BLX vTaskDelay to trigger a pre-fetch abort. */
     BLX     vTaskDelay
     POP     { R0-R4, R12, R14 }
 

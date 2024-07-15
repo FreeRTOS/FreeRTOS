@@ -72,21 +72,21 @@ void vApplicationIRQHandler( void );
 /* --------------------- Static Task Memory Allocation --------------------- */
 
 /** @brief Statically declared TCB Used by the Idle Task */
- static StaticTask_t xTimerTaskTCB;
+static StaticTask_t xTimerTaskTCB;
 
-/** @brief Statically declared MPU aligned stack used by the timer task */
- static StackType_t uxTimerTaskStack[ configMINIMAL_STACK_SIZE ];
+/** @brief Statically declared stack used by the timer task */
+static StackType_t uxTimerTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Statically declared TCB Used by the Idle Task */
- static StaticTask_t xIdleTaskTCB;
+static StaticTask_t xIdleTaskTCB;
 
-/** @brief Statically declared MPU aligned stack used by the idle task */
- static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+/** @brief Statically declared stack used by the idle task */
+static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Simple variable to show how the idle tick hook can be used */
- static volatile TickType_t ulIdleTickHookCount = 0x0;
+static volatile TickType_t ulIdleTickHookCount = 0x0;
 
- extern  volatile uint32_t ulPortYieldRequired;
+extern volatile uint32_t ulPortYieldRequired;
 
 /* ------------------------------------------------------------------------- */
 
@@ -101,48 +101,48 @@ int main( void )
                "----------------------------\r\n\r\n" );
 
     #if ( mainDEMO_TYPE & REGISTER_DEMO )
-    {
-        if( pdPASS == xReturn )
         {
-            sci_print( "Creating the Register test tasks\r\n" );
-            xReturn = xCreateRegisterTestTasks();
+            if( pdPASS == xReturn )
+            {
+                sci_print( "Creating the Register test tasks\r\n" );
+                xReturn = xCreateRegisterTestTasks();
+            }
         }
-    }
     #endif /* ( mainDEMO_TYPE & REGISTER_DEMO ) */
 
     #if ( mainDEMO_TYPE & QUEUE_DEMO )
-    {
-        if( pdPASS == xReturn )
         {
-            sci_print( "Creating the Queue Demo Tasks\r\n" );
-            xReturn = xCreateQueueTasks();
+            if( pdPASS == xReturn )
+            {
+                sci_print( "Creating the Queue Demo Tasks\r\n" );
+                xReturn = xCreateQueueTasks();
+            }
         }
-    }
     #endif /* ( mainDEMO_TYPE & QUEUE_DEMO ) */
 
     #if ( mainDEMO_TYPE & IRQ_DEMO )
-    {
-        if( pdPASS == xReturn )
         {
-            sci_print( "Creating the IRQ Demo Tasks\r\n" );
-            xReturn = xCreateIRQTestTask();
+            if( pdPASS == xReturn )
+            {
+                sci_print( "Creating the IRQ Demo Tasks\r\n" );
+                xReturn = xCreateIRQTestTask();
+            }
         }
-    }
     #endif /* ( mainDEMO_TYPE & IRQ_DEMO ) */
 
     #if ( mainDEMO_TYPE & NOTIFICATION_DEMO )
-    {
-        if( pdPASS == xReturn )
         {
-            sci_print( "Creating the Notification Demo Tasks\r\n" );
-            xReturn = xCreateNotificationTestTask();
+            if( pdPASS == xReturn )
+            {
+                sci_print( "Creating the Notification Demo Tasks\r\n" );
+                xReturn = xCreateNotificationTestTask();
+            }
         }
-    }
     #endif /* ( mainDEMO_TYPE & NOTIFICATION_DEMO ) */
 
     if( pdPASS == xReturn )
     {
-        sci_print( "\r\n--------------------------- Start of FreeRTOS Demos"
+        sci_print( "\r\n--------------------------- Start of FreeRTOS Demo Tasks"
                    "---------------------------\r\n\r\n" );
         vTaskStartScheduler();
     }
@@ -295,8 +295,6 @@ void vAssertCalled( const char * pcFuncName,
         __asm volatile ( "NOP" );
     }
 
-    /* NOTE: Unprivileged tasks cannot enter critical sections on the ARM_CRx_MPU port.
-     * Meaning unprivileged tasks will cause a pre-fetch abort if they fail an assert. */
     taskENTER_CRITICAL();
     {
         /* You can step out of this function to debug the assertion by using
@@ -406,7 +404,7 @@ void vApplicationIRQHandler( void )
         /* An IRQ Raised by Channel 21 of the VIM is a Software Interrupt (SSI). */
         else if( 21UL == ulIRQChannelIndex )
         {
-            #if ( mainDEMO_TYPE & IRQ_DEMO )
+            #if ( mainDEMO_TYPE &IRQ_DEMO )
                 /* This is an interrupt raised by Software */
                 vIRQDemoHandler();
             #else

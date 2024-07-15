@@ -39,26 +39,26 @@
 /* Demo include */
 #include "demo_tasks.h"
 
-#if ( mainDEMO_TYPE & IRQ_DEMO )
+#if ( mainDEMO_TYPE &IRQ_DEMO )
 
 /** @brief TCB used by the IRQ Test Task */
-     static StaticTask_t xIRQTestTaskTCB;
+    static StaticTask_t xIRQTestTaskTCB;
 
-/** @brief MPU Region Aligned Stack used by the IRQ Test Task */
+/** @brief Stack used by the IRQ Test Task */
 
-     static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ];
+    static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ];
 
 /** @brief Parameters that are passed into the IRQ test task solely for
  * the purpose of ensuring parameters are passed into tasks correctly. */
     #define irqTASK_PARAMETER    ( 0xFEEDBEEFUL )
 
 /** @brief Statically allocated task handle for the IRQ Test task. */
-     static TaskHandle_t xIRQTaskHandle;
+    static TaskHandle_t xIRQTaskHandle;
 
-     volatile static uint32_t ulIntNestTestVal;
+    volatile static uint32_t ulIntNestTestVal;
 /* ----------------------------------------------------------------------------------- */
 
-/** @brief Entry point for the Unprivileged IRQ Test Task.
+/** @brief Entry point for the IRQ Test Task.
  * @param pvParameters A test value to ensure the task's arguments are correctly set.
  * @note This task raises Software Interrupts (SWI) in the form of IRQs using the
  * Vectored Interrupt Manager (VIM) built into the RM57 by Texas Instrument (TI).
@@ -124,7 +124,7 @@
 
 /* ----------------------------------------------------------------------------------- */
 
-    void vIRQDemoHandler( void ) /* PRIVILEGED_FUNCTION */
+    void vIRQDemoHandler( void )
     {
         sci_print( "\tSWI Based IRQ was raised!\r\n" );
         volatile uint32_t ulSSIRegisterValue;
@@ -221,7 +221,7 @@
     {
         BaseType_t xReturn = pdFAIL;
 
-        /* Create the register check tasks, as described at the top of this file. */
+        /* Create the IRQ check tasks, as described at the top of this file. */
         xIRQTaskHandle = xTaskCreateStatic( prvIRQTestTask,
                                             "IRQTestTask",
                                             configMINIMAL_STACK_SIZE,

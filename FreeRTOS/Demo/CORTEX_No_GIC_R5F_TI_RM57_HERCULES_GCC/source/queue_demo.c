@@ -2,22 +2,23 @@
  * FreeRTOS V202212.00
  * Copyright (C) 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
@@ -48,7 +49,7 @@
 
 #if ( mainDEMO_TYPE & QUEUE_DEMO )
 
-    /* ------------------------------ Demo Task Configs ------------------------------ */
+    /* ------------------------------ Demo Task Configs --------------------*/
 
     /** @brief The rate at which data is sent to the queue from the send task.
      * @note Ticks are converted to milliseconds using pdMS_TO_TICKS(). */
@@ -95,16 +96,16 @@
 
 /*-------------------- Static Task Memory Allocation ------------------- */
 
-/** @brief Statically allocated, and MPU aligned, Queue object */
+/** @brief Statically allocated Queue object */
     static StaticQueue_t xStaticQueue;
 
-/** @brief Statically allocated, and MPU aligned, Storage for the Queue */
+/** @brief Statically allocated Storage for the Queue */
     static uint8_t xQueueStorage[ 0x20 ];
 
-/** @brief Statically allocated, and MPU aligned, QueueHandle */
+/** @brief Statically allocated QueueHandle */
     static QueueHandle_t xQueue;
 
-/* Each task needs to know the other tasks handle so they can send signals to
+/* Each task needs to know the other tasks' handle so they can send signals to
  * each other. The handle is obtained from the task's name. */
 
 /** @brief Task name for the queue send task. */
@@ -113,13 +114,13 @@
 /** @brief Task name for the queue receive task. */
     static const char * pcReceiveTaskName = "ReceiveTaskName";
 
-/** @brief Static MPU aligned stack used by the Queue Send Task */
+/** @brief Statically allocated stack used by the Queue Send Task */
     static StackType_t xQueueSendTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /** @brief Static TCB Used by the Queue Send Task */
      static StaticTask_t xQueueSendTaskTCB;
 
-/** @brief Static MPU aligned stack used by the Queue Receive Task */
+/** @brief Statically allocated stack used by the Queue Receive Task */
     static StackType_t xQueueReceiveTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /** @brief Static TCB Used by the Queue Receive Task */
@@ -181,6 +182,8 @@
 
         return xReturn;
     }
+
+/* ------------------------------------------------------------------------------------ */
 
     BaseType_t xCreateQueueTasks( void )
     {

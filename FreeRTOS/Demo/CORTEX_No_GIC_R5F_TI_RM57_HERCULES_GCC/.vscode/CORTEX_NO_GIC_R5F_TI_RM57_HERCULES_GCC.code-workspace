@@ -8,13 +8,13 @@
             "name": "FreeRTOS-Kernel"
         },
 		{
-            "path": "../../../Source/portable/GCC/ARM_CRx_MPU",
+            "path": "../../../Source/portable/GCC/ARM_CRx_No_GIC",
             "C_Cpp.default.includePath": [
                 "../source",
                 "../include",
                 "../BoardFiles/include",
                 "../BoardFiles/source",
-                "../../Source/portable/GCC/ARM_CRx_MPU",
+                "../../Source/portable/GCC/ARM_CRx_No_GIC",
                 "../../Source/include",
                 "../../Source",
             ],
@@ -34,15 +34,15 @@
             "**/.github**": true,
             "**/.git[a-hj-z-]**": true,
             "**/portable/**": true
-            
+
         },
-    
+
         "C_Cpp.default.includePath": [
             "../source",
             "../include",
             "../BoardFiles/include",
             "../BoardFiles/source",
-            "../../Source/portable/GCC/ARM_CRx_MPU",
+            "../../Source/portable/GCC/ARM_CRx_No_GIC",
             "../../Source/include",
             "../../Source",
         ],

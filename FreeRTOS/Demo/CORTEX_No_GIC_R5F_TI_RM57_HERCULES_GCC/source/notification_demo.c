@@ -2,22 +2,23 @@
  * FreeRTOS V202212.00
  * Copyright (C) 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
@@ -48,13 +49,13 @@
     /** @brief Value sent back and forth between the tasks */
     #define notificationTEST_VALUE        0x1234UL
 
-/** @brief TCB used by the Notification Test Task */
-     static StaticTask_t xNotificationTestTaskTCB;
+    /** @brief TCB used by the Notification Test Task */
+    static StaticTask_t xNotificationTestTaskTCB;
 
-/** @brief MPU Region Aligned Stack used by the Notification Test Task */
+    /** @brief Stack used by the Notification Test Task */
     static StackType_t uxNotificationTestTaskStack[ configMINIMAL_STACK_SIZE ];
 
-/** @brief Statically allocated task handle for the Notification Test task. */
+    /** @brief Statically allocated task handle for the Notification Test task. */
     static TaskHandle_t xNotificationTaskOneHandle;
 
 /* ----------------------------------------------------------------------------------- */
@@ -72,8 +73,11 @@
         }
     }
 
-/** @brief Entry point for the Unprivileged Notification Test Task.
- * @param pvParameters A test value to ensure the task's arguments are correctly set.
+/* ----------------------------------------------------------------------------------- */
+
+/** @brief Entry point for the Notification Test Task.
+ * @param pvParameters A test value to ensure the task's arguments are correctly
+ * set.
  * @note This task sends itself and another task notifications using the
  * cross-task notification APIs.
  */
@@ -91,7 +95,8 @@
             ulNotificationValue = 0x0UL;
 
             /* The task should not yet have a notification pending. */
-            xReturned = xTaskNotifyWait( 0x0UL, 0x0UL, &ulNotificationValue, 0x0UL );
+            xReturned = xTaskNotifyWait( 0x0UL, 0x0UL,
+                                         &ulNotificationValue, 0x0UL );
             configASSERT( pdFAIL == xReturned );
             configASSERT( 0x0UL == ulNotificationValue );
 
@@ -107,7 +112,8 @@
 
             /* Two notifications have been sent to this task by itself */
             configASSERT( 0x2UL == ulNotificationValue );
-            sci_print( "Notification Task correctly sent itself two notifications!\r\n" );
+            sci_print( "Notification Task correctly sent itself two"
+                       "notifications!\r\n" );
 
             /* Now make the task send itself a notification with a value */
             xReturned = xTaskNotify( xTaskGetCurrentTaskHandle(),
@@ -131,7 +137,8 @@
             }
             else
             {
-                sci_print( "Notification Task did NOT get the expected value!\r\n" );
+                sci_print( "Notification Task did NOT get the expected"
+                           "value!\r\n" );
                 configASSERT( 0x0UL );
             }
 
@@ -139,12 +146,13 @@
             ulNotificationValue = 0x0UL;
 
             /* There should be no value to receive this time */
-            xReturned = xTaskNotifyWait( 0, 0, &ulNotificationValue, ( TickType_t ) 0x0UL );
+            xReturned = xTaskNotifyWait( 0, 0, &ulNotificationValue,
+                                        ( TickType_t ) 0x0UL );
 
             if( ( pdPASS == xReturned ) || ( 0x0 != ulNotificationValue ) )
             {
-                sci_print( "Notification Task received a value when there should have been "
-                           "none" );
+                sci_print( "Notification Task received a value when there"
+                           "should have been none" );
                 configASSERT( 0x0UL );
             }
 

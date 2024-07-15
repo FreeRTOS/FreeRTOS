@@ -51,7 +51,7 @@ FetchContent_Declare(
     FreeRTOS-Kernel
     GIT_REPOSITORY https://github.com/FreeRTOS/FreeRTOS-Kernel.git
     # Last tested FreeRTOS-Kernel Commit
-    GIT_TAG e8289dfee6e00660b5ad028e9f931ffb76c95840
+    GIT_TAG main
     SOURCE_DIR "${DEMO_DIR}/../../Source"
     USES_TERMINAL_DOWNLOAD YES
     USES_TERMINAL_UPDATE   YES

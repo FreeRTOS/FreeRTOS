@@ -268,7 +268,7 @@ void vApplicationTickHook( void )
 
 /*-----------------------------------------------------------*/
 
-void traceOnEnter()
+void traceOnEnter( void )
 {
     #if ( TRACE_ON_ENTER == 1 )
         int xReturn;

@@ -1,0 +1,56 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTT_Plain_Text", "MQTT_Plain_Text.vcxproj", "{95746A42-54E8-4A6C-AE5D-EE5CE3B086BD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\VisualStudio_StaticProjects\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{40EF7C88-97FB-485A-A7E0-9A53C66A1079}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_with_Libslirp|Win32 = Debug_with_Libslirp|Win32
+		Debug|Win32 = Debug|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95746A42-54E8-4A6C-AE5D-EE5CE3B086BD}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{95746A42-54E8-4A6C-AE5D-EE5CE3B086BD}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{95746A42-54E8-4A6C-AE5D-EE5CE3B086BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{95746A42-54E8-4A6C-AE5D-EE5CE3B086BD}.Debug|Win32.Build.0 = Debug|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.Build.0 = Debug|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|Win32.Build.0 = Debug|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|Win32.Build.0 = Debug|Win32
+		{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}.Debug_with_Libslirp|Win32.ActiveCfg = Debug_with_Libslirp|Win32
+		{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}.Debug_with_Libslirp|Win32.Build.0 = Debug_with_Libslirp|Win32
+		{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}.Debug|Win32.Build.0 = Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C90E6CC5-818B-4C97-8876-0986D989387C} = {40EF7C88-97FB-485A-A7E0-9A53C66A1079}
+		{72C209C4-49A4-4942-A201-44706C9D77EC} = {40EF7C88-97FB-485A-A7E0-9A53C66A1079}
+		{BE362AC0-B10B-4276-B84E-6304652BA228} = {40EF7C88-97FB-485A-A7E0-9A53C66A1079}
+		{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7} = {40EF7C88-97FB-485A-A7E0-9A53C66A1079}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F7B1074-CE74-4830-B363-0E4C8540F490}
+	EndGlobalSection
+EndGlobal

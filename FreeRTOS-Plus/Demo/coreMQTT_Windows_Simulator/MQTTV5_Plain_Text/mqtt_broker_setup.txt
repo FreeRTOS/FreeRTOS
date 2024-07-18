@@ -1,0 +1,29 @@
+It is our recommendation to always use strong mutual authentication in any Internet of Things
+application. Instructions below are for setting up a local Mosquitto broker that communicates
+over plaintext for use with this MQTT demo.
+1. Download Mosquitto from https://mosquitto.org/download/
+2. Install Mosquitto as a Windows service by running the installer.
+3. Start the Mosquitto service.
+   More details about running Mosquitto as a Windows service can be found at
+   https://github.com/eclipse/mosquitto/blob/master/readme-windows.txt and
+   https://github.com/eclipse/mosquitto/blob/master/readme.md
+4. Verify that Mosquitto server is running locally and listening on port 1883
+   by following the steps below.
+    a. Open PowerShell.
+    b. Type in command `netstat -a -p TCP | findstr 1883` to check if there
+       is an active connection listening on port 1883.
+    c. Verify that there is an output as shown below
+       `TCP    0.0.0.0:1883           <HOST-NAME>:0       LISTENING`
+    d. If there is no output on step c, go through the Mosquitto documentation
+       listed above to check if the setup was correct.
+5. Make sure the Mosquitto broker is allowed to communicate through
+   Windows Firewall.
+   After running this MQTT example, consider disabling the Mosquitto broker to
+   communicate through Windows Firewall to avoid unwanted network traffic
+   to your machine.
+6. After verifying that a Mosquitto broker is running successfully, update
+   the config `democonfigMQTT_BROKER_ENDPOINT` to the local IP address of your
+   Windows host machine. Please note that "localhost" or address "127.0.0.1"
+   will not work as this example is running on a Windows Simulator and not on a
+   Windows host natively. Also note that, if the Windows host is using a
+   Virtual Private Network(VPN), connection to the Mosquitto broker may not work.

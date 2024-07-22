@@ -488,20 +488,21 @@
         uint8_t uxRxData;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            /* Defines the memory that will actually hold the streams within the
-             * stream buffer. */
-            static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
 
-            /* The variable used to hold the stream buffer structure. */
+            /* The variable used to hold the stream buffer structure.
+             * This control information is valid as long as xStreamBuffer
+             * is valid. */
             StaticStreamBuffer_t xStreamBufferStruct;
+            {
+                /* Defines the memory that will actually hold the streams within the
+                 * stream buffer. */
+                static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
 
-
-            xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
-                                                       xTriggerLevelBytes,
-                                                       ucStorageBuffer,
-                                                       &xStreamBufferStruct );
-        }
+                xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
+                                                           xTriggerLevelBytes,
+                                                           ucStorageBuffer,
+                                                           &xStreamBufferStruct );
+            }
         #else /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
         {
             xStreamBuffer = xStreamBufferCreate( sizeof( uint8_t ), xTriggerLevelBytes );

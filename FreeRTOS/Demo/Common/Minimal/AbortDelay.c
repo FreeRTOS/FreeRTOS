@@ -488,7 +488,9 @@
         uint8_t uxRxData;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-            /* The variable used to hold the stream buffer structure. */
+            /* The variable used to hold the stream buffer structure.
+             * This control information is valid as long as xStreamBuffer
+             * is valid. */
             StaticStreamBuffer_t xStreamBufferStruct;
             {
                 /* Defines the memory that will actually hold the streams within the

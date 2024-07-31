@@ -1,4 +1,5 @@
 CC = arm-none-eabi-gcc
+SIZE = arm-none-eabi-size
 BIN := freertos_tcp_mps2_demo.axf
 
 BUILD_DIR := build
@@ -29,7 +30,6 @@ INCLUDE_DIRS += -I$(KERNEL_DIR)/include
 SOURCE_FILES += $(KERNEL_DIR)/tasks.c
 SOURCE_FILES += $(KERNEL_DIR)/list.c
 SOURCE_FILES += $(KERNEL_DIR)/queue.c
-SOURCE_FILES += $(KERNEL_DIR)/timers.c
 SOURCE_FILES += $(KERNEL_DIR)/event_groups.c
 
 # FreeRTOS Kernel ARM Cortex-M3 Port
@@ -51,30 +51,33 @@ SOURCE_FILES += ${FREERTOS_TCP}/source/portable/BufferManagement/BufferAllocatio
 SOURCE_FILES += ${FREERTOS_TCP}/source/portable/NetworkInterface/MPS2_AN385/NetworkInterface.c
 SOURCE_FILES += ${FREERTOS_TCP}/source/portable/NetworkInterface/MPS2_AN385/ether_lan9118/smsc9220_eth_drv.c
 
-DEFINES := -DQEMU_SOC_MPS2 -DHEAP3
+DEFINES := -DHEAP3
+CPPFLAGS += $(DEFINES)
 
-LDFLAGS = -T mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon
-LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
-
-CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-error=implicit-function-declaration
-CFLAGS += -Wno-builtin-declaration-mismatch -Werror
-
+CFLAGS += -mthumb -mcpu=cortex-m3
 ifeq ($(DEBUG), 1)
-    CFLAGS += -ggdb3 -Og
+    CFLAGS += -g3 -Og -ffunction-sections -fdata-sections
 else
-    CFLAGS += -O3
+    CFLAGS += -Os -ffunction-sections -fdata-sections
 endif
-    CFLAGS += -fstrict-aliasing -Wstrict-aliasing -Wno-error=address-of-packed-member
+CFLAGS += -MMD
+CFLAGS += -Wall -Wextra -Wshadow
+#CFLAGS += -Wpedantic -fanalyzer
+#CFLAGS += -flto
+CFLAGS += $(INCLUDE_DIRS)
+
+LDFLAGS = -T mps2_m3.ld
+LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
+LDFLAGS += -Xlinker --gc-sections
+LDFLAGS += -nostartfiles -specs=nano.specs -specs=nosys.specs -specs=rdimon.specs
 
 OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
-
-CPPFLAGS += $(DEFINES)
-CFLAGS += $(INCLUDE_DIRS)
 
 .PHONY: clean
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
-	$(CC) -ffunction-sections -fdata-sections $(CFLAGS) $(LDFLAGS) $+ -o $(@)
+	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o $(@)
+	$(SIZE) $(@)
 
 %.d: %.c
 	@set -e; rm -f $@; \
@@ -87,7 +90,7 @@ INCLUDES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.d)
 
 ${BUILD_DIR}/%.o : %.c Makefile
 	-mkdir -p $(@D)
-	$(CC)  $(CPPFLAGS) $(CFLAGS) -MMD -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
 	-rm -rf build

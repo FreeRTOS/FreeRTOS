@@ -293,6 +293,10 @@ static int prvFleetProvisioningTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
+BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
                                             MQTTPacketInfo_t * pxPacketInfo,
                                             MQTTDeserializedInfo_t * pxDeserializedInfo )

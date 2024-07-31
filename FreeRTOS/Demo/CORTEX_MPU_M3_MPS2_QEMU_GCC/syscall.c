@@ -45,15 +45,10 @@ typedef struct UART_t
 #define UART_CTRL_TX_EN      ( 1 << 0 )
 #define UART_CTRL_RX_EN      ( 1 << 1 )
 
-
-extern unsigned long _heap_bottom;
-extern unsigned long _heap_top;
-extern unsigned long g_ulBase;
-
 /**
  * @brief initializes the UART emulated hardware
  */
-void uart_init()
+void uart_init(void)
 {
     UART0_ADDR->BAUDDIV = 16;
     UART0_ADDR->CTRL = UART_CTRL_TX_EN;
@@ -74,7 +69,7 @@ void uart_init()
 int
 _uart_putc(char c, FILE *file)
 {
-    (void) file;
+    ( void ) file;
     UART_DR( UART0_ADDR ) = c;
     return (unsigned char) c;
 }
@@ -85,15 +80,19 @@ FILE *const stdout = &__stdio;
 
 #else
 
-static void * heap_end = 0;
+extern unsigned long _heap_bottom;
+extern unsigned long _heap_top;
+
+static char * heap_end = ( char * ) &_heap_bottom;
 
 /**
  * @brief not used anywhere in the code
  * @todo  implement if necessary
  *
  */
-int _fstat( __attribute__( ( unused ) ) int file )
+int _fstat( int file )
 {
+    ( void ) file;
     return 0;
 }
 
@@ -102,10 +101,13 @@ int _fstat( __attribute__( ( unused ) ) int file )
  * @todo  implement if necessary
  *
  */
-int _read( __attribute__( ( unused ) ) int file,
-           __attribute__( ( unused ) ) char * buf,
-           __attribute__( ( unused ) ) int len )
+int _read( int file,
+           char * buf,
+           int len )
 {
+    ( void ) file;
+    ( void ) buf;
+    ( void ) len;
     return -1;
 }
 
@@ -117,11 +119,13 @@ int _read( __attribute__( ( unused ) ) int file,
  * @param [in] len   length of the buffer
  * @returns the number of bytes written
  */
-int _write( __attribute__( ( unused ) ) int file,
-            __attribute__( ( unused ) ) char * buf,
+int _write( int file,
+            char * buf,
             int len )
 {
     int todo;
+
+    ( void ) file;
 
     for( todo = 0; todo < len; todo++ )
     {
@@ -139,16 +143,9 @@ int _write( __attribute__( ( unused ) ) int file,
  */
 void * _sbrk( int incr )
 {
-    char * prev_heap_end;
+    void * prev_heap_end = heap_end;
 
-    if( heap_end == 0 )
-    {
-        heap_end = ( void * ) &_heap_bottom;
-    }
-
-    prev_heap_end = heap_end;
-
-    if( ( heap_end + incr ) > ( void * ) &_heap_top )
+    if( ( heap_end + incr ) > ( char * ) &_heap_top )
     {
         return ( void * ) -1;
     }
@@ -157,6 +154,7 @@ void * _sbrk( int incr )
 
     return prev_heap_end;
 }
+
 void _close( int fd )
 {
     ( void ) fd;
@@ -202,7 +200,7 @@ void _kill( pid_t pid,
     ( void ) sig;
 }
 
-int _getpid()
+int _getpid( void )
 {
     return 1;
 }

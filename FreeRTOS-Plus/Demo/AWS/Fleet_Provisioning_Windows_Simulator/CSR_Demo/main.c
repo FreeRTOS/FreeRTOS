@@ -54,6 +54,7 @@
 /*-----------------------------------------------------------*/
 
 extern void vStartFleetProvisioningDemo( void );
+extern void vPlatformInitIpStack( void );
 
 /*-----------------------------------------------------------*/
 

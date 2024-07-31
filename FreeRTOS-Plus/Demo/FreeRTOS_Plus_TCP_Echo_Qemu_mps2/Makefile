@@ -30,7 +30,6 @@ INCLUDE_DIRS += -I$(KERNEL_DIR)/include
 SOURCE_FILES += $(KERNEL_DIR)/tasks.c
 SOURCE_FILES += $(KERNEL_DIR)/list.c
 SOURCE_FILES += $(KERNEL_DIR)/queue.c
-SOURCE_FILES += $(KERNEL_DIR)/timers.c
 SOURCE_FILES += $(KERNEL_DIR)/event_groups.c
 
 # FreeRTOS Kernel ARM Cortex-M3 Port

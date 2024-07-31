@@ -72,7 +72,6 @@ extern void vAssertCalled( void );
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configSUPPORT_STATIC_ALLOCATION                  1
-#define configNUM_TX_DESCRIPTORS                         15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    2
 #define configCHECK_FOR_STACK_OVERFLOW                   2
 #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS       0
@@ -133,10 +132,5 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
  |      9 connected. */
 extern void vLoggingPrintf( const char * pcFormatString,
                             ... );
-
-#ifdef HEAP3
-    #define xPortGetMinimumEverFreeHeapSize    ( x )
-    #define xPortGetFreeHeapSize               ( x )
-#endif
 
 #endif /* FREERTOS_CONFIG_H */

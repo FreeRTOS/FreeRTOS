@@ -237,7 +237,6 @@ void _c_int00( void )
 
     {
         extern uint32 _sidata, _sdata, _edata;
-        extern uint32 _siPrivData, __privileged_data_start__, __privileged_data_end__;
         uint32 *src, *dst;
 
         src = &_sidata;
@@ -248,13 +247,6 @@ void _c_int00( void )
             *dst++ = *src++;
         }
 
-        src = &_siPrivData;
-        dst = &__privileged_data_start__;
-
-        while( dst < &__privileged_data_end__ )
-        {
-            *dst++ = *src++;
-        }
     }
     /* USER CODE BEGIN (26) */
     /* USER CODE END */

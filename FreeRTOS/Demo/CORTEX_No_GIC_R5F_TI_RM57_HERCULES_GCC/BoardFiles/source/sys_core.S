@@ -146,12 +146,12 @@ _coreInitStackPointer_:
         bx    lr
 
 
-undefSp: .word 0x08000000+0x00000100
-svcSp:   .word 0x08000000+0x00000200
-fiqSp:   .word 0x08000000+0x00000400
-abortSp: .word 0x08000000+0x00000600
-irqSp:   .word 0x08000000+0x00000800
-userSp:  .word 0x08000000+0x00000800
+undefSp: .word 0x08000000+0x00000200
+svcSp:   .word 0x08000000+0x00000800
+fiqSp:   .word 0x08000000+0x00000A00
+abortSp: .word 0x08000000+0x00000C00
+irqSp:   .word 0x08000000+0x00001000
+userSp:  .word 0x08000000+0x00001000
 
 /*-------------------------------------------------------------------------------*/
 @ Get CPSR Value

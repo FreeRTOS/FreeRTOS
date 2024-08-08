@@ -1,6 +1,6 @@
 # Intro
 
-This directory contains a FreeRTOS project to build either a Blinky, or MPU demo
+This directory contains a FreeRTOS project to build either a Blinky demo
 for the [RM57L843](https://www.ti.com/product/RM57L843).
 
 It is set up to blink LEDs on the Texas Instruments

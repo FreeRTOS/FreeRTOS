@@ -4,9 +4,9 @@ IMAGE := RTOSDemo.elf
 # The directory that contains the /source and /demo sub directories.
 FREERTOS_ROOT = ./../../../..
 
-CC = riscv64-unknown-elf-gcc
-LD = riscv64-unknown-elf-gcc
-SIZE = riscv64-unknown-elf-size
+CC = riscv32-unknown-elf-gcc
+LD = riscv32-unknown-elf-gcc
+SIZE = riscv32-unknown-elf-size
 MAKE = make
 
 # Generate GCC_VERSION in number format

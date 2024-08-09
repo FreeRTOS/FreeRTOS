@@ -59,7 +59,7 @@
 /** @brief Configure the hardware to start the scheduler timer. */
 void vMainSetupTimerInterrupt( void );
 
-/** @brief Set up necessary hardware registers */
+/** @brief Set up necessary hardware registers. */
 static void prvSetupHardware( void );
 
 /** @brief Landing point function for any failed configASSERT() check.
@@ -71,19 +71,19 @@ void vAssertCalled( const char * pcFileName,
 void vApplicationIRQHandler( void );
 /* --------------------- Static Task Memory Allocation --------------------- */
 
-/** @brief Statically declared TCB Used by the Idle Task */
+/** @brief Statically declared TCB Used by the Idle Task. */
 static StaticTask_t xTimerTaskTCB;
 
-/** @brief Statically declared stack used by the timer task */
+/** @brief Statically declared stack used by the timer task. */
 static StackType_t uxTimerTaskStack[ configMINIMAL_STACK_SIZE ];
 
-/** @brief Statically declared TCB Used by the Idle Task */
+/** @brief Statically declared TCB Used by the Idle Task. */
 static StaticTask_t xIdleTaskTCB;
 
-/** @brief Statically declared stack used by the idle task */
+/** @brief Statically declared stack used by the idle task. */
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-/** @brief Simple variable to show how the idle tick hook can be used */
+/** @brief Simple variable to show how the idle tick hook can be used. */
 static volatile TickType_t ulIdleTickHookCount = 0x0;
 
 extern volatile uint32_t ulPortYieldRequired;
@@ -167,9 +167,9 @@ static void prvSetupHardware( void )
     hetInit();
     sciInit();
 
-    /* Setup gioPORTB for when using the RM57 Launchpad */
-    gioPORTB->DIR |= ( 0x01 << 6 ); /*configure GIOB[6] as output */
-    gioPORTB->DIR |= ( 0x01 << 7 ); /*configure GIOB[7] as output */
+    /* Setup gioPORTB for when using the RM57 Launchpad. */
+    gioPORTB->DIR |= ( 0x01 << 6 ); /*configure GIOB[6] as output. */
+    gioPORTB->DIR |= ( 0x01 << 7 ); /*configure GIOB[7] as output. */
 
     /* Configure HET as master, pull functionality, and switch on. */
     hetREG1->GCR = 0x01000001;
@@ -180,8 +180,8 @@ static void prvSetupHardware( void )
     hetREG1->DIR = 0xAA178035;
     hetREG1->DOUT = 0x0;
 
-    /* Enable notifications for the SCI register */
-    /* Use a BAUD rate of 115200, 1 stop bit, and None Parity */
+    /* Enable notifications for the SCI register. */
+    /* Use a BAUD rate of 115200, 1 stop bit, and None Parity. */
     sciEnableNotification( scilinREG, SCI_RX_INT );
 }
 
@@ -194,13 +194,13 @@ void vToggleLED( uint32_t ulLEDNum )
 
     if( 0x0 == ulLEDNum )
     {
-        /* RM57 TMDX Dev Kit LED1 use NHET[27], Launchpad LED2 uses GIOB[6] */
+        /* RM57 TMDX Dev Kit LED1 use NHET[27], Launchpad LED2 uses GIOB[6]. */
         ulLEDVal = 1UL << 27UL;
         ulGIOVal = 1UL << 6UL;
     }
     else
     {
-        /* RM57 TMDX Dev Kit LED2 use NHET[5], Launchpad LED3 uses GIOB[7] */
+        /* RM57 TMDX Dev Kit LED2 use NHET[5], Launchpad LED3 uses GIOB[7]. */
         ulLEDVal = 1UL << 5UL;
         ulGIOVal = 1UL << 7UL;
     }
@@ -319,11 +319,11 @@ void vAssertCalled( const char * pcFuncName,
  */
 void vApplicationIRQHandler( void )
 {
-    /* Load the IRQ Channel Number and Function PTR from the VIM */
+    /* Load the IRQ Channel Number and Function PTR from the VIM. */
     volatile uint32_t ulIRQChannelIndex = portVIM_IRQ_INDEX;
     volatile ISRFunction_t xIRQFncPtr = portVIM_IRQ_VEC_REG;
 
-    /* Setup Bit Mask Clear Values */
+    /* Setup Bit Mask Clear Values. */
     volatile uint32_t ulPendingIRQMask;
 
     volatile uint32_t ulPendISRReg0 = vimREG->REQMASKCLR0;
@@ -374,7 +374,7 @@ void vApplicationIRQHandler( void )
     /*
      * Channel 0 is the ESM handler, treat this as a special case.
      * phantomInterrupt()
-     * Keep interrupts disabled, this function does not return
+     * Keep interrupts disabled, this function does not return.
      */
 
     if( 0UL == ulIRQChannelIndex )
@@ -396,23 +396,23 @@ void vApplicationIRQHandler( void )
         /* An IRQ Raised by Channel Two of the VIM is RTI Compare Interrupt 0. */
         if( 2UL == ulIRQChannelIndex )
         {
-            /* This is the System Tick Timer Interrupt */
+            /* This is the System Tick Timer Interrupt. */
             ulPortYieldRequired = xTaskIncrementTick();
-            /* Acknowledge the System Tick Timer Interrupt */
+            /* Acknowledge the System Tick Timer Interrupt. */
             portRTI_INTFLAG_REG = 0x1UL;
         }
         /* An IRQ Raised by Channel 21 of the VIM is a Software Interrupt (SSI). */
         else if( 21UL == ulIRQChannelIndex )
         {
             #if ( mainDEMO_TYPE &IRQ_DEMO )
-                /* This is an interrupt raised by Software */
+                /* This is an interrupt raised by Software. */
                 vIRQDemoHandler();
             #else
                 sci_print( "SWI of unknown cause was raised!\r\n" );
                 configASSERT( 0x0 );
             #endif
 
-            /* Register read is needed to mark the end of the IRQ */
+            /* Register read is needed to mark the end of the IRQ. */
             volatile uint32_t ulEndOfIntRegVal = *portEND_OF_INTERRUPT_REG;
             *portEND_OF_INTERRUPT_REG = ulEndOfIntRegVal;
         }

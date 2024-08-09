@@ -45,13 +45,13 @@
     * for the purpose of ensuring parameters are passed into tasks correctly. */
     #define notificationTASK_PARAMETER    ( 0xFEEDBEEFUL )
 
-    /** @brief Value sent back and forth between the tasks */
+    /** @brief Value sent back and forth between the tasks. */
     #define notificationTEST_VALUE        0x1234UL
 
-    /** @brief TCB used by the Notification Test Task */
+    /** @brief TCB used by the Notification Test Task. */
     static StaticTask_t xNotificationTestTaskTCB;
 
-    /** @brief Stack used by the Notification Test Task */
+    /** @brief Stack used by the Notification Test Task. */
     static StackType_t uxNotificationTestTaskStack[ configMINIMAL_STACK_SIZE ];
 
     /** @brief Statically allocated task handle for the Notification Test task. */
@@ -85,12 +85,12 @@
         BaseType_t xReturned;
         UBaseType_t ulNotificationValue;
 
-        /* Ensure that the correct parameter was passed to the task */
+        /* Ensure that the correct parameter was passed to the task. */
         configASSERT( ( uint32_t ) pvParameters == notificationTEST_VALUE );
 
         for( ; ; )
         {
-            /* Clear the notification value each loop */
+            /* Clear the notification value each loop. */
             ulNotificationValue = 0x0UL;
 
             /* The task should not yet have a notification pending. */
@@ -99,31 +99,31 @@
             configASSERT( pdFAIL == xReturned );
             configASSERT( 0x0UL == ulNotificationValue );
 
-            /* Tell the task to notify itself twice */
+            /* Tell the task to notify itself twice. */
             xReturned = xTaskNotifyGive( xTaskGetCurrentTaskHandle() );
             prvNotifyCheck( xReturned );
 
             xReturned = xTaskNotifyGive( xTaskGetCurrentTaskHandle() );
             prvNotifyCheck( xReturned );
 
-            /* Perform a non-blocking notification read, should see two "gives" */
+            /* Perform a non-blocking notification read, should see two "gives". */
             ulNotificationValue = ulTaskNotifyTake( pdTRUE, 0x0 );
 
-            /* Two notifications have been sent to this task by itself */
+            /* Two notifications have been sent to this task by itself. */
             configASSERT( 0x2UL == ulNotificationValue );
             sci_print( "Notification Task correctly sent itself two"
                        "notifications!\r\n" );
 
-            /* Now make the task send itself a notification with a value */
+            /* Now make the task send itself a notification with a value. */
             xReturned = xTaskNotify( xTaskGetCurrentTaskHandle(),
                                      notificationTEST_VALUE,
                                      eSetValueWithOverwrite );
             prvNotifyCheck( xReturned );
 
-            /* Clear ulNotificationValue before using it */
+            /* Clear ulNotificationValue before using it. */
             ulNotificationValue = 0x0UL;
 
-            /* Receive the value sent using xTaskNotify */
+            /* Receive the value sent using xTaskNotify. */
             xReturned = xTaskNotifyWait( 0,
                                          ( uint32_t ) 0xFFFFFFFFUL,
                                          &ulNotificationValue,
@@ -141,10 +141,10 @@
                 configASSERT( 0x0UL );
             }
 
-            /* Reset the variable before using it */
+            /* Reset the variable before using it. */
             ulNotificationValue = 0x0UL;
 
-            /* There should be no value to receive this time */
+            /* There should be no value to receive this time. */
             xReturned = xTaskNotifyWait( 0, 0, &ulNotificationValue,
                                         ( TickType_t ) 0x0UL );
 
@@ -168,7 +168,7 @@
             configASSERT( xReturned == pdFALSE );
 
             sci_print( "Notification Task sleeping before next loop!\r\n\r\n" );
-            /* Sleep for odd number of seconds to schedule at different real-times */
+            /* Sleep for odd number of seconds to schedule at different real-times. */
             vTaskDelay( pdMS_TO_TICKS( 2750UL ) );
         }
     }
@@ -179,7 +179,7 @@
     {
         BaseType_t xReturn = pdFAIL;
 
-        /* Create the notification test task */
+        /* Create the notification test task. */
         xNotificationTaskOneHandle = xTaskCreateStatic( prvNotificationTestTask,
                                                         "NotificationTestTask",
                                                         configMINIMAL_STACK_SIZE,

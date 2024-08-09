@@ -39,11 +39,11 @@
 #include "timers.h"
 #include "queue.h"
 
-/* Board Support Package Includes */
+/* Board Support Package Includes. */
 #include "sci.h"
 #include "reg_system.h"
 
-/* Demo Specific Includes */
+/* Demo Specific Includes. */
 #include "demo_tasks.h"
 
 #if ( mainDEMO_TYPE & QUEUE_DEMO )
@@ -61,10 +61,10 @@
     /** @brief The number of items the queue can hold at once. */
     #define queueQUEUE_LENGTH               ( 2 )
 
-    /** @brief Value sent from the send task to the receive task */
+    /** @brief Value sent from the send task to the receive task. */
     #define queueVALUE_SENT_FROM_TASK       ( 0x1234UL )
 
-    /** @brief Value sent from the timer to the receive task */
+    /** @brief Value sent from the timer to the receive task. */
     #define queueVALUE_SENT_FROM_TIMER      ( 0x4321UL )
 
 /* --------------------- Task Function Declaration --------------------- */
@@ -95,13 +95,13 @@
 
 /*-------------------- Static Task Memory Allocation ------------------- */
 
-/** @brief Statically allocated Queue object */
+/** @brief Statically allocated Queue object. */
     static StaticQueue_t xStaticQueue;
 
-/** @brief Statically allocated Storage for the Queue */
+/** @brief Statically allocated Storage for the Queue. */
     static uint8_t xQueueStorage[ 0x20 ];
 
-/** @brief Statically allocated QueueHandle */
+/** @brief Statically allocated QueueHandle. */
     static QueueHandle_t xQueue;
 
 /* Each task needs to know the other tasks' handle so they can send signals to
@@ -113,16 +113,16 @@
 /** @brief Task name for the queue receive task. */
     static const char * pcReceiveTaskName = "ReceiveTaskName";
 
-/** @brief Statically allocated stack used by the Queue Send Task */
+/** @brief Statically allocated stack used by the Queue Send Task. */
     static StackType_t xQueueSendTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
-/** @brief Static TCB Used by the Queue Send Task */
+/** @brief Static TCB Used by the Queue Send Task. */
      static StaticTask_t xQueueSendTaskTCB;
 
-/** @brief Statically allocated stack used by the Queue Receive Task */
+/** @brief Statically allocated stack used by the Queue Receive Task. */
     static StackType_t xQueueReceiveTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
-/** @brief Static TCB Used by the Queue Receive Task */
+/** @brief Static TCB Used by the Queue Receive Task. */
      static StaticTask_t xQueueReceiveTaskTCB;
 
 /** @brief A software timer that is started from the tick hook. */
@@ -201,16 +201,16 @@
         {
             sci_print( "Created the Queue for the tasks\r\n" );
 
-            /** @brief The debugging text name for the timer */
+            /** @brief The debugging text name for the timer. */
             const char * pcTimerName = "Timer";
             /** @brief Mark that this is an auto-reload timer. */
             const BaseType_t xAutoReload = ( BaseType_t ) pdTRUE;
             /** @brief Timer ID that is not used in this demo. */
             void * const pvTimerID = NULL;
-            /** @brief Callback function for the timer */
+            /** @brief Callback function for the timer. */
             TimerCallbackFunction_t pxCallbackFunction = prvQueueSendTimerCallback;
 
-            /* Create a statically allocated timer */
+            /* Create a statically allocated timer. */
             xTimer = xTimerCreateStatic( pcTimerName,
                                          ( const TickType_t ) queueTIMER_SEND_FREQUENCY_MS,
                                          xAutoReload,

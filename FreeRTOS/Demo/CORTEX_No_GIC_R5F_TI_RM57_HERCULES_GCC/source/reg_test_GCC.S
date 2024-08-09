@@ -260,7 +260,7 @@ vRegTest2Implementation:
     MOV      R12, #0xCC000000
     MOV      R14, #0xEE000000
 
-    /* Likewise the floating point registers */
+    /* Likewise the floating point registers. */
     VMOV     D0,  R0,  R1
     VMOV     D1,  R2,  R3
     VMOV     D2,  R4,  R5
@@ -282,7 +282,7 @@ vRegTest2Implementation:
     expected value. */
 reg2_loop:
 
-    /* Yield to increase test coverage */
+    /* Yield to increase test coverage. */
     PUSH    {R0, R14}
     BLX     vPortYield
     POP     {R0, R14}
@@ -422,7 +422,7 @@ reg2_loopf_pass:
     STR     R1, [R0, #+0x4]
     POP     { R0-R1 }
 
-    /* Delay for 0x200 ticks before running again */
+    /* Delay for 0x200 ticks before running again. */
     PUSH    { R0-R4, R12, R14 }
     MOV     R0, #0x200
     BLX     vTaskDelay
@@ -437,7 +437,7 @@ reg2_error_loop:
     B     reg2_error_loop
     NOP
 
-/* End of file */
+/* End of file. */
 .end
 
 

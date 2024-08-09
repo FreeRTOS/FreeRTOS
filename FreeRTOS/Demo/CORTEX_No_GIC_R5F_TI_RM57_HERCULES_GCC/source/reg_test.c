@@ -41,16 +41,16 @@
 
 /* ----------------------------------------------------------------------------------- */
 
-/** @brief TCB used by Register Test Task One */
+/** @brief TCB used by Register Test Task One. */
 static StaticTask_t xRegTestOneTaskTCB;
 
-/** @brief Stack used by Register Test Task One */
+/** @brief Stack used by Register Test Task One. */
 static StackType_t uxRegTestOneTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
-/** @brief TCB used by Register Test Two Task */
+/** @brief TCB used by Register Test Two Task. */
 static StaticTask_t xRegTestTwoTaskTCB;
 
-/** @brief Stack used by Register Test Task Two */
+/** @brief Stack used by Register Test Task Two. */
 static StackType_t uxRegTestTwoTaskStack[ configMINIMAL_STACK_SIZE / 2U ];
 
 /* Parameters that are passed into the register check tasks solely for the

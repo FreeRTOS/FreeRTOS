@@ -41,10 +41,10 @@
 
 #if ( mainDEMO_TYPE &IRQ_DEMO )
 
-/** @brief TCB used by the IRQ Test Task */
+/** @brief TCB used by the IRQ Test Task. */
     static StaticTask_t xIRQTestTaskTCB;
 
-/** @brief Stack used by the IRQ Test Task */
+/** @brief Stack used by the IRQ Test Task. */
 
     static StackType_t uxIRQTestTaskStack[ configMINIMAL_STACK_SIZE ];
 
@@ -68,7 +68,7 @@
  */
     static void prvIRQTestTask( void * pvParameters )
     {
-        /* Ensure that the correct parameter was passed to the task */
+        /* Ensure that the correct parameter was passed to the task. */
         configASSERT( ( uint32_t ) pvParameters == irqTASK_PARAMETER );
         volatile uint32_t * xSoftwareInterruptRegister;
         volatile TickType_t ulLoopCount;
@@ -76,8 +76,6 @@
 
         for( ; ; )
         {
-            /* Disable IRQs to raise a Software Based IRQ */
-            /* portDISABLE_INTERRUPTS(); */
             sci_print( "IRQ Test Task Starting IRQ Nesting Test!\r\n" );
             ulIntNestTestVal = 0xFFFFUL;
 
@@ -117,7 +115,7 @@
             }
 
             sci_print( "IRQ Test Task sleeping before next loop!\r\n\r\n" );
-            /* Sleep for odd number of seconds to schedule at different real-times */
+            /* Sleep for odd number of seconds to schedule at different real-times. */
             vTaskDelay( pdMS_TO_TICKS( 3150UL ) );
         }
     }
@@ -130,9 +128,9 @@
         volatile uint32_t ulSSIRegisterValue;
         volatile uint32_t ulSSIIntFlagValue;
         volatile uint32_t * xSoftwareInterruptRegister;
-        /* The 4 different SWI Registers use a bitfield to mark that they where raised */
+        /* The 4 different SWI Registers use a bitfield to mark that they where raised. */
         {
-            /* Determine what channel raised the IRQ without clearing the interrupt */
+            /* Determine what channel raised the IRQ without clearing the interrupt. */
             ulSSIIntFlagValue = portSSI_INTFLAG_REG;
 
             if( 0x1UL & ulSSIIntFlagValue )
@@ -145,24 +143,24 @@
                     ulIntNestTestVal++;
                     sci_print( "\t\tSWI Channel #1 Raised with Data Value 0x11, clearing the "
                                "IRQs...\r\n" );
-                    /* Read to mark this IRQ as cleared */
-                    /* Mark the Nested Channel 1 IRQ as cleared */
+                    /* Read to mark this IRQ as cleared. */
+                    /* Mark the Nested Channel 1 IRQ as cleared. */
                     ulSSIIntFlagValue = portSSI_VEC_REG;
                     configASSERT( 0x1101UL == ulSSIIntFlagValue );
 
-                    /* Mark the Nested Channel 2 IRQ as cleared */
+                    /* Mark the Nested Channel 2 IRQ as cleared. */
                     ulSSIIntFlagValue = portSSI_VEC_REG;
                     configASSERT( 0x2202UL == ulSSIIntFlagValue );
 
-                    /* Mark the Nested Channel 3 IRQ as cleared */
+                    /* Mark the Nested Channel 3 IRQ as cleared. */
                     ulSSIIntFlagValue = portSSI_VEC_REG;
                     configASSERT( 0x3303UL == ulSSIIntFlagValue );
 
-                    /* Mark the Nested Channel 4 IRQ as cleared */
+                    /* Mark the Nested Channel 4 IRQ as cleared. */
                     ulSSIIntFlagValue = portSSI_VEC_REG;
                     configASSERT( 0x4404UL == ulSSIIntFlagValue );
 
-                    /* Should be no other IRQs raised, mask out the data */
+                    /* Should be no other IRQs raised, mask out the data. */
                     ulSSIIntFlagValue = ( portSSI_VEC_REG ) & 0XFFUL;
                     configASSERT( 0x0UL == ulSSIIntFlagValue );
                 }

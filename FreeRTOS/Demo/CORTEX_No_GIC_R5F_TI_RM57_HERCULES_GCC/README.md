@@ -1,7 +1,8 @@
 # Intro
 
-This directory contains a FreeRTOS project to build either a Blinky demo
-for the [RM57L843](https://www.ti.com/product/RM57L843).
+This directory contains a FreeRTOS project to build a set of demos for the
+[RM57L843](https://www.ti.com/product/RM57L843) board. The demos to build are
+selected using the macro `mainDEMO_TYPE` in the `include/demo_tasks.h` file.
 
 It is set up to blink LEDs on the Texas Instruments
 [LAUNCHXL2-RM57L](https://www.ti.com/tool/LAUNCHXL2-RM57L)
@@ -10,7 +11,7 @@ and the [TMDXRM57LHDK](https://www.ti.com/tool/TMDXRM57LHDK) Development Kits.
 The code related to the Main Demo Files can be found in the
 [source](./source) directory.
 The code related to the board setup can be found in the
-[BoardFiles](./BoardFiles) directory
+[BoardFiles](./BoardFiles) directory.
 
 ## Building
 
@@ -63,4 +64,4 @@ These binaries can then be flashed to the board by using
 
 Rudimentary UART output is available by opening a Serial Connection
 to the board. The settings for the UART are a BAUD rate of 115200, 1 stopbit,
-and None Parity
+and None Parity.

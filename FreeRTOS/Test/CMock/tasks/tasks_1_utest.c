@@ -5377,6 +5377,9 @@ void test_xTaskGenericNotify_success_eIncrement_ISR( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
+    listGET_ITEM_VALUE_OF_HEAD_ENTRY_ExpectAndReturn( pxDelayedTaskList, 1000 );
 
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
@@ -5415,6 +5418,10 @@ void test_xTaskGenericNotify_success_eSetValueWithOverwrite_ISR( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
+    listGET_ITEM_VALUE_OF_HEAD_ENTRY_ExpectAndReturn( pxDelayedTaskList, 1000 );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -5452,6 +5459,10 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite_ISR( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
+    listGET_ITEM_VALUE_OF_HEAD_ENTRY_ExpectAndReturn( pxDelayedTaskList, 1000 );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -5561,6 +5572,9 @@ void test_xTaskGenericNotify_success_default_ISR( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -5606,6 +5620,9 @@ void test_xTaskGenericNotify_success_default_ISR_task_woken_null( void )
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &pxReadyTasksLists[ ptcb->uxPriority ],
                            &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
+
     /* API Call */
     ret_task_notify = xTaskGenericNotifyFromISR( ptcb,
                                                  uxIndexToNotify,
@@ -5802,6 +5819,9 @@ void test_vTaskGenericNotifyGiveFromISR_success( void )
     listREMOVE_ITEM_Expect( &( task_to_notify->xStateListItem ) );
     /* prvAddTaskToReadyList */
     listINSERT_END_Expect( &( pxReadyTasksLists[ task_to_notify->uxPriority ] ), &task_to_notify->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
+    listGET_ITEM_VALUE_OF_HEAD_ENTRY_ExpectAndReturn( pxDelayedTaskList, 1000 );
 
     /* API Call */
     vTaskGenericNotifyGiveFromISR( task_to_notify,

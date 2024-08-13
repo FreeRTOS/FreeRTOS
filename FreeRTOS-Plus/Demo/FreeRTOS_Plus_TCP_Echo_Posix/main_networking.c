@@ -135,6 +135,7 @@ static UBaseType_t ulNextRand;
 
 void main_tcp_echo_client_tasks( void )
 {
+    BaseType_t xResult;
     const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 
     /*
@@ -157,8 +158,6 @@ void main_tcp_echo_client_tasks( void )
     /* Initialise the network interface.*/
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
 
-    memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
-
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         extern NetworkInterface_t * pxLibslirp_FillInterfaceDescriptor( BaseType_t xEMACIndex,
                                                                         NetworkInterface_t * pxInterface );
@@ -173,11 +172,13 @@ void main_tcp_echo_client_tasks( void )
         }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
 
-        FreeRTOS_IPInit_Multi();
+        xResult = FreeRTOS_IPInit_Multi();
     #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
         /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+        xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    configASSERT( xResult == pdTRUE );
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\n" ) );

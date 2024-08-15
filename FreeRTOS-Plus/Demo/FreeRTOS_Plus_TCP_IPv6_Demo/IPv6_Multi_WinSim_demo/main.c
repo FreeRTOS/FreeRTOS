@@ -189,6 +189,7 @@ NetworkInterface_t * pxWinPcap_FillInterfaceDescriptor( BaseType_t xEMACIndex,
 
 int main( void )
 {
+    BaseType_t xReturn;
     const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 
     /*
@@ -314,7 +315,9 @@ int main( void )
     }
     #endif /* ( mainNETWORK_UP_COUNT >= 3U ) */
 
-    FreeRTOS_IPInit_Multi();
+    xReturn = FreeRTOS_IPInit_Multi();
+
+    configASSERT( xReturn == pdTRUE );
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );

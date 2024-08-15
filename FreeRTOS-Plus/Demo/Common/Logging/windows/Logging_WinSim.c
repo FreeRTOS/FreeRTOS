@@ -397,7 +397,7 @@ void vLoggingPrintf( const char * pcFormat,
                     pcTarget--;
                 }
 
-                sscanf( pcTarget, "%8X", &ulIPAddress );
+                ( void ) sscanf( pcTarget, "%8X", &ulIPAddress );
                 rc = sprintf( pcTarget, "%lu.%lu.%lu.%lu",
                               ( unsigned long ) ( ulIPAddress >> 24UL ),
                               ( unsigned long ) ( ( ulIPAddress >> 16UL ) & 0xffUL ),
@@ -601,7 +601,7 @@ static void prvLogToFile( const char * pcMessage,
                 remove( pcFullLogFileName );
             }
 
-            rename( pcLogFileName, pcFullLogFileName );
+            ( void ) rename( pcLogFileName, pcFullLogFileName );
             ulSizeOfLoggingFile = 0;
         }
     }

@@ -81,7 +81,7 @@ jobs:
           # Therefore, we can just download it.
           mkdir -p freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output
           wget -O freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
-          "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
+          "https://freertos.github.io/coreMQTT/main/mqtt.tag"
 
       - name: Generate doxygen ZIP
         uses: FreeRTOS/CI-CD-Github-Actions/doxygen@main
@@ -168,6 +168,8 @@ jobs:
 
       - name: Set up CBMC runner
         uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@main
+        with:
+          cbmc_version: "5.95.1"
 
       - name: Run CBMC
         uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@main

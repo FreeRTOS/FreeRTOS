@@ -140,6 +140,7 @@ static UBaseType_t ulNextRand;
 
 void main_tcp_echo_client_tasks( void )
 {
+    BaseType_t xReturn;
     const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 
     /*
@@ -180,14 +181,13 @@ void main_tcp_echo_client_tasks( void )
         }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
 
-        memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
-
-        FreeRTOS_IPInit_Multi();
+        xReturn = FreeRTOS_IPInit_Multi();
     #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
         /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+        xReturn = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
+    configASSERT( xReturn == pdTRUE );
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\n" ) );
@@ -223,6 +223,10 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
     uint32_t ulGatewayAddress;
     uint32_t ulDNSServerAddress;
     char cBuffer[ 16 ];
+
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+        ( void ) pxEndPoint;
+    #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
     /* If the network has just come up...*/
     if( eNetworkEvent == eNetworkUp )
@@ -334,6 +338,10 @@ static void prvMiscInitialisation( void )
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
     {
         BaseType_t xReturn;
+
+        #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
+            ( void ) pxEndPoint;
+        #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
         /* Determine if a name lookup is for this node.  Two names are given
          * to this node: that returned by pcApplicationHostnameHook() and that set

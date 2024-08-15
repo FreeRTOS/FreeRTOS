@@ -200,6 +200,10 @@ static BaseType_t prvSendHttpRequest( const TransportInterface_t * pxTransportIn
 
 /*-----------------------------------------------------------*/
 
+extern BaseType_t xPlatformIsNetworkUp( void );
+
+/*-----------------------------------------------------------*/
+
 /*
  * @brief Create the task that demonstrates the HTTP API Demo over a
  * mutually-authenticated network connection with an HTTP server.

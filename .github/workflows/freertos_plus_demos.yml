@@ -956,7 +956,7 @@ jobs:
       - env:
           stepName: Build AWS IoT Fleet Provisioning Demo
         name: ${{ env.stepName }}
-        working-directory: FreeRTOS-Plus/Demo/AWS/Fleet_Provisioning_Windows_Simulator/Fleet_Provisioning_With_CSR_Demo
+        working-directory: FreeRTOS-Plus/Demo/AWS/Fleet_Provisioning_Windows_Simulator/CSR_Demo
         run: |
           # ${{ env.stepName }}
           echo "::group::${{ env.stepName }}"

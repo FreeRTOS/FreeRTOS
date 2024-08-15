@@ -293,4 +293,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
     #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 #endif
 
+/**
+ * @brief The number of command structures to allocate in the pool
+ * for the agent.
+ */
+#define MQTT_COMMAND_CONTEXTS_POOL_SIZE    10
+
 #endif /* DEMO_CONFIG_H */

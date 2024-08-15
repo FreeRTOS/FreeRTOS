@@ -206,10 +206,10 @@
                     lStringLength = prvCreateTxData( pcTransmittedString, echoBUFFER_SIZES );
 
                     /* Add in some unique text at the front of the string. */
-                    sprintf( pcTransmittedString, "TxRx message number %u", ulTxCount );
+                    sprintf( pcTransmittedString, "TxRx message number %lu", ulTxCount );
                     ulTxCount++;
 
-                    printf( "sending data to the echo server size %d original %d\n",
+                    printf( "sending data to the echo server size %ld original %d\n",
                             lStringLength,
                             echoBUFFER_SIZES );
                     /* Send the string to the socket. */
@@ -217,7 +217,7 @@
                                                   ( void * ) pcTransmittedString, /* The data being sent. */
                                                   lStringLength,                  /* The length of the data being sent. */
                                                   0 );                            /* No flags. */
-                    printf( "FreeRTOS_send returned...transmitted %d\n",
+                    printf( "FreeRTOS_send returned...transmitted %ld\n",
                             lTransmitted );
 
                     if( lTransmitted < 0 )
@@ -398,15 +398,24 @@
         #if ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
             eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase,
                                                         uint32_t ulIPAddress )
+            {
+                ( void ) eDHCPPhase;
+                ( void ) ulIPAddress;
+
+                return eDHCPContinue;
+            }
         #else /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
             eDHCPCallbackAnswer_t xApplicationDHCPHook_Multi( eDHCPCallbackPhase_t eDHCPPhase,
                                                               struct xNetworkEndPoint * pxEndPoint,
                                                               IP_Address_t * pxIPAddress )
+            {
+                ( void ) eDHCPPhase;
+                ( void ) pxEndPoint;
+                ( void ) pxIPAddress;
+
+                return eDHCPContinue;
+            }
         #endif /* ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
-        {
-            /* Provide a stub for this function. */
-            return eDHCPContinue;
-        }
 
     #endif /* if ( ipconfigUSE_DHCP_HOOK != 0 )*/
 

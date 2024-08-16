@@ -30,12 +30,12 @@
  *
  * Procedure:
  *   - TestRunner records original memory size.
- *   - Create ( num of cores ) tasks ( T0~Tn-1 ).
- *   - Task T0~Tn-1 delete itself.
- *   - TestRunner checks if memory freed.
- *   - Create ( num of cores ) tasks ( T0~Tn-1 ).
- *   - Task T0~Tn-1 are in delay loop.
- *   - TestRunner deletes T0~Tn-1 remotely.
+ *   - Create ( num of cores ) tasks T0 ~ T(n - 1).
+ *   - Tasks T0 ~ T(n - 1) delete themselves.
+ *   - TestRunner checks if memory is freed.
+ *   - Create ( num of cores ) tasks T0 ~ T(n - 1).
+ *   - Task T0 ~ T(n - 1) delay in loop.
+ *   - TestRunner deletes T0 ~ T(n - 1).
  *   - TestRunner checks if memory freed.
  * Expected:
  *   - Have same remaining memory before creating task and after deleting task.
@@ -45,16 +45,19 @@
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
+
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Timeout value to stop test.
  */
 #define TEST_TIMEOUT_MS    ( 1000 )
+
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -64,6 +67,7 @@
 #if ( configMAX_PRIORITIES <= 2 )
     #error configMAX_PRIORITIES must be larger than 2 to avoid scheduling idle tasks unexpectedly.
 #endif /* if ( configMAX_PRIORITIES <= 2 ) */
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -103,7 +107,7 @@ static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ];
 static BaseType_t xTaskRunStatus[ configNUMBER_OF_CORES ];
 
 /**
- * @brief The heap size before creating tasks T0~Tn-1.
+ * @brief The heap size before creating tasks T0 ~ T(n - 1).
  */
 static uint32_t ulOriginalFreeHeapSize;
 /*-----------------------------------------------------------*/
@@ -112,7 +116,7 @@ static void prvSelfDeleteTask( void * pvParameters )
 {
     BaseType_t * pxTaskRunStatus = ( BaseType_t * ) pvParameters;
 
-    /* Setup the flag to indicate the task has run. */
+    /* Set the flag to indicate the task has run. */
     *pxTaskRunStatus = pdTRUE;
 
     vTaskDelete( NULL );
@@ -126,10 +130,10 @@ static void prvDelayTask( void * pvParameters )
 {
     BaseType_t * pxTaskRunStatus = ( BaseType_t * ) pvParameters;
 
-    /* Setup the flag to indicate the task has run. */
+    /* Set the flag to indicate the task has run. */
     *pxTaskRunStatus = pdTRUE;
 
-    /* Block this task then it can be deleted. */
+    /* Block this task forever. */
     vTaskDelay( portMAX_DELAY );
 }
 /*-----------------------------------------------------------*/
@@ -147,9 +151,9 @@ static void prvTestTaskSelfDelete( void )
         xTaskCreationResult = xTaskCreate( prvSelfDeleteTask,
                                            "SelfDel",
                                            configMINIMAL_STACK_SIZE,
-                                           ( void * ) ( &xTaskRunStatus[ i ] ),
+                                           ( void * ) ( &( xTaskRunStatus[ i ] ) ),
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -164,7 +168,7 @@ static void prvTestTaskSelfDelete( void )
         xTaskHandles[ i ] = NULL;
     }
 
-    /* Verify the heap size is recycled. */
+    /* Verify the memory used for task TCB and stack is freed. */
     ulFreeHeapSize = xPortGetFreeHeapSize();
     TEST_ASSERT_EQUAL_INT_MESSAGE( ulOriginalFreeHeapSize, ulFreeHeapSize, "Self deleted task test failed." );
 }
@@ -183,9 +187,9 @@ static void prvTestTaskRemoteDelete( void )
         xTaskCreationResult = xTaskCreate( prvDelayTask,
                                            "KeepDelay",
                                            configMINIMAL_STACK_SIZE,
-                                           ( void * ) ( &xTaskRunStatus[ i ] ),
+                                           ( void * ) ( &( xTaskRunStatus[ i ] ) ),
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -243,7 +247,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to task delete test.
+ * @brief Entry point for test runner to task delete test.
  */
 void vRunTaskDeleteTest( void )
 {

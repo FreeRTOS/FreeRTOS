@@ -53,4 +53,6 @@
  */
 void vRunTaskDeleteTest( void );
 
+/*-----------------------------------------------------------*/
+
 #endif /* ifndef TEST_CONFIG_H */

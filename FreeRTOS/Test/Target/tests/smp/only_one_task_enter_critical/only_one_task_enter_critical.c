@@ -30,7 +30,8 @@
  *
  * Procedure:
  *   - Create ( num of cores ) tasks.
- *   - All tasks increase the counter for TASK_INCREASE_COUNTER_TIMES times in critical section.
+ *   - All tasks increase the counter for TASK_INCREASE_COUNTER_TIMES times in
+ *     critical section.
  * Expected:
  *   - All tasks have correct value of counter after increasing.
  */
@@ -39,10 +40,11 @@
 #include <stdint.h>
 
 /* Kernel includes. */
-#include "FreeRTOS.h" /* Must come first. */
-#include "task.h"     /* RTOS task related API prototypes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#include "unity.h"    /* unit testing support functions */
+/* Unit testing support functions. */
+#include "unity.h"
 /*-----------------------------------------------------------*/
 
 /**
@@ -87,7 +89,7 @@ static TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES ];
 static uint32_t xTaskIndexes[ configNUMBER_OF_CORES ];
 
 /**
- * @brief Flags to indicate if task T0~Tn-1 finish or not.
+ * @brief Flags to indicate if task T0 ~ T(n - 1) finish or not.
  */
 static BaseType_t xTaskTestResults[ configNUMBER_OF_CORES ];
 
@@ -104,7 +106,7 @@ static volatile uint32_t xTaskCounter;
 
 static void prvTaskIncCounter( void * pvParameters )
 {
-    uint32_t currentTaskIdx = *( ( int * ) pvParameters );
+    uint32_t currentTaskIdx = *( ( uint32_t * ) pvParameters );
     BaseType_t xAllTaskReady = pdFALSE;
     BaseType_t xTestResult = pdPASS;
     uint32_t xTempTaskCounter = 0;
@@ -127,22 +129,25 @@ static void prvTaskIncCounter( void * pvParameters )
         }
     }
 
-    /* Increase the test counter in the loop. The test expects only one task can increase
-    * the shared variable xTaskCounter protected by critical section at the same time. */
+    /* Increase the test counter in the loop. The test expects only one task
+     * can increase the shared variable xTaskCounter protected by the critical
+     * section at the same time. */
     taskENTER_CRITICAL();
     {
         xTempTaskCounter = xTaskCounter;
 
         for( i = 0; i < TASK_INCREASE_COUNTER_TIMES; i++ )
         {
-            /* Increase the local variable xTempTaskCounter and shared variable xTaskCounter.
-             * They should have the same value in the critical section. */
+            /* Increase the local variable xTempTaskCounter and shared variable
+             * xTaskCounter. They must have the same value in the critical
+             * section. */
             xTaskCounter++;
             xTempTaskCounter++;
 
-            /* If multiple tasks run in the critical section, shared variable will
-             * be increased by multiple tasks. Local variable xTempTaskCounter won't be
-             * equal to xTaskCounter. */
+            /* If multiple tasks enter the critical section, the shared variable
+             * xTaskCounter will be increased by multiple tasks.As a result, the
+             * local variable xTempTaskCounter won't be equal to the shared
+             * variable xTaskCounter. */
             if( xTaskCounter != xTempTaskCounter )
             {
                 xTestResult = pdFAIL;
@@ -170,9 +175,9 @@ void Test_OnlyOneTaskEnterCritical( void )
         xTaskCreationResult = xTaskCreate( prvTaskIncCounter,
                                            "IncCounter",
                                            configMINIMAL_STACK_SIZE,
-                                           &xTaskIndexes[ i ],
+                                           &( xTaskIndexes[ i ] ),
                                            configMAX_PRIORITIES - 2,
-                                           &xTaskHandles[ i ] );
+                                           &( xTaskHandles[ i ] ) );
 
         TEST_ASSERT_EQUAL_MESSAGE( pdPASS, xTaskCreationResult, "Task creation failed." );
     }
@@ -226,7 +231,7 @@ void tearDown( void )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief A start entry for test runner to run critical section test.
+ * @brief Entry point for test runner to run critical section test.
  */
 void vRunOnlyOneTaskEnterCriticalTest( void )
 {

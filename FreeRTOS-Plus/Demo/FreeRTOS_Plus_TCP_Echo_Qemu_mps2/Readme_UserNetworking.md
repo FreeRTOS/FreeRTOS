@@ -86,53 +86,11 @@ User Mode Networking has the following limitations:
    guest.
  - The guest is not directly accessible from the host or the external network.
 
-Do the following steps on the host machine:
-
-1. Pick a MAC address for the QEMU. Define a shell variable `QEMU_MAC_ADDRESS`
-and set its value to the picked MAC Address. For example, run the following
-command if you picked `52:54:00:12:34:AD`:
-```shell
-export QEMU_MAC_ADDRESS=52:54:00:12:34:AD
-```
-
-2. Define a shell variable `ECHO_SERVER_IP_ADDRESS` and set its value to the
-IP address of the Echo Server which is running on the host. For example,
-run the following command if the IP address of the Echo Server is
-`192.168.76.2`:
-```shell
-export ECHO_SERVER_IP_ADDRESS=192.168.76.2
-```
 
 ## Build and Run
 Do the following steps on the host machine:
 
-1. Set `configMAC_ADDR0`-`configMAC_ADDR5` in `FreeRTOSConfig.h` to the value
-of `QEMU_MAC_ADDRESS`:
-```shell
-echo $QEMU_MAC_ADDRESS
-```
-```c
-#define configMAC_ADDR0         0x52
-#define configMAC_ADDR1         0x54
-#define configMAC_ADDR2         0x00
-#define configMAC_ADDR3         0x12
-#define configMAC_ADDR4         0x34
-#define configMAC_ADDR5         0xAD
-```
-
-2. Set `configECHO_SERVER_ADDR0`-`configECHO_SERVER_ADDR3` in `FreeRTOSConfig.h`
-to the value of `ECHO_SERVER_IP_ADDRESS`:
-```shell
-echo $ECHO_SERVER_IP_ADDRESS
-```
-```c
-#define configECHO_SERVER_ADDR0 192
-#define configECHO_SERVER_ADDR1 168
-#define configECHO_SERVER_ADDR2 76
-#define configECHO_SERVER_ADDR3 2
-```
-
-3. The echo server is assumed to be on port 7, which is the standard echo
+1. The echo server is assumed to be on port 7, which is the standard echo
 protocol port. You can change the port to any other listening port (e.g. 3682 ).
 Set `configECHO_PORT` to the value of this port.
 
@@ -140,23 +98,19 @@ Set `configECHO_PORT` to the value of this port.
 #define configECHO_PORT          ( 7 )
 ```
 
-4. Build:
+2. Build:
 ```shell
    make
 ```
 
-5. Run:
+3. Run:
 ```shell
-   qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel
-      build/freertos_tcp_mps2_demo.axf -monitor null -semihosting
-      -semihosting-config enable=on,target=native -serial stdio -nographic
-      -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net
-      nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0
+   sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
+   -kernel ./build/freertos_tcp_mps2_demo.axf \
+   -monitor null -semihosting -semihosting-config enable=on,target=native -serial stdio -nographic \
+   -netdev user,id=mynet0, -net nic,model=lan9118,netdev=mynet0
+
 ```
-Adding `-netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9` to
-the qemu command line changes the network configuration to use 192.168.76.0/24
-instead of the default (10.0.2.0/24) and starts guest DHCP allocation from
-9 (instead of 15).
 
 6. You should see that following output on the terminal of the Echo Server (which
 is running `sudo nc -l 7` or `netcat -l 7` or `nc -l -p 7` depending on your OS):
@@ -170,26 +124,21 @@ is running `sudo nc -l 7` or `netcat -l 7` or `nc -l -p 7` depending on your OS)
 ## Debug
 1. Build with debugging symbols:
 ```
-make DEBUG=1
+   make DEBUG=1
 ```
 
 2. Start QEMU in the paused state waiting for GDB connection:
 ```shell
-   qemu-system-arm \
-    -machine mps2-an385 \
-    -cpu cortex-m3 \
-    --kernel -s -S build/freertos_tcp_mps2_demo.axf \
-    -monitor null \
-    -semihostingsemihosting-config enable=on,target=native \
-    -serial stdio -nographic \
-    -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 \
-    -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
-    -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump
+   sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
+   -kernel ./build/freertos_tcp_mps2_demo.axf \
+   -monitor null -semihosting -semihosting-config enable=on,target=native -serial stdio -nographic \
+   -netdev user,id=mynet0, -net nic,model=lan9118,netdev=mynet0 \
+   -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump
 ```
 
 3. Run GDB:
 ```shell
-$ arm-none-eabi-gdb -q ./build/freertos_tcp_mps2_demo.axf
+sudo arm-none-eabi-gdb -q ./build/freertos_tcp_mps2_demo.axf
 
 (gdb) target remote :1234
 (gdb) break main

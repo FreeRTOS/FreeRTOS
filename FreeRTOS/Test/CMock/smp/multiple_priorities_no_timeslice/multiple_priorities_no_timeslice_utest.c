@@ -3526,24 +3526,29 @@ void test_task_priority_inherit_disinherit_timeout( void )
  *
  * Main task (T1)
  * Priority – 3
- * State – Running
+ * State – Running( 0 )
  *
- * After creating the core task.
+ * After creating the core task with xTaskCreate(). Core 2 was requested to yield
+ * but not yet able to select core task.
  *
- * Main task (T1)	  Core Task (T2)
- * Priority – 3       Priority – 3
- * State – Running    State – Ready
+ * Main task (T1)	      Core Task (T2)
+ * Priority – 3           Priority – 3
+ * State – Running( 0 )   State – Ready
  *
- * After setting the core affinity of the core task.
+ * After setting the core affinity of the core task to core 1 only with vTaskCoreAffinitySet().
  *
- * Task (T1)	      Task (T2)
- * Priority – 3       Priority – 3
- * State – Running    State – Ready
- * After setting the core affinity of the core task.
+ * Main task (T1)	      Core Task (T2)
+ * Priority – 3           Priority – 3
+ * State – Running( 0 )   Affinity – ( 1 )
+ *                        State – Ready
  *
- * Task (T1)	      Task (T2)
- * Priority – 3       Priority – 3
- * State – Running    State – Ready
+ * After async core yield for core task.
+ *
+ * Main Task (T1)	      Core Task (T2)
+ * Priority – 3           Priority – 3
+ * State – Running( 0 )   Affinity – ( 1 )
+ *                        State – Running( 1 )
+ *
  */
 void test_task_create_task_set_affinity_async_yield( void )
 {
@@ -3570,7 +3575,7 @@ void test_task_create_task_set_affinity_async_yield( void )
     /* Core yield is called here to simulate SMP asynchronous behavior. */
     for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
     {
-        vCheckAndExecuteAsyncPortYield( xCoreID );
+        vCheckAndExecuteAsyncCoreYield( xCoreID );
     }
 
     /* Verify that the task core task can run on core 1. */

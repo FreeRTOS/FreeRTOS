@@ -190,7 +190,7 @@ void vSetCurrentCore( BaseType_t xCoreID )
     xCurrentCoreId = xCoreID;
 }
 
-void vCheckAndExecuteAsyncPortYield( BaseType_t xCoreID )
+void vCheckAndExecuteAsyncCoreYield( BaseType_t xCoreID )
 {
     BaseType_t xCoreInCritical = pdFALSE;
     BaseType_t xPreviousCoreId = xCurrentCoreId;

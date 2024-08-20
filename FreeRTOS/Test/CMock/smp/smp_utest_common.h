@@ -105,9 +105,9 @@ void xTaskIncrementTick_helper( void );
 void vSetCurrentCore( BaseType_t xCoreID );
 
 /**
- * @brief Check and execut asynchronous port yield request.
+ * @brief Check and execut asynchronous core yield request.
  */
-void vCheckAndExecuteAsyncPortYield( BaseType_t xCoreID );
+void vCheckAndExecuteAsyncCoreYield( BaseType_t xCoreID );
 
 /**
  * @brief Helper function to create static test task.

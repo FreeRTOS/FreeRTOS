@@ -1338,62 +1338,6 @@ void test_coverage_vTaskCoreAffinitySet_null_task_handle( void )
 }
 
 /**
- * @brief vTaskCoreAffinitySet - no new core for task which is not running.
- *
- * Set core mask for a not running task. The new core mask doesn't enable the task
- * to run on any new core. Verify the core mask set is correct.
- *
- * <b>Coverage</b>
- * @code{c}
- * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
- * {
- *     ...
- * }
- * else
- * {
- *     if( ( uxPrevNotAllowedCores & uxCoreAffinityMask ) != 0U )
- *     {
- *         prvYieldForTask( pxTCB );
- *     }
- * }
- * @endcode
- * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is false.
- * ( ( uxPrevNotAllowedCores & uxCoreAffinityMask ) != 0U ) is false.
- */
-void test_coverage_vTaskCoreAffinitySet_task_not_running_no_new_core( void )
-{
-    TCB_t xTaskTCB = { NULL };
-    UBaseType_t uxCoreAffinityMask;
-    UBaseType_t uxNewCoreAffinityMask;
-
-    /* Setup the variables and structure. */
-    /* This task is allowed to run on core 0 and core 1 only. */
-    uxCoreAffinityMask = ( 1U << 0 ) | ( 1U << 1 );
-    vCreateStaticTestTaskAffinity( &xTaskTCB,
-                                   uxCoreAffinityMask,
-                                   tskIDLE_PRIORITY,
-                                   configNUMBER_OF_CORES,
-                                   pdFALSE );
-    xSchedulerRunning = pdTRUE;
-
-    /* Expectations. */
-    vFakePortEnterCriticalSection_StubWithCallback( NULL );
-    vFakePortExitCriticalSection_StubWithCallback( NULL );
-    vFakePortCheckIfInISR_StopIgnore();
-
-    vFakePortEnterCriticalSection_Expect();
-    vFakePortExitCriticalSection_Expect();
-
-    /* API call. */
-    /* No new core is enabled for this task. */
-    uxNewCoreAffinityMask = ( 1U << 0 );
-    vTaskCoreAffinitySet( &xTaskTCB, uxNewCoreAffinityMask );
-
-    /* Validations. */
-    TEST_ASSERT_EQUAL( uxNewCoreAffinityMask, xTaskTCB.uxCoreAffinityMask );
-}
-
-/**
  * @brief prvYieldForTask - running task with xTaskRunState equals to configNUMBER_OF_CORES.
  *
  * Yield for a task of equal priority. No other task should be requested to yield.

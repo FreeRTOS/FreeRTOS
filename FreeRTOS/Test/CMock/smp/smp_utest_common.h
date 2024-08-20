@@ -105,7 +105,7 @@ void xTaskIncrementTick_helper( void );
 void vSetCurrentCore( BaseType_t xCoreID );
 
 /**
- * @brief Check and execut asynchronouse port yield request.
+ * @brief Check and execut asynchronous port yield request.
  */
 void vCheckAndExecuteAsyncPortYield( BaseType_t xCoreID );
 

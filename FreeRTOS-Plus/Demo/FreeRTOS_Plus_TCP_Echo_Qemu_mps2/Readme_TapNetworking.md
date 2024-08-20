@@ -314,12 +314,20 @@ echo $ECHO_SERVER_IP_ADDRESS
 #define configECHO_SERVER_ADDR3 204
 ```
 
-7. Build:
+7. The echo server is assumed to be on port 7, which is the standard echo
+protocol port. You can change the port to any other listening port (e.g. 3682 ).
+Set `configECHO_PORT` to the value of this port.
+
+```c
+#define configECHO_PORT          ( 7 )
+```
+
+8. Build:
 ```shell
 make
 ```
 
-8. Run:
+9. Run:
 ```shell
 sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
           -kernel ./build/freertos_tcp_mps2_demo.axf \
@@ -330,7 +338,7 @@ sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
           -monitor null -semihosting -semihosting-config enable=on,target=native
 ```
 
-9. You should see that following output on the terminal of the Echo Server (which
+10. You should see that following output on the terminal of the Echo Server (which
 is running `sudo nc -l 7` or `netcat -l 7` depending on your OS):
 ```
 0FGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=> ?

@@ -28,6 +28,20 @@ The demo requires 2 components -
 +--------------------------------------------------------+
 ```
 
+## PreRequisites
+
+1. Install the following tools in the Host Machine:
+   * [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
+   * [qemu-arm-system](https://www.qemu.org/download).
+   * Make (Version 4.3):
+     ```
+     sudo apt install make
+     ```
+2.  Clone the source code:
+     ```
+      git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules --depth 1
+     ```
+
 ## Launch Echo Server
 Launch Echo Server on the host machine.
 
@@ -118,12 +132,20 @@ echo $ECHO_SERVER_IP_ADDRESS
 #define configECHO_SERVER_ADDR3 2
 ```
 
-3. Build:
+3. The echo server is assumed to be on port 7, which is the standard echo
+protocol port. You can change the port to any other listening port (e.g. 3682 ).
+Set `configECHO_PORT` to the value of this port.
+
+```c
+#define configECHO_PORT          ( 7 )
+```
+
+4. Build:
 ```shell
    make
 ```
 
-4. Run:
+5. Run:
 ```shell
    qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel
       build/freertos_tcp_mps2_demo.axf -monitor null -semihosting
@@ -136,8 +158,8 @@ the qemu command line changes the network configuration to use 192.168.76.0/24
 instead of the default (10.0.2.0/24) and starts guest DHCP allocation from
 9 (instead of 15).
 
-5. You should see that following output on the terminal of the Echo Server (which
-is running `sudo nc -l 7` or `netcat -l 7` depending on your OS):
+6. You should see that following output on the terminal of the Echo Server (which
+is running `sudo nc -l 7` or `netcat -l 7` or `nc -l -p 7` depending on your OS):
 ```
 0FGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=> ?
 @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
@@ -153,11 +175,16 @@ make DEBUG=1
 
 2. Start QEMU in the paused state waiting for GDB connection:
 ```shell
-   qemu-system-arm -machine mps2-an385 -cpu cortex-m3 —kernel -s -S
-      build/freertos_tcp_mps2_demo.axf -monitor null -semihosting
-      -semihosting-config enable=on,target=native -serial stdio -nographic
-      -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 -net
-      nic,macaddr=$QEMU_MAC_ADDRESS,model=lan9118,netdev=mynet0
+   qemu-system-arm \
+    -machine mps2-an385 \
+    -cpu cortex-m3 \
+    --kernel -s -S build/freertos_tcp_mps2_demo.axf \
+    -monitor null \
+    -semihostingsemihosting-config enable=on,target=native \
+    -serial stdio -nographic \
+    -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 \
+    -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
+    -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump
 ```
 
 3. Run GDB:

@@ -152,21 +152,21 @@ dependencies:
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96"
-    version: "f61fc4c"
+    version: "1c71555"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802"
-    version: "7d6393a"
+    version: "889118a"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"
 
   - name: "Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4"
-    version: "dcdae99"
+    version: "62ce026"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git"

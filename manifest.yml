@@ -194,14 +194,14 @@ dependencies:
       path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace"
 
   - name: "CMock"
-    version: "afa2949"
+    version: "v2.5.3"
     repository:
       type: "git"
       url: " https://github.com/ThrowTheSwitch/CMock.git"
       path: "FreeRTOS/Test/CMock/CMock"
 
   - name: "CMock"
-    version: "150573c"
+    version: "v2.5.3"
     repository:
       type: "git"
       url: " https://github.com/ThrowTheSwitch/CMock.git"

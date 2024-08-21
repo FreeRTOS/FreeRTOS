@@ -93,10 +93,15 @@ extern void vAssertCalled( void );
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-/* When the user uses User Mode Networking , the QEMU virtual machine
+/* When the user uses User Mode Networking, the QEMU virtual machine
  * automatically starts up an internal DHCP server on an internal
- * networkaddress -10.0.2.2/24. Note that from inside the guest, connecting to a
- * port on the "gateway" IP address will connect to that port on the host.
+ * network address in the subnet 10.0.2.0/24. This DHCP server allocates IPs to
+ * Guest OSes in the subnet 10.0.2.0/24 starting from 10.0.2.15. The QEMU VM
+ * also sets up 10.0.2.2 as the "gateway" IP address. Connecting to a port on
+ * this "gateway" IP address 10.0.2.2 from inside the guest connects to that
+ * port on the host machine. For example, connecting to the "gateway" IP address
+ * 10.0.2.2 on port 7 from inside the guest will connect to the host machine on
+ * port 7. See the following links for more details:
  * https://wiki.qemu.org/Documentation/Networking
  * http://bsdwiki.reedmedia.net/wiki/networking_qemu_virtual_bsd_systems.html */
 

@@ -93,10 +93,22 @@ extern void vAssertCalled( void );
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
+/* When the user uses User Mode Networking, the QEMU virtual machine
+ * automatically starts up an internal DHCP server on an internal
+ * network address in the subnet 10.0.2.0/24. This DHCP server allocates IPs to
+ * Guest OSes in the subnet 10.0.2.0/24 starting from 10.0.2.15. The QEMU VM
+ * also sets up 10.0.2.2 as the "gateway" IP address. Connecting to a port on
+ * this "gateway" IP address 10.0.2.2 from inside the guest connects to that
+ * port on the host machine. For example, connecting to the "gateway" IP address
+ * 10.0.2.2 on port 7 from inside the guest will connect to the host machine on
+ * port 7. See the following links for more details:
+ * https://wiki.qemu.org/Documentation/Networking
+ * http://bsdwiki.reedmedia.net/wiki/networking_qemu_virtual_bsd_systems.html */
+
 #define configECHO_SERVER_ADDR0    10
-#define configECHO_SERVER_ADDR1    136
-#define configECHO_SERVER_ADDR2    206
-#define configECHO_SERVER_ADDR3    133
+#define configECHO_SERVER_ADDR1    0
+#define configECHO_SERVER_ADDR2    2
+#define configECHO_SERVER_ADDR3    2
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet/WiFi data

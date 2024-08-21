@@ -3499,3 +3499,85 @@ void test_task_priority_inherit_disinherit_timeout( void )
     /* Verify that the low priority task is ready. */
     verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eReady, -1 );
 }
+
+
+/**
+ * @brief AWS_IoT-FreeRTOS_SMP_TC-110
+ * Yield for the task when setting the core affinity of a task of ready state. This
+ * situation happens when the core can't select the task to run before the task
+ * core affinity is changed. The vTaskCoreAffinitySet should request a core on which
+ * the task is able to run with new core affinity setting.
+ *
+ * #define configRUN_MULTIPLE_PRIORITIES                    1
+ * #define configUSE_TIME_SLICING                           0
+ * #define configUSE_CORE_AFFINITY                          1
+ * #define configNUMBER_OF_CORES                            (N > 2)
+ *
+ * This test can be run with FreeRTOS configured for any number of cores greater
+ * than 2.
+ *
+ * Tasks are created prior to starting the scheduler
+ *
+ * Main task (T1)
+ * Priority – 3
+ * State – Ready
+ *
+ * After calling vTaskStartScheduler()
+ *
+ * Main task (T1)
+ * Priority – 3
+ * State – Running( 0 )
+ *
+ * After creating the core task with xTaskCreate(). Core 2 was requested to yield
+ * but not yet able to select core task.
+ *
+ * Main task (T1)	      Core Task (T2)
+ * Priority – 3           Priority – 3
+ * State – Running( 0 )   State – Ready
+ *
+ * After setting the core affinity of the core task to core 1 only with vTaskCoreAffinitySet().
+ *
+ * Main task (T1)	      Core Task (T2)
+ * Priority – 3           Priority – 3
+ * State – Running( 0 )   Affinity – ( 1 )
+ *                        State – Ready
+ *
+ * After async core yield for core task.
+ *
+ * Main Task (T1)	      Core Task (T2)
+ * Priority – 3           Priority – 3
+ * State – Running( 0 )   Affinity – ( 1 )
+ *                        State – Running( 1 )
+ *
+ */
+void test_task_create_task_set_affinity_async_yield( void )
+{
+    TaskHandle_t xMainTaskHandle;
+    TaskHandle_t xCoreTaskHandle;
+    BaseType_t xCoreID;
+
+    /* The core yield should be manually triggered in the test cases when using
+     *　async core yield setup. */
+    commonAsyncCoreYieldSetup();
+
+    /* Create high priority main task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xMainTaskHandle );
+
+    /* Start the scheduler. */
+    vTaskStartScheduler();
+
+    /* Create high priority core task. */
+    xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 3, &xCoreTaskHandle );
+
+    /* Set the core affinity of the core task to core 1. */
+    vTaskCoreAffinitySet( xCoreTaskHandle, ( 1 << 1 ) );
+
+    /* Core yield is called here to simulate SMP asynchronous behavior. */
+    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
+    {
+        vCheckAndExecuteAsyncCoreYield( xCoreID );
+    }
+
+    /* Verify that the task core task can run on core 1. */
+    verifySmpTask( &xCoreTaskHandle, eRunning, 1 );
+}

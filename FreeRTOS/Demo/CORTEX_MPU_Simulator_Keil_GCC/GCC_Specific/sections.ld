@@ -2,12 +2,12 @@
 MEMORY
 {
   ROM (rx)         : ORIGIN = 0x00, LENGTH = 0x80000
-  RAM (rw)         : ORIGIN = 0x20000000, LENGTH = 0x8000
+  RAM (rw)         : ORIGIN = 0x20000000, LENGTH = 0x08000
 }
 
 /* Variables used by FreeRTOS-MPU. */
-_Privileged_Functions_Region_Size = 32K;
-_Privileged_Data_Region_Size = 16384;
+_Privileged_Functions_Region_Size = 64K;
+_Privileged_Data_Region_Size = 16K;
 
 __FLASH_segment_start__ = ORIGIN( ROM );
 __FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( ROM );

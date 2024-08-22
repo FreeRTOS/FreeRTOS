@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -220,7 +220,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The name of the MQTT library used and its version, following an "@"
  * symbol.
  */
-#include "core_mqtt.h"     /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+#include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
 #define democonfigMQTT_LIB               "core-mqtt@"MQTT_LIBRARY_VERSION
 
 /**

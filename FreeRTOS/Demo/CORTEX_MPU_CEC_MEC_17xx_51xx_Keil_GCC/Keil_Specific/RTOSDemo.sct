@@ -5,22 +5,26 @@
 
 LR_IROM1 0xE0000 0x40000  ; load region size_region
 {
-	ER_PRIVILEGED_FUNCTIONS 0xE0000 0x8000  {
+	ER_PRIVILEGED_FUNCTIONS 0xE0000  {
 		*.o (RESET, +First)
 		startup_MPS_CM4.o
 		*(InRoot$$Sections)
 		*( privileged_functions )
 	}
 
-	ER_UNPRIVILEGED_FUNCTIONS 0xE8000 0x18000 {
+	ER_FREERTOS_SYSTEM_CALLS 0xF0000 FIXED {
+		*(freertos_system_calls)
+	}
+
+	ER_UNPRIVILEGED_FUNCTIONS +0 {
 		.ANY (+RO)
 	}
 
-	RW_PRIVILEGED_DATA 0x100000 0x200 {
+	RW_PRIVILEGED_DATA 0x100000 {
 		*( privileged_data )
 	}
 
-	RW_UNPRIVILEGED_DATA 0x100200 0x1FE00 {
+	RW_UNPRIVILEGED_DATA 0x108000 {
 		.ANY (+RW +ZI)
 	}
 }

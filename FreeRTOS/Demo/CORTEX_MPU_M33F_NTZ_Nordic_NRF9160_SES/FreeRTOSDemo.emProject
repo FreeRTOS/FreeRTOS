@@ -1,5 +1,10 @@
 <!DOCTYPE CrossStudio_Project_File>
 <solution Name="FreeRTOSDemo" target="8" version="2">
+  <configuration
+    Name="Debug"
+    c_preprocessor_definitions="DEBUG"
+    gcc_debugging_level="Level 3"
+    gcc_optimization_level="None" />
   <project Name="FreeRTOSDemo">
     <configuration
       LIBRARY_IO_TYPE="RTT"
@@ -24,7 +29,7 @@
       build_intermediate_directory="Output/$(Configuration)/Objects/"
       build_output_directory="Output/$(Configuration)/"
       c_preprocessor_definitions="ARM_MATH_ARMV8MML;NRF9160_XXAA;__NRF_FAMILY;__SUPPORT_RESET_HALT_AFTER_BTL=0;INITIALIZE_USER_SECTIONS;__ARMCC_VERSION"
-      c_user_include_directories="$(ProjectDir)/Nordic_Code/CMSIS_5/CMSIS/Core/Include;$(ProjectDir)/Nordic_Code/nRF/Device/Include;$(ProjectDir)/Config;../../Source/include;../../Source/portable/GCC/ARM_CM33_NTZ/non_secure;../Common/ARMv8M/mpu_demo"
+      c_user_include_directories="$(ProjectDir)/Nordic_Code/CMSIS_5/CMSIS/Core/Include;$(ProjectDir)/Nordic_Code/nRF/Device/Include;$(ProjectDir)/Config;../../Source/include;../../Source/portable/GCC/ARM_CM33_NTZ/non_secure;../Common/ARMv8M/mpu_demo;../Common/ARMv8M/reg_tests/GCC/ARM_CM33/non_secure"
       debug_register_definition_file="$(ProjectDir)/Nordic_Code/nRF/XML/nrf9160_Registers.xml"
       debug_stack_pointer_start="__stack_end__"
       debug_start_from_entry_point_symbol="No"
@@ -39,32 +44,14 @@
       project_type="Executable"
       target_reset_script="Reset();"
       target_trace_initialize_script="EnableTrace(&quot;$(TraceInterfaceType)&quot;)" />
-    <folder Name="Nordic_Code">
-      <folder Name="CMSIS Files">
-        <file file_name="Nordic_Code/nRF/Device/Source/system_nrf9160.c">
-          <configuration
-            Name="Common"
-            default_code_section=".init"
-            default_const_section=".init_rodata" />
-        </file>
-        <file file_name="Nordic_Code/nRF/Device/Include/nrf.h" />
-      </folder>
-      <folder Name="Script Files">
-        <file file_name="Nordic_Code/nRF/Scripts/nRF_Target.js">
-          <configuration Name="Common" file_type="Reset Script" />
-        </file>
-      </folder>
-      <folder Name="System Files">
-        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
-        <file file_name="Nordic_Code/nRF/Source/nrf9160_Vectors.s">
-          <configuration Name="Common" file_type="Assembly" />
-        </file>
-        <file file_name="Nordic_Code/nRF/Source/thumb_crt0.s" />
-      </folder>
+    <folder Name="Config">
+      <file file_name="Config/FreeRTOSConfig.h" />
     </folder>
-    <folder Name="User">
-      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
-      <file file_name="Source/main.c" />
+    <folder Name="Demos">
+      <file file_name="../Common/ARMv8M/mpu_demo/mpu_demo.c" />
+      <file file_name="../Common/ARMv8M/mpu_demo/mpu_demo.h" />
+      <file file_name="../Common/ARMv8M/reg_tests/GCC/ARM_CM33/non_secure/reg_test_asm.c" />
+      <file file_name="../Common/ARMv8M/reg_tests/GCC/ARM_CM33/non_secure/reg_test_asm.h" />
     </folder>
     <folder Name="FreeRTOS">
       <folder Name="include">
@@ -89,13 +76,16 @@
       <folder Name="portable">
         <folder Name="Common">
           <file file_name="../../Source/portable/Common/mpu_wrappers.c" />
+          <file file_name="../../Source/portable/Common/mpu_wrappers_v2.c" />
         </folder>
         <folder Name="GCC">
           <folder Name="ARM_CM33_NTZ">
+            <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/mpu_wrappers_v2_asm.c" />
+            <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/port.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/portasm.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/portasm.h" />
-            <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/port.c" />
             <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/portmacro.h" />
+            <file file_name="../../Source/portable/GCC/ARM_CM33_NTZ/non_secure/portmacrocommon.h" />
           </folder>
         </folder>
         <folder Name="MemMang">
@@ -109,17 +99,35 @@
       <file file_name="../../Source/tasks.c" />
       <file file_name="../../Source/timers.c" />
     </folder>
-    <folder Name="Config">
-      <file file_name="Config/FreeRTOSConfig.h" />
+    <folder Name="Nordic_Code">
+      <folder Name="CMSIS Files">
+        <file file_name="Nordic_Code/nRF/Device/Include/nrf.h" />
+        <file file_name="Nordic_Code/nRF/Device/Source/system_nrf9160.c">
+          <configuration
+            Name="Common"
+            default_code_section=".init"
+            default_const_section=".init_rodata"
+            gcc_strict_prototypes_warning="No" />
+        </file>
+      </folder>
+      <folder Name="Script Files">
+        <file file_name="Nordic_Code/nRF/Scripts/nRF_Target.js">
+          <configuration Name="Common" file_type="Reset Script" />
+        </file>
+      </folder>
+      <folder Name="System Files">
+        <file file_name="Nordic_Code/nRF/Source/nrf9160_Vectors.s">
+          <configuration Name="Common" file_type="Assembly" />
+        </file>
+        <file file_name="Nordic_Code/nRF/Source/nRF_Startup.s" />
+        <file file_name="Nordic_Code/nRF/Source/thumb_crt0.s" />
+      </folder>
     </folder>
-    <folder Name="Demos">
-      <file file_name="../Common/ARMv8M/mpu_demo/mpu_demo.c" />
-      <file file_name="../Common/ARMv8M/mpu_demo/mpu_demo.h" />
+    <folder Name="User">
+      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
+      <file file_name="Source/main.c" />
+      <file file_name="Source/reg_tests.c" />
+      <file file_name="Source/reg_tests.h" />
     </folder>
   </project>
-  <configuration
-    Name="Debug"
-    c_preprocessor_definitions="DEBUG"
-    gcc_debugging_level="Level 3"
-    gcc_optimization_level="None" />
 </solution>

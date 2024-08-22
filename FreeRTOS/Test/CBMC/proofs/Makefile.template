@@ -119,8 +119,8 @@ goto:
 # Ignore the return code for CBMC, so that we can still generate the
 # report if the proof failed. If the proof failed, we separately fail
 # the entire job using the check-cbmc-result rule.
-cbmc.txt: $(ENTRY).goto
-	-cbmc $(CBMCFLAGS) $(SOLVER) --unwinding-assertions --trace @RULE_INPUT@ > $@ 2>&1
+cbmc.xml: $(ENTRY).goto
+	-cbmc $(CBMCFLAGS) $(SOLVER) --unwinding-assertions --trace --xml-ui @RULE_INPUT@ > $@ 2>&1
 
 property.xml: $(ENTRY).goto
 	cbmc $(CBMCFLAGS) --unwinding-assertions --show-properties --xml-ui @RULE_INPUT@ > $@ 2>&1
@@ -128,28 +128,27 @@ property.xml: $(ENTRY).goto
 coverage.xml: $(ENTRY).goto
 	cbmc $(CBMCFLAGS) --cover location --xml-ui @RULE_INPUT@ > $@ 2>&1
 
-cbmc: cbmc.txt
+cbmc: cbmc.xml
 
 property: property.xml
 
 coverage: coverage.xml
 
-report: cbmc.txt property.xml coverage.xml
+report: cbmc.xml property.xml coverage.xml
 	$(VIEWER) \
 	--goto $(ENTRY).goto \
 	--srcdir $(FREERTOS) \
-	--htmldir html \
-	--srcexclude "(.@FORWARD_SLASH@Demo)" \
-	--result cbmc.txt \
+	--reportdir html \
+	--result cbmc.xml \
 	--property property.xml \
-	--block coverage.xml
+	--coverage coverage.xml
 
-# This rule depends only on cbmc.txt and has no dependents, so it will
+# This rule depends only on cbmc.xml and has no dependents, so it will
 # not block the report from being generated if it fails. This rule is
 # intended to fail if and only if the CBMC safety check that emits
-# cbmc.txt yielded a proof failure.
-check-cbmc-result: cbmc.txt
-	grep -e "^VERIFICATION SUCCESSFUL" $^
+# cbmc.xml yielded a proof failure.
+check-cbmc-result: cbmc.xml
+	grep -e "<cprover-status>SUCCESS</cprover-status>" $^
 
 # ____________________________________________________________________
 # Rules
@@ -159,7 +158,7 @@ check-cbmc-result: cbmc.txt
 clean:
 	@RM@ $(OBJS) $(ENTRY).goto
 	@RM@ $(ENTRY)[0-9].goto $(ENTRY)[0-9].txt
-	@RM@ cbmc.txt property.xml coverage.xml TAGS TAGS-*
+	@RM@ cbmc.xml property.xml coverage.xml TAGS TAGS-*
 	@RM@ *~ \#*
 	@RM@ queue_datastructure.h
 

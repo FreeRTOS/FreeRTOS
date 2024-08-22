@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://aws.amazon.com/freertos
  * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 
@@ -41,7 +42,7 @@
 
 /* Variables used in the creation of the run time stats time base.  Run time
  * stats record how much time each task spends in the Running state. */
-static long long llInitialRunTimeCounterValue = 0LL, llTicksPerHundedthMillisecond = 0LL;
+static long long llInitialRunTimeCounterValue = 0LL, llTicksPerHundredthMillisecond = 0LL;
 
 /*-----------------------------------------------------------*/
 
@@ -55,13 +56,13 @@ void vConfigureTimerForRunTimeStats( void )
 
     if( QueryPerformanceFrequency( &liPerformanceCounterFrequency ) == 0 )
     {
-        llTicksPerHundedthMillisecond = 1;
+        llTicksPerHundredthMillisecond = 1;
     }
     else
     {
         /* How many times does the performance counter increment in 1/100th
          * millisecond. */
-        llTicksPerHundedthMillisecond = liPerformanceCounterFrequency.QuadPart / 100000LL;
+        llTicksPerHundredthMillisecond = liPerformanceCounterFrequency.QuadPart / 100000LL;
 
         /* What is the performance counter value now, this will be subtracted
          * from readings taken at run time. */
@@ -82,10 +83,10 @@ unsigned long ulGetRunTimeCounterValue( void )
     /* Subtract the performance counter value reading taken when the
      * application started to get a count from that reference point, then
      * scale to (simulated) 1/100ths of a millisecond. */
-    if( llTicksPerHundedthMillisecond == 0 )
+    if( llTicksPerHundredthMillisecond == 0 )
     {
         /* The trace macros can call this function before the kernel has been
-         * started, in which case llTicksPerHundedthMillisecond will not have been
+         * started, in which case llTicksPerHundredthMillisecond will not have been
          * initialised. */
         ulReturn = 0;
     }
@@ -93,7 +94,7 @@ unsigned long ulGetRunTimeCounterValue( void )
     {
         ulReturn = ( unsigned long )
                    ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) /
-                     llTicksPerHundedthMillisecond );
+                     llTicksPerHundredthMillisecond );
     }
 
     return ulReturn;

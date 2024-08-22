@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -177,7 +177,7 @@
 
             if( xTaskAbortDelay( xBlockingTask ) != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             /* Reset the priority to the normal controlling priority. */
@@ -288,7 +288,7 @@
 
         if( xReturned != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
     }
 /*-----------------------------------------------------------*/
@@ -379,7 +379,7 @@
 
         if( ulReturn != 0 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -393,7 +393,7 @@
 
         if( ulReturn != 0 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
@@ -406,7 +406,7 @@
 
         if( ulReturn != 0 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -442,7 +442,7 @@
 
         if( xReturn != 0x00 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -456,7 +456,7 @@
 
         if( xReturn != 0x00 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
@@ -469,7 +469,7 @@
 
         if( xReturn != 0x00 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -488,20 +488,21 @@
         uint8_t uxRxData;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            /* Defines the memory that will actually hold the streams within the
-             * stream buffer. */
-            static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
 
-            /* The variable used to hold the stream buffer structure. */
+            /* The variable used to hold the stream buffer structure.
+             * This control information is valid as long as xStreamBuffer
+             * is valid. */
             StaticStreamBuffer_t xStreamBufferStruct;
+            {
+                /* Defines the memory that will actually hold the streams within the
+                 * stream buffer. */
+                static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
 
-
-            xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
-                                                       xTriggerLevelBytes,
-                                                       ucStorageBuffer,
-                                                       &xStreamBufferStruct );
-        }
+                xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
+                                                           xTriggerLevelBytes,
+                                                           ucStorageBuffer,
+                                                           &xStreamBufferStruct );
+            }
         #else /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
         {
             xStreamBuffer = xStreamBufferCreate( sizeof( uint8_t ), xTriggerLevelBytes );
@@ -517,7 +518,7 @@
 
         if( xReturn != 0x00 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -531,7 +532,7 @@
 
         if( xReturn != 0x00 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
@@ -544,7 +545,7 @@
 
         if( xReturn != 0x00 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -584,7 +585,7 @@
 
         if( xReturn != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Note the time before the delay so the length of the delay is known. */
@@ -595,7 +596,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -609,7 +610,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
@@ -622,7 +623,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -660,7 +661,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -674,7 +675,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
@@ -687,7 +688,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -710,7 +711,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -724,7 +725,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
@@ -737,7 +738,7 @@
 
         if( xReturn != pdFALSE )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
@@ -755,7 +756,7 @@
         /* The actual block time should not be less than the expected block time. */
         if( xActualBlockTime < xExpectedBlockTime )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* The actual block time can be greater than the expected block time, as it
@@ -763,7 +764,7 @@
          * acceptable margin. */
         if( xActualBlockTime > ( xExpectedBlockTime + xAllowableMargin ) )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
     }
 /*-----------------------------------------------------------*/
@@ -785,7 +786,7 @@
             xReturn = pdFAIL;
         }
 
-        if( xErrorOccurred == pdTRUE )
+        if( xErrorOccurred != pdFALSE )
         {
             xReturn = pdFAIL;
         }

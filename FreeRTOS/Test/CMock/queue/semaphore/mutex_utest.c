@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -37,6 +37,18 @@
 static SemaphoreHandle_t xSemaphoreHandleStatic = NULL;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
+
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback( int NumCalls )
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
 
 /* ============================= Unity Fixtures ============================= */
 
@@ -255,7 +267,7 @@ void test_macro_xSemaphoreGive_multiple_Mutex_fail( void )
  * @brief Test xSemaphoreTake multiple times on a Mutex.
  * @details Create a Mutex using xSemaphoreCreateMutex,
  * verify that an immediate call to xSemaphoreTake succeeds, a subsequent
- * call to xSemaphoreGive succeds, but a second call to xSemaphoreGive fails.
+ * call to xSemaphoreGive succeeds, but a second call to xSemaphoreGive fails.
  * @coverage xQueueSemaphoreTake
  */
 void test_macro_xSemaphoreTake_multiple_Mutex_fail( void )
@@ -468,6 +480,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout( void )
 
     /* Return a test value from the call to pvTaskIncrementMutexHeldCount */
     pvTaskIncrementMutexHeldCount_ExpectAndReturn( ( void * ) xFakeMutexHolder );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Take the mutex */
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
@@ -552,6 +565,8 @@ static BaseType_t xSemaphoreTake_blocking_xTaskResumeAllStub( int cmock_num_call
 void test_macro_xSemaphoreTake_blocking_mutex_inherit_disinherit( void )
 {
     xTaskPriorityDisinherit_ExpectAndReturn( NULL, pdFALSE );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
 

@@ -1,8 +1,8 @@
 diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
-index 08d3799da..6681a34f1 100644
+index e87db0f45..1ffbf1191 100644
 --- a/FreeRTOS/Source/queue.c
 +++ b/FreeRTOS/Source/queue.c
-@@ -193,7 +193,7 @@ static BaseType_t prvIsQueueFull( const Queue_t * pxQueue ) PRIVILEGED_FUNCTION;
+@@ -197,7 +197,7 @@ static BaseType_t prvIsQueueFull( const Queue_t * pxQueue ) PRIVILEGED_FUNCTION;
   * Copies an item into the queue, either at the front of the queue or the
   * back of the queue.
   */
@@ -10,11 +10,11 @@ index 08d3799da..6681a34f1 100644
 +BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
                                        const void * pvItemToQueue,
                                        const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
-
-@@ -2157,7 +2157,7 @@ void vQueueDelete( QueueHandle_t xQueue )
+ 
+@@ -2263,7 +2263,7 @@ UBaseType_t uxQueueGetQueueItemSize( QueueHandle_t xQueue ) /* PRIVILEGED_FUNCTI
  #endif /* configUSE_MUTEXES */
  /*-----------------------------------------------------------*/
-
+ 
 -static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
 +BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
                                        const void * pvItemToQueue,

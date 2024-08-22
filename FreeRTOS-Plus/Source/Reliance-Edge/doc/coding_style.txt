@@ -45,9 +45,9 @@ bool ExampleFunction(
     */
     if(ulFirstParameter > 0U)
     {
-        /*  This is a multi-line comment.  Filler text: Lorem ipsum dolor sit
-            amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua.
+        /*  This is a multi-line comment. It is a comment that spans multiple
+            lines. It is explaining the important following function call.
+            This is the last line of this multi-line comment.
         */
         FunctionCall();
 
@@ -137,9 +137,9 @@ applies to all general comments within the code.
 */
 if(ulFirstParameter > 0U)
 {
-    /*  This is a multi-line comment.  Filler text: Lorem ipsum dolor sit amet,
-        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-        et dolore magna aliqua.
+    /*  This is a multi-line comment. It is a comment that spans multiple
+        lines. It is explaining the important following function call.
+        This is the last line of this multi-line comment.
     */
     while(fStatus)
     {

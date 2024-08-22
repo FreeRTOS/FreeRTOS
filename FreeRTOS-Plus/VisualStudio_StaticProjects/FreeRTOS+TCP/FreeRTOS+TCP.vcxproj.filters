@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="compiler_msvc">
+      <UniqueIdentifier>{a3216426-70cf-4b4f-8b8f-423c8d0416cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface">
+      <UniqueIdentifier>{21d82bd5-24ba-4986-bf91-cc5eefe88952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp">
+      <UniqueIdentifier>{6ceb2f4f-e7f3-4a8d-a60b-4c48157f091d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\winpcap">
+      <UniqueIdentifier>{97a99563-c215-4975-9cb8-c6a29a30f03f}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Network Interface\winpcap\include">
+      <UniqueIdentifier>{7a52d3bf-8fc9-4242-8636-e173ade0aa68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\winpcap\include\pcap">
+      <UniqueIdentifier>{2968f486-aba8-47f5-a175-fe77e197a2c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\tcp_utilities">
+      <UniqueIdentifier>{b2e06bcd-b665-4ef4-8eff-5203748463d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\tcp_utilities\include">
+      <UniqueIdentifier>{af7dc417-59c0-4c2b-bb4b-cc9b84817e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\dependency">
+      <UniqueIdentifier>{2f9d315d-e376-46c7-b896-052a57fa90c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\dependency\glib">
+      <UniqueIdentifier>{80f9d2cd-c700-4cc5-b0a4-e00ad25ad4b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\dependency\glib\include">
+      <UniqueIdentifier>{dd33c19f-f4e9-4a7e-bdf9-c2716cf554b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\dependency\glib\x86">
+      <UniqueIdentifier>{e1a1fbf5-cbe9-4b8c-8cc0-b07325ec237a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\dependency\glib\x64">
+      <UniqueIdentifier>{c96ee908-213c-4a3b-bf42-eb90362fe673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\include">
+      <UniqueIdentifier>{0e5bd1c4-dcc1-4cfe-ade2-37c6b0137e5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Interface\libslirp\source">
+      <UniqueIdentifier>{bf054a66-9772-4e3d-9f7d-2ad8b488c759}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_ICMP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Stream_Buffer.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DNS_Callback.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Reception.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DNS_Parser.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DNS_Networking.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Sockets.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IP_Utils.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DHCP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DNS.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_WIN.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IP_Timers.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_ARP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DNS_Cache.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IP.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_dump_packets.c">
+      <Filter>Network Interface\tcp_utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_mem_stats.c">
+      <Filter>Network Interface\tcp_utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c">
+      <Filter>Network Interface\tcp_utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\BufferManagement\BufferAllocation_2.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_BitConfig.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_DHCPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4_Sockets.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv4_Utils.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Sockets.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_IPv6_Utils.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_ND.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_RA.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Routing.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv4.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_IP_IPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv4.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_State_Handling_IPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv4.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Transmission_IPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv4.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_Utils_IPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv4.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IPv6.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkInterface_WinPCap.c">
+      <Filter>Network Interface\winpcap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\libslirp\MBuffNetifBackendLibslirp.c">
+      <Filter>Network Interface\libslirp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\libslirp\MBuffNetworkInterface.c">
+      <Filter>Network Interface\libslirp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\arp_table.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\bootp.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\cksum.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\dhcpv6.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\dnssearch.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\if.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ip_icmp.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ip_input.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ip_output.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ip6_icmp.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ip6_input.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ip6_output.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\mbuf.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\misc.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ncsi.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\ndp_table.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\sbuf.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\slirp.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\socket.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\state.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\stream.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\tcp_input.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\tcp_output.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\tcp_subr.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\tcp_timer.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\tftp.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\udp.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\udp6.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\util.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\version.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\libslirp\src\vmstate.c">
+      <Filter>Network Interface\libslirp\source</Filter>
+    </ClCompile>
+    <ClCompile Include="plus_tcp_hooks_winsim.c">
+      <Filter>Network Interface</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_Sockets.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_errno_TCP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP_Utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DNS_Globals.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DNS_Networking.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_TCP_WIN.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DNS.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_TCP_IP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DHCP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DNS_Cache.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\NetworkBufferManagement.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_ARP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\NetworkInterface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_TCP_Transmission.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP_Timers.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOSIPConfigDefaults.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP_Private.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_Stream_Buffer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_ICMP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DNS_Callback.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_TCP_State_Handling.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_TCP_Reception.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_UDP_IP.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_TCP_Utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\IPTraceMacroDefaults.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DNS_Parser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_dump_packets.h">
+      <Filter>Network Interface\tcp_utilities\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_netstat.h">
+      <Filter>Network Interface\tcp_utilities\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_mem_stats.h">
+      <Filter>Network Interface\tcp_utilities\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC\pack_struct_end.h">
+      <Filter>compiler_msvc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC\pack_struct_start.h">
+      <Filter>compiler_msvc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\sll.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\usb.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\vlan.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-bpf.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-namedb.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\remote-ext.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\bittypes.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\ip6_misc.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\Win32-Extensions.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\Packet32.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap-stdinc.h">
+      <Filter>Network Interface\winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\pcap.h">
+      <Filter>Network Interface\winpcap\include\pcap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\namedb.h">
+      <Filter>Network Interface\winpcap\include\pcap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\bpf.h">
+      <Filter>Network Interface\winpcap\include\pcap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\winpcap\include\pcap\bluetooth.h">
+      <Filter>Network Interface\winpcap\include\pcap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_BitConfig.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_DHCPv6.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IP_Common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Private.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Sockets.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv4_Utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Private.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Sockets.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_IPv6_Utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_ND.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_Routing.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\galloca.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\garray.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gasyncqueue.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gasyncqueueprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gatomic.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gbacktrace.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gbase64.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gbitlock.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gbookmarkfile.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gbsearcharray.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gbytes.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gcharset.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gcharsetprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gchecksum.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gconstructor.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gconvert.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gconvertprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gdataset.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gdatasetprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gdate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gdatetime.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gdir.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\genviron.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gerror.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gfileutils.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\ggettext.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\ghash.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\ghmac.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\ghook.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\ghostutils.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gi18n.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gi18n-lib.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\giochannel.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gjournal-private.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gkeyfile.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib_trace.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-autocleanups.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-init.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glibintl.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-object.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-private.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-typeof.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-unix.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glib-unixprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\glist.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmacros.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmain.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmain-internal.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmappedfile.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmarkup.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmem.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmessages.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gmirroringtable.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gnode.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\goption.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gpathbuf.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gpattern.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gpoll.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gprimes.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gprintf.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gprintfint.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gqsort.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gquark.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gqueue.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\grand.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\grcbox.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\grcboxprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\grefcount.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\grefstring.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gregex.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gscanner.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gscripttable.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gsequence.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gshell.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gslice.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gslist.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gspawn.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gspawn-private.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gstdio.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gstdioprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gstrfuncs.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gstring.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gstringchunk.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gstrvbuilder.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtestutils.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gthread.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gthreadpool.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gthreadprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtimer.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtimezone.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtrace-private.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtranslit-data.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtrashstack.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtree.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gtypes.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gunibreak.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gunichartables.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gunicode.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gunicodeprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gunicomp.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gunidecomp.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\guri.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\guriprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gutils.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gutilsprivate.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\guuid.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvalgrind.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvariant.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvariant-core.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvariant-internal.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvariant-serialiser.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvarianttype.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gvarianttypeinfo.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gversion.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gwakeup.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\gwin32.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\glib\valgrind.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\build\glib\glibconfig.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\build\glib\glib-visibility.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\build\glib\gversionmacros.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\glib\build\subprojects\pcre2-10.42\pcre2.h">
+      <Filter>Network Interface\libslirp\dependency\glib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\bootp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\debug.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\dhcpv6.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\if.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\ip.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\ip_icmp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\ip6.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\ip6_icmp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\libslirp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\main.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\mbuf.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\misc.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\ncsi-pkt.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\sbuf.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\slirp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\socket.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\stream.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\tcp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\tcp_timer.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\tcp_var.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\tcpip.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\tftp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\udp.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\util.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\libslirp\src\vmstate.h">
+      <Filter>Network Interface\libslirp\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\ThirdParty\glib\build\subprojects\pcre2-10.42\pcre2-8.lib">
+      <Filter>Network Interface\libslirp\dependency\glib\x86</Filter>
+    </Library>
+    <Library Include="..\..\ThirdParty\glib\build\subprojects\proxy-libintl\intl.lib">
+      <Filter>Network Interface\libslirp\dependency\glib\x86</Filter>
+    </Library>
+    <Library Include="..\..\ThirdParty\glib\build\glib\glib-2.0.lib">
+      <Filter>Network Interface\libslirp\dependency\glib\x86</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

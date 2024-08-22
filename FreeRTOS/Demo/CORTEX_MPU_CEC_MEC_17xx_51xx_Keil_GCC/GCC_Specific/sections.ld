@@ -20,8 +20,8 @@ MEMORY
 }
 
 /* Variables used by FreeRTOS-MPU. */
-_Privileged_Functions_Region_Size = 32K;
-_Privileged_Data_Region_Size = 512;
+_Privileged_Functions_Region_Size = 64K;
+_Privileged_Data_Region_Size = 32K;
 
 __FLASH_segment_start__ = ORIGIN( ROM );
 __FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( ROM );
@@ -85,28 +85,32 @@ SECTIONS
      * For Cortex-M devices, the beginning of the startup code is stored in
      * the .isr_vector section, which goes to ROM
      */
-	.isr_vector :
-	{
-		. = ALIGN(4);
-		_isr_vector = .;
-		KEEP(*(.isr_vector))
-	} >ROM
+    .isr_vector :
+    {
+        . = ALIGN(4);
+        _isr_vector = .;
+        KEEP(*(.isr_vector))
+    } >ROM
 
-	privileged_functions :
-	{
-		. = ALIGN(4);
-		*(privileged_functions)
-		
-		/* Non privileged code is after _Privileged_Functions_Region_Size. */
-		__privileged_functions_actual_end__ = .;
-		. = _Privileged_Functions_Region_Size;
-	} > ROM
+    privileged_functions :
+    {
+        . = ALIGN(4);
+        *(privileged_functions)
+
+        /* Non privileged code is after _Privileged_Functions_Region_Size. */
+        __privileged_functions_actual_end__ = .;
+        . = _Privileged_Functions_Region_Size;
+    } > ROM
 
 
     .text :
     {
         . = ALIGN(4);
 
+        /* Place the FreeRTOS System Calls first in the unprivileged region. */
+        __syscalls_flash_start__ = .;
+        *(freertos_system_calls)
+        __syscalls_flash_end__ = .;
 
         /*
          * This section is here for convenience, to store the
@@ -233,14 +237,14 @@ SECTIONS
     */
 
 
-	privileged_data :
-	{
-		*(privileged_data)
-		/* Non kernel data is kept out of the first _Privileged_Data_Region_Size
-		bytes of SRAM. */
-		__privileged_data_actual_end__ = .;
-		. = _Privileged_Data_Region_Size;
-	} > RAM
+    privileged_data :
+    {
+        *(privileged_data)
+        /* Non kernel data is kept out of the first _Privileged_Data_Region_Size
+        bytes of SRAM. */
+        __privileged_data_actual_end__ = .;
+        . = _Privileged_Data_Region_Size;
+    } > RAM
 
     /*
      * The initialised data section.
@@ -254,7 +258,7 @@ SECTIONS
         . = ALIGN(4);
 
         /* This is used by the startup code to initialise the .data section */
-        _sdata = . ;        	/* STM specific definition */
+        _sdata = . ;            /* STM specific definition */
         __data_start__ = . ;
         *(.data_begin .data_begin.*)
 
@@ -264,7 +268,7 @@ SECTIONS
         . = ALIGN(4);
 
         /* This is used by the startup code to initialise the .data section */
-        _edata = . ;        	/* STM specific definition */
+        _edata = . ;            /* STM specific definition */
         __data_end__ = . ;
 
     } >RAM

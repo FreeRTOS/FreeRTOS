@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -41,6 +41,9 @@
 #include "freertos_command_pool.h"
 #include "freertos_agent_message.h"
 
+/* Demo config include. */
+#include "demo_config.h"
+
 /*-----------------------------------------------------------*/
 
 #define QUEUE_NOT_INITIALIZED    ( 0U )
@@ -79,10 +82,8 @@ void Agent_InitializePool( void )
     if( initStatus == QUEUE_NOT_INITIALIZED )
     {
         memset( ( void * ) commandStructurePool, 0x00, sizeof( commandStructurePool ) );
-        commandStructMessageCtx.queue = xQueueCreateStatic( MQTT_COMMAND_CONTEXTS_POOL_SIZE,
-                                                       sizeof( MQTTAgentCommand_t * ),
-                                                       staticQueueStorageArea,
-                                                       &staticQueueStructure );
+        commandStructMessageCtx.queue = xQueueCreate( MQTT_COMMAND_CONTEXTS_POOL_SIZE,
+                                                      sizeof( MQTTAgentCommand_t * ) );
         configASSERT( commandStructMessageCtx.queue );
 
         /* Populate the queue. */

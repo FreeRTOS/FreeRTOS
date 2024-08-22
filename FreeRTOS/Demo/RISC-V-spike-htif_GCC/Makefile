@@ -34,8 +34,8 @@ CFLAGS  = -march=$(MARCH) -mabi=$(MABI) -mcmodel=medany \
 	-ffunction-sections \
 	-fdata-sections \
 	-fno-builtin-printf
-ASFLAGS = -march=$(MARCH) -mabi=$(MABI) -mcmodel=medany
 LDFLAGS = -nostartfiles \
+	-march=$(MARCH) -mabi=$(MABI) -mcmodel=medany \
 	-Xlinker --gc-sections \
 	-Xlinker --defsym=__stack_size=$(STACK_SIZE)
 
@@ -76,7 +76,7 @@ $(BUILD_DIR)/%$(XLEN).o: %.c Makefile
 
 $(BUILD_DIR)/%$(XLEN).o: %.S Makefile
 	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(ASFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 # Run lds through the C preprocessor, to replace BASE_ADDRESS with the actual
 # value. It might be simpler to use sed instead.

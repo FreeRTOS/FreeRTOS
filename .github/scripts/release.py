@@ -250,15 +250,7 @@ class KernelRelease(BaseRelease):
 
         print()
 
-    def updateVersionMacros(self, version_str):
-        info('Updating version macros in task.h for "%s"' % version_str)
 
-        # Extract major / minor / build from the version string.
-        ver = re.search(r'([\d.]+)', version_str).group(1)
-        (major, minor, build) = ver.split('.')
-        update_freertos_version_macros(os.path.join(self.repo_path, 'include', 'task.h'), version_str, major, minor, build)
-
-        self.commitChanges(self.commit_msg_prefix + 'Bump task.h version macros to "%s"' % version_str)
 
     def createReleaseZip(self):
         '''
@@ -333,31 +325,6 @@ class KernelRelease(BaseRelease):
 
     def autoRelease(self):
         info('Auto-releasing FreeRTOS Kernel V%s' % self.version)
-
-        # Determine if we need to set a separate version macros for the main branch
-        if (self.commit == 'HEAD') and len(self.main_br_version) > 0 and (self.main_br_version != self.version):
-            # Update version macros for main branch
-            self.updateVersionMacros(self.main_br_version)
-
-            # Push the branch
-            self.pushLocalCommits()
-
-            # Revert the last commit in our working git repo
-            self.local_repo.git.reset('--hard','HEAD^')
-
-        # Update the version macros
-        self.updateVersionMacros(self.version)
-
-        if (self.commit == 'HEAD') and (self.main_br_version == self.version):
-            # Share a task.h version number commit for main branch and release tag)
-            self.pushLocalCommits()
-
-        # When baselining off a non-HEAD commit, main is left unchanged by tagging a detached HEAD,
-        # applying the autocommits, tagging, and pushing the new tag data to remote.
-        # However in the detached HEAD state we don't have a branch to push to, so we skip
-
-        # Update the header in each c/assembly file
-        self.updateFileHeaderVersions(['FreeRTOS Kernel V','FreeRTOS Kernel <DEVELOPMENT BRANCH>'], 'FreeRTOS Kernel V%s' % self.version)
 
         self.pushTag()
 

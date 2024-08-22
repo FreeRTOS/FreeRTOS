@@ -1,0 +1,70 @@
+; NOTE: ARMv8-M MPU requires that each region must start on a 32 byte aligned
+; address and the size of a region must be a multiple of 32 bytes.
+;
+; Flash Layout
+;
+;  ---------------------
+; |   Privileged Code   |
+;  ---------------------
+; |    System Calls     |
+;  ---------------------
+; |  Unprivileged Code  |
+;  ---------------------
+;
+; RAM Layout
+;
+;  ---------------------
+; |   Privileged Data   |
+;  ---------------------
+; |  Unprivileged Data  |
+;  ---------------------
+
+LR_APP 0x00000000 ; load region
+{
+    ER_IROM_PRIVILEGED +0 ALIGN 32
+    {
+        *.o(RESET, +First)
+        *(InRoot$$Sections) ; All sections that must be in a root region
+        *(privileged_functions)
+    }
+
+    ER_IROM_PRIVILEGED_ALIGN +0 ALIGN 32 EMPTY 0x0
+    {
+    }
+
+    ER_IROM_FREERTOS_SYSTEM_CALLS +0 ALIGN 32
+    {
+        *(freertos_system_calls)
+    }
+
+    ER_IROM_FREERTOS_SYSTEM_CALLS_ALIGN +0 ALIGN 32 EMPTY 0x0
+    {
+    }
+
+    ER_IROM_UNPRIVILEGED +0 ALIGN 32
+    {
+        *(+RO)
+    }
+
+    ER_IROM_UNPRIVILEGED_ALIGN +0 ALIGN 32 EMPTY 0x0
+    {
+    }
+
+    ER_IRAM_PRIVILEGED 0x20000000 ALIGN 32
+    {
+        *(privileged_data)
+    }
+
+    ER_IRAM_PRIVILEGED_ALIGN +0 ALIGN 32 EMPTY 0x0
+    {
+    }
+
+    ER_IRAM_UNPRIVILEGED +0 ALIGN 32
+    {
+        *(+RW, +ZI)
+    }
+
+    ER_IRAM_UNPRIVILEGED_ALIGN +0 ALIGN 32 EMPTY 0x0
+    {
+    }
+}

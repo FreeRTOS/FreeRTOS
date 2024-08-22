@@ -63,9 +63,11 @@ AFLAGS=-mthumb         \
 #
 # The flags passed to the compiler.
 #
-CFLAGS=-mthumb         \
-       -mcpu=cortex-m3 \
-       -O2             \
+CFLAGS=-mthumb             \
+       -mcpu=cortex-m3     \
+       -O2                 \
+	   -fdata-sections     \
+	   -ffunction-sections \
        -MD
 
 #
@@ -81,7 +83,7 @@ LD=arm-none-eabi-ld
 #
 # The flags passed to the linker.
 #
-LDFLAGS= -Map gcc/out.map
+LDFLAGS= -Map gcc/out.map --gc-sections
 
 #
 # Get the location of libgcc.a from the GCC front-end.

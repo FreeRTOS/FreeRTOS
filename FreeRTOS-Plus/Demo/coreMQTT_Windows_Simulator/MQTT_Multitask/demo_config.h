@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -292,5 +292,11 @@ extern void vLoggingPrintf( const char * pcFormatString,
     #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
     #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 #endif
+
+/**
+ * @brief The number of command structures to allocate in the pool
+ * for the agent.
+ */
+#define MQTT_COMMAND_CONTEXTS_POOL_SIZE    10
 
 #endif /* DEMO_CONFIG_H */

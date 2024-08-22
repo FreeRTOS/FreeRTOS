@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -79,13 +79,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Server's root CA certificate for TLS authentication with S3.
  *
- * The Baltimore Cybertrust root CA certificate is often used for authentication
- * with S3. It can be found at:
- * https://baltimore-cybertrust-root.chain-demos.digicert.com/info/index.html.
- *
- * S3 has started migrating certificates to Amazon Trust Services. If
- * authentication errors persist, re-attempt the connection with an Amazon root
- * CA certificate: https://www.amazontrust.com/repository.
+ * The CA can be found at https://www.amazontrust.com/repository.
  *
  * @note This certificate should be PEM-encoded.
  *
@@ -94,7 +88,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  *
- * #define democonfigS3_ROOT_CA_PEM   "...insert here..." 
+ * #define democonfigS3_ROOT_CA_PEM   "...insert here..."
  */
 
 /**
@@ -109,7 +103,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "-----BEGIN CERTIFICATE-----\n"\
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
- * #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM   "...insert here..." 
+ * #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM   "...insert here..."
  */
 
 
@@ -120,9 +114,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * Must include the PEM header and footer:
  * "-----BEGIN CERTIFICATE-----
-" * "...base64 data...
-" * "-----END CERTIFICATE-----
-"
+ * " * "...base64 data...
+ * " * "-----END CERTIFICATE-----
+ * "
  *
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
  */
@@ -166,7 +160,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * while setting up AWS resources before running the demo.
  * Refer to the demo setup instructions in the README.md file
  * within the same directory as this file in the repository.
-
+ *
  * #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE   "...insert here..."
  */
 
@@ -207,7 +201,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 5000 )
+#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 10000 )
 
 /**
  * @brief The length in bytes of the user buffer.

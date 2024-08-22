@@ -4,7 +4,7 @@ TLS mutual authentication for use with this MQTT demo.
     a. Download and install [Git For Windows](https://git-scm.com/download/win).
        Most of you may already have this installed. Git For Windows provides an
        OpenSSL binary for generating certificates.
-    b. Open PowerShell and enter the following commands to generate TLS certificates:
+    b. Open PowerShell and enter the following commands to generate TLS certificates [Note: While creating the certificates make sure to not use same organization name for all the certificates to prevent "self-signed certificate" error.]:
       i.    cd "C:\Program Files\Git\usr\bin" # If Git is installed elsewhere, update the path.
       ii.   mkdir $home\Documents\certs
       iii.  .\openssl.exe req -x509 -nodes -sha256 -days 365 -newkey rsa:2048 -keyout $home\Documents\certs\ca.key -out $home\Documents\certs\ca.crt
@@ -13,16 +13,19 @@ TLS mutual authentication for use with this MQTT demo.
       vi.   .\openssl.exe genrsa -out $home\Documents\certs\client.key 2048
       vii.  .\openssl.exe req -new -out $home\Documents\certs\client.csr -key $home\Documents\certs\client.key
       viii. .\openssl.exe x509 -req -in $home\Documents\certs\client.csr -CA $home\Documents\certs\ca.crt -CAkey $home\Documents\certs\ca.key -CAcreateserial -out $home\Documents\certs\client.crt -days 365
+      ix.   [Optional]  .\openssl.exe verify -CAfile $home\Documents\certs\ca.crt $home\Documents\certs\server.crt # verify the server certificate is correctly signed
+      x.    [Optional]  .\openssl.exe verify -CAfile $home\Documents\certs\ca.crt $home\Documents\certs\client.crt # verify the client certificate is correctly signed
 2. Download Mosquitto from https://mosquitto.org/download/
 3. Install Mosquitto as a Windows service by running the installer.
 4. Go to the path where Mosquitto was installed. The default path is C:\Program Files\mosquitto.
-5. Update mosquitto.conf to have the following entries and don't forget to substitute your Windows username:
-    port 8883
+5. Update mosquitto.conf to have the following entries and don't forget to substitute your Windows username [Mosquitto Version 2.0.0 onwards]:
+    listener 8883
     cafile C:\Users\%Substitute Windows username%\Documents\certs\ca.crt
     certfile C:\Users\%Substitute Windows username%\Documents\certs\server.crt
     keyfile C:\Users\%Substitute Windows username%\Documents\certs\server.key
     require_certificate true
     tls_version tlsv1.2
+    allow_anonymous true
 6. Start the Mosquitto service.
    More details about running Mosquitto as a Windows service can be found at
    https://github.com/eclipse/mosquitto/blob/master/readme-windows.txt and

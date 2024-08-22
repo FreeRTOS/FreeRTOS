@@ -483,7 +483,7 @@
                 </option>
                 <option>
                     <name>AsmDefines</name>
-                    <state>portasmHANDLE_INTERRUPT=vApplicationHandleTrap</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>PreInclude</name>
@@ -553,7 +553,7 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
@@ -561,7 +561,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>RTOSDemo.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -569,7 +569,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -2008,5 +2008,8 @@
     </file>
     <file>
         <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\vector_table.S</name>
     </file>
 </project>

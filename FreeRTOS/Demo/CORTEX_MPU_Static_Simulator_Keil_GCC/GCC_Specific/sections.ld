@@ -6,8 +6,8 @@ MEMORY
 }
 
 /* Variables used by FreeRTOS-MPU. */
-_Privileged_Functions_Region_Size = 32K;
-_Privileged_Data_Region_Size = 4096;
+_Privileged_Functions_Region_Size = 64K;
+_Privileged_Data_Region_Size = 16K;
 
 __FLASH_segment_start__ = ORIGIN( ROM );
 __FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( ROM );
@@ -155,6 +155,13 @@ SECTIONS
         KEEP(*(.fini_array))
         PROVIDE_HIDDEN (__fini_array_end = .);
         . = ALIGN(4);
+
+        /* Set start of system calls to here */
+        __syscalls_flash_start__ = .;
+        /* Place all FreeRTOS System calls here */
+        *(freertos_system_calls)
+        __syscalls_flash_end__ = .;
+        /* Mark the end of the system calls */
 
         . = ALIGN(4);
 

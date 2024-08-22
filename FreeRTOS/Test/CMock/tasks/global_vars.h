@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202112.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202212.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,8 +23,8 @@
  * https://github.com/FreeRTOS
  *
  */
-#ifndef GBLOBAL_VARS_H
-#define GBLOBAL_VARS_H
+#ifndef GLOBAL_VARS_H
+#define GLOBAL_VARS_H
 
 #include "task.h"
 
@@ -71,22 +71,11 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
     #endif
 
     #if ( configGENERATE_RUN_TIME_STATS == 1 )
-        uint32_t ulRunTimeCounter; /*< Stores the amount of time the task has spent in the Running state. */
+        configRUN_TIME_COUNTER_TYPE ulRunTimeCounter; /*< Stores the amount of time the task has spent in the Running state. */
     #endif
 
-    #if ( configUSE_NEWLIB_REENTRANT == 1 )
-
-        /* Allocate a Newlib reent structure that is specific to this task.
-         * Note Newlib support has been included by popular demand, but is not
-         * used by the FreeRTOS maintainers themselves.  FreeRTOS is not
-         * responsible for resulting newlib operation.  User must be familiar with
-         * newlib and must provide system-wide implementations of the necessary
-         * stubs. Be warned that (at the time of writing) the current newlib design
-         * implements a system-wide malloc() that must be provided with locks.
-         *
-         * See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
-         * for additional information. */
-        struct  _reent xNewLib_reent;
+    #if ( configUSE_C_RUNTIME_TLS_SUPPORT == 1 )
+        configTLS_BLOCK_TYPE xTLSBlock; /**< Memory block used as Thread Local Storage (TLS) Block for the task. */
     #endif
 
     #if ( configUSE_TASK_NOTIFICATIONS == 1 )
@@ -294,22 +283,22 @@ typedef void (* port_yield_operation)( void );
         TEST_ASSERT_FALSE( vApplicationStackOverflowHook_called ); \
     } while( 0 )
 
-#define ASSERT_GET_IDLE_TASK_MEMORY_CALLED()           \
-    do {                                               \
-        TEST_ASSERT_TRUE( getIddleTaskMemory_called ); \
-        getIddleTaskMemory_called = false;             \
+#define ASSERT_GET_IDLE_TASK_MEMORY_CALLED()          \
+    do {                                              \
+        TEST_ASSERT_TRUE( getIdleTaskMemory_called ); \
+        getIdleTaskMemory_called = false;             \
     } while( 0 )
 
-#define ASSERT_GET_IDLE_TASK_MEMORY_NOT_CALLED()        \
-    do {                                                \
-        TEST_ASSERT_FALSE( getIddleTaskMemory_called ); \
+#define ASSERT_GET_IDLE_TASK_MEMORY_NOT_CALLED()       \
+    do {                                               \
+        TEST_ASSERT_FALSE( getIdleTaskMemory_called ); \
     } while( 0 )
 
 #define RESET_ALL_HOOKS()                             \
     do {                                              \
         vApplicationTickHook_called = false;          \
         vTaskDeletePre_called = false;                \
-        getIddleTaskMemory_called = false;            \
+        getIdleTaskMemory_called = false;             \
         port_yield_called = false;                    \
         port_enable_interrupts_called = false;        \
         port_disable_interrupts_called = false;       \
@@ -333,4 +322,4 @@ typedef void (* port_yield_operation)( void );
 #undef HOOK_DIAG
 #define HOOK_DIAG()
 
-#endif /* ifndef GBLOBAL_VARS_H */
+#endif /* ifndef GLOBAL_VARS_H */

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+    <project>
+        <path>$WS_DIR$\FreeRTOSDemo.ewp</path>
+    </project>
+
+  <batchBuild>
+    <batchDefinition>
+      <name>all</name>
+      <member>
+        <project>FreeRTOSDemo</project>
+        <configuration>Release</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>
+
+

@@ -20,5 +20,5 @@
             }
         }
     },
-    "terminal.integrated.defaultProfile.windows": "Cygwin", //    "terminal.integrated.defaultProfile.windows": "MSYS2",
+    "terminal.integrated.defaultProfile.windows": "MSYS2",
 }

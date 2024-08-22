@@ -114,10 +114,10 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationTickHook( void );
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize );
+                                    configSTACK_DEPTH_TYPE * pulIdleTaskStackSize );
 void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
-                                     uint32_t * pulTimerTaskStackSize );
+                                     configSTACK_DEPTH_TYPE * pulTimerTaskStackSize );
 
 #if ( projENABLE_TRACING == 1 )
 
@@ -392,7 +392,7 @@ void vAssertCalled( const char * const pcFileName,
  * used by the Idle task. */
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize )
+                                    configSTACK_DEPTH_TYPE * pulIdleTaskStackSize )
 {
     /* If the buffers to be provided to the Idle task are declared inside this
      * function then they must be declared static - otherwise they will be allocated on
@@ -420,7 +420,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
  * to provide the memory that is used by the Timer service task. */
 void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
-                                     uint32_t * pulTimerTaskStackSize )
+                                     configSTACK_DEPTH_TYPE * pulTimerTaskStackSize )
 {
     /* If the buffers to be provided to the Timer task are declared inside this
      * function then they must be declared static - otherwise they will be allocated on

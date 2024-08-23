@@ -33,15 +33,15 @@
 #include "task.h"
 #include "semphr.h"
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-#include "FreeRTOS_IP_Private.h"
-#include "FreeRTOS_UDP_IP.h"
-#include "FreeRTOS_DNS.h"
-#include "FreeRTOS_DHCP.h"
-#include "NetworkBufferManagement.h"
-#include "NetworkInterface.h"
+// /* FreeRTOS+TCP includes. */
+// #include "FreeRTOS_IP.h"
+// #include "FreeRTOS_Sockets.h"
+// #include "FreeRTOS_IP_Private.h"
+// #include "FreeRTOS_UDP_IP.h"
+// #include "FreeRTOS_DNS.h"
+// #include "FreeRTOS_DHCP.h"
+// #include "NetworkBufferManagement.h"
+// #include "NetworkInterface.h"
 
 /*
  * CBMC models a pointer as an object id and an offset into that

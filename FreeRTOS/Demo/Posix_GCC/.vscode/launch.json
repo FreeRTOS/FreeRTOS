@@ -31,6 +31,19 @@
             "preLaunchTask": "${defaultBuildTask}"
         },
         {
+            "name": "Launch GDB Cygwin",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/posix_demo",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "preLaunchTask": "${defaultBuildTask}"
+        },
+        {
             "name": "Launch GDB MSYS2",
             "type": "cppdbg",
             "request": "launch",

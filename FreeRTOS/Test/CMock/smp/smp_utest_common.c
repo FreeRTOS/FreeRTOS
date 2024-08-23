@@ -154,6 +154,14 @@ void vFakePortYieldCoreStubCallback( int xCoreID,
     }
 }
 
+void vFakePortYieldCoreAsyncStubCallback( int xCoreID,
+                                          int cmock_num_calls )
+{
+    ( void ) cmock_num_calls;
+
+    xCoreYields[ xCoreID ] = pdTRUE;
+}
+
 void vFakePortYieldStubCallback( int cmock_num_calls )
 {
     vTaskSwitchContext( xCurrentCoreId );
@@ -180,6 +188,34 @@ void vFakePortExitCriticalSectionCallback( int cmock_num_calls )
 void vSetCurrentCore( BaseType_t xCoreID )
 {
     xCurrentCoreId = xCoreID;
+}
+
+void vCheckAndExecuteAsyncCoreYield( BaseType_t xCoreID )
+{
+    BaseType_t xCoreInCritical = pdFALSE;
+    BaseType_t xPreviousCoreId = xCurrentCoreId;
+    int i;
+
+    if( xCoreYields[ xCoreID ] != pdFALSE )
+    {
+        /* Check if the lock is acquired by any core. */
+        for( i = 0; i < configNUMBER_OF_CORES; i++ )
+        {
+            if( ( xIsrLockCount[ i ] > 0 ) || ( xTaskLockCount[ i ] > 0 ) )
+            {
+                xCoreInCritical = pdTRUE;
+                break;
+            }
+        }
+
+        if( xCoreInCritical != pdTRUE )
+        {
+            /* No task is in the critical section. We can yield this core. */
+            xCurrentCoreId = xCoreID;
+            vTaskSwitchContext( xCurrentCoreId );
+            xCurrentCoreId = xPreviousCoreId;
+        }
+    }
 }
 
 static void vYieldCores( void )
@@ -265,6 +301,14 @@ void vFakePortReleaseTaskLockCallback( int cmock_num_calls )
     }
 }
 
+void vFakePortReleaseTaskLockAsyncCallback( int cmock_num_calls )
+{
+    ( void ) cmock_num_calls;
+
+    TEST_ASSERT_MESSAGE( xTaskLockCount[ xCurrentCoreId ] > 0, "xTaskLockCount[ xCurrentCoreId ] <= 0" );
+    xTaskLockCount[ xCurrentCoreId ]--;
+}
+
 portBASE_TYPE vFakePortEnterCriticalFromISRCallback( int cmock_num_calls )
 {
     portBASE_TYPE xSavedInterruptState;
@@ -279,6 +323,12 @@ void vFakePortExitCriticalFromISRCallback( portBASE_TYPE xSavedInterruptState,
     vTaskExitCriticalFromISR( xSavedInterruptState );
     /* Simulate yield cores when leaving the critical section. */
     vYieldCores();
+}
+
+void vFakePortExitCriticalFromISRAsyncCallback( portBASE_TYPE xSavedInterruptState,
+                                                int cmock_num_calls )
+{
+    vTaskExitCriticalFromISR( xSavedInterruptState );
 }
 
 /* ============================= Unity Fixtures ============================= */
@@ -340,6 +390,13 @@ void commonSetUp( void )
     xCurrentCoreId = 0;
     memset( xTaskLockCount, 0x00, sizeof( xTaskLockCount ) );
     memset( xIsrLockCount, 0x00, sizeof( xIsrLockCount ) );
+}
+
+void commonAsyncCoreYieldSetup( void )
+{
+    vFakePortYieldCore_StubWithCallback( vFakePortYieldCoreAsyncStubCallback );
+    vFakePortExitCriticalFromISR_StubWithCallback( vFakePortExitCriticalFromISRAsyncCallback );
+    vFakePortReleaseTaskLock_StubWithCallback( vFakePortReleaseTaskLockAsyncCallback );
 }
 
 void commonTearDown( void )

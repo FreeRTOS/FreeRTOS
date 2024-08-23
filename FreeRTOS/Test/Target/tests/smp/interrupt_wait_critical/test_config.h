@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,23 +24,35 @@
  *
  */
 
-int32_t publicTCPPrepareSend( FreeRTOS_Socket_t * pxSocket,
-                              NetworkBufferDescriptor_t ** ppxNetworkBuffer,
-                              UBaseType_t uxOptionsLength )
-{
-    prvTCPPrepareSend( pxSocket, ppxNetworkBuffer, uxOptionsLength );
-}
+#ifndef TEST_CONFIG_H
+#define TEST_CONFIG_H
 
-BaseType_t publicTCPHandleState( FreeRTOS_Socket_t * pxSocket,
-                                 NetworkBufferDescriptor_t ** ppxNetworkBuffer )
-{
-    prvTCPHandleState( pxSocket, ppxNetworkBuffer );
-}
+/* This file must be included at the end of the FreeRTOSConfig.h. It contains
+ * any FreeRTOS specific configurations that the test requires. */
 
-void publicTCPReturnPacket( FreeRTOS_Socket_t * pxSocket,
-                            NetworkBufferDescriptor_t * pxNetworkBuffer,
-                            uint32_t ulLen,
-                            BaseType_t xReleaseAfterSend )
-{
-    prvTCPReturnPacket( pxSocket, pxNetworkBuffer, ulLen, xReleaseAfterSend );
-}
+#ifdef configRUN_MULTIPLE_PRIORITIES
+    #undef configRUN_MULTIPLE_PRIORITIES
+#endif /* ifdef configRUN_MULTIPLE_PRIORITIES */
+
+#ifdef configUSE_TIME_SLICING
+    #undef configUSE_TIME_SLICING
+#endif /* ifdef configUSE_TIME_SLICING */
+
+#ifdef configUSE_PREEMPTION
+    #undef configUSE_PREEMPTION
+#endif /* ifdef configUSE_PREEMPTION */
+
+#define configRUN_MULTIPLE_PRIORITIES    1
+#define configUSE_TIME_SLICING           1
+#define configUSE_PREEMPTION             1
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Entry point for test runner to run interrupt task wait critical section test.
+ */
+void vRunInterruptWaitCriticalTest( void );
+
+/*-----------------------------------------------------------*/
+
+#endif /* ifndef TEST_CONFIG_H */

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202212.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright (C) 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,8 +24,50 @@
  *
  */
 
-eFrameProcessingResult_t publicProcessIPPacket( IPPacket_t * const pxIPPacket,
-                                                NetworkBufferDescriptor_t * const pxNetworkBuffer )
+/**
+ * @file task_delete_test_runner.c
+ * @brief The implementation of main function to start test runner task.
+ *
+ * Procedure:
+ *   - Initialize environment.
+ *   - Run the test case.
+ */
+
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* Unit testing support functions. */
+#include "unity.h"
+
+/* Pico includes. */
+#include "pico/multicore.h"
+#include "pico/stdlib.h"
+
+/*-----------------------------------------------------------*/
+
+static void prvTestRunnerTask( void * pvParameters );
+
+/*-----------------------------------------------------------*/
+
+static void prvTestRunnerTask( void * pvParameters )
 {
-    prvProcessIPPacket( pxIPPacket, pxNetworkBuffer );
+    ( void ) pvParameters;
+
+    /* Run test case. */
+    vRunTaskDeleteTest();
+
+    vTaskDelete( NULL );
 }
+/*-----------------------------------------------------------*/
+
+void vRunTest( void )
+{
+    xTaskCreate( prvTestRunnerTask,
+                 "testRunner",
+                 configMINIMAL_STACK_SIZE,
+                 NULL,
+                 configMAX_PRIORITIES - 1,
+                 NULL );
+}
+/*-----------------------------------------------------------*/

@@ -82,7 +82,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/jobs"
 
   - name: "wolfssl"
-    version: "v4.5.0-stable"
+    version: "v5.6.4-stable"
     repository:
       type: "git"
       url: "https://github.com/wolfSSL/wolfssl"

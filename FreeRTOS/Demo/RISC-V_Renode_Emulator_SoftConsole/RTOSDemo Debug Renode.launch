@@ -10,7 +10,7 @@
     <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.doStartGdbServer" value="false"/>
     <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.enableSemihosting" value="false"/>
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.firstResetType" value="init"/>
-    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.gdbClientOtherCommands" value="set mem inaccessible-by-default off&#13;&#10;set arch riscv:rv32"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.gdbClientOtherCommands" value="set mem inaccessible-by-default off&#13;&#10;set arch riscv:rv32&#13;&#10;set $target_riscv = 1"/>
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.gdbClientOtherOptions" value=""/>
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.gdbServerConnectionAddress" value=""/>
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.openocd.gdbServerExecutable" value="${openocd_path}/${openocd_executable}"/>

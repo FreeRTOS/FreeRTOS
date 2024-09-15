@@ -142,9 +142,8 @@ void HardFault_Handler( void )
         " mrseq r0, msp                                             \n"
         " mrsne r0, psp                                             \n"
         " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler2_address_const                            \n"
+        " ldr r2, =prvGetRegistersFromStack                         \n"
         " bx r2                                                     \n"
-        " handler2_address_const: .word prvGetRegistersFromStack    \n"
     );
 }
 

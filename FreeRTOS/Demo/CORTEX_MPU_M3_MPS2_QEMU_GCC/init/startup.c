@@ -134,9 +134,8 @@ void HardFault_Handler( void )
         " mrseq r0, msp                                             \n"
         " mrsne r0, psp                                             \n"
         " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler2_address_const                            \n"
+        " ldr r2, =prvGetRegistersFromStack                         \n"
         " bx r2                                                     \n"
-        " handler2_address_const: .word prvGetRegistersFromStack    \n"
     );
 }
 
@@ -149,9 +148,8 @@ void MemMang_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler3_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler3_address_const: .word vHandleMemoryFault                    \n"
     );
 }
 
@@ -163,9 +161,8 @@ void BusFault_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler4_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler4_address_const: .word vHandleMemoryFault                    \n"
     );
 }
 
@@ -177,9 +174,8 @@ void UsageFault_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler5_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler5_address_const: .word vHandleMemoryFault                    \n"
     );
 }
 
@@ -191,9 +187,8 @@ void Debug_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler6_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler6_address_const: .word vHandleMemoryFault                    \n"
     );
 }
 

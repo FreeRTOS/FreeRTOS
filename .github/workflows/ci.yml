@@ -94,7 +94,7 @@ jobs:
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         env:
           GIT_SHA:
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: doxygen.zip-${{ github.sha }}
           path: ./freertos/doxygen.zip
@@ -144,7 +144,7 @@ jobs:
           Upload memory size report as artifact (for main and
           release-candidate ONLY)
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: freertos-memory-estimates
           path: ./freertos_lts_memory_estimates.json

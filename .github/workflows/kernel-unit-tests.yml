@@ -28,12 +28,12 @@ jobs:
           make -C FreeRTOS/Test/CMock lcovhtml
           lcov --config-file FreeRTOS/Test/CMock/lcovrc --summary FreeRTOS/Test/CMock/build/cmock_test.info > FreeRTOS/Test/CMock/build/cmock_test_summary.txt
     - name: Archive code coverage data
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-data
         path: FreeRTOS/Test/CMock/build/cmock_test*
     - name: Archive code coverage html report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: FreeRTOS/Test/CMock/build/coverage
@@ -69,12 +69,12 @@ jobs:
           make -C FreeRTOS/Test/CMock lcovhtml
           lcov --config-file FreeRTOS/Test/CMock/lcovrc --summary FreeRTOS/Test/CMock/build/cmock_test.info > FreeRTOS/Test/CMock/build/cmock_test_summary.txt
     - name: Archive code coverage data
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-data
         path: FreeRTOS/Test/CMock/build/cmock_test*
     - name: Archive code coverage html report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: FreeRTOS/Test/CMock/build/coverage

@@ -122,13 +122,12 @@ void Default_Handler( void )
     __asm volatile
     (
         ".align 8                                \n"
-        " ldr r3, NVIC_INT_CTRL_CONST            \n" /* Load the address of the interrupt control register into r3. */
+        " ldr r3, =0xe000ed04                    \n" /* Load the address of the interrupt control register into r3. */
         " ldr r2, [r3, #0]                       \n" /* Load the value of the interrupt control register into r2. */
         " uxtb r2, r2                            \n" /* The interrupt number is in the least significant byte - clear all other bits. */
         "Infinite_Loop:                          \n" /* Sit in an infinite loop - the number of the executing interrupt is held in r2. */
         " b  Infinite_Loop                       \n"
-        ".align 4                                \n"
-        "NVIC_INT_CTRL_CONST: .word 0xe000ed04   \n"
+        " .ltorg                                 \n"
     );
 }
 
@@ -144,6 +143,7 @@ void HardFault_Handler( void )
         " ldr r1, [r0, #24]                                         \n"
         " ldr r2, =prvGetRegistersFromStack                         \n"
         " bx r2                                                     \n"
+        " .ltorg                                                    \n"
     );
 }
 

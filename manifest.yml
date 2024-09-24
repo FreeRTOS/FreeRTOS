@@ -96,14 +96,14 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
 
   - name: "glib"
-    version: "2.76.3"
+    version: "2.78.1"
     repository:
       type: "git"
       url:  "https://gitlab.gnome.org/GNOME/glib.git"
       path: "FreeRTOS-Plus/ThirdParty/glib"
 
   - name: "libslirp"
-    version: "177da3d"
+    version: "v4.7.0"
     repository:
       type: "git"
       url:  "https://gitlab.freedesktop.org/slirp/libslirp.git"
@@ -117,7 +117,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"
 
   - name: "ota"
-    version: "9a8395b"
+    version: "v4.0.0"
     repository:
       type: "git"
       url: "https://github.com/aws/ota-for-aws-iot-embedded-sdk"

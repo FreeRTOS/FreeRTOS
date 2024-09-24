@@ -129,7 +129,7 @@ is running `sudo nc -l 7` or `netcat -l 7` or `nc -l -p 7` depending on your OS)
 
 2. Start QEMU in the paused state waiting for GDB connection:
 ```shell
-   sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 \
+   sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -s -S \
    -kernel ./build/freertos_tcp_mps2_demo.axf \
    -monitor null -semihosting -semihosting-config enable=on,target=native -serial stdio -nographic \
    -netdev user,id=mynet0, -net nic,model=lan9118,netdev=mynet0 \

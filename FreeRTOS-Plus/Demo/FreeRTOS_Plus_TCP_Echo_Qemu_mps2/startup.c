@@ -111,15 +111,14 @@ void Default_Handler( void )
 {
     __asm volatile
     (
-        "Default_Handler: \n"
-        "    ldr r3, NVIC_INT_CTRL_CONST  \n"
+        "Default_Handler:\n"
+        "    ldr r3, =0xe000ed04\n"
         "    ldr r2, [r3, #0]\n"
         "    uxtb r2, r2\n"
         "Infinite_Loop:\n"
         "    b  Infinite_Loop\n"
         ".size  Default_Handler, .-Default_Handler\n"
-        ".align 4\n"
-        "NVIC_INT_CTRL_CONST: .word 0xe000ed04\n"
+        ".ltorg\n"
     );
 }
 
@@ -135,6 +134,7 @@ void Default_Handler2( void )
         " ldr r1, [r0, #24]                                         \n"
         " ldr r2, =prvGetRegistersFromStack                         \n"
         " bx r2                                                     \n"
+        " .ltorg                                                    \n"
     );
 }
 
@@ -219,6 +219,7 @@ __attribute__( ( naked ) ) void exit( int status )
         "movs r0, #0x18\n"   /* SYS_EXIT */
         "bkpt 0xab\n"
         "end: b end\n"
+        ".ltorg"
         );
 
     ( void ) status;

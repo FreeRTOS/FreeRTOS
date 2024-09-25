@@ -112,15 +112,14 @@ void Default_Handler( void )
 {
     __asm volatile
     (
-        "Default_Handler: \n"
-        "    ldr r3, NVIC_INT_CTRL_CONST  \n"
+        "Default_Handler:\n"
+        "    ldr r3, =0xe000ed04\n"
         "    ldr r2, [r3, #0]\n"
         "    uxtb r2, r2\n"
         "Infinite_Loop:\n"
         "    b  Infinite_Loop\n"
         ".size  Default_Handler, .-Default_Handler\n"
-        ".align 4\n"
-        "NVIC_INT_CTRL_CONST: .word 0xe000ed04\n"
+        ".ltorg\n"
     );
 }
 
@@ -136,6 +135,7 @@ void HardFault_Handler( void )
         " ldr r1, [r0, #24]                                         \n"
         " ldr r2, =prvGetRegistersFromStack                         \n"
         " bx r2                                                     \n"
+        " .ltorg                                                    \n"
     );
 }
 
@@ -150,6 +150,7 @@ void MemMang_Handler( void )
         " mrsne r0, psp                                                      \n"
         " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -163,6 +164,7 @@ void BusFault_Handler( void )
         " mrsne r0, psp                                                      \n"
         " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -176,6 +178,7 @@ void UsageFault_Handler( void )
         " mrsne r0, psp                                                      \n"
         " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -189,6 +192,7 @@ void Debug_Handler( void )
         " mrsne r0, psp                                                      \n"
         " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -246,6 +250,7 @@ void exit( int status )
         "movs r0, #0x18\n"   /* SYS_EXIT */
         "bkpt 0xab\n"
         "end: b end\n"
+        ".ltorg\n"
         );
 
     ( void ) status;

@@ -30,12 +30,12 @@ jobs:
     - name: Archive code coverage data
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-data
+        name: submodule-coverage-data
         path: FreeRTOS/Test/CMock/build/cmock_test*
     - name: Archive code coverage html report
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-report
+        name: submodule-coverage-report
         path: FreeRTOS/Test/CMock/build/coverage
   run-upstream:
     name: FreeRTOS-Kernel Main Branch
@@ -71,10 +71,10 @@ jobs:
     - name: Archive code coverage data
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-data
+        name: main-branch-coverage-data
         path: FreeRTOS/Test/CMock/build/cmock_test*
     - name: Archive code coverage html report
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-report
+        name: main-branch-coverage-report
         path: FreeRTOS/Test/CMock/build/coverage

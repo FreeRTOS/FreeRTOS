@@ -260,13 +260,7 @@
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hash.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hc128.c">
-      <Filter>wolfSSL\wolfcrypt</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hmac.c">
-      <Filter>wolfSSL\wolfcrypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\idea.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\integer.c">
@@ -300,9 +294,6 @@
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\pwdbased.c">
-      <Filter>wolfSSL\wolfcrypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\rabbit.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\random.c">
@@ -379,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfmath.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\kdf.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

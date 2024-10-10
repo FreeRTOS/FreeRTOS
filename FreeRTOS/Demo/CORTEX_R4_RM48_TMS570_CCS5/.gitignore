@@ -1,0 +1,9 @@
+# Build output
+RM48 without FPU/
+RM48 with FPU/
+TMS570 without FPU/
+TMS570 with FPU/
+
+# CCS/Eclipse user settings
+.settings/
+.launches/

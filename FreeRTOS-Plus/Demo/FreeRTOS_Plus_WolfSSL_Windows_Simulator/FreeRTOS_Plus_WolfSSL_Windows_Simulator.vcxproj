@@ -21,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_Libslirp|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -160,10 +160,9 @@ xcopy /y /d "..\..\ThirdParty\glib\build\subprojects\pcre2-10.42\pcre2-8-0.dll" 
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_low_mem.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_operations.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hash.c" />
-    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hc128.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hmac.c" />
-    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\idea.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\integer.c" />
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\kdf.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\logging.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\md2.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\md4.c" />
@@ -174,7 +173,6 @@ xcopy /y /d "..\..\ThirdParty\glib\build\subprojects\pcre2-10.42\pcre2-8-0.dll" 
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs7.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\poly1305.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\pwdbased.c" />
-    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\rabbit.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\random.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ripemd.c" />
     <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\rsa.c" />

@@ -31,5 +31,5 @@ jobs:
       uses: FreeRTOS/CI-CD-Github-Actions/formatting-bot@main
       continue-on-error: true
       with:
-        exclude-dirs: ethernet, drivers, FreeRTOS/Demo, FreeRTOS-Plus/Demo
+        exclude-dirs: ethernet, drivers, FreeRTOS/Demo
       

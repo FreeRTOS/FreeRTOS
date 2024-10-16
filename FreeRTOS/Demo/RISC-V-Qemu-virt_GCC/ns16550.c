@@ -64,7 +64,7 @@ static void writeb( uint8_t b, uintptr_t addr )
 
 void vOutNS16550( struct device *dev, unsigned char c )
 {
-	uintptr_t addr = dev->addr;
+	volatile uintptr_t addr = dev->addr;
 
 	while ( (readb( addr + REG_LSR ) & LSR_THRE) == 0 ) {
 		/* busy wait */

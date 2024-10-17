@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://www.github.com/FreeRTOS
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -54,12 +54,12 @@
 
 static uint8_t readb( uintptr_t addr )
 {
-	return *( (uint8_t *) addr );
+	return *( (volatile uint8_t *) addr );
 }
 
 static void writeb( uint8_t b, uintptr_t addr )
 {
-	*( (uint8_t *) addr ) = b;
+	*( (volatile uint8_t *) addr ) = b;
 }
 
 void vOutNS16550( struct device *dev, unsigned char c )

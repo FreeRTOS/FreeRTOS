@@ -1062,24 +1062,22 @@ static CK_RV p11_rsa_ctx_init( mbedtls_pk_context * pk,
         xResult = CKR_FUNCTION_FAILED;
     }
 
-    /*
-     * TODO: corePKCS11 does not allow exporting RSA public attributes.
-     * This function should be updated to properly initialize the
-     * mbedtls_rsa_context when this is addressed.
-     */
+    CK_ATTRIBUTE pxAttrs[ 8 ] =
+    {
+        { .type = CKA_MODULUS,          .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->N ) },
+        { .type = CKA_PUBLIC_EXPONENT,  .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->E ) },
+        { .type = CKA_PRIME_1,          .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->P ) },
+        { .type = CKA_PRIME_2,          .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->Q ) },
+        { .type = CKA_PRIVATE_EXPONENT, .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->D ) },
+        { .type = CKA_EXPONENT_1,       .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->DP ) },
+        { .type = CKA_EXPONENT_2,       .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->DQ ) },
+        { .type = CKA_COEFFICIENT,      .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->QP ) },
+    };
 
-    /* CK_ATTRIBUTE pxAttrs[ 2 ] = */
-    /* { */
-    /*     { .type = CKA_MODULUS, .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_PUBLIC_EXPONENT,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_PRIME_1,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_PRIME_2,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_EXPONENT_1,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_EXPONENT_2,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_COEFFICIENT,  .ulValueLen = 0, .pValue = NULL }, */
-    /* }; */
-
-    ( void ) pxMbedRsaCtx;
+    xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
+                                                   xPkHandle,
+                                                   pxAttrs,
+                                                   sizeof( pxAttrs ) / sizeof( CK_ATTRIBUTE ) );
 
     if( xResult == CKR_OK )
     {

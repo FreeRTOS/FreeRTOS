@@ -362,3 +362,63 @@ void test_macro_xQueueSend_blocking_locked( void )
 
     vQueueDelete( xQueue );
 }
+
+/**
+ * @brief Test xQueueUnblock to unblock a task waiting to receive from a queue.
+ * @coverage xQueueUnblock
+ */
+void test_xQueueUnblock_receive( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    /* Export for callbacks */
+    xQueueHandleStatic = xQueue;
+
+    xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
+    xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
+    uint32_t checkVal = INVALID_UINT32;
+
+    /* Add a task to the queue's WaitingToReceive event list */
+    td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
+
+    /* Unblock the task waiting to receive from the queue */
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueUnblock( xQueue ) );
+
+    /* Verify that the task was unblocked */
+    TEST_ASSERT_EQUAL( 0, listLIST_IS_EMPTY( &( xQueue->xTasksWaitingToReceive ) ) );
+
+    vQueueDelete( xQueue );
+}
+
+/**
+ * @brief Test xQueueUnblock to unblock a task waiting to send to a queue.
+ * @coverage xQueueUnblock
+ */
+void test_xQueueUnblock_send( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    /* Export for callbacks */
+    xQueueHandleStatic = xQueue;
+
+    xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
+    xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
+    uint32_t checkVal = INVALID_UINT32;
+
+    /* Add a task to the queue's WaitingToSend event list */
+    td_task_addFakeTaskWaitingToSendToQueue( xQueue );
+
+    /* Unblock the task waiting to send to the queue */
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueUnblock( xQueue ) );
+
+    /* Verify that the task was unblocked */
+    TEST_ASSERT_EQUAL( 0, listLIST_IS_EMPTY( &( xQueue->xTasksWaitingToSend ) ) );
+
+    vQueueDelete( xQueue );
+}

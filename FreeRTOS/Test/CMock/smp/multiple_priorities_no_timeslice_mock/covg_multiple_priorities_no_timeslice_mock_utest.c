@@ -417,13 +417,14 @@ void test_coverage_vTaskPrioritySet_running_state( void )
  */
 void test_coverage_prvYieldCore_core_id_ne_current_coreid( void )
 {
-    TCB_t task;
-    TCB_t task2;
+    TCB_t task = {0};
+    TCB_t task2 = {0};
     TaskHandle_t xTaskHandle;
 
-    task.xTaskRunState = 1;   /* running on core 1 */
-    task2.xTaskRunState = -2; /* running on core 2 taskTASK_YIELDING  */
+    task.xTaskRunState = 1;              /* running on core 1 */
+    task2.xTaskRunState = -2;            /* running on core 2 taskTASK_YIELDING  */
     xTaskHandle = &task;
+    xTaskHandle->xPreemptionDisable = 1; /* To make sure the vTaskPreemptionEnable() call goes through */
     pxCurrentTCBs[ 0 ] = &task;
     pxCurrentTCBs[ 1 ] = &task;
     pxCurrentTCBs[ 2 ] = &task2;
@@ -460,13 +461,14 @@ void test_coverage_prvYieldCore_core_id_ne_current_coreid( void )
  */
 void test_coverage_prvYieldCore_runstate_eq_yielding( void )
 {
-    TCB_t task;
-    TCB_t task2;
+    TCB_t task = {0};
+    TCB_t task2 = {0};
     TaskHandle_t xTaskHandle;
 
-    task.xTaskRunState = 1;   /* running on core 1 */
-    task2.xTaskRunState = -2; /* running on core 2 taskTASK_YIELDING  */
+    task.xTaskRunState = 1;              /* running on core 1 */
+    task2.xTaskRunState = -2;            /* running on core 2 taskTASK_YIELDING  */
     xTaskHandle = &task;
+    xTaskHandle->xPreemptionDisable = 1; /* To make sure the vTaskPreemptionEnable() call goes through */
     pxCurrentTCBs[ 0 ] = &task;
     pxCurrentTCBs[ 1 ] = &task2;
     pxCurrentTCBs[ 2 ] = &task2;

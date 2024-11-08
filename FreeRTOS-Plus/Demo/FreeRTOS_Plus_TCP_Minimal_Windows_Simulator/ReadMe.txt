@@ -23,6 +23,10 @@ The TCP client example included in the minimal project is described on the
 following URL:
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 
+The TCP server example included in the minimal project is described on the
+following URL:
+https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
+
 A description of the FreeRTOS+TCP source code directory is provided on the
 following URL:
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Networking_Tutorial_Source_Code_Organisation.html

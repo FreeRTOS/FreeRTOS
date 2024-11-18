@@ -5,5 +5,5 @@ Directories:
   Windows simulator for easy evaluation.  Be aware that FreeRTOS is much slower
   and not deterministic when executed in a simulated environment.
 
-+ See http://www.freertos.org/plus
++ See https://www.freertos.org/Documentation/03-Libraries/02-FreeRTOS-plus/01-Introduction
 

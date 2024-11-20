@@ -20,4 +20,4 @@
 + The **FreeRTOS-Plus/ThirdParty** directory contains third party libraries used by
   the demo applications in the FreeRTOS-Plus/Demo directory.
 
-+ See http://www.freertos.org/plus
++ See https://www.freertos.org/Documentation/03-Libraries/02-FreeRTOS-plus/01-Introduction

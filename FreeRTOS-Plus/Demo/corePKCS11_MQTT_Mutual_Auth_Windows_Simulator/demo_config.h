@@ -105,7 +105,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @note Port 443 requires use of the ALPN TLS extension with the ALPN protocol
  * name. When using port 8883, ALPN is not required.
  *
- * #define democonfigMQTT_BROKER_PORT    "...insert here..."
+ * #define democonfigMQTT_BROKER_PORT    ( insert here )
  */
 
 /**

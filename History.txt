@@ -1,5 +1,84 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS 202212.01 and FreeRTOS 202411.00 released November 2024
+
+    + Include LTS 3.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT,
+      corePKCS11, coreHTTP, coreJSON, AWS IoT Device Shadow, AWS IoT Jobs, AWS
+      IoT Device Defender, Backoff Algorithm, AWS IoT Fleet Provisioning,
+      coreSNTP, SigV4, and FreeRTOS Cellular Interface libraries:
+        * FreeRTOS Kernel V11.1.0
+        * FreeRTOS+TCP V4.2.2
+        * coreMQTT v2.3.1
+        * coreHTTP v3.1.1
+        * corePKCS11 v3.6.2
+        * coreJSON v3.3.0
+        * AWS IoT Device Shadow v1.4.1
+        * AWS IoT Jobs v1.5.1
+        * AWS IoT Device Defender v1.4.0
+        * Backoff Algorithm v1.4.1
+        * AWS IoT Fleet Provisioning v1.2.1
+        * AWS IoT Core MQTT File Streams 1.1.0
+        * coreSNTP v1.3.1
+        * SigV4 v1.3.0
+        * FreeRTOS Cellular Interface v1.4.0
+    + Include [Percepio Tracelyzer](https://github.com/percepio/TraceRecorderSource)
+      as a submodule.
+    + Update coreMQTT Agent library to v1.3.0.
+    + Update WolfSSL to version v5.6.4.
+    + Update MbedTLS to version 3.5.1.
+    + Update CMock to version 2.5.3.
+    + Update CBMC to version 5.95.1.
+    + Add support for static memory allocation in FreeRTOS-Plus-CLI. We thank
+      @tabarnakos for their contribution.
+    + Add ARMv7-R No_GIC Port Demo and ARMv7-R MPU Port Demos.
+    + Add FreeRTOS_Plus_TCP_IPv6_Demo Windows Simulator Demo.
+    + Add FreeRTOS SMP demos which earlier existed in a separate repository
+      FreeRTOS-SMP-Demos.
+    + Add GitHub Action to run CBMC proofs on every PR.
+    + Add GitHub Action to run FreeRTOS-Kernel and FreeRTOS-Plus-TCP demos on
+      every PR.
+    + Add SMP on-target tests.
+    + Add TLSv1.3 Support to WinSim Demos.
+    + Update documentation for FreeRTOS_PLUS_TCP_ECHO_QEMU_msp2 demo.
+    + Add picolibc support to the RISC-V_RV32_QEMU_VIRT_GCC demo. We thank
+      @Keith Packard for their contribution.
+    + Update CORTEX_MPU_M33F_Simulator_Keil_GCC demo to use latest CMSIS packs.
+      We thank @urutva for their contribution.
+    + Change network interface implementation from linux to libslirp for
+      FreeRTOS_Plus_TCP_Echo_Posix demo.
+    + Fix configMAX_SYSCALL_INTERRUPT_PRIORITY value for CORTEX_MPS2_QEMU_IAR_GCC
+      demo. We thank @soares-sergio for their contribution.
+    + Fix configPRIO_BITS and configMAX_SYSCALL_INTERRUPT_PRIORITY values for
+      CORTEX_MPU_M23_Nuvoton_NuMaker_PFM_M2351_IAR_GCC demo. We thank @urutva
+      for their contribution.
+    + Fix configCPU_CLOCK_HZ for RISC-V-Qemu-virt_GCC demo. We thank @wly3155
+      for their contribution.
+    + Fix warnings and missing debug info in RISC-V_RV32_QEMU_VIRT_GCC demo.
+      We thank @e14002270 for their contribution.
+    + Fix CMock pointer comparison policy. We thank @Moral-Hao for their
+      contribution.
+    + Disable configCHECK_HANDLER_INSTALLATION for XMC1000 demo as XMC1000 has
+      a ROM-based vector table and therefore, does install OS handlers directly.
+      We thank @jefftenney for their contribution.
+    + Remove portasmHANDLE_INTERRUPT from the RISC-V_RV32_QEMU_VIRT_GCC demo as
+      it is no longer needed. We thank @tony2037 for their contribution.
+    + Fix build warnings and runtime issues in msp430_GCC demo. We thank
+      @Forty-Bot for their contribution.
+    + Remove not needed variable from FreeRTOS+CLI demo. We thank @dougwfoster
+      for their contribution.
+    + Fix TickType_t width for Visual Studio demos. We thank @watsk for their
+      contribution.
+    + Fix compiler errors for WIN32-MingW demo. We thank @watsk for their
+      contribution.
+    + Cleanups in QEMU and POSIX simulator demos. We thank @laroche for their
+      contribution.
+    + Fix AbortDelay Tests in release build. We thank @NikJen26 for their
+      contribution.
+
+Changes between FreeRTOS 202212.00 and FreeRTOS 202212.01 released March 2023
+    + Fix FreeRTOS-Plus demos to use the configured IP addresses in absence of a DHCP server or
+          while using static IP configuration.
+
 Changes between FreeRTOS 202112.00 and FreeRTOS 202212.00 released December 2022
 
 	+ Released LTS 2.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,

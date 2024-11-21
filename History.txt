@@ -2,7 +2,7 @@ Documentation and download available at https://www.FreeRTOS.org/
 
 Changes between FreeRTOS 202212.01 and FreeRTOS 202411.00 released November 2024
 
-    + Include LTS 3.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT,
+    + Include 202406-LTS versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT,
       corePKCS11, coreHTTP, coreJSON, AWS IoT Device Shadow, AWS IoT Jobs, AWS
       IoT Device Defender, Backoff Algorithm, AWS IoT Fleet Provisioning,
       coreSNTP, SigV4, and FreeRTOS Cellular Interface libraries:
@@ -81,7 +81,7 @@ Changes between FreeRTOS 202212.00 and FreeRTOS 202212.01 released March 2023
 
 Changes between FreeRTOS 202112.00 and FreeRTOS 202212.00 released December 2022
 
-	+ Released LTS 2.0 versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,
+	+ Released 202210-LTS versions of FreeRTOS Kernel, FreeRTOS+TCP, coreMQTT, corePKCS11,
 	  coreHTTP, coreJSON, AWS IoT Over-the-air-Updates (OTA), AWS IoT Device Shadow, AWS IoT Jobs,
 	  AWS IoT Device Defender, Backoff Algorithm, AWS IoT Fleet Provisioning, coreSNTP,
 	  SigV4, and FreeRTOS Cellular Interface libraries

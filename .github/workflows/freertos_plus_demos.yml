@@ -1051,10 +1051,19 @@ jobs:
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "
 
+      - name: Query device IP address
+        id: get-ip
+        run: |
+          # Query the device's IP address
+          SERVER_IP="$(ip addr show | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | cut -d/ -f1 | head -n 1)"
+          echo "Device IP address: $SERVER_IP"
+          echo "server_ip=\"$SERVER_IP\"" >> $GITHUB_ENV
+
       - name: Start localhost Echo server
         id: echo-server
-        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-echo-server@main
+        uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-echo-server@main
         with:
+          host: ${{ env.server_ip }}
           port_number: 5000
 
       - env:
@@ -1067,6 +1076,8 @@ jobs:
           echo -e "::group::${{ env.stepName }}"
           sed -i -z "s/define[[:space:]]*echoECHO_PORT[[:space:]]*([[:space:]]*[0-9]\+[[:space:]]*)/define echoECHO_PORT ( 5000 )/g" TCPEchoClient_SingleTasks.c
           sed -i -z "s/int[[:space:]]*main[[:space:]]*([[:space:]]*void[[:space:]]*)\n{/int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );/g" main.c
+          sed -i "s/^#define configECHO_SERVER_ADDR .*/#define configECHO_SERVER_ADDR ${{ env.server_ip }}/" FreeRTOSConfig.h
+          git diff
           make -j TRACE_ON_ENTER=0
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "

@@ -168,10 +168,7 @@ extern void vAssertCalled( const char * const pcFileName,
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#define configECHO_SERVER_ADDR0    127
-#define configECHO_SERVER_ADDR1    0
-#define configECHO_SERVER_ADDR2    0
-#define configECHO_SERVER_ADDR3    1
+#define configECHO_SERVER_ADDR "172.31.69.236"
 
 /* Default MAC address configuration. The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet/WiFi data

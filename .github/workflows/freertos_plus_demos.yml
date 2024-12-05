@@ -446,10 +446,20 @@ jobs:
         id: generate-credentials
         uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
 
+      - name: Query device IP address
+        id: get-ip
+        run: |
+          # Query the device's IP address
+          $SERVER_IP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notmatch '127.0.0.1' } | Select-Object -First 1 -ExpandProperty IPAddress)
+          Write-Host "Device IP address: $SERVER_IP"
+          echo "server_ip=$SERVER_IP" >> $env:GITHUB_ENV
+        shell: pwsh
+
       - name: Start localhost MQTT broker
         id: mqtt-broker
-        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-mqtt-broker@main
+        uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-mqtt-broker@main
         with:
+          host_address: ${{ env.server_ip }}
           root-ca-cert-path:
             ${{ steps.generate-credentials.outputs.root-ca-cert-path }}
           server-priv-key-path:
@@ -475,7 +485,7 @@ jobs:
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >> demo_config.h
-          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "${{ env.server_ip }}"' >> demo_config.h
           echo '#define democonfigMQTT_BROKER_PORT ( 1883 )' >> demo_config.h
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "
@@ -521,7 +531,7 @@ jobs:
           sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.root-ca-cert-path }} >> root_ca_cert.txt
           sed '$ s/.$//' root_ca_cert.txt >> demo_config.h
           echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
-          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "${{ env.server_ip }}"' >> demo_config.h
           echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
           sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
           exitStatus=$?
@@ -575,7 +585,7 @@ jobs:
           sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
           sed '$ s/.$//' device_priv_key.txt >> demo_config.h
           echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
-          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "${{ env.server_ip }}"' >> demo_config.h
           echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
           sed -i -z "s/define[[:space:]]*democonfigDISABLE_SNI[[:space:]]*([[:space:]]*[a-zA-Z0-9]\+[[:space:]]*)/define democonfigDISABLE_SNI ( pdTRUE )/g" demo_config.h
           echo "::endgroup::"
@@ -621,7 +631,7 @@ jobs:
           echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' >> demo_config.h
           echo '  #define DEMO_CONFIG_H_TEST_BUILD' >> demo_config.h
           echo '  #define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >> demo_config.h
-          echo '  #define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '  #define democonfigMQTT_BROKER_ENDPOINT "${{ env.server_ip }}"' >> demo_config.h
           echo '  #define democonfigMQTT_BROKER_PORT ( 1883 )' >> demo_config.h
           echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' >> demo_config.h
           echo "::endgroup::"
@@ -665,7 +675,7 @@ jobs:
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >> demo_config.h
-          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "${{ env.server_ip }}"' >> demo_config.h
           echo '#define democonfigMQTT_BROKER_PORT ( 1883 )' >> demo_config.h
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "
@@ -710,7 +720,7 @@ jobs:
           sed 's/.*/"&\\n"\\/' ${{ steps.generate-credentials.outputs.device-priv-key-path }} >> device_priv_key.txt
           sed '$ s/.$//' device_priv_key.txt >> demo_config.h
           echo '#define democonfigCLIENT_IDENTIFIER "mqtt_demo_test"' >>  demo_config.h
-          echo '#define democonfigMQTT_BROKER_ENDPOINT "127.0.0.1"' >> demo_config.h
+          echo '#define democonfigMQTT_BROKER_ENDPOINT "${{ env.server_ip }}"' >> demo_config.h
           echo '#define democonfigMQTT_BROKER_PORT ( 8883 )' >> demo_config.h
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "

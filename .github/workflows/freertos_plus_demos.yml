@@ -1198,10 +1198,20 @@ jobs:
             exit 1
           }
 
+      - name: Query device IP address
+        id: get-ip
+        run: |
+          # Query the device's IP address
+          $SERVER_IP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notmatch '127.0.0.1' } | Select-Object -First 1 -ExpandProperty IPAddress)
+          Write-Host "Device IP address: $SERVER_IP"
+          echo "server_ip=$SERVER_IP" >> $env:GITHUB_ENV
+        shell: pwsh
+
       - name: Start localhost Echo server
         id: echo-server
-        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-echo-server@main
+        uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-echo-server@main
         with:
+          host_address: ${{ env.server_ip }}
           port_number: 5000
 
       - env:
@@ -1216,7 +1226,7 @@ jobs:
           $newContent = $content -replace '#define\s+echoECHO_PORT.*', '#define echoECHO_PORT	( 5000 )'
           $newContent | Set-Content -Path 'DemoTasks\TCPEchoClient_SingleTasks.c'
           $content = Get-Content -Path 'tcp_echo_config.h' -Raw
-          $newContent = $content -replace '#define\s+configECHO_SERVER_ADDR.*', '#define configECHO_SERVER_ADDR  "127.0.0.1"'
+          $newContent = $content -replace '#define\s+configECHO_SERVER_ADDR.*', '#define configECHO_SERVER_ADDR  "${{ env.server_ip }}"'
           $newContent | Set-Content -Path 'tcp_echo_config.h'
           $content = Get-Content -Path 'main.c' -Raw
           $newContent = $content -replace 'int\s+main(.*?)void(.*?)\r?\n\s*{', 'int main( void ){setvbuf( stdout, NULL, _IONBF, 0 );'

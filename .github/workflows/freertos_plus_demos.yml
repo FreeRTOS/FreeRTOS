@@ -1063,7 +1063,7 @@ jobs:
         id: echo-server
         uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-echo-server@main
         with:
-          host: ${{ env.server_ip }}
+          host_address: ${{ env.server_ip }}
           port_number: 5000
 
       - env:

@@ -111,7 +111,7 @@
 /* This demo allows for users to perform actions with the keyboard. */
 #define mainNO_KEY_PRESS_VALUE             ( -1 )
 #define mainRESET_TIMER_KEY                ( 'r' )
-
+#define mainINTERRUPT_NUMBER 3
 /*-----------------------------------------------------------*/
 
 /*
@@ -119,7 +119,9 @@
  */
 static void prvQueueReceiveTask( void * pvParameters );
 static void prvQueueSendTask( void * pvParameters );
-
+static void prvHanlderTask(void* pvParameters);
+static void prvGenInterruptTask(void* pvParameters);
+static uint32_t ulExampleInterruptHandler(void);
 /*
  * The callback function executed when the software timer expires.
  */
@@ -133,6 +135,7 @@ static QueueHandle_t xQueue = NULL;
 /* A software timer that is started from the tick hook. */
 static TimerHandle_t xTimer = NULL;
 
+static SemaphoreHandle_t xBinary;
 /*-----------------------------------------------------------*/
 
 /*** SEE THE COMMENTS AT THE TOP OF THIS FILE ***/
@@ -144,19 +147,28 @@ void main_blinky( void )
 
     /* Create the queue. */
     xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
+    // Create binary semaphore
+    xBinary = xSemaphoreCreateBinary();
 
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this
          * file. */
-        xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
-                     "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-                     configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task. */
-                     NULL,                            /* The parameter passed to the task - not used in this simple case. */
-                     mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
-                     NULL );                          /* The task handle is not required, so NULL is passed. */
+        //xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
+        //             "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+        //             configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task. */
+        //             NULL,                            /* The parameter passed to the task - not used in this simple case. */
+        //             mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
+        //             NULL );                          /* The task handle is not required, so NULL is passed. */
 
-        xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+        //xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+
+        // prvGenInterruptTask generates an interrupt every 500ms to trigger ulExampleInterruptHandler.
+        // ulExampleInterruptHandler gives xBinary which allows prvHanlderTask to switch from delay list to ready list.
+        // prvHanlderTask takes care of deferred interrupt handling.
+        xTaskCreate(prvHanlderTask, "prvHanlderTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+        xTaskCreate(prvGenInterruptTask, "prvGenInterruptTask", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+        vPortSetInterruptHandler(mainINTERRUPT_NUMBER, ulExampleInterruptHandler);
 
         /* Create the software timer, but don't start it yet. */
         xTimer = xTimerCreate( "Timer",                     /* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
@@ -165,7 +177,7 @@ void main_blinky( void )
                                NULL,                        /* The timer's ID is not used. */
                                prvQueueSendTimerCallback ); /* The function executed when the timer expires. */
 
-        xTimerStart( xTimer, 0 );                           /* The scheduler has not started so use a block time of 0. */
+        //xTimerStart( xTimer, 0 );                           /* The scheduler has not started so use a block time of 0. */
 
         /* Start the tasks and timer running. */
         vTaskStartScheduler();
@@ -181,6 +193,42 @@ void main_blinky( void )
     }
 }
 /*-----------------------------------------------------------*/
+static uint32_t ulExampleInterruptHandler(void)
+{
+    BaseType_t xHigherPriorityTaskWoken;
+    /* The xHigherPriorityTaskWoken parameter must be initialized to
+    pdFALSE as it will get set to pdTRUE inside the interrupt safe
+    API function if a context switch is required. */
+    xHigherPriorityTaskWoken = pdFALSE;
+    /* 'Give' the semaphore to unblock the task, passing in the address of
+    xHigherPriorityTaskWoken as the interrupt safe API function's
+    pxHigherPriorityTaskWoken parameter. */
+    printf("  Give (Send) semaphore +++\n");
+    xSemaphoreGiveFromISR(xBinary, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    printf("  Give (Send) semaphore ---\n");
+}
+
+static void prvHanlderTask(void* pvParameters)
+{
+    for (;;)
+    {
+        printf("xBinary = %d\n", uxSemaphoreGetCount(xBinary));
+        xSemaphoreTake(xBinary, portMAX_DELAY);
+        printf("Deferred Interrupt Handling\n");
+    }
+}
+
+static void prvGenInterruptTask(void* pvParameters)
+{
+    for (;;)
+    {
+        vTaskDelay(pdMS_TO_TICKS(500UL));
+        printf("Generate Interrupt +++\n");
+        vPortGenerateSimulatedInterrupt(mainINTERRUPT_NUMBER);
+        printf("Generate Interrupt ---\n");
+    }
+}
 
 static void prvQueueSendTask( void * pvParameters )
 {

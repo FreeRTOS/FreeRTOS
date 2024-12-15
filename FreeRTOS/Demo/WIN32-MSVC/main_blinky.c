@@ -111,7 +111,7 @@
 /* This demo allows for users to perform actions with the keyboard. */
 #define mainNO_KEY_PRESS_VALUE             ( -1 )
 #define mainRESET_TIMER_KEY                ( 'r' )
-#define mainINTERRUPT_NUMBER 3
+#define mainINTERRUPT_NUMBER 4
 /*-----------------------------------------------------------*/
 
 /*
@@ -122,6 +122,7 @@ static void prvQueueSendTask( void * pvParameters );
 static void prvHanlderTask(void* pvParameters);
 static void prvGenInterruptTask(void* pvParameters);
 static uint32_t ulExampleInterruptHandler(void);
+static void DeferredHandler(void* pvParameter1, uint32_t ulParameter2);
 /*
  * The callback function executed when the software timer expires.
  */
@@ -131,11 +132,20 @@ static void prvQueueSendTimerCallback( TimerHandle_t xTimerHandle );
 
 /* The queue used by both tasks. */
 static QueueHandle_t xQueue = NULL;
+static QueueHandle_t xIntQueue = NULL;
+static QueueHandle_t xStrQueue = NULL;
 
 /* A software timer that is started from the tick hook. */
 static TimerHandle_t xTimer = NULL;
 
-static SemaphoreHandle_t xBinary;
+static SemaphoreHandle_t xBinary, xCounting;
+static enum {
+    BinarySemaphore = 1,
+    CountingSemaphore,
+    CentralizedDefer,
+    ISRSendData
+} DemoType;
+
 /*-----------------------------------------------------------*/
 
 /*** SEE THE COMMENTS AT THE TOP OF THIS FILE ***/
@@ -147,8 +157,14 @@ void main_blinky( void )
 
     /* Create the queue. */
     xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
+    // Create an integer queue of 5 items
+    xIntQueue = xQueueCreate(5, sizeof(uint32_t));
+    xStrQueue = xQueueCreate(5, sizeof(char *));
     // Create binary semaphore
     xBinary = xSemaphoreCreateBinary();
+    // Create counting semaphore
+    xCounting = xSemaphoreCreateCounting(5, 0);
+    DemoType = ISRSendData;
 
     if( xQueue != NULL )
     {
@@ -166,9 +182,9 @@ void main_blinky( void )
         // prvGenInterruptTask generates an interrupt every 500ms to trigger ulExampleInterruptHandler.
         // ulExampleInterruptHandler gives xBinary which allows prvHanlderTask to switch from delay list to ready list.
         // prvHanlderTask takes care of deferred interrupt handling.
-        xTaskCreate(prvHanlderTask, "prvHanlderTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-        xTaskCreate(prvGenInterruptTask, "prvGenInterruptTask", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-        vPortSetInterruptHandler(mainINTERRUPT_NUMBER, ulExampleInterruptHandler);
+        xTaskCreate(prvHanlderTask, "prvHanlderTask", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+        xTaskCreate(prvGenInterruptTask, "prvGenInterruptTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+        vPortSetInterruptHandler(mainINTERRUPT_NUMBER, (void *)ulExampleInterruptHandler);
 
         /* Create the software timer, but don't start it yet. */
         xTimer = xTimerCreate( "Timer",                     /* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
@@ -195,6 +211,9 @@ void main_blinky( void )
 /*-----------------------------------------------------------*/
 static uint32_t ulExampleInterruptHandler(void)
 {
+    static uint32_t value = 1;
+    int temp;
+    static char *pStr[] = { "String 0", "String 1", "String 2", "String 3", "String 4" };
     BaseType_t xHigherPriorityTaskWoken;
     /* The xHigherPriorityTaskWoken parameter must be initialized to
     pdFALSE as it will get set to pdTRUE inside the interrupt safe
@@ -203,30 +222,96 @@ static uint32_t ulExampleInterruptHandler(void)
     /* 'Give' the semaphore to unblock the task, passing in the address of
     xHigherPriorityTaskWoken as the interrupt safe API function's
     pxHigherPriorityTaskWoken parameter. */
-    printf("  Give (Send) semaphore +++\n");
-    xSemaphoreGiveFromISR(xBinary, &xHigherPriorityTaskWoken);
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-    printf("  Give (Send) semaphore ---\n");
+    printf("[ulExampleInterruptHandler]  Give (Send) semaphore +++\n");
+    switch (DemoType)
+    {
+        case BinarySemaphore:
+            xSemaphoreGiveFromISR(xBinary, &xHigherPriorityTaskWoken);
+            break;
+        case CountingSemaphore:
+            // Generate 3 events
+            xSemaphoreGiveFromISR(xCounting, &xHigherPriorityTaskWoken);
+            xSemaphoreGiveFromISR(xCounting, &xHigherPriorityTaskWoken);
+            xSemaphoreGiveFromISR(xCounting, &xHigherPriorityTaskWoken);
+            break;
+        case CentralizedDefer:
+            xTimerPendFunctionCallFromISR(DeferredHandler, NULL, value, &xHigherPriorityTaskWoken);
+            value++;
+            printf("[ulExampleInterruptHandler]  Send tmrCOMMAND_EXECUTE_CALLBACK to timer daemon\n");
+            break;
+        case ISRSendData:
+            // Receive all items from xIntQueue
+            while (xQueueReceiveFromISR(xIntQueue, &temp, &xHigherPriorityTaskWoken) != pdFAIL)
+            {
+                xQueueSendFromISR(xStrQueue, &pStr[temp], &xHigherPriorityTaskWoken);
+                printf("[ulExampleInterruptHandler] Send String \"%s\"\n", pStr[temp]);
+            }
+            break;
+        default:
+            break;
+    }
+    printf("[ulExampleInterruptHandler]  Give (Send) semaphore xHigherPriorityTaskWoken %lld ---\n", xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken); // For real HW platform, vTaskSwitchContext is performed.
 }
 
+static void DeferredHandler(void *pvParameter1, uint32_t ulParameter2)
+{
+    printf("  Timer daemon runs DeferredHandler ulParameter2 %u\n", ulParameter2);
+}
+
+// Handle deferred interrupt
 static void prvHanlderTask(void* pvParameters)
 {
+    char *pStr;
     for (;;)
     {
-        printf("xBinary = %d\n", uxSemaphoreGetCount(xBinary));
-        xSemaphoreTake(xBinary, portMAX_DELAY);
-        printf("Deferred Interrupt Handling\n");
+        switch (DemoType)
+        {
+            case BinarySemaphore:
+                printf("[prvHanlderTask] xBinary = %lld\n", uxSemaphoreGetCount(xBinary));
+                xSemaphoreTake(xBinary, portMAX_DELAY);
+                printf("[prvHanlderTask] Deferred Interrupt Handling\n");
+                break;
+            case CountingSemaphore:
+                printf("[prvHanlderTask] xCounting = %lld\n", uxSemaphoreGetCount(xCounting));
+                xSemaphoreTake(xCounting, portMAX_DELAY);
+                printf("[prvHanlderTask] Deferred Interrupt Handling\n");
+                break;
+            case ISRSendData:
+                while (xQueueReceive(xStrQueue, &pStr, pdMS_TO_TICKS(100UL)) == pdTRUE)
+                {
+                    printf("[prvHanlderTask] Receive string \"%s\"\n", pStr);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
 
 static void prvGenInterruptTask(void* pvParameters)
 {
+    int i;
     for (;;)
     {
         vTaskDelay(pdMS_TO_TICKS(500UL));
-        printf("Generate Interrupt +++\n");
-        vPortGenerateSimulatedInterrupt(mainINTERRUPT_NUMBER);
-        printf("Generate Interrupt ---\n");
+        switch (DemoType)
+        {
+            case ISRSendData:
+                // Send 5 items to xIntQueue
+                for (i = 0; i < 5; i++)
+                    xQueueSend(xIntQueue, &i, 0);
+                printf("[prvGenInterruptTask] Send 5 items to xIntQueue\n");
+            case BinarySemaphore:
+            case CountingSemaphore:
+            case CentralizedDefer:
+                printf("[prvGenInterruptTask] Generate Interrupt +++\n");
+                vPortGenerateSimulatedInterrupt(mainINTERRUPT_NUMBER);
+                printf("[prvGenInterruptTask] Generate Interrupt ---\n");
+                break;
+            default:
+                break;
+        }
     }
 }
 

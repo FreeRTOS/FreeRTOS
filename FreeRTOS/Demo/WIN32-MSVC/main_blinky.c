@@ -140,12 +140,22 @@ static TimerHandle_t xTimer = NULL;
 
 static SemaphoreHandle_t xBinary, xCounting;
 static enum {
+    MinDemoType,
     BinarySemaphore = 1,
     CountingSemaphore,
     CentralizedDefer,
-    ISRSendData
+    ISRSendData,
+    MaxDemoType
 } DemoType;
 
+static char *pStrDemoName[] = {
+    "MinDemoType",
+    "BinarySemaphore",
+    "CountingSemaphore",
+    "CentralizedDefer",
+    "ISRSendData",
+    "MaxDemoType"
+};
 /*-----------------------------------------------------------*/
 
 /*** SEE THE COMMENTS AT THE TOP OF THIS FILE ***/
@@ -178,7 +188,13 @@ void main_blinky( void )
         //             NULL );                          /* The task handle is not required, so NULL is passed. */
 
         //xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
-
+        printf("Choose Demo Type: \n");
+        for (int i = BinarySemaphore; i < MaxDemoType; i++)
+        {
+            printf("  [%d]  %s\n", i, pStrDemoName[i]);
+        }
+        scanf("%d", &DemoType);
+        printf("DemoType = %d", DemoType);
         // prvGenInterruptTask generates an interrupt every 500ms to trigger ulExampleInterruptHandler.
         // ulExampleInterruptHandler gives xBinary which allows prvHanlderTask to switch from delay list to ready list.
         // prvHanlderTask takes care of deferred interrupt handling.

@@ -206,21 +206,23 @@ int main( void )
 
     configASSERT( xTraceEnable( TRC_START ) == TRC_SUCCESS );
 
-    /* Set interrupt handler for keyboard input. */
-    vPortSetInterruptHandler( mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler );
+    if (mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1)
+    {
+        /* Set interrupt handler for keyboard input. */
+        vPortSetInterruptHandler(mainINTERRUPT_NUMBER_KEYBOARD, prvKeyboardInterruptHandler);
 
-    /* Start keyboard input handling thread. */
-    xWindowsKeyboardInputThreadHandle = CreateThread(
-        NULL,                          /* Pointer to thread security attributes. */
-        0,                             /* Initial thread stack size, in bytes. */
-        prvWindowsKeyboardInputThread, /* Pointer to thread function. */
-        NULL,                          /* Argument for new thread. */
-        0,                             /* Creation flags. */
-        NULL );
+        /* Start keyboard input handling thread. */
+        xWindowsKeyboardInputThreadHandle = CreateThread(
+            NULL,                          /* Pointer to thread security attributes. */
+            0,                             /* Initial thread stack size, in bytes. */
+            prvWindowsKeyboardInputThread, /* Pointer to thread function. */
+            NULL,                          /* Argument for new thread. */
+            0,                             /* Creation flags. */
+            NULL);
 
-    /* Use the cores that are not used by the FreeRTOS tasks for the Windows thread. */
-    SetThreadAffinityMask( xWindowsKeyboardInputThreadHandle, ~0x01u );
-
+        /* Use the cores that are not used by the FreeRTOS tasks for the Windows thread. */
+        SetThreadAffinityMask(xWindowsKeyboardInputThreadHandle, ~0x01u);
+    }
     /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
      * of this file. */
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )

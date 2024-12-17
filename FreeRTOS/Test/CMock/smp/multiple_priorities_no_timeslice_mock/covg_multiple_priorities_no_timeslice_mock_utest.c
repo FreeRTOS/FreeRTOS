@@ -804,8 +804,8 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetTaskLock_Expect();
     /* prvCheckForRunStateChange */
-    vFakePortAssertIfISR_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortAssertIfISR_Expect();
     /* End of prvCheckForRunStateChange */
     vFakePortGetISRLock_Expect();
     vFakePortReleaseISRLock_Expect();

@@ -446,7 +446,7 @@ jobs:
         id: generate-credentials
         uses: FreeRTOS/CI-CD-GitHub-Actions/ssl-credential-creator@main
 
-      - name: Query device IP address
+      - name: Query CI host IP address
         id: get-ip
         run: |
           # Query the device's IP address
@@ -1061,7 +1061,7 @@ jobs:
           echo "::endgroup::"
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }} "
 
-      - name: Query device IP address
+      - name: Query CI host IP address
         id: get-ip
         run: |
           # Query the device's IP address
@@ -1198,7 +1198,7 @@ jobs:
             exit 1
           }
 
-      - name: Query device IP address
+      - name: Query CI host IP address
         id: get-ip
         run: |
           # Query the device's IP address

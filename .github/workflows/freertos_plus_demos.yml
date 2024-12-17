@@ -457,7 +457,7 @@ jobs:
 
       - name: Start localhost MQTT broker
         id: mqtt-broker
-        uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-mqtt-broker@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-mqtt-broker@main
         with:
           host_address: ${{ env.server_ip }}
           root-ca-cert-path:
@@ -1071,7 +1071,7 @@ jobs:
 
       - name: Start localhost Echo server
         id: echo-server
-        uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-echo-server@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-echo-server@main
         with:
           host_address: ${{ env.server_ip }}
           port_number: 5000
@@ -1209,7 +1209,7 @@ jobs:
 
       - name: Start localhost Echo server
         id: echo-server
-        uses: tony-josi-aws/CI-CD-GitHub-Actions/localhost-echo-server@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/localhost-echo-server@main
         with:
           host_address: ${{ env.server_ip }}
           port_number: 5000

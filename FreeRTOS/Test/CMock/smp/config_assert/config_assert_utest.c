@@ -278,13 +278,7 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     vFakePortEnterCriticalSection_Expect();
     /* back */
     /* prvYieldForTask */
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskRemoveFromUnorderedEventList( &xEventListItem,
                                                             xItemValue ) );
@@ -319,7 +313,6 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
 
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
     validate_and_clear_assertions();
@@ -353,7 +346,6 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
 
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
@@ -477,7 +469,6 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
 
     vFakePortGetTaskLock_Expect();
     vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
 

@@ -1158,7 +1158,7 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
 
     /* Test Verifications */
-    TEST_ASSERT_EQUAL_STRING_LEN( "IDLE long n",
+    TEST_ASSERT_EQUAL_STRING_LEN( "IDLE long 0",
                                   xIdleTask->pcTaskName,
                                   configMAX_TASK_NAME_LEN - 1 );
 

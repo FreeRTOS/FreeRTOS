@@ -168,22 +168,19 @@ extern void vAssertCalled( const char * const pcFileName,
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#define configECHO_SERVER_ADDR0    127
-#define configECHO_SERVER_ADDR1    0
-#define configECHO_SERVER_ADDR2    0
-#define configECHO_SERVER_ADDR3    1
+#define configECHO_SERVER_ADDR    "172.31.69.236"
 
 /* Default MAC address configuration. The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet/WiFi data
  * to and from a real network connection on the host PC. See the
  * configNETWORK_INTERFACE_TO_USE definition above for information on how to
  * configure the real network connection to use. */
-#define configMAC_ADDR0            0x00
-#define configMAC_ADDR1            0x11
-#define configMAC_ADDR2            0x22
-#define configMAC_ADDR3            0x33
-#define configMAC_ADDR4            0x44
-#define configMAC_ADDR5            0x41
+#define configMAC_ADDR0           0x00
+#define configMAC_ADDR1           0x11
+#define configMAC_ADDR2           0x22
+#define configMAC_ADDR3           0x33
+#define configMAC_ADDR4           0x44
+#define configMAC_ADDR5           0x41
 
 /* Default IP address configuration. Used in ipconfigUSE_DNS is set to 0, or
  * ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */

@@ -252,7 +252,7 @@ void main_tcp_echo_client_tasks( void )
     }
     else
     {
-        FreeRTOS_printf( "Application idle hook network down\n" );
+        FreeRTOS_printf( ( "Application idle hook network down\n" ) );
     }
 }
 /*-----------------------------------------------------------*/

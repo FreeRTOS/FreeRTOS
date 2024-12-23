@@ -90,6 +90,7 @@
 #include "task.h"
 #include "timers.h"
 #include "semphr.h"
+#include "event_groups.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY    ( tskIDLE_PRIORITY + 2 )
@@ -123,6 +124,10 @@ static void prvHanlderTask(void* pvParameters);
 static void prvGenInterruptTask(void* pvParameters);
 static uint32_t ulExampleInterruptHandler(void);
 static void DeferredHandler(void* pvParameter1, uint32_t ulParameter2);
+static void prvPrintTask(void* pvParameters);
+static void prvResurMutexTask(void *pvParameters);
+static void prvReadEventGroupTask(void *pvParameters);
+static void prvGroupSyncTask(void *pvParameters);
 /*
  * The callback function executed when the software timer expires.
  */
@@ -138,13 +143,22 @@ static QueueHandle_t xStrQueue = NULL;
 /* A software timer that is started from the tick hook. */
 static TimerHandle_t xTimer = NULL;
 
-static SemaphoreHandle_t xBinary, xCounting;
+static SemaphoreHandle_t xBinary, xCounting, xMutex, xRecursiveMutex;
+static EventGroupHandle_t xGroup;
+static TaskHandle_t xTaskHandler;
+
 static enum {
     MinDemoType,
     BinarySemaphore = 1,
     CountingSemaphore,
     CentralizedDefer,
     ISRSendData,
+    Mutex,
+    RecursiveMutex,
+    EventGroup,
+    GroupSync,
+    TaskNotify,
+    TaskNotifyNoClear,
     MaxDemoType
 } DemoType;
 
@@ -154,6 +168,12 @@ static char *pStrDemoName[] = {
     "CountingSemaphore",
     "CentralizedDefer",
     "ISRSendData",
+    "Mutex",
+    "RecursiveMutex",
+    "EventGroup",
+    "GroupSync",
+    "TaskNotify(ClearOnExit==TRUE)",
+    "TaskNotify(ClearOnExit==FALSE)"
     "MaxDemoType"
 };
 /*-----------------------------------------------------------*/
@@ -174,6 +194,12 @@ void main_blinky( void )
     xBinary = xSemaphoreCreateBinary();
     // Create counting semaphore
     xCounting = xSemaphoreCreateCounting(5, 0);
+    // Create Mutex
+    xMutex = xSemaphoreCreateMutex();
+    // Create Recursive Mutex
+    xRecursiveMutex = xSemaphoreCreateRecursiveMutex();
+    // Create eventgroup
+    xGroup = xEventGroupCreate();
     DemoType = ISRSendData;
 
     if( xQueue != NULL )
@@ -193,15 +219,27 @@ void main_blinky( void )
         {
             printf("  [%d]  %s\n", i, pStrDemoName[i]);
         }
-        scanf("%d", &DemoType);
-        printf("DemoType = %d", DemoType);
+        scanf("%d", &DemoType); 
+        printf("DemoType = %d\n", DemoType);
         // prvGenInterruptTask generates an interrupt every 500ms to trigger ulExampleInterruptHandler.
         // ulExampleInterruptHandler gives xBinary which allows prvHanlderTask to switch from delay list to ready list.
         // prvHanlderTask takes care of deferred interrupt handling.
-        xTaskCreate(prvHanlderTask, "prvHanlderTask", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-        xTaskCreate(prvGenInterruptTask, "prvGenInterruptTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-        vPortSetInterruptHandler(mainINTERRUPT_NUMBER, (void *)ulExampleInterruptHandler);
-
+        if (DemoType == Mutex) {
+            printf("Default xMutex = %lld, xBinary = %lld\n", uxSemaphoreGetCount(xMutex), uxSemaphoreGetCount(xBinary));
+            xTaskCreate(prvPrintTask, "prvPrintTask", configMINIMAL_STACK_SIZE, "Task1", 1, NULL);
+            xTaskCreate(prvPrintTask, "prvPrintTask", configMINIMAL_STACK_SIZE, "Task2", 1, NULL);
+        } else if (DemoType == RecursiveMutex) {
+            xTaskCreate(prvResurMutexTask, "prvResurMutexTask", configMINIMAL_STACK_SIZE, "prvResurMutexTask", 2, NULL);
+        } else if (DemoType == GroupSync) {
+            xTaskCreate(prvGroupSyncTask, "Task 1", configMINIMAL_STACK_SIZE, 1, 1, NULL);
+            xTaskCreate(prvGroupSyncTask, "Task 2", configMINIMAL_STACK_SIZE, 2, 1, NULL);
+            xTaskCreate(prvGroupSyncTask, "Task 3", configMINIMAL_STACK_SIZE, 4, 1, NULL);
+        } else {
+            xTaskCreate(prvHanlderTask, "prvHanlderTask", configMINIMAL_STACK_SIZE, NULL, 2, &xTaskHandler);
+            xTaskCreate(prvGenInterruptTask, "prvGenInterruptTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+            xTaskCreate(prvReadEventGroupTask, "prvReadEventGroupTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+            vPortSetInterruptHandler(mainINTERRUPT_NUMBER, (void*)ulExampleInterruptHandler);
+        }
         /* Create the software timer, but don't start it yet. */
         xTimer = xTimerCreate( "Timer",                     /* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
                                xTimerPeriod,                /* The period of the software timer in ticks. */
@@ -225,12 +263,78 @@ void main_blinky( void )
     }
 }
 /*-----------------------------------------------------------*/
+// There are 3 tasks. Each task set one bit in event group
+static void prvGroupSyncTask(void *pvParameters) {
+    EventBits_t BitsToSet;
+
+    BitsToSet = (EventBits_t)pvParameters;
+    for (;;) {
+        vTaskDelay(pdMS_TO_TICKS(rand() % 500UL));
+        printf("%s start group sync, BitsToSet %llx\n", pcTaskGetTaskName(NULL), BitsToSet);
+        // Get the current xGroup->uxEventBits and save to uxOriginalBitValue. 
+        // Set BitsToSet to xGroup->uxEventBits.
+        // If uxOriginalBitValue | BitsToSet == TargetBits (0x7), clear TargetBits in xGroup->uxEventBits and return.
+        // Else move task to delayed list and yield.
+        // If task runs again, it means either the required bits were set or the block time expired.
+        // If timeout, clear TargetBits in xGroup->uxEventBits and return.
+        xEventGroupSync(xGroup, BitsToSet, 0x7, portMAX_DELAY);
+        printf("%s end group sync\n", pcTaskGetTaskName(NULL));
+    }
+}
+static void prvResurMutexTask(void *pvParameters)
+{
+    for (;;)
+    {
+        printf("xRecursiveMutex = %lld\n", uxSemaphoreGetCount(xRecursiveMutex));
+        if (xSemaphoreTakeRecursive(xRecursiveMutex, portMAX_DELAY) == pdTRUE)
+        {
+            printf("Take xRecursiveMutex Successfully\n");
+            // If we use xSemaphoreTake here, xSemaphoreTake will enters blocked state to wait for xRecursiveMutex.
+            // This is a deadlock.
+            xSemaphoreTakeRecursive(xRecursiveMutex, portMAX_DELAY);
+            printf("   2nd take xRecursiveMutex = %lld\n", uxSemaphoreGetCount(xRecursiveMutex));
+            xSemaphoreGiveRecursive(xRecursiveMutex);
+            printf("   Release xRecursiveMutex = %lld\n", uxSemaphoreGetCount(xRecursiveMutex));
+            xSemaphoreGiveRecursive(xRecursiveMutex);
+            printf("   2nd Release xRecursiveMutex = %lld\n", uxSemaphoreGetCount(xRecursiveMutex));
+        }
+        vTaskDelay(pdMS_TO_TICKS(50UL));
+    }
+}
+
+static void prvPrintTask(void *pvParameters)
+{
+    char *pStr;
+    TickType_t xTimeAtWhichMutexWasTaken;
+    pStr = (char *)pvParameters;
+    for (;;)
+    {
+        printf("[%s], xSemaphoreTake is started = %lld\n", pStr, uxSemaphoreGetCount(xMutex));
+        xSemaphoreTake(xMutex, portMAX_DELAY);
+        {
+            xTimeAtWhichMutexWasTaken = xTaskGetTickCount();
+            printf("[%s], xSemaphoreTake is completed = %lld and go to blocked status\n", pStr, uxSemaphoreGetCount(xMutex));
+            vTaskDelay(pdMS_TO_TICKS(100UL));
+        }
+        printf("[%s], xSemaphoreGive is started and Release xMutex = %lld\n", pStr, uxSemaphoreGetCount(xMutex));
+        xSemaphoreGive(xMutex);
+        printf("[%s], xSemaphoreGive is completed\n", pStr);
+        if (xTaskGetTickCount() != xTimeAtWhichMutexWasTaken)
+        {
+            printf("[%s], taskYIELD is started\n", pStr);
+            taskYIELD();
+            printf("[%s], taskYIELD is completed\n", pStr);
+        }
+    }
+}
+
 static uint32_t ulExampleInterruptHandler(void)
 {
     static uint32_t value = 1;
     int temp;
     static char *pStr[] = { "String 0", "String 1", "String 2", "String 3", "String 4" };
-    BaseType_t xHigherPriorityTaskWoken;
+    static const char *pcString = "Bit Setting ISR - About to set bit 2.";
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     /* The xHigherPriorityTaskWoken parameter must be initialized to
     pdFALSE as it will get set to pdTRUE inside the interrupt safe
     API function if a context switch is required. */
@@ -238,19 +342,23 @@ static uint32_t ulExampleInterruptHandler(void)
     /* 'Give' the semaphore to unblock the task, passing in the address of
     xHigherPriorityTaskWoken as the interrupt safe API function's
     pxHigherPriorityTaskWoken parameter. */
-    printf("[ulExampleInterruptHandler]  Give (Send) semaphore +++\n");
     switch (DemoType)
     {
         case BinarySemaphore:
+            printf("[ulExampleInterruptHandler]  Give (Send) semaphore +++\n");
             xSemaphoreGiveFromISR(xBinary, &xHigherPriorityTaskWoken);
+            printf("[ulExampleInterruptHandler]  Give (Send) semaphore xHigherPriorityTaskWoken %lld ---\n", xHigherPriorityTaskWoken);
             break;
         case CountingSemaphore:
             // Generate 3 events
+            printf("[ulExampleInterruptHandler]  Give (Send) semaphore +++\n");
             xSemaphoreGiveFromISR(xCounting, &xHigherPriorityTaskWoken);
             xSemaphoreGiveFromISR(xCounting, &xHigherPriorityTaskWoken);
             xSemaphoreGiveFromISR(xCounting, &xHigherPriorityTaskWoken);
+            printf("[ulExampleInterruptHandler]  Give (Send) semaphore xHigherPriorityTaskWoken %lld ---\n", xHigherPriorityTaskWoken);
             break;
         case CentralizedDefer:
+            // Send DeferredHandler to timer daemon task to run
             xTimerPendFunctionCallFromISR(DeferredHandler, NULL, value, &xHigherPriorityTaskWoken);
             value++;
             printf("[ulExampleInterruptHandler]  Send tmrCOMMAND_EXECUTE_CALLBACK to timer daemon\n");
@@ -263,22 +371,64 @@ static uint32_t ulExampleInterruptHandler(void)
                 printf("[ulExampleInterruptHandler] Send String \"%s\"\n", pStr[temp]);
             }
             break;
+        case EventGroup:
+            // Send DeferredHandler to timer daemon task to take care of event group
+            printf("Send DeferredHandler to Timer Daemon\n");
+            xTimerPendFunctionCallFromISR(DeferredHandler, (void *)pcString, 0, &xHigherPriorityTaskWoken);
+            // Set bit 2 to event group
+            printf("Send vEventGroupSetBitsCallback to Timer Daemon\n");
+            xEventGroupSetBitsFromISR(xGroup, 1UL << 2UL, &xHigherPriorityTaskWoken);
+            break;
+        case TaskNotifyNoClear:
+            vTaskNotifyGiveFromISR(xTaskHandler, &xHigherPriorityTaskWoken);
+            vTaskNotifyGiveFromISR(xTaskHandler, &xHigherPriorityTaskWoken);
+        case TaskNotify:
+            vTaskNotifyGiveFromISR(xTaskHandler, &xHigherPriorityTaskWoken);
+            printf("vTaskNotifyGiveFromISR\n");
+            break;
         default:
             break;
     }
-    printf("[ulExampleInterruptHandler]  Give (Send) semaphore xHigherPriorityTaskWoken %lld ---\n", xHigherPriorityTaskWoken);
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken); // For real HW platform, vTaskSwitchContext is performed.
+    // For real HW platform, vTaskSwitchContext is performed. 
+    // For x86 simulator, kernel thread will suspend current task and run another task in ready list.
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+
+static void prvReadEventGroupTask(void *pvParameters)
+{
+    EventBits_t xEventGroupValue;
+
+    for (;;)
+    {
+
+        xEventGroupValue = xEventGroupWaitBits(xGroup, 0x7, pdTRUE, pdFALSE, portMAX_DELAY);
+        if (xEventGroupValue & 0x1)
+            printf("Bit Reading Task - Event bit 0 is set\n");
+        if (xEventGroupValue & 0x2)
+            printf("Bit Reading Task - Event bit 1 is set\n");
+        if (xEventGroupValue & 0x4)
+            printf("Bit Reading Task - Event bit 2 is set\n");
+    }
 }
 
 static void DeferredHandler(void *pvParameter1, uint32_t ulParameter2)
 {
-    printf("  Timer daemon runs DeferredHandler ulParameter2 %u\n", ulParameter2);
+    switch (DemoType) {
+        case EventGroup:
+            printf("%s\n", (char *)pvParameter1);
+            break;
+        default:
+            printf("  Timer daemon runs DeferredHandler ulParameter2 %u\n", ulParameter2);
+            break;
+    }
 }
 
 // Handle deferred interrupt
 static void prvHanlderTask(void* pvParameters)
 {
     char *pStr;
+    uint32_t ulEventsToProcess;
+
     for (;;)
     {
         switch (DemoType)
@@ -299,6 +449,24 @@ static void prvHanlderTask(void* pvParameters)
                     printf("[prvHanlderTask] Receive string \"%s\"\n", pStr);
                 }
                 break;
+            case EventGroup:
+                vTaskDelay(pdMS_TO_TICKS(200UL));
+                printf("Bit Setting Task - set bit 0 is started\n");
+                xEventGroupSetBits(xGroup, 1UL << 0UL);
+                printf("Bit Setting Task - set bit 0 is completed\n");
+                vTaskDelay(pdMS_TO_TICKS(200UL));
+                printf("Bit Setting Task - set bit 1 is started\n");
+                xEventGroupSetBits(xGroup, 1UL << 1UL);
+                printf("Bit Setting Task - set bit 1 is completed\n");
+                break;
+            case TaskNotify:
+                ulEventsToProcess = ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(500UL + 100UL));
+                printf("ulEventsToProcess = %x\n", ulEventsToProcess);
+                break;
+            case TaskNotifyNoClear:
+                ulEventsToProcess = ulTaskNotifyTake(pdFALSE, pdMS_TO_TICKS(500UL + 100UL));
+                printf("ulEventsToProcess = %x\n", ulEventsToProcess);
+                break;
             default:
                 break;
         }
@@ -308,6 +476,7 @@ static void prvHanlderTask(void* pvParameters)
 static void prvGenInterruptTask(void* pvParameters)
 {
     int i;
+
     for (;;)
     {
         vTaskDelay(pdMS_TO_TICKS(500UL));
@@ -321,6 +490,9 @@ static void prvGenInterruptTask(void* pvParameters)
             case BinarySemaphore:
             case CountingSemaphore:
             case CentralizedDefer:
+            case EventGroup:
+            case TaskNotify:
+            case TaskNotifyNoClear:
                 printf("[prvGenInterruptTask] Generate Interrupt +++\n");
                 vPortGenerateSimulatedInterrupt(mainINTERRUPT_NUMBER);
                 printf("[prvGenInterruptTask] Generate Interrupt ---\n");

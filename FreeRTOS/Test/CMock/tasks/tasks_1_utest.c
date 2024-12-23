@@ -3607,12 +3607,22 @@ void test_xTaskGetIdleTaskHandle_success( void )
 {
     TaskHandle_t ret_idle_handle;
     int ret;
+    BaseType_t xIdleNameLen;
+    BaseType_t xCopyLen;
 
     start_scheduler();
+
+    /* The length of the idle task name is limited to the minimum of the length
+     * of configIDLE_TASK_NAME and configMAX_TASK_NAME_LEN - 2, keeping space
+     * for the core ID suffix and the null-terminator. */
+    xIdleNameLen = sizeof( configIDLE_TASK_NAME ) - 1;
+    xCopyLen = ( xIdleNameLen < configMAX_TASK_NAME_LEN - 2 ) ? xIdleNameLen : configMAX_TASK_NAME_LEN - 2;
+
     /* Api Call */
     ret_idle_handle = xTaskGetIdleTaskHandle();
     ptcb = ret_idle_handle;
-    ret = strncmp( ptcb->pcTaskName, configIDLE_TASK_NAME, configMAX_TASK_NAME_LEN - 1 );
+    /* Verify the base name of the idle task. */
+    ret = strncmp( ptcb->pcTaskName, configIDLE_TASK_NAME, xCopyLen );
     TEST_ASSERT_EQUAL( 0, ret );
 }
 

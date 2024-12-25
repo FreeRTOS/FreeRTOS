@@ -349,22 +349,22 @@ unsigned int vFakePortGetCoreID( void )
     return 0;
 }
 
-void vFakePortReleaseTaskLock( void )
+void vFakePortReleaseTaskLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
 
-void vFakePortGetTaskLock( void )
+void vFakePortGetTaskLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
 
-void vFakePortGetISRLock( void )
+void vFakePortGetISRLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
 
-void vFakePortReleaseISRLock( void )
+void vFakePortReleaseISRLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
@@ -671,6 +671,7 @@ void test_xTaskCreateStatic_success( void )
                                ulStackDepth * sizeof( StackType_t ) ) );
 
     StackType_t * pxTopOfStack = &( ptcb->pxStack[ ulStackDepth - ( uint32_t ) 1 ] );
+
     pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack )
                                        & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
 
@@ -1869,6 +1870,7 @@ void test_vTaskDelay_success_gt_0_yield_called( void )
     task_handle = create_task();
     ptcb = ( TCB_t * ) task_handle;
     TickType_t delay = 34;
+
     /* Expectations */
     /* prvAddCurrentTaskToDelayedList */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
@@ -1891,6 +1893,7 @@ void test_vTaskDelay_success_gt_0_yield_not_called( void )
     task_handle = create_task();
     ptcb = ( TCB_t * ) task_handle;
     TickType_t delay = 34;
+
     /* Expectations */
     /* prvAddCurrentTaskToDelayedList */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
@@ -1937,6 +1940,7 @@ void test_vTaskDelay_success_gt_0_already_yielded( void )
     pxCurrentTCB = task_handle;
     ptcb = ( TCB_t * ) task_handle;
     TickType_t delay = 34;
+
     /* Expectations */
     /* prvAddCurrentTaskToDelayedList */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
@@ -1981,6 +1985,7 @@ void test_eTaskGetState_success_current_tcb( void )
     task_handle = create_task();
     ptcb = ( TCB_t * ) task_handle;
     eTaskState ret_task_state;
+
     /* no Expectations */
 
     /* API Call */
@@ -2000,6 +2005,7 @@ void test_eTaskGetState_success_not_current_tcb_pending_ready( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              NULL );
@@ -2023,6 +2029,7 @@ void test_eTaskGetState_success_not_current_tcb_blocked_delayed( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              pxDelayedTaskList );
@@ -2046,6 +2053,7 @@ void test_eTaskGetState_success_not_current_tcb_blocked_overflow( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              pxOverflowDelayedTaskList );
@@ -2069,6 +2077,7 @@ void test_eTaskGetState_success_not_current_tcb_ready( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &pxReadyTasksLists[ 0 ] );
@@ -2092,6 +2101,7 @@ void test_eTaskGetState_success_not_current_tcb_suspended( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &xSuspendedTaskList );
@@ -2117,6 +2127,7 @@ void test_eTaskGetState_success_not_current_tcb_deleted( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &xTasksWaitingTermination );
@@ -2140,6 +2151,7 @@ void test_eTaskGetState_success_not_current_tcb_deleted_not_found( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              NULL );
@@ -2169,6 +2181,7 @@ void test_eTaskGetState_success_not_current_tcb_wait_notif( void )
     ptcb->ucNotifyState[ 0 ] = 1; /* taskWAITING_NOTIFICATION */
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &xSuspendedTaskList );
@@ -2194,6 +2207,7 @@ void test_eTaskGetState_success_not_current_tcb_blocked( void )
     ptcb = ( TCB_t * ) task_handle;
     TEST_ASSERT_NOT_EQUAL( pxCurrentTCB, ptcb );
     eTaskState ret_task_state;
+
     /* Expectations */
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
                                              &xSuspendedTaskList );
@@ -3655,6 +3669,7 @@ void test_xTaskGetApplicationTaskTag_null_tcb_current( void )
     vTaskSetApplicationTaskTag( task_handle, pxHookFunction );
 
     TaskHookFunction_t hook_function;
+
     hook_function = xTaskGetApplicationTaskTag( NULL );
 
     TEST_ASSERT_EQUAL( &pxHookFunction, hook_function );
@@ -3668,6 +3683,7 @@ void test_xTaskGetApplicationTaskTag_tcb( void )
     vTaskSetApplicationTaskTag( task_handle, pxHookFunction );
 
     TaskHookFunction_t hook_function;
+
     hook_function = xTaskGetApplicationTaskTag( task_handle );
 
     TEST_ASSERT_EQUAL( &pxHookFunction, hook_function );
@@ -3693,6 +3709,7 @@ void test_xTaskGetApplicationTaskTagFromISR_success( void )
     vTaskSetApplicationTaskTag( task_handle, pxHookFunction );
 
     TaskHookFunction_t hook_function;
+
     hook_function = xTaskGetApplicationTaskTagFromISR( task_handle );
 
     TEST_ASSERT_EQUAL( &pxHookFunction, hook_function );
@@ -3708,6 +3725,7 @@ void test_xTaskGetApplicationTaskTagFromISR_null_handle( void )
     vTaskSetApplicationTaskTag( task_handle, pxHookFunction );
 
     TaskHookFunction_t hook_function;
+
     hook_function = xTaskGetApplicationTaskTagFromISR( NULL );
 
     TEST_ASSERT_EQUAL( &pxHookFunction, hook_function );
@@ -4177,6 +4195,7 @@ void test_xTaskCheckForTimeOut_timeout( void )
     time_out.xOverflowCount = xNumOfOverflows;
     time_out.xTimeOnEntering = 3;
     uint32_t expected = ( 1000 - ( xTickCount - time_out.xTimeOnEntering ) );
+
     /* API Call */
     ret_check_timeout = xTaskCheckForTimeOut( &time_out,
                                               &ticks_to_wait );

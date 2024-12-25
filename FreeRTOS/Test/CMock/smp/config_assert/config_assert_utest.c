@@ -311,8 +311,8 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
     xSchedulerRunning = pdFALSE; /* causes the assert */
     uxSchedulerSuspended = pdFALSE;
 
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
+    vFakePortGetTaskLock_Expect( 1 );
+    vFakePortGetISRLock_Expect( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
     validate_and_clear_assertions();
@@ -344,8 +344,8 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
     xSchedulerRunning = pdTRUE;
     uxSchedulerSuspended = pdFALSE;
 
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
+    vFakePortGetTaskLock_Expect( 0 );
+    vFakePortGetISRLock_Expect( 0 );
 
     listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
@@ -467,8 +467,8 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
 
     pxCurrentTCBs[ 1 ] = &currentTCB;
 
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
+    vFakePortGetTaskLock_Expect( 1 );
+    vFakePortGetISRLock_Expect( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
 
@@ -576,9 +576,9 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
     vFakePortAssertIfISR_Expect();
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortGetTaskLock_Expect( 0 );
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
 
     /* API Call */

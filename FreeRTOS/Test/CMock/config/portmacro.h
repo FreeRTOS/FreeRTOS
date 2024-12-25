@@ -125,37 +125,37 @@ typedef unsigned long    UBaseType_t;
 /*-----------------------------------------------------------*/
 
 #define portSAVE_CONTEXT()
-#define portYIELD()                      vFakePortYield()
-#define portYIELD_WITHIN_API()           vFakePortYieldWithinAPI()
-#define portYIELD_FROM_ISR()             vFakePortYieldFromISR()
+#define portYIELD()                         vFakePortYield()
+#define portYIELD_WITHIN_API()              vFakePortYieldWithinAPI()
+#define portYIELD_FROM_ISR()                vFakePortYieldFromISR()
 
 /* Critical section handling. */
-#define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
-#define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
+#define portDISABLE_INTERRUPTS()            vFakePortDisableInterrupts()
+#define portENABLE_INTERRUPTS()             vFakePortEnableInterrupts()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
     vFakePortClearInterruptMaskFromISR( x )
 #define portSET_INTERRUPT_MASK_FROM_ISR() \
     ulFakePortSetInterruptMaskFromISR()
-#define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
+#define portSET_INTERRUPT_MASK()            ulFakePortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK( x )       vFakePortClearInterruptMask( x )
 #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
     vFakePortAssertIfInterruptPriorityInvalid()
-#define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
-#define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
-#define portGET_ISR_LOCK()               vFakePortGetISRLock()
-#define portRELEASE_ISR_LOCK()           vFakePortReleaseISRLock()
-#define portGET_TASK_LOCK()              vFakePortGetTaskLock()
-#define portRELEASE_TASK_LOCK()          vFakePortReleaseTaskLock()
+#define portENTER_CRITICAL()                vFakePortEnterCriticalSection()
+#define portEXIT_CRITICAL()                 vFakePortExitCriticalSection()
+#define portGET_ISR_LOCK( xCoreID )         vFakePortGetISRLock( xCoreID )
+#define portRELEASE_ISR_LOCK( xCoreID )     vFakePortReleaseISRLock( xCoreID )
+#define portGET_TASK_LOCK( xCoreID )        vFakePortGetTaskLock( xCoreID )
+#define portRELEASE_TASK_LOCK( xCoreID )    vFakePortReleaseTaskLock( xCoreID )
 
-#define portCHECK_IF_IN_ISR()            vFakePortCheckIfInISR()
-#define portRESTORE_INTERRUPTS( x )      vFakePortRestoreInterrupts( x )
+#define portCHECK_IF_IN_ISR()               vFakePortCheckIfInISR()
+#define portRESTORE_INTERRUPTS( x )         vFakePortRestoreInterrupts( x )
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) \
     vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
-#define portSETUP_TCB( pxTCB )           portSetupTCB_CB( pxTCB );
-#define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
+#define portSETUP_TCB( pxTCB )              portSetupTCB_CB( pxTCB );
+#define  portASSERT_IF_IN_ISR()             vFakePortAssertIfISR();
 
-#define portGET_CORE_ID()                vFakePortGetCoreID()
-#define portYIELD_CORE( x )              vFakePortYieldCore( x )
+#define portGET_CORE_ID()                   vFakePortGetCoreID()
+#define portYIELD_CORE( x )                 vFakePortYieldCore( x )
 
 #define portENTER_CRITICAL_FROM_ISR    vFakePortEnterCriticalFromISR
 #define portEXIT_CRITICAL_FROM_ISR     vFakePortExitCriticalFromISR

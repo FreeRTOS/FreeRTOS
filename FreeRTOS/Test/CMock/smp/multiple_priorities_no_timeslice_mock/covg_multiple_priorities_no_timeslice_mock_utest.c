@@ -802,13 +802,13 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
     vFakePortAssertIfISR_Expect();
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
+    vFakePortGetTaskLock_Expect( 0 );
     /* prvCheckForRunStateChange */
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortAssertIfISR_Expect();
     /* End of prvCheckForRunStateChange */
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
     /* End of vTaskSuspendAll */
 
@@ -826,7 +826,7 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
 
     vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
@@ -908,12 +908,12 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
     vFakePortAssertIfISR_Stub( port_assert_if_isr_cb );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
+    vFakePortGetTaskLock_Expect( 0 );
     /* prvCheckForRunStateChange */
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     /* End of prvCheckForRunStateChange */
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
     /* End of vTaskSuspendAll */
 
@@ -926,7 +926,7 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
 
     vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),

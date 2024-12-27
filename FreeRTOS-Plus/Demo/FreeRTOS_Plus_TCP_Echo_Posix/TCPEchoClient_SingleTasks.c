@@ -158,17 +158,11 @@
 
         #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
         {
-            xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                                 configECHO_SERVER_ADDR1,
-                                                                                 configECHO_SERVER_ADDR2,
-                                                                                 configECHO_SERVER_ADDR3 );
+            xEchoServerAddress.sin_address.ulIP_IPv4 = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
         }
         #else
         {
-            xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                    configECHO_SERVER_ADDR1,
-                                                                    configECHO_SERVER_ADDR2,
-                                                                    configECHO_SERVER_ADDR3 );
+            xEchoServerAddress.sin_addr = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
         }
         #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 
@@ -189,8 +183,8 @@
             FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
 
             /* Connect to the echo server. */
-            printf( "\nConnecting to echo server %d.%d.%d.%d:%d....\n",
-                    configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3, echoECHO_PORT );
+            printf( "\nConnecting to echo server %s:%d....\n",
+                    configECHO_SERVER_ADDR, echoECHO_PORT );
 
             ret = FreeRTOS_connect( xSocket, &xEchoServerAddress, sizeof( xEchoServerAddress ) );
 

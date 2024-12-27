@@ -35,6 +35,11 @@
 #ifndef FREERTOS_IP_CONFIG_H
 #define FREERTOS_IP_CONFIG_H
 
+#ifdef HEAP3
+    #define xPortGetMinimumEverFreeHeapSize( x )    0
+    #define xPortGetFreeHeapSize()                  0
+#endif
+
 /* Prototype for the function used to print out. In this case it prints to the
  * console before the network is connected then a UDP port after the network has
  * connected. */
@@ -67,7 +72,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * FreeRTOS_netstat() command, and ping replies. If ipconfigHAS_PRINTF is set to 1
  * then FreeRTOS_printf should be set to the function used to print out the
  * messages. */
-#define ipconfigHAS_PRINTF    0
+#define ipconfigHAS_PRINTF    1
 #if ( ipconfigHAS_PRINTF == 1 )
     #define FreeRTOS_printf( X )    vLoggingPrintf X
 #endif

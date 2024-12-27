@@ -316,10 +316,10 @@ echo $ECHO_SERVER_IP_ADDRESS
 
 7. The echo server is assumed to be on port 7, which is the standard echo
 protocol port. You can change the port to any other listening port (e.g. 3682 ).
-Set `configECHO_PORT` to the value of this port.
+Set `echoECHO_PORT` to the value of this port.
 
 ```c
-#define configECHO_PORT          ( 7 )
+#define echoECHO_PORT          ( 7 )
 ```
 
 8. Build:

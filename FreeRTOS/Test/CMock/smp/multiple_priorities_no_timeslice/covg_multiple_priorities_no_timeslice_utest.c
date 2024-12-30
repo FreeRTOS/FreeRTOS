@@ -3328,7 +3328,7 @@ void test_coverage_xTaskResumeAll_task_in_pending_ready_list( void )
     vFakePortExitCriticalSection_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */
@@ -3398,7 +3398,7 @@ void test_coverage_xTaskResumeAll_task_in_pending_ready_list_uxpriority_lesser( 
     vFakePortExitCriticalSection_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */

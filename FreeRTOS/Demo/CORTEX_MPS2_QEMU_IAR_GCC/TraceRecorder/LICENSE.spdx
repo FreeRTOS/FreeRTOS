@@ -1,0 +1,10 @@
+SPDXVersion: SPDX-2.2
+DataLicense: CC0-1.0
+Creator: Organization: Percepio AB ()
+PackageName: TraceRecorderSource
+PackageOriginator: Percepio AB
+PackageDownloadLocation: git+https://github.com/percepio/TraceRecorderSource.git
+PackageLicenseDeclared: Apache-2.0
+PackageCopyrightText: <text>Copyright 2023 Percepio AB</text>
+PackageSummary: <text>Trace Recorder</text>
+PackageDescription: <text>A generic software Trace Recorder that can generate trace events and transmit or store them.</text>

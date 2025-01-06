@@ -113,6 +113,9 @@ void main_blinky( void )
     /* Create the queue. */
     xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
+    /* TODO TraceRecorder (Tweak 4): Setting a name for the queue (optional). */
+    vTraceSetQueueName(xQueue, "BlinkyQueue");
+
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this
@@ -206,6 +209,10 @@ static void prvQueueReceiveTask( void * pvParameters )
     /* Prevent the compiler warning about the unused parameter. */
     ( void ) pvParameters;
 
+    /* TraceRecorder: Registering a channel name for the user events. */
+    TraceStringHandle_t xUserEventLogChannel;
+    xTraceStringRegister("Log", &xUserEventLogChannel);
+
     for( ; ; )
     {
         /* Wait until something arrives in the queue - this task will block
@@ -221,14 +228,31 @@ static void prvQueueReceiveTask( void * pvParameters )
             /* It is normally not good to call printf() from an embedded system,
              * although it is ok in this simulated case. */
             printf( "Message received from task\r\n" );
+
+            /******************************************************************
+             * TODO TraceRecorder (Tweak 5): Added User Events (xTracePrint).
+             * Can be a better alternative to printf (faster and thread-safe).
+             * xTracePrint is similar to puts(), i.e. strings only.
+             * xTracePrintF is similar to printf (with integer arguments).
+             * Examples:
+             *  xTracePrint(channel, "Something happened!");
+             *  xTracePrintF(channel, "Value 1: %d, Value 2: %d", val1, val2);
+             * See trcPrint.h for details.
+             *****************************************************************/
+            xTracePrint(xUserEventLogChannel, "Message received from task");
         }
         else if( ulReceivedValue == mainVALUE_SENT_FROM_TIMER )
         {
             printf( "Message received from software timer\r\n" );
+
+            xTracePrint(xUserEventLogChannel,
+            		"Message received from software timer");
         }
         else
         {
             printf( "Unexpected message\r\n" );
+
+            xTracePrint(xUserEventLogChannel, "Unexpected message");
         }
     }
 }

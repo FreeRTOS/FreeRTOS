@@ -114,7 +114,7 @@ void main_blinky( void )
     xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
     /* TODO TraceRecorder (Tweak 4): Setting a name for the queue (optional). */
-    vTraceSetQueueName(xQueue, "BlinkyQueue");
+    vTraceSetQueueName(xQueue, "Blinky-Queue");
 
     if( xQueue != NULL )
     {

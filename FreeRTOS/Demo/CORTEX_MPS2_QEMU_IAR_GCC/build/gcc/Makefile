@@ -92,10 +92,18 @@ SOURCE_FILES += ./RegTest.c
 # Lightweight print formatting to use in place of the heavier GCC equivalent.
 SOURCE_FILES += ./printf-stdarg.c
 
-# Percepio TraceRecorder
-TRACERECORDER_DIR = $(DEMO_PROJECT)/TraceRecorder
+# Percepio TraceRecorder (FreeRTOS-Plus-Trace)
+TRACERECORDER_DIR = $(DEMO_ROOT)/../../FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
+TRACERECORDER_CFG_DIR = $(DEMO_PROJECT)/TraceRecorderConfig
 VPATH += $(TRACERECORDER_DIR)
-INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/include -I$(TRACERECORDER_DIR)/config
+VPATH += $(TRACERECORDER_DIR)/kernelports/FreeRTOS
+VPATH += $(TRACERECORDER_DIR)/streamports/RingBuffer
+INCLUDE_DIRS += -I$(TRACERECORDER_CFG_DIR)
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/include 
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/kernelports/FreeRTOS/include
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/streamports/RingBuffer/include
+SOURCE_FILES +=	(TRACERECORDER_DIR)/kernelports/FreeRTOS/trcKernelPort.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/streamports/RingBuffer/trcStreamPort.c
 SOURCE_FILES += (TRACERECORDER_DIR)/trcAssert.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcCounter.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcDependency.c
@@ -110,7 +118,6 @@ SOURCE_FILES +=	(TRACERECORDER_DIR)/trcHeap.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcInternalEventBuffer.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcInterval.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcISR.c
-SOURCE_FILES +=	(TRACERECORDER_DIR)/trcKernelPort.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcMultiCoreEventBuffer.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcObject.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcPrint.c
@@ -120,7 +127,6 @@ SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStackMonitor.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStateMachine.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStaticBuffer.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStreamingRecorder.c
-SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStreamPort.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcString.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcTask.c
 SOURCE_FILES +=	(TRACERECORDER_DIR)/trcTimestamp.c

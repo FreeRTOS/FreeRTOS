@@ -34,7 +34,8 @@ dump binary value trace.bin *RecorderDataPtr
 Note that you can copy/paste this command into the Eclipse Debugger Console by using Ctrl-C, Ctrl-V.
 
 ### Usage with IAR Embedded Workbench for Arm
-To save TraceRecorder snapshots using IAR, see [https://percepio.com/iar](https://percepio.com/iar).
-
+The IAR project is not yet updated for TraceRecorder (work in progress). However, you can easily extend the existing IAR project with TraceRecorder.
+Simply add the source files and include paths for TraceRecorder listed in build/gcc/Makefile. Build and run.
+To save the trace, please refer to the guides at [https://percepio.com/iar](https://percepio.com/iar).
 
 

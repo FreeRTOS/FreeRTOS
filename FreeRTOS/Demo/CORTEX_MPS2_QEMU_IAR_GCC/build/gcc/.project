@@ -36,9 +36,9 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>TraceRecorder</name>
+			<name>TraceRecorderConfig</name>
 			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/TraceRecorder</locationURI>
+			<locationURI>FREERTOS_ROOT/Demo/CORTEX_MPS2_QEMU_IAR_GCC/TraceRecorderConfig</locationURI>
 		</link>
 		<link>
 			<name>Source/Blinky_Demo</name>

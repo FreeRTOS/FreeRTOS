@@ -108,6 +108,13 @@ void main( void )
     /* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
      * instructions. */
 
+	/* Initializing TraceRecorder. Using #if (configUSE_TRACE_FACILITY == 1)
+	 * is normally not needed. TraceRecorder API calls are normally ignored
+     * and produce no code when configUSE_TRACE_FACILITY is 0, assuming 
+	 * trcRecorder.h is included. However, this was missing for 
+	 * xTraceTimestampSetPeriod() in TraceRecorder v4.10.2. */   
+#if (configUSE_TRACE_FACILITY == 1)
+
 	/* TODO TraceRecorder (Step 2): Call xTraceInitialize early in main().
 	 * This should be called before any FreeRTOS calls are made. */
 	xTraceInitialize();
@@ -115,8 +122,10 @@ void main( void )
 	/* TODO TraceRecorder (Step 3): Call xTraceEnable to start tracing. */
 	xTraceEnable(TRC_START);
 	
-	/* Needed for using TraceRecorder on QEMU. */
+	/* Extra step needed for using TraceRecorder on QEMU. */
 	xTraceTimestampSetPeriod(configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+
+#endif	
 
     /* Hardware initialisation.  printf() output uses the UART for IO. */
     prvUARTInit();

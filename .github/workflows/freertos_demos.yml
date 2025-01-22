@@ -459,7 +459,7 @@ jobs:
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           set +e
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source FreeRTOS/Demo/ThirdParty/Community-Supported-Demos FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
           exitStatus=$?
           set -e
           echo -e "::endgroup::"

@@ -54,6 +54,13 @@
 #include <stdio.h>
 #include <string.h>
 
+/* TODO: Steps for adding TraceRecorder are tagged with comments like this. */
+/* TODO: This way, Eclipse IDEs can provide a summary in the Tasks window. */
+/* TODO: To open Tasks, select Window -> Show View -> Tasks (or Other) */
+
+/* TODO TraceRecorder (Step 1): Include trcRecorder.h to access the API. */
+#include <trcRecorder.h>
+
 /* This project provides two demo applications.  A simple blinky style demo
  * application, and a more comprehensive test and demo application.  The
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
@@ -100,6 +107,25 @@ void main( void )
 {
     /* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
      * instructions. */
+
+	/* Initializing TraceRecorder. Using #if (configUSE_TRACE_FACILITY == 1)
+	 * is normally not needed. TraceRecorder API calls are normally ignored
+     * and produce no code when configUSE_TRACE_FACILITY is 0, assuming 
+	 * trcRecorder.h is included. However, this was missing for 
+	 * xTraceTimestampSetPeriod() in TraceRecorder v4.10.2. */   
+#if (configUSE_TRACE_FACILITY == 1)
+
+	/* TODO TraceRecorder (Step 2): Call xTraceInitialize early in main().
+	 * This should be called before any FreeRTOS calls are made. */
+	xTraceInitialize();
+	
+	/* TODO TraceRecorder (Step 3): Call xTraceEnable to start tracing. */
+	xTraceEnable(TRC_START);
+	
+	/* Extra step needed for using TraceRecorder on QEMU. */
+	xTraceTimestampSetPeriod(configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+
+#endif	
 
     /* Hardware initialisation.  printf() output uses the UART for IO. */
     prvUARTInit();
@@ -198,6 +224,8 @@ void vApplicationDaemonTaskStartupHook( void )
      * execute (sometimes called the timer task).  This is useful if the
      * application includes initialisation code that would benefit from executing
      * after the scheduler has been started. */
+	 
+	 xTraceEnable(TRC_START);
 }
 /*-----------------------------------------------------------*/
 

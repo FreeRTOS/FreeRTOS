@@ -39,7 +39,7 @@
 #include "mock_fake_port.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
-#define EVENT_QUEUE_LENGTH 5
+#define EVENT_QUEUE_LENGTH    5
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

@@ -998,23 +998,6 @@ jobs:
           }
 
       - env:
-          stepName: Build AWS IoT OTA over MQTT
-        name: ${{ env.stepName }}
-        working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Mqtt_Demo
-        run: |
-          # ${{ env.stepName }}
-          echo "::group::${{ env.stepName }}"
-          msbuild ota_over_mqtt_demo.sln -t:rebuild -property:Configuration=Debug -m
-          if($? -eq 1) {
-            echo "::endgroup::"
-            echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
-          }else {
-            echo "::endgroup::"
-            echo "${{ env.pwshFail }} ${{ env.stepName }} ${{ env.pwshEnd }}"
-            exit 1
-          }
-
-      - env:
           stepName: Build AWS IoT OTA over HTTP
         name: ${{ env.stepName }}
         working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Http_Demo

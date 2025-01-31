@@ -5,14 +5,14 @@ license: "MIT"
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "7e419c2"
+    version: "1b8f596"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
       path: "FreeRTOS/Source"
 
   - name: "FreeRTOS-Plus-TCP"
-    version: "V4.1.0"
+    version: "fbb668ac"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git"
@@ -187,7 +187,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/tinycbor"
 
   - name: "TraceRecorder"
-    version: "3aa0355"
+    version: "Tz4/4.10/v4.10.2"
     repository:
       type: "git"
       url: "https://github.com/percepio/TraceRecorderSource.git"

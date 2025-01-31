@@ -50,10 +50,10 @@ void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
 
 void portSetupTCB_CB( void * tcb );
 
-void vFakePortGetISRLock( void );
-void vFakePortReleaseISRLock( void );
-void vFakePortGetTaskLock( void );
-void vFakePortReleaseTaskLock( void );
+void vFakePortGetISRLock( BaseType_t xCoreID );
+void vFakePortReleaseISRLock( BaseType_t xCoreID );
+void vFakePortGetTaskLock( BaseType_t xCoreID );
+void vFakePortReleaseTaskLock( BaseType_t xCoreID );
 
 void vFakePortAssertIfISR();
 BaseType_t vFakePortCheckIfInISR( void );

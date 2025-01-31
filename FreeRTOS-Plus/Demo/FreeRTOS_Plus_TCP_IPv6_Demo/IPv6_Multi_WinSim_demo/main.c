@@ -434,7 +434,6 @@ void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
 
         if( pxEndPoint->bits.bIPv6 == 0U )
         {
-            *ipLOCAL_IP_ADDRESS_POINTER = pxEndPoint->ipv4_settings.ulIPAddress;
             configPRINTF( ( "IPv4 address = %xip\n", FreeRTOS_ntohl( pxEndPoint->ipv4_settings.ulIPAddress ) ) );
         }
 

@@ -40,7 +40,6 @@
 /* Header include. */
 #include "freertos_command_pool.h"
 #include "freertos_agent_message.h"
-#include "core_mqtt_config_defaults.h"
 
 /* Demo config include. */
 #include "demo_config.h"

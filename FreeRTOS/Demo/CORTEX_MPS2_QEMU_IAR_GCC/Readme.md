@@ -15,7 +15,7 @@
 ## Tracing with Percepio View
 This demo project includes Percepio TraceRecorder, configured for snapshot tracing with Percepio View or Tracealyzer.
 Percepio View is a free tracing tool from Percepio, providing the core features of Percepio Tracealyzer but limited to snapshot tracing.
-No license or registration is required. More information and download is found at [Percepio's product page for Percepio View](https://traceviewer.io/freertos-view).
+No license or registration is required. More information and download is found at [Percepio's product page for Percepio View](https://traceviewer.io/get-view?target=freertos).
 
 ### TraceRecorder Integration
 If you like to study how TraceRecorder is integrated, the steps for adding TraceRecorder are tagged with "TODO TraceRecorder" comments in the demo source code.

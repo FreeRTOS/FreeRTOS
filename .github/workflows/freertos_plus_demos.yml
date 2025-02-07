@@ -388,7 +388,6 @@ jobs:
           FreeRTOS-Plus/Source/AWS/device-shadow \
           FreeRTOS-Plus/Source/AWS/fleet-provisioning \
           FreeRTOS-Plus/Source/AWS/jobs \
-          FreeRTOS-Plus/Source/AWS/ota \
           FreeRTOS-Plus/Source/AWS/sigv4 \
           FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
           FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
@@ -880,7 +879,6 @@ jobs:
           FreeRTOS-Plus/Source/AWS/device-shadow \
           FreeRTOS-Plus/Source/AWS/fleet-provisioning \
           FreeRTOS-Plus/Source/AWS/jobs \
-          FreeRTOS-Plus/Source/AWS/ota \
           FreeRTOS-Plus/Source/AWS/sigv4 \
           FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
           FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
@@ -1288,7 +1286,6 @@ jobs:
           FreeRTOS-Plus/Source/AWS/device-shadow \
           FreeRTOS-Plus/Source/AWS/fleet-provisioning \
           FreeRTOS-Plus/Source/AWS/jobs \
-          FreeRTOS-Plus/Source/AWS/ota \
           FreeRTOS-Plus/Source/AWS/sigv4 \
           FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
           FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \

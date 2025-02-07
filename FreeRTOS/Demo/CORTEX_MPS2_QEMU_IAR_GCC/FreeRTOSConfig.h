@@ -136,6 +136,8 @@
 #define configENABLE_BACKWARD_COMPATIBILITY 0
 
 /* TODO TraceRecorder (Step 5): Include trcRecorder.h at the end of FreeRTOSConfig.h. */
-#include "trcRecorder.h"
+#ifndef __IASMARM__
+    #include "trcRecorder.h"
+#endif
 
 #endif /* FREERTOS_CONFIG_H */

@@ -22,20 +22,32 @@ If you like to study how TraceRecorder is integrated, the steps for adding Trace
 This way, if using an Eclipse-based IDE, you can find a summary in the Tasks window by selecting Window -> Show View -> Tasks (or Other, if not listed).
 See also [the official getting-started guide](https://traceviewer.io/getting-started-freertos-view).
 
-### Usage with GCC
-To save the TraceRecorder trace, start a debug session with GDB, for example using the provided Eclipse launch profile (should work in most Eclipse-based IDEs).
+### Usage with GDB
+To save the TraceRecorder trace, start a debug session with GDB.
 Halt the execution and the run the command below. 
 This saves the trace as trace.bin in the build/gcc folder.
 Open the trace file in Percepio View or Tracealyzer.
 
+If using an Eclipse-based IDE, run the following command in the "Debugger Console":
 ```
 dump binary value trace.bin *RecorderDataPtr
 ```
-Note that you can copy/paste this command into the Eclipse Debugger Console by using Ctrl-C, Ctrl-V.
+
+If using VS Code, use the "Debug Console" and add "-exec" before the command:
+```
+-exec dump binary value trace.bin *RecorderDataPtr
+```
+
+Note that you can typically copy/paste this command into the debug console.
+
 
 ### Usage with IAR Embedded Workbench for Arm
-The IAR project is not yet updated for TraceRecorder (work in progress). However, you can easily extend the existing IAR project with TraceRecorder.
-Simply add the source files and include paths for TraceRecorder listed in build/gcc/Makefile. Build and run.
-To save the trace, please refer to the guides at [https://percepio.com/iar](https://percepio.com/iar).
+Launch the IAR debugger. With the default project configuration, this should connect to the QEMU GDB server.
+To save the trace, please refer to the "Snapshot Mode" guide at [https://percepio.com/iar](https://percepio.com/iar).
+In summary:
+- Download the IAR macro file [save_trace_buffer.mac](https://percepio.com/downloads/save_trace_buffer.mac) (click "save as")
+- Add the macro file in the project options -> Debugger -> Use Macro File(s). 
+- Start debugging and open View -> Macros -> Debugger Macros.
+- Locate and run "save_trace_buffer". Open the resulting "trace.hex" in Percepio View or Tracealyzer.
 
 

@@ -1097,7 +1097,12 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
 
     /* Test Verifications */
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
+
+#if ( configNUMBER_OF_CORES > 1 )
     TEST_ASSERT_EQUAL_STRING( "IDLE longX0", xIdleTask->pcTaskName );
+#else
+    TEST_ASSERT_EQUAL_STRING( "IDLE longXX", xIdleTask->pcTaskName );
+#endif /* configNUMBER_OF_CORES */
 
     /* Clean up idle task. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
@@ -1160,9 +1165,12 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
 
     /* Test Verifications */
-    TEST_ASSERT_EQUAL_STRING_LEN( "IDLE long 0",
-                                  xIdleTask->pcTaskName,
-                                  configMAX_TASK_NAME_LEN - 1 );
+#if ( configNUMBER_OF_CORES > 1 )
+    TEST_ASSERT_EQUAL_STRING( "IDLE long 0", xIdleTask->pcTaskName );
+#else
+    TEST_ASSERT_EQUAL_STRING( "IDLE long n", xIdleTask->pcTaskName );
+#endif /* configNUMBER_OF_CORES */
+
 
     /* Clean up idle task. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )

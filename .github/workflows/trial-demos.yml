@@ -64,6 +64,11 @@ jobs:
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+      
+      - name: Install Common Dependencies
+        run: |
+          choco install vcredist140 -y
+          choco install windows-sdk-10.0 -y
 
       - env:
           stepName: Install Glib

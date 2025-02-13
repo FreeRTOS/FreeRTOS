@@ -781,7 +781,7 @@ jobs:
         run: |
           # ${{ env.stepName }}
           echo "::group::${{ env.stepName }}"
-          msbuild mqtt_multitask_demo.sln -t:rebuild -property:Configuration=Debug -m
+          msbuild mqtt_multitask_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
           if($? -eq 1) {
             echo "::endgroup::"
             echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
@@ -790,6 +790,17 @@ jobs:
             echo "${{ env.pwshFail }} ${{ env.stepName }} ${{ env.pwshEnd }}"
             exit 1
           }
+      
+      - env:
+          stepName: Run and monitor MQTT Multi-Task Demo
+        name: ${{ env.stepName }}
+        uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
+        with:
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask/Debug_with_Libslirp/MQTT_Multitask.exe
+          log-dir: demo_run_logs
+          timeout-seconds: 90
+          success-line: "Demo completed successfully"
+          retry-attempts: 3
 
       - env:
           stepName: Configure corePKCS11_MQTT_Mutual_Auth_Windows_Simulator

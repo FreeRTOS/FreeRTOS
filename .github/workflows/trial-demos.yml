@@ -1,4 +1,4 @@
-name: Build FreeRTOS+ Demos
+name: Trial Demos
 on:
   workflow_dispatch:
   push:
@@ -153,7 +153,7 @@ jobs:
         run: |
           # ${{ env.stepName }}
           echo "::group::${{ env.stepName }}"
-          msbuild mqtt_multitask_demo.sln -t:rebuild -property:Configuration=Debug_with_Libslirp -property:Platform=Win32 -m
+          msbuild mqtt_multitask_demo.sln -t:rebuild -property:Configuration=Debug -property:Platform=Win32 -m
           if($? -eq 1) {
             echo "::endgroup::"
             echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
@@ -168,7 +168,7 @@ jobs:
         name: ${{ env.stepName }}
         uses: FreeRTOS/CI-CD-GitHub-Actions/executable-monitor@main
         with:
-          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask/Debug_with_Libslirp/MQTT_Multitask.exe
+          exe-path: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask/Debug/MQTT_Multitask.exe
           log-dir: demo_run_logs
           timeout-seconds: 90
           success-line: "Demo completed successfully"

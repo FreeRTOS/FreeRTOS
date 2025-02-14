@@ -10,7 +10,7 @@ SIZE = arm-none-eabi-size
 MAKE = make
 
 CFLAGS += -ffreestanding -mthumb -mcpu=cortex-m3
-CFLAGS += -Wall -Wextra -Wshadow
+CFLAGS += -Wall -Wextra -Wshadow -Wno-unused-value
 CFLAGS += -g3 -Os -ffunction-sections -fdata-sections
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
 #CFLAGS += -std=c99
@@ -91,6 +91,45 @@ SOURCE_FILES += ./startup_gcc.c
 SOURCE_FILES += ./RegTest.c
 # Lightweight print formatting to use in place of the heavier GCC equivalent.
 SOURCE_FILES += ./printf-stdarg.c
+
+# Percepio TraceRecorder (FreeRTOS-Plus-Trace)
+TRACERECORDER_DIR = $(DEMO_ROOT)/../../FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
+TRACERECORDER_CFG_DIR = $(DEMO_PROJECT)/TraceRecorderConfig
+VPATH += $(TRACERECORDER_DIR)
+VPATH += $(TRACERECORDER_DIR)/kernelports/FreeRTOS
+VPATH += $(TRACERECORDER_DIR)/streamports/RingBuffer
+INCLUDE_DIRS += -I$(TRACERECORDER_CFG_DIR)
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/include 
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/kernelports/FreeRTOS/include
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/streamports/RingBuffer/include
+SOURCE_FILES +=	(TRACERECORDER_DIR)/kernelports/FreeRTOS/trcKernelPort.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/streamports/RingBuffer/trcStreamPort.c
+SOURCE_FILES += (TRACERECORDER_DIR)/trcAssert.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcCounter.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcDependency.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcDiagnostics.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcEntryTable.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcError.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcEvent.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcEventBuffer.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcExtension.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcHardwarePort.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcHeap.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcInternalEventBuffer.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcInterval.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcISR.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcMultiCoreEventBuffer.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcObject.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcPrint.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcRunnable.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcSnapshotRecorder.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStackMonitor.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStateMachine.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStaticBuffer.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcStreamingRecorder.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcString.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcTask.c
+SOURCE_FILES +=	(TRACERECORDER_DIR)/trcTimestamp.c
 
 #Create a list of object files with the desired output directory path.
 OBJS = $(SOURCE_FILES:%.c=%.o)

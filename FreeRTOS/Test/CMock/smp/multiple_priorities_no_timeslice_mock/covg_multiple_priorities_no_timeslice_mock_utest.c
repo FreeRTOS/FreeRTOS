@@ -802,13 +802,14 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
     vFakePortAssertIfISR_Expect();
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
+    vFakePortGetTaskLock_Expect( 0 );
     /* prvCheckForRunStateChange */
-    vFakePortAssertIfISR_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortAssertIfISR_Expect();
     /* End of prvCheckForRunStateChange */
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
     /* End of vTaskSuspendAll */
 
@@ -826,7 +827,7 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_1( void )
 
     vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
@@ -908,12 +909,13 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
     vFakePortAssertIfISR_Stub( port_assert_if_isr_cb );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
+    vFakePortGetTaskLock_Expect( 0 );
     /* prvCheckForRunStateChange */
     vFakePortGetCoreID_ExpectAndReturn( 0 );
     /* End of prvCheckForRunStateChange */
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
     /* End of vTaskSuspendAll */
 
@@ -926,7 +928,7 @@ void test_coverage_prvGetExpectedIdleTime_ready_list_eq_2( void )
 
     vFakePortEnterCriticalSection_Expect();
     vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     listCURRENT_LIST_LENGTH_ExpectAndThrow( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ),
@@ -1095,7 +1097,7 @@ void test_coverage_prvCreateIdleTasks_name_within_max_len( void )
 
     /* Test Verifications */
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
-    TEST_ASSERT_EQUAL_STRING( configIDLE_TASK_NAME, xIdleTask->pcTaskName );
+    TEST_ASSERT_EQUAL_STRING( "IDLE longX0", xIdleTask->pcTaskName );
 
     /* Clean up idle task. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
@@ -1158,7 +1160,7 @@ void test_coverage_prvCreateIdleTasks_name_too_long( void )
     xIdleTask = ( TCB_t * ) xIdleTaskHandles[ 0 ];
 
     /* Test Verifications */
-    TEST_ASSERT_EQUAL_STRING_LEN( configIDLE_TASK_NAME,
+    TEST_ASSERT_EQUAL_STRING_LEN( "IDLE long 0",
                                   xIdleTask->pcTaskName,
                                   configMAX_TASK_NAME_LEN - 1 );
 

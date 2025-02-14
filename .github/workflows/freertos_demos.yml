@@ -406,8 +406,12 @@ jobs:
               # ${{ env.stepName }}
               echo -e "::group::${{ env.stepName }}"
               set +e
-              sudo apt-get -y update
-              sudo apt-get -y install gcc-msp430 build-essential
+              curl -L -O https://dr-download.ti.com/software-development/ide-configuration-compiler-or-debugger/MD-LlCjWuAbzH/9.3.1.2/msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
+              sudo apt update -y
+              sudo apt install -y p7zip-full
+              7z x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
+              chmod +x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run
+              sudo ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run --prefix /usr/bin/msp430-gcc --mode unattended
               exitStatus=$?
               set -e
               echo -e "::endgroup::"
@@ -427,7 +431,7 @@ jobs:
               # ${{ env.stepName }}
               echo -e "::group::${{ env.stepName }}"
               set +e
-              make -j
+              make -j  CC=/usr/bin/msp430-gcc/bin/msp430-elf-gcc OPT="-Os -I/usr/bin/msp430-gcc/include -L/usr/bin/msp430-gcc/include"
               exitStatus=$?
               set -e
               echo -e "::endgroup::"
@@ -455,7 +459,7 @@ jobs:
           # ${{ env.stepName }}
           echo -e "::group::${{ env.stepName }}"
           set +e
-          git submodule update --checkout --init --depth 1 FreeRTOS/Source FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+          git submodule update --checkout --init --depth 1 FreeRTOS/Source FreeRTOS/Demo/ThirdParty/Community-Supported-Demos FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace
           exitStatus=$?
           set -e
           echo -e "::endgroup::"
@@ -476,7 +480,7 @@ jobs:
           set +e
           sudo apt-get -y update
           sudo apt-get -y install gcc-arm-none-eabi build-essential cmake git ninja-build python3-minimal
-          sudo apt-get -y install qemu-system-arm qemu-efi
+          sudo apt-get -y install qemu-system-arm qemu-efi-arm
           exitStatus=$?
           set -e
           echo -e "::endgroup::"

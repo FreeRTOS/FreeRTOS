@@ -37,7 +37,7 @@
  * main_full.c.
  */
 
-.align( 4 )
+.align( 8 )
 vRegTest1Implementation:
 
     /* Fill the core registers with known values. */
@@ -68,6 +68,70 @@ vRegTest1Implementation:
     li x29, 0x1d
     li x30, 0x1e
     li x31, 0x1f
+#endif
+#if __riscv_flen == 64
+    li x15, 0xC030000000000000 // -16
+    fmv.d.x f0, x15
+    li x15, 0xC02E000000000000 // -15
+    fmv.d.x f1, x15
+    li x15, 0xC02C000000000000 // -14
+    fmv.d.x f2, x15
+    li x15, 0xc02a000000000000 // -13
+    fmv.d.x f3, x15
+    li x15, 0xC028000000000000 // -12
+    fmv.d.x f4, x15
+    li x15, 0xC026000000000000 // -11
+    fmv.d.x f5, x15
+    li x15, 0xc024000000000000 // -10
+    fmv.d.x f6, x15
+    li x15, 0xc022000000000000 // -9
+    fmv.d.x f7, x15
+    li x15, 0xc020000000000000 // -8
+    fmv.d.x f8, x15
+    li x15, 0xc01c000000000000 // -7
+    fmv.d.x f9, x15
+    li x15, 0xc018000000000000 // -6
+    fmv.d.x f10, x15
+    li x15, 0xc014000000000000 // -5
+    fmv.d.x f11, x15
+    li x15, 0xc010000000000000 // -4
+    fmv.d.x f12, x15
+    li x15, 0xc008000000000000 // -3
+    fmv.d.x f13, x15
+    li x15, 0xc000000000000000 // -2
+    fmv.d.x f14, x15
+    li x15, 0xbff0000000000000 // -1
+    fmv.d.x f15, x15
+    li x15, 0                  // 0
+    fmv.d.x f16, x15
+    li x15, 0x3ff0000000000000 // 1
+    fmv.d.x f17, x15
+    li x15, 0x4000000000000000 // 2
+    fmv.d.x f18, x15
+    li x15, 0x4008000000000000 // 3
+    fmv.d.x f19, x15
+    li x15, 0x4010000000000000 // 4
+    fmv.d.x f20, x15
+    li x15, 0x4014000000000000 // 5
+    fmv.d.x f21, x15
+    li x15, 0x4018000000000000 // 6
+    fmv.d.x f22, x15
+    li x15, 0x401c000000000000 // 7
+    fmv.d.x f23, x15
+    li x15, 0x4020000000000000 // 8
+    fmv.d.x f24, x15
+    li x15, 0x4022000000000000 // 9
+    fmv.d.x f25, x15
+    li x15, 0x4024000000000000 // 10
+    fmv.d.x f26, x15
+    li x15, 0x4026000000000000 // 11
+    fmv.d.x f27, x15
+    li x15, 0x4028000000000000 // 12
+    fmv.d.x f28, x15
+    li x15, 0x402a000000000000 // 13
+    fmv.d.x f29, x15
+    li x15, 0x402C000000000000 // 14
+    fmv.d.x f30, x15
 #endif
 
 reg1_loop:
@@ -129,12 +193,145 @@ reg1_loop:
     li x15, 0x1f
     bne x15, x31, reg1_error_loop
 #endif
+#if __riscv_flen == 64
+    li x15, 0xC030000000000000 // -16
+    fmv.d.x f31, x15
+    feq.d x15, f0, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xC02E000000000000 // -15
+    fmv.d.x f31, x15
+    feq.d x15, f1, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xC02C000000000000 // -14
+    fmv.d.x f31, x15
+    feq.d x15, f2, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc02a000000000000 // -13
+    fmv.d.x f31, x15
+    feq.d x15, f3, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xC028000000000000 // -12
+    fmv.d.x f31, x15
+    feq.d x15, f4, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xC026000000000000 // -11
+    fmv.d.x f31, x15
+    feq.d x15, f5, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc024000000000000 // -10
+    fmv.d.x f31, x15
+    feq.d x15, f6, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc022000000000000 // -9
+    fmv.d.x f31, x15
+    feq.d x15, f7, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc020000000000000 // -8
+    fmv.d.x f31, x15
+    feq.d x15, f8, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc01c000000000000 // -7
+    fmv.d.x f31, x15
+    feq.d x15, f9, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc018000000000000 // -6
+    fmv.d.x f31, x15
+    feq.d x15, f10, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc014000000000000 // -5
+    fmv.d.x f31, x15
+    feq.d x15, f11, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc010000000000000 // -4
+    fmv.d.x f31, x15
+    feq.d x15, f12, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc008000000000000 // -3
+    fmv.d.x f31, x15
+    feq.d x15, f13, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xc000000000000000 // -2
+    fmv.d.x f31, x15
+    feq.d x15, f14, f31
+    beqz x15, reg1_error_loop
+    li x15, 0xbff0000000000000 // -1
+    fmv.d.x f31, x15
+    feq.d x15, f15, f31
+    beqz x15, reg1_error_loop
+    li x15, 0                  // 0
+    fmv.d.x f31, x15
+    feq.d x15, f16, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x3ff0000000000000 // 1
+    fmv.d.x f31, x15
+    feq.d x15, f17, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4000000000000000 // 2
+    fmv.d.x f31, x15
+    feq.d x15, f18, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4008000000000000 // 3
+    fmv.d.x f31, x15
+    feq.d x15, f19, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4010000000000000 // 4
+    fmv.d.x f31, x15
+    feq.d x15, f20, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4014000000000000 // 5
+    fmv.d.x f31, x15
+    feq.d x15, f21, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4018000000000000 // 6
+    fmv.d.x f31, x15
+    feq.d x15, f22, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x401c000000000000 // 7
+    fmv.d.x f31, x15
+    feq.d x15, f23, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4020000000000000 // 8
+    fmv.d.x f31, x15
+    feq.d x15, f24, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4022000000000000 // 9
+    fmv.d.x f31, x15
+    feq.d x15, f25, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4024000000000000 // 10
+    fmv.d.x f31, x15
+    feq.d x15, f26, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4026000000000000 // 11
+    fmv.d.x f31, x15
+    feq.d x15, f27, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x4028000000000000 // 12
+    fmv.d.x f31, x15
+    feq.d x15, f28, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x402a000000000000 // 13
+    fmv.d.x f31, x15
+    feq.d x15, f29, f31
+    beqz x15, reg1_error_loop
+    li x15, 0x402C000000000000 // 14
+    fmv.d.x f31, x15
+    feq.d x15, f30, f31
+    beqz x15, reg1_error_loop
+#endif
 
     /* Everything passed, increment the loop counter. */
+#if __riscv_xlen == 64
+    ld x15, ulRegTest1LoopCounterConst
+    ld x14, 0(x15)
+    addi x14, x14, 1
+    sd x14, 0(x15)
+#else
     lw x15, ulRegTest1LoopCounterConst
     lw x14, 0(x15)
     addi x14, x14, 1
     sw x14, 0(x15)
+#endif
 
     /* Restore clobbered register reading for next loop. */
     li x14, 0xe
@@ -149,12 +346,12 @@ reg1_error_loop:
     /* Busy loop which holds the task. */
     jal reg1_error_loop
 
-.align( 4 )
-ulRegTest1LoopCounterConst: .word ulRegTest1LoopCounter
+.align( 8 )
+ulRegTest1LoopCounterConst: .dword ulRegTest1LoopCounter
 
 /*-----------------------------------------------------------*/
 
-.align( 4 )
+.align( 8 )
 vRegTest2Implementation:
 
     /* Fill the core registers with known values. */
@@ -185,6 +382,70 @@ vRegTest2Implementation:
     li x29, 0x2d
     li x30, 0x2e
     li x31, 0x2f
+#endif
+#if __riscv_flen == 64
+    li x5, 0x402E000000000000 // 15
+    fmv.d.x f1, x5
+    li x5, 0x402C000000000000 // 14
+    fmv.d.x f2, x5
+    li x5, 0x402a000000000000 // 13
+    fmv.d.x f3, x5
+    li x5, 0x4028000000000000 // 12
+    fmv.d.x f4, x5
+    li x5, 0x4026000000000000 // 11
+    fmv.d.x f5, x5
+    li x5, 0x4024000000000000 // 10
+    fmv.d.x f6, x5
+    li x5, 0x4022000000000000 // 9
+    fmv.d.x f7, x5
+    li x5, 0x4020000000000000 // 8
+    fmv.d.x f8, x5
+    li x5, 0x401c000000000000 // 7
+    fmv.d.x f9, x5
+    li x5, 0x4018000000000000 // 6
+    fmv.d.x f10, x5
+    li x5, 0x4014000000000000 // 5
+    fmv.d.x f11, x5
+    li x5, 0x4010000000000000 // 4
+    fmv.d.x f12, x5
+    li x5, 0x4008000000000000 // 3
+    fmv.d.x f13, x5
+    li x5, 0x4000000000000000 // 2
+    fmv.d.x f14, x5
+    li x5, 0x3ff0000000000000 // 1
+    fmv.d.x f15, x5
+    li x5, 0                  // 0
+    fmv.d.x f16, x5
+    li x5, 0xbff0000000000000 // -1
+    fmv.d.x f17, x5
+    li x5, 0xc000000000000000 // -2
+    fmv.d.x f18, x5
+    li x5, 0xc008000000000000 // -3
+    fmv.d.x f19, x5
+    li x5, 0xc010000000000000 // -4
+    fmv.d.x f20, x5
+    li x5, 0xc014000000000000 // -5
+    fmv.d.x f21, x5
+    li x5, 0xc018000000000000 // -6
+    fmv.d.x f22, x5
+    li x5, 0xc01c000000000000 // -7
+    fmv.d.x f23, x5
+    li x5, 0xc020000000000000 // -8
+    fmv.d.x f24, x5
+    li x5, 0xc022000000000000 // -9
+    fmv.d.x f25, x5
+    li x5, 0xc024000000000000 // -10
+    fmv.d.x f26, x5
+    li x5, 0xC026000000000000 // -11
+    fmv.d.x f27, x5
+    li x5, 0xC028000000000000 // -12
+    fmv.d.x f28, x5
+    li x5, 0xC02A000000000000 // -13
+    fmv.d.x f29, x5
+    li x5, 0xC02C000000000000 // -14
+    fmv.d.x f30, x5
+    li x5, 0xC02E000000000000 // -15
+    fmv.d.x f31, x5
 #endif
 
 Reg2_loop:
@@ -246,12 +507,145 @@ Reg2_loop:
     li x5, 0x2f
     bne x5, x31, reg2_error_loop
 #endif
+#if __riscv_flen == 64
+    li x5, 0x402E000000000000 // 15
+    fmv.d.x f0, x5
+    feq.d x5, f1, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x402C000000000000 // 14
+    fmv.d.x f0, x5
+    feq.d x5, f2, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x402a000000000000 // 13
+    fmv.d.x f0, x5
+    feq.d x5, f3, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4028000000000000 // 12
+    fmv.d.x f0, x5
+    feq.d x5, f4, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4026000000000000 // 11
+    fmv.d.x f0, x5
+    feq.d x5, f5, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4024000000000000 // 10
+    fmv.d.x f0, x5
+    feq.d x5, f6, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4022000000000000 // 9
+    fmv.d.x f0, x5
+    feq.d x5, f7, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4020000000000000 // 8
+    fmv.d.x f0, x5
+    feq.d x5, f8, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x401c000000000000 // 7
+    fmv.d.x f0, x5
+    feq.d x5, f9, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4018000000000000 // 6
+    fmv.d.x f0, x5
+    feq.d x5, f10, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4014000000000000 // 5
+    fmv.d.x f0, x5
+    feq.d x5, f11, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4010000000000000 // 4
+    fmv.d.x f0, x5
+    feq.d x5, f12, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4008000000000000 // 3
+    fmv.d.x f0, x5
+    feq.d x5, f13, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x4000000000000000 // 2
+    fmv.d.x f0, x5
+    feq.d x5, f14, f0
+    beqz x5, reg2_error_loop
+    li x5, 0x3ff0000000000000 // 1
+    fmv.d.x f0, x5
+    feq.d x5, f15, f0
+    beqz x5, reg2_error_loop
+    li x5, 0                  // 0
+    fmv.d.x f0, x5
+    feq.d x5, f16, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xbff0000000000000 // -1
+    fmv.d.x f0, x5
+    feq.d x5, f17, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc000000000000000 // -2
+    fmv.d.x f0, x5
+    feq.d x5, f18, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc008000000000000 // -3
+    fmv.d.x f0, x5
+    feq.d x5, f19, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc010000000000000 // -4
+    fmv.d.x f0, x5
+    feq.d x5, f20, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc014000000000000 // -5
+    fmv.d.x f0, x5
+    feq.d x5, f21, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc018000000000000 // -6
+    fmv.d.x f0, x5
+    feq.d x5, f22, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc01c000000000000 // -7
+    fmv.d.x f0, x5
+    feq.d x5, f23, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc020000000000000 // -8
+    fmv.d.x f0, x5
+    feq.d x5, f24, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc022000000000000 // -9
+    fmv.d.x f0, x5
+    feq.d x5, f25, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xc024000000000000 // -10
+    fmv.d.x f0, x5
+    feq.d x5, f26, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xC026000000000000 // -11
+    fmv.d.x f0, x5
+    feq.d x5, f27, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xC028000000000000 // -12
+    fmv.d.x f0, x5
+    feq.d x5, f28, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xC02A000000000000 // -13
+    fmv.d.x f0, x5
+    feq.d x5, f29, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xC02C000000000000 // -14
+    fmv.d.x f0, x5
+    feq.d x5, f30, f0
+    beqz x5, reg2_error_loop
+    li x5, 0xC02E000000000000 // -15
+    fmv.d.x f0, x5
+    feq.d x5, f31, f0
+    beqz x5, reg2_error_loop
+#endif
 
     /* Everything passed, increment the loop counter. */
+#if __riscv_xlen == 64
+    ld x5, ulRegTest2LoopCounterConst
+    ld x6, 0(x5)
+    addi x6, x6, 1
+    sd x6, 0(x5)
+#else
     lw x5, ulRegTest2LoopCounterConst
     lw x6, 0(x5)
     addi x6, x6, 1
     sw x6, 0(x5)
+#endif
 
     /* Restore clobbered register reading for next loop. */
     li x6, 0x61
@@ -263,5 +657,5 @@ reg2_error_loop:
     /* Busy loop which holds the task. */
     jal reg2_error_loop
 
-.align( 4 )
-ulRegTest2LoopCounterConst: .word ulRegTest2LoopCounter
+.align( 8 )
+ulRegTest2LoopCounterConst: .dword ulRegTest2LoopCounter

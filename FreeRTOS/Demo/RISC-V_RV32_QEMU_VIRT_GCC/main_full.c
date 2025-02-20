@@ -249,7 +249,11 @@ static void prvCheckTask( void * pvParameters )
     ( void ) pvParameters;
 
     /* Demo start marker. */
+#if __riscv_flen == 64
+    printf( "FreeRTOS Demo Start (With FPU)\r\n" );
+#else
     printf( "FreeRTOS Demo Start\r\n" );
+#endif
 
     xPreviousWakeTime = xTaskGetTickCount();
 

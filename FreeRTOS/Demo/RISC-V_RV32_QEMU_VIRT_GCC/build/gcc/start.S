@@ -68,6 +68,12 @@ _start:
 	addi a0, a0, REGSIZE
 	bltu a0, a1, 1b
 2:
+#ifdef __riscv_fdiv
+	// Enable FPU
+	li          t0, (1 << 13)
+	csrs        mstatus, t0
+	fscsr       x0
+#endif
 
 	// argc, argv, envp is 0
 	li  a0, 0

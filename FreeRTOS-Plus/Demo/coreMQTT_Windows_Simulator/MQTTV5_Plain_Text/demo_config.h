@@ -88,6 +88,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigMQTT_BROKER_ENDPOINT				"insert here."
  */
+//#define democonfigMQTT_BROKER_ENDPOINT ("localhost")
+#define democonfigMQTT_BROKER_ENDPOINT ("test.mosquitto.org")
+#define democonfigMQTT_BROKER_PORT ( 1883 )
 
 
 /**
@@ -113,7 +116,5 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 #endif /* DEMO_CONFIG_H */
 
-#define democonfigMQTT_BROKER_ENDPOINT ("test.mosquitto.org")
-#define democonfigMQTT_BROKER_PORT ( 1883 )
 
 

@@ -48,9 +48,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DemoTasks\PlaintextMQTTExample.c">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\main.c">
       <Filter>Source</Filter>
     </ClCompile>
@@ -71,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.c">
       <Filter>Additional Network Transport Files\PlaintextTransport</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\demo-aditi.c">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

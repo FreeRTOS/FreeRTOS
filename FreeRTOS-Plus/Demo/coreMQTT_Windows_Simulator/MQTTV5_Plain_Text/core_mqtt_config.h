@@ -64,8 +64,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
-/* Enable version 5*/
+/* Enable version 5*/ /*
 #define MQTT_VERSION_5_ENABLED (true)
+
+#define MQTT_USER_PROPERTY_ENABLED    ( true ) */
 
 /**
  * @brief The maximum number of MQTT PUBLISH messages that may be pending

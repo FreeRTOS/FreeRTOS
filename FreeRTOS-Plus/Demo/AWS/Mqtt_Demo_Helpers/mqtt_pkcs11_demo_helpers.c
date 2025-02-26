@@ -49,6 +49,7 @@
 
 /* MQTT library includes. */
 #include "core_mqtt.h"
+#include "core_mqtt_config.h"
 
 /* Exponential backoff retry include. */
 #include "backoff_algorithm.h"

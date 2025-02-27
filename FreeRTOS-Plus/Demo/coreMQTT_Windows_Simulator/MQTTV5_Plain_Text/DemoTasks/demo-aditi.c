@@ -233,11 +233,14 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
  */
 static uint32_t prvGetTimeMs( void );
 static uint16_t usUnsubscribePacketIdentifier;
+static uint16_t usPublishPacketIdentifier;
 
 
 static void prvMQTTSubscribeToTopics(MQTTContext_t * pxMQTTContext) ; 
 
 static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext);
+
+static void prvMQTTPublishToTopics(MQTTContext_t* pxMQTTContext);
 
 /**
  * @brief The application callback function for getting the incoming publishes,
@@ -445,11 +448,30 @@ static void prvMQTTDemoTask( void * pvParameters )
         /**************************** Publish and Keep-Alive Loop. ******************************/
 
         /* Publish messages with QoS2, and send and process keep-alive messages. */
+
+
+
+
+        ///* Leave connection idle for some time. */
+        //LogInfo(("Keeping Connection Idle...\r\n\r\n"));
+        //vTaskDelay(mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS);
+
+
             /*prvMQTTPublishToTopics(&xMQTTContext); */
             LogInfo( ( "Attempt to send Subcribe to Broker.\r\n" ) );
-            xMQTTStatus = prvProcessLoopWithTimeout( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             prvMQTTSubscribeToTopics(&xMQTTContext) ; 
 
+            prvMQTTPublishToTopics(&xMQTTContext);
+            /* Process incoming publish echo. Since the application subscribed and published
+            / * to the same topic, the broker will send the incoming publish message back
+            / * to the application. */
+            //LogInfo(("Attempt to receive publishes from broker.\r\n"));
+            //xMQTTStatus = prvProcessLoopWithTimeout(&xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS);
+            //configASSERT(xMQTTStatus == MQTTSuccess);
+
+            ///* Leave connection idle for some time. */
+            //LogInfo(("Keeping Connection Idle...\r\n\r\n"));
+            //vTaskDelay(mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS);
 
             prvMQTTUnsubscribeFromTopics(&xMQTTContext);
 
@@ -677,9 +699,10 @@ static void prvMQTTProcessResponse(MQTTPacketInfo_t* pxIncomingPacket,
 
     switch (pxIncomingPacket->type)
     {
-    case MQTT_PACKET_TYPE_SUBACK:
-        LogInfo(("Suback received for packet ID %u.\n\n", usPacketId)); 
-        break; 
+    case MQTT_PACKET_TYPE_SUBACK : 
+        LogInfo(("SUBACK received for packet ID %u.", usPacketId));
+        configASSERT(usSubscribePacketIdentifier == usPacketId);
+        break;
     case MQTT_PACKET_TYPE_UNSUBACK :
         LogInfo(("Unsuback received for packet ID %u. \n\n", usPacketId)); 
         break;
@@ -722,7 +745,24 @@ static void prvMQTTProcessResponse(MQTTPacketInfo_t* pxIncomingPacket,
     }
 }
 
+static void prvUpdateSubAckStatus(MQTTPacketInfo_t* pxPacketInfo)
+{
+    MQTTStatus_t xResult = MQTTSuccess;
+    uint8_t* pucPayload = NULL;
+    size_t ulSize = 0;
+    uint32_t ulTopicCount = 0U;
 
+    xResult = MQTT_GetSubAckStatusCodes(pxPacketInfo, &pucPayload, &ulSize);
+
+    /* MQTT_GetSubAckStatusCodes always returns success if called with packet info
+     * from the event callback and non-NULL parameters. */
+    configASSERT(xResult == MQTTSuccess);
+
+    for (ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++)
+    {
+        xTopicFilterContext[ulTopicCount].xSubAckStatus = pucPayload[ulTopicCount];
+    }
+}
 
 
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
@@ -869,14 +909,14 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     //}
     xMQTTSubscription[0].qos = MQTTQoS2;
     xMQTTSubscription[0].pTopicFilter = "test1" ;
-    xMQTTSubscription[0].topicFilterLength = 5 ;
+    xMQTTSubscription[0].topicFilterLength = 5;
     xMQTTSubscription[0].noLocalOption = false ; 
     xMQTTSubscription[0].retainHandlingOption = 1 ;
-    xMQTTSubscription[0].retainAsPublishedOption = false ;
+    xMQTTSubscription[0].retainAsPublishedOption = true ;
 
     ulTopicCount ++ ; 
 
-    xMQTTSubscription[1].qos = MQTTQoS0;
+    xMQTTSubscription[1].qos = MQTTQoS2;
     xMQTTSubscription[1].pTopicFilter = "test2" ;
     xMQTTSubscription[1].topicFilterLength = 5 ;
     xMQTTSubscription[1].noLocalOption = false ; 
@@ -985,6 +1025,7 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
 }   
 
 
+
 static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
 {
     MQTTStatus_t xResult;
@@ -1028,3 +1069,85 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
 
     configASSERT(xResult == MQTTSuccess);
 }
+
+
+static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
+{
+    MQTTStatus_t xResult;
+    MQTTPublishInfo_t xMQTTPublishInfo;
+    /***
+     * For readability, error handling in this function is restricted to the use of
+     * asserts().
+     ***/
+        /* Some fields are not used by this demo so start with everything at 0. */
+        ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
+        /* This demo uses QoS0 */
+        MQTTUserProperties_t userProperty;
+        userProperty.count = 1;
+        userProperty.userProperty[0].pKey = "Key1";
+        userProperty.userProperty[0].pValue = "Value1";
+        userProperty.userProperty[0].keyLength = 4;
+        userProperty.userProperty[0].valueLength = 6;
+        xMQTTPublishInfo.topicAlias = 2U;
+        xMQTTPublishInfo.qos = MQTTQoS2;
+        xMQTTPublishInfo.retain = false;
+        xMQTTPublishInfo.pTopicName = "test1";
+        xMQTTPublishInfo.topicNameLength = 5;
+        xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
+        xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
+        xMQTTPublishInfo.pUserProperty = &userProperty;
+
+        /* Get a unique packet id. */
+        usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
+
+        LogInfo( ( "Publishing to the MQTT topic %s.\r\n", xMQTTPublishInfo.pTopicName));
+        /* Send PUBLISH packet. */
+        xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
+        configASSERT( xResult == MQTTSuccess );
+
+        ///*Publish using only topic alias*/
+        //xMQTTPublishInfo.topicAlias = 2U;
+        //xMQTTPublishInfo.topicNameLength = 0U;
+        //xMQTTPublishInfo.pUserProperty = NULL;
+        //xMQTTPublishInfo.pPayload = "OnlyTopicAlias";
+        //xMQTTPublishInfo.payloadLength = 14;
+        //usPublishPacketIdentifier = MQTT_GetPacketId(pxMQTTContext);
+        //LogInfo( ( "Publishing to the MQTT topic only using topic alias "));
+        ///* Send PUBLISH packet. */
+        //xResult = MQTT_Publish(pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier);
+        //configASSERT(xResult == MQTTSuccess);
+
+        ///*Publish using Qos 0*/
+        //xMQTTPublishInfo.qos = MQTTQoS0;
+        //xMQTTPublishInfo.pPayload = "UsingQos0";
+        //xMQTTPublishInfo.payloadLength = 9; 
+        //LogInfo(("Publishing Qos0  "));
+
+
+        //xResult = MQTT_Publish(pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier);
+        //configASSERT(xResult == MQTTSuccess);
+
+        ///*Publish using Qos 1*/
+        //xMQTTPublishInfo.qos = MQTTQoS1;
+        //xMQTTPublishInfo.pPayload = "UsingQos1";
+        //xMQTTPublishInfo.payloadLength = 9;
+        //xMQTTPublishInfo.pCorrelationData = "test";
+        //xMQTTPublishInfo.correlationLength = 4;
+        //xMQTTPublishInfo.contentTypeLength = 4;
+        //xMQTTPublishInfo.msgExpiryInterval = 100;
+        //xMQTTPublishInfo.msgExpiryPresent = true;
+        //xMQTTPublishInfo.pContentType = "test";
+        //LogInfo(("Publishing Qos1 "));
+
+        //usPublishPacketIdentifier = MQTT_GetPacketId(pxMQTTContext);
+        //xResult = MQTT_Publish(pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier);
+        //configASSERT(xResult == MQTTSuccess);
+
+        LogInfo(("Attempt to receive publishes from broker.\r\n"));
+        xResult = prvProcessLoopWithTimeout(pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS);
+        configASSERT(xResult == MQTTSuccess);
+
+        /* Leave connection idle for some time. */
+        LogInfo(("Keeping Connection Idle...\r\n\r\n"));
+        vTaskDelay(mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS);
+    }

@@ -40,21 +40,21 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
 
   - name: "coreMQTT"
-    version: "238350a"
+    version: "86a5750"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
 
   - name: "coreMQTT Agent"
-    version: "d3668a6"
+    version: "f48f266"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT-Agent.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "59875a9"
+    version: "44fee05"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"

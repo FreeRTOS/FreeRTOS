@@ -2,14 +2,15 @@
 
 ## Requirements
 
-1. GNU RISC-V toolchains (tested on 
+1. GNU RISC-V toolchains Tested on:
   * Pre-built Sifive GNU Embedded Toolchain — v3.0.4 - https://www.sifive.com/software
   * Self built from https://github.com/riscv-collab/riscv-gnu-toolchain/tree/a33dac0251d17a7b74d99bd8fd401bfce87d2aed (tag: 2025.01.20)
 
-1. qemu-riscv64-system. Tested on
-  * pre-built Sifive QEMU — v3.0.4)- https://www.sifive.com/software
+1. qemu-riscv64-system. Tested on:
+  * pre-built Sifive QEMU — v3.0.4 - https://www.sifive.com/software
   * qemu-system-riscv64 v 8.2.2
-1. Linux OS (tested on Ubuntu 24.04 LTS)
+1. Linux OS. Tested on:
+  * Ubuntu 24.04 LTS
 
 
 ## How to build

@@ -14,10 +14,7 @@ GCC_VERSION = $(shell $(CC) --version | grep ^$(CC) | sed 's/^.* //g' | awk -F. 
 GCC_VERSION_NEED_ZICSR = "110100"
 
 ifeq ($(RVA23),1)
-  # The following ISA string should be used, however since autovectorization may be enabled in libc, 
-  # there may be issues if the Vector registers are not stored when we do task switching. So for the
-  # time being, we don't include the vector extensions.
-  #MARCH = rv64imafdcv_zicsr_zicntr_zihpm_ziccif_ziccrse_ziccamoa_zicclsm_za64rs_zihintpause_zic64b_zicbom_zicbop_zicboz_zfhmin_zkt_zvfhmin_zvbb_zvkt_zihintntl_zawrs
+  # For the time being, we don't include the vector extensions.
   MARCH = rv64imafdc_zicsr_zicntr_zihpm_ziccif_ziccrse_ziccamoa_zicclsm_za64rs_zihintpause_zic64b_zicbom_zicbop_zicboz_zfhmin_zkt_zihintntl_zawrs
   MABI = lp64d
   MCMODEL = medany

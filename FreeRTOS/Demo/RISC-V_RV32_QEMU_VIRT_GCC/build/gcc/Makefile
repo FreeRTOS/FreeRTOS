@@ -18,7 +18,7 @@ ifeq ($(RVA23),1)
   MARCH = rv64imafdc_zicsr_zicntr_zihpm_ziccif_ziccrse_ziccamoa_zicclsm_za64rs_zihintpause_zic64b_zicbom_zicbop_zicboz_zfhmin_zkt_zihintntl_zawrs
   MABI = lp64d
   MCMODEL = medany
-  INCLUDE_DIRS += -I$(KERNEL_PORT_DIR)/chip_specific_extensions/RV32IF_CLINT
+  CFLAGS+=-DconfigENABLE_FPU=1
   $(info  Using RVA23 build)
 else
   ifeq ($(shell test $(GCC_VERSION) -ge $(GCC_VERSION_NEED_ZICSR) && echo true),true)
@@ -28,10 +28,10 @@ else
   endif
   MABI=ilp32
   MCMODEL=medlow
-  INCLUDE_DIRS += -I$(KERNEL_PORT_DIR)/chip_specific_extensions/RV32I_CLINT_no_extensions
   $(info  Using RV32 build)
 endif
 
+INCLUDE_DIRS += -I$(KERNEL_PORT_DIR)/chip_specific_extensions/RV32I_CLINT_no_extensions
 
 CFLAGS += $(INCLUDE_DIRS) -fmessage-length=0 \
           -march=$(MARCH) -mabi=$(MABI) -mcmodel=$(MCMODEL) -ffunction-sections -fdata-sections \
@@ -39,7 +39,7 @@ CFLAGS += $(INCLUDE_DIRS) -fmessage-length=0 \
 
 
 ifeq ($(PICOLIBC),1)
-CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF 
+CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
 else
 CFLAGS += --specs=nano.specs -fno-builtin-printf
 endif

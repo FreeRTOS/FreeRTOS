@@ -168,29 +168,29 @@ static int tiny_print( char **out, const char *format, va_list args, unsigned in
 				width += *format - '0';
 			}
 			if( *format == 's' ) {
-				register char *s = (char *)va_arg( args, int );
+				register char *s = (char *)va_arg( args, long );
 				pc += prints (out, s?s:"(null)", width, pad, buflimit);
 				continue;
 			}
 			if( *format == 'd' ) {
-				pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a', buflimit);
+				pc += printi (out, va_arg( args, long ), 10, 1, width, pad, 'a', buflimit);
 				continue;
 			}
 			if( *format == 'x' ) {
-				pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'a', buflimit);
+				pc += printi (out, va_arg( args, long ), 16, 0, width, pad, 'a', buflimit);
 				continue;
 			}
 			if( *format == 'X' ) {
-				pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'A', buflimit);
+				pc += printi (out, va_arg( args, long ), 16, 0, width, pad, 'A', buflimit);
 				continue;
 			}
 			if( *format == 'u' ) {
-				pc += printi (out, va_arg( args, int ), 10, 0, width, pad, 'a', buflimit);
+				pc += printi (out, va_arg( args, long ), 10, 0, width, pad, 'a', buflimit);
 				continue;
 			}
 			if( *format == 'c' ) {
 				/* char are converted to int then pushed on the stack */
-				scr[0] = (char)va_arg( args, int );
+				scr[0] = (char)va_arg( args, long );
 				scr[1] = '\0';
 				pc += prints (out, scr, width, pad, buflimit);
 				continue;

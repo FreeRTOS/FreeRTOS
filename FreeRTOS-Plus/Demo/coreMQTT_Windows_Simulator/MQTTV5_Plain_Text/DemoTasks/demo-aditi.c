@@ -81,7 +81,7 @@
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
  */
-#define mqttexampleCONNACK_RECV_TIMEOUT_MS                ( 1000U )
+#define mqttexampleCONNACK_RECV_TIMEOUT_MS                ( 100000U )
 
 /**
  * @brief The prefix to the topic(s) subscribe(d) to and publish(ed) to in the example.
@@ -462,6 +462,8 @@ static void prvMQTTDemoTask( void * pvParameters )
             prvMQTTSubscribeToTopics(&xMQTTContext) ; 
 
             prvMQTTPublishToTopics(&xMQTTContext);
+
+
             /* Process incoming publish echo. Since the application subscribed and published
             / * to the same topic, the broker will send the incoming publish message back
             / * to the application. */
@@ -473,7 +475,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             //LogInfo(("Keeping Connection Idle...\r\n\r\n"));
             //vTaskDelay(mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS);
 
-            prvMQTTUnsubscribeFromTopics(&xMQTTContext);
+            prvMQTTUnsubscribeFromTopics(&xMQTTContext); 
 
             ///* Process incoming UNSUBACK packet from the broker. */
             xMQTTStatus = prvProcessLoopWithTimeout(&xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS);
@@ -568,12 +570,11 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
 /*-----------------------------------------------------------*/
 
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
-                                               NetworkContext_t * pxNetworkContext ,
-                                               MQTTConnectProperties_t *pxProperties)
+                                               NetworkContext_t * pxNetworkContext)
 {
     MQTTStatus_t xResult;
     MQTTConnectInfo_t xConnectInfo;
-    MQTTUserProperties_t userProperty ; 
+    MQTTUserProperties_t xUserProperties ; 
     MQTTAckInfo_t disconnect;
     PlaintextTransportStatus_t xNetworkStatus;
     MQTTPublishInfo_t willInfo;
@@ -604,36 +605,61 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Some fields are not used in this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
-    ( void ) memset( ( void * ) pxProperties, 0x00, sizeof(*pxProperties) );
     (void)memset((void*)&disconnect, 0x00, sizeof(disconnect));
     (void)memset((void*)&willInfo, 0x00, sizeof(willInfo));
     (void)memset((void*)&auth, 0x00, sizeof(auth));
-    xResult = MQTTV5_InitConnect(pxProperties);
-    configASSERT(xResult == MQTTSuccess);
-    pxProperties->pIncomingUserProperty = &userProperty;
-    pxMQTTContext->pConnectProperties = pxProperties;
+
+
+    MqttPropBuilder_t propBuilder;
+    uint8_t buf[500];
+    size_t bufLength = sizeof(buf);
+    xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength);
+
+    xUserProperties.count = 1;
+    xUserProperties.userProperty[0].pKey = "Key1";
+    xUserProperties.userProperty[0].pValue = "Value1";
+    xUserProperties.userProperty[0].keyLength = 4;
+    xUserProperties.userProperty[0].valueLength = 6;
+
+    uint32_t sessionExpiry = 20;
+    uint16_t receiveMax = 20 ; 
+    uint32_t maxPacketSize = 200; 
+    uint16_t topicAliasMaximum = 20;
+
+            
+    xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
+    xResult = MQTTPropAdd_ConnSessionExpiry(&(propBuilder), sessionExpiry);
+    xResult = MQTTPropAdd_ConnReceiveMax(&(propBuilder), receiveMax); 
+    xResult = MQTTPropAdd_ConnMaxPacketSize(&(propBuilder), maxPacketSize);
+    xResult = MQTTPropAdd_ConnTopicAliasMax(&(propBuilder), topicAliasMaximum);
+    /*xResult = MQTTPropAdd_ConnRequestProbInfo(&(propBuilder), 0);*/
+    xResult = MQTTPropAdd_ConnRequestRespInfo(&(propBuilder), 1);
+    //xResult = MQTTPropAdd_ConnAuthMethod(&(propBuilder), "SCRAM-SHA-1 ", 11);
+    //xResult = MQTTPropAdd_ConnAuthData(&(propBuilder), "test", 4);
+
+
 
     /* The client identifier is used to uniquely identify this MQTT client to
      * the MQTT broker. In a production device the identifier can be something
      * unique, such as a device serial number. */
-    xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
-    xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
+    //xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
+    //xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
 
     /* Set MQTT keep-alive period. If the application does not send packets at an interval less than
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-    LogInfo(("Create a bad connection with the broker"));
+    //LogInfo(("Create a bad connection with the broker"));
 
-    /*Bad Authentication.*/
-    auth.authDataLength = 4;
-    auth.authMethodLength = 4;
-    auth.pAuthData = "test";
-    auth.pAuthMethod = "test";
-    pxProperties->pOutgoingAuth = &auth;
-    pxProperties->pIncomingAuth = &auth;
-    xResult = MQTT_Connect(pxMQTTContext, &xConnectInfo, NULL, mqttexampleCONNACK_RECV_TIMEOUT_MS,
-        &xSessionPresent);
+    ///*Bad Authentication.*/
+    //auth.authDataLength = 4;
+    //auth.authMethodLength = 13;
+    //auth.pAuthData = "test";
+    //auth.pAuthMethod = "mathChallenge";
+    //pxProperties->pOutgoingAuth = &auth;
+    //pxProperties->pIncomingAuth = &auth;
+    //xResult = MQTT_Connect(pxMQTTContext, &xConnectInfo, NULL, mqttexampleCONNACK_RECV_TIMEOUT_MS,
+    //    &xSessionPresent);
 
 
     /*LWT verification with user properties.*/
@@ -646,22 +672,20 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
     willInfo.pTopicName = "TestWill1234";
     willInfo.topicNameLength = 12;
-    willInfo.pUserProperty = &userProperty;
+    willInfo.pUserProperty = &xUserProperties;
     willInfo.payloadLength = 15;
     willInfo.pPayload = "TestWillPayload";
     willInfo.willDelay = 30;
-    userProperty.count = 1;
-    userProperty.userProperty[0].pKey = "Key1";
-    userProperty.userProperty[0].pValue = "Value1";
-    userProperty.userProperty[0].keyLength= 4;
-    userProperty.userProperty[0].valueLength = 6;
-    pxProperties->pOutgoingAuth = NULL;
-    xResult = MQTT_Connect(pxMQTTContext,
-        &xConnectInfo,
-        &willInfo,
-        mqttexampleCONNACK_RECV_TIMEOUT_MS,
-        &xSessionPresent);
-    Plaintext_FreeRTOS_Disconnect(pxNetworkContext);
+
+    //xResult = MQTT_Connect(pxMQTTContext,
+    //    &xConnectInfo,
+    //    &willInfo,
+    //    mqttexampleCONNACK_RECV_TIMEOUT_MS,
+    //    &xSessionPresent, &propBuilder);
+
+
+
+    //Plaintext_FreeRTOS_Disconnect(pxNetworkContext);
 
 
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
@@ -669,20 +693,26 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     LogInfo(("Create  a good connection with the broker"));
     xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
     xConnectInfo.clientIdentifierLength = (uint16_t)strlen(democonfigCLIENT_IDENTIFIER);
-    pxProperties->sessionExpiry = 20;
-    pxProperties->maxPacketSize = 200;
-    pxProperties->requestResponseInfo = 1;
-    pxProperties->receiveMax = 20;
-    pxProperties->topicAliasMax = 20;
-    pxProperties->requestProblemInfo = 1; 
+    //pxProperties->sessionExpiry = 20;
+    //pxProperties->maxPacketSize = 200;
+    //pxProperties->requestResponseInfo = 1;
+    //pxProperties->receiveMax = 20;
+    //pxProperties->topicAliasMax = 20;
+    //pxProperties->requestProblemInfo = 1; 
 
     xNetworkStatus = prvConnectToServerWithBackoffRetries(pxNetworkContext);
     configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
+    //auth.authDataLength = 4;
+    //auth.authMethodLength = 13;
+    //auth.pAuthData = "test";
+    //auth.pAuthMethod = "mathChallenge";
+    ////pxProperties->pOutgoingAuth = &auth;
+    //pxMQTTContext->pIncomingAuth = &auth;
     xResult = MQTT_Connect( pxMQTTContext,
                             &xConnectInfo,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent );
+                            &xSessionPresent, &propBuilder);
     configASSERT( xResult == MQTTSuccess );
 
     /* Successfully established and MQTT connection with the broker. */
@@ -699,6 +729,9 @@ static void prvMQTTProcessResponse(MQTTPacketInfo_t* pxIncomingPacket,
 
     switch (pxIncomingPacket->type)
     {
+    case MQTT_PACKET_TYPE_PUBLISH:
+        LogInfo(("Incoming Publish received for packet ID %u. \n\n", usPacketId));
+        break;
     case MQTT_PACKET_TYPE_SUBACK : 
         LogInfo(("SUBACK received for packet ID %u.", usPacketId));
         configASSERT(usSubscribePacketIdentifier == usPacketId);
@@ -869,14 +902,13 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     uint16_t usNextRetryBackOff = 0U;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
     MQTTUserProperties_t xUserProperties ; 
-    MQTTSubscribeProperties_t xSubscribeProperties ; 
     bool xFailedSubscribeToTopic = false;
     uint32_t ulTopicCount = 0U;
 
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
     ( void ) memset(( void * ) &xUserProperties, 0x00, sizeof( xUserProperties ));
-    ( void ) memset(( void * ) &xSubscribeProperties, 0x00, sizeof( xSubscribeProperties ));
+    //( void ) memset(( void * ) &xSubscribeProperties, 0x00, sizeof( xSubscribeProperties ));
 
     /* Get a unique packet id. */
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
@@ -891,9 +923,9 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
 
     /*Populating Other Properties*/
 
-    xSubscribeProperties.pUserProperties = &xUserProperties;
-    xSubscribeProperties.propertyLength = 11;
-    xSubscribeProperties.subscriptionId = 1;
+    //xSubscribeProperties.pUserProperties = &xUserProperties;
+    //xSubscribeProperties.propertyLength = 11;
+    //xSubscribeProperties.subscriptionId = 1;
 
 
     /* Populate subscription list. */
@@ -907,7 +939,16 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     //    xMQTTSubscription[0].retainHandlingOption = 1;
     //    xMQTTSubscription[0].retainAsPublishedOption = false;
     //}
-    xMQTTSubscription[0].qos = MQTTQoS2;
+    MqttPropBuilder_t propBuilder;
+    uint8_t buf[500];
+    size_t bufLength = sizeof(buf);
+
+    size_t subId = 2; 
+    xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength); 
+    xResult = MQTTPropAdd_SubscribeId(&(propBuilder), subId); 
+    xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
+
+    xMQTTSubscription[0].qos = MQTTQoS2;  
     xMQTTSubscription[0].pTopicFilter = "test1" ;
     xMQTTSubscription[0].topicFilterLength = 5;
     xMQTTSubscription[0].noLocalOption = false ; 
@@ -959,9 +1000,9 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
          * messages received from the broker will have QOS2. */
         xResult = MQTT_SubscribeV5(pxMQTTContext,
                                   xMQTTSubscription,
-                                  &xSubscribeProperties, 
                                   2,
-                                  usSubscribePacketIdentifier);
+                                  usSubscribePacketIdentifier, 
+                                  &(propBuilder));
         LogInfo(("Attempt to receive SubAcks from Broker. \r\n"));
         configASSERT( xResult == MQTTSuccess );
 
@@ -1032,12 +1073,16 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
     MQTTSubscribeInfo_t xMQTTSubscription = { 0 };
     uint32_t ulTopicCount;
     MQTTUserProperties_t xUserProperties;
-    MQTTSubscribeProperties_t xSubscribeProperties;
 
     /* Some fields are not used by this demo so start with everything at 0. */
     memset((void*)&xMQTTSubscription, 0x00, sizeof(xMQTTSubscription));
     memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties));
-    memset((void*)&xSubscribeProperties, 0x00, sizeof(xSubscribeProperties));
+
+    MqttPropBuilder_t propBuilder;
+    uint8_t buf[500];
+    size_t bufLength = sizeof(buf);
+
+    xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength);
 
     /* Populate subscription list. */
     xUserProperties.count = 1;
@@ -1045,12 +1090,13 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
     xUserProperties.userProperty[0].pValue = "Value1";
     xUserProperties.userProperty[0].keyLength = 4;
     xUserProperties.userProperty[0].valueLength = 6;
+
+    xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
     
     xMQTTSubscription.qos = MQTTQoS2;
     xMQTTSubscription.pTopicFilter = "test1";
     xMQTTSubscription.topicFilterLength = 5;
 
-    xSubscribeProperties.pUserProperties = &xUserProperties;
     
     LogInfo(("Unsubscribing from topic %s.\r\n", xMQTTSubscription.pTopicFilter));
 
@@ -1063,9 +1109,9 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
     /* Send UNSUBSCRIBE packet. */
     xResult = MQTT_UnsubscribeV5(pxMQTTContext,
         &xMQTTSubscription,
-        &xSubscribeProperties,
         1,
-        usUnsubscribePacketIdentifier);
+        usUnsubscribePacketIdentifier,
+        &(propBuilder));
 
     configASSERT(xResult == MQTTSuccess);
 }
@@ -1088,7 +1134,7 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         userProperty.userProperty[0].pValue = "Value1";
         userProperty.userProperty[0].keyLength = 4;
         userProperty.userProperty[0].valueLength = 6;
-        xMQTTPublishInfo.topicAlias = 2U;
+       /* xMQTTPublishInfo.topicAlias = 2U;*/
         xMQTTPublishInfo.qos = MQTTQoS2;
         xMQTTPublishInfo.retain = false;
         xMQTTPublishInfo.pTopicName = "test1";
@@ -1096,6 +1142,7 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
         xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
         xMQTTPublishInfo.pUserProperty = &userProperty;
+        xMQTTPublishInfo.topicAlias = 2U;
 
         /* Get a unique packet id. */
         usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
@@ -1105,12 +1152,12 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
         configASSERT( xResult == MQTTSuccess );
 
-        ///*Publish using only topic alias*/
+        /*Publish using only topic alias*/
         //xMQTTPublishInfo.topicAlias = 2U;
         //xMQTTPublishInfo.topicNameLength = 0U;
         //xMQTTPublishInfo.pUserProperty = NULL;
         //xMQTTPublishInfo.pPayload = "OnlyTopicAlias";
-        //xMQTTPublishInfo.payloadLength = 14;
+        //xMQTTPublishInfo.payloadLength = 14; 
         //usPublishPacketIdentifier = MQTT_GetPacketId(pxMQTTContext);
         //LogInfo( ( "Publishing to the MQTT topic only using topic alias "));
         ///* Send PUBLISH packet. */

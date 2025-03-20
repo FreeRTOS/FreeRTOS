@@ -212,7 +212,7 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
  * @param[in] xNetworkContext network context.
  */
 static void prvCreateMQTTConnectionWithBroker(MQTTContext_t* pxMQTTContext,
-    NetworkContext_t* pxNetworkContext); 
+    NetworkContext_t* pxNetworkContext, MQTTConnectProperties_t* pxProperties, MqttPropBuilder_t* ackPropsBuilder); 
 
 
 
@@ -395,6 +395,14 @@ static void prvMQTTDemoTask( void * pvParameters )
     MQTTConnectProperties_t xProperties;
     MQTTAckInfo_t disconnect = { 0 };
 
+
+
+
+    MqttPropBuilder_t ackPropsBuilder;
+    uint8_t ackPropsBuf[500]; 
+    size_t ackPropsBufLength = sizeof(ackPropsBuf);
+    MqttPropertyBuilder_Init(&(ackPropsBuilder), ackPropsBuf, ackPropsBufLength);
+
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
@@ -441,7 +449,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Send an MQTT CONNECT packet over the established TLS connection,
          * and wait for the connection acknowledgment (CONNACK) packet. */
         LogInfo( ( "Creating an MQTT connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext);
+        prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext, &xProperties, &ackPropsBuilder);
 
 
         /**************************** Publish and Keep-Alive Loop. ******************************/
@@ -569,7 +577,7 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
 /*-----------------------------------------------------------*/
 
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
-                                               NetworkContext_t * pxNetworkContext)
+                                               NetworkContext_t * pxNetworkContext, MQTTConnectProperties_t* pxProperties, MqttPropBuilder_t *ackPropsBuilder)
 {
     MQTTStatus_t xResult;
     MQTTConnectInfo_t xConnectInfo;
@@ -592,8 +600,16 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.recv = Plaintext_FreeRTOS_recv;
     xTransport.writev = NULL;
 
+
+    //MqttPropBuilder_t ackPropsBuilder; 
+    //uint8_t ackPropsBuf[500] = { 0 } ;
+    //size_t ackPropsBufLength = sizeof(ackPropsBuf);
+    //xResult = MqttPropertyBuilder_Init(&(ackPropsBuilder), ackPropsBuf, ackPropsBufLength);
+
+
+
     /* Initialize MQTT library. */
-    xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
+    xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer, ackPropsBuilder);
     configASSERT( xResult == MQTTSuccess );
     xResult = MQTT_InitStatefulQoS( pxMQTTContext,
                                     pOutgoingPublishRecords,
@@ -648,17 +664,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-    //LogInfo(("Create a bad connection with the broker"));
-
-    ///*Bad Authentication.*/
-    //auth.authDataLength = 4;
-    //auth.authMethodLength = 13;
-    //auth.pAuthData = "test";
-    //auth.pAuthMethod = "mathChallenge";
-    //pxProperties->pOutgoingAuth = &auth;
-    //pxProperties->pIncomingAuth = &auth;
-    //xResult = MQTT_Connect(pxMQTTContext, &xConnectInfo, NULL, mqttexampleCONNACK_RECV_TIMEOUT_MS,
-    //    &xSessionPresent);
 
 
     /*LWT verification with user properties.*/
@@ -677,11 +682,11 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     willInfo.willDelay = 30;
 
 
-    xResult = MQTT_Connect(pxMQTTContext,
-        &xConnectInfo,
-        &willInfo,
-        mqttexampleCONNACK_RECV_TIMEOUT_MS,
-        &xSessionPresent, &propBuilder);
+    //xResult = MQTT_Connect(pxMQTTContext,
+    //    &xConnectInfo,
+    //    &willInfo,
+    //    mqttexampleCONNACK_RECV_TIMEOUT_MS,
+    //    &xSessionPresent, &propBuilder);
 
 
 
@@ -693,21 +698,14 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     LogInfo(("Create  a good connection with the broker"));
     xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
     xConnectInfo.clientIdentifierLength = (uint16_t)strlen(democonfigCLIENT_IDENTIFIER);
-    //pxProperties->sessionExpiry = 20;
-    //pxProperties->maxPacketSize = 200;
-    //pxProperties->requestResponseInfo = 1;
-    //pxProperties->receiveMax = 20;
-    //pxProperties->topicAliasMax = 20;
-    //pxProperties->requestProblemInfo = 1; 
+
 
     xNetworkStatus = prvConnectToServerWithBackoffRetries(pxNetworkContext);
     configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
-    //auth.authDataLength = 4;
-    //auth.authMethodLength = 13;
-    //auth.pAuthData = "test";
-    //auth.pAuthMethod = "mathChallenge";
-    ////pxProperties->pOutgoingAuth = &auth;
-    //pxMQTTContext->pIncomingAuth = &auth;
+
+    xResult  = MQTTV5_InitConnect(pxProperties);
+    pxMQTTContext->pConnectProperties = pxProperties;
+
     xResult = MQTT_Connect( pxMQTTContext,
                             &xConnectInfo,
                             NULL,
@@ -811,12 +809,9 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
             //uint16_t userPropKeyLen, userPropKeyVal;
             //char* pUserPropVal = NULL;
 
-            //prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
-            pxDeserializedInfo->pNextAckInfo->pReasonString = "test";
-            pxDeserializedInfo->pNextAckInfo->reasonStringLength = 4;
+            MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBREL", 10); 
             prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
-            /*MQTT_IncomingPubGetNextProp(&pCurrIndex, &pUserPropKey, &userPropKeyLen, &pUserPropVal, &userPropKeyVal, pxDeserializedInfo);
-            LogError(("User Property Key: %s, User Property Value: %s\n", pUserPropKey, pUserPropVal));*/
+
         }
         else if((pxPacketInfo->type & 0xF0U) == MQTT_PACKET_TYPE_PUBLISH)
         {
@@ -825,26 +820,17 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
             uint16_t userPropKeyLen, userPropKeyVal;
             char* pUserPropVal = NULL;
 
-            /*MQTTUserProperties_t xUserProperties = pxDeserializedInfo->pNextAckInfo->pUserProperty ;
-            (void)memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties));*/
+            MQTTUserProperties_t xUserProperties;
+            (void)memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties)); 
 
-            MQTTUserProperties_t *xUserProperties = pxDeserializedInfo->pNextAckInfo->pUserProperty;
-            /*= pxDeserializedInfo->pNextAckInfo->pUserProperty;*/
-           /* (void)memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties));*/
+            xUserProperties.count = 1;
+            xUserProperties.userProperty[0].pKey = "Key1";
+            xUserProperties.userProperty[0].pValue = "Value1";
+            xUserProperties.userProperty[0].keyLength = 4;
+            xUserProperties.userProperty[0].valueLength = 6;
 
-            xUserProperties->count = 1;
-            xUserProperties->userProperty[0].pKey = "Key1";
-            xUserProperties->userProperty[0].pValue = "Value1";
-            xUserProperties->userProperty[0].keyLength = 4;
-            xUserProperties->userProperty[0].valueLength = 6;
-            /*pxDeserializedInfo->pNextAckInfo->pUserProperty = &(xUserProperties); */
-            MQTTPropAdd_PubAckReasonString("TEST1", 5, pxDeserializedInfo);
-            MQTTPropAdd_PubAckUserProperty(xUserProperties, pxDeserializedInfo); 
-
-            prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
-            //MQTT_IncomingPubGetNextProp(&pCurrIndex, &pUserPropKey, &userPropKeyLen, &pUserPropVal, &userPropKeyVal, pxDeserializedInfo);
-            //(("User Property Key: %s, User Property Value: %s\n", pUserPropKey, pUserPropVal));
-
+            MQTTPropAdd_UserProps(&pxMQTTContext->ackPropsBuffer,&xUserProperties);
+            //MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBACK", 10);
 
         }
         else

@@ -169,7 +169,7 @@ vRegTest1Implementation:
     vadd.vi v28, v0, 13  // v28 = [13, 14, 15, 16...]
     vadd.vi v29, v0, 14  // v29 = [14, 15, 16, 17...]
     vadd.vi v30, v0, 15  // v30 = [15, 16, 17, 18...]
-    vadd.vi v31, v0, 0   // v31 = [15, 16, 17, 18...]
+    vadd.vi v31, v0, 0   // v31 = [0,1,2,3...]
 #endif
 
 reg1_loop:

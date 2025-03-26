@@ -109,7 +109,7 @@
 #define mainMESSAGE_BUFFER_STACK_SIZE    ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 #define mainCHECK_TASK_STACK_SIZE        ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 #ifdef __riscv_vector
-#define mainREG_TEST_STACK_SIZE_WORDS    270
+#define mainREG_TEST_STACK_SIZE_WORDS    222
 #else
 #define mainREG_TEST_STACK_SIZE_WORDS    90
 #endif

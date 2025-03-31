@@ -14,11 +14,10 @@ GCC_VERSION = $(shell $(CC) --version | grep ^$(CC) | sed 's/^.* //g' | awk -F. 
 GCC_VERSION_NEED_ZICSR = "110100"
 
 ifeq ($(RVA23),1)
-  # For the time being, we don't include the vector extensions.
-  MARCH = rv64imafdc_zicsr_zicntr_zihpm_ziccif_ziccrse_ziccamoa_zicclsm_za64rs_zihintpause_zic64b_zicbom_zicbop_zicboz_zfhmin_zkt_zihintntl_zawrs
+  MARCH = rv64imafdcv_zicsr_zicntr_zihpm_ziccif_ziccrse_ziccamoa_zicclsm_za64rs_zihintpause_zic64b_zicbom_zicbop_zicboz_zfhmin_zkt_zvfhmin_zvbb_zvkt_zihintntl_zawrs
   MABI = lp64d
   MCMODEL = medany
-  CFLAGS+=-DconfigENABLE_FPU=1
+  CFLAGS+=-DconfigENABLE_FPU=1 -DconfigENABLE_VPU=1
   $(info  Using RVA23 build)
 else
   ifeq ($(shell test $(GCC_VERSION) -ge $(GCC_VERSION_NEED_ZICSR) && echo true),true)

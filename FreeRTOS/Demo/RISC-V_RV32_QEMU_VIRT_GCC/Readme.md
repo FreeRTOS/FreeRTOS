@@ -63,7 +63,7 @@ For the RVA23 build:
 ```
 $ qemu-system-riscv64 -nographic -machine virt -net none -chardev stdio,id=con,mux=on \
     -serial chardev:con -mon chardev=con,mode=readline -bios none -smp 4 \
-    -s --kernel build/gcc/output/RTOSDemo.elf
+    -cpu rv64,zba=true,zbb=true,v=true,vlen=256,vext_spec=v1.0,rvv_ta_all_1s=true,rvv_ma_all_1s=true -s --kernel build/gcc/output/RTOSDemo.elf
 ```
 
 

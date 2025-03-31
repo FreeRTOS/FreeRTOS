@@ -74,6 +74,11 @@ _start:
 	csrs        mstatus, t0
 	fscsr       x0
 #endif
+#ifdef __riscv_vector
+	// Enable VPU
+	li          t0, (1 << 9)
+	csrs        mstatus, t0
+#endif
 
 	// argc, argv, envp is 0
 	li  a0, 0

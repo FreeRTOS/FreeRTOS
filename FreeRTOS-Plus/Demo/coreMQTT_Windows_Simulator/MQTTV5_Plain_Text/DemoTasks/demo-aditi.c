@@ -452,19 +452,10 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext, &xProperties, &ackPropsBuilder);
 
 
-        /**************************** Publish and Keep-Alive Loop. ******************************/
-
-        /* Publish messages with QoS2, and send and process keep-alive messages. */
+        /**************************** Publish and Keep-Alive Loop. ******************************
 
 
-
-
-        ///* Leave connection idle for some time. */
-        //LogInfo(("Keeping Connection Idle...\r\n\r\n"));
-        //vTaskDelay(mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS);
-
-
-            /*prvMQTTPublishToTopics(&xMQTTContext); */
+            /* Subscribing to Topics */
             LogInfo( ( "Attempt to send Subcribe to Broker.\r\n" ) );
             prvMQTTSubscribeToTopics(&xMQTTContext) ; 
 
@@ -474,13 +465,6 @@ static void prvMQTTDemoTask( void * pvParameters )
             /* Process incoming publish echo. Since the application subscribed and published
             / * to the same topic, the broker will send the incoming publish message back
             / * to the application. */
-            //LogInfo(("Attempt to receive publishes from broker.\r\n"));
-            //xMQTTStatus = prvProcessLoopWithTimeout(&xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS);
-            //configASSERT(xMQTTStatus == MQTTSuccess);
-
-            ///* Leave connection idle for some time. */
-            //LogInfo(("Keeping Connection Idle...\r\n\r\n"));
-            //vTaskDelay(mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS);
 
             prvMQTTUnsubscribeFromTopics(&xMQTTContext); 
 
@@ -490,6 +474,11 @@ static void prvMQTTDemoTask( void * pvParameters )
 
 
 
+            MqttPropBuilder_t propBuilder;
+            uint8_t buf[500];
+            size_t bufLength = sizeof(buf);
+            xMQTTStatus = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength); 
+
             MQTTUserProperties_t userProperty;
             memset(&userProperty, 0x0, sizeof(userProperty));
             userProperty.count = 1;
@@ -497,10 +486,13 @@ static void prvMQTTDemoTask( void * pvParameters )
             userProperty.userProperty[0].pValue = "Disconnect";
             userProperty.userProperty[0].keyLength = 10;
             userProperty.userProperty[0].valueLength = 10;
-            disconnect.pUserProperty = &userProperty;
-            disconnect.reasonStringLength = 4;
-            disconnect.pReasonString = "test";
-            xMQTTStatus = MQTTV5_Disconnect(&xMQTTContext, &disconnect, 0); 
+            
+            uint8_t rc = 0x00; 
+            disconnect.reasonCode = &rc; 
+            xMQTTStatus = MQTTPropAdd_UserProps(&(propBuilder), &userProperty);
+            xMQTTStatus = MQTTPropAdd_DisconnReasonString(&(propBuilder), "DISCONNECT-RS", 13); 
+            xMQTTStatus = MQTTV5_Disconnect(&xMQTTContext, &disconnect,&propBuilder);
+
             configASSERT(xMQTTStatus == MQTTSuccess);
 
 
@@ -600,14 +592,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.recv = Plaintext_FreeRTOS_recv;
     xTransport.writev = NULL;
 
-
-    //MqttPropBuilder_t ackPropsBuilder; 
-    //uint8_t ackPropsBuf[500] = { 0 } ;
-    //size_t ackPropsBufLength = sizeof(ackPropsBuf);
-    //xResult = MqttPropertyBuilder_Init(&(ackPropsBuilder), ackPropsBuf, ackPropsBufLength);
-
-
-
     /* Initialize MQTT library. */
     xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer, ackPropsBuilder);
     configASSERT( xResult == MQTTSuccess );
@@ -664,7 +648,11 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-
+    MqttPropBuilder_t willPropBuilder;
+    uint8_t wbuf[500];
+    size_t wbufLength = sizeof(wbuf);
+    xResult = MqttPropertyBuilder_Init(&(willPropBuilder), wbuf, wbufLength);
+    xResult = MQTTPropAdd_UserProps(&(willPropBuilder), &xUserProperties);
 
     /*LWT verification with user properties.*/
     /*LWT with will delay.*/
@@ -672,45 +660,23 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xConnectInfo.cleanSession = true;
     xConnectInfo.clientIdentifierLength = 5;
     xConnectInfo.pClientIdentifier = "abcde";
-    xNetworkStatus = prvConnectToServerWithBackoffRetries(pxNetworkContext);
-    configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
+    //xNetworkStatus = prvConnectToServerWithBackoffRetries(pxNetworkContext);
+    //configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
     willInfo.pTopicName = "TestWill1234";
     willInfo.topicNameLength = 12;
-    willInfo.pUserProperty = &xUserProperties;
     willInfo.payloadLength = 15;
     willInfo.pPayload = "TestWillPayload";
     willInfo.willDelay = 30;
 
-
-    //xResult = MQTT_Connect(pxMQTTContext,
-    //    &xConnectInfo,
-    //    &willInfo,
-    //    mqttexampleCONNACK_RECV_TIMEOUT_MS,
-    //    &xSessionPresent, &propBuilder);
-
-
-
-    //Plaintext_FreeRTOS_Disconnect(pxNetworkContext);
-
-
-    /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
-     * is passed as NULL. */
-    LogInfo(("Create  a good connection with the broker"));
-    xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
-    xConnectInfo.clientIdentifierLength = (uint16_t)strlen(democonfigCLIENT_IDENTIFIER);
-
-
-    xNetworkStatus = prvConnectToServerWithBackoffRetries(pxNetworkContext);
-    configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
-
-    xResult  = MQTTV5_InitConnect(pxProperties);
+    xResult = MQTTV5_InitConnect(pxProperties);
     pxMQTTContext->pConnectProperties = pxProperties;
 
-    xResult = MQTT_Connect( pxMQTTContext,
-                            &xConnectInfo,
-                            NULL,
-                            mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent, &propBuilder);
+    xResult = MQTT_Connect(pxMQTTContext,
+        &xConnectInfo,
+        &willInfo,
+        mqttexampleCONNACK_RECV_TIMEOUT_MS,
+        &xSessionPresent, &propBuilder, &willPropBuilder);
+
     configASSERT( xResult == MQTTSuccess );
 
     /* Successfully established and MQTT connection with the broker. */
@@ -724,55 +690,61 @@ static void prvMQTTProcessResponse(MQTTPacketInfo_t* pxIncomingPacket,
     uint16_t usPacketId)
 {
     uint32_t ulTopicCount = 0U;
-
-    switch (pxIncomingPacket->type)
+    if ((pxIncomingPacket->type & 0xF0U) == MQTT_PACKET_TYPE_PUBLISH)
     {
-    case MQTT_PACKET_TYPE_PUBLISH:
         LogInfo(("Incoming Publish received for packet ID %u. \n\n", usPacketId));
-        break;
-    case MQTT_PACKET_TYPE_SUBACK : 
-        LogInfo(("SUBACK received for packet ID %u.", usPacketId));
-        configASSERT(usSubscribePacketIdentifier == usPacketId);
-        break;
-    case MQTT_PACKET_TYPE_UNSUBACK :
-        LogInfo(("Unsuback received for packet ID %u. \n\n", usPacketId)); 
-        break;
-    case MQTT_PACKET_TYPE_PUBACK:
-        LogInfo(("PUBACK received for packet ID %u.\r\n", usPacketId));
-        break;
-    case MQTT_PACKET_TYPE_PINGRESP:
+    }
+    else
+    {
+        switch (pxIncomingPacket->type)
+        {
+        case MQTT_PACKET_TYPE_PUBLISH:
+            LogInfo(("Incoming Publish received for packet ID %u. \n\n", usPacketId));
+            break;
+        case MQTT_PACKET_TYPE_SUBACK:
+            LogInfo(("SUBACK received for packet ID %u.", usPacketId));
+            configASSERT(usSubscribePacketIdentifier == usPacketId);
+            break;
+        case MQTT_PACKET_TYPE_UNSUBACK:
+            LogInfo(("Unsuback received for packet ID %u. \n\n", usPacketId));
+            break;
+        case MQTT_PACKET_TYPE_PUBACK:
+            LogInfo(("PUBACK received for packet ID %u.\r\n", usPacketId));
+            break;
+        case MQTT_PACKET_TYPE_PINGRESP:
 
-        /* Nothing to be done from application as library handles
-         * PINGRESP with the use of MQTT_ProcessLoop API function. */
-        LogWarn(("PINGRESP should not be handled by the application "
-            "callback when using MQTT_ProcessLoop.\n"));
-        break;
+            /* Nothing to be done from application as library handles
+             * PINGRESP with the use of MQTT_ProcessLoop API function. */
+            LogWarn(("PINGRESP should not be handled by the application "
+                "callback when using MQTT_ProcessLoop.\n"));
+            break;
 
-    case MQTT_PACKET_TYPE_PUBREC:
-        LogInfo(("PUBREC received for packet id %u.\n\n",
-            usPacketId));
-        break;
+        case MQTT_PACKET_TYPE_PUBREC:
+            LogInfo(("PUBREC received for packet id %u.\n\n",
+                usPacketId));
+            break;
 
-    case MQTT_PACKET_TYPE_PUBREL:
+        case MQTT_PACKET_TYPE_PUBREL:
 
-        /* Nothing to be done from application as library handles
-         * PUBREL. */
-        LogInfo(("PUBREL received for packet id %u.\n\n",
-            usPacketId));
-        break;
+            /* Nothing to be done from application as library handles
+             * PUBREL. */
+            LogInfo(("PUBREL received for packet id %u.\n\n",
+                usPacketId));
+            break;
 
-    case MQTT_PACKET_TYPE_PUBCOMP:
+        case MQTT_PACKET_TYPE_PUBCOMP:
 
-        /* Nothing to be done from application as library handles
-         * PUBCOMP. */
-        LogInfo(("PUBCOMP received for packet id %u.\n\n",
-            usPacketId));
-        break;
+            /* Nothing to be done from application as library handles
+             * PUBCOMP. */
+            LogInfo(("PUBCOMP received for packet id %u.\n\n",
+                usPacketId));
+            break;
 
-        /* Any other packet type is invalid. */
-    default:
-        LogWarn(("prvMQTTProcessResponse() called with unknown packet type:(%02X).\r\n",
-            pxIncomingPacket->type));
+            /* Any other packet type is invalid. */
+        default:
+            LogWarn(("prvMQTTProcessResponse() called with unknown packet type:(%02X).\r\n",
+                pxIncomingPacket->type));
+        }
     }
 }
 
@@ -804,10 +776,6 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
     ( void ) pxMQTTContext;
         if (pxPacketInfo->type == MQTT_PACKET_TYPE_PUBREC)
         {
-            //uint8_t* pCurrIndex = NULL;
-            //char* pUserPropKey = NULL;
-            //uint16_t userPropKeyLen, userPropKeyVal;
-            //char* pUserPropVal = NULL;
 
             MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBREL", 10); 
             prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
@@ -820,6 +788,31 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
             uint16_t userPropKeyLen, userPropKeyVal;
             char* pUserPropVal = NULL;
 
+            do {
+                bool ret = MQTT_IncomingPubGetNextProp(&pCurrIndex,
+                    &pUserPropKey,
+                    &userPropKeyLen,
+                    &pUserPropVal,
+                    &userPropKeyVal,
+                    pxDeserializedInfo);
+
+                if (ret == false)
+                {
+                    LogError(("No more keys to iterate over."));
+                    break;
+                }
+                if (pUserPropKey != NULL)
+                {
+                    if (strcmp(pUserPropKey, "Key2") == 0)
+                    {
+                        LogError(("Found the key."));
+                        LogError(("The value is: %.*s", userPropKeyVal, pUserPropVal));
+                        break;
+                    }
+                }
+            } while (true);
+
+
             MQTTUserProperties_t xUserProperties;
             (void)memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties)); 
 
@@ -830,7 +823,42 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
             xUserProperties.userProperty[0].valueLength = 6;
 
             MQTTPropAdd_UserProps(&pxMQTTContext->ackPropsBuffer,&xUserProperties);
-            //MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBACK", 10);
+            MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBREC", 10);
+            
+            prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
+            
+        }
+        else if (pxPacketInfo->type == MQTT_PACKET_TYPE_CONNACK)
+        {
+            pxDeserializedInfo->pNextAckInfo = NULL;
+            uint8_t* pCurrIndex = NULL;
+            char* pUserPropKey = NULL;
+            uint16_t userPropKeyLen, userPropKeyVal;
+            char* pUserPropVal = NULL;
+
+            do {
+                bool ret = MQTT_ConnackGetNextProp(&pCurrIndex,
+                    &pUserPropKey,
+                    &userPropKeyLen,
+                    &pUserPropVal,
+                    &userPropKeyVal,
+                    pxMQTTContext);
+
+                if (ret == false)
+                {
+                    LogError(("No more keys to iterate over."));
+                    break;
+                }
+                if (pUserPropKey != NULL)
+                {
+                    if (strcmp(pUserPropKey, "Key1") == 0)
+                    {
+                        LogError(("Found the key."));
+                        LogError(("The value is: %.*s", userPropKeyVal, pUserPropVal));
+                        break;
+                    }
+                }
+            } while (true);
 
         }
         else
@@ -946,24 +974,6 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     xUserProperties.userProperty[0].keyLength = 4;
     xUserProperties.userProperty[0].valueLength = 6;
 
-    /*Populating Other Properties*/
-
-    //xSubscribeProperties.pUserProperties = &xUserProperties;
-    //xSubscribeProperties.propertyLength = 11;
-    //xSubscribeProperties.subscriptionId = 1;
-
-
-    /* Populate subscription list. */
-
-    //for (ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
-    //{
-    //    xMQTTSubscription[ulTopicCount].qos = MQTTQoS2;
-    //    xMQTTSubscription[ulTopicCount].pTopicFilter = xTopicFilterContext[ulTopicCount].pcTopicFilter;
-    //    xMQTTSubscription[ulTopicCount].topicFilterLength = (uint16_t)strlen(xTopicFilterContext[ulTopicCount].pcTopicFilter);
-    //    xMQTTSubscription[0].noLocalOption = false;
-    //    xMQTTSubscription[0].retainHandlingOption = 1;
-    //    xMQTTSubscription[0].retainAsPublishedOption = false;
-    //}
     MqttPropBuilder_t propBuilder;
     uint8_t buf[500];
     size_t bufLength = sizeof(buf);
@@ -990,21 +1000,7 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     xMQTTSubscription[1].retainAsPublishedOption = true ;
 
 
-    /*for (int i = 0; i < mqttexampleTOPIC_COUNT; i++)
-    {
-        LogError(("DEBUG: xTopicFilterContext[%d] = %s", i, xTopicFilterContext[i].pcTopicFilter));
-    }*/
-
-    //strcpy(xTopicFilterContext[0].pcTopicFilter, "test1");  // ? Works now!
-
-    strcpy(xTopicFilterContext[0].pcTopicFilter, "test1");  // ? Copies "test1\0"
-    strcpy(xTopicFilterContext[1].pcTopicFilter, "test2");  // ? Copies "test1\0"
-
-   /* xTopicFilterContext[0].pcTopicFilter = "test1"; 
-    xTopicFilterContext[1].pcTopicFilter = "test2"; */
-
-
-
+   
 
         /* The client is now connected to the broker. Subscribe to the topic
          * as specified in mqttexampleTOPIC at the top of this file by sending a
@@ -1014,8 +1010,6 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
          * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
          * messages received from the broker will have QOS2. */
 
-    do
-    {
         /* The client is now connected to the broker. Subscribe to the topic
          * as specified in mqttexampleTOPIC at the top of this file by sending a
          * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
@@ -1024,17 +1018,17 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
          * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
          * messages received from the broker will have QOS2. */
         xResult = MQTT_SubscribeV5(pxMQTTContext,
-                                  xMQTTSubscription,
-                                  2,
-                                  usSubscribePacketIdentifier, 
-                                  &(propBuilder));
+            xMQTTSubscription,
+            2,
+            usSubscribePacketIdentifier,
+            &(propBuilder));
         LogInfo(("Attempt to receive SubAcks from Broker. \r\n"));
-        configASSERT( xResult == MQTTSuccess );
+        configASSERT(xResult == MQTTSuccess);
 
-        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
+        for (ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
         {
-            LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n",
-                       xTopicFilterContext[ ulTopicCount ].pcTopicFilter ));
+            LogInfo(("SUBSCRIBE sent for topic %s to broker.\n\n",
+                xMQTTSubscription[ulTopicCount].pTopicFilter));
         }
 
         /* Process incoming packet from the broker. After sending the subscribe, the
@@ -1044,49 +1038,8 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
          * receiving Publish message before subscribe ack is zero; but application
          * must be ready to receive any packet.  This demo uses the generic packet
          * processing function everywhere to highlight this fact. */
-        xResult = prvProcessLoopWithTimeout( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
-        configASSERT( xResult == MQTTSuccess );
-
-        /* Reset flag before checking suback responses. */
-        xFailedSubscribeToTopic = false;
-
-        /* Check if recent subscription request has been rejected. #xTopicFilterContext is updated
-         * in the event callback to reflect the status of the SUBACK sent by the broker. It represents
-         * either the QoS level granted by the server upon subscription, or acknowledgement of
-         * server rejection of the subscription request. */
-        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
-        {
-            if( xTopicFilterContext[ ulTopicCount ].xSubAckStatus == MQTTSubAckFailure )
-            {
-                xFailedSubscribeToTopic = true;
-
-                /* Generate a random number and calculate backoff value (in milliseconds) for
-                 * the next connection retry.
-                 * Note: It is recommended to seed the random number generator with a device-specific
-                 * entropy source so that possibility of multiple devices retrying failed network operations
-                 * at similar intervals can be avoided. */
-                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, uxRand(), &usNextRetryBackOff );
-
-                if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
-                {
-                    LogError( ( "Server rejected subscription request. All retry attempts have exhausted. Topic=%s",
-                                xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
-                }
-                else if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
-                {
-                    LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
-                               xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
-                    /* Backoff before the next re-subscribe attempt. */
-                    vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
-                }
-
-                break;
-            }
-        }
-
-        //configASSERT( xBackoffAlgStatus != BackoffAlgorithmRetriesExhausted );
-    } while( ( xFailedSubscribeToTopic == true ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
-
+        xResult = prvProcessLoopWithTimeout(pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS);
+        configASSERT(xResult == MQTTSuccess);
 
 }   
 
@@ -1172,7 +1125,7 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         //xResult = MQTTPropAdd_PubTopicAlias(&(propBuilder), 30);
         xResult = MQTTPropAdd_PubResponseTopic(&(propBuilder), "test", 4);
         xResult = MQTTPropAdd_PubCorrelationData(&(propBuilder), "test", 4);
-        xResult = MQTTPropAdd_PubSubscriptionId(&(propBuilder),2 ); 
+       /* xResult = MQTTPropAdd_PubSubscriptionId(&(propBuilder),2 ); */
         xResult = MQTTPropAdd_PubContentType(&(propBuilder), "test", 4);
 
         userProperty.count = 1;
@@ -1199,43 +1152,6 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier , &(propBuilder));
         configASSERT( xResult == MQTTSuccess );
 
-        ///*Publish using only topic alias*/
-        //xMQTTPublishInfo.topicAlias = 2U;
-        //xMQTTPublishInfo.topicNameLength = 0U;
-        //xMQTTPublishInfo.pUserProperty = NULL;
-        //xMQTTPublishInfo.pPayload = "OnlyTopicAlias";
-        //xMQTTPublishInfo.payloadLength = 14; 
-        //usPublishPacketIdentifier = MQTT_GetPacketId(pxMQTTContext);
-        //LogInfo( ( "Publishing to the MQTT topic only using topic alias "));
-        ///* Send PUBLISH packet. */
-        //xResult = MQTT_Publish(pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier);
-        //configASSERT(xResult == MQTTSuccess);
-
-        ///*Publish using Qos 0*/
-        //xMQTTPublishInfo.qos = MQTTQoS0;
-        //xMQTTPublishInfo.pPayload = "UsingQos0";
-        //xMQTTPublishInfo.payloadLength = 9; 
-        //LogInfo(("Publishing Qos0  "));
-
-
-        //xResult = MQTT_Publish(pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier);
-        //configASSERT(xResult == MQTTSuccess);
-
-        ///*Publish using Qos 1*/
-        //xMQTTPublishInfo.qos = MQTTQoS1;
-        //xMQTTPublishInfo.pPayload = "UsingQos1";
-        //xMQTTPublishInfo.payloadLength = 9;
-        //xMQTTPublishInfo.pCorrelationData = "test";
-        //xMQTTPublishInfo.correlationLength = 4;
-        //xMQTTPublishInfo.contentTypeLength = 4;
-        //xMQTTPublishInfo.msgExpiryInterval = 100;
-        //xMQTTPublishInfo.msgExpiryPresent = true;
-        //xMQTTPublishInfo.pContentType = "test";
-        //LogInfo(("Publishing Qos1 "));
-
-        //usPublishPacketIdentifier = MQTT_GetPacketId(pxMQTTContext);
-        //xResult = MQTT_Publish(pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier);
-        //configASSERT(xResult == MQTTSuccess);
 
         LogInfo(("Attempt to receive publishes from broker.\r\n"));
         xResult = prvProcessLoopWithTimeout(pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS);

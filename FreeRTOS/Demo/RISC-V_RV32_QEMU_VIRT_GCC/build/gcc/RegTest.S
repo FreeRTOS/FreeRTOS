@@ -358,10 +358,6 @@ reg1_loop:
     beqz x15, reg1_error_loop
 #endif
 #if configENABLE_VPU == 1
-    /* Set the vector length to maximum available */
-    li x15, -1
-    vsetvli x0, x15, e8, m1, ta, ma  /* Use 64-bit elements, mask and tail agnostic */
-
     vid.v v0                // v0 = [0,1,2,3...]
     vadd.vi v0, v0, -15     // v0 = [-15, -14, -13, -12...]
     vsub.vv v0, v1, v0      // Compare v1 to the expected value, v0
@@ -932,10 +928,6 @@ Reg2_loop:
     beqz x5, reg2_error_loop
 #endif
 #if configENABLE_VPU == 1
-    /* Set the vector length to maximum available */
-    li x5, -1
-    vsetvli x0, x5, e8, m1, ta, ma  /* Use 64-bit elements, mask and tail agnostic */
-
     vid.v v31               // v31 = [0,1,2,3...]
     vadd.vi v31, v31, 8     // v31 = [-15, -14, -13, -12...]
     vsub.vv v31, v1, v31    // Compare v1 to the expected value, v31

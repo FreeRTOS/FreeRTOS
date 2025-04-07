@@ -45,7 +45,7 @@ endif
 
 LDFLAGS += -nostartfiles -Xlinker --gc-sections -Wl,-Map,$(OUTPUT_DIR)/RTOSDemo.map \
            -T./fake_rom.ld -march=$(MARCH) -mabi=$(MABI) -mcmodel=$(MCMODEL) -Xlinker \
-           --defsym=__stack_size=350 -Wl,--start-group -Wl,--end-group
+           --defsym=__stack_size=352 -Wl,--start-group -Wl,--end-group
 
 ifeq ($(PICOLIBC),1)
 LDFLAGS += --specs=picolibc.specs --oslib=semihost --crt0=minimal -DPICOLIBC_INTEGER_PRINTF_SCANF

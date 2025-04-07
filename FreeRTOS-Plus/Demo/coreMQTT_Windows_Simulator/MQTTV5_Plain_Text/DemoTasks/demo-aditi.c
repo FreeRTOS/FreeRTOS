@@ -462,6 +462,8 @@ static void prvMQTTDemoTask( void * pvParameters )
             prvMQTTPublishToTopics(&xMQTTContext);
 
 
+
+
             /* Process incoming publish echo. Since the application subscribed and published
             / * to the same topic, the broker will send the incoming publish message back
             / * to the application. */
@@ -491,7 +493,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             disconnect.reasonCode = &rc; 
             xMQTTStatus = MQTTPropAdd_UserProps(&(propBuilder), &userProperty);
             xMQTTStatus = MQTTPropAdd_DisconnReasonString(&(propBuilder), "DISCONNECT-RS", 13); 
-            xMQTTStatus = MQTTV5_Disconnect(&xMQTTContext, &disconnect,&propBuilder);
+            xMQTTStatus = MQTT_Disconnect(&xMQTTContext, &disconnect,&propBuilder);
 
             configASSERT(xMQTTStatus == MQTTSuccess);
 
@@ -641,8 +643,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     /* The client identifier is used to uniquely identify this MQTT client to
      * the MQTT broker. In a production device the identifier can be something
      * unique, such as a device serial number. */
-    //xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
-    //xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
+
 
     /* Set MQTT keep-alive period. If the application does not send packets at an interval less than
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
@@ -668,8 +669,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     willInfo.pPayload = "TestWillPayload";
     willInfo.willDelay = 30;
 
-    xResult = MQTTV5_InitConnect(pxProperties);
-    pxMQTTContext->pConnectProperties = pxProperties;
 
     xResult = MQTT_Connect(pxMQTTContext,
         &xConnectInfo,
@@ -812,7 +811,8 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                 }
             } while (true);
 
-
+            uint8_t rc = 0x10; 
+            pxDeserializedInfo->pNextAckInfo->reasonCode = &rc; 
             MQTTUserProperties_t xUserProperties;
             (void)memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties)); 
 
@@ -861,6 +861,20 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
             } while (true);
 
         }
+        else if (pxPacketInfo->type == MQTT_PACKET_TYPE_SUBACK)
+        {
+            uint8_t *startOfRc; 
+            size_t size; 
+            startOfRc = pxDeserializedInfo->pAckInfo->reasonCode; 
+            size = pxDeserializedInfo->pAckInfo->reasonCodeLength; 
+            LogError(("The size of the reason code is %d", size));
+            int i; 
+            for (i = 0; i < size; i++)
+            {
+                LogError(("The reason code is %d", startOfRc[i]));
+            }
+        }
+
         else
         {
             pxDeserializedInfo->pNextAckInfo = NULL;
@@ -982,6 +996,8 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength); 
     xResult = MQTTPropAdd_SubscribeId(&(propBuilder), subId); 
     xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
+    xResult = MQTTPropAdd_SubscribeId(&(propBuilder), 7);
+
 
     xMQTTSubscription[0].qos = MQTTQoS2;  
     xMQTTSubscription[0].pTopicFilter = "test1" ;
@@ -1017,7 +1033,7 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
          * will expect all the messages it sends to the broker to be sent back to it
          * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
          * messages received from the broker will have QOS2. */
-        xResult = MQTT_SubscribeV5(pxMQTTContext,
+        xResult = MQTT_Subscribe(pxMQTTContext,
             xMQTTSubscription,
             2,
             usSubscribePacketIdentifier,
@@ -1085,7 +1101,7 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
     configASSERT(usUnsubscribePacketIdentifier != 0);
 
     /* Send UNSUBSCRIBE packet. */
-    xResult = MQTT_UnsubscribeV5(pxMQTTContext,
+    xResult = MQTT_Unsubscribe(pxMQTTContext,
         &xMQTTSubscription,
         1,
         usUnsubscribePacketIdentifier,
@@ -1142,7 +1158,6 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         xMQTTPublishInfo.topicNameLength = 5;
         xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
         xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
-        //xMQTTPublishInfo.pUserProperty = &userProperty;
 
         /* Get a unique packet id. */
         usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );

@@ -72,6 +72,9 @@
     <ClCompile Include="DemoTasks\demo-aditi.c">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_utils.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core_mqtt_config.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.h">
       <Filter>Additional Network Transport Files\PlaintextTransport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_utils.h">
+      <Filter>Libraries\coreMQTT\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

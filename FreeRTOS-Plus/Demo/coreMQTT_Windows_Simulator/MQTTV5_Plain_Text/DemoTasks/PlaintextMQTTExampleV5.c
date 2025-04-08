@@ -462,16 +462,11 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext, &xProperties, &ackPropsBuilder);
 
 
-        /**************************** Publish and Keep-Alive Loop. ******************************
-
-
             /* Subscribing to Topics */
             LogInfo( ( "Attempt to send Subcribe to Broker.\r\n" ) );
             prvMQTTSubscribeToTopics(&xMQTTContext) ; 
 
             prvMQTTPublishToTopics(&xMQTTContext);
-
-
 
 
             /* Process incoming publish echo. Since the application subscribed and published
@@ -1056,21 +1051,21 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     xResult = MQTTPropAdd_SubscribeId(&(propBuilder), 7);
    
 
-/* The client is now connected to the broker. Subscribe to the topic
-    * as specified in mqttexampleTOPIC at the top of this file by sending a
-    * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
-    * This client will then publish to the same topic it subscribed to, so it
-    * will expect all the messages it sends to the broker to be sent back to it
-    * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
-    * messages received from the broker will have QOS2. */
+    /* The client is now connected to the broker. Subscribe to the topic
+        * as specified in mqttexampleTOPIC at the top of this file by sending a
+        * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
+        * This client will then publish to the same topic it subscribed to, so it
+        * will expect all the messages it sends to the broker to be sent back to it
+        * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
+        * messages received from the broker will have QOS2. */
 
-/* The client is now connected to the broker. Subscribe to the topic
-    * as specified in mqttexampleTOPIC at the top of this file by sending a
-    * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
-    * This client will then publish to the same topic it subscribed to, so it
-    * will expect all the messages it sends to the broker to be sent back to it
-    * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
-    * messages received from the broker will have QOS2. */
+    /* The client is now connected to the broker. Subscribe to the topic
+        * as specified in mqttexampleTOPIC at the top of this file by sending a
+        * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
+        * This client will then publish to the same topic it subscribed to, so it
+        * will expect all the messages it sends to the broker to be sent back to it
+        * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
+        * messages received from the broker will have QOS2. */
 
     BackoffAlgorithm_InitializeParams(  &xRetryParams,
                                         mqttexampleRETRY_BACKOFF_BASE_MS,

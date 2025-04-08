@@ -89,7 +89,7 @@ xcopy /y /d "..\..\..\ThirdParty\glib\build\subprojects\pcre2-10.42\pcre2-8-0.dl
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.c" />
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\demo-aditi.c" />
+    <ClCompile Include="DemoTasks\PlaintextMQTTExampleV5.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />

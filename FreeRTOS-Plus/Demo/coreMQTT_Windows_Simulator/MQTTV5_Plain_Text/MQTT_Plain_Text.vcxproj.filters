@@ -69,7 +69,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.c">
       <Filter>Additional Network Transport Files\PlaintextTransport</Filter>
     </ClCompile>
-    <ClCompile Include="DemoTasks\demo-aditi.c">
+    <ClCompile Include="DemoTasks\PlaintextMQTTExampleV5.c">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_utils.c">

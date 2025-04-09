@@ -771,6 +771,49 @@ static void prvMQTTProcessResponse(MQTTPacketInfo_t* pxIncomingPacket,
     }
 }
 
+static void prvMQTTProcessIncomingPublish(MQTTPublishInfo_t* pxPublishInfo)
+{
+    uint32_t ulTopicCount;
+    BaseType_t xTopicFound = pdFALSE;
+
+    configASSERT(pxPublishInfo != NULL);
+
+    /* Process incoming Publish. */
+    LogInfo(("Incoming QoS : %d\n", pxPublishInfo->qos));
+
+    /* Verify the received publish is for one of the topics that's been subscribed to. */
+    for (ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
+    {
+        if ((pxPublishInfo->topicNameLength == strlen(xTopicFilterContext[ulTopicCount].pcTopicFilter)) &&
+            (strncmp(xTopicFilterContext[ulTopicCount].pcTopicFilter, pxPublishInfo->pTopicName, pxPublishInfo->topicNameLength) == 0))
+        {
+            xTopicFound = pdTRUE;
+            break;
+        }
+    }
+
+    if (xTopicFound == pdTRUE)
+    {
+        LogInfo(("\r\nIncoming Publish Topic Name: %.*s matches a subscribed topic.\r\n",
+            pxPublishInfo->topicNameLength,
+            pxPublishInfo->pTopicName));
+    }
+    else
+    {
+        LogError(("Incoming Publish Topic Name: %.*s does not match a subscribed topic.\r\n",
+            pxPublishInfo->topicNameLength,
+            pxPublishInfo->pTopicName));
+    }
+
+    /* Verify the message received matches the message sent. */
+    if (strncmp(mqttexampleMESSAGE, (const char*)(pxPublishInfo->pPayload), pxPublishInfo->payloadLength) != 0)
+    {
+        LogError(("Incoming Publish Message: %.*s does not match Expected Message: %s.\r\n",
+            pxPublishInfo->topicNameLength,
+            pxPublishInfo->pTopicName, mqttexampleMESSAGE));
+    }
+}
+
 static void prvUpdateSubAckStatus(MQTTPacketInfo_t* pxPacketInfo)
 {
     MQTTStatus_t xResult = MQTTSuccess;
@@ -849,21 +892,11 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
             MQTTPropAdd_UserProps(&pxMQTTContext->ackPropsBuffer,&xUserProperties);
             MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBREC", 10);
 
-            if (strncmp(mqttexampleMESSAGE, (const char*)(pxDeserializedInfo->pPublishInfo->pPayload), pxDeserializedInfo->pPublishInfo->payloadLength) != 0)
-            {
-                LogError(("Incoming Publish Message: %.*s does not match Expected Message: %s.\r\n",
-                    pxDeserializedInfo->pPublishInfo->topicNameLength,
-                    pxDeserializedInfo->pPublishInfo->pTopicName, mqttexampleMESSAGE));
-            }
 
-
-            
-            prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
-            
+            prvMQTTProcessIncomingPublish(pxDeserializedInfo->pPublishInfo);
         }
         else if (pxPacketInfo->type == MQTT_PACKET_TYPE_CONNACK)
         {
-            pxDeserializedInfo->pNextAckInfo = NULL;
             uint8_t* pCurrIndex = NULL;
             char* pUserPropKey = NULL;
             uint16_t userPropKeyLen, userPropKeyVal;
@@ -892,6 +925,7 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                     }
                 }
             } while (true);
+            prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
 
         }
         else if (pxPacketInfo->type == MQTT_PACKET_TYPE_SUBACK)
@@ -911,12 +945,8 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
         else if (pxPacketInfo->type == MQTT_PACKET_TYPE_PUBREL)
         {
             *pReasonCode = MQTTPublishSuccess;
+            prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
 
-        }
-        else if (pxPacketInfo->type == MQTT_PACKET_TYPE_PUBCOMP)
-        {
-            *pReasonCode = MQTTPublishSuccess; 
-            pxMQTTContext->ackPropsBuffer.pBuffer = NULL;
         }
         else
         {
@@ -1048,7 +1078,6 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength); 
     xResult = MQTTPropAdd_SubscribeId(&(propBuilder), subId); 
     xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
-    xResult = MQTTPropAdd_SubscribeId(&(propBuilder), 7);
    
 
     /* The client is now connected to the broker. Subscribe to the topic

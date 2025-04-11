@@ -47,12 +47,57 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1387372952208</id>
+			<id>1713338225157</id>
 			<name>FreeRTOS+Trace Recorder</name>
-			<type>10</type>
+			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-ConfigurationTemplate</arguments>
+				<arguments>1.0-name-matches-false-false-include</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338225174</id>
+			<name>FreeRTOS+Trace Recorder</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-kernelports</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338225189</id>
+			<name>FreeRTOS+Trace Recorder</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-config</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338266068</id>
+			<name>FreeRTOS_Source</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338266079</id>
+			<name>FreeRTOS_Source</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-include</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1713338266087</id>
+			<name>FreeRTOS_Source</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-portable</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -290,7 +335,16 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>0</id>
+			<id>1712588912887</id>
+			<name>FreeRTOS+Trace Recorder/kernelports</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-FreeRTOS</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1712588782478</id>
 			<name>FreeRTOS_Source/portable</name>
 			<type>9</type>
 			<matcher>
@@ -299,7 +353,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>0</id>
+			<id>1712588782487</id>
 			<name>FreeRTOS_Source/portable</name>
 			<type>9</type>
 			<matcher>
@@ -308,7 +362,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1418321226214</id>
+			<id>1712588808334</id>
 			<name>FreeRTOS_Source/portable/MemMang</name>
 			<type>5</type>
 			<matcher>

@@ -49,6 +49,7 @@
 
 /* MQTT library includes. */
 #include "core_mqtt.h"
+#include "core_mqtt_config.h"
 
 /* Exponential backoff retry include. */
 #include "backoff_algorithm.h"
@@ -356,6 +357,10 @@ static uint32_t prvGetTimeMs( void );
  */
 static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
                                                uint32_t ulTimeoutMs );
+
+/*-----------------------------------------------------------*/
+
+extern UBaseType_t uxRand( void );
 
 /*-----------------------------------------------------------*/
 
@@ -794,7 +799,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
                 }
             }
 
-            if( xReturnStatus == pdFAIL )
+            if( xReturnStatus != pdFAIL )
             {
                 /* Keep a flag for indicating if MQTT session is established. This
                  * flag will mark that an MQTT DISCONNECT has to be sent at the end

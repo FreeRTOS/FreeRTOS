@@ -1338,62 +1338,6 @@ void test_coverage_vTaskCoreAffinitySet_null_task_handle( void )
 }
 
 /**
- * @brief vTaskCoreAffinitySet - no new core for task which is not running.
- *
- * Set core mask for a not running task. The new core mask doesn't enable the task
- * to run on any new core. Verify the core mask set is correct.
- *
- * <b>Coverage</b>
- * @code{c}
- * if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
- * {
- *     ...
- * }
- * else
- * {
- *     if( ( uxPrevNotAllowedCores & uxCoreAffinityMask ) != 0U )
- *     {
- *         prvYieldForTask( pxTCB );
- *     }
- * }
- * @endcode
- * ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) is false.
- * ( ( uxPrevNotAllowedCores & uxCoreAffinityMask ) != 0U ) is false.
- */
-void test_coverage_vTaskCoreAffinitySet_task_not_running_no_new_core( void )
-{
-    TCB_t xTaskTCB = { NULL };
-    UBaseType_t uxCoreAffinityMask;
-    UBaseType_t uxNewCoreAffinityMask;
-
-    /* Setup the variables and structure. */
-    /* This task is allowed to run on core 0 and core 1 only. */
-    uxCoreAffinityMask = ( 1U << 0 ) | ( 1U << 1 );
-    vCreateStaticTestTaskAffinity( &xTaskTCB,
-                                   uxCoreAffinityMask,
-                                   tskIDLE_PRIORITY,
-                                   configNUMBER_OF_CORES,
-                                   pdFALSE );
-    xSchedulerRunning = pdTRUE;
-
-    /* Expectations. */
-    vFakePortEnterCriticalSection_StubWithCallback( NULL );
-    vFakePortExitCriticalSection_StubWithCallback( NULL );
-    vFakePortCheckIfInISR_StopIgnore();
-
-    vFakePortEnterCriticalSection_Expect();
-    vFakePortExitCriticalSection_Expect();
-
-    /* API call. */
-    /* No new core is enabled for this task. */
-    uxNewCoreAffinityMask = ( 1U << 0 );
-    vTaskCoreAffinitySet( &xTaskTCB, uxNewCoreAffinityMask );
-
-    /* Validations. */
-    TEST_ASSERT_EQUAL( uxNewCoreAffinityMask, xTaskTCB.uxCoreAffinityMask );
-}
-
-/**
  * @brief prvYieldForTask - running task with xTaskRunState equals to configNUMBER_OF_CORES.
  *
  * Yield for a task of equal priority. No other task should be requested to yield.
@@ -1797,11 +1741,7 @@ void test_coverage_xTaskRemoveFromEventList_remove_eq_priority_task( void )
     uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
 
     /* Expectations. */
-    vFakePortGetCoreID_StubWithCallback( NULL );
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get portGET_CRITICAL_NESTING_COUNT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get prvYieldCore. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get portGET_CRITICAL_NESTING_COUNT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get xYieldPendings. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 0 ); /* portTASK_SWITCH_HOOK(). */
 
     /* API call. */
@@ -1998,9 +1938,7 @@ void test_coverage_vTaskRemoveFromUnorderedEventList_remove_higher_priority_task
     uxCurrentNumberOfTasks = uxCurrentNumberOfTasks + 1;
 
     /* Expectations. */
-    vFakePortGetCoreID_StubWithCallback( NULL );
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get portGET_CRITICAL_NESTING_COUNT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get prvYieldCore. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     /* API call. */
     vTaskRemoveFromUnorderedEventList( &xTaskTCB.xEventListItem, 500 | 0x80000000UL );
@@ -2046,9 +1984,7 @@ void test_coverage_vTaskEnterCritical_task_in_critical_already( void )
 
     /* Expectations. */
     vFakePortDisableInterrupts_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Get both locks. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Increment the critical nesting count. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check first time enter critical section. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     /* API call. */
     vTaskEnterCritical();
@@ -2086,9 +2022,8 @@ void test_coverage_vTaskEnterCriticalFromISR_isr_in_critical_already( void )
     vFakePortGetCoreID_StubWithCallback( NULL );
 
     /* Expectations. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMaskFromISR_ExpectAndReturn( 0x5a5a ); /* The value to be verified. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 );                     /* Get ISR locks. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 );                     /* Increment the critical nesting count. */
 
     /* API call. */
     xSavedInterruptStatus = vTaskEnterCriticalFromISR();
@@ -2129,10 +2064,7 @@ void test_coverage_vTaskExitCritical_task_enter_critical_mt_1( void )
     vFakePortGetCoreID_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* configASSERT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check critical nesting count. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Decrease the critical nesting count. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check exit critical section. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     /* API call. */
     vTaskExitCritical();
@@ -2170,8 +2102,7 @@ void test_coverage_vTaskExitCritical_task_not_in_critical( void )
     vFakePortGetCoreID_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* configASSERT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     /* API call. */
     vTaskExitCritical();
@@ -2228,10 +2159,7 @@ void test_coverage_vTaskExitCriticalFromISR_isr_enter_critical_mt_1( void )
     vFakePortGetCoreID_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* configASSERT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check critical nesting count. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Decrement critical nesting count. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     /* API call. */
     /* The mask value has not effect since ISR enters critical section more than 1 time. */
@@ -2271,8 +2199,7 @@ void test_coverage_vTaskExitCriticalFromISR_isr_not_in_critical( void )
     vFakePortGetCoreID_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* configASSERT. */
-    vFakePortGetCoreID_ExpectAndReturn( 0 ); /* Check critical nesting count. */
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     /* API call. */
     /* The mask value has not effect since ISR is not in critical section. */
@@ -3401,7 +3328,7 @@ void test_coverage_xTaskResumeAll_task_in_pending_ready_list( void )
     vFakePortExitCriticalSection_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */
@@ -3471,7 +3398,7 @@ void test_coverage_xTaskResumeAll_task_in_pending_ready_list_uxpriority_lesser( 
     vFakePortExitCriticalSection_StubWithCallback( NULL );
 
     /* Expectations. */
-    vFakePortReleaseTaskLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
     vFakePortExitCriticalSection_Expect();
 
     /* API call. */

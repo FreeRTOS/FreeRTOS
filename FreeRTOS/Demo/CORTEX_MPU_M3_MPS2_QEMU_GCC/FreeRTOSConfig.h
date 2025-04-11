@@ -44,6 +44,10 @@ extern void vAssertCalled( void );
 #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled()
 #define configQUEUE_REGISTRY_SIZE                        20
 
+#ifdef PICOLIBC_TLS
+#define configUSE_PICOLIBC_TLS                           1
+#endif
+
 #define configUSE_PREEMPTION                             1
 #define configUSE_TIME_SLICING                           0
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          0
@@ -68,7 +72,6 @@ extern void vAssertCalled( void );
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configSUPPORT_STATIC_ALLOCATION                  1
-#define configNUM_TX_DESCRIPTORS                         15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    2
 #define configCHECK_FOR_STACK_OVERFLOW                   2
 #define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS       0
@@ -129,10 +132,5 @@ unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that re
  |      9 connected. */
 extern void vLoggingPrintf( const char * pcFormatString,
                             ... );
-
-#ifdef HEAP3
-    #define xPortGetMinimumEverFreeHeapSize    ( x )
-    #define xPortGetFreeHeapSize               ( x )
-#endif
 
 #endif /* FREERTOS_CONFIG_H */

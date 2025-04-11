@@ -130,6 +130,7 @@ static UBaseType_t ulNextRand;
 
 int main( void )
 {
+    BaseType_t xResult;
     const uint32_t ulLongTime_ms = 250UL;
 
     /* Create a mutex that is used to guard against the console being accessed
@@ -157,12 +158,14 @@ int main( void )
             xEndPoints[ 0 ].bits.bWantDHCP = pdTRUE;
         }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
-        memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
-        FreeRTOS_IPInit_Multi();
+
+        xResult = FreeRTOS_IPInit_Multi();
     #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
         /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+        xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    configASSERT( xResult == pdTRUE );
 
     /* Initialise the logging. */
     uint32_t ulLoggingIPAddress;

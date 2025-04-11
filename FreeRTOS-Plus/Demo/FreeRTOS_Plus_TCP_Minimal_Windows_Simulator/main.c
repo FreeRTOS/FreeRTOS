@@ -145,6 +145,7 @@ static UBaseType_t ulNextRand;
 
 int main( void )
 {
+    BaseType_t xResult;
     const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 
     /*
@@ -185,13 +186,13 @@ int main( void )
         }
         #endif /* ( ipconfigUSE_DHCP != 0 ) */
 
-        memcpy( ipLOCAL_MAC_ADDRESS, ucMACAddress, sizeof( ucMACAddress ) );
-
-        FreeRTOS_IPInit_Multi();
+        xResult = FreeRTOS_IPInit_Multi();
     #else /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
         /* Using the old /single /IPv4 library, or using backward compatible mode of the new /multi library. */
-        FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+        xResult = FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
     #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+
+    configASSERT( xResult == pdTRUE );
 
     /* Start the RTOS scheduler. */
     FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );

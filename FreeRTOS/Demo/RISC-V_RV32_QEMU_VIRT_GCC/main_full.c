@@ -108,7 +108,11 @@
  * constant is different depending on the compiler in use. */
 #define mainMESSAGE_BUFFER_STACK_SIZE    ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 #define mainCHECK_TASK_STACK_SIZE        ( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#ifdef __riscv_vector
+#define mainREG_TEST_STACK_SIZE_WORDS    222
+#else
 #define mainREG_TEST_STACK_SIZE_WORDS    90
+#endif
 
 /* Parameters that are passed into the register check tasks solely for the
  * purpose of ensuring parameters are passed into tasks correctly. */
@@ -249,7 +253,11 @@ static void prvCheckTask( void * pvParameters )
     ( void ) pvParameters;
 
     /* Demo start marker. */
+#if __riscv_flen == 64
+    printf( "FreeRTOS Demo Start (With FPU and vector)\r\n" );
+#else
     printf( "FreeRTOS Demo Start\r\n" );
+#endif
 
     xPreviousWakeTime = xTaskGetTickCount();
 

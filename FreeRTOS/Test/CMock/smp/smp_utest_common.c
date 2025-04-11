@@ -154,6 +154,14 @@ void vFakePortYieldCoreStubCallback( int xCoreID,
     }
 }
 
+void vFakePortYieldCoreAsyncStubCallback( int xCoreID,
+                                          int cmock_num_calls )
+{
+    ( void ) cmock_num_calls;
+
+    xCoreYields[ xCoreID ] = pdTRUE;
+}
+
 void vFakePortYieldStubCallback( int cmock_num_calls )
 {
     vTaskSwitchContext( xCurrentCoreId );
@@ -182,6 +190,34 @@ void vSetCurrentCore( BaseType_t xCoreID )
     xCurrentCoreId = xCoreID;
 }
 
+void vCheckAndExecuteAsyncCoreYield( BaseType_t xCoreID )
+{
+    BaseType_t xCoreInCritical = pdFALSE;
+    BaseType_t xPreviousCoreId = xCurrentCoreId;
+    int i;
+
+    if( xCoreYields[ xCoreID ] != pdFALSE )
+    {
+        /* Check if the lock is acquired by any core. */
+        for( i = 0; i < configNUMBER_OF_CORES; i++ )
+        {
+            if( ( xIsrLockCount[ i ] > 0 ) || ( xTaskLockCount[ i ] > 0 ) )
+            {
+                xCoreInCritical = pdTRUE;
+                break;
+            }
+        }
+
+        if( xCoreInCritical != pdTRUE )
+        {
+            /* No task is in the critical section. We can yield this core. */
+            xCurrentCoreId = xCoreID;
+            vTaskSwitchContext( xCurrentCoreId );
+            xCurrentCoreId = xPreviousCoreId;
+        }
+    }
+}
+
 static void vYieldCores( void )
 {
     BaseType_t i;
@@ -205,7 +241,8 @@ unsigned int vFakePortGetCoreIDCallback( int cmock_num_calls )
     return ( unsigned int ) xCurrentCoreId;
 }
 
-void vFakePortGetISRLockCallback( int cmock_num_calls )
+void vFakePortGetISRLockCallback( BaseType_t xCoreID,
+                                  int cmock_num_calls )
 {
     int i;
 
@@ -214,25 +251,27 @@ void vFakePortGetISRLockCallback( int cmock_num_calls )
     /* Ensure that no other core is in the critical section. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        if( i != xCurrentCoreId )
+        if( i != xCoreID )
         {
             TEST_ASSERT_MESSAGE( xIsrLockCount[ i ] == 0, "vFakePortGetISRLock xIsrLockCount[ i ] > 0" );
             TEST_ASSERT_MESSAGE( xTaskLockCount[ i ] == 0, "vFakePortGetISRLock xTaskLockCount[ i ] > 0" );
         }
     }
 
-    xIsrLockCount[ xCurrentCoreId ]++;
+    xIsrLockCount[ xCoreID ]++;
 }
 
-void vFakePortReleaseISRLockCallback( int cmock_num_calls )
+void vFakePortReleaseISRLockCallback( BaseType_t xCoreID,
+                                      int cmock_num_calls )
 {
     ( void ) cmock_num_calls;
 
-    TEST_ASSERT_MESSAGE( xIsrLockCount[ xCurrentCoreId ] > 0, "xIsrLockCount[ xCurrentCoreId ] <= 0" );
-    xIsrLockCount[ xCurrentCoreId ]--;
+    TEST_ASSERT_MESSAGE( xIsrLockCount[ xCoreID ] > 0, "xIsrLockCount[ xCoreID ] <= 0" );
+    xIsrLockCount[ xCoreID ]--;
 }
 
-void vFakePortGetTaskLockCallback( int cmock_num_calls )
+void vFakePortGetTaskLockCallback( BaseType_t xCoreID,
+                                   int cmock_num_calls )
 {
     int i;
 
@@ -241,28 +280,38 @@ void vFakePortGetTaskLockCallback( int cmock_num_calls )
     /* Ensure that no other core is in the critical section. */
     for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
-        if( i != xCurrentCoreId )
+        if( i != xCoreID )
         {
             TEST_ASSERT_MESSAGE( xIsrLockCount[ i ] == 0, "vFakePortGetTaskLock xIsrLockCount[ i ] > 0" );
             TEST_ASSERT_MESSAGE( xTaskLockCount[ i ] == 0, "vFakePortGetTaskLock xTaskLockCount[ i ] > 0" );
         }
     }
 
-    xTaskLockCount[ xCurrentCoreId ]++;
+    xTaskLockCount[ xCoreID ]++;
 }
 
-void vFakePortReleaseTaskLockCallback( int cmock_num_calls )
+void vFakePortReleaseTaskLockCallback( BaseType_t xCoreID,
+                                       int cmock_num_calls )
 {
     ( void ) cmock_num_calls;
 
-    TEST_ASSERT_MESSAGE( xTaskLockCount[ xCurrentCoreId ] > 0, "xTaskLockCount[ xCurrentCoreId ] <= 0" );
-    xTaskLockCount[ xCurrentCoreId ]--;
+    TEST_ASSERT_MESSAGE( xTaskLockCount[ xCoreID ] > 0, "xTaskLockCount[ xCoreID ] <= 0" );
+    xTaskLockCount[ xCoreID ]--;
 
     /* When releasing the ISR lock, check if any core is waiting to yield. */
-    if( xTaskLockCount[ xCurrentCoreId ] == 0 )
+    if( xTaskLockCount[ xCoreID ] == 0 )
     {
         vYieldCores();
     }
+}
+
+void vFakePortReleaseTaskLockAsyncCallback( BaseType_t xCoreID,
+                                            int cmock_num_calls )
+{
+    ( void ) cmock_num_calls;
+
+    TEST_ASSERT_MESSAGE( xTaskLockCount[ xCoreID ] > 0, "xTaskLockCount[ xCoreID ] <= 0" );
+    xTaskLockCount[ xCoreID ]--;
 }
 
 portBASE_TYPE vFakePortEnterCriticalFromISRCallback( int cmock_num_calls )
@@ -279,6 +328,12 @@ void vFakePortExitCriticalFromISRCallback( portBASE_TYPE xSavedInterruptState,
     vTaskExitCriticalFromISR( xSavedInterruptState );
     /* Simulate yield cores when leaving the critical section. */
     vYieldCores();
+}
+
+void vFakePortExitCriticalFromISRAsyncCallback( portBASE_TYPE xSavedInterruptState,
+                                                int cmock_num_calls )
+{
+    vTaskExitCriticalFromISR( xSavedInterruptState );
 }
 
 /* ============================= Unity Fixtures ============================= */
@@ -340,6 +395,13 @@ void commonSetUp( void )
     xCurrentCoreId = 0;
     memset( xTaskLockCount, 0x00, sizeof( xTaskLockCount ) );
     memset( xIsrLockCount, 0x00, sizeof( xIsrLockCount ) );
+}
+
+void commonAsyncCoreYieldSetup( void )
+{
+    vFakePortYieldCore_StubWithCallback( vFakePortYieldCoreAsyncStubCallback );
+    vFakePortExitCriticalFromISR_StubWithCallback( vFakePortExitCriticalFromISRAsyncCallback );
+    vFakePortReleaseTaskLock_StubWithCallback( vFakePortReleaseTaskLockAsyncCallback );
 }
 
 void commonTearDown( void )

@@ -565,6 +565,13 @@
     #define traceTASK_SWITCHED_IN()
 #endif
 
+#ifndef traceSTARTING_SCHEDULER
+
+/* Called after all idle tasks and timer task (if enabled) have been created
+ * successfully, just before the scheduler is started. */
+    #define traceSTARTING_SCHEDULER( xIdleTaskHandles )
+#endif
+
 #ifndef traceINCREASE_TICK_COUNT
 
 /* Called before stepping the tick count after waking from tickless idle

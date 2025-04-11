@@ -216,6 +216,10 @@ class HeaderChecker:
                 print("PASS")
                 print("-" * 85)
                 return True
+            elif self.customCheck(path):
+                print("PASS")
+                print("-" * 85)
+                return True
             elif self.isThirdPartyFile(path):
                 print("FAIL")
                 print("-" * 85)
@@ -435,3 +439,6 @@ class HeaderChecker:
             else:
                 error_count += 1
         return error_count == 0
+
+    def customCheck(self, path):
+        return False

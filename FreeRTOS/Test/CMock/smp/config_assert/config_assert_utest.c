@@ -278,13 +278,7 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     vFakePortEnterCriticalSection_Expect();
     /* back */
     /* prvYieldForTask */
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskRemoveFromUnorderedEventList( &xEventListItem,
                                                             xItemValue ) );
@@ -317,9 +311,8 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
     xSchedulerRunning = pdFALSE; /* causes the assert */
     uxSchedulerSuspended = pdFALSE;
 
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect( 1 );
+    vFakePortGetISRLock_Expect( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
     validate_and_clear_assertions();
@@ -351,9 +344,8 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
     xSchedulerRunning = pdTRUE;
     uxSchedulerSuspended = pdFALSE;
 
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect( 0 );
+    vFakePortGetISRLock_Expect( 0 );
 
     listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdFALSE );
@@ -475,9 +467,8 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
 
     pxCurrentTCBs[ 1 ] = &currentTCB;
 
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 1 );
+    vFakePortGetTaskLock_Expect( 1 );
+    vFakePortGetISRLock_Expect( 1 );
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
 
@@ -583,11 +574,12 @@ void test_prvGetExpectedIdleTime_assert_nextUnblock_lt_xTickCount( void )
 
     /* vTaskSuspendAll */
     vFakePortAssertIfISR_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
     ulFakePortSetInterruptMask_ExpectAndReturn( 0 );
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetTaskLock_Expect( 0 );
+    vFakePortGetCoreID_ExpectAndReturn( 0 );
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
     vFakePortClearInterruptMask_Expect( 0 );
 
     /* API Call */
@@ -617,40 +609,6 @@ void test_vTaskStepTick_assert_scheduler_not_suspended( void )
 
     /* API Call */
     EXPECT_ASSERT_BREAK( vTaskStepTick( xTicksToJump ) );
-
-    /* Test Verifications */
-    validate_and_clear_assertions();
-}
-
-/**
- * @brief prvCheckForRunStateChange - task state not changed.
- *
- * When the task is able to run after calling portENABLE_INTERRUPTS. The task state
- * is supposed to be changed to run state. This test cover the assertion of this scenario.
- *
- * <b>Coverage</b>
- * @code{c}
- * configASSERT( pxThisTCB->xTaskRunState != taskTASK_YIELDING );
- * @endcode
- */
-void test_prvCheckForRunStateChange_assert_task_state_not_changed( void )
-{
-    TCB_t xTaskTCB = { NULL };
-
-    pxCurrentTCBs[ 0 ] = &xTaskTCB;
-    xTaskTCB.uxCriticalNesting = 0;
-    xTaskTCB.xTaskRunState = taskTASK_YIELDING;
-    uxSchedulerSuspended = 1;
-
-    /* Expection. */
-    vFakePortAssertIfISR_Expect();
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortGetCoreID_ExpectAndReturn( 0 );
-    vFakePortReleaseTaskLock_Expect();
-    vFakePortEnableInterrupts_Expect();
-
-    /* API Call. */
-    EXPECT_ASSERT_BREAK( prvCheckForRunStateChange() );
 
     /* Test Verifications */
     validate_and_clear_assertions();

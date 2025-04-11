@@ -66,6 +66,12 @@ void vPortFree( void * pv );
 void commonSetUp( void );
 
 /**
+ * @brief Common test case asyncrhonous core yield setup function for SMP tests.
+ * This API should be called after commonSetUp().
+ */
+void commonAsyncCoreYieldSetup( void );
+
+/**
  * @brief Common test case teardown function for SMP tests.
  */
 void commonTearDown( void );
@@ -97,6 +103,11 @@ void xTaskIncrementTick_helper( void );
  * @brief Set the core ID returned by portGET_CORE_ID()
  */
 void vSetCurrentCore( BaseType_t xCoreID );
+
+/**
+ * @brief Check and execut asynchronous core yield request.
+ */
+void vCheckAndExecuteAsyncCoreYield( BaseType_t xCoreID );
 
 /**
  * @brief Helper function to create static test task.

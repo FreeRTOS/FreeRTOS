@@ -57,11 +57,8 @@ extern void vAssertCalled( void );
 #define configUSE_16_BIT_TICKS              0
 #define configIDLE_SHOULD_YIELD             0
 #define configMAX_PRIORITIES                ( 10 )
-#define configTIMER_QUEUE_LENGTH            20
-#define configTIMER_TASK_PRIORITY           ( configMAX_PRIORITIES - 3 )
 #define configUSE_COUNTING_SEMAPHORES       1
 #define configSUPPORT_DYNAMIC_ALLOCATION    1
-#define  configNUM_TX_DESCRIPTORS           15
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
@@ -74,7 +71,7 @@ extern void vAssertCalled( void );
 #define INCLUDE_vTaskDelete                     0
 #define INCLUDE_vTaskCleanUpResources           0
 #define INCLUDE_vTaskSuspend                    0
-#define INCLUDE_vTaskDelayUntil                 1
+#define INCLUDE_vTaskDelayUntil                 0
 #define INCLUDE_vTaskDelay                      1
 
 
@@ -89,7 +86,6 @@ extern void vAssertCalled( void );
 /* networking definitions */
 #define configMAC_ISR_SIMULATOR_PRIORITY    ( configMAX_PRIORITIES - 2 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK      1
-/*#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000) */
 #define configNETWORK_INTERFACE_TO_USE      1L
 
 /* The address of an echo server that will be used by the two demo echo client
@@ -97,10 +93,22 @@ extern void vAssertCalled( void );
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
+/* When the user uses User Mode Networking, the QEMU virtual machine
+ * automatically starts up an internal DHCP server on an internal
+ * network address in the subnet 10.0.2.0/24. This DHCP server allocates IPs to
+ * Guest OSes in the subnet 10.0.2.0/24 starting from 10.0.2.15. The QEMU VM
+ * also sets up 10.0.2.2 as the "gateway" IP address. Connecting to a port on
+ * this "gateway" IP address 10.0.2.2 from inside the guest connects to that
+ * port on the host machine. For example, connecting to the "gateway" IP address
+ * 10.0.2.2 on port 7 from inside the guest will connect to the host machine on
+ * port 7. See the following links for more details:
+ * https://wiki.qemu.org/Documentation/Networking
+ * http://bsdwiki.reedmedia.net/wiki/networking_qemu_virtual_bsd_systems.html */
+
 #define configECHO_SERVER_ADDR0    10
-#define configECHO_SERVER_ADDR1    136
-#define configECHO_SERVER_ADDR2    206
-#define configECHO_SERVER_ADDR3    133
+#define configECHO_SERVER_ADDR1    0
+#define configECHO_SERVER_ADDR2    2
+#define configECHO_SERVER_ADDR3    2
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet/WiFi data
@@ -115,16 +123,16 @@ extern void vAssertCalled( void );
 #define configMAC_ADDR4    0x34
 #define configMAC_ADDR5    0xAD
 
-/* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
- * ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+/* Default IP address configuration.  Used if ipconfigUSE_DHCP is set to 0, or
+ * ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be contacted. */
 
 #define configIP_ADDR0    10
 #define configIP_ADDR1    211
 #define configIP_ADDR2    55
 #define configIP_ADDR3    5
 
-/* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
- * 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+/* Default gateway IP address configuration.  Used if ipconfigUSE_DHCP is set to
+ * 0, or ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be contacted. */
 
 #define configGATEWAY_ADDR0    10
 #define configGATEWAY_ADDR1    211
@@ -132,16 +140,16 @@ extern void vAssertCalled( void );
 #define configGATEWAY_ADDR3    1
 
 /* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and
- * 208.67.220.220.  Used in ipconfigUSE_DNS is set to 0, or ipconfigUSE_DNS is set
- * to 1 but a DNS server cannot be contacted.*/
+ * 208.67.220.220.  Used if ipconfigUSE_DHCP is set to 0, or ipconfigUSE_DHCP is set
+ * to 1 but a DHCP server cannot be contacted.*/
 
 #define configDNS_SERVER_ADDR0    127
 #define configDNS_SERVER_ADDR1    0
 #define configDNS_SERVER_ADDR2    0
 #define configDNS_SERVER_ADDR3    53
 
-/* Default netmask configuration.  Used in ipconfigUSE_DNS is set to 0, or
- * ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+/* Default netmask configuration.  Used if ipconfigUSE_DHCP is set to 0, or
+ * ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be contacted. */
 #define configNET_MASK0           255
 #define configNET_MASK1           255
 #define configNET_MASK2           255

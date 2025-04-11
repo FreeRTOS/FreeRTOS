@@ -40,9 +40,7 @@ void main_tcp_echo_client_tasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 
-extern void initialise_monitor_handles( void );
-
-int main()
+int main( void )
 {
     main_tcp_echo_client_tasks();
     return 0;
@@ -84,8 +82,6 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 
 void vApplicationIdleHook( void )
 {
-    volatile size_t xFreeHeapSpace;
-
     /* This is just a trivial example of an idle hook.  It is called on each
      * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
      * idle task just queries the amount of FreeRTOS heap that remains.  See the

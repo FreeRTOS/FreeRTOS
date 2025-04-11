@@ -849,7 +849,7 @@ static int p11_ecdsa_check_pair( const void * pvPub,
         };
         unsigned char pucTestSignature[ MBEDTLS_ECDSA_MAX_SIG_LEN( 256 ) ] = { 0 };
         size_t uxSigLen = 0;
-        lResult = p11_ecdsa_sign( pxMbedtlsPkCtx, MBEDTLS_MD_SHA256,
+        lResult = p11_ecdsa_sign( ( mbedtls_pk_context * ) pxMbedtlsPkCtx, MBEDTLS_MD_SHA256,
                                   pucTestHash, sizeof( pucTestHash ),
                                   pucTestSignature, sizeof( pucTestSignature ), &uxSigLen,
                                   NULL, NULL );
@@ -883,7 +883,7 @@ static size_t p11_rsa_get_bitlen( const mbedtls_pk_context * pxMbedtlsPkCtx )
 
     configASSERT( mbedtls_rsa_info.get_bitlen );
 
-    return mbedtls_rsa_info.get_bitlen( pxMbedtlsPkCtx );
+    return mbedtls_rsa_info.get_bitlen( ( mbedtls_pk_context * ) pxMbedtlsPkCtx );
 }
 
 /*-----------------------------------------------------------*/
@@ -1009,8 +1009,8 @@ static int p11_rsa_check_pair( const void * pvPub,
 {
     configASSERT( mbedtls_rsa_info.check_pair_func );
 
-    return mbedtls_rsa_info.check_pair_func( pvPub,
-                                             pxMbedtlsPkCtx,
+    return mbedtls_rsa_info.check_pair_func( ( void * ) pvPub,
+                                             ( mbedtls_pk_context * ) pxMbedtlsPkCtx,
                                              lFRng,
                                              pvPRng );
 }
@@ -1062,24 +1062,22 @@ static CK_RV p11_rsa_ctx_init( mbedtls_pk_context * pk,
         xResult = CKR_FUNCTION_FAILED;
     }
 
-    /*
-     * TODO: corePKCS11 does not allow exporting RSA public attributes.
-     * This function should be updated to properly initialize the
-     * mbedtls_rsa_context when this is addressed.
-     */
+    CK_ATTRIBUTE pxAttrs[ 8 ] =
+    {
+        { .type = CKA_MODULUS,          .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->N )  },
+        { .type = CKA_PUBLIC_EXPONENT,  .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->E )  },
+        { .type = CKA_PRIME_1,          .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->P )  },
+        { .type = CKA_PRIME_2,          .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->Q )  },
+        { .type = CKA_PRIVATE_EXPONENT, .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->D )  },
+        { .type = CKA_EXPONENT_1,       .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->DP ) },
+        { .type = CKA_EXPONENT_2,       .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->DQ ) },
+        { .type = CKA_COEFFICIENT,      .ulValueLen = sizeof( mbedtls_mpi ), .pValue = &( pxMbedRsaCtx->QP ) },
+    };
 
-    /* CK_ATTRIBUTE pxAttrs[ 2 ] = */
-    /* { */
-    /*     { .type = CKA_MODULUS, .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_PUBLIC_EXPONENT,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_PRIME_1,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_PRIME_2,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_EXPONENT_1,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_EXPONENT_2,  .ulValueLen = 0, .pValue = NULL }, */
-    /*     { .type = CKA_COEFFICIENT,  .ulValueLen = 0, .pValue = NULL }, */
-    /* }; */
-
-    ( void ) pxMbedRsaCtx;
+    xResult = pxFunctionList->C_GetAttributeValue( xSessionHandle,
+                                                   xPkHandle,
+                                                   pxAttrs,
+                                                   sizeof( pxAttrs ) / sizeof( CK_ATTRIBUTE ) );
 
     if( xResult == CKR_OK )
     {
@@ -1112,7 +1110,7 @@ static void p11_rsa_debug( const mbedtls_pk_context * pxMbedtlsPkCtx,
 {
     configASSERT( mbedtls_rsa_info.debug_func );
 
-    mbedtls_rsa_info.debug_func( pxMbedtlsPkCtx, pxItems );
+    mbedtls_rsa_info.debug_func( ( mbedtls_pk_context * ) pxMbedtlsPkCtx, pxItems );
 }
 
 /*-----------------------------------------------------------*/

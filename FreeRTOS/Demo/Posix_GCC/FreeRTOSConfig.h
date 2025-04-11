@@ -43,7 +43,7 @@
 #define configUSE_TICK_HOOK                        1
 #define configUSE_DAEMON_TASK_STARTUP_HOOK         1
 #define configTICK_RATE_HZ                         ( 1000 )                  /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
-#define configMINIMAL_STACK_SIZE                   ( ( unsigned short ) PTHREAD_STACK_MIN ) /* The stack size being passed is equal to the minimum stack size needed by pthread_create(). */
+#define configMINIMAL_STACK_SIZE                   ( PTHREAD_STACK_MIN ) /* The stack size being passed is equal to the minimum stack size needed by pthread_create(). */
 #define configTOTAL_HEAP_SIZE                      ( ( size_t ) ( 65 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                    ( 12 )
 #define configUSE_TRACE_FACILITY                   1
@@ -58,7 +58,23 @@
 #define configUSE_ALTERNATIVE_API                  0
 #define configUSE_QUEUE_SETS                       1
 #define configUSE_TASK_NOTIFICATIONS               1
+
+/* The following 2  memory allocation schemes are possible for this demo:
+ *
+ * 1. Dynamic Only.
+ *    #define configSUPPORT_STATIC_ALLOCATION  0
+ *    #define configSUPPORT_DYNAMIC_ALLOCATION 1
+ *
+ * 2. Static and Dynamic.
+ *    #define configSUPPORT_STATIC_ALLOCATION  1
+ *    #define configSUPPORT_DYNAMIC_ALLOCATION 1
+ *
+ * Static only configuration is not possible for this demo as it utilizes
+ * dynamic allocation.
+ */
 #define configSUPPORT_STATIC_ALLOCATION            1
+#define configSUPPORT_DYNAMIC_ALLOCATION           1
+
 #define configRECORD_STACK_HIGH_ADDRESS            1
 
 /* Software timer related configuration options.  The maximum possible task

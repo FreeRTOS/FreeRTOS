@@ -357,6 +357,10 @@
                     <state>$PROJ_DIR$\..\..\..\..\Source\include</state>
                     <state>$PROJ_DIR$\..\..\CMSIS</state>
                     <state>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3</state>
+                    <state>$PROJ_DIR$\..\..\TraceRecorderConfig</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\include</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\include</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\streamports\RingBuffer\include</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1258,6 +1262,93 @@
         <name>System files</name>
         <file>
             <name>$PROJ_DIR$\startup_ewarm.c</name>
+        </file>
+    </group>
+    <group>
+        <name>TraceRecorder</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcAssert.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcCounter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcDependency.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcDiagnostics.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcEntryTable.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcError.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcEvent.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcEventBuffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcExtension.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcHardwarePort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcHeap.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcInternalEventBuffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcInterval.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcISR.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\kernelports\FreeRTOS\trcKernelPort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcMultiCoreEventBuffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcObject.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcPrint.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcRunnable.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcStackMonitor.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcStateMachine.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcStaticBuffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcStreamingRecorder.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\streamports\RingBuffer\trcStreamPort.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcString.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcTask.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcTimestamp.c</name>
         </file>
     </group>
     <file>

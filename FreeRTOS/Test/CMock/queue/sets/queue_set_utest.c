@@ -39,6 +39,7 @@
 #include "mock_fake_port.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
+#define EVENT_QUEUE_LENGTH    5
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
@@ -122,6 +123,19 @@ void test_xQueueCreateSet_oneLength( void )
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueueSet ) );
 
     vQueueDelete( xQueueSet );
+}
+
+void test_xQueueCreateSetStatic_HappyPath( void )
+{
+    StaticQueue_t xQueueSetBuffer;
+    QueueHandle_t xQueueSetStorage[ EVENT_QUEUE_LENGTH ];
+    QueueSetHandle_t xQueueSet = NULL;
+
+    xQueueSet = xQueueCreateSetStatic( EVENT_QUEUE_LENGTH,
+                                       ( uint8_t * ) &( xQueueSetStorage[ 0 ] ),
+                                       &( xQueueSetBuffer ) );
+
+    TEST_ASSERT_NOT_NULL( xQueueSet );
 }
 
 /**

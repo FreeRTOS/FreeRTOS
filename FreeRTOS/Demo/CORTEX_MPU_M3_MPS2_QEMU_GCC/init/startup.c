@@ -34,8 +34,10 @@
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
-extern void uart_init();
-extern int main();
+extern void uart_init( void );
+extern int main( void );
+
+void _start( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
@@ -61,13 +63,12 @@ void Reset_Handler( void )
     }
 
     /* jump to board initialisation */
-    void _start( void );
     _start();
 }
 
 void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
 {
-/* These are volatile to try and prevent the compiler/linker optimising them
+/* These are volatile to try and prevent the compiler/linker optimizing them
  * away as the variables never actually get used.  If the debugger won't show the
  * values of the variables, make them global my moving their declaration outside
  * of this function. */
@@ -111,17 +112,17 @@ void Default_Handler( void )
 {
     __asm volatile
     (
-        "Default_Handler: \n"
-        "    ldr r3, NVIC_INT_CTRL_CONST  \n"
+        "Default_Handler:\n"
+        "    ldr r3, =0xe000ed04\n"
         "    ldr r2, [r3, #0]\n"
         "    uxtb r2, r2\n"
         "Infinite_Loop:\n"
         "    b  Infinite_Loop\n"
         ".size  Default_Handler, .-Default_Handler\n"
-        ".align 4\n"
-        "NVIC_INT_CTRL_CONST: .word 0xe000ed04\n"
+        ".ltorg\n"
     );
 }
+
 static void HardFault_Handler( void ) __attribute__( ( naked ) );
 void HardFault_Handler( void )
 {
@@ -132,9 +133,9 @@ void HardFault_Handler( void )
         " mrseq r0, msp                                             \n"
         " mrsne r0, psp                                             \n"
         " ldr r1, [r0, #24]                                         \n"
-        " ldr r2, handler2_address_const                            \n"
+        " ldr r2, =prvGetRegistersFromStack                         \n"
         " bx r2                                                     \n"
-        " handler2_address_const: .word prvGetRegistersFromStack    \n"
+        " .ltorg                                                    \n"
     );
 }
 
@@ -147,9 +148,9 @@ void MemMang_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler3_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler3_address_const: .word vHandleMemoryFault                    \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -161,9 +162,9 @@ void BusFault_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler4_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler4_address_const: .word vHandleMemoryFault                    \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -175,9 +176,9 @@ void UsageFault_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler5_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler5_address_const: .word vHandleMemoryFault                    \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -189,9 +190,9 @@ void Debug_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler6_address_const                                      \n"
+        " ldr r1, =vHandleMemoryFault                                        \n"
         " bx r1                                                              \n"
-        " handler6_address_const: .word vHandleMemoryFault                    \n"
+        " .ltorg                                                             \n"
     );
 }
 
@@ -232,12 +233,12 @@ const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ) ) 
 void _start( void )
 {
     uart_init();
-    main( 0, 0 );
+    main();
     exit( 0 );
 }
 
 __attribute__( ( naked ) )
-void exit( __attribute__( ( unused ) ) int status )
+void exit( int status )
 {
     /* Force qemu to exit using ARM Semihosting */
     __asm volatile (
@@ -249,5 +250,8 @@ void exit( __attribute__( ( unused ) ) int status )
         "movs r0, #0x18\n"   /* SYS_EXIT */
         "bkpt 0xab\n"
         "end: b end\n"
+        ".ltorg\n"
         );
+
+    ( void ) status;
 }

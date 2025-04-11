@@ -38,14 +38,18 @@ jobs:
           fetch-depth: 0
 
       - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_ID: ${{ github.event.inputs.commit_id }}
+          VERSION_NUMBER: ${{ github.event.inputs.version_number }}
+          GITHUB_ORG: ${{ github.repository_owner }}
         run: |
           # Configure repo for push
-          git config --global user.name ${{ github.actor }}
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com
+          git config --global user.name "$ACTOR"
+          git config --global user.email "$ACTOR"@users.noreply.github.com
 
           # Run the release script
           pip install -r ./tools/.github/scripts/release-requirements.txt
-          ./tools/.github/scripts/release.py FreeRTOS --core-repo-path=local_core --core-commit=${{ github.event.inputs.commit_id }} --new-core-version=${{ github.event.inputs.version_number }}
+          ./tools/.github/scripts/release.py "$GITHUB_ORG" --core-repo-path=local_core --core-commit="$COMMIT_ID" --new-core-version="$VERSION_NUMBER"
           exit $?
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

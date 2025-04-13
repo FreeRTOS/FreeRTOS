@@ -28,6 +28,7 @@
 #include <task.h>
 
 #include <FreeRTOSConfig.h>
+#include <FreeRTOSIPConfig.h>
 
 #include <string.h>
 #include <stdarg.h>
@@ -35,7 +36,6 @@
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask,
                                     char * pcTaskName );
-void vApplicationMallocFailedHook( void );
 void main_tcp_echo_client_tasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );

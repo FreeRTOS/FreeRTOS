@@ -218,10 +218,10 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
     void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
 {
-    uint32_t ulIPAddress;
-    uint32_t ulNetMask;
-    uint32_t ulGatewayAddress;
-    uint32_t ulDNSServerAddress;
+    uint32_t ulIPAddress = 0U;
+    uint32_t ulNetMask = 0U;
+    uint32_t ulGatewayAddress = 0U;
+    uint32_t ulDNSServerAddress = 0U;
     char cBuffer[ 16 ];
 
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
@@ -275,7 +275,7 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-UBaseType_t uxRand( void )
+static UBaseType_t uxRand( void )
 {
     const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
 
@@ -317,7 +317,7 @@ static void prvMiscInitialisation( void )
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
-    const char * pcApplicationHostnameHook( void )
+    static const char * pcApplicationHostnameHook( void )
     {
         /* Assign the name "FreeRTOS" to this network node.  This function will
          * be called during the DHCP: the machine will be registered with an IP

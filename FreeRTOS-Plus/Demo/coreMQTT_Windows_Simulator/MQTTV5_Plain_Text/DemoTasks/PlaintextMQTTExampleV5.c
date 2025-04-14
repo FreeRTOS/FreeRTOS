@@ -19,6 +19,7 @@
 
 /* MQTT library includes. */
 #include "core_mqtt.h"
+#include "core_mqtt_utils.h"
 
 /* Exponential backoff retry include. */
 #include "backoff_algorithm.h"
@@ -249,10 +250,12 @@ static void prvMQTTPublishToTopics(MQTTContext_t* pxMQTTContext);
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
-                              MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo, 
-                              MQTTPublishFailReasonCode_t * reasonCode);
+static void prvEventCallback(MQTTContext_t* pxMQTTContext,
+                            MQTTPacketInfo_t* pxPacketInfo,
+                            MQTTDeserializedInfo_t* pxDeserializedInfo,
+                            MQTTSuccessFailReasonCode_t* pReasonCode,
+                            MqttPropBuilder_t* sendPropsBuffer,
+                            MqttPropBuilder_t* getPropsBuffer); 
 
 /**
  * @brief Call #MQTT_ProcessLoop in a loop for the duration of a timeout or
@@ -403,7 +406,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     MQTTStatus_t xMQTTStatus;
     PlaintextTransportStatus_t xNetworkStatus;
     MQTTConnectProperties_t xProperties;
-    MQTTAckInfo_t disconnect = { 0 };
+    MQTTReasonCodeInfo_t disconnect = { 0 };
 
 
 
@@ -486,18 +489,17 @@ static void prvMQTTDemoTask( void * pvParameters )
             size_t bufLength = sizeof(buf);
             xMQTTStatus = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength); 
 
-            MQTTUserProperties_t userProperty;
+            MQTTUserProperty_t userProperty;
             memset(&userProperty, 0x0, sizeof(userProperty));
-            userProperty.count = 1;
-            userProperty.userProperty[0].pKey = "Disconnect";
-            userProperty.userProperty[0].pValue = "Disconnect";
-            userProperty.userProperty[0].keyLength = 10;
-            userProperty.userProperty[0].valueLength = 10;
+            userProperty.pKey = "Disconnect";
+            userProperty.pValue = "Disconnect";
+            userProperty.keyLength = 10;
+            userProperty.valueLength = 10;
             
 
-            MQTTDisconnectReasonCode_t reasonCode = MQTTNormalDisconnection; 
-            xMQTTStatus = MQTTPropAdd_UserProps(&(propBuilder), &userProperty);
-            xMQTTStatus = MQTTPropAdd_DisconnReasonString(&(propBuilder), "DISCONNECT-RS", 13); 
+            MQTTSuccessFailReasonCode_t reasonCode = MQTTNormalDisconnection; 
+            xMQTTStatus = MQTTPropAdd_UserProp(&(propBuilder), &userProperty);
+            xMQTTStatus = MQTTPropAdd_ReasonString(&(propBuilder), "DISCONNECT-RS", 13); 
 
             xMQTTStatus = MQTT_Disconnect(&xMQTTContext, &propBuilder, MQTTNormalDisconnection);
 
@@ -582,8 +584,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 {
     MQTTStatus_t xResult;
     MQTTConnectInfo_t xConnectInfo;
-    MQTTUserProperties_t xUserProperties ; 
-    MQTTAckInfo_t disconnect;
+    MQTTUserProperty_t xUserProperty ; 
+    MQTTReasonCodeInfo_t disconnect;
     PlaintextTransportStatus_t xNetworkStatus;
     MQTTPublishInfo_t willInfo;
     MQTTAuthInfo_t auth;
@@ -623,11 +625,10 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     size_t bufLength = sizeof(buf);
     xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength);
 
-    xUserProperties.count = 1;
-    xUserProperties.userProperty[0].pKey = "Key1";
-    xUserProperties.userProperty[0].pValue = "Value1";
-    xUserProperties.userProperty[0].keyLength = 4;
-    xUserProperties.userProperty[0].valueLength = 6;
+    xUserProperty.pKey = "Key1";
+    xUserProperty.pValue = "Value1";
+    xUserProperty.keyLength = 4;
+    xUserProperty.valueLength = 6;
 
     uint32_t sessionExpiry = 20;
     uint16_t receiveMax = 20 ; 
@@ -635,7 +636,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     uint16_t topicAliasMaximum = 20;
 
             
-    xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
+    xResult = MQTTPropAdd_UserProp(&(propBuilder), &xUserProperty);
     xResult = MQTTPropAdd_ConnSessionExpiry(&(propBuilder), sessionExpiry);
     xResult = MQTTPropAdd_ConnReceiveMax(&(propBuilder), receiveMax); 
     xResult = MQTTPropAdd_ConnMaxPacketSize(&(propBuilder), maxPacketSize);
@@ -660,11 +661,11 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     uint8_t wbuf[500];
     size_t wbufLength = sizeof(wbuf);
     xResult = MqttPropertyBuilder_Init(&(willPropBuilder), wbuf, wbufLength);
-    xResult = MQTTPropAdd_UserProps(&(willPropBuilder), &xUserProperties);
+    xResult = MQTTPropAdd_UserProp(&(willPropBuilder), &xUserProperty);
 
     /*LWT verification with user properties.*/
     /*LWT with will delay.*/
-    LogInfo(("Create a good connection with the broker and disconnect without sending the disconnect packet to validate will delay"));
+    //LogInfo(("Create a good connection with the broker and disconnect without sending the disconnect packet to validate will delay"));
     xConnectInfo.cleanSession = true;
     xConnectInfo.clientIdentifierLength = 5;
     xConnectInfo.pClientIdentifier = "abcde";
@@ -837,94 +838,145 @@ static void prvUpdateSubAckStatus(MQTTPacketInfo_t* pxPacketInfo)
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo, 
-                              MQTTPublishFailReasonCode_t * pReasonCode)
+                              MQTTSuccessFailReasonCode_t * pReasonCode,
+                              MqttPropBuilder_t *sendPropsBuffer, 
+                              MqttPropBuilder_t *getPropsBuffer)
 {
     /* The MQTT context is not used in this function. */
     ( void ) pxMQTTContext;
         if (pxPacketInfo->type == MQTT_PACKET_TYPE_PUBREC)
         {
             *pReasonCode = MQTTPacketIdNotFound; 
-            MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBREL", 10); 
+            MQTTPropAdd_ReasonString(sendPropsBuffer, "TESTPUBREL", 10); 
             prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
 
         }
         else if((pxPacketInfo->type & 0xF0U) == MQTT_PACKET_TYPE_PUBLISH)
         {
+            MQTTStatus_t status = MQTTSuccess; 
             uint8_t* pCurrIndex = NULL;
             char * pUserPropKey = NULL;
             uint16_t userPropKeyLen, userPropKeyVal;
             char* pUserPropVal = NULL;
+            uint8_t propertyId; 
+            uint8_t* startOfProp = NULL; 
+            uint16_t topicAlias; 
+            uint8_t payloadFormat; 
+            const char* pResponseTopic; 
+            uint16_t responseTopicLength; 
+            const char* pCorrelationData; 
+            uint16_t correlationLength;
+            status = MQTT_IncomingGetNextProp(getPropsBuffer, &propertyId); 
 
-            do {
-                bool ret = MQTT_IncomingPubGetNextProp(&pCurrIndex,
-                    &pUserPropKey,
-                    &userPropKeyLen,
-                    &pUserPropVal,
-                    &userPropKeyVal,
-                    pxDeserializedInfo);
-
-                if (ret == false)
+            if (status == MQTTSuccess)
+            {
+                switch (propertyId)
                 {
-                    LogError(("No more keys to iterate over."));
-                    break;
-                }
-                if (pUserPropKey != NULL)
-                {
-                    if (strcmp(pUserPropKey, "Key2") == 0)
+                    case(MQTT_TOPIC_ALIAS_ID):
                     {
-                        LogError(("Found the key."));
-                        LogError(("The value is: %.*s", userPropKeyVal, pUserPropVal));
+                        status = MQTTPropGet_PubTopicAlias(getPropsBuffer, &topicAlias);
+                        break; 
+                    }
+                    case(MQTT_PAYLOAD_FORMAT_ID):
+                    {
+                        status = MQTTPropGet_PubPayloadFormatIndicator(getPropsBuffer, &payloadFormat);
+                        break; 
+                    }
+                    case(MQTT_RESPONSE_TOPIC_ID):
+                    {
+                        status = MQTTPropGet_PubResponseTopic(getPropsBuffer, &pResponseTopic, &responseTopicLength);
+                        break; 
+                    }
+                    case(MQTT_CORRELATION_DATA_ID):
+                    {
+                        status = MQTTPropGet_PubCorrelationData(getPropsBuffer, &pCorrelationData, &correlationLength);
+                        break; 
+                    }
+                    case(MQTT_USER_PROPERTY_ID):
+                    {
+                        status = MQTTPropGet_UserProp(getPropsBuffer, &pUserPropKey, &userPropKeyLen, &pUserPropVal, &userPropKeyVal);
                         break;
                     }
                 }
-            } while (true);
+            }
 
-            *pReasonCode = MQTTPublishSuccess; 
-            MQTTUserProperties_t xUserProperties;
-            (void)memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties)); 
+            status = MQTT_IncomingGetNextProp(getPropsBuffer, &propertyId);
+            if (status == MQTTSuccess)
+            {
+                switch (propertyId)
+                {
+                case(MQTT_TOPIC_ALIAS_ID):
+                {
+                    status = MQTTPropGet_PubTopicAlias(getPropsBuffer, &topicAlias);
+                    break;
+                }
+                case(MQTT_PAYLOAD_FORMAT_ID):
+                {
+                    status = MQTTPropGet_PubPayloadFormatIndicator(getPropsBuffer, &payloadFormat);
+                    break;
+                }
+                case(MQTT_RESPONSE_TOPIC_ID):
+                {
+                    status = MQTTPropGet_PubResponseTopic(getPropsBuffer, &pResponseTopic, &responseTopicLength);
+                    break;
+                }
+                case(MQTT_CORRELATION_DATA_ID):
+                {
+                    status = MQTTPropGet_PubCorrelationData(getPropsBuffer, &pCorrelationData, &correlationLength);
+                    break;
+                }
+                case(MQTT_USER_PROPERTY_ID):
+                {
+                    status = MQTTPropGet_UserProp(getPropsBuffer, &pUserPropKey, &userPropKeyLen, &pUserPropVal, &userPropKeyVal);
+                    break;
+                }
+                }
+            }
+            status = MQTT_IncomingGetNextProp(getPropsBuffer, &propertyId);
 
-            xUserProperties.count = 1;
-            xUserProperties.userProperty[0].pKey = "Key1";
-            xUserProperties.userProperty[0].pValue = "Value1";
-            xUserProperties.userProperty[0].keyLength = 4;
-            xUserProperties.userProperty[0].valueLength = 6;
+            status = MQTTPropGet_PubResponseTopic(getPropsBuffer, &pResponseTopic, &responseTopicLength);
 
-            MQTTPropAdd_UserProps(&pxMQTTContext->ackPropsBuffer,&xUserProperties);
-            MQTTPropAdd_PubAckReasonString(pxMQTTContext, "TESTPUBREC", 10);
+
+            *pReasonCode = MQTTReasonSuccess; 
+
+            MQTTUserProperty_t xUserProperty; 
+
+            xUserProperty.pKey = "Key1";
+            xUserProperty.pValue = "Value1";
+            xUserProperty.keyLength = 4;
+            xUserProperty.valueLength = 6;
+
+            MQTTPropAdd_UserProp(sendPropsBuffer,&xUserProperty);
+            MQTTPropAdd_ReasonString(sendPropsBuffer, "TESTPUBREC", 10);
 
 
             prvMQTTProcessIncomingPublish(pxDeserializedInfo->pPublishInfo);
+
         }
         else if (pxPacketInfo->type == MQTT_PACKET_TYPE_CONNACK)
         {
+
+
+            MQTTStatus_t status = MQTTSuccess;
             uint8_t* pCurrIndex = NULL;
             char* pUserPropKey = NULL;
             uint16_t userPropKeyLen, userPropKeyVal;
             char* pUserPropVal = NULL;
+            uint8_t propertyId;
+            uint8_t* startOfProp = NULL;
+            uint16_t topicAlias;
+            uint8_t payloadFormat;
+            const char* pResponseTopic;
+            uint16_t responseTopicLength;
+            const char* pCorrelationData;
+            uint16_t correlationLength;
+            size_t propertyLength = getPropsBuffer->bufferLength;
+            uint16_t topicAliasMax; 
 
-            do {
-                bool ret = MQTT_ConnackGetNextProp(&pCurrIndex,
-                    &pUserPropKey,
-                    &userPropKeyLen,
-                    &pUserPropVal,
-                    &userPropKeyVal,
-                    pxMQTTContext);
+            status = MQTT_IncomingGetNextProp(getPropsBuffer, &propertyId);
 
-                if (ret == false)
-                {
-                    LogError(("No more keys to iterate over."));
-                    break;
-                }
-                if (pUserPropKey != NULL)
-                {
-                    if (strcmp(pUserPropKey, "Key1") == 0)
-                    {
-                        LogError(("Found the key."));
-                        LogError(("The value is: %.*s", userPropKeyVal, pUserPropVal));
-                        break;
-                    }
-                }
-            } while (true);
+            status = MQTTPropGet_ConnTopicAliasMax(getPropsBuffer, &topicAliasMax); 
+
             prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
 
         }
@@ -932,8 +984,8 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
         {
             uint8_t *startOfRc; 
             size_t size; 
-            startOfRc = pxDeserializedInfo->pAckInfo->reasonCode; 
-            size = pxDeserializedInfo->pAckInfo->reasonCodeLength; 
+            startOfRc = pxDeserializedInfo->pReasonCode->reasonCode; 
+            size = pxDeserializedInfo->pReasonCode->reasonCodeLength;
             LogError(("The size of the reason code is %d", size));
             int i; 
             for (i = 0; i < size; i++)
@@ -944,13 +996,13 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
         }
         else if (pxPacketInfo->type == MQTT_PACKET_TYPE_PUBREL)
         {
-            *pReasonCode = MQTTPublishSuccess;
+            *pReasonCode = MQTTReasonSuccess;
             prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
 
         }
         else
         {
-            pxMQTTContext->ackPropsBuffer.pBuffer = NULL;  
+            sendPropsBuffer->pBuffer = NULL; 
             prvMQTTProcessResponse(pxPacketInfo, pxDeserializedInfo->packetIdentifier);
 
         }
@@ -1040,14 +1092,14 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     uint16_t usNextRetryBackOff = 0U;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
-    MQTTUserProperties_t xUserProperties ; 
+    MQTTUserProperty_t xUserProperty ; 
     bool xFailedSubscribeToTopic = false;
     BackoffAlgorithmContext_t xRetryParams;
     uint32_t ulTopicCount = 0U;
 
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
-    ( void ) memset(( void * ) &xUserProperties, 0x00, sizeof( xUserProperties ));
+    ( void ) memset(( void * ) &xUserProperty, 0x00, sizeof( xUserProperty ));
 
     /* Get a unique packet id. */
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
@@ -1064,11 +1116,11 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
         xMQTTSubscription[ulTopicCount].retainAsPublishedOption = true;
     }
      
-    xUserProperties.count = 1;
-    xUserProperties.userProperty[0].pKey = "Key1";
-    xUserProperties.userProperty[0].pValue = "Value1";
-    xUserProperties.userProperty[0].keyLength = 4;
-    xUserProperties.userProperty[0].valueLength = 6;
+
+    xUserProperty.pKey = "Key1";
+    xUserProperty.pValue = "Value1";
+    xUserProperty.keyLength = 4;
+    xUserProperty.valueLength = 6;
 
     MqttPropBuilder_t propBuilder;
     uint8_t buf[500];
@@ -1077,7 +1129,7 @@ static void prvMQTTSubscribeToTopics( MQTTContext_t * pxMQTTContext )
     size_t subId = 2; 
     xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength); 
     xResult = MQTTPropAdd_SubscribeId(&(propBuilder), subId); 
-    xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
+    xResult = MQTTPropAdd_UserProp(&(propBuilder), &xUserProperty);
    
 
     /* The client is now connected to the broker. Subscribe to the topic
@@ -1177,11 +1229,11 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
 {
     MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription = { 0 };
-    MQTTUserProperties_t xUserProperties;
+    MQTTUserProperty_t xUserProperty;
 
     /* Some fields are not used by this demo so start with everything at 0. */
     memset((void*)&xMQTTSubscription, 0x00, sizeof(xMQTTSubscription));
-    memset((void*)&xUserProperties, 0x00, sizeof(xUserProperties));
+    memset((void*)&xUserProperty, 0x00, sizeof(xUserProperty));
 
     MqttPropBuilder_t propBuilder;
     uint8_t buf[500];
@@ -1190,13 +1242,12 @@ static void prvMQTTUnsubscribeFromTopics(MQTTContext_t* pxMQTTContext)
     xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength);
 
     /* Populate subscription list. */
-    xUserProperties.count = 1;
-    xUserProperties.userProperty[0].pKey = "Key1";
-    xUserProperties.userProperty[0].pValue = "Value1";
-    xUserProperties.userProperty[0].keyLength = 4;
-    xUserProperties.userProperty[0].valueLength = 6;
+    xUserProperty.pKey = "Key1";
+    xUserProperty.pValue = "Value1";
+    xUserProperty.keyLength = 4;
+    xUserProperty.valueLength = 6;
 
-    xResult = MQTTPropAdd_UserProps(&(propBuilder), &xUserProperties);
+    xResult = MQTTPropAdd_UserProp(&(propBuilder), &xUserProperty);
     
     xMQTTSubscription.qos = MQTTQoS2;
     xMQTTSubscription.pTopicFilter = "test1";
@@ -1233,12 +1284,11 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
         /* Some fields are not used by this demo so start with everything at 0. */
         ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
         /* This demo uses QoS0 */
-        MQTTUserProperties_t userProperty;
-        userProperty.count = 1;
-        userProperty.userProperty[0].pKey = "Key1";
-        userProperty.userProperty[0].pValue = "Value1";
-        userProperty.userProperty[0].keyLength = 4;
-        userProperty.userProperty[0].valueLength = 6;
+        MQTTUserProperty_t xUserProperty;
+        xUserProperty.pKey = "Key1";
+        xUserProperty.pValue = "Value1";
+        xUserProperty.keyLength = 4;
+        xUserProperty.valueLength = 6;
 
         MqttPropBuilder_t propBuilder;
         uint8_t buf[500];
@@ -1246,22 +1296,22 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
 
         xResult = MqttPropertyBuilder_Init(&(propBuilder), buf, bufLength);
 
-        xResult = MQTTPropAdd_UserProps(&(propBuilder), &userProperty);
+        xResult = MQTTPropAdd_UserProp(&(propBuilder), &xUserProperty);
         xResult = MQTTPropAdd_PubPayloadFormat(&(propBuilder), 1);
         xResult = MQTTPropAdd_PubMessageExpiry(&(propBuilder), 100);
-        //xResult = MQTTPropAdd_PubTopicAlias(&(propBuilder), 30);
+        xResult = MQTTPropAdd_PubTopicAlias(&(propBuilder), 5);
         xResult = MQTTPropAdd_PubResponseTopic(&(propBuilder), "test", 4);
         xResult = MQTTPropAdd_PubCorrelationData(&(propBuilder), "test", 4);
        /* xResult = MQTTPropAdd_PubSubscriptionId(&(propBuilder),2 ); */
         xResult = MQTTPropAdd_PubContentType(&(propBuilder), "test", 4);
 
-        userProperty.count = 1;
-        userProperty.userProperty[0].pKey = "Key2";
-        userProperty.userProperty[0].pValue = "Value2";
-        userProperty.userProperty[0].keyLength = 4;
-        userProperty.userProperty[0].valueLength = 6;
 
-        xResult = MQTTPropAdd_UserProps(&(propBuilder), &userProperty); 
+        xUserProperty.pKey = "Key2";
+        xUserProperty.pValue = "Value2";
+        xUserProperty.keyLength = 4;
+        xUserProperty.valueLength = 6;
+
+        xResult = MQTTPropAdd_UserProp(&(propBuilder), &xUserProperty);
 
         xMQTTPublishInfo.qos = MQTTQoS2;
         xMQTTPublishInfo.retain = false;

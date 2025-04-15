@@ -124,7 +124,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/ota"
 
   - name: "coreSNTP"
-    version: "89fffaa"
+    version: "941ad2f"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreSNTP"

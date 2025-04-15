@@ -919,7 +919,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 
     /* Always correct the system base time on receiving time from server.*/
     SntpStatus_t status;
-    uint32_t unixSecs;
+    UnixTime_t unixSecs;
     uint32_t unixMicroSecs;
 
     /* Convert server time from NTP timestamp to UNIX format. */
@@ -929,7 +929,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     configASSERT( status == SntpSuccess );
 
     /* Always correct the base time of the system clock as the time received from the server. */
-    systemClock.baseTime.secs = unixSecs;
+    systemClock.baseTime.secs = ( uint32_t )unixSecs;
     systemClock.baseTime.msecs = unixMicroSecs / 1000;
 
     /* Set the clock adjustment "slew" rate of system clock if it wasn't set already and this is NOT

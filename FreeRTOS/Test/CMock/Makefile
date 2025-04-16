@@ -119,8 +119,8 @@ directories:
     -mkdir -p $(COVERAGE_DIR)
     -mkdir -p $(BIN_DIR)
 
-zero_coverage:
-	lcov --zerocounters --directory $(BUILD_DIR) --config-file $(UT_ROOT_DIR)/lcovrc --ignore-errors empty
+zero_coverage :
+        lcov --zerocounters --directory $(BUILD_DIR) --config-file $(UT_ROOT_DIR)/lcovrc --ignore-errors empty
 
 coverage : run_col
     lcov --base-directory $(KERNEL_DIR) --directory $(BUILD_DIR) --capture     \

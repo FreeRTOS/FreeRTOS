@@ -284,8 +284,10 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
                                                             xItemValue ) );
     validate_and_clear_assertions();
 
-    /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
-    pxCurrentTCBs[ 0 ] = NULL;
+    /* Clear all pxCurrentTCBs references before function exit */
+    for (int i = 0; i < configNUMBER_OF_CORES; ++i) {
+        pxCurrentTCBs[i] = NULL;
+    }
 }
 
 /**

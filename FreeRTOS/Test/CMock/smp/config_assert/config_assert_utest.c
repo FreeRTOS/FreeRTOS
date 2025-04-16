@@ -283,6 +283,9 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     EXPECT_ASSERT_BREAK( vTaskRemoveFromUnorderedEventList( &xEventListItem,
                                                             xItemValue ) );
     validate_and_clear_assertions();
+
+    /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
+    pxCurrentTCBs[ 0 ] = NULL;
 }
 
 /**
@@ -318,7 +321,7 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
     validate_and_clear_assertions();
 
     /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
-    pxCurrentTCBs[ 0 ] = NULL; 
+    pxCurrentTCBs[ 0 ] = NULL;
 }
 
 /**
@@ -357,6 +360,9 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 0 ) );
 
     validate_and_clear_assertions();
+
+    /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
+    pxCurrentTCBs[ 0 ] = NULL;
 }
 
 /**

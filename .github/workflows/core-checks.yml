@@ -9,9 +9,9 @@ jobs:
     steps:
       # Install python 3
       - name: Tool Setup
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
-          python-version: 3.7.10
+          python-version: 3.8
           architecture:   x64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

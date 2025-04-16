@@ -238,7 +238,7 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
  */
 void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
 {
-    static TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
+    TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
 
     ListItem_t xEventListItem;
     TickType_t xItemValue = 0;
@@ -302,7 +302,7 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
  */
 void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
 {
-    static TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
+    TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
 
     unblockedTCB[ 0 ].uxCriticalNesting = 0;
 
@@ -316,6 +316,9 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
 
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
     validate_and_clear_assertions();
+
+    /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
+    pxCurrentTCBs[ 0 ] = NULL; 
 }
 
 /**
@@ -334,7 +337,7 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
  */
 void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
 {
-    static TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
+    TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
 
     unblockedTCB[ 0 ].uxCriticalNesting = 0;
     unblockedTCB[ 0 ].xTaskRunState = 2; /* causes the assert coreID != runstate */

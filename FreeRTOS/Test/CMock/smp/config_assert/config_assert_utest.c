@@ -285,7 +285,8 @@ void test_prvYieldForTask_assert_yieldpending_core_is_false( void )
     validate_and_clear_assertions();
 
     /* Clear all pxCurrentTCBs references before function exit */
-    for (int i = 0; i < configNUMBER_OF_CORES; ++i) {
+    for (int i = 0; i < configNUMBER_OF_CORES; ++i)
+    {
         pxCurrentTCBs[i] = NULL;
     }
 }
@@ -322,8 +323,11 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
     validate_and_clear_assertions();
 
-    /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
-    pxCurrentTCBs[ 0 ] = NULL;
+    /* Clear all pxCurrentTCBs references before function exit */
+    for (int i = 0; i < configNUMBER_OF_CORES; ++i)
+    {
+        pxCurrentTCBs[i] = NULL;
+    }
 }
 
 /**
@@ -363,8 +367,11 @@ void test_prvSelectHighestPriorityTask_assert_coreid_ne_runstate( void )
 
     validate_and_clear_assertions();
 
-    /* Clear the pxCurrentTCBs[ 0 ] that points to stack. */
-    pxCurrentTCBs[ 0 ] = NULL;
+    /* Clear all pxCurrentTCBs references before function exit */
+    for (int i = 0; i < configNUMBER_OF_CORES; ++i)
+    {
+        pxCurrentTCBs[i] = NULL;
+    }
 }
 
 /**

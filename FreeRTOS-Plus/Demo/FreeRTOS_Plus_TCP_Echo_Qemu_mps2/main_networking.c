@@ -44,6 +44,7 @@
 #include "FreeRTOS_Sockets.h"
 #include "TCPEchoClient_SingleTasks.h"
 #include "CMSIS/CMSDK_CM3.h"
+#include "main_networking.h"
 
 /* Echo client task parameters  */
 #define mainECHO_CLIENT_TASK_STACK_SIZE     ( configMINIMAL_STACK_SIZE * 2 )                /* Not used in the linux port. */

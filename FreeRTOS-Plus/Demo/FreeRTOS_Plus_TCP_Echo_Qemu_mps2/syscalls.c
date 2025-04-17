@@ -29,6 +29,8 @@ extern "C" {
 
 #include <sys/types.h>
 
+#include "syscalls.h"
+
 typedef struct UART_t
 {
     volatile uint32_t DATA;

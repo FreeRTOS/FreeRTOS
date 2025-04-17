@@ -29,6 +29,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "startup.h"
+
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );

@@ -34,9 +34,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "main_networking.h"
+
 void vApplicationStackOverflowHook( TaskHandle_t pxTask,
                                     char * pcTaskName );
-void main_tcp_echo_client_tasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 

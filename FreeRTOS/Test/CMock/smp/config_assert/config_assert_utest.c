@@ -491,6 +491,8 @@ void test_vTaskSwitchContext_assert_nexting_count_ne_zero( void )
     EXPECT_ASSERT_BREAK( vTaskSwitchContext( 1 ) );
 
     validate_and_clear_assertions();
+
+    pxCurrentTCBs[ 1 ] = NULL;
 }
 
 /**

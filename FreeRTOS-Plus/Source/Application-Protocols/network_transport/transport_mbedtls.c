@@ -462,13 +462,19 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
     {
         mbedtlsError = mbedtls_ssl_set_hostname( &( pSslContext->context ),
                                                  pHostName );
+    }
+    /* MbedTLS-3.6.3 requires calling the mbedtls_ssl_set_hostname() before calling mbedtls_ssl_handshake(). */
+    else
+    {
+        mbedtlsError = mbedtls_ssl_set_hostname( &( pSslContext->context ),
+                                                 NULL );
+    }
 
-        if( mbedtlsError != 0 )
-        {
-            LogError( ( "Failed to set server name: mbedTLSError= %s : %s.",
-                        mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
-                        mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
-        }
+    if( mbedtlsError != 0 )
+    {
+        LogError( ( "Failed to set server name: mbedTLSError= %s : %s.",
+                    mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
+                    mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
     }
 
     /* Set Maximum Fragment Length if enabled. */

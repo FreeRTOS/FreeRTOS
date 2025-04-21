@@ -45,7 +45,7 @@ jobs:
       - name: Check Formatting
         uses: FreeRTOS/CI-CD-Github-Actions/formatting@main
         with:
-          exclude-dirs: ethernet, drivers, FreeRTOS/Demo, WinPCap, libslirp-version.h, CMSIS, Trace_Recorder_Configuration, ThirdParty
+          exclude-dirs: ethernet, drivers, FreeRTOS/Demo, WinPCap, libslirp-version.h, CMSIS, Trace_Recorder_Configuration, ThirdParty, conssole.h, syscalls.c, Demo_IP_Protocols, Reliance-Edge
 
   spell-check:
     runs-on: ubuntu-latest

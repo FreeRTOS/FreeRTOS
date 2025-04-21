@@ -56,8 +56,8 @@ extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
 extern List_t xDelayedTaskList1;
 extern List_t * pxDelayedTaskList;
 extern UBaseType_t uxSchedulerSuspended;
-extern BaseType_t xTickCount;
-extern BaseType_t xNextTaskUnblockTime;
+extern TickType_t xTickCount;
+extern TickType_t xNextTaskUnblockTime;
 extern BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 
 /* ===========================  EXTERN FUNCTIONS  =========================== */

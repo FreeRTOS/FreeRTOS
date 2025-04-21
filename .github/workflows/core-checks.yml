@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   core-checker:
     name: Check File Headers
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       # Install python 3
       - name: Tool Setup

@@ -5,13 +5,13 @@ on: [pull_request]
 jobs:
   core-checker:
     name: Check File Headers
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       # Install python 3
       - name: Tool Setup
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7.10
+          python-version: 3.8
           architecture:   x64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

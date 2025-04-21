@@ -305,8 +305,10 @@ void test_prvSelectHighestPriorityTask_assert_scheduler_running_false( void )
     TCB_t unblockedTCB[ configNUMBER_OF_CORES ] = { 0 };
 
     unblockedTCB[ 0 ].uxCriticalNesting = 0;
+    unblockedTCB[ 1 ].uxCriticalNesting = 0;
 
     pxCurrentTCBs[ 0 ] = &unblockedTCB[ 0 ];
+    pxCurrentTCBs[ 1 ] = &unblockedTCB[ 1 ];
 
     xSchedulerRunning = pdFALSE; /* causes the assert */
     uxSchedulerSuspended = pdFALSE;

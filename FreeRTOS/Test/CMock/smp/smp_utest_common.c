@@ -431,7 +431,7 @@ void verifyIdleTask( BaseType_t index,
     TaskStatus_t xTaskDetails;
     int ret;
 
-    vTaskGetInfo( xIdleTaskHandles[ index ], &xTaskDetails, pdTRUE, eInvalid );
+    vTaskGetInfo( xIdleTaskHandles[ index ], &xTaskDetails, pdFALSE, eInvalid );
     #ifdef configIDLE_TASK_NAME
         ret = strncmp( xTaskDetails.xHandle->pcTaskName, configIDLE_TASK_NAME, strlen( configIDLE_TASK_NAME ) );
     #else

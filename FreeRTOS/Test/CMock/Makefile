@@ -138,5 +138,5 @@ $(COVINFO) : $(LCOV_LIST)
 $(LCOV_LIST) : zero_coverage
     make -C $(subst .info,,$(@F)) lcov
 
-lcovhtml : $(COVINFO) | directories
+lcovhtml : directories $(COVINFO)
     genhtml $(COVINFO) $(LCOV_OPTS) --output-directory $(COVERAGE_DIR) --quiet

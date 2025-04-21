@@ -65,7 +65,7 @@ extern volatile BaseType_t xYieldPendings[ configNUMBER_OF_CORES ];
 extern List_t xTasksWaitingTermination;
 extern List_t xSuspendedTaskList;
 extern List_t xPendingReadyList;
-extern BaseType_t xPendedTicks;
+extern TickType_t xPendedTicks;
 extern List_t xDelayedTaskList1;
 extern List_t xDelayedTaskList2;
 extern List_t * pxDelayedTaskList;
@@ -1270,7 +1270,7 @@ void test_coverage_prvAddNewTaskToReadyList_create_more_idle_tasks_than_cores( v
     prvAddNewTaskToReadyList( &xTaskTCBs[ configNUMBER_OF_CORES ] );
 
     /* Validations. The run state of this task is still taskTASK_NOT_RUNNING. */
-    configASSERT( xTaskTCBs[ configNUMBER_OF_CORES + 1U ].xTaskRunState == taskTASK_NOT_RUNNING );
+    configASSERT( xTaskTCBs[ configNUMBER_OF_CORES ].xTaskRunState == taskTASK_NOT_RUNNING );
 }
 
 /**
@@ -3085,8 +3085,9 @@ void test_coverage_prvCheckTasksWaitingTermination_delete_running_task( void )
 
     /* Free the resource allocated in this test. Since running task can't be deleted,
      * there won't have double free assertion. */
-    vPortFree( pxTaskTCB );
     vPortFree( pxTaskTCB->pxStack );
+    vPortFree( pxTaskTCB );
+
     /* Verify memory allocate count in tearDown function. */
 }
 

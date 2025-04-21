@@ -29,8 +29,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "startup.h"
-
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
@@ -39,6 +37,7 @@ extern int main( void );
 
 void _start( void );
 void EthernetISR( void );
+void Reset_Handler( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 

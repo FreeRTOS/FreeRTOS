@@ -29,7 +29,16 @@ extern "C" {
 
 #include <sys/types.h>
 
-#include "syscalls.h"
+void uart_init( void );
+int _fstat( int file );
+int _read( int file,
+           char * buf,
+           int len );
+int _write( int file,
+            char * buf,
+            int len );
+
+void * _sbrk( int incr );
 
 typedef struct UART_t
 {

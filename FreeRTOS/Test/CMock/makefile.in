@@ -45,6 +45,7 @@ CFLAGS              +=  -fstack-protector-all
 CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds -Wno-unused-function
 
 ifeq ($(ENABLE_SANITIZER),1)
+   export ASAN_OPTIONS = detect_leaks=0
    CFLAGS           +=  -fsanitize=address,undefined -fsanitize-recover=address
    CFLAGS           +=  -O3 -ggdb3
    CPPFLAGS         +=  -D_FORTIFY_SOURCE=2

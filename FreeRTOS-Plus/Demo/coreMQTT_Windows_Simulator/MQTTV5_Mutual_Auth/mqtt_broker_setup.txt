@@ -1,0 +1,79 @@
+Instructions below are for setting up a local Mosquitto broker that supports
+TLS mutual authentication for use with this MQTT demo.
+1. Generate certificates with OpenSSL.
+    a. Download and install [Git For Windows](https://git-scm.com/download/win).
+       Most of you may already have this installed. Git For Windows provides an
+       OpenSSL binary for generating certificates.
+    b. Open PowerShell and enter the following commands to generate TLS certificates:
+      i.    cd "C:\Program Files\Git\usr\bin" # If Git is installed elsewhere, update the path.
+      ii.   mkdir $home\Documents\certs
+      iii.  .\openssl.exe req -x509 -nodes -sha256 -days 365 -newkey rsa:2048 -keyout $home\Documents\certs\ca.key -out $home\Documents\certs\ca.crt
+      iv.   .\openssl.exe req -nodes -sha256 -new -keyout $home\Documents\certs\server.key -out $home\Documents\certs\server.csr
+      v.    .\openssl.exe x509 -req -sha256 -in $home\Documents\certs\server.csr -CA $home\Documents\certs\ca.crt -CAkey $home\Documents\certs\ca.key -CAcreateserial -out $home\Documents\certs\server.crt -days 365
+      vi.   .\openssl.exe genrsa -out $home\Documents\certs\client.key 2048
+      vii.  .\openssl.exe req -new -out $home\Documents\certs\client.csr -key $home\Documents\certs\client.key
+      viii. .\openssl.exe x509 -req -in $home\Documents\certs\client.csr -CA $home\Documents\certs\ca.crt -CAkey $home\Documents\certs\ca.key -CAcreateserial -out $home\Documents\certs\client.crt -days 365
+2. Download Mosquitto from https://mosquitto.org/download/
+3. Install Mosquitto as a Windows service by running the installer.
+4. Go to the path where Mosquitto was installed. The default path is C:\Program Files\mosquitto.
+5. Update mosquitto.conf to have the following entries and don't forget to substitute your Windows username:
+    port 8883
+    cafile C:\Users\%Substitute Windows username%\Documents\certs\ca.crt
+    certfile C:\Users\%Substitute Windows username%\Documents\certs\server.crt
+    keyfile C:\Users\%Substitute Windows username%\Documents\certs\server.key
+    require_certificate true
+    tls_version tlsv1.2
+6. Start the Mosquitto service.
+   More details about running Mosquitto as a Windows service can be found at
+   https://github.com/eclipse/mosquitto/blob/master/readme-windows.txt and
+   https://github.com/eclipse/mosquitto/blob/master/readme.md
+7. Verify that Mosquitto server is running locally and listening on port 8883
+   by following the steps below.
+    a. Open PowerShell.
+    b. Type in command `netstat -a -p TCP | findstr 8883` to check if there
+       is an active connection listening on port 8883.
+    c. Verify that there is an output as shown below
+       `TCP    0.0.0.0:8883           <HOST-NAME>:0       LISTENING`
+    d. If there is no output on step c, go through the Mosquitto documentation
+       listed above to check if the setup was correct.
+8. Make sure the Mosquitto broker is allowed to communicate through
+   Windows Firewall.
+   After running this MQTT example, consider disabling the Mosquitto broker to
+   communicate through Windows Firewall to avoid unwanted network traffic
+   to your machine.
+9. After verifying that a Mosquitto broker is running successfully, update
+   the config `democonfigMQTT_BROKER_ENDPOINT` to the local IP address of your
+   Windows host machine. Please note that "localhost" or address "127.0.0.1"
+   will not work as this example is running on a Windows Simulator and not on a
+   Windows host natively. Also note that, if the Windows host is using a
+   Virtual Private Network(VPN), connection to the Mosquitto broker may not work.
+10. In the certs folder of your Documents, you will find a file called `ca.crt`.
+    Copy its contents to `#define democonfigROOT_CA_PEM`. Keep in mind that it
+    must include the PEM header and footer and be formatted in this manner:
+        #define democonfigROOT_CA_PEM \
+            "-----BEGIN CERTIFICATE-----\n" \
+            "...base64 data...\n" \
+            "-----END CERTIFICATE-----\n"
+11. In the certs folder of your Documents, you will find a file called `client.crt`.
+    Copy its contents to `#define democonfigCLIENT_CERTIFICATE_PEM`. Keep in mind
+    that it must include the PEM header and footer and be formatted in this manner:
+        #define democonfigCLIENT_CERTIFICATE_PEM \
+            "-----BEGIN CERTIFICATE-----\n" \
+            "...base64 data...\n" \
+            "-----END CERTIFICATE-----\n"
+12. In the certs folder of your Documents, you will find a file called `client.key`.
+    Copy its contents to `#define democonfigCLIENT_PRIVATE_KEY_PEM`. Keep in mind
+    that it must include the PEM header and footer and be formatted in this manner:
+        #define democonfigCLIENT_PRIVATE_KEY_PEM \
+            "-----BEGIN RSA PRIVATE KEY-----\n" \
+            "...base64 data...\n" \
+            "-----END RSA PRIVATE KEY-----\n"
+
+    *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for convenience
+    *!!! of demonstration only.  Production devices should store keys securely,
+    *!!! such as within a secure element.
+
+13. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be
+    configured this way because the local MQTT broker will only have an IP
+    address but not a hostname. However, SNI (Server name indication) should
+    be enabled whenever possible.

@@ -91,8 +91,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
 //#define democonfigMQTT_BROKER_ENDPOINT ("localhost")
 //#define democonfigMQTT_BROKER_ENDPOINT ("192.168.0.103")
 
-//#define democonfigMQTT_BROKER_ENDPOINT ("broker.hivemq.com")
-#define democonfigMQTT_BROKER_ENDPOINT ("test.mosquitto.org")
+#define democonfigMQTT_BROKER_ENDPOINT ("broker.hivemq.com")
+//#define democonfigMQTT_BROKER_ENDPOINT ("test.mosquitto.org")
 #define democonfigMQTT_BROKER_PORT ( 1883 )
 
 

@@ -783,7 +783,7 @@ static void prvSuspendedTaskTimerTestCallback( TimerHandle_t xExpiredTimer )
 
 static void prvNotifyingTimerCallback( TimerHandle_t xNotUsed )
 {
-    static BaseType_t uxIndexToNotify = 0;
+    static UBaseType_t uxIndexToNotify = 0;
 
     ( void ) xNotUsed;
 

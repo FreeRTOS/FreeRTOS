@@ -30,7 +30,7 @@ extern "C" {
 #include <sys/types.h>
 
 void uart_init( void );
-int _fstat( int file );
+__attribute__( ( used ) ) int _fstat( int file );
 int _read( int file,
            char * buf,
            int len );

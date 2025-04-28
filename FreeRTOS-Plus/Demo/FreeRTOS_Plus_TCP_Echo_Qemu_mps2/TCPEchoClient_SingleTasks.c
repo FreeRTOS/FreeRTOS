@@ -237,10 +237,10 @@
                     /* Receive data echoed back to the socket. */
                     while( xReceivedBytes < lTransmitted )
                     {
-                        xReturned = FreeRTOS_recv( xSocket,                                 /* The socket being received from. */
-                                                   &( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
+                        xReturned = FreeRTOS_recv( xSocket,                                       /* The socket being received from. */
+                                                   &( pcReceivedString[ xReceivedBytes ] ),       /* The buffer into which the received data will be written. */
                                                    ( size_t ) ( lStringLength - xReceivedBytes ), /* The size of the buffer provided to receive the data. */
-                                                   0 );                                     /* No flags. */
+                                                   0 );                                           /* No flags. */
 
                         if( xReturned < 0 )
                         {

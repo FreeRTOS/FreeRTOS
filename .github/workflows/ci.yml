@@ -32,7 +32,7 @@ jobs:
             git-secrets --scan
 
   formatting:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -45,7 +45,7 @@ jobs:
       - name: Check Formatting
         uses: FreeRTOS/CI-CD-Github-Actions/formatting@main
         with:
-          exclude-dirs: ethernet, drivers, FreeRTOS/Demo
+          exclude-dirs: ethernet, drivers, FreeRTOS/Demo, WinPCap, libslirp-version.h, CMSIS, Trace_Recorder_Configuration, ThirdParty, conssole.h, syscalls.c, Demo_IP_Protocols, Reliance-Edge
 
   spell-check:
     runs-on: ubuntu-latest
@@ -90,6 +90,7 @@ jobs:
           # List of directories containing libraries whose doxygen output will be generated.
           libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
           generate_zip: true
+          doxygen_dependencies: libclang-18-dev libclang-cpp18 graphviz
       - name: Upload doxygen artifact if main branch
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         env:

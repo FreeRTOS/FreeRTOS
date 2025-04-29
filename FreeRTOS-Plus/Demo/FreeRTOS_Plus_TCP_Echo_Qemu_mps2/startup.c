@@ -36,7 +36,8 @@ extern void uart_init( void );
 extern int main( void );
 
 void _start( void );
-void __attribute__( ( weak ) ) EthernetISR( void );
+void EthernetISR( void );
+void Reset_Handler( void );
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
@@ -65,7 +66,7 @@ void Reset_Handler( void )
     _start();
 }
 
-void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
+__attribute__( ( used ) ) static void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
 {
 /* These are volatile to try and prevent the compiler/linker optimizing them
  * away as the variables never actually get used.  If the debugger won't show the
@@ -138,35 +139,35 @@ void Default_Handler2( void )
     );
 }
 
-void Default_Handler3( void )
+static void Default_Handler3( void )
 {
     for( ; ; )
     {
     }
 }
 
-void Default_Handler4( void )
+static void Default_Handler4( void )
 {
     for( ; ; )
     {
     }
 }
 
-void Default_Handler5( void )
+static void Default_Handler5( void )
 {
     for( ; ; )
     {
     }
 }
 
-void Default_Handler6( void )
+static void Default_Handler6( void )
 {
     for( ; ; )
     {
     }
 }
 
-const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
+const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ), used ) ) =
 {
     ( uint32_t * ) &_estack,
     ( uint32_t * ) &Reset_Handler,       /* Reset                -15  */

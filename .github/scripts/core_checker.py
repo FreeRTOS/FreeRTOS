@@ -331,7 +331,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'FreeRTOS/Demo/AVR32_UC3/FreeRTOSConfig.h',
     r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_GCC_e2studio/src/smc_gen/.*',
     r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX/src/smc_gen/.*',
-    r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_Renesas_e2studio_CS\+/src/smc_gen/.*'
+    r'FreeRTOS/Demo/RX700_RX72N_EnvisionKit_Renesas_e2studio_CS\+/src/smc_gen/.*',
+    r'FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC/TraceRecorderConfig/.*'
 ]
 
 FREERTOS_IGNORED_FILES = [

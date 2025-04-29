@@ -143,10 +143,10 @@ void test_coverage_prvCheckForRunStateChange_first_time_critical_section( void )
     /* Expection. */
     vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
-    vFakePortReleaseISRLock_Expect();
-    vFakePortReleaseTaskLock_Expect();
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
+    vFakePortReleaseISRLock_Expect( 0 );
+    vFakePortReleaseTaskLock_Expect( 0 );
+    vFakePortGetTaskLock_Expect( 0 );
+    vFakePortGetISRLock_Expect( 0 );
 
     /* API Call. */
     prvCheckForRunStateChange();
@@ -192,10 +192,10 @@ void test_coverage_prvCheckForRunStateChange_first_time_suspend_scheduler( void 
     /* Expection. */
     vFakePortEnableInterrupts_StubWithCallback( prvPortEnableInterruptsCb );
 
-    vFakePortReleaseTaskLock_Expect();
-    vFakePortGetTaskLock_Expect();
-    vFakePortGetISRLock_Expect();
-    vFakePortReleaseISRLock_Expect();
+    vFakePortReleaseTaskLock_Expect( 0 );
+    vFakePortGetTaskLock_Expect( 0 );
+    vFakePortGetISRLock_Expect( 0 );
+    vFakePortReleaseISRLock_Expect( 0 );
 
     /* API Call. */
     prvCheckForRunStateChange();
@@ -234,6 +234,7 @@ void test_task_get_system_state( void )
 
     /*Get System states */
     int no_of_tasks = uxTaskGetSystemState( tsk_status_array, MAX_TASKS, NULL );
+
     TEST_ASSERT( ( no_of_tasks > 0 ) && ( no_of_tasks <= MAX_TASKS ) );
 }
 
@@ -257,6 +258,7 @@ void test_task_get_system_state_custom_time( void )
 
     /*Get System states */
     int no_of_tasks = uxTaskGetSystemState( tsk_status_array, MAX_TASKS, &ulTotalRunTime );
+
     TEST_ASSERT( ( no_of_tasks > 0 ) && ( no_of_tasks <= MAX_TASKS ) );
 }
 
@@ -279,6 +281,7 @@ void test_task_get_system_state_unavilable_task_space( void )
 
     /*Get System states */
     int no_of_tasks = uxTaskGetSystemState( tsk_status_array, MAX_TASKS - 1, NULL );
+
     TEST_ASSERT( ( no_of_tasks == 0 ) && ( no_of_tasks <= MAX_TASKS ) );
 }
 

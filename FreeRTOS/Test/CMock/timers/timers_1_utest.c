@@ -267,7 +267,7 @@ static TimerHandle_t create_timer()
 {
     uint32_t pvTimerID = 0;
     TimerHandle_t xTimer = NULL;
-    StaticTimer_t pxTimerBuffer[ sizeof( StaticTimer_t ) ];
+    static StaticTimer_t pxTimerBuffer[ sizeof( StaticTimer_t ) ];
     QueueHandle_t queue_handle = ( QueueHandle_t ) 3; /* not zero */
 
     /*pvPortMalloc_ExpectAndReturn( sizeof( Timer_t ), &pxNewTimer ); */

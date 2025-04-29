@@ -11,6 +11,7 @@
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+[Bb]uild/
 
 # CodeWarrior temporary files
 *.tdt

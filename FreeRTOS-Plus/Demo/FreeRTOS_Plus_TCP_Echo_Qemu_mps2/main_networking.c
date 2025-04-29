@@ -44,6 +44,7 @@
 #include "FreeRTOS_Sockets.h"
 #include "TCPEchoClient_SingleTasks.h"
 #include "CMSIS/CMSDK_CM3.h"
+#include "main_networking.h"
 
 /* Echo client task parameters  */
 #define mainECHO_CLIENT_TASK_STACK_SIZE     ( configMINIMAL_STACK_SIZE * 2 )                /* Not used in the linux port. */
@@ -211,17 +212,19 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
 
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
+/* *INDENT-OFF* */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
     void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
                                                struct xNetworkEndPoint * pxEndPoint )
 #else
     void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+/* *INDENT-ON* */
 {
-    uint32_t ulIPAddress;
-    uint32_t ulNetMask;
-    uint32_t ulGatewayAddress;
-    uint32_t ulDNSServerAddress;
+    uint32_t ulIPAddress = 0U;
+    uint32_t ulNetMask = 0U;
+    uint32_t ulGatewayAddress = 0U;
+    uint32_t ulDNSServerAddress = 0U;
     char cBuffer[ 16 ];
 
     #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 )
@@ -275,7 +278,7 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-UBaseType_t uxRand( void )
+static UBaseType_t uxRand( void )
 {
     const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
 
@@ -317,7 +320,7 @@ static void prvMiscInitialisation( void )
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
-    const char * pcApplicationHostnameHook( void )
+    static const char * pcApplicationHostnameHook( void )
     {
         /* Assign the name "FreeRTOS" to this network node.  This function will
          * be called during the DHCP: the machine will be registered with an IP

@@ -51,6 +51,7 @@
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+#include "TCPEchoClient_SingleTasks.h"
 
 /* Exclude the whole file if FreeRTOSIPConfig.h is configured to use UDP only. */
 #if ( ipconfigUSE_TCP == 1 )

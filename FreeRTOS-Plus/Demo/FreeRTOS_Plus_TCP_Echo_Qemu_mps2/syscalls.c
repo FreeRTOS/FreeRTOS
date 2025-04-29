@@ -29,6 +29,17 @@ extern "C" {
 
 #include <sys/types.h>
 
+void uart_init( void );
+__attribute__( ( used ) ) int _fstat( int file );
+int _read( int file,
+           char * buf,
+           int len );
+int _write( int file,
+            char * buf,
+            int len );
+
+void * _sbrk( int incr );
+
 typedef struct UART_t
 {
     volatile uint32_t DATA;

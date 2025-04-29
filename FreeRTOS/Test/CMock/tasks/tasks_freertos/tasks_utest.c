@@ -290,22 +290,22 @@ unsigned int vFakePortGetCoreID( void )
     return 0;
 }
 
-void vFakePortReleaseTaskLock( void )
+void vFakePortReleaseTaskLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
 
-void vFakePortGetTaskLock( void )
+void vFakePortGetTaskLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
 
-void vFakePortGetISRLock( void )
+void vFakePortGetISRLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }
 
-void vFakePortReleaseISRLock( void )
+void vFakePortReleaseISRLock( BaseType_t xCoreID )
 {
     HOOK_DIAG();
 }

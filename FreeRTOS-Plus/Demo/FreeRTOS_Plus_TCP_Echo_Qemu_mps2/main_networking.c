@@ -285,7 +285,8 @@ static UBaseType_t uxRand( void )
     /* Utility function to generate a pseudo random number. */
 
     ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
+
+    return ( ulNextRand >> 16UL ) & 0x7fffUL;
 }
 /*-----------------------------------------------------------*/
 

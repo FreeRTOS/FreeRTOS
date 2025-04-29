@@ -216,7 +216,7 @@
                     /* Send the string to the socket. */
                     lTransmitted = FreeRTOS_send( xSocket,                        /* The socket being sent to. */
                                                   ( void * ) pcTransmittedString, /* The data being sent. */
-                                                  lStringLength,                  /* The length of the data being sent. */
+                                                  ( size_t ) lStringLength,       /* The length of the data being sent. */
                                                   0 );                            /* No flags. */
                     printf( "FreeRTOS_send returned...transmitted %ld\n",
                             lTransmitted );
@@ -237,10 +237,10 @@
                     /* Receive data echoed back to the socket. */
                     while( xReceivedBytes < lTransmitted )
                     {
-                        xReturned = FreeRTOS_recv( xSocket,                                 /* The socket being received from. */
-                                                   &( pcReceivedString[ xReceivedBytes ] ), /* The buffer into which the received data will be written. */
-                                                   lStringLength - xReceivedBytes,          /* The size of the buffer provided to receive the data. */
-                                                   0 );                                     /* No flags. */
+                        xReturned = FreeRTOS_recv( xSocket,                                       /* The socket being received from. */
+                                                   &( pcReceivedString[ xReceivedBytes ] ),       /* The buffer into which the received data will be written. */
+                                                   ( size_t ) ( lStringLength - xReceivedBytes ), /* The size of the buffer provided to receive the data. */
+                                                   0 );                                           /* No flags. */
 
                         if( xReturned < 0 )
                         {
@@ -267,9 +267,9 @@
                     if( xReceivedBytes > 0 )
                     {
                         /* Compare the transmitted string to the received string. */
-                        configASSERT( strncmp( pcReceivedString, pcTransmittedString, lTransmitted ) == 0 );
+                        configASSERT( strncmp( pcReceivedString, pcTransmittedString, ( size_t ) lTransmitted ) == 0 );
 
-                        if( strncmp( pcReceivedString, pcTransmittedString, lTransmitted ) == 0 )
+                        if( strncmp( pcReceivedString, pcTransmittedString, ( size_t ) lTransmitted ) == 0 )
                         {
                             /* The echo reply was received without error. */
                             ulTxRxCycles[ xInstance ]++;
@@ -343,7 +343,7 @@
         do
         {
             ( void ) xApplicationGetRandomNumber( &ulRandomNumber );
-            lCharactersToAdd = ulRandomNumber % ( ulBufferLength - 20UL );
+            lCharactersToAdd = ( BaseType_t ) ( ulRandomNumber % ( ulBufferLength - 20UL ) );
         } while( ( lCharactersToAdd == 0 ) || ( lCharactersToAdd < lMinimumLength ) ); /* Must be at least enough to add the unique text to the start of the string later. */
 
         /* Fill the buffer. */

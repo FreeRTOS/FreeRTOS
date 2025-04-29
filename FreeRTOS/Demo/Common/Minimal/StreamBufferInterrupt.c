@@ -182,7 +182,8 @@ static void prvReceivingTask( void * pvParameters )
 void vBasicStreamBufferSendFromISR( void )
 {
     static size_t xNextByteToSend = 0;
-    const BaseType_t xCallsBetweenSends = 100, xBytesToSend = 4;
+    const size_t xBytesToSend = 4;
+    const BaseType_t xCallsBetweenSends = 100;
     static BaseType_t xCallCount = 0;
 
     /* Is it time to write to the stream buffer again? */

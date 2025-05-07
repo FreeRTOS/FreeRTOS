@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,17 +13,17 @@
  */
 
 #ifndef TRC_INTERVAL_H
-#define TRC_INTERVAL_H
+    #define TRC_INTERVAL_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <trcTypes.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_interval_apis Trace Interval APIs
@@ -40,7 +40,8 @@ extern "C" {
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceIntervalCreate(const char *szName, TraceIntervalHandle_t *pxIntervalHandle);
+            traceResult xTraceIntervalCreate( const char * szName,
+                                              TraceIntervalHandle_t * pxIntervalHandle );
 
 /**
  * @brief Starts trace interval.
@@ -50,7 +51,7 @@ traceResult xTraceIntervalCreate(const char *szName, TraceIntervalHandle_t *pxIn
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceIntervalStart(TraceIntervalHandle_t xIntervalHandle);
+            traceResult xTraceIntervalStart( TraceIntervalHandle_t xIntervalHandle );
 
 /**
  * @brief Stops trace interval.
@@ -60,7 +61,7 @@ traceResult xTraceIntervalStart(TraceIntervalHandle_t xIntervalHandle);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceIntervalStop(TraceIntervalHandle_t xIntervalHandle);
+            traceResult xTraceIntervalStop( TraceIntervalHandle_t xIntervalHandle );
 
 /**
  * @brief Gets trace interval state.
@@ -71,16 +72,17 @@ traceResult xTraceIntervalStop(TraceIntervalHandle_t xIntervalHandle);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceIntervalGetState(TraceIntervalHandle_t xIntervalHandle, uint32_t *puxState);
+            traceResult xTraceIntervalGetState( TraceIntervalHandle_t xIntervalHandle,
+                                                uint32_t * puxState );
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_INTERVAL_H */

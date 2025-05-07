@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder SDK for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder SDK for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,18 +13,18 @@
  */
 
 #ifndef TRC_STACK_MONITOR_H
-#define TRC_STACK_MONITOR_H
+    #define TRC_STACK_MONITOR_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <stdint.h>
-#include <trcRecorder.h>
+            #include <stdint.h>
+            #include <trcRecorder.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_stack_monitor_apis Trace Stack Monitor APIs
@@ -32,17 +32,17 @@ extern "C" {
  * @{
  */
 
-#if (((TRC_CFG_ENABLE_STACK_MONITOR) == 1) && ((TRC_CFG_SCHEDULING_ONLY) == 0))
+            #if ( ( ( TRC_CFG_ENABLE_STACK_MONITOR ) == 1 ) && ( ( TRC_CFG_SCHEDULING_ONLY ) == 0 ) )
 
-#define TRACE_STACK_MONITOR_BUFFER_SIZE ((sizeof(void*) + sizeof(TraceUnsignedBaseType_t)) * (TRC_CFG_STACK_MONITOR_MAX_TASKS) + sizeof(uint32_t))
+                #define TRACE_STACK_MONITOR_BUFFER_SIZE    ( ( sizeof( void * ) + sizeof( TraceUnsignedBaseType_t ) ) * ( TRC_CFG_STACK_MONITOR_MAX_TASKS ) + sizeof( uint32_t ) )
 
 /**
  * @internal Trace Stack Monitor Buffer Structure
  */
-typedef struct TraceStackMonitorBuffer
-{
-	uint32_t buffer[(TRACE_STACK_MONITOR_BUFFER_SIZE) / sizeof(uint32_t)];
-} TraceStackMonitorBuffer_t;
+                typedef struct TraceStackMonitorBuffer
+                {
+                    uint32_t buffer[ ( TRACE_STACK_MONITOR_BUFFER_SIZE ) / sizeof( uint32_t ) ];
+                } TraceStackMonitorBuffer_t;
 
 /**
  * @internal Initialize trace stack monitor system.
@@ -53,7 +53,7 @@ typedef struct TraceStackMonitorBuffer
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStackMonitorInitialize(TraceStackMonitorBuffer_t* pxBuffer);
+                traceResult xTraceStackMonitorInitialize( TraceStackMonitorBuffer_t * pxBuffer );
 
 /**
  * @brief Adds task/thread to trace stack monitor.
@@ -63,7 +63,7 @@ traceResult xTraceStackMonitorInitialize(TraceStackMonitorBuffer_t* pxBuffer);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStackMonitorAdd(void* pvTask);
+                traceResult xTraceStackMonitorAdd( void * pvTask );
 
 /**
  * @brief Removes task/thread from trace stack monitor.
@@ -73,7 +73,7 @@ traceResult xTraceStackMonitorAdd(void* pvTask);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStackMonitorRemove(void* pvTask);
+                traceResult xTraceStackMonitorRemove( void * pvTask );
 
 /**
  * @brief Gets trace stack monitor tread/task at index.
@@ -85,7 +85,9 @@ traceResult xTraceStackMonitorRemove(void* pvTask);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStackMonitorGetAtIndex(uint32_t uiIndex, void** ppvTask, TraceUnsignedBaseType_t* puxLowWaterMark);
+                traceResult xTraceStackMonitorGetAtIndex( uint32_t uiIndex,
+                                                          void ** ppvTask,
+                                                          TraceUnsignedBaseType_t * puxLowWaterMark );
 
 /**
  * @brief Performs trace stack monitor reporting.
@@ -97,39 +99,39 @@ traceResult xTraceStackMonitorGetAtIndex(uint32_t uiIndex, void** ppvTask, Trace
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStackMonitorReport(void);
+                traceResult xTraceStackMonitorReport( void );
 
-#else /* (((TRC_CFG_ENABLE_STACK_MONITOR) == 1) && ((TRC_CFG_SCHEDULING_ONLY) == 0)) */
+            #else /* (((TRC_CFG_ENABLE_STACK_MONITOR) == 1) && ((TRC_CFG_SCHEDULING_ONLY) == 0)) */
 
-typedef struct TraceStackMonitorBuffer
-{
-	uint32_t buffer[1];
-} TraceStackMonitorBuffer_t;
+                typedef struct TraceStackMonitorBuffer
+                {
+                    uint32_t buffer[ 1 ];
+                } TraceStackMonitorBuffer_t;
 
-#define xTraceStackMonitorInitialize(pxBuffer) ((void)pxBuffer, TRC_SUCCESS)
+                #define xTraceStackMonitorInitialize( pxBuffer )                             ( ( void ) pxBuffer, TRC_SUCCESS )
 
-#define xTraceStackMonitorDiagnosticsGet(xType, puiValue) ((void)xType, puiValue != 0 ? *puiValue = 0 : 0, puiValue != 0 ? TRC_SUCCESS : TRC_FAIL)
+                #define xTraceStackMonitorDiagnosticsGet( xType, puiValue )                  ( ( void ) xType, puiValue != 0 ? *puiValue = 0 : 0, puiValue != 0 ? TRC_SUCCESS : TRC_FAIL )
 
-#define xTraceStackMonitorDiagnosticsSet(xType, uiValue) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_3((void)xType, (void)uiValue, TRC_SUCCESS)
+                #define xTraceStackMonitorDiagnosticsSet( xType, uiValue )                   TRC_COMMA_EXPR_TO_STATEMENT_EXPR_3( ( void ) xType, ( void ) uiValue, TRC_SUCCESS )
 
-#define xTraceStackMonitorAdd(pvTask) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2((void)pvTask, TRC_SUCCESS)
+                #define xTraceStackMonitorAdd( pvTask )                                      TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( ( void ) pvTask, TRC_SUCCESS )
 
-#define xTraceStackMonitorRemove(pvTask) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2((void)pvTask, TRC_SUCCESS)
+                #define xTraceStackMonitorRemove( pvTask )                                   TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( ( void ) pvTask, TRC_SUCCESS )
 
-#define xTraceStackMonitorGetAtIndex(uiIndex, ppvTask, puxLowWaterMark) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_4((void)uiIndex, (void)ppvTask, (void)puxLowWaterMark, TRC_SUCCESS)
+                #define xTraceStackMonitorGetAtIndex( uiIndex, ppvTask, puxLowWaterMark )    TRC_COMMA_EXPR_TO_STATEMENT_EXPR_4( ( void ) uiIndex, ( void ) ppvTask, ( void ) puxLowWaterMark, TRC_SUCCESS )
 
-#define xTraceStackMonitorReport() TRC_COMMA_EXPR_TO_STATEMENT_EXPR_1(TRC_SUCCESS)
+                #define xTraceStackMonitorReport()                                           TRC_COMMA_EXPR_TO_STATEMENT_EXPR_1( TRC_SUCCESS )
 
-#endif /* (((TRC_CFG_ENABLE_STACK_MONITOR) == 1) && ((TRC_CFG_SCHEDULING_ONLY) == 0)) */
+            #endif /* (((TRC_CFG_ENABLE_STACK_MONITOR) == 1) && ((TRC_CFG_SCHEDULING_ONLY) == 0)) */
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_STACK_MONITOR_H */

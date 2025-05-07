@@ -9,11 +9,11 @@
  */
 
 #ifndef TRC_STREAM_PORT_CONFIG_H
-#define TRC_STREAM_PORT_CONFIG_H
+    #define TRC_STREAM_PORT_CONFIG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /*******************************************************************************
  * TRC_CFG_STREAM_PORT_ITM_PORT
@@ -26,10 +26,10 @@ extern "C" {
  * Default: 1 (0 is typically terminal output and 31 is used by Keil)
  *
  ******************************************************************************/
-#define TRC_CFG_STREAM_PORT_ITM_PORT 1
+    #define TRC_CFG_STREAM_PORT_ITM_PORT    1
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* TRC_STREAM_PORT_CONFIG_H */

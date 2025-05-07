@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,23 +13,23 @@
  */
 
 #ifndef TRC_HEAP_H
-#define TRC_HEAP_H
+    #define TRC_HEAP_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#ifndef TRC_USE_HEAPS
-#define TRC_USE_HEAPS 1
-#endif
+            #ifndef TRC_USE_HEAPS
+                #define TRC_USE_HEAPS    1
+            #endif
 
-#if (TRC_USE_HEAPS == 1)
+            #if ( TRC_USE_HEAPS == 1 )
 
-#include <trcTypes.h>
+                #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+                #ifdef __cplusplus
+                extern "C" {
+                #endif
 
 /**
  * @defgroup trace_heap_apis Trace Heap APIs
@@ -47,7 +47,11 @@ extern "C" {
  * @param[out] pxHeapHandle Pointer to uninitialized trace heap handle.
  * @return traceResult
  */
-traceResult xTraceHeapCreate(const char *szName, TraceUnsignedBaseType_t uxCurrent, TraceUnsignedBaseType_t uxHighWaterMark, TraceUnsignedBaseType_t uxMax, TraceHeapHandle_t *pxHeapHandle);
+                traceResult xTraceHeapCreate( const char * szName,
+                                              TraceUnsignedBaseType_t uxCurrent,
+                                              TraceUnsignedBaseType_t uxHighWaterMark,
+                                              TraceUnsignedBaseType_t uxMax,
+                                              TraceHeapHandle_t * pxHeapHandle );
 
 /**
  * @brief Signals trace heap alloc.
@@ -59,7 +63,9 @@ traceResult xTraceHeapCreate(const char *szName, TraceUnsignedBaseType_t uxCurre
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceHeapAlloc(TraceHeapHandle_t xHeapHandle, void *pvAddress, TraceUnsignedBaseType_t uxSize);
+                traceResult xTraceHeapAlloc( TraceHeapHandle_t xHeapHandle,
+                                             void * pvAddress,
+                                             TraceUnsignedBaseType_t uxSize );
 
 /**
  * @brief Signals trace heap free.
@@ -71,7 +77,9 @@ traceResult xTraceHeapAlloc(TraceHeapHandle_t xHeapHandle, void *pvAddress, Trac
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceHeapFree(TraceHeapHandle_t xHeapHandle, void* pvAddress, TraceUnsignedBaseType_t uxSize);
+                traceResult xTraceHeapFree( TraceHeapHandle_t xHeapHandle,
+                                            void * pvAddress,
+                                            TraceUnsignedBaseType_t uxSize );
 
 /**
  * @brief Gets trace heap current allocation size.
@@ -82,7 +90,8 @@ traceResult xTraceHeapFree(TraceHeapHandle_t xHeapHandle, void* pvAddress, Trace
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceHeapGetCurrent(TraceHeapHandle_t xHeapHandle, TraceUnsignedBaseType_t *puxCurrent);
+                traceResult xTraceHeapGetCurrent( TraceHeapHandle_t xHeapHandle,
+                                                  TraceUnsignedBaseType_t * puxCurrent );
 
 /**
  * @brief Gets trace heap high water mark.
@@ -93,7 +102,8 @@ traceResult xTraceHeapGetCurrent(TraceHeapHandle_t xHeapHandle, TraceUnsignedBas
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceHeapGetHighWaterMark(TraceHeapHandle_t xHeapHandle, TraceUnsignedBaseType_t *puxHighWaterMark);
+                traceResult xTraceHeapGetHighWaterMark( TraceHeapHandle_t xHeapHandle,
+                                                        TraceUnsignedBaseType_t * puxHighWaterMark );
 
 /**
  * @brief Gets trace heap max size.
@@ -104,32 +114,33 @@ traceResult xTraceHeapGetHighWaterMark(TraceHeapHandle_t xHeapHandle, TraceUnsig
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceHeapGetMax(TraceHeapHandle_t xHeapHandle, TraceUnsignedBaseType_t *puxMax);
+                traceResult xTraceHeapGetMax( TraceHeapHandle_t xHeapHandle,
+                                              TraceUnsignedBaseType_t * puxMax );
 
 /** @} */
 
-#ifdef __cplusplus
+                #ifdef __cplusplus
 }
-#endif
+                #endif
 
-#else
+            #else  /* if ( TRC_USE_HEAPS == 1 ) */
 
-#define xTraceHeapCreate(szName, uxCurrent, uxHighWaterMark, uxMax, pxHeapHandle) ((void)szName, (void)uxCurrent, (void)uxHighWaterMark, (void)uxMax, pxHeapHandle != 0 ? TRC_SUCCESS : TRC_FAIL)
+                #define xTraceHeapCreate( szName, uxCurrent, uxHighWaterMark, uxMax, pxHeapHandle )    ( ( void ) szName, ( void ) uxCurrent, ( void ) uxHighWaterMark, ( void ) uxMax, pxHeapHandle != 0 ? TRC_SUCCESS : TRC_FAIL )
 
-#define xTraceHeapAlloc(xHeapHandle, pvAddress, uxSize) ((void)xHeapHandle, (void)pvAddress, (void)uxSize, TRC_SUCCESS)
+                #define xTraceHeapAlloc( xHeapHandle, pvAddress, uxSize )                              ( ( void ) xHeapHandle, ( void ) pvAddress, ( void ) uxSize, TRC_SUCCESS )
 
-#define xTraceHeapFree(xHeapHandle, pvAddress, uxSize) ((void)xHeapHandle, (void)pvAddress, (void)uxSize, TRC_SUCCESS)
+                #define xTraceHeapFree( xHeapHandle, pvAddress, uxSize )                               ( ( void ) xHeapHandle, ( void ) pvAddress, ( void ) uxSize, TRC_SUCCESS )
 
-#define xTraceHeapGetCurrent(xHeapHandle, puxCurrent) ((void)xHeapHandle, puxCurrent != 0 ? *puxCurrent = 0 : 0, puxCurrent != 0 ? TRC_SUCCESS : TRC_FAIL)
+                #define xTraceHeapGetCurrent( xHeapHandle, puxCurrent )                                ( ( void ) xHeapHandle, puxCurrent != 0 ? *puxCurrent = 0 : 0, puxCurrent != 0 ? TRC_SUCCESS : TRC_FAIL )
 
-#define xTraceHeapGetHighWaterMark(xHeapHandle, puxHighWaterMark) ((void)xHeapHandle, puxHighWaterMark != 0 ? *puxHighWaterMark = 0 : 0, puxHighWaterMark != 0 ? TRC_SUCCESS : TRC_FAIL)
+                #define xTraceHeapGetHighWaterMark( xHeapHandle, puxHighWaterMark )                    ( ( void ) xHeapHandle, puxHighWaterMark != 0 ? *puxHighWaterMark = 0 : 0, puxHighWaterMark != 0 ? TRC_SUCCESS : TRC_FAIL )
 
-#define xTraceHeapGetMax(xHeapHandle, puxMax) ((void)xHeapHandle, puxMax != 0 ? *puxMax = 0 : 0, puxMax != 0 ? TRC_SUCCESS : TRC_FAIL)
+                #define xTraceHeapGetMax( xHeapHandle, puxMax )                                        ( ( void ) xHeapHandle, puxMax != 0 ? *puxMax = 0 : 0, puxMax != 0 ? TRC_SUCCESS : TRC_FAIL )
 
-#endif /* (TRC_USE_HEAPS == 1) */
+            #endif /* (TRC_USE_HEAPS == 1) */
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_HEAP_H */

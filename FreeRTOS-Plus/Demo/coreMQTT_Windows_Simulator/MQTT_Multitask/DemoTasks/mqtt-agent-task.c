@@ -111,13 +111,13 @@
 
 #ifndef democonfigCLIENT_IDENTIFIER
 
-    /**
-     * @brief The MQTT client identifier used in this example.  Each client identifier
-     * must be unique so edit as required to ensure no two clients connecting to the
-     * same broker use the same client identifier.  Using a #define is for convenience
-     * of demonstration only - production devices should use something unique to the
-     * device that can be read from software - such as a production serial number.
-     */
+/**
+ * @brief The MQTT client identifier used in this example.  Each client identifier
+ * must be unique so edit as required to ensure no two clients connecting to the
+ * same broker use the same client identifier.  Using a #define is for convenience
+ * of demonstration only - production devices should use something unique to the
+ * device that can be read from software - such as a production serial number.
+ */
     #error  "Please define democonfigCLIENT_IDENTIFIER in demo_config.h to something unique for this device."
 #endif
 
@@ -127,7 +127,7 @@
         #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
     #endif
 
-    /* If no username is defined, then a client certificate/key is required. */
+/* If no username is defined, then a client certificate/key is required. */
     #ifndef democonfigCLIENT_USERNAME
 
 /*
@@ -150,8 +150,8 @@
             #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
         #endif
 
-        /* AWS IoT MQTT broker port needs to be 443 for client authentication based on
-         * username/password. */
+/* AWS IoT MQTT broker port needs to be 443 for client authentication based on
+ * username/password. */
         #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
             #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
         #endif
@@ -720,55 +720,57 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         NetworkCredentials_t xNetworkCredentials = { 0 };
 
         #if defined( democonfigUSE_AWS_IOT_CORE_BROKER )
-            #if defined( democonfigCLIENT_USERNAME )
-                /*
-                 * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-                 * to AWS IoT Core with Custom Authentication on port 443.
-                 *
-                 * Custom Authentication uses the contents of the username and password
-                 * fields of the MQTT CONNECT packet to authenticate the client.
-                 *
-                 * For more information, refer to the documentation at:
-                 * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-                 */
-                static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
-                #if democonfigMQTT_BROKER_PORT != 443U
-                #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
-                #endif /* democonfigMQTT_BROKER_PORT != 443U */
-            #else /* if !defined( democonfigCLIENT_USERNAME ) */
-                /*
-                 * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-                 * x509 Certificate Authentication.
-                 */
-                static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
-            #endif /* !defined( democonfigCLIENT_USERNAME ) */
+        #if defined( democonfigCLIENT_USERNAME )
 
             /*
-             * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
-             * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+             * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+             * to AWS IoT Core with Custom Authentication on port 443.
+             *
+             * Custom Authentication uses the contents of the username and password
+             * fields of the MQTT CONNECT packet to authenticate the client.
+             *
+             * For more information, refer to the documentation at:
+             * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
              */
-            #if democonfigMQTT_BROKER_PORT == 443U
-                xNetworkCredentials.pAlpnProtos = ppcAlpnProtocols;
-            #elif democonfigMQTT_BROKER_PORT == 8883U
-                xNetworkCredentials.pAlpnProtos = NULL;
-            #else /* democonfigMQTT_BROKER_PORT != 8883U */
-                xNetworkCredentials.pAlpnProtos = NULL;
-            #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+            static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
+            #if democonfigMQTT_BROKER_PORT != 443U
+            #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
             #endif /* democonfigMQTT_BROKER_PORT != 443U */
+        #else /* if !defined( democonfigCLIENT_USERNAME ) */
+
+            /*
+             * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+             * x509 Certificate Authentication.
+             */
+            static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
+        #endif /* !defined( democonfigCLIENT_USERNAME ) */
+
+        /*
+         * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+         * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+         */
+        #if democonfigMQTT_BROKER_PORT == 443U
+            xNetworkCredentials.pAlpnProtos = ppcAlpnProtocols;
+        #elif democonfigMQTT_BROKER_PORT == 8883U
+            xNetworkCredentials.pAlpnProtos = NULL;
+        #else /* democonfigMQTT_BROKER_PORT != 8883U */
+            xNetworkCredentials.pAlpnProtos = NULL;
+        #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+        #endif /* democonfigMQTT_BROKER_PORT != 443U */
         #else /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
             xNetworkCredentials.pAlpnProtos = NULL;
-        #endif /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
+    #endif /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
 
-        /* Set the credentials for establishing a TLS connection. */
-        xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
-        xNetworkCredentials.rootCaSize = sizeof( democonfigROOT_CA_PEM );
-        #ifdef democonfigCLIENT_CERTIFICATE_PEM
-            xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-            xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-            xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-            xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-        #endif
-        xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
+    /* Set the credentials for establishing a TLS connection. */
+    xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
+    xNetworkCredentials.rootCaSize = sizeof( democonfigROOT_CA_PEM );
+    #ifdef democonfigCLIENT_CERTIFICATE_PEM
+        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
+        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
+        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
+        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+    #endif
+    xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
     #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
         PlaintextTransportStatus_t xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
@@ -1036,11 +1038,11 @@ static void prvConnectAndCreateDemoTasks( void * pvParameters )
     /* Selectively create demo tasks as per the compile time constant settings. */
 
     #if ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE > 0 )
-        {
-            vStartSimpleSubscribePublishTask( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE,
-                                              democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE,
-                                              tskIDLE_PRIORITY );
-        }
+    {
+        vStartSimpleSubscribePublishTask( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE,
+                                          democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE,
+                                          tskIDLE_PRIORITY );
+    }
     #endif
 
 

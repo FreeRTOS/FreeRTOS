@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,17 +13,17 @@
  */
 
 #ifndef TRC_COUNTER_H
-#define TRC_COUNTER_H
+    #define TRC_COUNTER_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <trcTypes.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_counter_apis Trace Counter APIs
@@ -39,7 +39,7 @@ extern "C" {
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterSetCallback(TraceCounterCallback_t xCallback);
+            traceResult xTraceCounterSetCallback( TraceCounterCallback_t xCallback );
 
 /**
  * @brief Creates trace counter.
@@ -53,7 +53,11 @@ traceResult xTraceCounterSetCallback(TraceCounterCallback_t xCallback);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterCreate(const char* szName, TraceBaseType_t xInitialValue, TraceBaseType_t xLowerLimit, TraceBaseType_t xUpperLimit, TraceCounterHandle_t* pxCounterHandle);
+            traceResult xTraceCounterCreate( const char * szName,
+                                             TraceBaseType_t xInitialValue,
+                                             TraceBaseType_t xLowerLimit,
+                                             TraceBaseType_t xUpperLimit,
+                                             TraceCounterHandle_t * pxCounterHandle );
 
 /**
  * @brief Adds value to trace counter.
@@ -64,7 +68,8 @@ traceResult xTraceCounterCreate(const char* szName, TraceBaseType_t xInitialValu
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterAdd(TraceCounterHandle_t xCounterHandle, TraceBaseType_t xValue);
+            traceResult xTraceCounterAdd( TraceCounterHandle_t xCounterHandle,
+                                          TraceBaseType_t xValue );
 
 /**
  * @brief Sets trace counter value.
@@ -75,7 +80,8 @@ traceResult xTraceCounterAdd(TraceCounterHandle_t xCounterHandle, TraceBaseType_
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterSet(TraceCounterHandle_t xCounterHandle, TraceBaseType_t xValue);
+            traceResult xTraceCounterSet( TraceCounterHandle_t xCounterHandle,
+                                          TraceBaseType_t xValue );
 
 /**
  * @brief Gets trace counter value.
@@ -86,7 +92,8 @@ traceResult xTraceCounterSet(TraceCounterHandle_t xCounterHandle, TraceBaseType_
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterGet(TraceCounterHandle_t xCounterHandle, TraceBaseType_t* pxValue);
+            traceResult xTraceCounterGet( TraceCounterHandle_t xCounterHandle,
+                                          TraceBaseType_t * pxValue );
 
 /**
  * @brief Increases trace counter value.
@@ -96,7 +103,7 @@ traceResult xTraceCounterGet(TraceCounterHandle_t xCounterHandle, TraceBaseType_
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterIncrease(TraceCounterHandle_t xCounterHandle);
+            traceResult xTraceCounterIncrease( TraceCounterHandle_t xCounterHandle );
 
 /**
  * @brief Decreases trace counter value.
@@ -106,7 +113,7 @@ traceResult xTraceCounterIncrease(TraceCounterHandle_t xCounterHandle);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterDecrease(TraceCounterHandle_t xCounterHandle);
+            traceResult xTraceCounterDecrease( TraceCounterHandle_t xCounterHandle );
 
 /**
  * @brief Gets trace counter upper limit.
@@ -117,7 +124,8 @@ traceResult xTraceCounterDecrease(TraceCounterHandle_t xCounterHandle);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterGetUpperLimit(TraceCounterHandle_t xCounterHandle, TraceBaseType_t* pxValue);
+            traceResult xTraceCounterGetUpperLimit( TraceCounterHandle_t xCounterHandle,
+                                                    TraceBaseType_t * pxValue );
 
 /**
  * @brief Gets trace counter lower limit.
@@ -128,7 +136,8 @@ traceResult xTraceCounterGetUpperLimit(TraceCounterHandle_t xCounterHandle, Trac
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterGetLowerLimit(TraceCounterHandle_t xCounterHandle, TraceBaseType_t* pxValue);
+            traceResult xTraceCounterGetLowerLimit( TraceCounterHandle_t xCounterHandle,
+                                                    TraceBaseType_t * pxValue );
 
 /**
  * @brief Gets trace counter name.
@@ -139,16 +148,17 @@ traceResult xTraceCounterGetLowerLimit(TraceCounterHandle_t xCounterHandle, Trac
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceCounterGetName(TraceCounterHandle_t xCounterHandle, const char** pszName);
+            traceResult xTraceCounterGetName( TraceCounterHandle_t xCounterHandle,
+                                              const char ** pszName );
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_COUNTER_H */

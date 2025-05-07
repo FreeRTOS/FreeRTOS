@@ -120,9 +120,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * Must include the PEM header and footer:
  * "-----BEGIN CERTIFICATE-----
-" * "...base64 data...
-" * "-----END CERTIFICATE-----
-"
+ * " * "...base64 data...
+ * " * "-----END CERTIFICATE-----
+ * "
  *
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
  */
@@ -166,7 +166,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * while setting up AWS resources before running the demo.
  * Refer to the demo setup instructions in the README.md file
  * within the same directory as this file in the repository.
-
+ *
  * #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE   "...insert here..."
  */
 

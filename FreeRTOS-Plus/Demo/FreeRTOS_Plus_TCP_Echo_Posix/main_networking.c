@@ -185,9 +185,9 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
              * demo tasks. */
 
             #if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
-                {
-                    vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
-                }
+            {
+                vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
+            }
             #endif /* mainCREATE_TCP_ECHO_TASKS_SINGLE */
 
             xTasksAlreadyCreated = pdTRUE;
@@ -237,6 +237,7 @@ static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
     uint32_t ulRandomNumbers[ 4 ];
+
     /* Seed the random number generator. */
     time( &xTimeNow );
     FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\n", xTimeNow ) );

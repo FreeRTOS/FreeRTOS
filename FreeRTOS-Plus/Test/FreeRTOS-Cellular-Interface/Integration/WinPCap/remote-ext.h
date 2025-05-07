@@ -45,7 +45,7 @@
     #endif
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /*!
@@ -465,7 +465,7 @@
 /* End of remote capture functions */
 
     #ifdef __cplusplus
-        }
+}
     #endif
 
 

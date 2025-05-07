@@ -60,102 +60,106 @@
 
 #include <trcRecorder.h>
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+#if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+    #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-typedef struct TraceStreamPortFile
-{
-	uint8_t buffer[sizeof(TraceUnsignedBaseType_t)];
-} TraceStreamPortFile_t;
+        typedef struct TraceStreamPortFile
+        {
+            uint8_t buffer[ sizeof( TraceUnsignedBaseType_t ) ];
+        } TraceStreamPortFile_t;
 
-static TraceStreamPortFile_t* pxStreamPortFile;
+        static TraceStreamPortFile_t * pxStreamPortFile;
 
 /* This will be set by the debugger when there is data to be read */
-volatile int32_t tz_host_command_bytes_to_read = 0;
+        volatile int32_t tz_host_command_bytes_to_read = 0;
 
 /* This will be filled with data from the debugger */
-volatile char tz_host_command_data[32];
+        volatile char tz_host_command_data[ 32 ];
 
 /* These variables are used for reading commands from the host, using read_from_host().
  * This is not required if using vTraceEnable(TRC_START).
  * A debugger IDE may write to these functions using a macro.
  * An example for Keil is included (Keil-uVision-Tracealyzer-ITM-Exporter.ini). */
 
-#define itm_write_32(__data) \
-{\
-	if ((CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk) &&					/* Trace enabled? */ \
-		(ITM->TCR & ITM_TCR_ITMENA_Msk) &&									/* ITM enabled? */ \
-		(ITM->TER & (1UL << (TRC_CFG_STREAM_PORT_ITM_PORT))))								/* ITM port enabled? */ \
-	{ \
-		while (ITM->PORT[TRC_CFG_STREAM_PORT_ITM_PORT].u32 == 0) { /* Do nothing */ }	/* Block until room in ITM FIFO - This stream port is always in "blocking mode", since intended for high-speed ITM! */ \
-		ITM->PORT[TRC_CFG_STREAM_PORT_ITM_PORT].u32 = __data;								/* Write the data */ \
-	} \
-}
+        #define itm_write_32( __data )                                                                                                                                                                              \
+    {                                                                                                                                                                                                               \
+        if( ( CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk ) &&            /* Trace enabled? */                                                                                                                    \
+            ( ITM->TCR & ITM_TCR_ITMENA_Msk ) &&                            /* ITM enabled? */                                                                                                                      \
+            ( ITM->TER & ( 1UL << ( TRC_CFG_STREAM_PORT_ITM_PORT ) ) ) )    /* ITM port enabled? */                                                                                                                 \
+        {                                                                                                                                                                                                           \
+            while( ITM->PORT[ TRC_CFG_STREAM_PORT_ITM_PORT ].u32 == 0 ) { /* Do nothing */ } /* Block until room in ITM FIFO - This stream port is always in "blocking mode", since intended for high-speed ITM! */ \
+            ITM->PORT[ TRC_CFG_STREAM_PORT_ITM_PORT ].u32 = __data;                         /* Write the data */                                                                                                    \
+        }                                                                                                                                                                                                           \
+    }
 
 /* This is assumed to execute from within the recorder, with interrupts disabled */
-traceResult prvTraceItmWrite(void* ptrData, uint32_t size, int32_t* ptrBytesWritten)
-{
-	uint32_t* ptr32 = (uint32_t*)ptrData;
+        traceResult prvTraceItmWrite( void * ptrData,
+                                      uint32_t size,
+                                      int32_t * ptrBytesWritten )
+        {
+            uint32_t * ptr32 = ( uint32_t * ) ptrData;
 
-	TRC_ASSERT(size % 4 == 0);
-	TRC_ASSERT(ptrBytesWritten != 0);
+            TRC_ASSERT( size % 4 == 0 );
+            TRC_ASSERT( ptrBytesWritten != 0 );
 
-	*ptrBytesWritten = 0;
+            *ptrBytesWritten = 0;
 
-	while (*ptrBytesWritten < (int32_t)size)
-	{
-		itm_write_32(*ptr32);
-		ptr32++;
-		*ptrBytesWritten += 4;
-	}
+            while( *ptrBytesWritten < ( int32_t ) size )
+            {
+                itm_write_32( *ptr32 );
+                ptr32++;
+                *ptrBytesWritten += 4;
+            }
 
-	return TRC_SUCCESS;
-}
+            return TRC_SUCCESS;
+        }
 
 /* This reads "command" data from a RAM buffer, written by a host macro in the debugger */
-traceResult prvTraceItmRead(void* ptrData, uint32_t uiSize, int32_t* piBytesRead)
-{
-	int32_t i;
-	uint8_t* bytesBuffer = (uint8_t*)ptrData;
+        traceResult prvTraceItmRead( void * ptrData,
+                                     uint32_t uiSize,
+                                     int32_t * piBytesRead )
+        {
+            int32_t i;
+            uint8_t * bytesBuffer = ( uint8_t * ) ptrData;
 
-	TRC_ASSERT(piBytesRead != 0);
+            TRC_ASSERT( piBytesRead != 0 );
 
-	/* Check if the debugger has updated tz_host_command_bytes_to_read */
-	if (tz_host_command_bytes_to_read > 0)
-	{
-		if (tz_host_command_bytes_to_read != (int32_t)uiSize)
-		{
-			/* Sanity check. */
-			return TRC_FAIL;
-		}
+            /* Check if the debugger has updated tz_host_command_bytes_to_read */
+            if( tz_host_command_bytes_to_read > 0 )
+            {
+                if( tz_host_command_bytes_to_read != ( int32_t ) uiSize )
+                {
+                    /* Sanity check. */
+                    return TRC_FAIL;
+                }
 
-		*piBytesRead = (int32_t)tz_host_command_bytes_to_read;
+                *piBytesRead = ( int32_t ) tz_host_command_bytes_to_read;
 
-		/* Read the bytes */
-		for (i = 0; i < tz_host_command_bytes_to_read; i++)
-		{
-			bytesBuffer[i] = tz_host_command_data[i];
-		}
+                /* Read the bytes */
+                for( i = 0; i < tz_host_command_bytes_to_read; i++ )
+                {
+                    bytesBuffer[ i ] = tz_host_command_data[ i ];
+                }
 
-		/* Reset */
-		tz_host_command_bytes_to_read = 0;
-	}
+                /* Reset */
+                tz_host_command_bytes_to_read = 0;
+            }
 
-	return TRC_SUCCESS;
-}
+            return TRC_SUCCESS;
+        }
 
-traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
-{
-	TRC_ASSERT_EQUAL_SIZE(TraceStreamPortBuffer_t, TraceStreamPortFile_t);
+        traceResult xTraceStreamPortInitialize( TraceStreamPortBuffer_t * pxBuffer )
+        {
+            TRC_ASSERT_EQUAL_SIZE( TraceStreamPortBuffer_t, TraceStreamPortFile_t );
 
-	TRC_ASSERT(pxBuffer != 0);
+            TRC_ASSERT( pxBuffer != 0 );
 
-	pxStreamPortFile = (TraceStreamPortFile_t*)pxBuffer;
+            pxStreamPortFile = ( TraceStreamPortFile_t * ) pxBuffer;
 
-	return TRC_SUCCESS;
-}
+            return TRC_SUCCESS;
+        }
 
-#endif
+    #endif /* if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING ) */
 
-#endif
+#endif /* if ( TRC_USE_TRACEALYZER_RECORDER == 1 ) */

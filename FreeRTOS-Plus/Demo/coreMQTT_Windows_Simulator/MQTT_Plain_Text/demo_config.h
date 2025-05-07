@@ -103,7 +103,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
 
 /**
  * @brief Size of the network buffer for MQTT packets.

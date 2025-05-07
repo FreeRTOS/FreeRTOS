@@ -203,21 +203,21 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
              * macros at the top of this file for a description of the individual
              * demo tasks. */
             #if ( mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS == 1 )
-                {
-                    vStartSimpleUDPClientServerTasks( configMINIMAL_STACK_SIZE, mainSIMPLE_UDP_CLIENT_SERVER_PORT, mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY );
-                }
+            {
+                vStartSimpleUDPClientServerTasks( configMINIMAL_STACK_SIZE, mainSIMPLE_UDP_CLIENT_SERVER_PORT, mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY );
+            }
             #endif /* mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS */
 
             #if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
-                {
-                    vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
-                }
+            {
+                vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
+            }
             #endif /* mainCREATE_TCP_ECHO_TASKS_SINGLE */
 
             #if ( mainCREATE_TCP_ECHO_SERVER_TASK == 1 )
-                {
-                    vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
-                }
+            {
+                vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
+            }
             #endif
 
             xTasksAlreadyCreated = pdTRUE;

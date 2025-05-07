@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,17 +13,17 @@
  */
 
 #ifndef TRC_EXTENSION_H
-#define TRC_EXTENSION_H
+    #define TRC_EXTENSION_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <trcTypes.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_extension_apis Trace Extension APIs
@@ -44,7 +44,12 @@ extern "C" {
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceExtensionCreate(const char *szName, uint8_t uiMajor, uint8_t uiMinor, uint16_t uiPatch, uint32_t uiEventCount, TraceExtensionHandle_t *pxExtensionHandle);
+            traceResult xTraceExtensionCreate( const char * szName,
+                                               uint8_t uiMajor,
+                                               uint8_t uiMinor,
+                                               uint16_t uiPatch,
+                                               uint32_t uiEventCount,
+                                               TraceExtensionHandle_t * pxExtensionHandle );
 
 /**
  * @brief Gets extension base event id.
@@ -55,7 +60,8 @@ traceResult xTraceExtensionCreate(const char *szName, uint8_t uiMajor, uint8_t u
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceExtensionGetBaseEventId(TraceExtensionHandle_t xExtensionHandle, uint32_t *puiBaseEventId);
+            traceResult xTraceExtensionGetBaseEventId( TraceExtensionHandle_t xExtensionHandle,
+                                                       uint32_t * puiBaseEventId );
 
 /**
  * @brief Gets extension event id.
@@ -67,7 +73,9 @@ traceResult xTraceExtensionGetBaseEventId(TraceExtensionHandle_t xExtensionHandl
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceExtensionGetEventId(TraceExtensionHandle_t xExtensionHandle, uint32_t uiLocalEventId, uint32_t *puiGlobalEventId);
+            traceResult xTraceExtensionGetEventId( TraceExtensionHandle_t xExtensionHandle,
+                                                   uint32_t uiLocalEventId,
+                                                   uint32_t * puiGlobalEventId );
 
 /**
  * @brief Gets extension configuration name.
@@ -78,16 +86,17 @@ traceResult xTraceExtensionGetEventId(TraceExtensionHandle_t xExtensionHandle, u
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceExtensionGetConfigName(TraceExtensionHandle_t xExtensionHandle, const char **pszName);
+            traceResult xTraceExtensionGetConfigName( TraceExtensionHandle_t xExtensionHandle,
+                                                      const char ** pszName );
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_EXTENSION_H */

@@ -42,7 +42,7 @@
  * in the EventGroup element (e.g. <EventGroup name="SOCKETS">)
  *
  *****************************************************************************/
-#define TRC_EXT_SOCKETS_NAME "aws_secure_sockets"
+#define TRC_EXT_SOCKETS_NAME             "aws_secure_sockets"
 
 /******************************************************************************
  * <EXTENSIONPREFIX>_VERSION_MAJOR
@@ -64,11 +64,11 @@
  * using 16 bits. They are treated as unsigned integers, so the maximum values
  * are 256, 256 and 65535.
  *****************************************************************************/
-#define TRC_EXT_SOCKETS_VERSION_MAJOR 1
+#define TRC_EXT_SOCKETS_VERSION_MAJOR    1
 
-#define TRC_EXT_SOCKETS_VERSION_MINOR 0
+#define TRC_EXT_SOCKETS_VERSION_MINOR    0
 
-#define TRC_EXT_SOCKETS_VERSION_PATCH 0
+#define TRC_EXT_SOCKETS_VERSION_PATCH    0
 
 
 /******************************************************************************
@@ -76,61 +76,69 @@
  * The event codes used in the trace wrapper functions. Important that these
  * are relative to <PREFIX>_FIRST.
  *****************************************************************************/
-#define EVENTCODE_SOCKETS_Connect (TRC_EXT_BASECODE + 0)
+#define EVENTCODE_SOCKETS_Connect    ( TRC_EXT_BASECODE + 0 )
 
-#define EVENTCODE_SOCKETS_Send (TRC_EXT_BASECODE + 1)
+#define EVENTCODE_SOCKETS_Send       ( TRC_EXT_BASECODE + 1 )
 
-#define EVENTCODE_SOCKETS_Recv (TRC_EXT_BASECODE + 2)
+#define EVENTCODE_SOCKETS_Recv       ( TRC_EXT_BASECODE + 2 )
 
 /******************************************************************************
  * <EXTENSIONPREFIX>_COUNT
  * The number of event codes used by this extension. Should be at least 1.
  * Tracealyzer allows for events codes up to 4095.
  *****************************************************************************/
-#define TRC_EXT_SOCKETS_COUNT 2
+#define TRC_EXT_SOCKETS_COUNT        2
 
 
 /***** Trace Wrappers *****/
 
 #include <aws_secure_sockets.h> /* Including the original header file, so that custom data types are understood. */
 
-static inline int32_t SOCKETS_Connect__trace( Socket_t xSocket, SocketsSockaddr_t * pxAddress, Socklen_t xAddressLength )
+static inline int32_t SOCKETS_Connect__trace( Socket_t xSocket,
+                                              SocketsSockaddr_t * pxAddress,
+                                              Socklen_t xAddressLength )
 {
-	int32_t ret = SOCKETS_Connect(xSocket, pxAddress, xAddressLength);
+    int32_t ret = SOCKETS_Connect( xSocket, pxAddress, xAddressLength );
 
-	// Note: The host-side xml file assumes that ret == 0 means OK, otherwise timeout/error.
-	prvTraceStoreEvent3(EVENTCODE_SOCKETS_Connect, (uint32_t)xSocket, (uint32_t)pxAddress->ulAddress, (uint32_t)ret);
+    /* Note: The host-side xml file assumes that ret == 0 means OK, otherwise timeout/error. */
+    prvTraceStoreEvent3( EVENTCODE_SOCKETS_Connect, ( uint32_t ) xSocket, ( uint32_t ) pxAddress->ulAddress, ( uint32_t ) ret );
 
-	return ret;
+    return ret;
 }
 
-static inline int32_t SOCKETS_Send__trace( Socket_t xSocket, const void * pvBuffer, size_t xDataLength, uint32_t ulFlags )
+static inline int32_t SOCKETS_Send__trace( Socket_t xSocket,
+                                           const void * pvBuffer,
+                                           size_t xDataLength,
+                                           uint32_t ulFlags )
 {
-	int32_t ret = SOCKETS_Send(xSocket, pvBuffer, xDataLength, ulFlags);
+    int32_t ret = SOCKETS_Send( xSocket, pvBuffer, xDataLength, ulFlags );
 
-	// Note: The host-side xml file assumes that ret == 0 means OK, otherwise timeout/error.
-	prvTraceStoreEvent2(EVENTCODE_SOCKETS_Send, (uint32_t)xSocket, (uint32_t)ret);
+    /* Note: The host-side xml file assumes that ret == 0 means OK, otherwise timeout/error. */
+    prvTraceStoreEvent2( EVENTCODE_SOCKETS_Send, ( uint32_t ) xSocket, ( uint32_t ) ret );
 
-	return ret;
+    return ret;
 }
 
 
-static inline int32_t SOCKETS_Recv__trace( Socket_t xSocket, void * pvBuffer, size_t xBufferLength, uint32_t ulFlags )
+static inline int32_t SOCKETS_Recv__trace( Socket_t xSocket,
+                                           void * pvBuffer,
+                                           size_t xBufferLength,
+                                           uint32_t ulFlags )
 {
-	int32_t ret = SOCKETS_Recv(xSocket, pvBuffer, xBufferLength, ulFlags);
+    int32_t ret = SOCKETS_Recv( xSocket, pvBuffer, xBufferLength, ulFlags );
 
-	// Note: The host-side xml file assumes that ret == 0 means OK, otherwise timeout/error.
-	prvTraceStoreEvent2(EVENTCODE_SOCKETS_Recv, (uint32_t)xSocket, (uint32_t)ret);
+    /* Note: The host-side xml file assumes that ret == 0 means OK, otherwise timeout/error. */
+    prvTraceStoreEvent2( EVENTCODE_SOCKETS_Recv, ( uint32_t ) xSocket, ( uint32_t ) ret );
 
-	return ret;
+    return ret;
 }
 
 /***** Function Redefinitions *****/
 
-#define SOCKETS_Connect SOCKETS_Connect__trace
+#define SOCKETS_Connect    SOCKETS_Connect__trace
 
-#define SOCKETS_Send SOCKETS_Send__trace
+#define SOCKETS_Send       SOCKETS_Send__trace
 
-#define SOCKETS_Recv SOCKETS_Recv__trace
+#define SOCKETS_Recv       SOCKETS_Recv__trace
 
 #endif /* _AWS_SECURE_SOCKETS_TZEXT_H */

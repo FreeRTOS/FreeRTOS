@@ -20,8 +20,8 @@
  */
 
 /*!
-    \file wolfssl/openssl/ossl_typ.h
-*/
+ *  \file wolfssl/openssl/ossl_typ.h
+ */
 
 
 #ifndef WOLFSSL_OSSL_TYP_H_

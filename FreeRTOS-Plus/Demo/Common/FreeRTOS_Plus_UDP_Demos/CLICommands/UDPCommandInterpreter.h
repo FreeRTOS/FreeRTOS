@@ -27,6 +27,8 @@
 #ifndef UDP_COMMAND_INTERPRETER_H
 #define UDP_COMMAND_INTERPRETER_H
 
-void vStartUDPCommandInterpreterTask( uint16_t usStackSize, uint32_t ulPort, UBaseType_t uxPriority );
+void vStartUDPCommandInterpreterTask( uint16_t usStackSize,
+                                      uint32_t ulPort,
+                                      UBaseType_t uxPriority );
 
 #endif /* UDP_COMMAND_INTERPRETER_H */

@@ -13,70 +13,71 @@
 
 #include <trcRecorder.h>
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+#if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+    #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-TraceStreamPortFile_t* pxStreamPortFile;
+        TraceStreamPortFile_t * pxStreamPortFile;
 
-traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer)
-{
-	TRC_ASSERT_EQUAL_SIZE(TraceStreamPortBuffer_t, TraceStreamPortFile_t);
+        traceResult xTraceStreamPortInitialize( TraceStreamPortBuffer_t * pxBuffer )
+        {
+            TRC_ASSERT_EQUAL_SIZE( TraceStreamPortBuffer_t, TraceStreamPortFile_t );
 
-	TRC_ASSERT(pxBuffer != 0);
+            TRC_ASSERT( pxBuffer != 0 );
 
-	pxStreamPortFile = (TraceStreamPortFile_t*)pxBuffer;
-	pxStreamPortFile->pxFile = 0;
+            pxStreamPortFile = ( TraceStreamPortFile_t * ) pxBuffer;
+            pxStreamPortFile->pxFile = 0;
 
-#if (TRC_USE_INTERNAL_BUFFER == 1)
-	return xTraceInternalEventBufferInitialize(pxStreamPortFile->buffer, sizeof(pxStreamPortFile->buffer));
-#else
-	return TRC_SUCCESS;
-#endif
-}
+            #if ( TRC_USE_INTERNAL_BUFFER == 1 )
+                return xTraceInternalEventBufferInitialize( pxStreamPortFile->buffer, sizeof( pxStreamPortFile->buffer ) );
+            #else
+                return TRC_SUCCESS;
+            #endif
+        }
 
-traceResult xTraceStreamPortOnTraceBegin(void)
-{
-	if (pxStreamPortFile == 0)
-	{
-		return TRC_FAIL;
-	}
+        traceResult xTraceStreamPortOnTraceBegin( void )
+        {
+            if( pxStreamPortFile == 0 )
+            {
+                return TRC_FAIL;
+            }
 
-	if (pxStreamPortFile->pxFile == 0)
-	{
-		errno_t err = fopen_s(&pxStreamPortFile->pxFile, TRC_CFG_STREAM_PORT_TRACE_FILE, "wb");
-		if (err != 0)
-		{
-			printf("Could not open trace file, error code %d.\n", err);
+            if( pxStreamPortFile->pxFile == 0 )
+            {
+                errno_t err = fopen_s( &pxStreamPortFile->pxFile, TRC_CFG_STREAM_PORT_TRACE_FILE, "wb" );
 
-			return TRC_FAIL;
-		}
-		else
-		{
-			printf("Trace file created.\n");
-		}
-	}
+                if( err != 0 )
+                {
+                    printf( "Could not open trace file, error code %d.\n", err );
 
-	return TRC_SUCCESS;
-}
+                    return TRC_FAIL;
+                }
+                else
+                {
+                    printf( "Trace file created.\n" );
+                }
+            }
 
-traceResult xTraceStreamPortOnTraceEnd(void)
-{
-	if (pxStreamPortFile == 0)
-	{
-		return TRC_FAIL;
-	}
+            return TRC_SUCCESS;
+        }
 
-	if (pxStreamPortFile->pxFile != 0)
-	{
-		fclose(pxStreamPortFile->pxFile);
-		pxStreamPortFile->pxFile = 0;
-		printf("Trace file closed.\n");
-	}
+        traceResult xTraceStreamPortOnTraceEnd( void )
+        {
+            if( pxStreamPortFile == 0 )
+            {
+                return TRC_FAIL;
+            }
 
-	return TRC_SUCCESS;
-}
+            if( pxStreamPortFile->pxFile != 0 )
+            {
+                fclose( pxStreamPortFile->pxFile );
+                pxStreamPortFile->pxFile = 0;
+                printf( "Trace file closed.\n" );
+            }
 
-#endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
+            return TRC_SUCCESS;
+        }
+
+    #endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
 
 #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/

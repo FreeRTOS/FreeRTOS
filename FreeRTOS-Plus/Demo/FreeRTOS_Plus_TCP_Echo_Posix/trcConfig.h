@@ -46,11 +46,11 @@
  ******************************************************************************/
 
 #ifndef TRC_CONFIG_H
-#define TRC_CONFIG_H
+    #define TRC_CONFIG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /******************************************************************************
  * Include of processor header file
@@ -59,7 +59,7 @@ extern "C" {
  * required at least for the ARM Cortex-M port, that uses the ARM CMSIS API.
  * Try that in case of build problems. Otherwise, remove the #error line below.
  *****************************************************************************/
-//#error "Trace Recorder: Please include your processor's header file here and remove this line."
+/*#error "Trace Recorder: Please include your processor's header file here and remove this line." */
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_HARDWARE_PORT
@@ -79,7 +79,7 @@ extern "C" {
  * See trcHardwarePort.h for available ports and information on how to
  * define your own port, if not already present.
  ******************************************************************************/
-#define TRC_CFG_HARDWARE_PORT TRC_HARDWARE_PORT_Win32
+    #define TRC_CFG_HARDWARE_PORT                    TRC_HARDWARE_PORT_Win32
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_RECORDER_MODE
@@ -95,7 +95,7 @@ extern "C" {
  * TRC_RECORDER_MODE_SNAPSHOT
  * TRC_RECORDER_MODE_STREAMING
  ******************************************************************************/
-#define TRC_CFG_RECORDER_MODE TRC_RECORDER_MODE_SNAPSHOT
+    #define TRC_CFG_RECORDER_MODE                    TRC_RECORDER_MODE_SNAPSHOT
 
 /*******************************************************************************
  * TRC_CFG_SCHEDULING_ONLY
@@ -107,9 +107,9 @@ extern "C" {
  *
  * Default value is 0 (= include additional events).
  ******************************************************************************/
-#define TRC_CFG_SCHEDULING_ONLY 0
+    #define TRC_CFG_SCHEDULING_ONLY                  0
 
- /******************************************************************************
+/******************************************************************************
  * TRC_CFG_INCLUDE_MEMMANG_EVENTS
  *
  * Macro which should be defined as either zero (0) or one (1).
@@ -119,9 +119,9 @@ extern "C" {
  *
  * Default value is 1.
  *****************************************************************************/
-#define TRC_CFG_INCLUDE_MEMMANG_EVENTS 1
+    #define TRC_CFG_INCLUDE_MEMMANG_EVENTS           1
 
- /******************************************************************************
+/******************************************************************************
  * TRC_CFG_INCLUDE_USER_EVENTS
  *
  * Macro which should be defined as either zero (0) or one (1).
@@ -144,84 +144,84 @@ extern "C" {
  *
  * Default value is 1.
  *****************************************************************************/
-#define TRC_CFG_INCLUDE_USER_EVENTS 1
+    #define TRC_CFG_INCLUDE_USER_EVENTS              1
 
- /*****************************************************************************
- * TRC_CFG_INCLUDE_ISR_TRACING
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the code for recording Interrupt Service Routines is
- * excluded, in order to reduce code size.
- *
- * Default value is 1.
- *
- * Note: tracing ISRs requires that you insert calls to vTraceStoreISRBegin
- * and vTraceStoreISREnd in your interrupt handlers.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_ISR_TRACING 1
+/*****************************************************************************
+* TRC_CFG_INCLUDE_ISR_TRACING
+*
+* Macro which should be defined as either zero (0) or one (1).
+*
+* If this is zero (0), the code for recording Interrupt Service Routines is
+* excluded, in order to reduce code size.
+*
+* Default value is 1.
+*
+* Note: tracing ISRs requires that you insert calls to vTraceStoreISRBegin
+* and vTraceStoreISREnd in your interrupt handlers.
+*****************************************************************************/
+    #define TRC_CFG_INCLUDE_ISR_TRACING              1
 
- /*****************************************************************************
- * TRC_CFG_INCLUDE_READY_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If one (1), events are recorded when tasks enter scheduling state "ready".
- * This allows Tracealyzer to show the initial pending time before tasks enter
- * the execution state, and present accurate response times.
- * If zero (0), "ready events" are not created, which allows for recording
- * longer traces in the same amount of RAM.
- *
- * Default value is 1.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_READY_EVENTS 1
+/*****************************************************************************
+* TRC_CFG_INCLUDE_READY_EVENTS
+*
+* Macro which should be defined as either zero (0) or one (1).
+*
+* If one (1), events are recorded when tasks enter scheduling state "ready".
+* This allows Tracealyzer to show the initial pending time before tasks enter
+* the execution state, and present accurate response times.
+* If zero (0), "ready events" are not created, which allows for recording
+* longer traces in the same amount of RAM.
+*
+* Default value is 1.
+*****************************************************************************/
+    #define TRC_CFG_INCLUDE_READY_EVENTS             1
 
- /*****************************************************************************
- * TRC_CFG_INCLUDE_OSTICK_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is one (1), events will be generated whenever the OS clock is
- * increased. If zero (0), OS tick events are not generated, which allows for
- * recording longer traces in the same amount of RAM.
- *
- * Default value is 1.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_OSTICK_EVENTS 1
+/*****************************************************************************
+* TRC_CFG_INCLUDE_OSTICK_EVENTS
+*
+* Macro which should be defined as either zero (0) or one (1).
+*
+* If this is one (1), events will be generated whenever the OS clock is
+* increased. If zero (0), OS tick events are not generated, which allows for
+* recording longer traces in the same amount of RAM.
+*
+* Default value is 1.
+*****************************************************************************/
+    #define TRC_CFG_INCLUDE_OSTICK_EVENTS            1
 
- /*****************************************************************************
- * TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the trace will exclude any "event group" events.
- *
- * Default value is 0 (excluded) since dependent on event_groups.c
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS 1
+/*****************************************************************************
+* TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS
+*
+* Macro which should be defined as either zero (0) or one (1).
+*
+* If this is zero (0), the trace will exclude any "event group" events.
+*
+* Default value is 0 (excluded) since dependent on event_groups.c
+*****************************************************************************/
+    #define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS       1
 
- /*****************************************************************************
- * TRC_CFG_INCLUDE_TIMER_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the trace will exclude any Timer events.
- *
- * Default value is 0 since dependent on timers.c
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_TIMER_EVENTS 1
+/*****************************************************************************
+* TRC_CFG_INCLUDE_TIMER_EVENTS
+*
+* Macro which should be defined as either zero (0) or one (1).
+*
+* If this is zero (0), the trace will exclude any Timer events.
+*
+* Default value is 0 since dependent on timers.c
+*****************************************************************************/
+    #define TRC_CFG_INCLUDE_TIMER_EVENTS             1
 
- /*****************************************************************************
- * TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the trace will exclude any "pending function call"
- * events, such as xTimerPendFunctionCall().
- *
- * Default value is 0 since dependent on timers.c
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS 1
+/*****************************************************************************
+* TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS
+*
+* Macro which should be defined as either zero (0) or one (1).
+*
+* If this is zero (0), the trace will exclude any "pending function call"
+* events, such as xTimerPendFunctionCall().
+*
+* Default value is 0 since dependent on timers.c
+*****************************************************************************/
+    #define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS    1
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS
@@ -233,7 +233,7 @@ extern "C" {
  *
  * Default value is 0 since dependent on stream_buffer.c (new in FreeRTOS v10)
  ******************************************************************************/
-#define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS 1
+    #define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS     1
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_RECORDER_BUFFER_ALLOCATION
@@ -251,7 +251,7 @@ extern "C" {
  * The custom mode allows you to control how and where the allocation is made,
  * for details see TRC_ALLOC_CUSTOM_BUFFER and vTraceSetRecorderDataBuffer().
  ******************************************************************************/
-#define TRC_CFG_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_STATIC
+    #define TRC_CFG_RECORDER_BUFFER_ALLOCATION       TRC_RECORDER_BUFFER_ALLOCATION_STATIC
 
 /******************************************************************************
  * TRC_CFG_MAX_ISR_NESTING
@@ -266,25 +266,25 @@ extern "C" {
  *
  * Default value: 8
  *****************************************************************************/
-#define TRC_CFG_MAX_ISR_NESTING 8
+    #define TRC_CFG_MAX_ISR_NESTING                  8
 
-#define TRC_CFG_CTRL_TASK_STACK_SIZE ( 1024 )
+    #define TRC_CFG_CTRL_TASK_STACK_SIZE             ( 1024 )
 
-#define TRC_CFG_CTRL_TASK_PRIORITY 1
+    #define TRC_CFG_CTRL_TASK_PRIORITY               1
 
-#define TRC_CFG_CTRL_TASK_DELAY 2
+    #define TRC_CFG_CTRL_TASK_DELAY                  2
 
-#define TRC_CFG_RECORDER_DATA_ATTRIBUTE
+    #define TRC_CFG_RECORDER_DATA_ATTRIBUTE
 
 /* Specific configuration, depending on Streaming/Snapshot mode */
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)
-#include "trcSnapshotConfig.h"
-#elif (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
-#include "trcStreamingConfig.h"
-#endif
+    #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT )
+        #include "trcSnapshotConfig.h"
+    #elif ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
+        #include "trcStreamingConfig.h"
+    #endif
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* _TRC_CONFIG_H */

@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,17 +13,17 @@
  */
 
 #ifndef TRC_TASK_H
-#define TRC_TASK_H
+    #define TRC_TASK_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <trcTypes.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_task_apis Trace Task APIs
@@ -31,29 +31,29 @@ extern "C" {
  * @{
  */
 
-#ifndef TRC_CFG_ENABLE_STACK_MONITOR
-#define TRC_CFG_ENABLE_STACK_MONITOR 0
-#endif
+            #ifndef TRC_CFG_ENABLE_STACK_MONITOR
+                #define TRC_CFG_ENABLE_STACK_MONITOR    0
+            #endif
 
 /**
  * @internal Trace Task Info Structure
  */
-typedef struct TraceTaskInfo
-{
-	void* coreTasks[TRC_CFG_CORE_COUNT];
-} TraceTaskInfo_t;
+            typedef struct TraceTaskInfo
+            {
+                void * coreTasks[ TRC_CFG_CORE_COUNT ];
+            } TraceTaskInfo_t;
 
-extern TraceTaskInfo_t* pxTraceTaskInfo;
+            extern TraceTaskInfo_t * pxTraceTaskInfo;
 
-#define TRACE_TASK_INFO_BUFFER_SIZE (sizeof(TraceTaskInfo_t))
+            #define TRACE_TASK_INFO_BUFFER_SIZE    ( sizeof( TraceTaskInfo_t ) )
 
 /**
  * @internal Trace Task Info Buffer Structure
  */
-typedef struct TraceTaskInfoBuffer
-{
-	uint8_t buffer[TRACE_TASK_INFO_BUFFER_SIZE];
-} TraceTaskInfoBuffer_t;
+            typedef struct TraceTaskInfoBuffer
+            {
+                uint8_t buffer[ TRACE_TASK_INFO_BUFFER_SIZE ];
+            } TraceTaskInfoBuffer_t;
 
 /**
  * @internal Initialize trace task system.
@@ -64,7 +64,7 @@ typedef struct TraceTaskInfoBuffer
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskInitialize(TraceTaskInfoBuffer_t* pxBuffer);
+            traceResult xTraceTaskInitialize( TraceTaskInfoBuffer_t * pxBuffer );
 
 /**
  * @brief Register trace task in the trace.
@@ -77,7 +77,7 @@ traceResult xTraceTaskInitialize(TraceTaskInfoBuffer_t* pxBuffer);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskRegister(pvTask, szName, uxPriority, pxTaskHandle) ((((pvTask) != 0) && (xTraceObjectRegister(PSF_EVENT_TASK_CREATE, pvTask, szName, uxPriority, (TraceObjectHandle_t*)(pxTaskHandle)) == TRC_SUCCESS)) ? (xTraceStackMonitorAdd(pvTask), TRC_SUCCESS) : TRC_FAIL)
+            #define xTraceTaskRegister( pvTask, szName, uxPriority, pxTaskHandle )    ( ( ( ( pvTask ) != 0 ) && ( xTraceObjectRegister( PSF_EVENT_TASK_CREATE, pvTask, szName, uxPriority, ( TraceObjectHandle_t * ) ( pxTaskHandle ) ) == TRC_SUCCESS ) ) ? ( xTraceStackMonitorAdd( pvTask ), TRC_SUCCESS ) : TRC_FAIL )
 
 /**
  * @brief Unregister trace task from trace.
@@ -88,7 +88,8 @@ traceResult xTraceTaskInitialize(TraceTaskInfoBuffer_t* pxBuffer);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskUnregister(TraceTaskHandle_t xTaskHandle, TraceUnsignedBaseType_t uxPriority);
+            traceResult xTraceTaskUnregister( TraceTaskHandle_t xTaskHandle,
+                                              TraceUnsignedBaseType_t uxPriority );
 
 /**
  * @brief Sets trace task name.
@@ -99,7 +100,7 @@ traceResult xTraceTaskUnregister(TraceTaskHandle_t xTaskHandle, TraceUnsignedBas
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskSetName xTraceObjectSetName
+            #define xTraceTaskSetName    xTraceObjectSetName
 
 /**
  * @brief Sets trace task priority.
@@ -110,7 +111,8 @@ traceResult xTraceTaskUnregister(TraceTaskHandle_t xTaskHandle, TraceUnsignedBas
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBaseType_t uxPriority);
+            traceResult xTraceTaskSetPriority( TraceTaskHandle_t xTaskHandle,
+                                               TraceUnsignedBaseType_t uxPriority );
 
 /**
  * @brief Registers trace task without trace task handle.
@@ -122,7 +124,7 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskRegisterWithoutHandle(pvTask, szName, uxPriority) ((((pvTask) != 0) && (xTraceObjectRegisterWithoutHandle(PSF_EVENT_TASK_CREATE, pvTask, szName, uxPriority) == TRC_SUCCESS)) ? (xTraceStackMonitorAdd(pvTask), TRC_SUCCESS) : TRC_FAIL)
+            #define xTraceTaskRegisterWithoutHandle( pvTask, szName, uxPriority )    ( ( ( ( pvTask ) != 0 ) && ( xTraceObjectRegisterWithoutHandle( PSF_EVENT_TASK_CREATE, pvTask, szName, uxPriority ) == TRC_SUCCESS ) ) ? ( xTraceStackMonitorAdd( pvTask ), TRC_SUCCESS ) : TRC_FAIL )
 
 /**
  * @brief Unregisters trace task without trace task handle.
@@ -133,7 +135,7 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskUnregisterWithoutHandle(pvTask, uxPriority) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2(xTraceStackMonitorRemove(pvTask), xTraceObjectUnregisterWithoutHandle(PSF_EVENT_TASK_DELETE, pvTask, uxPriority))
+            #define xTraceTaskUnregisterWithoutHandle( pvTask, uxPriority )          TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( xTraceStackMonitorRemove( pvTask ), xTraceObjectUnregisterWithoutHandle( PSF_EVENT_TASK_DELETE, pvTask, uxPriority ) )
 
 /**
  * @brief Sets trace task name without trace task handle.
@@ -144,7 +146,7 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskSetNameWithoutHandle xTraceObjectSetNameWithoutHandle
+            #define xTraceTaskSetNameWithoutHandle    xTraceObjectSetNameWithoutHandle
 
 /**
  * @brief Sets trace task priority without trace task handle.
@@ -155,7 +157,8 @@ traceResult xTraceTaskSetPriority(TraceTaskHandle_t xTaskHandle, TraceUnsignedBa
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskSetPriorityWithoutHandle(void* pvTask, TraceUnsignedBaseType_t uxPriority);
+            traceResult xTraceTaskSetPriorityWithoutHandle( void * pvTask,
+                                                            TraceUnsignedBaseType_t uxPriority );
 
 /**
  * @brief Registers trace task switch event.
@@ -166,9 +169,11 @@ traceResult xTraceTaskSetPriorityWithoutHandle(void* pvTask, TraceUnsignedBaseTy
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskSwitch(void* pvTask, TraceUnsignedBaseType_t uxPriority);
+            traceResult xTraceTaskSwitch( void * pvTask,
+                                          TraceUnsignedBaseType_t uxPriority );
 
-#if (TRC_CFG_INCLUDE_READY_EVENTS == 1)
+            #if ( TRC_CFG_INCLUDE_READY_EVENTS == 1 )
+
 /**
  * @brief Registers trace task ready event.
  *
@@ -177,10 +182,10 @@ traceResult xTraceTaskSwitch(void* pvTask, TraceUnsignedBaseType_t uxPriority);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskReady(void* pvTask);
-#else
-#define xTraceTaskReady(p) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2((void)p, TRC_SUCCESS)
-#endif
+                traceResult xTraceTaskReady( void * pvTask );
+            #else
+                #define xTraceTaskReady( p )    TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( ( void ) p, TRC_SUCCESS )
+            #endif
 
 /**
  * @brief Sets current trace task.
@@ -190,7 +195,7 @@ traceResult xTraceTaskReady(void* pvTask);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskSetCurrent(pvTask) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2(pxTraceTaskInfo->coreTasks[TRC_CFG_GET_CURRENT_CORE()] = (pvTask), TRC_SUCCESS)
+            #define xTraceTaskSetCurrent( pvTask )     TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( pxTraceTaskInfo->coreTasks[ TRC_CFG_GET_CURRENT_CORE() ] = ( pvTask ), TRC_SUCCESS )
 
 /**
  * @brief Gets current trace task.
@@ -200,7 +205,7 @@ traceResult xTraceTaskReady(void* pvTask);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-#define xTraceTaskGetCurrent(ppvTask) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2(*(ppvTask) = pxTraceTaskInfo->coreTasks[TRC_CFG_GET_CURRENT_CORE()], TRC_SUCCESS)
+            #define xTraceTaskGetCurrent( ppvTask )    TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( *( ppvTask ) = pxTraceTaskInfo->coreTasks[ TRC_CFG_GET_CURRENT_CORE() ], TRC_SUCCESS )
 
 /**
  * @brief Registers trace task instance finished event.
@@ -213,7 +218,7 @@ traceResult xTraceTaskReady(void* pvTask);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskInstanceFinishedNow(void);
+            traceResult xTraceTaskInstanceFinishedNow( void );
 
 /**
  * @brief Marks the current trace task instance as finished on the next
@@ -228,16 +233,16 @@ traceResult xTraceTaskInstanceFinishedNow(void);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceTaskInstanceFinishedNext(void);
+            traceResult xTraceTaskInstanceFinishedNext( void );
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_TASK_H */

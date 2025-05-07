@@ -429,6 +429,7 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
 
     /* Set Maximum Fragment Length if enabled. */
     #ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
+
         /* Enable the max fragment extension. 4096 bytes is currently the largest fragment size permitted.
          * See RFC 8449 https://tools.ietf.org/html/rfc8449 for more information.
          *
@@ -701,7 +702,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         {
             sslContextFree( &( pTlsTransportParams->sslContext ) );
 
-            TCP_Sockets_Disconnect(pTlsTransportParams->tcpSocket);
+            TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
         }
     }
     else

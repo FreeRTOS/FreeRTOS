@@ -1,36 +1,36 @@
 /*
-* Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*
+ * Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
  * The configuration for trace streaming ("stream ports").
-*/
+ */
 
 #ifndef TRC_STREAM_PORT_CONFIG_H
-#define TRC_STREAM_PORT_CONFIG_H
+    #define TRC_STREAM_PORT_CONFIG_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <trcTypes.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /* Type flags */
-#define TRC_STREAM_PORT_RINGBUFFER_MODE_STOP_WHEN_FULL		(0U)
-#define TRC_STREAM_PORT_RINGBUFFER_MODE_OVERWRITE_WHEN_FULL	(1U)
+            #define TRC_STREAM_PORT_RINGBUFFER_MODE_STOP_WHEN_FULL         ( 0U )
+            #define TRC_STREAM_PORT_RINGBUFFER_MODE_OVERWRITE_WHEN_FULL    ( 1U )
 
 /**
  * @def TRC_CFG_STREAM_PORT_BUFFER_SIZE
  *
  * @brief Defines the size of the ring buffer use for storing trace events.
  */
-#define TRC_CFG_STREAM_PORT_BUFFER_SIZE 10000
+            #define TRC_CFG_STREAM_PORT_BUFFER_SIZE                        10000
 
 /**
  * @def TRC_CFG_STREAM_PORT_BUFFER_MODE
@@ -47,14 +47,14 @@ extern "C" {
  * recording is stopped when the buffer becomes full. This is useful for
  * recording events following a specific state, e.g., the startup sequence.
  */
-#define TRC_CFG_STREAM_PORT_RINGBUFFER_MODE TRC_STREAM_PORT_RINGBUFFER_MODE_OVERWRITE_WHEN_FULL
+            #define TRC_CFG_STREAM_PORT_RINGBUFFER_MODE                    TRC_STREAM_PORT_RINGBUFFER_MODE_OVERWRITE_WHEN_FULL
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
+        #endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
 
-#endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
+    #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
 
 #endif /* TRC_STREAM_PORT_CONFIG_H */

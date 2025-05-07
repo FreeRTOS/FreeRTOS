@@ -10,34 +10,34 @@
  */
 
 #ifndef TRC_STREAMING_PORT_H
-#define TRC_STREAMING_PORT_H
+    #define TRC_STREAMING_PORT_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
-#include <trcTypes.h>
-#include <trcStreamPortConfig.h>
+            #include <trcTypes.h>
+            #include <trcStreamPortConfig.h>
 
-#define TRC_USE_INTERNAL_BUFFER (TRC_CFG_STREAM_PORT_USE_INTERNAL_BUFFER)
+            #define TRC_USE_INTERNAL_BUFFER                 ( TRC_CFG_STREAM_PORT_USE_INTERNAL_BUFFER )
 
 /* Aligned */
-#define TRC_STREAM_PORT_INTERNAL_BUFFER_SIZE ((((TRC_CFG_STREAM_PORT_INTERNAL_BUFFER_SIZE) + sizeof(TraceUnsignedBaseType_t) - 1) / sizeof(TraceUnsignedBaseType_t)) * sizeof(TraceUnsignedBaseType_t))
+            #define TRC_STREAM_PORT_INTERNAL_BUFFER_SIZE    ( ( ( ( TRC_CFG_STREAM_PORT_INTERNAL_BUFFER_SIZE ) + sizeof( TraceUnsignedBaseType_t ) - 1 ) / sizeof( TraceUnsignedBaseType_t ) ) * sizeof( TraceUnsignedBaseType_t ) )
 
 /**
  * @brief A structure representing the trace stream port buffer.
  */
-typedef struct TraceStreamPortBuffer
-{
-#if (TRC_USE_INTERNAL_BUFFER == 1)
-	uint8_t uiBufferInternal[TRC_STREAM_PORT_INTERNAL_BUFFER_SIZE];
-#endif
-	uint8_t uiBuffer[4];
-} TraceStreamPortBuffer_t;
+            typedef struct TraceStreamPortBuffer
+            {
+                #if ( TRC_USE_INTERNAL_BUFFER == 1 )
+                    uint8_t uiBufferInternal[ TRC_STREAM_PORT_INTERNAL_BUFFER_SIZE ];
+                #endif
+                uint8_t uiBuffer[ 4 ];
+            } TraceStreamPortBuffer_t;
 
 /**
  * @internal Stream port initialize callback.
@@ -48,7 +48,7 @@ typedef struct TraceStreamPortBuffer
  * @retval TRC_FAIL Initialization failed
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
+            traceResult xTraceStreamPortInitialize( TraceStreamPortBuffer_t * pxBuffer );
 
 /**
  * @brief Stream port begin callback.
@@ -58,7 +58,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortOnBegin(void);
+            traceResult xTraceStreamPortOnBegin( void );
 
 /**
  * @brief Stream port end callback.
@@ -68,7 +68,7 @@ traceResult xTraceStreamPortOnBegin(void);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortOnEnd(void);
+            traceResult xTraceStreamPortOnEnd( void );
 
 /**
  * @brief Allocates data from the stream port.
@@ -79,7 +79,8 @@ traceResult xTraceStreamPortOnEnd(void);
  * @retval TRC_FAIL Allocate failed
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortAllocate(uint32_t uiSize, void** ppvData);
+            traceResult xTraceStreamPortAllocate( uint32_t uiSize,
+                                                  void ** ppvData );
 
 /**
  * @brief Commits data to the stream port, depending on the implementation/configuration of the
@@ -93,7 +94,9 @@ traceResult xTraceStreamPortAllocate(uint32_t uiSize, void** ppvData);
  * @retval TRC_FAIL Commit failed
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortCommit(void* pvData, uint32_t uiSize, int32_t* piBytesCommitted);
+            traceResult xTraceStreamPortCommit( void * pvData,
+                                                uint32_t uiSize,
+                                                int32_t * piBytesCommitted );
 
 /**
  * @brief Writes data through the stream port interface.
@@ -105,7 +108,9 @@ traceResult xTraceStreamPortCommit(void* pvData, uint32_t uiSize, int32_t* piByt
  * @retval TRC_FAIL Write failed
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortWriteData(void* pvData, uint32_t uiSize, int32_t* piBytesWritten);
+            traceResult xTraceStreamPortWriteData( void * pvData,
+                                                   uint32_t uiSize,
+                                                   int32_t * piBytesWritten );
 
 /**
  * @brief Reads data through the stream port interface.
@@ -117,14 +122,16 @@ traceResult xTraceStreamPortWriteData(void* pvData, uint32_t uiSize, int32_t* pi
  * @retval TRC_FAIL Read failed
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceStreamPortReadData(void* pvData, uint32_t uiSize, int32_t* piBytesRead);
+            traceResult xTraceStreamPortReadData( void * pvData,
+                                                  uint32_t uiSize,
+                                                  int32_t * piBytesRead );
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
+        #endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
 
-#endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
+    #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
 
 #endif /* TRC_STREAMING_PORT_H */

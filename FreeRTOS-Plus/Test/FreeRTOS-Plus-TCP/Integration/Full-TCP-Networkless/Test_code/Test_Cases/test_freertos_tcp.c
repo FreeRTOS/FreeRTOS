@@ -348,12 +348,12 @@ TEST( Full_FREERTOS_TCP, UDPPacketLength )
      * checking for NULL pucEthernetBuffer. Also, the
      * next tests do not run and this whole test case
      * is scrapped.
-
-    xNetworkBuffer.pucEthernetBuffer = NULL;
-    xNetworkBuffer.xDataLength = 0;
-
-    xReturn = xProcessReceivedUDPPacket( &xNetworkBuffer, usPort );
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE( pdFAIL, xReturn, "Failed to parse 0 size packet" );
+     *
+     * xNetworkBuffer.pucEthernetBuffer = NULL;
+     * xNetworkBuffer.xDataLength = 0;
+     *
+     * xReturn = xProcessReceivedUDPPacket( &xNetworkBuffer, usPort );
+     * TEST_ASSERT_EQUAL_UINT32_MESSAGE( pdFAIL, xReturn, "Failed to parse 0 size packet" );
      */
 
 

@@ -321,7 +321,7 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
         {
             /* Print out the list of network interfaces.  The first in the list
              * is interface '1', not interface '0'. */
-            for(xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next)
+            for( xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next )
             {
                 /* The descriptions of the devices can be full of spaces, clean them
                  * a little.  printf() can only be used here because the network is not
@@ -416,7 +416,7 @@ static void prvOpenSelectedNetworkInterface( pcap_if_t * pxAllNetworkInterfaces 
     /* Walk the list of devices until the selected device is located. */
     pxInterface = pxAllNetworkInterfaces;
 
-    for(x = 0L; x < ( xConfigNetworkInterfaceToUse - 1L ); x++)
+    for( x = 0L; x < ( xConfigNetworkInterfaceToUse - 1L ); x++ )
     {
         pxInterface = pxInterface->next;
     }
@@ -676,9 +676,9 @@ static void prvInterruptSimulatorTask( void * pvParameters )
                         pxNetworkBuffer->xDataLength = ( size_t ) pxHeader->len;
 
                         #if ( niDISRUPT_PACKETS == 1 )
-                            {
-                                pxNetworkBuffer = vRxFaultInjection( pxNetworkBuffer, pucPacketData );
-                            }
+                        {
+                            pxNetworkBuffer = vRxFaultInjection( pxNetworkBuffer, pucPacketData );
+                        }
                         #endif /* niDISRUPT_PACKETS */
 
                         if( pxNetworkBuffer != NULL )
@@ -778,7 +778,7 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
     }
     else
     {
-        for(uxIndex = 0; uxIndex < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; uxIndex++)
+        for( uxIndex = 0; uxIndex < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; uxIndex++ )
         {
             size_t uxOffset = uxIndex * BUFFER_SIZE_ROUNDED_UP;
             NetworkBufferDescriptor_t ** ppDescriptor;

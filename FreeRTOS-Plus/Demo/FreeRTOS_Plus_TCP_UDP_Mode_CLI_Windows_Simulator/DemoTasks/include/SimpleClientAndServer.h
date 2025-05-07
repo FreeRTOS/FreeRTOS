@@ -27,6 +27,8 @@
 #ifndef SIMPLE_CLIENT_AND_SERVER_H
 #define SIMPLE_CLIENT_AND_SERVER_H
 
-void vStartSimpleUDPClientServerTasks( uint16_t usStackSize, uint32_t ulsPort, unsigned portBASE_TYPE uxPriority );
+void vStartSimpleUDPClientServerTasks( uint16_t usStackSize,
+                                       uint32_t ulsPort,
+                                       unsigned portBASE_TYPE uxPriority );
 
 #endif /* SIMPLE_CLIENT_AND_SERVER_H */

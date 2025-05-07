@@ -94,64 +94,70 @@
 
 #include <trcRecorder.h>
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+#if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
+    #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <aws_secure_sockets.h>
+        #include <aws_secure_sockets.h>
 
-SocketsSockaddr_t addr = {sizeof(SocketsSockaddr_t), SOCKETS_AF_INET, 0, 0};
+        SocketsSockaddr_t addr = { sizeof( SocketsSockaddr_t ), SOCKETS_AF_INET, 0, 0 };
 
-#define IPv4(a,b,c,d) (uint32_t)((d << 24) + (c << 16) + (b << 8) + a)
+        #define IPv4( a, b, c, d )    ( uint32_t ) ( ( d << 24 ) + ( c << 16 ) + ( b << 8 ) + a )
 
-Socket_t sock = 0;
+        Socket_t sock = 0;
 
-void prvInitSocket(void)
-{
-	int32_t status;
+        void prvInitSocket( void )
+        {
+            int32_t status;
 
-	SOCKETS_Init();
+            SOCKETS_Init();
 
-	sock = SOCKETS_Socket(SOCKETS_AF_INET, SOCKETS_SOCK_STREAM, SOCKETS_IPPROTO_TCP);
+            sock = SOCKETS_Socket( SOCKETS_AF_INET, SOCKETS_SOCK_STREAM, SOCKETS_IPPROTO_TCP );
 
-	configPRINTF( ( "Connecting to %d.%d.%d.%d, port %d\r\n", HOST_IPADDRESS_0, HOST_IPADDRESS_1, HOST_IPADDRESS_2, HOST_IPADDRESS_3, HOST_PORT) );
+            configPRINTF( ( "Connecting to %d.%d.%d.%d, port %d\r\n", HOST_IPADDRESS_0, HOST_IPADDRESS_1, HOST_IPADDRESS_2, HOST_IPADDRESS_3, HOST_PORT ) );
 
-	addr.ulAddress = IPv4(HOST_IPADDRESS_0, HOST_IPADDRESS_1, HOST_IPADDRESS_2, HOST_IPADDRESS_3);
-	addr.usPort =  SOCKETS_htons(HOST_PORT);
+            addr.ulAddress = IPv4( HOST_IPADDRESS_0, HOST_IPADDRESS_1, HOST_IPADDRESS_2, HOST_IPADDRESS_3 );
+            addr.usPort = SOCKETS_htons( HOST_PORT );
 
-	status = SOCKETS_Connect(sock, &addr, sizeof( SocketsSockaddr_t ) );
+            status = SOCKETS_Connect( sock, &addr, sizeof( SocketsSockaddr_t ) );
 
-	if (status != SOCKETS_ERROR_NONE)
-	{
-		//prvTraceError(PSF_ERROR_STREAM_PORT_FAIL);
-		configPRINTF( ( "Failed to connect, status: %d\r\n", status) );
-	}
-	else
-	{
-		configPRINTF( ( "Connected.\r\n") );
-	}
-}
+            if( status != SOCKETS_ERROR_NONE )
+            {
+                /*prvTraceError(PSF_ERROR_STREAM_PORT_FAIL); */
+                configPRINTF( ( "Failed to connect, status: %d\r\n", status ) );
+            }
+            else
+            {
+                configPRINTF( ( "Connected.\r\n" ) );
+            }
+        }
 
 
-int32_t prvWriteToSocket(void* ptrData, uint32_t size, int32_t* ptrBytesWritten)
-{
-	uint32_t bytesWritten = SOCKETS_Send(sock, ptrData, size, 0);
+        int32_t prvWriteToSocket( void * ptrData,
+                                  uint32_t size,
+                                  int32_t * ptrBytesWritten )
+        {
+            uint32_t bytesWritten = SOCKETS_Send( sock, ptrData, size, 0 );
 
-	if (ptrBytesWritten != 0)
-		*ptrBytesWritten = (int32_t)bytesWritten;
+            if( ptrBytesWritten != 0 )
+            {
+                *ptrBytesWritten = ( int32_t ) bytesWritten;
+            }
 
-	if (bytesWritten != size)
-	{
-		return -1;
-	}
+            if( bytesWritten != size )
+            {
+                return -1;
+            }
 
-	return 0;
-}
+            return 0;
+        }
 
-int32_t prvReadFromSocket(void* ptrData, uint32_t size, int32_t* ptrBytesRead)
-{
-	// Not yet implemented, since not necessary.
-	return 0;
-}
+        int32_t prvReadFromSocket( void * ptrData,
+                                   uint32_t size,
+                                   int32_t * ptrBytesRead )
+        {
+            /* Not yet implemented, since not necessary. */
+            return 0;
+        }
 
-#endif
-#endif
+    #endif /* if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING ) */
+#endif /* if ( TRC_USE_TRACEALYZER_RECORDER == 1 ) */

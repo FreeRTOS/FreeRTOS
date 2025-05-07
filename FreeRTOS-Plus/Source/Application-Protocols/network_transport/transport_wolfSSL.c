@@ -143,7 +143,7 @@ static int wolfSSL_IORecvGlue( WOLFSSL * ssl,
     read = TCP_Sockets_Recv( xSocket, ( void * ) buf, ( size_t ) sz );
 
     if( ( read == 0 ) ||
-        ( read == -TCP_SOCKETS_ERRNO_EWOULDBLOCK) )
+        ( read == -TCP_SOCKETS_ERRNO_EWOULDBLOCK ) )
     {
         read = WOLFSSL_CBIO_ERR_WANT_READ;
     }
@@ -169,7 +169,7 @@ static int wolfSSL_IOSendGlue( WOLFSSL * ssl,
     Socket_t xSocket = ( Socket_t ) context;
     BaseType_t sent = TCP_Sockets_Send( xSocket, ( void * ) buf, ( size_t ) sz );
 
-    if( sent == -TCP_SOCKETS_ERRNO_EWOULDBLOCK)
+    if( sent == -TCP_SOCKETS_ERRNO_EWOULDBLOCK )
     {
         sent = WOLFSSL_CBIO_ERR_WANT_WRITE;
     }
@@ -403,10 +403,10 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         socketStatus = TCP_Sockets_Connect( &( pNetworkContext->tcpSocket ),
-                                        pHostName,
-                                        port,
-                                        receiveTimeoutMs,
-                                        sendTimeoutMs );
+                                            pHostName,
+                                            port,
+                                            receiveTimeoutMs,
+                                            sendTimeoutMs );
 
         if( socketStatus != 0 )
         {

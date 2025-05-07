@@ -10,11 +10,11 @@
  */
 
 #ifndef TRC_STREAMING_CONFIG_H
-#define TRC_STREAMING_CONFIG_H
+    #define TRC_STREAMING_CONFIG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 /**
  * @def TRC_CFG_ENTRY_SLOTS
@@ -28,7 +28,7 @@ extern "C" {
  * trace display will be affected. In that case, there will be warnings
  * (as User Events) from TzCtrl task, that monitors this.
  */
-#define TRC_CFG_ENTRY_SLOTS 50
+    #define TRC_CFG_ENTRY_SLOTS                50
 
 /**
  * @def TRC_CFG_ENTRY_SYMBOL_MAX_LENGTH
@@ -42,10 +42,10 @@ extern "C" {
  * which will affect the trace display. In that case, there will be warnings
  * (as User Events) from TzCtrl task, that monitors this.
  */
-#define TRC_CFG_ENTRY_SYMBOL_MAX_LENGTH 32
+    #define TRC_CFG_ENTRY_SYMBOL_MAX_LENGTH    32
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* TRC_STREAMING_CONFIG_H */

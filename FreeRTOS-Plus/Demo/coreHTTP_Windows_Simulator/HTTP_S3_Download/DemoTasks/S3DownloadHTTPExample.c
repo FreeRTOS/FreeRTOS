@@ -1492,7 +1492,7 @@ static void prvSha256Encode( const char * pcInputStr,
         mbedtls_sha256( pcInputStr, xInputStrLen, ucSha256, 0 );
     #endif
 
-    for(size_t i = 0; i < SHA256_HASH_DIGEST_LENGTH; i++ )
+    for( size_t i = 0; i < SHA256_HASH_DIGEST_LENGTH; i++ )
     {
         *pcOutputChar = cHexChars[ ( ucSha256[ i ] & 0xF0 ) >> 4 ];
         pcOutputChar++;

@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,17 +13,17 @@
  */
 
 #ifndef TRC_EVENT_BUFFER_H
-#define TRC_EVENT_BUFFER_H
+    #define TRC_EVENT_BUFFER_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <trcTypes.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_event_buffer_apis Trace Event Buffer APIs
@@ -35,28 +35,28 @@ extern "C" {
  * @def TRC_EVENT_BUFFER_OPTION_SKIP
  * @brief Buffer should skip new events when full
  */
-#define TRC_EVENT_BUFFER_OPTION_SKIP		(0U)
+            #define TRC_EVENT_BUFFER_OPTION_SKIP         ( 0U )
 
 /**
  * @def TRC_EVENT_BUFFER_OPTION_OVERWRITE
  * @brief Buffer should overwrite old events when full
  */
-#define TRC_EVENT_BUFFER_OPTION_OVERWRITE	(1U)
+            #define TRC_EVENT_BUFFER_OPTION_OVERWRITE    ( 1U )
 
 /**
  * @brief Trace Event Buffer Structure
  */
-typedef struct TraceEventBuffer
-{
-	uint32_t uiHead;				/**< Head index of buffer */
-	uint32_t uiTail;				/**< Tail index of buffer */
-	uint32_t uiSize;				/**< Buffer size */
-	uint32_t uiOptions;				/**< Options (skip/overwrite when full) */
-	uint32_t uiDroppedEvents;		/**< Nr of dropped events */
-	uint32_t uiFree;				/**< Nr of free bytes */
-	uint32_t uiTimerWraparounds;	/**< Nr of timer wraparounds */
-	uint8_t* puiBuffer;				/**< Trace Event Buffer: may be NULL */
-} TraceEventBuffer_t;
+            typedef struct TraceEventBuffer
+            {
+                uint32_t uiHead;             /**< Head index of buffer */
+                uint32_t uiTail;             /**< Tail index of buffer */
+                uint32_t uiSize;             /**< Buffer size */
+                uint32_t uiOptions;          /**< Options (skip/overwrite when full) */
+                uint32_t uiDroppedEvents;    /**< Nr of dropped events */
+                uint32_t uiFree;             /**< Nr of free bytes */
+                uint32_t uiTimerWraparounds; /**< Nr of timer wraparounds */
+                uint8_t * puiBuffer;         /**< Trace Event Buffer: may be NULL */
+            } TraceEventBuffer_t;
 
 /**
  * @internal Initialize trace event buffer.
@@ -76,8 +76,10 @@ typedef struct TraceEventBuffer
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceEventBufferInitialize(TraceEventBuffer_t * pxTraceEventBuffer, uint32_t uiOptions,
-		uint8_t *puiBuffer, uint32_t uiSize);
+            traceResult xTraceEventBufferInitialize( TraceEventBuffer_t * pxTraceEventBuffer,
+                                                     uint32_t uiOptions,
+                                                     uint8_t * puiBuffer,
+                                                     uint32_t uiSize );
 
 /**
  * @brief Pushes data into trace event buffer.
@@ -92,7 +94,10 @@ traceResult xTraceEventBufferInitialize(TraceEventBuffer_t * pxTraceEventBuffer,
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceEventBufferPush(TraceEventBuffer_t *pxTraceEventBuffer, void *pxData, uint32_t uiSize, int32_t *piBytesWritten);
+            traceResult xTraceEventBufferPush( TraceEventBuffer_t * pxTraceEventBuffer,
+                                               void * pxData,
+                                               uint32_t uiSize,
+                                               int32_t * piBytesWritten );
 
 /**
  * @brief Transfer trace event buffer data through streamport.
@@ -107,7 +112,8 @@ traceResult xTraceEventBufferPush(TraceEventBuffer_t *pxTraceEventBuffer, void *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceEventBufferTransfer(TraceEventBuffer_t* pxTraceEventBuffer, int32_t* piBytesWritten);
+            traceResult xTraceEventBufferTransfer( TraceEventBuffer_t * pxTraceEventBuffer,
+                                                   int32_t * piBytesWritten );
 
 /**
  * @brief Clears all data from event buffer.
@@ -117,16 +123,16 @@ traceResult xTraceEventBufferTransfer(TraceEventBuffer_t* pxTraceEventBuffer, in
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceEventBufferClear(TraceEventBuffer_t* pxTraceEventBuffer);
+            traceResult xTraceEventBufferClear( TraceEventBuffer_t * pxTraceEventBuffer );
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_EVENT_BUFFER_H */

@@ -44,24 +44,24 @@
 #include "user_settings.h"
 
 /* UDP command server task parameters. */
-#define mainUDP_CLI_TASK_PRIORITY					( tskIDLE_PRIORITY )
-#define mainUDP_CLI_PORT_NUMBER						( 5001UL )
-#define mainUDP_CLI_TASK_STACK_SIZE					( configMINIMAL_STACK_SIZE )
+#define mainUDP_CLI_TASK_PRIORITY                    ( tskIDLE_PRIORITY )
+#define mainUDP_CLI_PORT_NUMBER                      ( 5001UL )
+#define mainUDP_CLI_TASK_STACK_SIZE                  ( configMINIMAL_STACK_SIZE )
 
 /* Simple UDP client and server task parameters. */
-#define mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY		( tskIDLE_PRIORITY )
-#define mainSIMPLE_CLIENT_SERVER_PORT				( 5005UL )
-#define mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE	( configMINIMAL_STACK_SIZE )
+#define mainSIMPLE_CLIENT_SERVER_TASK_PRIORITY       ( tskIDLE_PRIORITY )
+#define mainSIMPLE_CLIENT_SERVER_PORT                ( 5005UL )
+#define mainSIMPLE_CLIENT_SERVER_TASK_STACK_SIZE     ( configMINIMAL_STACK_SIZE )
 
 /* Echo client task parameters. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE 			( configMINIMAL_STACK_SIZE * 2 )
-#define mainECHO_CLIENT_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainECHO_CLIENT_TASK_STACK_SIZE              ( configMINIMAL_STACK_SIZE * 2 )
+#define mainECHO_CLIENT_TASK_PRIORITY                ( tskIDLE_PRIORITY + 1 )
 
 /* Set the following constants to 1 or 0 to define which tasks to include and
-exclude. */
-#define mainCREATE_UDP_CLI_TASKS					1
-#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS	0
-#define mainCREATE_UDP_ECHO_TASKS					1
+ * exclude. */
+#define mainCREATE_UDP_CLI_TASKS                     1
+#define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS    0
+#define mainCREATE_UDP_ECHO_TASKS                    1
 
 /*-----------------------------------------------------------*/
 
@@ -72,19 +72,19 @@ exclude. */
 extern void vRegisterCLICommands( void );
 
 /* The default IP and MAC address used by the demo.  The address configuration
-defined here will be used if ipconfigUSE_DHCP is 0, or if ipconfigUSE_DHCP is
-1 but a DHCP server could not be contacted.  See the online documentation for
-more information. */
+ * defined here will be used if ipconfigUSE_DHCP is 0, or if ipconfigUSE_DHCP is
+ * 1 but a DHCP server could not be contacted.  See the online documentation for
+ * more information. */
 static const uint8_t ucIPAddress[ 4 ] = { configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 };
 static const uint8_t ucNetMask[ 4 ] = { configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 };
 static const uint8_t ucGatewayAddress[ 4 ] = { configGATEWAY_ADDR0, configGATEWAY_ADDR1, configGATEWAY_ADDR2, configGATEWAY_ADDR3 };
 static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configDNS_SERVER_ADDR1, configDNS_SERVER_ADDR2, configDNS_SERVER_ADDR3 };
 
 /* Default MAC address configuration.  The demo creates a virtual network
-connection that uses this MAC address by accessing the raw Ethernet data
-to and from a real network connection on the host PC.  See the
-configNETWORK_INTERFACE_TO_USE definition for information on how to configure
-the real network connection to use. */
+ * connection that uses this MAC address by accessing the raw Ethernet data
+ * to and from a real network connection on the host PC.  See the
+ * configNETWORK_INTERFACE_TO_USE definition for information on how to configure
+ * the real network connection to use. */
 const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
 /* Used to guard prints to the console. */
@@ -102,124 +102,129 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
 /*-----------------------------------------------------------*/
 
 /* Define a name that will be used for LLMNR and NBNS searches. */
-#define mainHOST_NAME                                 "RTOSDemo"
-#define mainDEVICE_NICK_NAME                          "windows_demo"
+#define mainHOST_NAME           "RTOSDemo"
+#define mainDEVICE_NICK_NAME    "windows_demo"
 
 /* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
 /******************************************************************************
- *
- * See the following web page for information on using this demo.
- * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/RTOS_UDP_CLI_Windows_Simulator.shtml
- *
- ******************************************************************************/
+*
+* See the following web page for information on using this demo.
+* https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/RTOS_UDP_CLI_Windows_Simulator.shtml
+*
+******************************************************************************/
 
 
 int main( void )
 {
-const uint32_t ulLongTime_ms = 250UL;
+    const uint32_t ulLongTime_ms = 250UL;
 
-	/* Create a mutex that is used to guard against the console being accessed
-	by more than one task simultaniously. */
-	xConsoleMutex = xSemaphoreCreateMutex();
+    /* Create a mutex that is used to guard against the console being accessed
+     * by more than one task simultaniously. */
+    xConsoleMutex = xSemaphoreCreateMutex();
 
-	/* Initialise the network interface.  Tasks that use the network are
-	created in the network event hook when the network is connected and ready
-	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
-	set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
-	contacted. */
-	FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+    /* Initialise the network interface.  Tasks that use the network are
+     * created in the network event hook when the network is connected and ready
+     * for use.  The address values passed in here are used if ipconfigUSE_DHCP is
+     * set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
+     * contacted. */
+    FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 
-	/* Initialise the logging. */
-	uint32_t ulLoggingIPAddress;
+    /* Initialise the logging. */
+    uint32_t ulLoggingIPAddress;
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-		                                           configECHO_SERVER_ADDR1,
-		                                           configECHO_SERVER_ADDR2,
-		                                           configECHO_SERVER_ADDR3 );
+                                                   configECHO_SERVER_ADDR1,
+                                                   configECHO_SERVER_ADDR2,
+                                                   configECHO_SERVER_ADDR3 );
     vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
 
 
-	/* Register commands with the FreeRTOS+CLI command interpreter. */
-	vRegisterCLICommands();
+    /* Register commands with the FreeRTOS+CLI command interpreter. */
+    vRegisterCLICommands();
 
-	/* Start the RTOS scheduler. */
-	vTaskStartScheduler();
+    /* Start the RTOS scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the idle and/or
-	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not not
-	really applicable to the Win32 simulator port). */
-	for( ;; )
-	{
-		Sleep( ulLongTime_ms );
-	}
+    /* If all is well, the scheduler will now be running, and the following
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the idle and/or
+     * timer tasks	to be created.  See the memory management section on the
+     * FreeRTOS web site for more details (this is standard text that is not not
+     * really applicable to the Win32 simulator port). */
+    for( ; ; )
+    {
+        Sleep( ulLongTime_ms );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-const unsigned long ulMSToSleep = 5;
+    const unsigned long ulMSToSleep = 5;
 
-	/* This function is called on each cycle of the idle task if
-	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
-	load. */
-	Sleep( ulMSToSleep );
+    /* This function is called on each cycle of the idle task if
+     * configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
+     * load. */
+    Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
 
 /* Called automatically when a reply to an outgoing ping is received. */
-void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier )
+void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
+                                uint16_t usIdentifier )
 {
-static const uint8_t *pcSuccess = ( uint8_t * ) "Ping reply received - ";
-static const uint8_t *pcInvalidChecksum = ( uint8_t * ) "Ping reply received with invalid checksum - ";
-static const uint8_t *pcInvalidData = ( uint8_t * ) "Ping reply received with invalid data - ";
-static uint8_t cMessage[ 50 ];
+    static const uint8_t * pcSuccess = ( uint8_t * ) "Ping reply received - ";
+    static const uint8_t * pcInvalidChecksum = ( uint8_t * ) "Ping reply received with invalid checksum - ";
+    static const uint8_t * pcInvalidData = ( uint8_t * ) "Ping reply received with invalid data - ";
+    static uint8_t cMessage[ 50 ];
 
 
-	switch( eStatus )
-	{
-		case eSuccess	:
-			FreeRTOS_debug_printf( ( ( char * ) pcSuccess ) );
-			break;
+    switch( eStatus )
+    {
+        case eSuccess:
+            FreeRTOS_debug_printf( ( ( char * ) pcSuccess ) );
+            break;
 
-		case eInvalidChecksum :
-			FreeRTOS_debug_printf( ( ( char * ) pcInvalidChecksum ) );
-			break;
+        case eInvalidChecksum:
+            FreeRTOS_debug_printf( ( ( char * ) pcInvalidChecksum ) );
+            break;
 
-		case eInvalidData :
-			FreeRTOS_debug_printf( ( ( char * ) pcInvalidData ) );
-			break;
+        case eInvalidData:
+            FreeRTOS_debug_printf( ( ( char * ) pcInvalidData ) );
+            break;
 
-		default :
-			/* It is not possible to get here as all enums have their own
-			case. */
-			break;
-	}
+        default:
 
-	sprintf( ( char * ) cMessage, "identifier %d\r\n", ( int ) usIdentifier );
-	FreeRTOS_debug_printf( ( ( char * ) cMessage ) );
+            /* It is not possible to get here as all enums have their own
+             * case. */
+            break;
+    }
+
+    sprintf( ( char * ) cMessage, "identifier %d\r\n", ( int ) usIdentifier );
+    FreeRTOS_debug_printf( ( ( char * ) cMessage ) );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the
-	size of the heap available to pvPortMalloc() is defined by
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
-	API function can be used to query the size of free heap space that remains
-	(although it does not provide information on how the remaining heap might
-	be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+     * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+     * function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+     * timer or semaphore is created.  It is also called by various parts of the
+     * demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the
+     * size of the heap available to pvPortMalloc() is defined by
+     * configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+     * API function can be used to query the size of free heap space that remains
+     * (although it does not provide information on how the remaining heap might
+     * be fragmented). */
+    taskDISABLE_INTERRUPTS();
+
+    for( ; ; )
+    {
+    }
 }
 /*-----------------------------------------------------------*/
 

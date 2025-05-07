@@ -93,35 +93,39 @@
  */
 
 #ifndef TRC_STREAM_PORT_H
-#define TRC_STREAM_PORT_H
+    #define TRC_STREAM_PORT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
 
-#define HOST_IPADDRESS_0 192
-#define HOST_IPADDRESS_1 168
-#define HOST_IPADDRESS_2 10
-#define HOST_IPADDRESS_3 116
-#define HOST_PORT 12000
+    #define HOST_IPADDRESS_0    192
+    #define HOST_IPADDRESS_1    168
+    #define HOST_IPADDRESS_2    10
+    #define HOST_IPADDRESS_3    116
+    #define HOST_PORT           12000
 
-void prvInitSocket(void);
-int32_t prvReadFromSocket(void* ptrData, uint32_t size, int32_t* ptrBytesRead);
-int32_t prvWriteToSocket(void* ptrData, uint32_t size, int32_t* ptrBytesWritten);
+    void prvInitSocket( void );
+    int32_t prvReadFromSocket( void * ptrData,
+                               uint32_t size,
+                               int32_t * ptrBytesRead );
+    int32_t prvWriteToSocket( void * ptrData,
+                              uint32_t size,
+                              int32_t * ptrBytesWritten );
 
-#define TRC_STREAM_PORT_INIT() \
-	TRC_STREAM_PORT_MALLOC(); \
-	prvInitSocket();
+    #define TRC_STREAM_PORT_INIT() \
+    TRC_STREAM_PORT_MALLOC();      \
+    prvInitSocket();
 
-#define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 1
+    #define TRC_STREAM_PORT_USE_INTERNAL_BUFFER    1
 
-#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesWritten) prvWriteToSocket(_ptrData, _size, _ptrBytesWritten)
+    #define TRC_STREAM_PORT_WRITE_DATA( _ptrData, _size, _ptrBytesWritten )    prvWriteToSocket( _ptrData, _size, _ptrBytesWritten )
 
-#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) prvReadFromSocket(_ptrData, _size, _ptrBytesRead)
+    #define TRC_STREAM_PORT_READ_DATA( _ptrData, _size, _ptrBytesRead )        prvReadFromSocket( _ptrData, _size, _ptrBytesRead )
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* TRC_STREAM_PORT_H */

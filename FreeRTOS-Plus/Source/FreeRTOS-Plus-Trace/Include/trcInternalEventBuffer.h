@@ -13,23 +13,23 @@
  */
 
 #ifndef TRC_INTERNAL_BUFFER_H
-#define TRC_INTERNAL_BUFFER_H
+    #define TRC_INTERNAL_BUFFER_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#ifndef TRC_USE_INTERNAL_BUFFER
-#define TRC_USE_INTERNAL_BUFFER 1
-#endif
+            #ifndef TRC_USE_INTERNAL_BUFFER
+                #define TRC_USE_INTERNAL_BUFFER    1
+            #endif
 
-#if (TRC_USE_INTERNAL_BUFFER == 1)
+            #if ( TRC_USE_INTERNAL_BUFFER == 1 )
 
-#include <trcTypes.h>
+                #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+                #ifdef __cplusplus
+                extern "C" {
+                #endif
 
 /**
  * @defgroup trace_internal_event_buffer_apis Trace Internal Event Buffer APIs
@@ -46,7 +46,8 @@ extern "C" {
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceInternalEventBufferInitialize(uint8_t* puiBuffer, uint32_t uiSize);
+                traceResult xTraceInternalEventBufferInitialize( uint8_t * puiBuffer,
+                                                                 uint32_t uiSize );
 
 /**
  * @brief Pushes data to the internal trace event buffer.
@@ -58,7 +59,9 @@ traceResult xTraceInternalEventBufferInitialize(uint8_t* puiBuffer, uint32_t uiS
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceInternalEventBufferPush(void *pvData, uint32_t uiSize, int32_t *piBytesWritten);
+                traceResult xTraceInternalEventBufferPush( void * pvData,
+                                                           uint32_t uiSize,
+                                                           int32_t * piBytesWritten );
 
 /**
  * @brief Transfers all internal trace event buffer data using the function
@@ -75,7 +78,7 @@ traceResult xTraceInternalEventBufferPush(void *pvData, uint32_t uiSize, int32_t
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceInternalEventBufferTransfer(int32_t *piBytesWritten);
+                traceResult xTraceInternalEventBufferTransfer( int32_t * piBytesWritten );
 
 /**
  * @brief Clears all trace events in the internal trace event buffer.
@@ -83,25 +86,25 @@ traceResult xTraceInternalEventBufferTransfer(int32_t *piBytesWritten);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceInternalEventBufferClear(void);
+                traceResult xTraceInternalEventBufferClear( void );
 
 /** @} */
 
-#ifdef __cplusplus
+                #ifdef __cplusplus
 }
-#endif
+                #endif
 
-#else /* (TRC_USE_INTERNAL_BUFFER == 1)*/
+            #else /* (TRC_USE_INTERNAL_BUFFER == 1)*/
 
-#define xTraceInternalEventBufferInitialize(puiBuffer, uiSize) ((void)uiSize, puiBuffer != 0 ? TRC_SUCCESS : TRC_FAIL)
-#define xTraceInternalEventBufferPush(pvData, uiSize, piBytesWritten) ((void)uiSize, (void)piBytesWritten, pvData != 0 ? TRC_SUCCESS : TRC_FAIL)
-#define xTraceInternalEventBufferTransfer(piBytesWritten) ((void)piBytesWritten, TRC_SUCCESS)
-#define xTraceInternalEventBufferClear() (void)(TRC_SUCCESS)
+                #define xTraceInternalEventBufferInitialize( puiBuffer, uiSize )           ( ( void ) uiSize, puiBuffer != 0 ? TRC_SUCCESS : TRC_FAIL )
+                #define xTraceInternalEventBufferPush( pvData, uiSize, piBytesWritten )    ( ( void ) uiSize, ( void ) piBytesWritten, pvData != 0 ? TRC_SUCCESS : TRC_FAIL )
+                #define xTraceInternalEventBufferTransfer( piBytesWritten )                ( ( void ) piBytesWritten, TRC_SUCCESS )
+                #define xTraceInternalEventBufferClear()                                   ( void ) ( TRC_SUCCESS )
 
-#endif /* (TRC_USE_INTERNAL_BUFFER == 1)*/
+            #endif /* (TRC_USE_INTERNAL_BUFFER == 1)*/
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 #endif /* TRC_INTERNAL_BUFFER_H */

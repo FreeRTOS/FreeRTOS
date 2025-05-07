@@ -29,10 +29,10 @@
 class TraceRecorderInit
 {
 public:
-	static bool Initialize();
+    static bool Initialize();
 private:
-	TraceRecorderInit();
-	~TraceRecorderInit();
+    TraceRecorderInit();
+    ~TraceRecorderInit();
 
-	bool IsInitialized();
+    bool IsInitialized();
 };

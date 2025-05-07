@@ -1,10 +1,10 @@
 /*
-* Percepio Trace Recorder for Tracealyzer v4.6.0
-* Copyright 2021 Percepio AB
-* www.percepio.com
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Percepio Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 /**
  * @file
@@ -13,18 +13,18 @@
  */
 
 #ifndef TRC_PRINT_H
-#define TRC_PRINT_H
+    #define TRC_PRINT_H
 
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+    #if ( TRC_USE_TRACEALYZER_RECORDER == 1 )
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+        #if ( TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING )
 
-#include <stdarg.h>
-#include <trcTypes.h>
+            #include <stdarg.h>
+            #include <trcTypes.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
 
 /**
  * @defgroup trace_print_apis Trace Print APIs
@@ -32,18 +32,18 @@ extern "C" {
  * @{
  */
 
-#if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
+            #if ( TRC_CFG_SCHEDULING_ONLY == 0 ) && ( TRC_CFG_INCLUDE_USER_EVENTS == 1 )
 
 /** @internal */
-#define TRC_PRINT_BUFFER_SIZE (sizeof(TraceStringHandle_t) + sizeof(TraceStringHandle_t))
+                #define TRC_PRINT_BUFFER_SIZE    ( sizeof( TraceStringHandle_t ) + sizeof( TraceStringHandle_t ) )
 
 /**
  * @internal Trace Print Buffer Structure
  */
-typedef struct TracePrintBuffer
-{
-	uint32_t buffer[(TRC_PRINT_BUFFER_SIZE) / sizeof(uint32_t)];
-} TracePrintBuffer_t;
+                typedef struct TracePrintBuffer
+                {
+                    uint32_t buffer[ ( TRC_PRINT_BUFFER_SIZE ) / sizeof( uint32_t ) ];
+                } TracePrintBuffer_t;
 
 /**
  * @internal Initialize print trace system.
@@ -54,7 +54,7 @@ typedef struct TracePrintBuffer
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTracePrintInitialize(TracePrintBuffer_t* pxBuffer);
+                traceResult xTracePrintInitialize( TracePrintBuffer_t * pxBuffer );
 
 /**
  * @brief Generate "User Events" with unformatted text.
@@ -84,7 +84,8 @@ traceResult xTracePrintInitialize(TracePrintBuffer_t* pxBuffer);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTracePrint(TraceStringHandle_t xChannel, const char* szString);
+                traceResult xTracePrint( TraceStringHandle_t xChannel,
+                                         const char * szString );
 
 /**
  * @brief Wrapper for vTracePrintF for printing to default channel.
@@ -93,7 +94,7 @@ traceResult xTracePrint(TraceStringHandle_t xChannel, const char* szString);
  * replacement for printf and similar functions, e.g. in a debug logging macro.
  *
  * Example:
- * 	// Old: #define LogString debug_console_printf
+ *  // Old: #define LogString debug_console_printf
  *
  *  // New, log to Tracealyzer instead:
  *  #define LogString xTraceConsoleChannelPrintF
@@ -106,7 +107,8 @@ traceResult xTracePrint(TraceStringHandle_t xChannel, const char* szString);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceConsoleChannelPrintF(const char* szFormat, ...);
+                traceResult xTraceConsoleChannelPrintF( const char * szFormat,
+                                                        ... );
 
 /**
  * @brief Generates "User Events" with formatted text and data.
@@ -160,7 +162,9 @@ traceResult xTraceConsoleChannelPrintF(const char* szFormat, ...);
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTracePrintF(TraceStringHandle_t xChannel, const char* szFormat, ...);
+                traceResult xTracePrintF( TraceStringHandle_t xChannel,
+                                          const char * szFormat,
+                                          ... );
 
 /**
  * @brief Generates "User Events" with formatted text and data.
@@ -172,36 +176,38 @@ traceResult xTracePrintF(TraceStringHandle_t xChannel, const char* szFormat, ...
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
-traceResult xTraceVPrintF(TraceStringHandle_t xChannel, const char* szFormat, va_list xVL);
+                traceResult xTraceVPrintF( TraceStringHandle_t xChannel,
+                                           const char * szFormat,
+                                           va_list xVL );
 
-#else /* (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1) */
+            #else /* (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1) */
 
-typedef struct TracePrintBuffer
-{
-	uint32_t buffer[1];
-} TracePrintBuffer_t;
+                typedef struct TracePrintBuffer
+                {
+                    uint32_t buffer[ 1 ];
+                } TracePrintBuffer_t;
 
-#define xTracePrintInitialize(p) ((void)p, p != 0 ? TRC_SUCCESS : TRC_FAIL)
+                #define xTracePrintInitialize( p )              ( ( void ) p, p != 0 ? TRC_SUCCESS : TRC_FAIL )
 
-#define xTracePrint(c, s) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_3((void)c, (void)s, TRC_SUCCESS)
+                #define xTracePrint( c, s )                     TRC_COMMA_EXPR_TO_STATEMENT_EXPR_3( ( void ) c, ( void ) s, TRC_SUCCESS )
 
-#define xTracePrintF(c, s, ...) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_3((void)c, (void)s, TRC_SUCCESS)
+                #define xTracePrintF( c, s, ... )               TRC_COMMA_EXPR_TO_STATEMENT_EXPR_3( ( void ) c, ( void ) s, TRC_SUCCESS )
 
-#define xTraceConsoleChannelPrintF(s, ...) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2((void)s, TRC_SUCCESS)
+                #define xTraceConsoleChannelPrintF( s, ... )    TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2( ( void ) s, TRC_SUCCESS )
 
-#define xTraceVPrintF(c, s, v) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_4((void)c, (void)s, (void)v, TRC_SUCCESS)
+                #define xTraceVPrintF( c, s, v )                TRC_COMMA_EXPR_TO_STATEMENT_EXPR_4( ( void ) c, ( void ) s, ( void ) v, TRC_SUCCESS )
 
-#endif /* (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1) */
+            #endif /* (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1) */
 
 /** @} */
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
+        #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
-#endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
+    #endif /* (TRC_USE_TRACEALYZER_RECORDER == 1) */
 
 
 #endif /* TRC_PRINT_H */

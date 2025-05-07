@@ -79,11 +79,11 @@ int main( void )
 
     /* Create the SNTP client task that is responsible for synchronizing system time with the time servers
      * periodically. This is created as a high priority task to keep the SNTP client operation unhindered. */
-    xTaskCreate( prvPKCS11DemoTask,             /* Function that implements the task. */
-                 "PKCS11 Demo",                 /* Text name for the task - only used for debugging. */
-                 configPKCS11_DEMO_STACK_SIZE,  /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                          /* Task parameter - not used in this case. */
-                 configMAX_PRIORITIES - 1,      /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+    xTaskCreate( prvPKCS11DemoTask,            /* Function that implements the task. */
+                 "PKCS11 Demo",                /* Text name for the task - only used for debugging. */
+                 configPKCS11_DEMO_STACK_SIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
+                 NULL,                         /* Task parameter - not used in this case. */
+                 configMAX_PRIORITIES - 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
                  NULL );
 
     /* Start the RTOS scheduler. */

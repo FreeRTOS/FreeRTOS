@@ -4199,16 +4199,8 @@ void mbedtls_platform_free( void * ptr );
     #endif /* MBEDTLS_SSL_PROTO_TLS1_2*/
 #endif /* if 0 */
 
-#ifdef MBEDTLS_USE_PSA_CRYPTO
-    #ifdef MBEDTLS_PSA_CRYPTO_CONFIG
-        #include MBEDTLS_PSA_CRYPTO_CONFIG
-    #else
-        //#include "mbedtls/config_psa.h"
-    #endif /* MBEDTLS_PSA_CRYPTO_CONFIG */
-#endif /* MBEDTLS_USE_PSA_CRYPTO */
-
-//#include "mbedtls/config_adjust_legacy_crypto.h"
-
-//#include "mbedtls/check_config.h"
+#if defined( MBEDTLS_USE_PSA_CRYPTO ) && defined( MBEDTLS_PSA_CRYPTO_CONFIG )
+    #include MBEDTLS_PSA_CRYPTO_CONFIG
+#endif /* MBEDTLS_USE_PSA_CRYPTO && MBEDTLS_PSA_CRYPTO_CONFIG */
 
 #endif /* __FREERTOS_MBEDTLS_CONFIG__*/

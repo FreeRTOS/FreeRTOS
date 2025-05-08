@@ -86,6 +86,10 @@ struct NetworkContext
     TlsTransportParams_t * pParams;
 };
 
+extern mbedtls_threading_mutex_t mbedtls_threading_key_slot_mutex;
+extern mbedtls_threading_mutex_t mbedtls_threading_psa_globaldata_mutex;
+extern mbedtls_threading_mutex_t mbedtls_threading_psa_rngdata_mutex;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -637,6 +641,9 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
 
     /* Initialize contexts for random number generation. */
     mbedtls_entropy_init( pEntropyContext );
+    mbedtls_mutex_init( &mbedtls_threading_key_slot_mutex );
+    mbedtls_mutex_init( &mbedtls_threading_psa_globaldata_mutex );
+    mbedtls_mutex_init ( &mbedtls_threading_psa_rngdata_mutex );
     mbedtls_ctr_drbg_init( pCtrDrbgContext );
 
     if( mbedtlsError != 0 )

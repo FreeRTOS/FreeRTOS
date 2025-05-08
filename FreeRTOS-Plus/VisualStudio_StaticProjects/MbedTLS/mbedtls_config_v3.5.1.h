@@ -1123,6 +1123,8 @@ void mbedtls_platform_free( void * ptr );
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384
  */
 #define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
+#define MBEDTLS_CAN_ECDH
+#define MBEDTLS_PK_CAN_ECDSA_SIGN
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
@@ -1795,6 +1797,8 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment this macro to enable the support for TLS 1.3.
  */
 #define MBEDTLS_SSL_PROTO_TLS1_3
+#define PSA_WANT_ALG_HKDF_EXTRACT
+#define PSA_WANT_ALG_HKDF_EXPAND
 
 /**
  * \def MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE
@@ -1847,6 +1851,7 @@ void mbedtls_platform_free( void * ptr );
  *
  */
 #define MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_EPHEMERAL_ENABLED
+#define PSA_WANT_ALG_ECDH
 
 /**
  * \def MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_PSK_EPHEMERAL_ENABLED
@@ -2755,6 +2760,7 @@ void mbedtls_platform_free( void * ptr );
  * This module provides a generic entropy pool
  */
 #define MBEDTLS_ENTROPY_C
+#define MBEDTLS_MD_CAN_SHA256
 
 /**
  * \def MBEDTLS_ERROR_C
@@ -2782,6 +2788,7 @@ void mbedtls_platform_free( void * ptr );
  * requisites are enabled as well.
  */
 #define MBEDTLS_GCM_C
+#define MBEDTLS_CCM_GCM_CAN_AES
 
 /**
  * \def MBEDTLS_HKDF_C
@@ -2825,6 +2832,8 @@ void mbedtls_platform_free( void * ptr );
  * Uncomment to enable the LMS verification algorithm and public key operations.
  */
 #define MBEDTLS_LMS_C
+#define MBEDTLS_PSA_CRYPTO_CLIENT
+#define PSA_WANT_ALG_SHA_256
 
 /**
  * \def MBEDTLS_LMS_PRIVATE
@@ -3468,6 +3477,7 @@ void mbedtls_platform_free( void * ptr );
  *           (MBEDTLS_GCM_C || MBEDTLS_CCM_C || MBEDTLS_CHACHAPOLY_C)
  */
 #define MBEDTLS_SSL_TICKET_C
+#define MBEDTLS_SSL_HAVE_GCM
 
 /**
  * \def MBEDTLS_SSL_CLI_C
@@ -4193,12 +4203,12 @@ void mbedtls_platform_free( void * ptr );
     #ifdef MBEDTLS_PSA_CRYPTO_CONFIG
         #include MBEDTLS_PSA_CRYPTO_CONFIG
     #else
-        #include "mbedtls/config_psa.h"
+        //#include "mbedtls/config_psa.h"
     #endif /* MBEDTLS_PSA_CRYPTO_CONFIG */
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
-#include "mbedtls/config_adjust_legacy_crypto.h"
+//#include "mbedtls/config_adjust_legacy_crypto.h"
 
-#include "mbedtls/check_config.h"
+//#include "mbedtls/check_config.h"
 
 #endif /* __FREERTOS_MBEDTLS_CONFIG__*/

@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cache uncrustify
-        uses: actions/cache-restore@v4
+        uses: actions/cache/restore@v4
         id: read-uncrustify
         with:
           path: |

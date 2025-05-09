@@ -86,6 +86,16 @@ struct NetworkContext
     TlsTransportParams_t * pParams;
 };
 
+/**
+ * @brief Global mutexes used for threading in PSA APIs. These are defined by the 
+ * mbedtls library, we just need to initialise them.
+ */
+#if defined( MBEDTLS_PSA_CRYPTO_C )
+    extern mbedtls_threading_mutex_t mbedtls_threading_key_slot_mutex;
+    extern mbedtls_threading_mutex_t mbedtls_threading_psa_globaldata_mutex;
+    extern mbedtls_threading_mutex_t mbedtls_threading_psa_rngdata_mutex;
+#endif
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -638,6 +648,12 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
     /* Initialize contexts for random number generation. */
     mbedtls_entropy_init( pEntropyContext );
     mbedtls_ctr_drbg_init( pCtrDrbgContext );
+
+    #if defined(MBEDTLS_PSA_CRYPTO_C)
+    mbedtls_mutex_init( &mbedtls_threading_key_slot_mutex );
+    mbedtls_mutex_init( &mbedtls_threading_psa_globaldata_mutex );
+    mbedtls_mutex_init( &mbedtls_threading_psa_rngdata_mutex );
+    #endif
 
     if( mbedtlsError != 0 )
     {

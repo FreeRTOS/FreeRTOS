@@ -1,0 +1,24 @@
+name: Cache Restore and Upload Artifact
+
+on:
+  pull_request:
+
+jobs:
+  process-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache uncrustify
+        uses: actions/cache-restore@v4
+        id: read-uncrustify
+        with:
+          path: |
+            ~/uncrustify
+          key: ${{ runner.os }}-uncrustify
+
+      - name: Upload uncrustify as artifact
+        uses: actions/upload-artifact@v4
+        if: steps.cache-uncrustify.outputs.cache-hit == 'true'
+        with:
+          name: uncrustify-file
+          path: ~/uncrustify
+          retention-days: 7

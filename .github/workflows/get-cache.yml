@@ -17,7 +17,7 @@ jobs:
 
       - name: Upload uncrustify as artifact
         uses: actions/upload-artifact@v4
-        if: steps.cache-uncrustify.outputs.cache-hit == 'true'
+        if: steps.read-uncrustify.outputs.cache-hit == 'true'
         with:
           name: uncrustify-file
           path: ~/uncrustify

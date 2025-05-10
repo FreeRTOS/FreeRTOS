@@ -588,7 +588,7 @@ static MQTTStatus_t prvMQTTConnect( bool xCleanSession )
                             &xConnectInfo,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent );
+                            &xSessionPresent, NULL, NULL );
 
     LogInfo( ( "Session present: %d\n", xSessionPresent ) );
 
@@ -964,7 +964,7 @@ static void prvMQTTAgentTask( void * pvParameters )
         else if( xMQTTStatus == MQTTSuccess )
         {
             /* MQTTAgent_Terminate() was called, but MQTT was not disconnected. */
-            xMQTTStatus = MQTT_Disconnect( &( xGlobalMqttAgentContext.mqttContext ) );
+            xMQTTStatus = MQTT_Disconnect( &( xGlobalMqttAgentContext.mqttContext ), NULL, MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION );
             configASSERT( xMQTTStatus == MQTTSuccess );
             xNetworkResult = prvSocketDisconnect( &xNetworkContext );
             configASSERT( xNetworkResult == pdPASS );

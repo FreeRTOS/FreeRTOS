@@ -125,7 +125,7 @@
 /*
 * @brief A sample Reason String used in MQTT v5
 */
-#define mqttexampleREASON_STRING                          "Reason String"
+#define mqttexampleREASON_STRING                          "Reason-String"
 /*
 * @brief Sample will payload used in the connect packet.
 */
@@ -545,8 +545,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* If the server rejected the subscription request, attempt to resubscribe to the
          * topic. Attempts are made according to the exponential backoff retry strategy
          * implemented in BackoffAlgorithm. */
-            LogInfo( ( "Attempt to send Subcribe to Broker.\r\n" ) );
-            prvMQTTSubscribeToTopics(&xMQTTContext) ; 
+        LogInfo( ( "Attempt to send Subcribe to Broker.\r\n" ) );
+        prvMQTTSubscribeToTopics(&xMQTTContext) ; 
 
         /**************************** Publish and Keep-Alive Loop. ******************************/
 

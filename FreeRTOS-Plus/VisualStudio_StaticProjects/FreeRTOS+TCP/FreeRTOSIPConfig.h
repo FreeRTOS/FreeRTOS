@@ -313,6 +313,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 #define configMAC
 
+#define ipconfigUSE_IPv4    (1)
+
+#define ipconfigUSE_IPv6    (0)
+
 extern BaseType_t xPlatformIsNetworkUp( void );
 
 

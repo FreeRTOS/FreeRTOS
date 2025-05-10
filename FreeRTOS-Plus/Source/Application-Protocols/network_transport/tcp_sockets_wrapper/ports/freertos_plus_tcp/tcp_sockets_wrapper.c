@@ -125,6 +125,7 @@ BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
         #else
             serverAddress.sin_addr = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
 
+
             /* Check for errors from DNS lookup. */
             if( serverAddress.sin_addr == 0U )
         #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */

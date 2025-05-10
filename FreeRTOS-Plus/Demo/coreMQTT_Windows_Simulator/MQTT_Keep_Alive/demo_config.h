@@ -88,14 +88,14 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigMQTT_BROKER_ENDPOINT				"insert here."
  */
-
+#define democonfigMQTT_BROKER_ENDPOINT ("test.mosquitto.org")
 
 /**
  * @brief The port to use for the demo.
  *
  * #define democonfigMQTT_BROKER_PORT					( insert here. )
  */
-
+#define democonfigMQTT_BROKER_PORT ( 1883 )
 
 /**
  * @brief Set the stack size of the main demo task.

@@ -366,9 +366,12 @@ static void prvPingRespTimerCallback( TimerHandle_t pxTimer );
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
-                              MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo );
+static void prvEventCallback(MQTTContext_t* pxMQTTContext,
+    MQTTPacketInfo_t* pxPacketInfo,
+    MQTTDeserializedInfo_t* pxDeserializedInfo,
+    MQTTSuccessFailReasonCode_t* pReasonCode,
+    MqttPropBuilder_t* sendPropsBuffer,
+    MqttPropBuilder_t* getPropsBuffer);
 
 /*-----------------------------------------------------------*/
 
@@ -663,7 +666,7 @@ static void prvMQTTDemoTask( void * pvParameters )
          * sending the disconnect, the client must close the network connection. */
         LogInfo( ( "Disconnecting the MQTT connection with %s.",
                    democonfigMQTT_BROKER_ENDPOINT ) );
-        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
+        xMQTTStatus = MQTT_Disconnect( &xMQTTContext, NULL, MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
         /* Stop the keep-alive timers for the next iteration. */
@@ -779,7 +782,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                     pOutgoingPublishRecords,
                                     mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
                                     pIncomingPublishRecords,
-                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN, NULL, 0 );
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */
@@ -809,7 +812,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                             &xConnectInfo,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent );
+                            &xSessionPresent, NULL, NULL );
     configASSERT( xResult == MQTTSuccess );
 }
 /*-----------------------------------------------------------*/
@@ -876,7 +879,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         xResult = MQTT_Subscribe( pxMQTTContext,
                                   xMQTTSubscription,
                                   sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                  usSubscribePacketIdentifier );
+                                  usSubscribePacketIdentifier, NULL );
         configASSERT( xResult == MQTTSuccess );
 
         LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n", mqttexampleTOPIC ) );
@@ -976,7 +979,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
     /* Send a PUBLISH packet. */
-    xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
+    xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier, NULL );
     configASSERT( xResult == MQTTSuccess );
 
     /* When a PUBLISH packet has been sent, the keep-alive timer can be reset. */
@@ -1010,7 +1013,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     xResult = MQTT_Unsubscribe( pxMQTTContext,
                                 xMQTTSubscription,
                                 sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                usUnsubscribePacketIdentifier );
+                                usUnsubscribePacketIdentifier , NULL);
     configASSERT( xResult == MQTTSuccess );
 
     /* When an UNSUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
@@ -1142,9 +1145,12 @@ static void prvPingRespTimerCallback( TimerHandle_t pxTimer )
 
 /*-----------------------------------------------------------*/
 
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
-                              MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo )
+static void prvEventCallback(MQTTContext_t* pxMQTTContext,
+    MQTTPacketInfo_t* pxPacketInfo,
+    MQTTDeserializedInfo_t* pxDeserializedInfo,
+    MQTTSuccessFailReasonCode_t* pReasonCode,
+    MqttPropBuilder_t* sendPropsBuffer,
+    MqttPropBuilder_t* getPropsBuffer)
 {
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;

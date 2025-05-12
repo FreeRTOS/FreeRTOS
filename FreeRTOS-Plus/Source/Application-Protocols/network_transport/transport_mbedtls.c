@@ -86,16 +86,6 @@ struct NetworkContext
     TlsTransportParams_t * pParams;
 };
 
-/**
- * @brief Global mutexes used for threading in PSA APIs. These are defined by the
- * mbedtls library, we just need to initialise them.
- */
-#if defined( MBEDTLS_PSA_CRYPTO_C )
-    extern mbedtls_threading_mutex_t mbedtls_threading_key_slot_mutex;
-    extern mbedtls_threading_mutex_t mbedtls_threading_psa_globaldata_mutex;
-    extern mbedtls_threading_mutex_t mbedtls_threading_psa_rngdata_mutex;
-#endif
-
 /*-----------------------------------------------------------*/
 
 /**

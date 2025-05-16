@@ -80,6 +80,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigTHING_NAME    "...insert here..."
  */
 
+
 #ifndef democonfigCLIENT_IDENTIFIER
 
 /**
@@ -105,6 +106,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
 
+
 /**
  * @brief The port to use for the demo.
  *
@@ -117,6 +119,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigMQTT_BROKER_PORT    ( insert here. )
  */
+
+#define democonfigMQTT_BROKER_PORT    ( 8883 )
 
 /**
  * @brief AWS root CA certificate.
@@ -135,6 +139,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigROOT_CA_PEM    "...insert here..."
  */
 
+
 /**
  * @brief Client certificate.
  *
@@ -152,6 +157,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
  */
 
+
 /**
  * @brief Client's private key.
  *
@@ -168,6 +174,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */
+
 
 /**
  * @brief The username value for authenticating client to the MQTT broker when

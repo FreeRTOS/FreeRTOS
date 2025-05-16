@@ -316,9 +316,12 @@ static BaseType_t xShadowDeleted = pdFALSE;
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
-                              MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo );
+static void prvEventCallback(MQTTContext_t* pxMqttContext,
+    MQTTPacketInfo_t* pxPacketInfo,
+    MQTTDeserializedInfo_t* pxDeserializedInfo,
+    MQTTSuccessFailReasonCode_t* pReasonCode,
+    MqttPropBuilder_t* sendPropsBuffer,
+    MqttPropBuilder_t* getPropsBuffer); 
 
 /**
  * @brief Process payload from /update/delta topic.
@@ -690,7 +693,10 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
  */
 static void prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo )
+                              MQTTDeserializedInfo_t * pxDeserializedInfo, 
+                              MQTTSuccessFailReasonCode_t* pReasonCode,
+                              MqttPropBuilder_t* sendPropsBuffer,
+                              MqttPropBuilder_t* getPropsBuffer)
 {
     ShadowMessageType_t messageType = ShadowMessageTypeMaxNum;
     const char * pcThingName = NULL;

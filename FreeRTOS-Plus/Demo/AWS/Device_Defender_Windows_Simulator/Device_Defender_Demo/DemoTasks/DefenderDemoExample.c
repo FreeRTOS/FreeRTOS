@@ -224,15 +224,24 @@ extern BaseType_t xPlatformIsNetworkUp( void );
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Callback to receive the incoming publish messages from the MQTT broker.
+ * @brief This example uses the MQTT library of the AWS IoT Device SDK for
+ * Embedded C. This is the prototype of the callback function defined by
+ * that library. It will be invoked whenever the MQTT library receives an
+ * incoming message.
  *
- * @param[in] pxMqttContext The MQTT context for the MQTT connection.
- * @param[in] pxPacketInfo Pointer to publish info of the incoming publish.
- * @param[in] pxDeserializedInfo Deserialized information from the incoming publish.
+ * @param[in] pxMqttContext MQTT context pointer.
+ * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
+ * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
+ * @param[out] pReasonCode Pointer to success/failure reason code for outgoing publish acks.
+ * @param[out] sendPropsBuffer Buffer containing MQTT 5.0 properties for sending messages.
+ * @param[in] getPropsBuffer Buffer containing MQTT 5.0 properties received from broker.
  */
 static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTPacketInfo_t * pxPacketInfo,
-                                MQTTDeserializedInfo_t * pxDeserializedInfo );
+                                MQTTDeserializedInfo_t * pxDeserializedInfo,
+                                MQTTSuccessFailReasonCode_t * pReasonCode,
+                                MQTTPropBuilder_t * sendPropsBuffer,
+                                MQTTPropBuilder_t * getPropsBuffer);
 
 /**
  * @brief Collect all the metrics to be sent in the Device Defender report.
@@ -369,7 +378,10 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
 
 static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTPacketInfo_t * pxPacketInfo,
-                                MQTTDeserializedInfo_t * pxDeserializedInfo )
+                                MQTTDeserializedInfo_t * pxDeserializedInfo,
+                                MQTTSuccessFailReasonCode_t * pReasonCode,
+                                MQTTPropBuilder_t * sendPropsBuffer,
+                                MQTTPropBuilder_t * getPropsBuffer)
 {
     DefenderStatus_t xStatus;
     DefenderTopic_t xApi;

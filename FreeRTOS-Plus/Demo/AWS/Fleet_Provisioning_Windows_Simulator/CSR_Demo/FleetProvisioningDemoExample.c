@@ -254,7 +254,10 @@ static MQTTFixedBuffer_t xBuffer =
  */
 static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
                                             MQTTPacketInfo_t * pxPacketInfo,
-                                            MQTTDeserializedInfo_t * pxDeserializedInfo );
+                                            MQTTDeserializedInfo_t * pxDeserializedInfo, 
+                                            MQTTSuccessFailReasonCode_t* pReasonCode,
+                                            MQTTPropBuilder_t* sendPropsBuffer,
+                                            MQTTPropBuilder_t* getPropsBuffer);
 
 /**
  * @brief Subscribe to the CreateCertificateFromCsr accepted and rejected topics.
@@ -299,7 +302,10 @@ BaseType_t xPlatformIsNetworkUp( void );
 
 static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
                                             MQTTPacketInfo_t * pxPacketInfo,
-                                            MQTTDeserializedInfo_t * pxDeserializedInfo )
+                                            MQTTDeserializedInfo_t * pxDeserializedInfo, 
+                                            MQTTSuccessFailReasonCode_t* pReasonCode,
+                                            MQTTPropBuilder_t* sendPropsBuffer,
+                                            MQTTPropBuilder_t* getPropsBuffer)
 {
     FleetProvisioningStatus_t xStatus;
     FleetProvisioningTopic_t xApi;

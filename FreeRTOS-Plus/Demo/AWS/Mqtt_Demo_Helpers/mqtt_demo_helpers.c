@@ -651,7 +651,7 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
                        outgoingPublishPackets[ ucIndex ].packetId ) );
             xMQTTStatus = MQTT_Publish( pxMqttContext,
                                         &outgoingPublishPackets[ ucIndex ].pubInfo,
-                                        outgoingPublishPackets[ ucIndex ].packetId , NULL);
+                                        outgoingPublishPackets[ ucIndex ].packetId);
 
             if( xMQTTStatus != MQTTSuccess )
             {
@@ -728,7 +728,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
                                                 pOutgoingPublishRecords,
                                                 mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
                                                 pIncomingPublishRecords,
-                                                mqttexampleINCOMING_PUBLISH_RECORD_LEN, NULL, 0 );
+                                                mqttexampleINCOMING_PUBLISH_RECORD_LEN );
 
             if( xMQTTStatus != MQTTSuccess )
             {
@@ -786,7 +786,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
                                             &xConnectInfo,
                                             NULL,
                                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                                            &sessionPresent, NULL, NULL );
+                                            &sessionPresent);
 
                 if( xMQTTStatus != MQTTSuccess )
                 {
@@ -851,7 +851,7 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
     if( xMqttSessionEstablished == true )
     {
         /* Send DISCONNECT. */
-        xMQTTStatus = MQTT_Disconnect( pxMqttContext , NULL, MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION);
+        xMQTTStatus = MQTT_Disconnect( pxMqttContext);
 
         if( xMQTTStatus != MQTTSuccess )
         {
@@ -896,7 +896,7 @@ BaseType_t xSubscribeToTopic( MQTTContext_t * pxMqttContext,
     xMQTTStatus = MQTT_Subscribe( pxMqttContext,
                                   pSubscriptionList,
                                   sizeof( pSubscriptionList ) / sizeof( MQTTSubscribeInfo_t ),
-                                  globalSubscribePacketIdentifier, NULL );
+                                  globalSubscribePacketIdentifier);
 
     if( xMQTTStatus != MQTTSuccess )
     {
@@ -959,7 +959,7 @@ BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxMqttContext,
     xMQTTStatus = MQTT_Unsubscribe( pxMqttContext,
                                     pSubscriptionList,
                                     sizeof( pSubscriptionList ) / sizeof( MQTTSubscribeInfo_t ),
-                                    globalUnsubscribePacketIdentifier , NULL);
+                                    globalUnsubscribePacketIdentifier);
 
     if( xMQTTStatus != MQTTSuccess )
     {
@@ -1029,7 +1029,7 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
         /* Send PUBLISH packet. */
         xMQTTStatus = MQTT_Publish( pxMqttContext,
                                     &outgoingPublishPackets[ ucPublishIndex ].pubInfo,
-                                    outgoingPublishPackets[ ucPublishIndex ].packetId, NULL );
+                                    outgoingPublishPackets[ ucPublishIndex ].packetId);
 
         if( xMQTTStatus != MQTTSuccess )
         {

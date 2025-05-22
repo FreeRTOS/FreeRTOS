@@ -169,6 +169,11 @@
  */
 #define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS        ( 3 )
 
+/**
+ * @brief Per the MQTT spec, the max packet size  can be of  max remaining length + 5 bytes
+ */
+#define MQTT_MAX_PACKET_SIZE                        ( 268435460U )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -713,7 +718,6 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     MQTTStatus_t xResult;
     MQTTPacketInfo_t xIncomingPacket;
     MQTTConnectInfo_t xConnectInfo;
-    uint16_t usPacketId;
     bool xSessionPresent;
     NetworkContext_t xNetworkContext;
 
@@ -746,6 +750,8 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * Last Will and Testament is not used in this demo. It is passed as NULL. */
     xResult = MQTT_GetConnectPacketSize( &xConnectInfo,
                                          NULL,
+                                         NULL,
+                                         NULL,
                                          &xRemainingLength,
                                          &xPacketSize );
 
@@ -755,6 +761,8 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 
     /* Serialize MQTT connect packet into the provided buffer. */
     xResult = MQTT_SerializeConnect( &xConnectInfo,
+                                     NULL,
+                                     NULL, 
                                      NULL,
                                      xRemainingLength,
                                      &xBuffer );
@@ -793,9 +801,10 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     configASSERT( xStatus == ( BaseType_t ) xIncomingPacket.remainingLength );
 
     xIncomingPacket.pRemainingData = xBuffer.pBuffer;
-    xResult = MQTT_DeserializeAck( &xIncomingPacket,
-                                   &usPacketId,
-                                   &xSessionPresent );
+    MQTTConnectProperties_t connackProperties = { 0 };
+    connackProperties.maxPacketSize = MQTT_MAX_PACKET_SIZE;
+    xResult = MQTT_DeserializeConnack( &connackProperties, &xIncomingPacket,
+                                   &xSessionPresent, NULL );
 
     /* Log this convenient demo information before asserting if the result is
      * successful. */
@@ -832,8 +841,10 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 
     xResult = MQTT_GetSubscribePacketSize( xMQTTSubscription,
                                            sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                           NULL,
                                            &xRemainingLength,
-                                           &xPacketSize );
+                                           &xPacketSize,
+                                           MQTT_MAX_PACKET_SIZE);
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xResult == MQTTSuccess );
@@ -847,6 +858,7 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
     /* Serialize subscribe into statically allocated ucSharedBuffer. */
     xResult = MQTT_SerializeSubscribe( xMQTTSubscription,
                                        sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                       NULL,
                                        usSubscribePacketIdentifier,
                                        xRemainingLength,
                                        &xBuffer );
@@ -1006,8 +1018,10 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
 
     /* Find out length of Publish packet size. */
     xResult = MQTT_GetPublishPacketSize( &xMQTTPublishInfo,
+                                         NULL,
                                          &xRemainingLength,
-                                         &xPacketSize );
+                                         &xPacketSize,
+                                         MQTT_MAX_PACKET_SIZE);
     configASSERT( xResult == MQTTSuccess );
 
     /* Make sure the packet size is less than static buffer size. */
@@ -1017,6 +1031,7 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
      * be sent directly in order to avoid copying it into the buffer.
      * QOS0 does not make use of packet identifier, therefore value of 0 is used */
     xResult = MQTT_SerializePublishHeader( &xMQTTPublishInfo,
+                                           NULL,
                                            0,
                                            xRemainingLength,
                                            &xBuffer,
@@ -1059,8 +1074,10 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 
     xResult = MQTT_GetUnsubscribePacketSize( xMQTTSubscription,
                                              sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                             NULL,
                                              &xRemainingLength,
-                                             &xPacketSize );
+                                             &xPacketSize,
+                                             MQTT_MAX_PACKET_SIZE);
     configASSERT( xResult == MQTTSuccess );
     /* Make sure the packet size is less than static buffer size */
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
@@ -1072,6 +1089,7 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 
     xResult = MQTT_SerializeUnsubscribe( xMQTTSubscription,
                                          sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                         NULL,
                                          usUnsubscribePacketIdentifier,
                                          xRemainingLength,
                                          &xBuffer );
@@ -1112,13 +1130,14 @@ static void prvMQTTDisconnect( Socket_t xMQTTSocket )
     MQTTStatus_t xResult;
     BaseType_t xStatus;
     size_t xPacketSize;
+    size_t remainingLength;
 
     /* Calculate DISCONNECT packet size. */
-    xResult = MQTT_GetDisconnectPacketSize( &xPacketSize );
+    xResult = MQTT_GetDisconnectPacketSize(NULL, &remainingLength, &xPacketSize, MQTT_MAX_PACKET_SIZE, MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION);
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xPacketSize <= mqttexampleSHARED_BUFFER_SIZE );
 
-    xResult = MQTT_SerializeDisconnect( &xBuffer );
+    xResult = MQTT_SerializeDisconnect(NULL, MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION, remainingLength, &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
     xStatus = FreeRTOS_send( xMQTTSocket,
@@ -1246,41 +1265,48 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
             xIncomingPacket.pRemainingData = xBuffer.pBuffer;
         }
 
-        /* Check if the incoming packet is a publish packet. */
-        if( ( xIncomingPacket.type & 0xf0 ) == MQTT_PACKET_TYPE_PUBLISH )
+        if ( ( xIncomingPacket.type & 0xf0 ) == MQTT_PACKET_TYPE_PUBLISH)
         {
-            xResult = MQTT_DeserializePublish( &xIncomingPacket, &usPacketId, &xPublishInfo );
+            xResult = MQTT_DeserializePublish(&xIncomingPacket, &usPacketId, &xPublishInfo, NULL, MQTT_MAX_PACKET_SIZE, 0);
             configASSERT( xResult == MQTTSuccess );
 
             /* Process incoming Publish message. */
-            prvMQTTProcessIncomingPublish( &xPublishInfo );
+            prvMQTTProcessIncomingPublish(&xPublishInfo);
+
+            prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
         }
-        else
+        else if ((xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK) || (xIncomingPacket.type == MQTT_PACKET_TYPE_UNSUBACK))
         {
-            /* If the received packet is not a Publish message, then it is an ACK for one
-             * of the messages we sent out, verify that the ACK packet is a valid MQTT
-             * packet. Session present is only valid for a CONNACK. CONNACK is not
-             * expected to be received here. Hence pass NULL for pointer to session
-             * present. */
-            xResult = MQTT_DeserializeAck( &xIncomingPacket, &usPacketId, NULL );
-            configASSERT( xResult == MQTTSuccess );
+            MQTTReasonCodeInfo_t reasonCodes;
+            xResult = MQTT_DeserializeSuback(&reasonCodes, &xIncomingPacket, &usPacketId, NULL, MQTT_MAX_PACKET_SIZE);
 
-            if( xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK )
+            configASSERT(xResult == MQTTSuccess || xResult == MQTTServerRefused);
+            if (xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK)
             {
-                prvMQTTUpdateSubAckStatus( &xIncomingPacket );
-
-                /* #MQTTServerRefused is returned when the broker refuses the client
-                 * to subscribe to a specific topic filter. */
-                configASSERT( xResult == MQTTSuccess || xResult == MQTTServerRefused );
-            }
-            else
-            {
-                configASSERT( xResult == MQTTSuccess );
+                prvMQTTUpdateSubAckStatus(&xIncomingPacket);
             }
 
             /* Process the response. */
-            prvMQTTProcessResponse( &xIncomingPacket, usPacketId );
+            prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
         }
+        else if ((xIncomingPacket.type == MQTT_PACKET_TYPE_PUBACK) ||
+            (xIncomingPacket.type == MQTT_PACKET_TYPE_PUBREC) ||
+            (xIncomingPacket.type == MQTT_PACKET_TYPE_PUBREL) ||
+            (xIncomingPacket.type == MQTT_PACKET_TYPE_PUBCOMP))
+        {
+            MQTTReasonCodeInfo_t reasonCode;
+            xResult = MQTT_DeserializePublishAck(&xIncomingPacket, &usPacketId, &reasonCode, 0, MQTT_MAX_PACKET_SIZE, NULL);
+            configASSERT(xResult == MQTTSuccess);
+            /* Process the response. */
+            prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
+        }
+        else
+        {
+            xResult = MQTT_DeserializePing(&xIncomingPacket);
+            configASSERT(xResult == MQTTSuccess);
+        }
+
+
     }
 }
 

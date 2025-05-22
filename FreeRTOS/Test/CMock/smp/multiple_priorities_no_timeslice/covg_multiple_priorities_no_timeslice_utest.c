@@ -399,6 +399,7 @@ void test_coverage_vTaskPreemptionEnable_task_running( void )
     /* Setup variables. */
     xTaskTCB.xPreemptionDisable = pdTRUE;
     xTaskTCB.xTaskRunState = 0;
+    xYieldPendings[ 0 ] = pdTRUE;
 
     xSchedulerRunning = pdTRUE;
 
@@ -2060,6 +2061,11 @@ void test_coverage_vTaskExitCritical_task_enter_critical_mt_1( void )
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
     xSchedulerRunning = pdTRUE;
 
+    portGET_TASK_LOCK(0);
+    portGET_TASK_LOCK(0);
+    portGET_ISR_LOCK(0);
+    portGET_ISR_LOCK(0);
+
     /* Clear callback in commonSetUp. */
     vFakePortGetCoreID_StubWithCallback( NULL );
 
@@ -2097,6 +2103,9 @@ void test_coverage_vTaskExitCritical_task_not_in_critical( void )
     xTaskTCB.uxCriticalNesting = 0;
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
     xSchedulerRunning = pdTRUE;
+
+    portGET_TASK_LOCK(0);
+    portGET_ISR_LOCK(0);
 
     /* Clear callback in commonSetUp. */
     vFakePortGetCoreID_StubWithCallback( NULL );

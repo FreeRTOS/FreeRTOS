@@ -90,7 +90,7 @@ static char * heap_end = ( char * ) &_heap_bottom;
  * @todo  implement if necessary
  *
  */
-int _fstat( int file )
+__attribute__( ( used ) ) int _fstat( int file )
 {
     ( void ) file;
     return 0;
@@ -101,7 +101,7 @@ int _fstat( int file )
  * @todo  implement if necessary
  *
  */
-int _read( int file,
+__attribute__( ( used ) ) int _read( int file,
            char * buf,
            int len )
 {
@@ -119,7 +119,7 @@ int _read( int file,
  * @param [in] len   length of the buffer
  * @returns the number of bytes written
  */
-int _write( int file,
+__attribute__( ( used ) ) int _write( int file,
             char * buf,
             int len )
 {
@@ -141,7 +141,7 @@ int _write( int file,
  * @returns the previous top of the heap
  * @note uses a global variable <b>heap_end</b> to keep track of the previous top
  */
-void * _sbrk( int incr )
+__attribute__( ( used ) ) void * _sbrk( int incr )
 {
     void * prev_heap_end = heap_end;
 
@@ -155,12 +155,12 @@ void * _sbrk( int incr )
     return prev_heap_end;
 }
 
-void _close( int fd )
+__attribute__( ( used ) ) void _close( int fd )
 {
     ( void ) fd;
 }
 
-int _lseek( int filedes,
+__attribute__( ( used ) ) int _lseek( int filedes,
             int offset,
             int whence )
 {
@@ -171,7 +171,7 @@ int _lseek( int filedes,
     return 0;
 }
 
-int _isatty()
+__attribute__( ( used ) ) int _isatty( void )
 {
     return 0;
 }

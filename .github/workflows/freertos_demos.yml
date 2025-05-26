@@ -406,11 +406,13 @@ jobs:
               # ${{ env.stepName }}
               echo -e "::group::${{ env.stepName }}"
               set +e
-              curl -L -O https://dr-download.ti.com/software-development/ide-configuration-compiler-or-debugger/MD-LlCjWuAbzH/9.3.1.2/msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
+              sudo curl -L -o /usr/local/msp430-gcc-full-linux-x64-installer-9.3.1.2.7z \
+              https://dr-download.ti.com/software-development/ide-configuration-compiler-or-debugger/MD-LlCjWuAbzH/9.3.1.2/msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
               sudo apt update -y
               sudo apt install -y p7zip-full
-              7z x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
-              chmod +x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run
+              cd /usr/local
+              sudo 7z x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
+              sudo chmod +x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run
               sudo ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run --prefix /usr/bin/msp430-gcc --mode unattended
               exitStatus=$?
               set -e

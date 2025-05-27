@@ -64,6 +64,7 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_utils.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c" />
@@ -79,6 +80,7 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_utils.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h" />

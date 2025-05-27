@@ -1355,17 +1355,8 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
 
             MQTTStatus_t status = MQTTSuccess;
             uint8_t* pCurrIndex = NULL;
-            char* pUserPropKey = NULL;
-            uint16_t userPropKeyLen, userPropKeyVal;
-            char* pUserPropVal = NULL;
             uint8_t propertyId;
             uint8_t* startOfProp = NULL;
-            uint16_t topicAlias;
-            uint8_t payloadFormat;
-            const char* pResponseTopic;
-            uint16_t responseTopicLength;
-            const char* pCorrelationData;
-            uint16_t correlationLength;
             size_t propertyLength = getPropsBuffer->bufferLength;
             uint16_t topicAliasMax; 
 
@@ -1378,13 +1369,13 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
         }
         else if (pxPacketInfo->type == MQTT_PACKET_TYPE_SUBACK)
         {
-            MQTTSuccessFailReasonCode_t *startOfRc; 
+            const uint8_t * startOfRc; 
             size_t size; 
             startOfRc = pxDeserializedInfo->pReasonCode->reasonCode; 
             size = pxDeserializedInfo->pReasonCode->reasonCodeLength;
             LogError(("The size of the reason code is %d", size));
-            int i; 
-            for (i = 0; i < size; i++)
+            size_t i; 
+            for (i = 0U; i < size; i++)
             {
                 LogError(("The reason code is %d", startOfRc[i]));
             }

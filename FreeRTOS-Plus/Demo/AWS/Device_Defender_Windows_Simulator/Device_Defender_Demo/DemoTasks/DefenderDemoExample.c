@@ -229,10 +229,19 @@ extern BaseType_t xPlatformIsNetworkUp( void );
  * @param[in] pxMqttContext The MQTT context for the MQTT connection.
  * @param[in] pxPacketInfo Pointer to publish info of the incoming publish.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming publish.
+ * @param[out] pReasonCode         Pointer to a variable where the application can set the reason code
+ *                                 to include in outgoing PUBLISH ACK responses.
+ * @param[out] sendPropsBuffer     Pointer to the MQTT property builder. The application can use this
+ *                                 to add properties to the outgoing response packet.
+ * @param[in] getPropsBuffer       Pointer to the MQTT property accessor. The application can use this
+ *                                 to read properties received in the incoming MQTT packet.
  */
 static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTPacketInfo_t * pxPacketInfo,
-                                MQTTDeserializedInfo_t * pxDeserializedInfo );
+                                MQTTDeserializedInfo_t * pxDeserializedInfo,
+                                MQTTSuccessFailReasonCode_t * pReasonCode,
+                                MQTTPropBuilder_t * sendPropsBuffer,
+                                MQTTPropBuilder_t * getPropsBuffer);
 
 /**
  * @brief Collect all the metrics to be sent in the Device Defender report.
@@ -369,7 +378,10 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
 
 static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTPacketInfo_t * pxPacketInfo,
-                                MQTTDeserializedInfo_t * pxDeserializedInfo )
+                                MQTTDeserializedInfo_t * pxDeserializedInfo,
+                                MQTTSuccessFailReasonCode_t * pReasonCode,
+                                MQTTPropBuilder_t * sendPropsBuffer,
+                                MQTTPropBuilder_t * getPropsBuffer)
 {
     DefenderStatus_t xStatus;
     DefenderTopic_t xApi;

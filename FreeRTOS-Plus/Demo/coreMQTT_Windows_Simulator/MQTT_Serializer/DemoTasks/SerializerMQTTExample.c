@@ -803,8 +803,8 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     xIncomingPacket.pRemainingData = xBuffer.pBuffer;
     MQTTConnectProperties_t connackProperties = { 0 };
     connackProperties.maxPacketSize = MQTT_MAX_PACKET_SIZE;
-    xResult = MQTT_DeserializeConnack( &connackProperties, &xIncomingPacket,
-                                   &xSessionPresent, NULL );
+
+    xResult = MQTT_DeserializeAck( &xIncomingPacket, NULL, &xSessionPresent, NULL, 0, MQTT_MAX_PACKET_SIZE, NULL, &connackProperties );
 
     /* Log this convenient demo information before asserting if the result is
      * successful. */
@@ -1275,37 +1275,31 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
 
             prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
         }
-        else if ((xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK) || (xIncomingPacket.type == MQTT_PACKET_TYPE_UNSUBACK))
+        else
         {
+            /* If the received packet is not a Publish message, then it is an ACK for one
+             * of the messages we sent out, verify that the ACK packet is a valid MQTT
+             * packet. Session present is only valid for a CONNACK. CONNACK is not
+             * expected to be received here. Hence pass NULL for pointer to session
+             * present. */
             MQTTReasonCodeInfo_t reasonCodes;
-            xResult = MQTT_DeserializeSuback(&reasonCodes, &xIncomingPacket, &usPacketId, NULL, MQTT_MAX_PACKET_SIZE);
 
-            configASSERT(xResult == MQTTSuccess || xResult == MQTTServerRefused);
+            xResult = MQTT_DeserializeAck( &xIncomingPacket, &usPacketId,NULL, &reasonCodes, 0, MQTT_MAX_PACKET_SIZE, NULL, NULL);
+
             if (xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK)
             {
                 prvMQTTUpdateSubAckStatus(&xIncomingPacket);
+                /* #MQTTServerRefused is returned when the broker refuses the client
+                 * to subscribe to a specific topic filter. */
+                configASSERT(xResult == MQTTSuccess || xResult == MQTTServerRefused);
             }
-
+            else
+            {
+                configASSERT(xResult == MQTTSuccess);
+            }
             /* Process the response. */
             prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
         }
-        else if ((xIncomingPacket.type == MQTT_PACKET_TYPE_PUBACK) ||
-            (xIncomingPacket.type == MQTT_PACKET_TYPE_PUBREC) ||
-            (xIncomingPacket.type == MQTT_PACKET_TYPE_PUBREL) ||
-            (xIncomingPacket.type == MQTT_PACKET_TYPE_PUBCOMP))
-        {
-            MQTTReasonCodeInfo_t reasonCode;
-            xResult = MQTT_DeserializePublishAck(&xIncomingPacket, &usPacketId, &reasonCode, 0, MQTT_MAX_PACKET_SIZE, NULL);
-            configASSERT(xResult == MQTTSuccess);
-            /* Process the response. */
-            prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
-        }
-        else
-        {
-            xResult = MQTT_DeserializePing(&xIncomingPacket);
-            configASSERT(xResult == MQTTSuccess);
-        }
-
 
     }
 }

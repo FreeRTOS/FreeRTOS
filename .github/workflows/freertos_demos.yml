@@ -430,6 +430,7 @@ jobs:
                   exit 1
                 fi
               else
+                popd
                 echo -e "${{ env.bashFail }} MD5 checksum verification failed for msp430-gcc-full-linux-x64-installer-9.3.1.2.7z ${{ env.bashEnd }}"
                 echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
                 exit -1           

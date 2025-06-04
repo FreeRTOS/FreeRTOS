@@ -66,7 +66,7 @@ void Reset_Handler( void )
     _start();
 }
 
-void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
+__attribute__( ( used ) ) static void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
 {
 /* These are volatile to try and prevent the compiler/linker optimizing them
  * away as the variables never actually get used.  If the debugger won't show the
@@ -196,7 +196,7 @@ void Debug_Handler( void )
     );
 }
 
-const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =
+const uint32_t * const isr_vector[] __attribute__( ( section( ".isr_vector" ), used ) ) =
 {
     ( uint32_t * ) &_estack,
     ( uint32_t * ) &Reset_Handler,       /* Reset                     -15 */
@@ -244,12 +244,12 @@ void exit( int status )
     __asm volatile (
         "mov r1, r0\n"
         "cmp r1, #0\n"
-        "bne .notclean\n"
+        "bne .notclean2\n"
         "ldr r1, =0x20026\n" /* ADP_Stopped_ApplicationExit, a clean exit */
-        ".notclean:\n"
+        ".notclean2:\n"
         "movs r0, #0x18\n"   /* SYS_EXIT */
         "bkpt 0xab\n"
-        "end: b end\n"
+        "end2: b end2\n"
         ".ltorg\n"
         );
 

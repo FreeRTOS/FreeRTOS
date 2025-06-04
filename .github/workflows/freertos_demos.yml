@@ -411,18 +411,27 @@ jobs:
               sudo apt update -y
               sudo apt install -y p7zip-full
               pushd $HOME
-              7z x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
-              chmod +x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run
-              sudo ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run --prefix /usr/bin/msp430-gcc --mode unattended
-              exitStatus=$?
-              set -e
-              echo -e "::endgroup::"
-              popd
-              if [ $exitStatus -eq 0 ]; then
-                echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+              EXPECTED_MD5="2db2f99b4cd5c541ca0389ee20c67527"
+              GENERATED_MD5=$(md5sum msp430-gcc-full-linux-x64-installer-9.3.1.2.7z | awk '{print $1}')
+
+              if [ "$GENERATED_MD5" = "$EXPECTED_MD5" ]; then
+                7z x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.7z
+                chmod +x ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run
+                sudo ./msp430-gcc-full-linux-x64-installer-9.3.1.2.run --prefix /usr/bin/msp430-gcc --mode unattended
+                exitStatus=$?
+                set -e
+                echo -e "::endgroup::"
+                popd
+                if [ $exitStatus -eq 0 ]; then
+                  echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+                else
+                  echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
+                  exit 1
               else
+                echo -e "${{ env.bashFail }} MD5 checksum verification failed for msp430-gcc-full-linux-x64-installer-9.3.1.2.7z ${{ env.bashEnd }}"
                 echo -e "${{ env.bashFail }} ${{ env.stepName }} ${{ env.bashEnd }}"
-                exit 1
+                exit -1           
               fi
 
         - env:

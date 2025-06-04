@@ -510,7 +510,7 @@ void vFullDemoIdleFunction( void )
 
     /* Exercise heap_5 a bit.  The malloc failed hook will trap failed
      * allocations so there is no need to test here. */
-    pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
+    pvAllocated = pvPortMalloc( ( size_t ) ( ( rand() % 500 ) + 1 ) );
     vPortFree( pvAllocated );
 
     /* Exit after a fixed time so code coverage results are written to the
@@ -656,7 +656,8 @@ static void prvDemonstrateTimerQueryFunctions( void )
 
 static void prvDemonstratePendingFunctionCall( void )
 {
-    static intptr_t ulParameter1 = 1000UL, ulParameter2 = 0UL;
+    static intptr_t ulParameter1 = 1000L;
+    static uint32_t ulParameter2 = 0UL;
     const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
 
     /* prvPendedFunction() just expects the parameters to be incremented by one

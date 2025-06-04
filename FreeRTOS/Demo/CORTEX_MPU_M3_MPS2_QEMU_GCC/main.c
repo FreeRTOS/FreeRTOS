@@ -34,9 +34,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-void vApplicationIdleHook( void );
-void vApplicationTickHook( void );
-
 int main( void )
 {
     app_main();

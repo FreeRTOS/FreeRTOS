@@ -35,8 +35,8 @@ else()
     set( CMAKE_BUILD_TYPE "debug" )
 endif()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
+set(CMAKE_C_FLAGS_RELEASE "-O3")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
 
 if( SANITIZE_ADDRESS )
     add_compile_options( -fsanitize=address -fsanitize=alignment )

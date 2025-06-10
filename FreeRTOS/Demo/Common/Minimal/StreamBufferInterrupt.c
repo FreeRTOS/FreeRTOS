@@ -213,7 +213,7 @@ void vBasicStreamBufferSendFromISR( void )
 
 BaseType_t xIsInterruptStreamBufferDemoStillRunning( void )
 {
-    uint32_t ulLastCycleCount = 0;
+    static uint32_t ulLastCycleCount = 0;
 
     /* Check the demo is still running. */
     if( ulLastCycleCount == ulCycleCount )

@@ -210,8 +210,6 @@ void vApplicationTickHook( void )
 
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
     {
-        extern void vFullDemoTickHookFunction( void );
-
         vFullDemoTickHookFunction();
     }
     #endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */

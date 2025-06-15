@@ -31,7 +31,7 @@ SECTIONS
 		_etext = .;
 	} >rom AT>rom
 
-	.rodata.align ALIGN(4):
+	.rodata.align ALIGN(8):
 	{
 		_rodata = .;
 	} >rom AT>rom
@@ -47,13 +47,13 @@ SECTIONS
 		*(.rodata .rodata.*)
 		*(.gnu.linkonce.r.*)
 
-		. = ALIGN(4);
+		. = ALIGN(8);
 		_erodata = .;
 	} >rom AT>rom
 
 	.data.align :
 	{
-		. = ALIGN(4);
+		. = ALIGN(8);
 		_data = .;
 	} >ram AT>rom
 
@@ -78,13 +78,13 @@ SECTIONS
 		*(.srodata.cst2)
 		*(.srodata .srodata.*)
 
-		. = ALIGN(4);
+		. = ALIGN(8);
 		_edata = .;
 	} >ram AT>rom
 
 	.bss.align :
 	{
-		. = ALIGN(4);
+		. = ALIGN(8);
 		_bss = .;
 	} >ram AT>rom
 
@@ -101,7 +101,7 @@ SECTIONS
 		*(.gnu.linkonce.b.*)
 		*(COMMON)
 
-		. = ALIGN(4);
+		. = ALIGN(8);
 		_ebss = .;
 	} >ram AT>rom
 

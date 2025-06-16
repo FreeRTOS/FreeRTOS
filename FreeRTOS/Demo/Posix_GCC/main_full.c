@@ -114,7 +114,6 @@
 #define mainSEM_TEST_PRIORITY           ( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY            ( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY       ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY         ( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY       ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY     ( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY          ( tskIDLE_PRIORITY )

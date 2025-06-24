@@ -969,6 +969,8 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     uint8_t * pucPayload = NULL;
     uint32_t ulTopicCount = 0U;
     size_t ulSize = 0U;
+    MQTTStatus_t xResult; 
+    size_t propertyLength = 0; 
 
     /* Check if the pxPacketInfo contains a valid SUBACK packet. */
     configASSERT( pxPacketInfo != NULL );
@@ -979,12 +981,26 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
      * packet identifier and at least 1 return code. */
     configASSERT( pxPacketInfo->remainingLength >= 3U );
 
-    /* According to the MQTT 3.1.1 protocol specification, the "Remaining Length" field is a
-     * length of the variable header (2 bytes) plus the length of the payload.
-     * Therefore, we add 2 positions for the starting address of the payload, and
-     * subtract 2 bytes from the remaining length for the length of the payload.*/
-    pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) );
-    ulSize = pxPacketInfo->remainingLength - sizeof( uint16_t );
+    /* According to the MQTT 5.0 specification, the "Remaining Length" field represents the
+    * combined length of the variable header and the payload. In a SUBACK packet, the variable
+    * header consists of the Packet Identifier (2 bytes) followed by the properties.
+    *
+    * To locate the start of the payload:
+    * - Skip the 2-byte Packet Identifier.
+    * - Then skip the properties, whose total length is decoded using the
+    *   decodeSubackPropertyLength() function.
+    *
+    * The payload starts immediately after the properties.
+    * Its size is calculated by subtracting the size of the variable header
+    * (2 bytes for Packet ID + property length) from the remaining length.
+    */
+
+    xResult = decodeSubackPropertyLength( &pxPacketInfo->pRemainingData[sizeof(uint16_t)],
+                                         pxPacketInfo->remainingLength,
+                                         &propertyLength);
+
+    pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) ) + propertyLength ;
+    ulSize = pxPacketInfo->remainingLength - sizeof( uint16_t ) - propertyLength ;
 
     for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {

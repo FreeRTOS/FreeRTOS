@@ -367,17 +367,18 @@ static void prvPingRespTimerCallback( TimerHandle_t pxTimer );
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  * @param[out] pReasonCode         Pointer to a variable where the application can set the reason code
  *                                 to include in outgoing PUBLISH ACK responses.
- * @param[out] sendPropsBuffer     Pointer to the MQTT property builder. The application can use this
+ * @param[out] pSendPropsBuffer     Pointer to the MQTT property builder. The application can use this
  *                                 to add properties to the outgoing response packet.
- * @param[in] getPropsBuffer       Pointer to the MQTT property accessor. The application can use this
+ * @param[in] pGetPropsBuffer       Pointer to the MQTT property accessor. The application can use this
  *                                 to read properties received in the incoming MQTT packet.
+ * @return true if eventCallback is successful, false if it fails.
  */
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
+static bool prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo,
                               MQTTSuccessFailReasonCode_t * pReasonCode,
-                              MQTTPropBuilder_t * sendPropsBuffer,
-                              MQTTPropBuilder_t * getPropsBuffer);
+                              MQTTPropBuilder_t * pSendPropsBuffer,
+                              MQTTPropBuilder_t * pGetPropsBuffer);
 
 /*-----------------------------------------------------------*/
 
@@ -1151,12 +1152,12 @@ static void prvPingRespTimerCallback( TimerHandle_t pxTimer )
 
 /*-----------------------------------------------------------*/
 
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
+static bool prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo,
                               MQTTSuccessFailReasonCode_t * pReasonCode,
-                              MQTTPropBuilder_t * sendPropsBuffer,
-                              MQTTPropBuilder_t * getPropsBuffer)
+                              MQTTPropBuilder_t * pSendPropsBuffer,
+                              MQTTPropBuilder_t * pGetPropsBuffer)
 {
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;
@@ -1169,6 +1170,7 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
     {
         prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }
+    return true; 
 }
 
 /*-----------------------------------------------------------*/

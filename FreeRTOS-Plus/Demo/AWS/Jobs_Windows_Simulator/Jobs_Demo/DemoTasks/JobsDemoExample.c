@@ -345,19 +345,20 @@ static JobActionType prvGetAction( const char * pcAction,
  * @param[in] pxMqttContext MQTT context pointer.
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
- * @param[out] pReasonCode         Pointer to a variable where the application can set the reason code
+ * @param[out] pxReasonCode         Pointer to a variable where the application can set the reason code
  *                                 to include in outgoing PUBLISH ACK responses.
- * @param[out] sendPropsBuffer     Pointer to the MQTT property builder. The application can use this
+ * @param[out] pxSendPropsBuffer     Pointer to the MQTT property builder. The application can use this
  *                                 to add properties to the outgoing response packet.
- * @param[in] getPropsBuffer       Pointer to the MQTT property accessor. The application can use this
+ * @param[in] pxGetPropsBuffer       Pointer to the MQTT property accessor. The application can use this
  *                                 to read properties received in the incoming MQTT packet.
+ * @return true if prvEventCallback is successful, false if it fails.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
+static bool prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo,
-                              MQTTSuccessFailReasonCode_t * pReasonCode,
-                              MQTTPropBuilder_t * sendPropsBuffer,
-                              MQTTPropBuilder_t * getPropsBuffer);
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer);
 
 /**
  * @brief Process payload from NextJobExecutionChanged and DescribeJobExecution
@@ -697,12 +698,12 @@ static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
  * function to determine whether the incoming message is a Jobs message
  * or not. If it is, it handles the message depending on the message type.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
+static bool prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo,
-                              MQTTSuccessFailReasonCode_t * pReasonCode,
-                              MQTTPropBuilder_t * sendPropsBuffer,
-                              MQTTPropBuilder_t * getPropsBuffer)
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer)
 {
     uint16_t usPacketIdentifier;
 
@@ -834,6 +835,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
     {
         vHandleOtherIncomingPacket( pxPacketInfo, usPacketIdentifier );
     }
+    return true; 
 }
 
 /*-----------------------------------------------------------*/

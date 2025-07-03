@@ -13,6 +13,8 @@ on:
 
 jobs:
   auto-release:
+    permissions:
+      id-token: write
     name: Auto Release
     runs-on: ubuntu-20.04
     steps:
@@ -53,3 +55,11 @@ jobs:
           pip install -r ./tools/.github/scripts/release-requirements.txt
           ./tools/.github/scripts/release.py "$GITHUB_ORG" --core-repo-path=local_core --core-commit="$COMMIT_ID" --new-core-version="$VERSION_NUMBER"
           exit $?
+      
+      - name: Backup Release Asset
+        uses: FreeRTOS/CI-CD-Github-Actions/artifact-backup@main
+        with:
+          # This is dependent on the release script putting this zip file
+          # in this exact location.
+          artifact_path: ./tools/.github/scripts/FreeRTOSv${{ github.event.inputs.version_number }}.zip
+          release_tag: ${{ github.event.inputs.version_number }}

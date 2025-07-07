@@ -108,7 +108,7 @@ static uint8_t ucIsStopNeededInTimerZeroCallback = ( uint8_t ) pdFALSE;
 /* The one-shot timer is configured to use a callback function that increments
  * ucOneShotTimerCounter each time it gets called. */
 static TimerHandle_t xOneShotTimer = NULL;
-static uint8_t ucOneShotTimerCounter = ( uint8_t ) 0;
+static volatile uint8_t ucOneShotTimerCounter = ( uint8_t ) 0;
 
 /* The ISR reload timer is controlled from the tick hook to exercise the timer
  * API functions that can be used from an ISR.  It is configured to increment

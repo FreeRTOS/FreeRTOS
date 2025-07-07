@@ -849,7 +849,7 @@ static void prvEchoServer( void * pvParameters )
 
     static void prvSpaceAvailableCoherenceActor( void * pvParameters )
     {
-        static char * cTxString = "12345";
+        static const char * cTxString = "12345";
         char cRxString[ mbCOHERENCE_TEST_BYTES_WRITTEN + 1 ]; /* +1 for NULL terminator. */
 
         ( void ) pvParameters;

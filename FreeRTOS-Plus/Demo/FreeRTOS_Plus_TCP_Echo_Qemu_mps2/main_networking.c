@@ -259,8 +259,10 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
         #else
             FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
         #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+        FreeRTOS_printf( ( "Network Configuration:\r\n\r\n" ) );
+
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-        FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
+        FreeRTOS_printf( ( "IP Address: %s\r\n", cBuffer ) );
 
         FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
         FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );

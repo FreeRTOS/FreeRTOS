@@ -61,5 +61,5 @@ jobs:
         with:
           # This is dependent on the release script putting this zip file
           # in this exact location.
-          artifact_path: ./tools/.github/scripts/FreeRTOSv${{ github.event.inputs.version_number }}.zip
+          artifact_path: ./FreeRTOSv${{ github.event.inputs.version_number }}.zip
           release_tag: ${{ github.event.inputs.version_number }}

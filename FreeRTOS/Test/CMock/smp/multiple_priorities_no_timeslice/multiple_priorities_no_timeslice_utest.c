@@ -3340,6 +3340,8 @@ void test_task_priority_inherit_disinherit( void )
 
     /* Create 1 low priority task. */
     xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandles[ i ] );
+    TEST_ASSERT_EQUAL( 1, xTaskHandles[16]->uxPriority );
+    TEST_ASSERT_EQUAL( 1, xTaskHandles[16]->uxBasePriority );
 
     /* Start the scheduler. */
     vTaskStartScheduler();

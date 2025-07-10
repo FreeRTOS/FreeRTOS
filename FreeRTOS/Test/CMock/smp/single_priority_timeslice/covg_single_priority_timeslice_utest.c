@@ -411,7 +411,7 @@ void test_coverage_prvSelectHighestPriorityTask_not_schedule_none_idle_task( voi
  *     ( xYieldPendings[ uxCore ] == pdFALSE ) )
  * {
  *     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
- *         if( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE )
+ *         if( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE )
  *     #endif
  *     {
  *         xLowestPriority = xTaskPriority;
@@ -503,7 +503,7 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_task_yielding( void )
  *     ( xYieldPendings[ uxCore ] == pdFALSE ) )
  * {
  *     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
- *         if( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE )
+ *         if( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE )
  *     #endif
  *     {
  *         xLowestPriority = xTaskPriority;
@@ -593,7 +593,7 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_task_state_invalid( voi
  *     ( xYieldPendings[ uxCore ] == pdFALSE ) )
  * {
  *     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
- *         if( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE )
+ *         if( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE )
  *     #endif
  *     {
  *         xLowestPriority = xTaskPriority;

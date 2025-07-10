@@ -206,7 +206,7 @@ void vApplicationGetPassiveIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
 /**
  * @brief vTaskPreemptionEnable - Enable preemption of a task when scheduler is not running.
  *
- * The xPreemptionDisable of the task will be set to pdFALSE.
+ * The uxPreemptionDisable of the task will be set to pdFALSE.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -226,7 +226,7 @@ void test_coverage_vTaskPreemptionEnable_scheduler_not_running( void )
     TCB_t xTaskTCB = { NULL };
 
     /* Setup variables. */
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
 
     /* Clear callback in commonSetUp. */
     vFakePortEnterCriticalSection_StubWithCallback( NULL );
@@ -240,13 +240,13 @@ void test_coverage_vTaskPreemptionEnable_scheduler_not_running( void )
     vTaskPreemptionEnable( &xTaskTCB );
 
     /* Validation. */
-    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+    TEST_ASSERT( xTaskTCB.uxPreemptionDisable == pdFALSE );
 }
 
 /**
  * @brief vTaskPreemptionEnable - Enable preemption of a task when scheduler is running.
  *
- * The xPreemptionDisable of the task will be set to pdFALSE.
+ * The uxPreemptionDisable of the task will be set to pdFALSE.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -267,7 +267,7 @@ void test_coverage_vTaskPreemptionEnable_scheduler_running( void )
     TCB_t xTaskTCB = { NULL };
 
     /* Setup variable. */
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
     xTaskTCB.xTaskRunState = -1; /* taskTASK_NOT_RUNNING. */
 
     xSchedulerRunning = pdTRUE;
@@ -284,13 +284,13 @@ void test_coverage_vTaskPreemptionEnable_scheduler_running( void )
     vTaskPreemptionEnable( &xTaskTCB );
 
     /* Validation. */
-    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+    TEST_ASSERT( xTaskTCB.uxPreemptionDisable == pdFALSE );
 }
 
 /**
  * @brief vTaskPreemptionEnable - Enable preemption of a task with NULL handle.
  *
- * The xPreemptionDisable of the task on core 0 will be set to pdFALSE.
+ * The uxPreemptionDisable of the task on core 0 will be set to pdFALSE.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -303,7 +303,7 @@ void test_coverage_vTaskPreemptionEnable_null_handle( void )
     TCB_t xTaskTCB = { NULL };
     UBaseType_t uxInterruptMask = 0x12345678;
 
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
     xTaskTCB.xTaskRunState = -1; /* taskTASK_NOT_RUNNING. */
     pxCurrentTCBs[ 0 ] = &xTaskTCB;
 
@@ -325,13 +325,13 @@ void test_coverage_vTaskPreemptionEnable_null_handle( void )
     vTaskPreemptionEnable( NULL );
 
     /* Expection. */
-    TEST_ASSERT( pxCurrentTCBs[ 0 ]->xPreemptionDisable == pdFALSE );
+    TEST_ASSERT( pxCurrentTCBs[ 0 ]->uxPreemptionDisable == pdFALSE );
 }
 
 /**
  * @brief vTaskPreemptionEnable - Enable preemption of a task which is not running.
  *
- * The xPreemptionDisable of the task will be set to pdFALSE. The xTaskRunState is
+ * The uxPreemptionDisable of the task will be set to pdFALSE. The xTaskRunState is
  * set to greater than ( configNUMBER_OF_CORES - 1 ).
  *
  * <b>Coverage</b>
@@ -353,7 +353,7 @@ void test_coverage_vTaskPreemptionEnable_task_not_running_gt_cores( void )
     TCB_t xTaskTCB = { NULL };
 
     /* Setup variables. */
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
     xTaskTCB.xTaskRunState = configNUMBER_OF_CORES;
 
     xSchedulerRunning = pdTRUE;
@@ -370,13 +370,13 @@ void test_coverage_vTaskPreemptionEnable_task_not_running_gt_cores( void )
     vTaskPreemptionEnable( &xTaskTCB );
 
     /* Validation. */
-    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+    TEST_ASSERT( xTaskTCB.uxPreemptionDisable == pdFALSE );
 }
 
 /**
  * @brief vTaskPreemptionEnable - Enable preemption of a task which is running.
  *
- * The xPreemptionDisable of the task will be set to pdFALSE.
+ * The uxPreemptionDisable of the task will be set to pdFALSE.
  *
  * <b>Coverage</b>
  * @code{c}
@@ -397,7 +397,7 @@ void test_coverage_vTaskPreemptionEnable_task_running( void )
     TCB_t xTaskTCB = { NULL };
 
     /* Setup variables. */
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
     xTaskTCB.xTaskRunState = 0;
     xYieldPendings[ 0 ] = pdTRUE;
 
@@ -418,7 +418,7 @@ void test_coverage_vTaskPreemptionEnable_task_running( void )
     vTaskPreemptionEnable( &xTaskTCB );
 
     /* Validation. */
-    TEST_ASSERT( xTaskTCB.xPreemptionDisable == pdFALSE );
+    TEST_ASSERT( xTaskTCB.uxPreemptionDisable == pdFALSE );
 }
 
 /**
@@ -1495,7 +1495,7 @@ void test_coverage_prvYieldForTask_task_yield_pending( void )
  *     ( xYieldPendings[ uxCore ] == pdFALSE ) )
  * {
  *     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
- *         if( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE )
+ *         if( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE )
  *     #endif
  *     {
  *         xLowestPriority = xTaskPriority;
@@ -1503,7 +1503,7 @@ void test_coverage_prvYieldForTask_task_yield_pending( void )
  *     }
  * }
  * @endcode
- * ( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE ) is false.
+ * ( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE ) is false.
  */
 void test_coverage_prvSelectHighestPriorityTask_affinity_preemption_disabled( void )
 {
@@ -1547,7 +1547,7 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_preemption_disabled( vo
     xTaskTCBs[ configNUMBER_OF_CORES ].xTaskRunState = 0;
 
     /* Task 1 has preemption disabled. */
-    xTaskTCBs[ 1 ].xPreemptionDisable = pdTRUE;
+    xTaskTCBs[ 1 ].uxPreemptionDisable = pdTRUE;
 
     /* Setup the affinity mask for TN and TN+1. */
     xTaskTCBs[ configNUMBER_OF_CORES ].uxCoreAffinityMask = ( 1 << 0 ) | ( 1 << 1 );
@@ -1588,7 +1588,7 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_preemption_disabled( vo
  *     ( xYieldPendings[ uxCore ] == pdFALSE ) )
  * {
  *     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
- *         if( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE )
+ *         if( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE )
  *     #endif
  *     {
  *         xLowestPriority = xTaskPriority;
@@ -1596,7 +1596,7 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_preemption_disabled( vo
  *     }
  * }
  * @endcode
- * ( pxCurrentTCBs[ uxCore ]->xPreemptionDisable == pdFALSE ) is true.
+ * ( pxCurrentTCBs[ uxCore ]->uxPreemptionDisable == pdFALSE ) is true.
  */
 void test_coverage_prvSelectHighestPriorityTask_affinity_preemption_enabled( void )
 {
@@ -1640,7 +1640,7 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_preemption_enabled( voi
     xTaskTCBs[ configNUMBER_OF_CORES ].xTaskRunState = 0;
 
     /* Task 1 has preemption disabled. */
-    xTaskTCBs[ 1 ].xPreemptionDisable = pdFALSE;
+    xTaskTCBs[ 1 ].uxPreemptionDisable = pdFALSE;
 
     /* Setup the affinity mask for TN and TN+1. */
     xTaskTCBs[ configNUMBER_OF_CORES ].uxCoreAffinityMask = ( 1 << 0 ) | ( 1 << 1 );

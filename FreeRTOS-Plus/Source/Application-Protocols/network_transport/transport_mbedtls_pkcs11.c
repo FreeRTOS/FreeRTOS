@@ -165,7 +165,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
  *
  * @return Zero on success.
  */
-static int32_t generateRandomBytes( void * pvCtx,
+static int generateRandomBytes( void * pvCtx,
                                     unsigned char * pucRandom,
                                     size_t xRandomLength );
 
@@ -347,7 +347,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         mbedtls_ssl_conf_authmode( &( pTlsTransportParams->sslContext.config ),
                                    MBEDTLS_SSL_VERIFY_REQUIRED );
         mbedtls_ssl_conf_rng( &( pTlsTransportParams->sslContext.config ),
-                              (void *)generateRandomBytes,
+                              generateRandomBytes,
                               &pTlsTransportParams->sslContext );
         mbedtls_ssl_conf_cert_profile( &( pTlsTransportParams->sslContext.config ),
                                        &( pTlsTransportParams->sslContext.certProfile ) );
@@ -544,7 +544,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
 /*-----------------------------------------------------------*/
 
-static int32_t generateRandomBytes( void * pvCtx,
+static int generateRandomBytes( void * pvCtx,
                                     unsigned char * pucRandom,
                                     size_t xRandomLength )
 {

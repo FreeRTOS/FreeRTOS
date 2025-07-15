@@ -209,7 +209,7 @@ mbedtls_pk_info_t mbedtls_pkcs11_pk_ecdsa =
 {
     .type               = MBEDTLS_PK_ECKEY,
     .name               = "PKCS#11",
-    .get_bitlen         = p11_ecdsa_get_bitlen,
+    .get_bitlen         = (size_t (*)(mbedtls_pk_context *))p11_ecdsa_get_bitlen,
     .can_do             = p11_ecdsa_can_do,
     .verify_func        = p11_ecdsa_verify,
     .sign_func          = p11_ecdsa_sign,
@@ -219,14 +219,14 @@ mbedtls_pk_info_t mbedtls_pkcs11_pk_ecdsa =
     #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
     .decrypt_func       = NULL,
     .encrypt_func       = NULL,
-    .check_pair_func    = p11_ecdsa_check_pair,
+    .check_pair_func    = (int (*)(mbedtls_pk_context *, mbedtls_pk_context *, int (*)(void *, unsigned char *, size_t),void *))p11_ecdsa_check_pair,
     .ctx_alloc_func     = p11_ecdsa_ctx_alloc,
     .ctx_free_func      = p11_ecdsa_ctx_free,
     #if defined( MBEDTLS_ECDSA_C ) && defined( MBEDTLS_ECP_RESTARTABLE )
         .rs_alloc_func  = NULL,
         .rs_free_func   = NULL,
     #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
-    .debug_func         = p11_ecdsa_debug,
+    .debug_func         = (void (*)(mbedtls_pk_context *, mbedtls_pk_debug_item *))p11_ecdsa_debug,
 };
 
 /*-----------------------------------------------------------*/
@@ -278,7 +278,7 @@ mbedtls_pk_info_t mbedtls_pkcs11_pk_rsa =
 {
     .type               = MBEDTLS_PK_RSA,
     .name               = "PKCS#11",
-    .get_bitlen         = p11_rsa_get_bitlen,
+    .get_bitlen         = (size_t (*)(mbedtls_pk_context *))p11_rsa_get_bitlen,
     .can_do             = p11_rsa_can_do,
     .verify_func        = p11_rsa_verify,
     .sign_func          = p11_rsa_sign,
@@ -288,14 +288,14 @@ mbedtls_pk_info_t mbedtls_pkcs11_pk_rsa =
     #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
     .decrypt_func       = NULL,
     .encrypt_func       = NULL,
-    .check_pair_func    = p11_rsa_check_pair,
+    .check_pair_func    = (int (*)(mbedtls_pk_context *, mbedtls_pk_context *, int (*)(void *, unsigned char *, size_t),void *))p11_rsa_check_pair,
     .ctx_alloc_func     = p11_rsa_ctx_alloc,
     .ctx_free_func      = p11_rsa_ctx_free,
     #if defined( MBEDTLS_ECDSA_C ) && defined( MBEDTLS_ECP_RESTARTABLE )
         .rs_alloc_func  = NULL,
         .rs_free_func   = NULL,
     #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
-    .debug_func         = p11_rsa_debug,
+    .debug_func         = (void (*)(mbedtls_pk_context *, mbedtls_pk_debug_item *))p11_rsa_debug,
 };
 
 /*-----------------------------------------------------------*/

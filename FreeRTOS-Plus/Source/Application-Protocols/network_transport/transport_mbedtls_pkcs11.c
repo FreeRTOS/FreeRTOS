@@ -347,7 +347,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         mbedtls_ssl_conf_authmode( &( pTlsTransportParams->sslContext.config ),
                                    MBEDTLS_SSL_VERIFY_REQUIRED );
         mbedtls_ssl_conf_rng( &( pTlsTransportParams->sslContext.config ),
-                              generateRandomBytes,
+                              (void *)generateRandomBytes,
                               &pTlsTransportParams->sslContext );
         mbedtls_ssl_conf_cert_profile( &( pTlsTransportParams->sslContext.config ),
                                        &( pTlsTransportParams->sslContext.certProfile ) );

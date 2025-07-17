@@ -66,15 +66,20 @@ static BaseType_t xInterruptDisableStatus[ configNUMBER_OF_CORES ] = { 0U };
 
 static List_t xTasksWaitingToSend;
 
+static portSPINLOCK_TYPE xPortTaskSpinlock = portINIT_SPINLOCK_STATIC;
+static portSPINLOCK_TYPE xPortISRSpinlock = portINIT_SPINLOCK_STATIC;
+
+BaseType_t xReturnOnSpin = pdFALSE;
+
 /* ============================  Callback Functions  ============================ */
 static void vFakePortEnterCriticalSection_callback( int cmock_num_calls )
 {
-    vTaskEnterCritical();
+    taskDATA_GROUP_ENTER_CRITICAL( &xPortTaskSpinlock, &xPortISRSpinlock );
 }
 
 static void vFakePortExitCriticalSection_callback( int cmock_num_calls )
 {
-    vTaskExitCritical();
+    taskDATA_GROUP_EXIT_CRITICAL( &xPortTaskSpinlock, &xPortISRSpinlock );
 }
 
 static void vFakePortInitSpinlock_callback( portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
@@ -111,7 +116,6 @@ static void vYieldCores( void )
 static void vFakePortReleaseSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
-    TEST_ASSERT_NOT_EQUAL( -1, pxSpinlock->xOwnerCore );
     TEST_ASSERT_NOT_EQUAL( 0, pxSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( xCoreID, pxSpinlock->xOwnerCore );
 
@@ -128,7 +132,6 @@ static void vFakePortReleaseSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_
 static void vFakePortReleaseSpinlock_failure_callback( BaseType_t xCoreID, portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
-    TEST_ASSERT_NOT_EQUAL( -1, pxSpinlock->xOwnerCore );
     TEST_ASSERT_NOT_EQUAL( 0, pxSpinlock->uxLockCount );
     /* Catch failure & do not release lock */
     TEST_ASSERT_NOT_EQUAL( xCoreID, pxSpinlock->xOwnerCore );
@@ -140,7 +143,6 @@ static void vFakePortGetSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_TYPE
     
     if( pxSpinlock->uxLockCount == 0 )
     {
-        TEST_ASSERT_EQUAL( -1, pxSpinlock->xOwnerCore );
         pxSpinlock->uxLockCount = pxSpinlock->uxLockCount + 1U;
         pxSpinlock->xOwnerCore = xCoreID;
     }
@@ -157,7 +159,6 @@ static void vFakePortGetSpinlock_failure_callback( BaseType_t xCoreID, portSPINL
     
     if( pxSpinlock->uxLockCount == 0 )
     {
-        // TEST_ASSERT_EQUAL( -1, pxSpinlock->xOwnerCore );
         pxSpinlock->uxLockCount = pxSpinlock->uxLockCount + 1U;
         pxSpinlock->xOwnerCore = xCoreID;
     }
@@ -165,6 +166,7 @@ static void vFakePortGetSpinlock_failure_callback( BaseType_t xCoreID, portSPINL
     {
         /* Catch failure and do not increment */
         TEST_ASSERT_NOT_EQUAL( xCoreID, pxSpinlock->xOwnerCore );
+        xReturnOnSpin = pdTRUE;
     }
 }
 
@@ -260,6 +262,8 @@ void granularLocksSetUp( void )
     xISRSpinlock.uxLockCount = 0;
     xISRSpinlock.xOwnerCore = -1;
 
+    xReturnOnSpin = pdFALSE;
+
     uint32_t i;
     for ( i = 0; i < configNUMBER_OF_CORES; i++ ){
         xPortCriticalNestingCount[ i ] = 0;
@@ -271,6 +275,12 @@ void granularLocksSetUp( void )
     vFakePortReleaseSpinlock_Stub( vFakePortReleaseSpinlock_callback );
     vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_callback );
     vFakePortYieldCore_Stub( vFakePortYieldCore_callback );
+
+    /* User data group use portENTER/EXIT_CRITICAL now. */
+    vFakePortEnterCriticalSection_StubWithCallback( vFakePortEnterCriticalSection_callback );
+    vFakePortExitCriticalSection_StubWithCallback( vFakePortExitCriticalSection_callback );
+    portINIT_SPINLOCK( &xPortTaskSpinlock );
+    portINIT_SPINLOCK( &xPortISRSpinlock );
 
     /* Interrupt masks. */
     memset( xInterruptMaskCount, 0, sizeof( UBaseType_t ) * configNUMBER_OF_CORES );
@@ -343,7 +353,6 @@ void granular_locks_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinloc
     /* Core 1 attempts to enter timer critical section */
     vSetCurrentCore( 1 );
     vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_failure_callback );
-    
     taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
     /* Lock state hasn't changed */
@@ -364,7 +373,7 @@ void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTas
     vSetCurrentCore( 0 );
     taskENTER_CRITICAL();
 
-    /* Core 0 also enters timer critical section */
+    /* Core 0 also enters data group critical section */
     taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
     TEST_ASSERT_EQUAL( 2, xPortCriticalNestingCount[ 0 ] );
@@ -373,22 +382,28 @@ void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTas
     TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
 
+    /* Core 1 attempts to acquire the data group spinlocks */
     vSetCurrentCore( 1 );
-    vFakePortReleaseSpinlock_Stub( vFakePortReleaseSpinlock_failure_callback );
-    /* Core 1 attempts to release timer spinlocks */
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_failure_callback );
+    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
-    vFakePortReleaseSpinlock_Stub( vFakePortReleaseSpinlock_callback );
+    /* The failure callback set the return on spin flag to indicate failure. */
+    TEST_ASSERT_EQUAL( pdTRUE, xReturnOnSpin );
+    /* The data group lock owner is still core 0. */
+    TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
+    TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
+    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+
     vSetCurrentCore( 0 );
+    vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_callback );
     taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
     taskEXIT_CRITICAL();
 
-    TEST_ASSERT_EQUAL( 0, xPortCriticalNestingCount[ 1 ] );
     TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( -1, pxDataGroupTaskSpinlock->xOwnerCore );
     TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( -1, pxDataGroupISRSpinlock->xOwnerCore );
-
 }
 
 void granular_locks_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )

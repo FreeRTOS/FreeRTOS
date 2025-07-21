@@ -367,9 +367,9 @@ void test_coverage_vTaskPrioritySet_non_running_state( void )
  *
  * <b>Coverage</b>
  * @code{c}
- * if( pxTCB->xPreemptionDisable == pdFALSE )
+ * if( pxTCB->uxPreemptionDisable == pdFALSE )
  * @endcode
- * ( pxTCB->xPreemptionDisable == pdFALSE ) is false.
+ * ( pxTCB->uxPreemptionDisable == pdFALSE ) is false.
  */
 void test_coverage_vTaskPrioritySet_running_state( void )
 {
@@ -378,7 +378,7 @@ void test_coverage_vTaskPrioritySet_running_state( void )
     /* Setup the variables and structure. */
     xTaskTCBs[ 0 ].uxPriority = 4;
     xTaskTCBs[ 0 ].uxBasePriority = 4;
-    xTaskTCBs[ 0 ].xPreemptionDisable = pdTRUE;
+    xTaskTCBs[ 0 ].uxPreemptionDisable = pdTRUE;
     xTaskTCBs[ 0 ].xTaskRunState = 1;
 
     BaseType_t xYieldRequired = pdFALSE;
@@ -419,13 +419,14 @@ void test_coverage_prvYieldCore_core_id_ne_current_coreid( void )
 {
     TCB_t task;
     TCB_t task2;
-    TaskHandle_t xTaskHandle;
+    TaskHandle_t xTestTaskHandle;
 
     task.xTaskRunState = 1;   /* running on core 1 */
-    task.xPreemptionDisable = 1;
+    task.uxPreemptionDisable = 1;
+    task.uxDeferredStateChange = 0;
     task2.xTaskRunState = -2; /* running on core 2 taskTASK_YIELDING  */
     xYieldPendings[ 1 ] = pdTRUE;
-    xTaskHandle = &task;
+    xTestTaskHandle = &task;
     pxCurrentTCBs[ 0 ] = &task;
     pxCurrentTCBs[ 1 ] = &task;
     pxCurrentTCBs[ 2 ] = &task2;
@@ -440,7 +441,7 @@ void test_coverage_prvYieldCore_core_id_ne_current_coreid( void )
     vFakePortExitCriticalSection_Expect();
 
     /* API call */
-    vTaskPreemptionEnable( xTaskHandle );
+    vTaskPreemptionEnable( xTestTaskHandle );
 
     /* Test Assertions */
     TEST_ASSERT_EQUAL( pdFALSE, xYieldPendings[ 2 ] );
@@ -467,7 +468,7 @@ void test_coverage_prvYieldCore_runstate_eq_yielding( void )
     TaskHandle_t xTaskHandle;
 
     task.xTaskRunState = 1;   /* running on core 1 */
-    task.xPreemptionDisable = 1;
+    task.uxPreemptionDisable = 1;
     task2.xTaskRunState = -2; /* running on core 2 taskTASK_YIELDING  */
     xTaskHandle = &task;
     pxCurrentTCBs[ 0 ] = &task;
@@ -517,6 +518,7 @@ void test_coverage_vTaskDelete_task_not_running( void )
     TaskHandle_t xTaskToDelete;
 
     task.xTaskRunState = configNUMBER_OF_CORES + 2; /* running on core 1 */
+    task.uxPreemptionDisable = 0;
     xTaskToDelete = &task;
     pxCurrentTCBs[ 0 ] = &task;
 
@@ -619,7 +621,7 @@ void test_coverage_vTaskPreemptionDisable_null_handle( void )
     vTaskPreemptionDisable( NULL );
 
     /* Test Verifications */
-    TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[ 0 ]->xPreemptionDisable );
+    TEST_ASSERT_EQUAL( pdTRUE, pxCurrentTCBs[ 0 ]->uxPreemptionDisable );
 }
 
 /**

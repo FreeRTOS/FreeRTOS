@@ -256,7 +256,7 @@ void test_coverage_xTaskIncrementTick_no_eq_priority_task_yield_pending( void )
  * for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configNUMBER_OF_CORES; x++ )
  * {
  *     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
- *         if( pxCurrentTCBs[ x ]->xPreemptionDisable == pdFALSE )
+ *         if( pxCurrentTCBs[ x ]->uxPreemptionDisable == pdFALSE )
  *     #endif
  *     {
  *         ....
@@ -264,7 +264,7 @@ void test_coverage_xTaskIncrementTick_no_eq_priority_task_yield_pending( void )
  *     ...
  * }
  * @endcode
- * ( pxCurrentTCBs[ x ]->xPreemptionDisable == pdFALSE ) is false.
+ * ( pxCurrentTCBs[ x ]->uxPreemptionDisable == pdFALSE ) is false.
  */
 void test_coverage_xTaskIncrementTick_preemption_disabled_task( void )
 {
@@ -305,7 +305,7 @@ void test_coverage_xTaskIncrementTick_preemption_disabled_task( void )
     xTaskTCB.xTaskRunState = 0;
     xTaskTCB.xStateListItem.pxContainer = &pxReadyTasksLists[ tskIDLE_PRIORITY ];
     xTaskTCB.uxTaskAttributes = 0;
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
     listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCB.xStateListItem );
 
     /* API calls. */
@@ -385,7 +385,7 @@ void test_coverage_xTaskIncrementTick_ready_higher_priority_delayed_task( void )
     xTaskTCB.xTaskRunState = 0;
     xTaskTCB.xStateListItem.pxContainer = pxDelayedTaskList;
     xTaskTCB.uxTaskAttributes = 0;
-    xTaskTCB.xPreemptionDisable = pdTRUE;
+    xTaskTCB.uxPreemptionDisable = pdTRUE;
     listINSERT_END( pxDelayedTaskList, &xTaskTCB.xStateListItem );
     xTaskTCB.xEventListItem.pvOwner = &xTaskTCB;
     xTaskTCB.xEventListItem.pxContainer = &xEventList;

@@ -34,17 +34,12 @@
 /* Task includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
-#include "task.h"
-#include "event_groups.h"
-#include "queue.h"
-#include "semphr.h"
 #include "timers.h"
 
 /* Test includes. */
 #include "unity.h"
 #include "unity_memory.h"
 #include "../global_vars.h"
-//#include "../smp_utest_common.h"
 #include "../granular_lock_utest_common.h"
 
 /* Mock includes. */
@@ -68,7 +63,6 @@ void setUp( void )
     xTimerTaskSpinlock.xOwnerCore = -1;
     xTimerISRSpinlock.uxLockCount = 0;
     xTimerISRSpinlock.xOwnerCore = -1;
-
 }
 
 /*! called after each testcase */
@@ -92,12 +86,12 @@ int suiteTearDown( int numFailures )
 
 void test_granular_locks_timers_critical_section_independence( void )
 {
-    granular_locks_critical_section_independence( &xTimerTaskSpinlock, &xTimerISRSpinlock);
+    granular_locks_critical_section_independence( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_mutual_exclusion( void )
+void test_granular_locks_timers_critical_section_mutual_exclusion( void )
 {
-    granular_locks_mutual_exclusion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_mutual_exclusion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
 void test_granular_locks_timers_critical_section_nesting( void )
@@ -105,89 +99,87 @@ void test_granular_locks_timers_critical_section_nesting( void )
     granular_locks_critical_section_nesting( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_deletion( void )
+void test_granular_locks_timers_critical_section_state_protection_deletion( void )
 {
-    granular_locks_state_protection_deletion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_deletion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_suspension( void )
+void test_granular_locks_timers_critical_section_state_protection_suspension( void )
 {
-    granular_locks_state_protection_suspension( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_suspension( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_deletion_suspension( void )
+void test_granular_locks_timers_critical_section_state_protection_deletion_suspension( void )
 {
-    granular_locks_state_protection_deletion_suspension( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_deletion_suspension( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_suspension_deletion( void )
+void test_granular_locks_timers_critical_section_state_protection_suspension_deletion( void )
 {
-    granular_locks_state_protection_suspension_deletion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_suspension_deletion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_suspension_resumption_test( void ) //=> Currently fails
+void test_granular_locks_timers_critical_section_state_protection_suspension_resumption_test( void ) /*=> Currently fails */
 {
-    granular_locks_state_protection_suspension_resumption_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_suspension_resumption_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
 void test_granular_locks_timers_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
 
-void test_granular_locks_timers_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( void )
+void test_granular_locks_timers_critical_section_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( void )
 {
-    granular_locks_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( &xTimerTaskSpinlock, &xTimerISRSpinlock );
 }
-
-

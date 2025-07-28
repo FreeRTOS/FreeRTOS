@@ -45,7 +45,6 @@
 /* ============================  Unity Fixtures  ============================ */
 
 void granularLocksSetUp( void );
-
 void granularLocksTearDown( void );
 
 /* ==========================  Helper functions =========================== */
@@ -55,60 +54,90 @@ void granularLocksTearDown( void );
  * When one core enters timer data group critical section, the other core can enter any other data group
  * (user data group in this case) critical section.
  */
-void granular_locks_critical_section_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_lock_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
 
 /**
  * The purpose of this test case is to verify that data group critical sections are mutually exclusive.
  * When one core enters timer data group critical section, the other cannot enter the same data group
  * critical section.
  */
-void granular_locks_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                       portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_lock_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
 
 /**
  * The purpose of this test case is to verify that critical section nesting count is maintained
  * correctly for nested critical sections within timer operations.
  */
-void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                              portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_lock_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
 
 /**
  * The purpose of this test case is to verify that the task's run state is protected when
  * it holds a timer data group lock. Operations like deletion/suspend are deferred till the
  * lock is held
  */
-void granular_locks_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                  portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_deletion_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                           portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_suspension_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                           portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_suspension_resumption_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                  portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_lock_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_deletion_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_suspension_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_suspension_resumption_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
 
-void granular_locks_state_protection_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_deletion_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_suspension_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_suspension_resumption_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
-
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+/**
+ * The purpose of this test case is to verify that the task's run state is protected when
+ * it holds a timer data group lock. Place the task on an event list won't nullify the
+ * task state change after leaving the critical section.
+ */
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                     portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                            portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                              portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                             portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                               portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                     portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                            portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                              portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                             portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                               portSPINLOCK_TYPE * pxDataGroupISRSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock );
 
 #endif /* GRANULAR_LOCK_UTEST_COMMON_H */

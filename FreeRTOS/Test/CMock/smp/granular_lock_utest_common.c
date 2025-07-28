@@ -49,6 +49,32 @@
 #include "mock_fake_assert.h"
 #include "mock_fake_port.h"
 #include "mock_portmacro.h"
+#include "mock_timers.h"
+
+
+/* ===========================  TYPE DEFINITIONS  =========================== */
+
+typedef enum eStateChangeType
+{
+    STATE_CHANGE_DELETE,
+    STATE_CHANGE_SUSPEND,
+    STATE_CHANGE_DELETE_SUSPEND,
+    STATE_CHANGE_SUSPEND_DELETE,
+    STATE_CHANGE_SUSPEND_RESUME
+} eStateChangeType_t;
+
+typedef enum eEventListOperation
+{
+    PLACE_ON_EVENT_LIST,
+    PLACE_ON_UNORDERED_EVENT_LIST,
+    PLACE_ON_EVENT_LIST_RESTRICTED
+} eEventListOperation_t;
+
+typedef enum eStateChangeOperation
+{
+    OPERATION_DELETE,
+    OPERATION_SUSPEND
+} eStateChangeOperation_t;
 
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern portSPINLOCK_TYPE xTaskSpinlock;
@@ -71,6 +97,52 @@ static portSPINLOCK_TYPE xPortISRSpinlock = portINIT_SPINLOCK_STATIC;
 
 BaseType_t xReturnOnSpin = pdFALSE;
 
+/* ============================  Application hook function  ============================ */
+
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+
+    static void prvApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                                  StackType_t ** ppxTimerTaskStackBuffer,
+                                                  configSTACK_DEPTH_TYPE * puxTimerTaskStackSize,
+                                                  int cmock_num_calls )
+    {
+        static StaticTask_t xTimerTaskTCB;
+        static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+
+        ( void ) cmock_num_calls;
+
+        *ppxTimerTaskTCBBuffer = &( xTimerTaskTCB );
+        *ppxTimerTaskStackBuffer = &( uxTimerTaskStack[ 0 ] );
+        *puxTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+    }
+
+    void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                        StackType_t ** ppxIdleTaskStackBuffer,
+                                        configSTACK_DEPTH_TYPE * puxIdleTaskStackSize )
+    {
+        static StaticTask_t xIdleTaskTCB;
+        static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+
+        *ppxIdleTaskTCBBuffer = &( xIdleTaskTCB );
+        *ppxIdleTaskStackBuffer = &( uxIdleTaskStack[ 0 ] );
+        *puxIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    }
+
+    void vApplicationGetPassiveIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                               StackType_t ** ppxIdleTaskStackBuffer,
+                                               configSTACK_DEPTH_TYPE * puxIdleTaskStackSize,
+                                               BaseType_t xPassiveIdleTaskIndex )
+    {
+        static StaticTask_t xIdleTaskTCBs[ configNUMBER_OF_CORES - 1 ];
+        static StackType_t uxIdleTaskStacks[ configNUMBER_OF_CORES - 1 ][ configMINIMAL_STACK_SIZE ];
+
+        *ppxIdleTaskTCBBuffer = &( xIdleTaskTCBs[ xPassiveIdleTaskIndex ] );
+        *ppxIdleTaskStackBuffer = &( uxIdleTaskStacks[ xPassiveIdleTaskIndex ][ 0 ] );
+        *puxIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    }
+
+#endif /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
+
 /* ============================  Callback Functions  ============================ */
 static void vFakePortEnterCriticalSection_callback( int cmock_num_calls )
 {
@@ -82,7 +154,8 @@ static void vFakePortExitCriticalSection_callback( int cmock_num_calls )
     taskDATA_GROUP_EXIT_CRITICAL( &xPortTaskSpinlock, &xPortISRSpinlock );
 }
 
-static void vFakePortInitSpinlock_callback( portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
+static void vFakePortInitSpinlock_callback( portSPINLOCK_TYPE * pxSpinlock,
+                                            int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
 
@@ -113,13 +186,16 @@ static void vYieldCores( void )
     }
 }
 
-static void vFakePortReleaseSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
+static void vFakePortReleaseSpinlock_callback( BaseType_t xCoreID,
+                                               portSPINLOCK_TYPE * pxSpinlock,
+                                               int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
     TEST_ASSERT_NOT_EQUAL( 0, pxSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( xCoreID, pxSpinlock->xOwnerCore );
 
     pxSpinlock->uxLockCount = pxSpinlock->uxLockCount - 1U;
+
     if( pxSpinlock->uxLockCount == 0U )
     {
         pxSpinlock->xOwnerCore = -1;
@@ -129,7 +205,9 @@ static void vFakePortReleaseSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_
     vYieldCores();
 }
 
-static void vFakePortReleaseSpinlock_failure_callback( BaseType_t xCoreID, portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
+static void vFakePortReleaseSpinlock_failure_callback( BaseType_t xCoreID,
+                                                       portSPINLOCK_TYPE * pxSpinlock,
+                                                       int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
     TEST_ASSERT_NOT_EQUAL( 0, pxSpinlock->uxLockCount );
@@ -137,10 +215,12 @@ static void vFakePortReleaseSpinlock_failure_callback( BaseType_t xCoreID, portS
     TEST_ASSERT_NOT_EQUAL( xCoreID, pxSpinlock->xOwnerCore );
 }
 
-static void vFakePortGetSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
+static void vFakePortGetSpinlock_callback( BaseType_t xCoreID,
+                                           portSPINLOCK_TYPE * pxSpinlock,
+                                           int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
-    
+
     if( pxSpinlock->uxLockCount == 0 )
     {
         pxSpinlock->uxLockCount = pxSpinlock->uxLockCount + 1U;
@@ -153,10 +233,12 @@ static void vFakePortGetSpinlock_callback( BaseType_t xCoreID, portSPINLOCK_TYPE
     }
 }
 
-static void vFakePortGetSpinlock_failure_callback( BaseType_t xCoreID, portSPINLOCK_TYPE *pxSpinlock, int cmock_num_calls )
+static void vFakePortGetSpinlock_failure_callback( BaseType_t xCoreID,
+                                                   portSPINLOCK_TYPE * pxSpinlock,
+                                                   int cmock_num_calls )
 {
     TEST_ASSERT_NOT_EQUAL( NULL, pxSpinlock );
-    
+
     if( pxSpinlock->uxLockCount == 0 )
     {
         pxSpinlock->uxLockCount = pxSpinlock->uxLockCount + 1U;
@@ -200,15 +282,16 @@ static void vFakePortYieldCore_callback( int xCoreID,
 
 static UBaseType_t ulFakePortSetInterruptMaskFromISR_callback( int cmock_num_calls )
 {
-    ( void )cmock_num_calls;
+    ( void ) cmock_num_calls;
     xInterruptMaskCount[ portGET_CORE_ID() ]++;
     return xInterruptMaskCount[ portGET_CORE_ID() ];
 }
 
-static void vFakePortClearInterruptMaskFromISR_callback( UBaseType_t uxNewMaskValue, int cmock_num_calls )
+static void vFakePortClearInterruptMaskFromISR_callback( UBaseType_t uxNewMaskValue,
+                                                         int cmock_num_calls )
 {
-    ( void )uxNewMaskValue;
-    ( void )cmock_num_calls;
+    ( void ) uxNewMaskValue;
+    ( void ) cmock_num_calls;
     TEST_ASSERT_EQUAL( uxNewMaskValue, xInterruptMaskCount[ portGET_CORE_ID() ] );
     TEST_ASSERT_NOT_EQUAL( 0, xInterruptMaskCount[ portGET_CORE_ID() ] );
     xInterruptMaskCount[ portGET_CORE_ID() ]--;
@@ -219,15 +302,16 @@ static void vFakePortClearInterruptMaskFromISR_callback( UBaseType_t uxNewMaskVa
 
 static UBaseType_t ulFakePortSetInterruptMask_callback( int cmock_num_calls )
 {
-    ( void )cmock_num_calls;
+    ( void ) cmock_num_calls;
     xInterruptMaskCount[ portGET_CORE_ID() ]++;
     return xInterruptMaskCount[ portGET_CORE_ID() ];
 }
 
-static void vFakePortClearInterruptMask_callback( UBaseType_t uxNewMaskValue, int cmock_num_calls )
+static void vFakePortClearInterruptMask_callback( UBaseType_t uxNewMaskValue,
+                                                  int cmock_num_calls )
 {
-    ( void )uxNewMaskValue;
-    ( void )cmock_num_calls;
+    ( void ) uxNewMaskValue;
+    ( void ) cmock_num_calls;
     TEST_ASSERT_EQUAL( uxNewMaskValue, xInterruptMaskCount[ portGET_CORE_ID() ] );
     TEST_ASSERT_NOT_EQUAL( 0, xInterruptMaskCount[ portGET_CORE_ID() ] );
     xInterruptMaskCount[ portGET_CORE_ID() ]--;
@@ -256,7 +340,7 @@ void granularLocksSetUp( void )
 {
     commonSetUp();
     vListInitialise( &xTasksWaitingToSend );
-        
+
     xTaskSpinlock.uxLockCount = 0;
     xTaskSpinlock.xOwnerCore = -1;
     xISRSpinlock.uxLockCount = 0;
@@ -265,7 +349,9 @@ void granularLocksSetUp( void )
     xReturnOnSpin = pdFALSE;
 
     uint32_t i;
-    for ( i = 0; i < configNUMBER_OF_CORES; i++ ){
+
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
         xPortCriticalNestingCount[ i ] = 0;
         xTaskHandles[ i ] = NULL;
     }
@@ -299,6 +385,11 @@ void granularLocksSetUp( void )
     vFakePortDisableInterrupts_Stub( vFakePortDisableInterrupts_callback );
     vFakePortEnableInterrupts_StopIgnore();
     vFakePortEnableInterrupts_Stub( vFakePortEnableInterrupts_callback );
+
+    #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+        /* Setup timer task memory callback. */
+        vApplicationGetTimerTaskMemory_StubWithCallback( prvApplicationGetTimerTaskMemory );
+    #endif
 }
 
 void granularLocksTearDown( void )
@@ -308,61 +399,139 @@ void granularLocksTearDown( void )
 
 /* ==============================  Test Cases  ============================== */
 
-void granular_locks_critical_section_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
-{    
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
-
-    /* Core 1 enters user critical section */
-    vSetCurrentCore( 1 );
-    taskENTER_CRITICAL();
-
-    TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
-}
-
-void granular_locks_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+/* ==============================  granular lock independence  ============================== */
+static void granular_locks_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                         portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
     xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
     xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
 
     vTaskStartScheduler();
 
-    /* Core 0 enters timer critical section */
+    /* Core 0 actions */
     vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
 
     TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
 
-    /* Core 1 attempts to enter timer critical section */
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+    }
+
+    /* Core 1 actions */
+    vSetCurrentCore( 1 );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskENTER_CRITICAL();
+    }
+    else
+    {
+        vTaskSuspendAll();
+    }
+
+    TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
+    TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+    }
+}
+
+void granular_locks_critical_section_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    granular_locks_independence( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+}
+
+void granular_locks_lock_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    granular_locks_independence( pxDataGroupTaskSpinlock, NULL );
+}
+
+/* ==============================  granular lock mutual exclustion  ============================== */
+
+static void granular_locks_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                             portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
+    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
+
+    vTaskStartScheduler();
+
+    /* Core 0 actions */
+    vSetCurrentCore( 0 );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
+
+    TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
+    TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+    }
+
+    /* Core 1 attempts to enter critical section or lock */
     vSetCurrentCore( 1 );
     vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_failure_callback );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
 
     /* Lock state hasn't changed */
     TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+    }
 }
 
-void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+/* Wrapper functions for backward compatibility */
+void granular_locks_critical_section_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                       portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    granular_locks_mutual_exclusion( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+}
+
+void granular_locks_lock_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    granular_locks_mutual_exclusion( pxDataGroupTaskSpinlock, NULL );
+}
+
+/* ==============================  granular lock nesting  ============================== */
+static void granular_locks_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                    portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
     xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
     xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
@@ -373,564 +542,560 @@ void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTas
     vSetCurrentCore( 0 );
     taskENTER_CRITICAL();
 
-    /* Core 0 also enters data group critical section */
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    /* Core 0 also enters data group critical section or lock */
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
 
     TEST_ASSERT_EQUAL( 2, xPortCriticalNestingCount[ 0 ] );
     TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+    }
 
     /* Core 1 attempts to acquire the data group spinlocks */
     vSetCurrentCore( 1 );
     vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_failure_callback );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
 
     /* The failure callback set the return on spin flag to indicate failure. */
     TEST_ASSERT_EQUAL( pdTRUE, xReturnOnSpin );
     /* The data group lock owner is still core 0. */
     TEST_ASSERT_EQUAL( 1, pxDataGroupTaskSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
+    }
 
     vSetCurrentCore( 0 );
     vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_callback );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_UNLOCK( pxDataGroupTaskSpinlock );
+    }
+
     taskEXIT_CRITICAL();
 
     TEST_ASSERT_EQUAL( 0, pxDataGroupTaskSpinlock->uxLockCount );
     TEST_ASSERT_EQUAL( -1, pxDataGroupTaskSpinlock->xOwnerCore );
-    TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->uxLockCount );
-    TEST_ASSERT_EQUAL( -1, pxDataGroupISRSpinlock->xOwnerCore );
+
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->uxLockCount );
+        TEST_ASSERT_EQUAL( -1, pxDataGroupISRSpinlock->xOwnerCore );
+    }
 }
 
-void granular_locks_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                              portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
+    granular_locks_nesting( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+}
+
+void granular_locks_lock_nesting( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    granular_locks_nesting( pxDataGroupTaskSpinlock, NULL );
+}
+
+/* ==============================  granular lock nesting  ============================== */
+
+static void test_state_protection_basic( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                         portSPINLOCK_TYPE * pxDataGroupISRSpinlock,
+                                         eStateChangeType_t eChangeType )
+{
+    /* Create tasks */
+    xTaskCreate( vSmpTestTask, "Task 1", configMINIMAL_STACK_SIZE, NULL,
+                 configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
+    xTaskCreate( vSmpTestTask, "Task 2", configMINIMAL_STACK_SIZE, NULL,
+                 configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
 
     vTaskStartScheduler();
 
+    /* Verify initial state */
     verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
     verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
 
-    /* Core 0 enters timer critical section */
+    /* Core 0 enters critical section */
     vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
-    /* Core 1 attempts to delete task running on Core 0 */
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
+
+    /* Core 1 attempts state changes */
     vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
 
-    /* Not Yet Deleted */
+    switch( eChangeType )
+    {
+        case STATE_CHANGE_DELETE:
+            vTaskDelete( xTaskHandles[ 0 ] );
+            break;
+
+        case STATE_CHANGE_SUSPEND:
+            vTaskSuspend( xTaskHandles[ 0 ] );
+            break;
+
+        case STATE_CHANGE_DELETE_SUSPEND:
+            vTaskDelete( xTaskHandles[ 0 ] );
+            vTaskSuspend( xTaskHandles[ 0 ] );
+            break;
+
+        case STATE_CHANGE_SUSPEND_DELETE:
+            vTaskSuspend( xTaskHandles[ 0 ] );
+            vTaskDelete( xTaskHandles[ 0 ] );
+            break;
+
+        case STATE_CHANGE_SUSPEND_RESUME:
+            vTaskSuspend( xTaskHandles[ 0 ] );
+            vTaskResume( xTaskHandles[ 0 ] );
+            break;
+    }
+
+    /* Verify still running */
     verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
 
+    /* Core 0 exits critical section */
     vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
-    /* Now Deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_UNLOCK( pxDataGroupTaskSpinlock );
+    }
+
+    /* Verify final state */
+    eTaskState expectedState;
+
+    switch( eChangeType )
+    {
+        case STATE_CHANGE_DELETE:
+        case STATE_CHANGE_DELETE_SUSPEND:
+        case STATE_CHANGE_SUSPEND_DELETE:
+            expectedState = eDeleted;
+            break;
+
+        case STATE_CHANGE_SUSPEND:
+            expectedState = eSuspended;
+            break;
+
+        case STATE_CHANGE_SUSPEND_RESUME:
+            expectedState = eRunning;
+            break;
+
+        default:
+            expectedState = eRunning;
+    }
+
+    verifySmpTask( &xTaskHandles[ 0 ], expectedState, -1 );
 }
 
-void granular_locks_state_protection_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+/* Critical Section versions */
+void granular_locks_critical_section_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
+    test_state_protection_basic( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                                 STATE_CHANGE_DELETE );
+}
+
+void granular_locks_critical_section_state_protection_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                  portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                                 STATE_CHANGE_SUSPEND );
+}
+
+void granular_locks_critical_section_state_protection_deletion_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                           portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                                 STATE_CHANGE_DELETE_SUSPEND );
+}
+
+void granular_locks_critical_section_state_protection_suspension_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                           portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                                 STATE_CHANGE_SUSPEND_DELETE );
+}
+
+void granular_locks_critical_section_state_protection_suspension_resumption_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                  portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                                 STATE_CHANGE_SUSPEND_RESUME );
+}
+
+/* Lock versions */
+void granular_locks_lock_state_protection_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, NULL,
+                                 STATE_CHANGE_DELETE );
+}
+
+void granular_locks_lock_state_protection_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, NULL,
+                                 STATE_CHANGE_SUSPEND );
+}
+
+void granular_locks_lock_state_protection_deletion_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, NULL,
+                                 STATE_CHANGE_DELETE_SUSPEND );
+}
+
+void granular_locks_lock_state_protection_suspension_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, NULL,
+                                 STATE_CHANGE_SUSPEND_DELETE );
+}
+
+void granular_locks_lock_state_protection_suspension_resumption_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection_basic( pxDataGroupTaskSpinlock, NULL,
+                                 STATE_CHANGE_SUSPEND_RESUME );
+}
+
+/* ==============================  granular lock task state protect  ============================== */
+
+static void test_state_protection( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock,
+                                   eEventListOperation_t eListOp,
+                                   eStateChangeOperation_t eStateOp,
+                                   BaseType_t xStateChangeFirst )
+{
+    /* Create tasks */
+    xTaskCreate( vSmpTestTask, "Task 1", configMINIMAL_STACK_SIZE, NULL,
+                 configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
+    xTaskCreate( vSmpTestTask, "Task 2", configMINIMAL_STACK_SIZE, NULL,
+                 configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
 
     vTaskStartScheduler();
 
+    /* Verify initial state */
     verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
     verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
 
-    /* Core 0 enters timer critical section */
+    /* Core 0 enters critical section */
     vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
-    /* Core 1 attempts to suspend task running on Core 0 */
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_LOCK( pxDataGroupTaskSpinlock );
+    }
+
+    if( !xStateChangeFirst )
+    {
+        /* Place task on event list */
+        switch( eListOp )
+        {
+            case PLACE_ON_EVENT_LIST:
+                vTaskPlaceOnEventList( &xTasksWaitingToSend, 0 );
+                break;
+
+            case PLACE_ON_UNORDERED_EVENT_LIST:
+                vTaskPlaceOnUnorderedEventList( &xTasksWaitingToSend, 0, 0 );
+                break;
+
+            case PLACE_ON_EVENT_LIST_RESTRICTED:
+                vTaskPlaceOnEventListRestricted( &xTasksWaitingToSend, 0, pdFALSE );
+                break;
+        }
+    }
+
+    /* Core 1 attempts state change */
     vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
 
-    /* Not Yet Suspended */
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
+    if( eStateOp == OPERATION_DELETE )
+    {
+        vTaskDelete( xTaskHandles[ 0 ] );
+    }
+    else
+    {
+        vTaskSuspend( xTaskHandles[ 0 ] );
+    }
 
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    if( xStateChangeFirst )
+    {
+        vSetCurrentCore( 0 );
 
-    /* Now Suspended */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
-}
+        /* Place task on event list */
+        switch( eListOp )
+        {
+            case PLACE_ON_EVENT_LIST:
+                vTaskPlaceOnEventList( &xTasksWaitingToSend, 0 );
+                break;
 
-void granular_locks_state_protection_deletion_suspension( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
-{
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
+            case PLACE_ON_UNORDERED_EVENT_LIST:
+                vTaskPlaceOnUnorderedEventList( &xTasksWaitingToSend, 0, 0 );
+                break;
 
-    vTaskStartScheduler();
+            case PLACE_ON_EVENT_LIST_RESTRICTED:
+                vTaskPlaceOnEventListRestricted( &xTasksWaitingToSend, 0, pdFALSE );
+                break;
+        }
+    }
 
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to delete & then suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-    
-    /* Still running */
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now Deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
-}
-
-void granular_locks_state_protection_suspension_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
-{
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend & then delete task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-    vTaskDelete( xTaskHandles[ 0 ] );
-    
-    /* Still running */
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now Deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
-}
-
-
-void granular_locks_state_protection_suspension_resumption_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock ) //=> Currently fails
-{
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend & then resume task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-    vTaskResume( xTaskHandles[ 0 ] );
-    
-    /* Still running on Core 0 */
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Since we had resumed the task on Core 0 is still running */
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, -1 );
-}
-
-void granular_locks_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
-{
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    vTaskPlaceOnEventList( &xTasksWaitingToSend, 0);
-
-    /* Core 1 attempts to delete task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-
-    /* Still blocked and run state 1 on Core 0, deletion deferred */
+    /* Verify intermediate state */
     verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
 
-    /* Core 0 exits timer critical section */
+    /* Core 0 exits critical section */
     vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
 
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
+    }
+    else
+    {
+        taskDATA_GROUP_UNLOCK( pxDataGroupTaskSpinlock );
+    }
+
+    /* Verify final state */
+    verifySmpTask( &xTaskHandles[ 0 ],
+                   ( eStateOp == OPERATION_DELETE ) ? eDeleted : eSuspended,
+                   -1 );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    vSetCurrentCore( 0 );
-    vTaskPlaceOnEventList( &xTasksWaitingToSend, 0);
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-
-    /* Still blocked and run state 1 on Core 0, suspension deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0);
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now suspended */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdFALSE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                     portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    vTaskPlaceOnUnorderedEventList( &xTasksWaitingToSend, 0,0);
-
-    /* Core 1 attempts to delete task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-
-    /* Still blocked and run state 1 on Core 0, deletion deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdFALSE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                            portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    vTaskPlaceOnUnorderedEventList( &xTasksWaitingToSend, 0, 0);
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-
-    /* Still blocked and run state 1 on Core 0, suspension deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now suspended */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdFALSE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                              portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    vTaskPlaceOnEventListRestricted( &xTasksWaitingToSend, 0, pdFALSE);
-
-    /* Core 1 attempts to delete task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-
-    /* Still blocked and run state 1 on Core 0, deletion deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdFALSE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                             portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    vTaskPlaceOnEventListRestricted( &xTasksWaitingToSend, 0, pdFALSE);
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-
-    /* Still blocked and run state 1 on Core 0, suspension deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now suspended */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_DELETE,
+                           pdFALSE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                               portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-
-    vSetCurrentCore( 0 );
-    /* Task running on Core 0 enters blocked state */
-    vTaskPlaceOnEventList( &xTasksWaitingToSend, 0);
-
-    /* Still blocked and run state 1 on Core 0, deletion deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_SUSPEND,
+                           pdFALSE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                   portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-
-    vSetCurrentCore( 0 );
-    /* Task running on Core 0 enters blocked state */
-    vTaskPlaceOnEventList( &xTasksWaitingToSend, 0);
-
-    /* Still blocked and run state 1 on Core 0, suspension deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdTRUE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                     portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-
-    vSetCurrentCore( 0 );
-    /* Task running on Core 0 enters blocked state */
-    vTaskPlaceOnUnorderedEventList( &xTasksWaitingToSend, 0, 0);
-
-    /* Still blocked and run state 1 on Core 0, deletion deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdTRUE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                            portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-
-    vSetCurrentCore( 0 );
-    /* Task running on Core 0 enters blocked state */
-    vTaskPlaceOnUnorderedEventList( &xTasksWaitingToSend, 0, 0);
-
-    /* Still blocked and run state 1 on Core 0, suspension deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdTRUE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                              portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskDelete( xTaskHandles[ 0 ] );
-
-    vSetCurrentCore( 0 );
-    /* Task running on Core 0 enters blocked state */
-    vTaskPlaceOnEventListRestricted( &xTasksWaitingToSend, 0, pdFALSE);
-
-    /* Still blocked and run state 1 on Core 0, deletion deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eDeleted, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdTRUE );
 }
 
-void granular_locks_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock, portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                             portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
 {
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 0 ] );
-    xTaskCreate( vSmpTestTask, "Granular Lock Task 2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xTaskHandles[ 1 ] );
-
-    vTaskStartScheduler();
-
-    verifySmpTask( &xTaskHandles[ 0 ], eRunning, 0 );
-    verifySmpTask( &xTaskHandles[ 1 ], eRunning, 1 );
-
-    /* Core 0 enters timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_ENTER_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Core 1 attempts to suspend task running on Core 0 */
-    vSetCurrentCore( 1 );
-    vTaskSuspend( xTaskHandles[ 0 ] );
-
-    vSetCurrentCore( 0 );
-    /* Task running on Core 0 enters blocked state */
-    vTaskPlaceOnEventListRestricted( &xTasksWaitingToSend, 0, pdFALSE);
-
-    /* Still blocked and run state 1 on Core 0, suspension deferred */
-    verifySmpTask( &xTaskHandles[ 0 ], eBlocked, 0 );
-
-    /* Core 0 exits timer critical section */
-    vSetCurrentCore( 0 );
-    taskDATA_GROUP_EXIT_CRITICAL( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock );
-
-    /* Now deleted */
-    verifySmpTask( &xTaskHandles[ 0 ], eSuspended, -1 );
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_DELETE,
+                           pdTRUE );
 }
+
+void granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
+                                                                                                               portSPINLOCK_TYPE * pxDataGroupISRSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, pxDataGroupISRSpinlock,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_SUSPEND,
+                           pdTRUE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdFALSE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdFALSE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdFALSE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdFALSE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_DELETE,
+                           pdFALSE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_SUSPEND,
+                           pdFALSE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdTRUE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdTRUE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_DELETE,
+                           pdTRUE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_UNORDERED_EVENT_LIST,
+                           OPERATION_SUSPEND,
+                           pdTRUE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_DELETE,
+                           pdTRUE );
+}
+
+void granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock )
+{
+    test_state_protection( pxDataGroupTaskSpinlock, NULL,
+                           PLACE_ON_EVENT_LIST_RESTRICTED,
+                           OPERATION_SUSPEND,
+                           pdTRUE );
+}
+
+/* ==============================  Locking Test Cases  ============================== */

@@ -9,20 +9,23 @@ LD = arm-none-eabi-gcc
 SIZE = arm-none-eabi-size
 MAKE = make
 
-CFLAGS += -ffreestanding -mthumb -mcpu=cortex-m3
-CFLAGS += -Wall -Wextra -Wshadow -Wno-unused-value
+ifeq ($(PICOLIBC), 1)
+    CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
+endif
+CFLAGS += -mthumb -mcpu=cortex-m3
 CFLAGS += -g3 -Os -ffunction-sections -fdata-sections
-CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
-#CFLAGS += -std=c99
-#CFLAGS += -Wpedantic -fanalyzer
 #CFLAGS += -flto
+CFLAGS += -Wall -Wextra -Wshadow -Wno-unused-value
+CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -MT $@
 CFLAGS += $(INCLUDE_DIRS)
 
 LDFLAGS = -T ./mps2_m3.ld
 LDFLAGS += -Xlinker -Map=$(OUTPUT_DIR)/RTOSDemo.map
 LDFLAGS += -Xlinker --gc-sections
-LDFLAGS += -nostartfiles
-LDFLAGS += -specs=nano.specs -specs=nosys.specs # -specs=rdimon.specs
+#LDFLAGS += -Xlinker --print-gc-sections
+ifneq ($(PICOLIBC), 1)
+    LDFLAGS += -nostartfiles -specs=nano.specs -specs=nosys.specs # -specs=rdimon.specs
+endif
 
 #
 # Kernel build.

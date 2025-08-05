@@ -76,7 +76,7 @@ _uart_putc(char c, FILE *file)
 
 static FILE __stdio = FDEV_SETUP_STREAM(_uart_putc, NULL, NULL, _FDEV_SETUP_WRITE);
 
-FILE *const stdout = &__stdio;
+__attribute__( ( used ) ) FILE *const stdout = &__stdio;
 
 #else
 

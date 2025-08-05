@@ -52,6 +52,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "FreeRTOS_IP.h"
+
 /* Demo Specific configs. */
 #include "demo_config.h"
 //#include "core_mqtt_config.h"
@@ -267,6 +269,8 @@
 #define mqttexampleACK_PROPERTIES_BUFFER_LEN              ( 500U )
 
 /*-----------------------------------------------------------*/
+
+UBaseType_t uxRand(void);
 
 /**
  * @brief Each compilation unit that consumes the NetworkContext must define it.
@@ -1363,19 +1367,18 @@ static bool prvEventCallback( MQTTContext_t * pxMQTTContext,
 {
     /* The MQTT context is not used in this function. */
     ( void ) pxMQTTContext;
-    MQTTStatus_t xResult; 
-        if((pxPacketInfo->type & 0xF0U) == MQTT_PACKET_TYPE_PUBLISH)
-        {
+    if((pxPacketInfo->type & 0xF0U) == MQTT_PACKET_TYPE_PUBLISH)
+    {
 
-            prvMQTTProcessIncomingPublish(pxDeserializedInfo->pPublishInfo, pReasonCode, pSendPropsBuffer, pGetPropsBuffer );
+        prvMQTTProcessIncomingPublish(pxDeserializedInfo->pPublishInfo, pReasonCode, pSendPropsBuffer, pGetPropsBuffer );
 
-        }
-        else
-        {
-            prvMQTTProcessResponse(pxPacketInfo, pReasonCode, pSendPropsBuffer, pGetPropsBuffer, pxDeserializedInfo->packetIdentifier);
+    }
+    else
+    {
+        prvMQTTProcessResponse(pxPacketInfo, pReasonCode, pSendPropsBuffer, pGetPropsBuffer, pxDeserializedInfo->packetIdentifier);
 
-        }
-        return true; 
+    }
+    return true; 
     }
 
 /*-----------------------------------------------------------*/

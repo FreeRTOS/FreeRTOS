@@ -20,7 +20,7 @@ env:
 jobs:
   winsim_cellular:
     name: Windows Simulator Cellular Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -128,7 +128,7 @@ jobs:
 
   winsim_coreHTTP:
     name: coreHTTP WinSim Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -281,7 +281,7 @@ jobs:
 
   winsim_corePKCS11:
     name: corePKCS11 WinSim Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -370,7 +370,7 @@ jobs:
 
   winsim_corelibs:
     name: core Library Windows Simulator Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -862,7 +862,7 @@ jobs:
 
   winsim_aws_iot:
     name: AWS IoT Windows Simulator Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -1146,7 +1146,7 @@ jobs:
 
   plus_tcp_winsim:
     name: FreeRTOS+TCP Windows Simulator Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     continue-on-error: true
     steps:
       - name: Checkout Repository
@@ -1303,7 +1303,7 @@ jobs:
 
   winsim_plus_demos:
     name: FreeRTOS+CLI Windows Simulator Demos
-    runs-on: windows-2019
+    runs-on: windows-latest
     continue-on-error: true
     steps:
       - name: Checkout Repository

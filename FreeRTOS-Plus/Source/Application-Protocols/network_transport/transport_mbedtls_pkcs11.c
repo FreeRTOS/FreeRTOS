@@ -165,9 +165,9 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
  *
  * @return Zero on success.
  */
-static int32_t generateRandomBytes( void * pvCtx,
-                                    unsigned char * pucRandom,
-                                    size_t xRandomLength );
+static int generateRandomBytes( void * pvCtx,
+                                unsigned char * pucRandom,
+                                size_t xRandomLength );
 
 /**
  * @brief Helper for reading the specified certificate object, if present,
@@ -544,9 +544,9 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
 /*-----------------------------------------------------------*/
 
-static int32_t generateRandomBytes( void * pvCtx,
-                                    unsigned char * pucRandom,
-                                    size_t xRandomLength )
+static int generateRandomBytes( void * pvCtx,
+                                unsigned char * pucRandom,
+                                size_t xRandomLength )
 {
     /* Must cast from void pointer to conform to mbed TLS API. */
     SSLContext_t * pxCtx = ( SSLContext_t * ) pvCtx;

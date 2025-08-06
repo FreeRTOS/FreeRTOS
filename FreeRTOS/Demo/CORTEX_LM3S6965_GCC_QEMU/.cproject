@@ -202,7 +202,7 @@
 						</tool>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="FreeRTOS+Trace Recorder" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="FreeRTOS_Source/examples|FreeRTOS+Trace Recorder" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -211,5 +211,32 @@ typedef struct QueueDefinition /* The old naming convention is used to prevent b
  * name below to enable the use of older kernel aware debuggers. */
 typedef xQUEUE Queue_t;
 
+/* Structure that hold state information on the buffer. */
+typedef struct StreamBufferDef_t
+{
+    volatile size_t xTail;                       /* Index to the next item to read within the buffer. */
+    volatile size_t xHead;                       /* Index to the next item to write within the buffer. */
+    size_t xLength;                              /* The length of the buffer pointed to by pucBuffer. */
+    size_t xTriggerLevelBytes;                   /* The number of bytes that must be in the stream buffer before a task that is waiting for data is unblocked. */
+    volatile TaskHandle_t xTaskWaitingToReceive; /* Holds the handle of a task waiting for data, or NULL if no tasks are waiting. */
+    volatile TaskHandle_t xTaskWaitingToSend;    /* Holds the handle of a task waiting to send data to a message buffer that is full. */
+    uint8_t * pucBuffer;                         /* Points to the buffer itself - that is - the RAM that stores the data passed through the buffer. */
+    uint8_t ucFlags;
+
+    #if ( configUSE_TRACE_FACILITY == 1 )
+        UBaseType_t uxStreamBufferNumber; /* Used for tracing purposes. */
+    #endif
+
+    #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
+        StreamBufferCallbackFunction_t pxSendCompletedCallback;    /* Optional callback called on send complete. sbSEND_COMPLETED is called if this is NULL. */
+        StreamBufferCallbackFunction_t pxReceiveCompletedCallback; /* Optional callback called on receive complete.  sbRECEIVE_COMPLETED is called if this is NULL. */
+    #endif
+    UBaseType_t uxNotificationIndex;                               /* The index we are using for notification, by default tskDEFAULT_INDEX_TO_NOTIFY. */
+    #if ( ( portUSING_GRANULAR_LOCKS == 1 ) && ( configNUMBER_OF_CORES > 1 ) )
+        portSPINLOCK_TYPE xTaskSpinlock;
+        portSPINLOCK_TYPE xISRSpinlock;
+    #endif /* #if ( ( portUSING_GRANULAR_LOCKS == 1 ) && ( configNUMBER_OF_CORES > 1 ) ) */
+} StreamBuffer_t;
+
 
 #endif /* ifndef GLOBAL_VARS_H */

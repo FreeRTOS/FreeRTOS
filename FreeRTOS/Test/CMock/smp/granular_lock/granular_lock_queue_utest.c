@@ -53,6 +53,7 @@
 #define TEST_QUEUE_ITEM_SIZE    ( sizeof( uint32_t ) )
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
+
 static QueueHandle_t xDynamicQueueHandle = NULL;
 static QueueHandle_t xStaticQueueHandle = NULL;
 
@@ -307,4 +308,213 @@ void test_granular_locks_dynamic_queue_lock_state_protection_vTaskPlaceOnEventLi
 {
     granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test(
         &xDynamicQueueHandle->xTaskSpinlock );
+}
+
+/* ==============================  Test Cases static allocated queue ============================== */
+
+void test_granular_locks_static_queue_critical_section_independence( void )
+{
+    granular_locks_critical_section_independence( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_mutual_exclusion( void )
+{
+    granular_locks_critical_section_mutual_exclusion( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_nesting( void )
+{
+    granular_locks_critical_section_nesting( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_deletion( void )
+{
+    granular_locks_critical_section_state_protection_deletion( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_suspension( void )
+{
+    granular_locks_critical_section_state_protection_suspension( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_deletion_suspension( void )
+{
+    granular_locks_critical_section_state_protection_deletion_suspension( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_suspension_deletion( void )
+{
+    granular_locks_critical_section_state_protection_suspension_deletion( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_suspension_resumption_test( void ) /*=> Currently fails */
+{
+    granular_locks_critical_section_state_protection_suspension_resumption_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_deletion_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_blocked_suspension_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_deletion_blocked_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventList_suspension_blocked_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_critical_section_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( void )
+{
+    granular_locks_critical_section_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test( &xStaticQueueHandle->xTaskSpinlock, &xStaticQueueHandle->xISRSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_independence( void )
+{
+    granular_locks_lock_independence( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_mutual_exclusion( void )
+{
+    granular_locks_lock_mutual_exclusion( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_deletion( void )
+{
+    granular_locks_lock_state_protection_deletion( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_suspension( void )
+{
+    granular_locks_lock_state_protection_suspension( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_deletion_suspension( void )
+{
+    granular_locks_lock_state_protection_deletion_suspension( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_suspension_deletion( void )
+{
+    granular_locks_lock_state_protection_suspension_deletion( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_suspension_resumption( void )
+{
+    granular_locks_lock_state_protection_suspension_resumption_test( &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventList_blocked_deletion( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventList_blocked_deletion_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventList_blocked_suspension( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventList_blocked_suspension_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_deletion_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_blocked_suspension_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_deletion_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_blocked_suspension_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventList_deletion_blocked( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventList_deletion_blocked_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventList_suspension_blocked( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventList_suspension_blocked_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_deletion_blocked_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnUnorderedEventList_suspension_blocked_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_deletion_blocked_test(
+        &xStaticQueueHandle->xTaskSpinlock );
+}
+
+void test_granular_locks_static_queue_lock_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked( void )
+{
+    granular_locks_lock_state_protection_vTaskPlaceOnEventListRestricted_suspension_blocked_test(
+        &xStaticQueueHandle->xTaskSpinlock );
 }

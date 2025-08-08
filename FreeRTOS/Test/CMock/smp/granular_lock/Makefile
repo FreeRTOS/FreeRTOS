@@ -16,7 +16,7 @@ PROJECT_DEPS_SRC    := list.c
 PROJECT_HEADER_DEPS :=  FreeRTOS.h
 
 # SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
-SUITE_UT_SRC        :=  granular_lock_timers_utest.c granular_lock_queue_utest.c
+SUITE_UT_SRC        :=  granular_lock_timers_utest.c granular_lock_queue_utest.c granular_lock_stream_buffer_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR
@@ -27,7 +27,7 @@ SUITE_SUPPORT_SRC   += granular_lock_utest_common.c
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/timers.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_assert.h
 MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/config/fake_port.h
-MOCK_FILES_FP   +=  $(UT_ROOT_DIR)//smp/granular_lock/portmacro.h
+MOCK_FILES_FP   +=  $(UT_ROOT_DIR)/smp/granular_lock/portmacro.h
 
 # List any addiitonal flags needed by the preprocessor
 CPPFLAGS            +=

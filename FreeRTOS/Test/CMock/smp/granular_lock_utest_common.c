@@ -394,6 +394,9 @@ void granularLocksSetUp( void )
 
 void granularLocksTearDown( void )
 {
+    /* Revert the callback function. */
+    vFakePortGetSpinlock_Stub( vFakePortGetSpinlock_callback );
+
     commonTearDown();
 }
 
@@ -432,6 +435,7 @@ static void granular_locks_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpin
     /* Core 1 actions */
     vSetCurrentCore( 1 );
 
+    /* Core 1 should be able to acquire kernel data group lock. */
     if( pxDataGroupISRSpinlock != NULL )
     {
         taskENTER_CRITICAL();
@@ -449,6 +453,19 @@ static void granular_locks_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpin
         TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
         TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
     }
+
+    /* Core 1 release the kerenl data group lock. */
+    if( pxDataGroupISRSpinlock != NULL )
+    {
+        taskEXIT_CRITICAL();
+    }
+    else
+    {
+        ( void ) xTaskResumeAll();
+    }
+
+    /* Switch back to core 0 after test. */
+    vSetCurrentCore( 0 );
 }
 
 void granular_locks_critical_section_independence( portSPINLOCK_TYPE * pxDataGroupTaskSpinlock,
@@ -515,6 +532,9 @@ static void granular_locks_mutual_exclusion( portSPINLOCK_TYPE * pxDataGroupTask
         TEST_ASSERT_EQUAL( 1, pxDataGroupISRSpinlock->uxLockCount );
         TEST_ASSERT_EQUAL( 0, pxDataGroupISRSpinlock->xOwnerCore );
     }
+
+    /* Switch back to core 0 after test. */
+    vSetCurrentCore( 0 );
 }
 
 /* Wrapper functions for backward compatibility */

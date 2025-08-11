@@ -238,5 +238,25 @@ typedef struct StreamBufferDef_t
     #endif /* #if ( ( portUSING_GRANULAR_LOCKS == 1 ) && ( configNUMBER_OF_CORES > 1 ) ) */
 } StreamBuffer_t;
 
+typedef TickType_t EventBits_t;
+
+typedef struct EventGroupDef_t
+{
+    EventBits_t uxEventBits;
+    List_t xTasksWaitingForBits; /**< List of tasks waiting for a bit to be set. */
+
+    #if ( configUSE_TRACE_FACILITY == 1 )
+        UBaseType_t uxEventGroupNumber;
+    #endif
+
+    #if ( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+        uint8_t ucStaticallyAllocated; /**< Set to pdTRUE if the event group is statically allocated to ensure no attempt is made to free the memory. */
+    #endif
+
+    #if ( ( portUSING_GRANULAR_LOCKS == 1 ) && ( configNUMBER_OF_CORES > 1 ) )
+        portSPINLOCK_TYPE xTaskSpinlock;
+        portSPINLOCK_TYPE xISRSpinlock;
+    #endif /* #if ( ( portUSING_GRANULAR_LOCKS == 1 ) && ( configNUMBER_OF_CORES > 1 ) ) */
+} EventGroup_t;
 
 #endif /* ifndef GLOBAL_VARS_H */

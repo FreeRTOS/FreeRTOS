@@ -142,7 +142,10 @@ static UBaseType_t ulNextRand;
 void main_tcp_echo_client_tasks( void )
 {
     BaseType_t xReturn;
-    const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
+
+    #ifndef __PICOLIBC__
+        const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
+    #endif
 
     /*
      * Instructions for using this project are provided on:
@@ -203,7 +206,9 @@ void main_tcp_echo_client_tasks( void )
      * really applicable to the Linux simulator port). */
     for( ; ; )
     {
-        usleep( ulLongTime_ms * 1000 );
+        #ifndef __PICOLIBC__
+            usleep( ulLongTime_ms * 1000 );
+        #endif
     }
 }
 /*-----------------------------------------------------------*/

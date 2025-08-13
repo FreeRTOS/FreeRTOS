@@ -66,7 +66,8 @@ SECTIONS
         *(privileged_functions)
         . = ALIGN(4);
         FILL(0xDEAD);
-        /* Ensure that un-privileged code is placed after the region reserved                                                                                                                                         4          * for privileged kernel code. */
+        /* Ensure that un-privileged code is placed after the region reserved
+	    * for privileged kernel code. */
         /* Note that dot (.) actually refers to the byte offset from the start
             * of the current section (.privileged_functions in this case). As a
             * result, setting dot (.) to a value sets the size of the section. */

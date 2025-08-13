@@ -51,31 +51,38 @@ SOURCE_FILES += ${FREERTOS_TCP}/source/portable/BufferManagement/BufferAllocatio
 SOURCE_FILES += ${FREERTOS_TCP}/source/portable/NetworkInterface/MPS2_AN385/NetworkInterface.c
 SOURCE_FILES += ${FREERTOS_TCP}/source/portable/NetworkInterface/MPS2_AN385/ether_lan9118/smsc9220_eth_drv.c
 
-DEFINES := -DHEAP3
-CPPFLAGS += $(DEFINES)
+CPPFLAGS += -DHEAP3
 
+ifeq ($(PICOLIBC), 1)
+    CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF --oslib=semihost
+endif
 CFLAGS += -mthumb -mcpu=cortex-m3
 ifeq ($(DEBUG), 1)
     CFLAGS += -g3 -Og -ffunction-sections -fdata-sections
 else
     CFLAGS += -Os -ffunction-sections -fdata-sections
 endif
-CFLAGS += -MMD
+#CFLAGS += -flto
 CFLAGS += -Wall -Wextra -Wshadow
 #CFLAGS += -Wpedantic -fanalyzer
-#CFLAGS += -flto
+CFLAGS += -MMD
 CFLAGS += $(INCLUDE_DIRS)
 
 LDFLAGS = -T mps2_m3.ld
 LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
 LDFLAGS += -Xlinker --gc-sections
-LDFLAGS += -nostartfiles -specs=nano.specs -specs=nosys.specs -specs=rdimon.specs
+#LDFLAGS += -Xlinker --print-gc-sections
+ifeq ($(PICOLIBC), 1)
+    LDFLAGS += -nostartfiles
+else
+    LDFLAGS += -nostartfiles -specs=nano.specs -specs=nosys.specs -specs=rdimon.specs
+endif
 
 OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
 .PHONY: clean
 
-$(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
+$(BUILD_DIR)/$(BIN): $(OBJ_FILES)
 	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o $(@)
 	$(SIZE) $(@)
 
@@ -88,7 +95,7 @@ $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
 INCLUDES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.d)
 -include $(INCLUDES)
 
-${BUILD_DIR}/%.o : %.c Makefile
+${BUILD_DIR}/%.o: %.c Makefile
 	-mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 

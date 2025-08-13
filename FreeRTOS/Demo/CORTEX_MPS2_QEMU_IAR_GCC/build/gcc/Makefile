@@ -12,7 +12,7 @@ MAKE = make
 ifeq ($(PICOLIBC), 1)
     CFLAGS += --specs=picolibc.specs -DPICOLIBC_INTEGER_PRINTF_SCANF
 endif
-CFLAGS += -mthumb -mcpu=cortex-m3
+CFLAGS += -mthumb -mcpu=cortex-m3 -ffreestanding
 CFLAGS += -g3 -Os -ffunction-sections -fdata-sections
 #CFLAGS += -flto
 CFLAGS += -Wall -Wextra -Wshadow -Wno-unused-value
@@ -102,7 +102,7 @@ VPATH += $(TRACERECORDER_DIR)
 VPATH += $(TRACERECORDER_DIR)/kernelports/FreeRTOS
 VPATH += $(TRACERECORDER_DIR)/streamports/RingBuffer
 INCLUDE_DIRS += -I$(TRACERECORDER_CFG_DIR)
-INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/include 
+INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/include
 INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/kernelports/FreeRTOS/include
 INCLUDE_DIRS += -I$(TRACERECORDER_DIR)/streamports/RingBuffer/include
 SOURCE_FILES +=	(TRACERECORDER_DIR)/kernelports/FreeRTOS/trcKernelPort.c

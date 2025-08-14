@@ -45,6 +45,11 @@ target_link_libraries(RTOSDemo PUBLIC
 add_custom_target(run
     COMMAND qemu-system-arm
         -machine lm3s6965evb
+        -monitor null
+        -semihosting
+        --semihosting-config enable=on,target=native
+        -serial stdio
+        -nographic
         -s # gdb tcp::1234
         -S
         -kernel $<TARGET_FILE:RTOSDemo>

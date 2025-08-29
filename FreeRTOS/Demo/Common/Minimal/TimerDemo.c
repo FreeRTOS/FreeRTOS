@@ -230,8 +230,10 @@ static void prvTimerTestTask( void * pvParameters )
 BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency )
 {
     static uint32_t ulLastLoopCounter = 0UL;
-    TickType_t xMaxBlockTimeUsedByTheseTests, xLoopCounterIncrementTimeMax;
     static TickType_t xIterationsWithoutCounterIncrement = ( TickType_t ) 0, xLastCycleFrequency;
+    TickType_t xMaxBlockTimeUsedByTheseTests, xLoopCounterIncrementTimeMax;
+
+    configASSERT( xCycleFrequency != 0UL );
 
     if( xLastCycleFrequency != xCycleFrequency )
     {
@@ -241,17 +243,17 @@ BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency )
         xLastCycleFrequency = xCycleFrequency;
     }
 
-    /* Calculate the maximum number of times that it is permissible for this
-     * function to be called without ulLoopCounter being incremented.  This is
-     * necessary because the tests in this file block for extended periods, and the
-     * block period might be longer than the time between calls to this function. */
-    xMaxBlockTimeUsedByTheseTests = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
-    xLoopCounterIncrementTimeMax = ( xMaxBlockTimeUsedByTheseTests / xCycleFrequency ) + 1;
-
     /* If the demo task is still running then the loop counter is expected to
      * have incremented every xLoopCounterIncrementTimeMax calls. */
     if( ulLastLoopCounter == ulLoopCounter )
     {
+        /* Calculate the maximum number of times that it is permissible for this
+         * function to be called without ulLoopCounter being incremented.  This is
+         * necessary because the tests in this file block for extended periods, and the
+         * block period might be longer than the time between calls to this function. */
+        xMaxBlockTimeUsedByTheseTests = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
+        xLoopCounterIncrementTimeMax = ( xMaxBlockTimeUsedByTheseTests / xCycleFrequency ) + 1;
+
         xIterationsWithoutCounterIncrement++;
 
         if( xIterationsWithoutCounterIncrement > xLoopCounterIncrementTimeMax )

@@ -233,6 +233,8 @@ BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency )
     static TickType_t xIterationsWithoutCounterIncrement = ( TickType_t ) 0, xLastCycleFrequency;
     TickType_t xMaxBlockTimeUsedByTheseTests, xLoopCounterIncrementTimeMax;
 
+    configASSERT( xCycleFrequency != 0UL );
+
     if( xLastCycleFrequency != xCycleFrequency )
     {
         /* The cycle frequency has probably become much faster due to an error
@@ -250,12 +252,7 @@ BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency )
          * necessary because the tests in this file block for extended periods, and the
          * block period might be longer than the time between calls to this function. */
         xMaxBlockTimeUsedByTheseTests = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
-        if( xCycleFrequency != ( TickType_t ) 0 )
-        {
-            xLoopCounterIncrementTimeMax = ( xMaxBlockTimeUsedByTheseTests / xCycleFrequency ) + 1;
-        } else {
-            xLoopCounterIncrementTimeMax = ( TickType_t ) 0;
-        }
+        xLoopCounterIncrementTimeMax = ( xMaxBlockTimeUsedByTheseTests / xCycleFrequency ) + 1;
 
         xIterationsWithoutCounterIncrement++;
 

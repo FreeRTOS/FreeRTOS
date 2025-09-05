@@ -243,18 +243,29 @@ static MQTTFixedBuffer_t xBuffer =
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Callback to receive the incoming publish messages from the MQTT
- * broker. Sets xResponseStatus if an expected CreateCertificateFromCsr or
- * RegisterThing response is received, and copies the response into
- * responseBuffer if the response is an accepted one.
- *
- * @param[in] pPublishInfo Pointer to publish info of the incoming publish.
- * @param[in] usPacketIdentifier Packet identifier of the incoming publish.
- */
-static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
+ /**
+  * @brief Callback to receive the incoming publish messages from the MQTT
+  * broker. Sets xResponseStatus if an expected CreateCertificateFromCsr or
+  * RegisterThing response is received, and copies the response into
+  * responseBuffer if the response is an accepted one.
+  *
+  * @param[in] pxMQTTContext MQTT context pointer.
+  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
+  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
+  * @param[out] pxReasonCode         Pointer to a variable where the application can set the reason code
+  *                                 to include in outgoing PUBLISH ACK responses.
+  * @param[out] pxSendPropsBuffer     Pointer to the MQTT property builder. The application can use this
+  *                                 to add properties to the outgoing response packet.
+  * @param[in] pxGetPropsBuffer       Pointer to the MQTT property accessor. The application can use this
+  *                                 to read properties received in the incoming MQTT packet.
+  * @return true if prvProvisioningPublishCallback is successful, false if it fails.
+  */
+static bool prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
                                             MQTTPacketInfo_t * pxPacketInfo,
-                                            MQTTDeserializedInfo_t * pxDeserializedInfo );
+                                            MQTTDeserializedInfo_t * pxDeserializedInfo,
+                                            MQTTSuccessFailReasonCode_t * pxReasonCode,
+                                            MQTTPropBuilder_t * pxSendPropsBuffer,
+                                            MQTTPropBuilder_t * pxGetPropsBuffer);
 
 /**
  * @brief Subscribe to the CreateCertificateFromCsr accepted and rejected topics.
@@ -297,9 +308,12 @@ BaseType_t xPlatformIsNetworkUp( void );
 
 /*-----------------------------------------------------------*/
 
-static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
+static bool prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
                                             MQTTPacketInfo_t * pxPacketInfo,
-                                            MQTTDeserializedInfo_t * pxDeserializedInfo )
+                                            MQTTDeserializedInfo_t * pxDeserializedInfo,
+                                            MQTTSuccessFailReasonCode_t * pxReasonCode,
+                                            MQTTPropBuilder_t * pxSendPropsBuffer,
+                                            MQTTPropBuilder_t * pxGetPropsBuffer)
 {
     FleetProvisioningStatus_t xStatus;
     FleetProvisioningTopic_t xApi;
@@ -384,6 +398,7 @@ static void prvProvisioningPublishCallback( MQTTContext_t * pxMqttContext,
         vHandleOtherIncomingPacket( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
         xResponseStatus = ResponseAccepted;
     }
+    return true; 
 }
 /*-----------------------------------------------------------*/
 

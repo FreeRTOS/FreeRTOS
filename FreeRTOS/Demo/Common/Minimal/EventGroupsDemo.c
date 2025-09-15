@@ -78,9 +78,6 @@
 /* A block time of zero simply means "don't block". */
 #define ebDONT_BLOCK                             ( 0 )
 
-/* A 5ms delay. */
-#define ebSHORT_DELAY                            pdMS_TO_TICKS( ( TickType_t ) 5 )
-
 /* Used in the selective bits test which checks no, one or both tasks blocked on
  *  event bits in a group are unblocked as appropriate as different bits get set. */
 #define ebSELECTIVE_BITS_1                       0x03

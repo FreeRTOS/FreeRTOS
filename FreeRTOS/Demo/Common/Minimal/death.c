@@ -80,7 +80,7 @@ static const UBaseType_t uxMaxNumberOfExtraTasksRunning = 3;
 
 /* Used to store a handle to the task that should be killed by a suicidal task,
  * before it kills itself. */
-TaskHandle_t xCreatedTask;
+static TaskHandle_t xCreatedTask;
 
 /*-----------------------------------------------------------*/
 

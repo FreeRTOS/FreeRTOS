@@ -168,7 +168,7 @@ static portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
 static portBASE_TYPE xPriorityRaiseWhenSuspendedError = pdFALSE;
 
 /* Queue used by the second test. */
-QueueHandle_t xSuspendedTestQueue;
+static QueueHandle_t xSuspendedTestQueue;
 
 /*-----------------------------------------------------------*/
 

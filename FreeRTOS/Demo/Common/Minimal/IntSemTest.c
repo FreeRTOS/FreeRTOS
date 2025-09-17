@@ -123,7 +123,7 @@ static SemaphoreHandle_t xMasterSlaveMutex = NULL;
 static BaseType_t xOkToGiveMutex = pdFALSE, xOkToGiveCountingSemaphore = pdFALSE;
 
 /* Used to coordinate timing between tasks and the interrupt. */
-const TickType_t xInterruptGivePeriod = pdMS_TO_TICKS( intsemINTERRUPT_MUTEX_GIVE_PERIOD_MS );
+static const TickType_t xInterruptGivePeriod = pdMS_TO_TICKS( intsemINTERRUPT_MUTEX_GIVE_PERIOD_MS );
 
 /*-----------------------------------------------------------*/
 

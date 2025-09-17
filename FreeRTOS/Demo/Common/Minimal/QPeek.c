@@ -74,7 +74,7 @@ static volatile BaseType_t xErrorDetected = pdFALSE;
 static volatile uint32_t ulLoopCounter = 0;
 
 /* Handles to the test tasks. */
-TaskHandle_t xMediumPriorityTask, xHighPriorityTask, xHighestPriorityTask;
+static TaskHandle_t xMediumPriorityTask, xHighPriorityTask, xHighestPriorityTask;
 /*-----------------------------------------------------------*/
 
 void vStartQueuePeekTasks( void )

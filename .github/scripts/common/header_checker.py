@@ -131,10 +131,8 @@ class HeaderChecker:
         """Validate a given section based on file extentions and section name"""
         valid = False
         if self.copyright_regex and section_name == "copyright":
-            valid = True
-            for line in section:
-                if not self.copyright_regex.match(line):
-                    valid = False
+            if not self.copyright_regex.match(section[0]):
+                valid = False
         elif file_ext in self.pyExtList:
             valid = self.headers_py[section_name] == section
         elif file_ext in self.asmExtList:

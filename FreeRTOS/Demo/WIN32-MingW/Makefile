@@ -3,7 +3,7 @@ BUILD_DIR := ./build
 
 # Compiler - Note this expects you are using MinGW version of GCC
 CC := gcc
-CFLAGS := -O0 -g3 -Wall -Wextra -c -fmessage-length=0 -Wcast-qual -D_WIN32_WINNT=0x0601
+CFLAGS := -O0 -g3 -Wall -Wextra -c -fmessage-length=0 -Wcast-qual -Wno-error=return-mismatch -D_WIN32_WINNT=0x0601
 
 ifeq ($(COVERAGE_TEST),1)
   CFLAGS += -DprojCOVERAGE_TEST=1

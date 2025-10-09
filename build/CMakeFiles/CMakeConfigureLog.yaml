@@ -1,0 +1,1282 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineSystem.cmake:207 (message)"
+      - "CMakeLists.txt:5 (project)"
+    message: |
+      The target system is: Generic -  - arm
+      The host system is: Windows - 10.0.26100 - AMD64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeNinjaFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Program used to build from build.ninja files."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ninja-build"
+      - "ninja"
+      - "samu"
+    candidate_directories:
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/msys64/ucrt64/bin/ninja-build.com"
+      - "C:/msys64/ucrt64/bin/ninja-build.exe"
+      - "C:/msys64/ucrt64/bin/ninja-build"
+      - "C:/msys64/ucrt64/bin/ninja.com"
+    found: "C:/msys64/ucrt64/bin/ninja.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "C:/msys64/ucrt64/share/cmake/Modules/"
+    found: "C:/msys64/ucrt64/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:5 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib\\libc.a(libc_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x28): undefined reference to `_exit'
+      C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib\\libc.a(libc_a-closer.o): in function `_close_r':
+      closer.c:(.text._close_r+0x18): undefined reference to `_close'
+      C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib\\libc.a(libc_a-lseekr.o): in function `_lseek_r':
+      lseekr.c:(.text._lseek_r+0x24): undefined reference to `_lseek'
+      C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib\\libc.a(libc_a-readr.o): in function `_read_r':
+      readr.c:(.text._read_r+0x24): undefined reference to `_read'
+      C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib\\libc.a(libc_a-writer.o): in function `_write_r':
+      writer.c:(.text._write_r+0x24): undefined reference to `_write'
+      C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib\\libc.a(libc_a-sbrkr.o): in function `_sbrk_r':
+      sbrkr.c:(.text._sbrk_r+0x18): undefined reference to `_sbrk'
+      collect2.exe: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "C:/msys64/ucrt64/share/cmake/Modules/"
+    found: "C:/msys64/ucrt64/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:5 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc.exe 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      The C compiler identification is GNU, found in:
+        C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/4.1.2/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-ar"
+      - "ar"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-ar.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-ar.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_RANLIB"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-ranlib"
+      - "ranlib"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-ranlib.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-ranlib.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-strip"
+      - "strip"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-strip.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-strip.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_LINKER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-ld"
+      - "ld"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-ld.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-ld.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-nm"
+      - "nm"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-nm.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-nm.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJDUMP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-objdump"
+      - "objdump"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-objdump.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-objdump.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJCOPY"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-objcopy"
+      - "objcopy"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-objcopy.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-objcopy.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-readelf"
+      - "readelf"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-readelf.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-readelf.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-dlltool"
+      - "dlltool"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-dlltool.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-dlltool.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-dlltool"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-dlltool.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-dlltool.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-dlltool"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-dlltool.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-dlltool.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-dlltool"
+      - "C:/msys64/usr/bin/arm-none-eabi-dlltool.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-dlltool.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-dlltool"
+      - "C:/Windows/System32/arm-none-eabi-dlltool.com"
+      - "C:/Windows/System32/arm-none-eabi-dlltool.exe"
+      - "C:/Windows/System32/arm-none-eabi-dlltool"
+      - "C:/Windows/arm-none-eabi-dlltool.com"
+      - "C:/Windows/arm-none-eabi-dlltool.exe"
+      - "C:/Windows/arm-none-eabi-dlltool"
+      - "C:/Windows/System32/wbem/arm-none-eabi-dlltool.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-dlltool.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-dlltool"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-dlltool.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-dlltool.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-dlltool"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-dlltool.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-dlltool.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-dlltool"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-dlltool.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-dlltool.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-dlltool"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-dlltool.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-dlltool.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-dlltool"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/dlltool.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/dlltool.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/dlltool"
+      - "C:/msys64/ucrt64/bin/dlltool.com"
+      - "C:/msys64/ucrt64/bin/dlltool.exe"
+      - "C:/msys64/ucrt64/bin/dlltool"
+      - "C:/msys64/usr/local/bin/dlltool.com"
+      - "C:/msys64/usr/local/bin/dlltool.exe"
+      - "C:/msys64/usr/local/bin/dlltool"
+      - "C:/msys64/usr/bin/dlltool.com"
+      - "C:/msys64/usr/bin/dlltool.exe"
+      - "C:/msys64/usr/bin/dlltool"
+      - "C:/Windows/System32/dlltool.com"
+      - "C:/Windows/System32/dlltool.exe"
+      - "C:/Windows/System32/dlltool"
+      - "C:/Windows/dlltool.com"
+      - "C:/Windows/dlltool.exe"
+      - "C:/Windows/dlltool"
+      - "C:/Windows/System32/wbem/dlltool.com"
+      - "C:/Windows/System32/wbem/dlltool.exe"
+      - "C:/Windows/System32/wbem/dlltool"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/dlltool.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/dlltool.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/dlltool"
+      - "C:/msys64/usr/bin/site_perl/dlltool.com"
+      - "C:/msys64/usr/bin/site_perl/dlltool.exe"
+      - "C:/msys64/usr/bin/site_perl/dlltool"
+      - "C:/msys64/usr/bin/vendor_perl/dlltool.com"
+      - "C:/msys64/usr/bin/vendor_perl/dlltool.exe"
+      - "C:/msys64/usr/bin/vendor_perl/dlltool"
+      - "C:/msys64/usr/bin/core_perl/dlltool.com"
+      - "C:/msys64/usr/bin/core_perl/dlltool.exe"
+      - "C:/msys64/usr/bin/core_perl/dlltool"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-addr2line"
+      - "addr2line"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-addr2line.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-addr2line.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-tapi"
+      - "tapi"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-tapi.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-tapi.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-tapi"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-tapi.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-tapi.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-tapi"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-tapi.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-tapi.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-tapi"
+      - "C:/msys64/usr/bin/arm-none-eabi-tapi.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-tapi.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-tapi"
+      - "C:/Windows/System32/arm-none-eabi-tapi.com"
+      - "C:/Windows/System32/arm-none-eabi-tapi.exe"
+      - "C:/Windows/System32/arm-none-eabi-tapi"
+      - "C:/Windows/arm-none-eabi-tapi.com"
+      - "C:/Windows/arm-none-eabi-tapi.exe"
+      - "C:/Windows/arm-none-eabi-tapi"
+      - "C:/Windows/System32/wbem/arm-none-eabi-tapi.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-tapi.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-tapi"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-tapi.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-tapi.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-tapi"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-tapi.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-tapi.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-tapi"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-tapi.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-tapi.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-tapi"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-tapi.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-tapi.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-tapi"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/tapi.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/tapi.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/tapi"
+      - "C:/msys64/ucrt64/bin/tapi.com"
+      - "C:/msys64/ucrt64/bin/tapi.exe"
+      - "C:/msys64/ucrt64/bin/tapi"
+      - "C:/msys64/usr/local/bin/tapi.com"
+      - "C:/msys64/usr/local/bin/tapi.exe"
+      - "C:/msys64/usr/local/bin/tapi"
+      - "C:/msys64/usr/bin/tapi.com"
+      - "C:/msys64/usr/bin/tapi.exe"
+      - "C:/msys64/usr/bin/tapi"
+      - "C:/Windows/System32/tapi.com"
+      - "C:/Windows/System32/tapi.exe"
+      - "C:/Windows/System32/tapi"
+      - "C:/Windows/tapi.com"
+      - "C:/Windows/tapi.exe"
+      - "C:/Windows/tapi"
+      - "C:/Windows/System32/wbem/tapi.com"
+      - "C:/Windows/System32/wbem/tapi.exe"
+      - "C:/Windows/System32/wbem/tapi"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/tapi.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/tapi.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/tapi"
+      - "C:/msys64/usr/bin/site_perl/tapi.com"
+      - "C:/msys64/usr/bin/site_perl/tapi.exe"
+      - "C:/msys64/usr/bin/site_perl/tapi"
+      - "C:/msys64/usr/bin/vendor_perl/tapi.com"
+      - "C:/msys64/usr/bin/vendor_perl/tapi.exe"
+      - "C:/msys64/usr/bin/vendor_perl/tapi"
+      - "C:/msys64/usr/bin/core_perl/tapi.com"
+      - "C:/msys64/usr/bin/core_perl/tapi.exe"
+      - "C:/msys64/usr/bin/core_perl/tapi"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:201 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ar-14.3"
+      - "arm-none-eabi-gcc-ar-14"
+      - "arm-none-eabi-gcc-ar14"
+      - "arm-none-eabi-gcc-ar"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar-14.3"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar-14.3"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar-14.3"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar-14.3"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar-14.3"
+      - "C:/Windows/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/Windows/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/Windows/arm-none-eabi-gcc-ar-14.3"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar-14.3"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-14.3"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar-14.3"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar-14.3"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar-14.3.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar-14.3.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar-14.3"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar-14.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar-14"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar-14.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar-14"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar-14.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar-14"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar-14.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar-14"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar-14.com"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar-14"
+      - "C:/Windows/arm-none-eabi-gcc-ar-14.com"
+      - "C:/Windows/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/Windows/arm-none-eabi-gcc-ar-14"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar-14.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar-14"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-14.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-14"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar-14.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar-14"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar-14.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar-14"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar-14.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar-14.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar-14"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar14.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar14.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar14"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar14.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar14.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ar14"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar14.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar14.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ar14"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar14.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar14.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ar14"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar14.com"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar14.exe"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ar14"
+      - "C:/Windows/arm-none-eabi-gcc-ar14.com"
+      - "C:/Windows/arm-none-eabi-gcc-ar14.exe"
+      - "C:/Windows/arm-none-eabi-gcc-ar14"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar14.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar14.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ar14"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar14.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar14.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar14"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar14.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar14.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ar14"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar14.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar14.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ar14"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar14.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar14.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ar14"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ar.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCCompiler.cmake:201 (include)"
+      - "CMakeLists.txt:5 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ranlib-14.3"
+      - "arm-none-eabi-gcc-ranlib-14"
+      - "arm-none-eabi-gcc-ranlib14"
+      - "arm-none-eabi-gcc-ranlib"
+    candidate_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/"
+      - "C:/msys64/ucrt64/bin/"
+      - "C:/msys64/usr/local/bin/"
+      - "C:/msys64/usr/bin/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/msys64/usr/bin/site_perl/"
+      - "C:/msys64/usr/bin/vendor_perl/"
+      - "C:/msys64/usr/bin/core_perl/"
+    searched_directories:
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib-14.3.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib-14.3.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib-14.3"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib-14"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib-14"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib-14"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib-14"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib-14"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib-14"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib-14"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-14"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib-14"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib-14"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib-14.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib-14.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib-14"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib14"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/msys64/ucrt64/bin/arm-none-eabi-gcc-ranlib14"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/msys64/usr/local/bin/arm-none-eabi-gcc-ranlib14"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/msys64/usr/bin/arm-none-eabi-gcc-ranlib14"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/Windows/System32/arm-none-eabi-gcc-ranlib14"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/Windows/arm-none-eabi-gcc-ranlib14"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/Windows/System32/wbem/arm-none-eabi-gcc-ranlib14"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib14"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/msys64/usr/bin/site_perl/arm-none-eabi-gcc-ranlib14"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/msys64/usr/bin/vendor_perl/arm-none-eabi-gcc-ranlib14"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib14.com"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib14.exe"
+      - "C:/msys64/usr/bin/core_perl/arm-none-eabi-gcc-ranlib14"
+      - "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib.com"
+    found: "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\usr\\bin\\site_perl"
+        - "C:\\msys64\\usr\\bin\\vendor_perl"
+        - "C:\\msys64\\usr\\bin\\core_perl"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:5 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/CMakeScratch/TryCompile-4hw6ur"
+      binary: "C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/CMakeScratch/TryCompile-4hw6ur"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/CMakeScratch/TryCompile-4hw6ur'
+        
+        Run Build Command(s): C:/msys64/ucrt64/bin/ninja.exe -v cmTC_c37ca
+        [1/2] C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe   -v -o CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj -c C:/msys64/ucrt64/share/cmake/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe
+        Target: arm-none-eabi
+        Configured with: /data/jenkins/workspace/GNU-toolchain/arm-14/src/gcc/configure --target=arm-none-eabi --prefix=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/install --with-gmp=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-mpfr=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-mpc=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-isl=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --disable-shared --disable-nls --disable-threads --disable-tls --enable-checking=release --enable-languages=c,c++,fortran --with-newlib --with-gnu-as --with-headers=yes --with-gnu-ld --with-native-system-header-dir=/include --with-sysroot=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/install/arm-none-eabi --with-bugurl=https://bugs.linaro.org/ --with-multilib-list=aprofile,rmprofile --with-libiconv-prefix=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-libiconv-prefix=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --enable-mingw-wildcard --host=i686-w64-mingw32 --with-pkgversion='Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)'
+        Thread model: single
+        Supported LTO compression algorithms: zlib
+        gcc version 14.3.1 20250623 (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_c37ca.dir/'
+         C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../libexec/gcc/arm-none-eabi/14.3.1/cc1.exe -quiet -v -iprefix C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/ -isysroot C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi -D__USES_INITFINI__ C:/msys64/ucrt64/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_c37ca.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mcpu=arm7tdmi -mfloat-abi=soft -marm -mlibarch=armv4t -march=armv4t -version -o C:\\msys64\\tmp\\ccz43Owb.s
+        GNU C17 (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) version 14.3.1 20250623 (arm-none-eabi)
+        	compiled by GNU C version 10-win32 20220113, GMP version 6.2.1, MPFR version 3.1.6, MPC version 1.0.3, isl version isl-0.15-1-g835ea3a-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/../../lib/gcc/arm-none-eabi/14.3.1/include"
+        ignoring nonexistent directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/install/lib/gcc/arm-none-eabi/14.3.1/../../../../include"
+        ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/../../lib/gcc/arm-none-eabi/14.3.1/include-fixed"
+        ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/../../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/include"
+        ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include
+         C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include-fixed
+         C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/include
+        End of search list.
+        Compiler executable checksum: b7d3e61a3c100ce920bcfa732511112e
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_c37ca.dir/'
+         C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj C:\\msys64\\tmp\\ccz43Owb.s
+        GNU assembler version 2.44.0 (arm-none-eabi) using BFD version (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 2.44.0.20250616
+        COMPILER_PATH=C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../libexec/gcc/arm-none-eabi/14.3.1/;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../libexec/gcc/;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/
+        LIBRARY_PATH=C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.'
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\msys64\\ucrt64\\bin\\cmake.exe -E rm -f libcmTC_c37ca.a && C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-ar.exe qc libcmTC_c37ca.a  CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj && C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-ranlib.exe libcmTC_c37ca.a && cd ."
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:5 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include]
+          add: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include-fixed]
+          add: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/include]
+        end of search list found
+        collapse include dir [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include] ==> [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none-eabi/14.3.1/include]
+        collapse include dir [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include-fixed] ==> [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none-eabi/14.3.1/include-fixed]
+        collapse include dir [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/include] ==> [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/include]
+        implicit include dirs: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none-eabi/14.3.1/include;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none-eabi/14.3.1/include-fixed;C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "C:/msys64/ucrt64/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:5 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: 'C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/CMakeScratch/TryCompile-4hw6ur']
+        ignore line: []
+        ignore line: [Run Build Command(s): C:/msys64/ucrt64/bin/ninja.exe -v cmTC_c37ca]
+        ignore line: [[1/2] C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe   -v -o CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj -c C:/msys64/ucrt64/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-gcc.exe]
+        ignore line: [Target: arm-none-eabi]
+        ignore line: [Configured with: /data/jenkins/workspace/GNU-toolchain/arm-14/src/gcc/configure --target=arm-none-eabi --prefix=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/install --with-gmp=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-mpfr=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-mpc=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-isl=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --disable-shared --disable-nls --disable-threads --disable-tls --enable-checking=release --enable-languages=c,c++,fortran --with-newlib --with-gnu-as --with-headers=yes --with-gnu-ld --with-native-system-header-dir=/include --with-sysroot=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/install/arm-none-eabi --with-bugurl=https://bugs.linaro.org/ --with-multilib-list=aprofile,rmprofile --with-libiconv-prefix=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --with-libiconv-prefix=/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/host-tools --enable-mingw-wildcard --host=i686-w64-mingw32 --with-pkgversion='Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)']
+        ignore line: [Thread model: single]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 14.3.1 20250623 (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_c37ca.dir/']
+        ignore line: [ C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../libexec/gcc/arm-none-eabi/14.3.1/cc1.exe -quiet -v -iprefix C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/ -isysroot C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi -D__USES_INITFINI__ C:/msys64/ucrt64/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_c37ca.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mcpu=arm7tdmi -mfloat-abi=soft -marm -mlibarch=armv4t -march=armv4t -version -o C:\\msys64\\tmp\\ccz43Owb.s]
+        ignore line: [GNU C17 (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) version 14.3.1 20250623 (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version 10-win32 20220113  GMP version 6.2.1  MPFR version 3.1.6  MPC version 1.0.3  isl version isl-0.15-1-g835ea3a-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/../../lib/gcc/arm-none-eabi/14.3.1/include"]
+        ignore line: [ignoring nonexistent directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi/data/jenkins/workspace/GNU-toolchain/arm-14/build-mingw-arm-none-eabi/install/lib/gcc/arm-none-eabi/14.3.1/../../../../include"]
+        ignore line: [ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/../../lib/gcc/arm-none-eabi/14.3.1/include-fixed"]
+        ignore line: [ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/../../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/include"]
+        ignore line: [ignoring duplicate directory "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include]
+        ignore line: [ C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/include-fixed]
+        ignore line: [ C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: b7d3e61a3c100ce920bcfa732511112e]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_c37ca.dir/']
+        ignore line: [ C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj C:\\msys64\\tmp\\ccz43Owb.s]
+        ignore line: [GNU assembler version 2.44.0 (arm-none-eabi) using BFD version (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 2.44.0.20250616]
+        ignore line: [COMPILER_PATH=C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../libexec/gcc/arm-none-eabi/14.3.1/]
+        ignore line: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../libexec/gcc/]
+        ignore line: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/]
+        ignore line: [LIBRARY_PATH=C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/]
+        ignore line: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/]
+        ignore line: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/]
+        ignore line: [C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../arm-none-eabi/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-mlibarch=armv4t' '-march=armv4t' '-dumpdir' 'CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.']
+        ignore line: [[2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\msys64\\ucrt64\\bin\\cmake.exe -E rm -f libcmTC_c37ca.a && C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-ar.exe qc libcmTC_c37ca.a  CMakeFiles/cmTC_c37ca.dir/CMakeCCompilerABI.c.obj && C:\\Users\\prana\\Downloads\\arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi\\bin\\arm-none-eabi-ranlib.exe libcmTC_c37ca.a && cd ."]
+        ignore line: []
+        ignore line: []
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+...

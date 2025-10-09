@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Users/prana/Documents/FreeRTOS-Kernel/include",
+                "C:/Users/prana/Documents/FreeRTOS-Kernel/portable/GCC/ARM_CM0"
+            ],
+            "defines": [],
+            "compilerPath": "C:/Users/prana/Downloads/arm-gnu-toolchain-14.3.rel1-mingw-w64-i686-arm-none-eabi/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}

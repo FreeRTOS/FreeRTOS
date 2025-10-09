@@ -42,7 +42,7 @@
 
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "FLEET_PROVISIONING_DEMO"
+    #define LIBRARY_LOG_NAME    "MQTT_MOSQUITTO_DEMO"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
@@ -67,149 +67,66 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /************ End of logging configuration ****************/
 
 /**
- * @brief The unique ID used by the demo to differentiate instances.
- *
- *!!! Please note a #defined constant is used for convenience of demonstration
- *!!! only.  Production devices can use something unique to the device that can
- *!!! be read by software, such as a production serial number, instead of a
- *!!! hard coded constant.
+ * @brief The MQTT client identifier used in this example.  
+ * Each client identifier must be unique.
  */
-#define democonfigFP_DEMO_ID    "FPDemoID"__TIME__
+#define democonfigCLIENT_IDENTIFIER    "FreeRTOS_Mosquitto_Client"
 
 /**
- * @brief The MQTT client identifier used in this example.  Each client identifier
- * must be unique so edit as required to ensure no two clients connecting to the
- * same broker use the same client identifier.
- *
- * @note Appending __TIME__ to the client id string will reduce the possibility of a
- * client id collision in the broker. Note that the appended time is the compilation
- * time. This client id can cause collision, if more than one instance of the same
- * binary is used at the same time to connect to the broker.
+ * @brief MQTT broker endpoint for Mosquitto test server.
  */
-#ifndef democonfigCLIENT_IDENTIFIER
-    #define democonfigCLIENT_IDENTIFIER    "client"democonfigFP_DEMO_ID
-#endif
+#define democonfigMQTT_BROKER_ENDPOINT    "test.mosquitto.org"
 
 /**
- * @brief Details of the MQTT broker to connect to.
- *
- * This is the Claim's Rest API Endpoint for AWS IoT.
- *
- * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
- * Settings/Custom Endpoint, or using the describe-endpoint API.
- *
- * #define democonfigMQTT_BROKER_ENDPOINT     "...insert here..."
+ * @brief Mosquitto MQTT broker port number.
+ * Using port 1883 for unencrypted, unauthenticated connection.
  */
-
-/**
- * @brief AWS IoT MQTT broker port number.
- *
- * In general, port 8883 is for secured MQTT connections.
- *
- * @note Port 443 requires use of the ALPN TLS extension with the ALPN protocol
- * name. When using port 8883, ALPN is not required.
- */
-#define democonfigMQTT_BROKER_PORT    ( 8883 )
-
-/**
- * @brief Server's root CA certificate.
- *
- * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
- * server and is publicly available. Refer to the AWS documentation available
- * in the link below.
- * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
- *
- * @note This certificate should be PEM-encoded.
- *
- * Must include the PEM header and footer:
- * "-----BEGIN CERTIFICATE-----\n"\
- * "...base64 data...\n"\
- * "-----END CERTIFICATE-----\n"
- *
- * #define democonfigROOT_CA_PEM    "...insert here..."
- */
-
-/**
- * @brief Name of the provisioning template to use for the RegisterThing
- * portion of the Fleet Provisioning workflow.
- *
- * For information about provisioning templates, see the following AWS documentation:
- * https://docs.aws.amazon.com/iot/latest/developerguide/provision-template.html#fleet-provision-template
- *
- * The example template used for this demo is available in the
- * example_demo_template.json file in the DemoSetup directory. In the example,
- * replace <provisioned-thing-policy> with the policy provisioned devices
- * should have.  The demo template uses Fn::Join to construct the Thing name by
- * concatenating fp_demo_ and the serial number sent by the demo.
- *
- * @note The provisioning template MUST be created in AWS IoT before running the
- * demo.
- *
- * @note If you followed the manual setup steps on https://freertos.org/iot-fleet-provisioning/demo.html,
- * the provisioning template name is "FleetProvisioningDemoTemplate".
- * However, if you used CloudFormation to set up the demo, the template name is "CF_FleetProvisioningDemoTemplate"
- *
- * #define democonfigPROVISIONING_TEMPLATE_NAME    "...insert here..."
- */
-
-/**
- * @brief Subject name to use when creating the certificate signing request (CSR)
- * for provisioning the demo client with using the Fleet Provisioning
- * CreateCertificateFromCsr APIs.
- *
- * This is passed to MbedTLS; see https://tls.mbed.org/api/x509__csr_8h.html#a954eae166b125cea2115b7db8c896e90
- */
-#ifndef democonfigCSR_SUBJECT_NAME
-    #define democonfigCSR_SUBJECT_NAME    "CN="democonfigFP_DEMO_ID
-#endif
+#define democonfigMQTT_BROKER_PORT        ( 1883 )
 
 /**
  * @brief Set the stack size of the main demo task.
- *
- * In the Windows port, this stack only holds a structure. The actual
- * stack is created by an operating system thread.
- *
- * @note This demo runs on WinSim and the minimal stack size is functional.
- * However, if you are porting components of this demo to other platforms,
- * the stack size may need to be increased to accommodate the size of the
- * buffers used when generating new keys and certificates.
- *
  */
-#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE          configMINIMAL_STACK_SIZE
 
 /**
- * @brief Size of the network buffer for MQTT packets. Must be large enough to
- * hold the GetCertificateFromCsr response, which, among other things, includes
- * a PEM encoded certificate.
+ * @brief Size of the network buffer for MQTT packets.
  */
-#define democonfigNETWORK_BUFFER_SIZE       ( 2048U )
+#define democonfigNETWORK_BUFFER_SIZE     ( 2048U )
 
 /**
  * @brief The name of the operating system that the application is running on.
- * The current value is given as an example. Please update for your specific
- * operating system.
  */
 #define democonfigOS_NAME                   "FreeRTOS"
 
 /**
- * @brief The version of the operating system that the application is running
- * on. The current value is given as an example. Please update for your specific
- * operating system version.
+ * @brief The version of the operating system that the application is running on.
  */
 #define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
 
 /**
- * @brief The name of the hardware platform the application is running on. The
- * current value is given as an example. Please update for your specific
- * hardware platform.
+ * @brief The name of the hardware platform the application is running on.
  */
 #define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
 
 /**
- * @brief The name of the MQTT library used and its version, following an "@"
- * symbol.
+ * @brief The name of the MQTT library used and its version.
  */
-#include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+#include "core_mqtt.h"
 #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
+
+/**
+ * @brief Disable AWS IoT Core specific features for Mosquitto
+ */
+#define democonfigDISABLE_AWS_IOT_FEATURES    1
+
+/**
+ * @brief Enable plain TCP connection (no TLS)
+ */
+#define democonfigUSE_TLS                     0
+
+/**
+ * @brief Demo topic for publishing test messages
+ */
+#define democonfigMQTT_TOPIC                  "freertos/demo/mosquitto"
 
 #endif /* DEMO_CONFIG_H */

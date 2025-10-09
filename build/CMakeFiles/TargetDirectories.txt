@@ -1,0 +1,3 @@
+C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/STM32L072_Demo.elf.dir
+C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/edit_cache.dir
+C:/Users/prana/Documents/STM32L072_Demo/build/CMakeFiles/rebuild_cache.dir

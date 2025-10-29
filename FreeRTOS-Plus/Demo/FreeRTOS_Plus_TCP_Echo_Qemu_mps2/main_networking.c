@@ -142,7 +142,10 @@ static UBaseType_t ulNextRand;
 void main_tcp_echo_client_tasks( void )
 {
     BaseType_t xReturn;
-    const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
+
+    #ifndef __PICOLIBC__
+        const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
+    #endif
 
     /*
      * Instructions for using this project are provided on:
@@ -203,7 +206,9 @@ void main_tcp_echo_client_tasks( void )
      * really applicable to the Linux simulator port). */
     for( ; ; )
     {
-        usleep( ulLongTime_ms * 1000 );
+        #ifndef __PICOLIBC__
+            usleep( ulLongTime_ms * 1000 );
+        #endif
     }
 }
 /*-----------------------------------------------------------*/
@@ -259,8 +264,10 @@ BaseType_t xTasksAlreadyCreated = pdFALSE;
         #else
             FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
         #endif /* defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 0 ) */
+        FreeRTOS_printf( ( "Network Configuration:\r\n\r\n" ) );
+
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-        FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
+        FreeRTOS_printf( ( "IP Address: %s\r\n", cBuffer ) );
 
         FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
         FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );

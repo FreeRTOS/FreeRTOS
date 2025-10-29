@@ -34,8 +34,10 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
-SemaphoreHandle_t xStdioMutex;
-StaticSemaphore_t xStdioMutexBuffer;
+#include "console.h"
+
+static SemaphoreHandle_t xStdioMutex;
+static StaticSemaphore_t xStdioMutexBuffer;
 
 void console_init( void )
 {

@@ -203,7 +203,7 @@
     static size_t uxNextRand = 0;
 
 /* The task handles are stored so their priorities can be changed. */
-    TaskHandle_t xQueueSetSendingTask, xQueueSetReceivingTask;
+    static TaskHandle_t xQueueSetSendingTask, xQueueSetReceivingTask;
 
 /*-----------------------------------------------------------*/
 

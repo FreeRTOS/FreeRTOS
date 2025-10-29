@@ -560,7 +560,7 @@ static void prvSingleTaskTests( StreamBufferHandle_t xStreamBuffer )
     /* Ensure data was written as expected even when there was an attempt to
      * write more than was available.  This also tries to read more bytes than are
      * available. */
-    xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucFullBuffer, xFullBufferSize, xMinimalBlockTime );
+    xStreamBufferReceive( xStreamBuffer, ( void * ) pucFullBuffer, xFullBufferSize, xMinimalBlockTime );
     prvCheckExpectedState( memcmp( ( const void * ) pucFullBuffer, ( const void * ) pc54ByteString, sbSTREAM_BUFFER_LENGTH_BYTES ) == 0 );
     prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
     prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );

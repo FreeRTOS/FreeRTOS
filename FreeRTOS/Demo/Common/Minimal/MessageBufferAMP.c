@@ -121,7 +121,7 @@ static uint32_t ulCycleCounters[ mbaNUMBER_OF_CORE_B_TASKS ];
 
 /* Set to pdFALSE if any errors are detected.  Used to inform the check task
  * that something might be wrong. */
-BaseType_t xDemoStatus = pdPASS;
+static BaseType_t xDemoStatus = pdPASS;
 
 /*-----------------------------------------------------------*/
 

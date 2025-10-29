@@ -242,6 +242,7 @@ static void prvSingleTaskTests( void )
     configASSERT( xReturned == pdPASS );
     ( void ) xReturned; /* In case configASSERT() is not defined. */
     xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
+    configASSERT( xReturned == pdPASS );
     configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
     ( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
 

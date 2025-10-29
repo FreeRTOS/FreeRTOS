@@ -114,7 +114,6 @@
 #define mainSEM_TEST_PRIORITY           ( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY            ( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY       ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY         ( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY       ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY     ( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY          ( tskIDLE_PRIORITY )
@@ -184,7 +183,7 @@ static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer );
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
-static char * pcStatusMessage = "OK: No errors";
+static const char * pcStatusMessage = "OK: No errors";
 int xErrorCount = 0;
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and

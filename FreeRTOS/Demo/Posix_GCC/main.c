@@ -67,6 +67,7 @@
 
 /* Local includes. */
 #include "console.h"
+#include "timers.h"
 
 #if ( projENABLE_TRACING == 1 )
     #include <trcRecorder.h>
@@ -460,6 +461,8 @@ void handle_sigint( int signal )
 
 /*-----------------------------------------------------------*/
 
+#if ( projENABLE_TRACING == 1 )
+
 static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )
@@ -480,5 +483,7 @@ uint32_t uiTraceTimerGetValue( void )
 {
     return( xTaskGetTickCount() - ulEntryTime );
 }
+
+#endif /* if ( projENABLE_TRACING == 1 ) */
 
 /*-----------------------------------------------------------*/

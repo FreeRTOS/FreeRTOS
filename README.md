@@ -50,6 +50,16 @@ This repository contains the FreeRTOS Kernel, a number of supplementary librarie
 [Releases](https://github.com/FreeRTOS/FreeRTOS/releases) contains older FreeRTOS releases.
 
 
+## FreeRTOS for Beginners
+
+FreeRTOS is a real-time operating system kernel designed for microcontrollers.
+It allows multiple tasks to run seemingly in parallel using priority-based scheduling.
+
+Key concepts:
+- Task: A function that runs independently
+- Scheduler: Decides which task runs
+- Tick: Time base for task switching
+
 ## FreeRTOS Lab Projects
 FreeRTOS Lab projects are libraries and demos that are fully functional, but may be experimental or undergoing optimizations and refactorization to improve memory usage, modularity, documentation, demo usability, or test coverage.
 

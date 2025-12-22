@@ -1,4 +1,6 @@
-CROSS   = riscv64-unknown-elf-
+# Toolchain prefix can be overridden, e.g.:
+#   make CROSS=riscv-none-elf-
+CROSS ?= riscv64-unknown-elf-
 CC      = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 ARCH    = $(CROSS)ar

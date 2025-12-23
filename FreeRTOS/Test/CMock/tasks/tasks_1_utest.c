@@ -4813,35 +4813,67 @@ void test_vTaskPriorityDisinheritAfterTimeout_fail_null_handle()
 void test_vTaskPriorityDisinheritAfterTimeout_success()
 {
     TaskHandle_t mutex_holder;
+    UBaseType_t inheritedPriority = 5U;
+    /* Tasks at priority 1-3 are ready */
+    UBaseType_t lowPriorityTasksReady = 0xEU;
 
     /* Setup */
     create_task_priority = 4;
     mutex_holder = create_task();
     mutex_holder->uxMutexesHeld = 1;
+    mutex_holder->uxPriority = inheritedPriority;
+    /* Now mark task priority 5 as ready */
+    uxTopReadyPriority = ( UBaseType_t ) ( ( 1 << inheritedPriority ) | lowPriorityTasksReady );
     /* Expectations */
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, 0x80000000UL );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ inheritedPriority ],
+                                             &mutex_holder->xStateListItem,
+                                             pdTRUE );
+    uxListRemove_ExpectAndReturn( &mutex_holder->xStateListItem, 0 );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ mutex_holder->uxBasePriority ],
+                           &mutex_holder->xStateListItem );
     /* API Call */
     vTaskPriorityDisinheritAfterTimeout( mutex_holder,
                                          create_task_priority - 1 );
     /* Validations */
     TEST_ASSERT_EQUAL( create_task_priority, mutex_holder->uxPriority );
     TEST_ASSERT_EQUAL( create_task_priority, mutex_holder->uxBasePriority );
+    /* Priority is reset back to 4, we should expect tasks 4-1 to be ready */
+    TEST_ASSERT_EQUAL( uxTopReadyPriority, ( UBaseType_t ) ( ( 1 << create_task_priority ) | lowPriorityTasksReady ) );
 }
 
 void test_vTaskPriorityDisinheritAfterTimeout_success2()
 {
     TaskHandle_t mutex_holder;
+    UBaseType_t inheritedPriority = 6U;
+    /* Task at priority 5 is ready */
+    UBaseType_t priorityFiveTaskReady = 0x20U;
 
     /* Setup */
     create_task_priority = 4;
     mutex_holder = create_task();
     mutex_holder->uxMutexesHeld = 1;
+    mutex_holder->uxPriority = inheritedPriority;
+    /* Now mark task priority 6 as ready */
+    uxTopReadyPriority = ( UBaseType_t ) ( ( 1 << inheritedPriority ) | priorityFiveTaskReady );
     /* Expectations */
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, 0x80000000UL );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ inheritedPriority ],
+                                             &mutex_holder->xStateListItem,
+                                             pdTRUE );
+    uxListRemove_ExpectAndReturn( &mutex_holder->xStateListItem, 0 );
+    /* prvAddTaskToReadyList */
+    listINSERT_END_Expect( &pxReadyTasksLists[ mutex_holder->uxBasePriority ],
+                           &mutex_holder->xStateListItem );
     /* API Call */
     vTaskPriorityDisinheritAfterTimeout( mutex_holder,
                                          create_task_priority );
     /* Validations */
     TEST_ASSERT_EQUAL( create_task_priority, mutex_holder->uxPriority );
     TEST_ASSERT_EQUAL( create_task_priority, mutex_holder->uxBasePriority );
+    /* Priority is reset back to 4, we should expect tasks 5-4 to be ready */
+    TEST_ASSERT_EQUAL( uxTopReadyPriority, ( UBaseType_t ) ( ( 1 << create_task_priority ) | priorityFiveTaskReady ) );
 }
 
 void test_vTaskPriorityDisinheritAfterTimeout_success3()

@@ -1,0 +1,33 @@
+
+CONTENTS
+
+   common control of test run
+
+common.asl
+
+   objects of common use provide the common control
+   of test run, provide the uniform structure of all
+   run-time tests
+
+ehandle.asl
+
+   exceptional conditions support
+
+runmode.asl
+
+   1. It is no longer utilized though available
+
+   Set up the particular desirable set of tests to be run
+   (have effect only when running a group of test cases or
+   even collections) such as all Functional tests, all Complex
+   tests, all Exceptions tests or Full test (all enumerated
+   above tests) compiled all as one DefinitionBlock.
+   See additional comments in runmode.asl file.
+
+   2. Variables which disable/enable pieces of tests.
+
+   This serves different purposes - to prevent crashes,
+   hangs, and so on. All these variables must be finally
+   set to non-zero - so enabling all the excluded now tests.
+
+

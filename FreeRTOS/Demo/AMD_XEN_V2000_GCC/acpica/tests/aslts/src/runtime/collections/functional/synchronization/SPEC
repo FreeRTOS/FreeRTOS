@@ -1,0 +1,160 @@
+Single thread tests
+===================
+
+m301:
+Valid sequence of requests, no exceptions expected.
+Acquire mutexes of monotone increasing level (Global lock
+on level 0 too) for all available levels from 0 up to 15,
+then Release them all in the inverse order.
+
+m369:
+Valid sequence of requests, no exceptions expected.
+Acquire mutexes of monotone increasing level (Global lock on level 0 too)
+for all available levels from 0 up to 15, Acquire 2 mutexes of each level,
+then Release them all in the inverse order (keep the exactly inverse order
+for Releasing mutexes of the same level too).
+
+m36a:
+Exactly m301 but additionally:
+all Release operations are located into separate method.
+
+m36b:
+Exactly m301 but additionally:
+all Acquire and Release operations are located into separate methods.
+
+m36c:
+Invalid sequence of Acquire operations:
+1) Acquire N-th level mutex (N>=1):
+2) Acquire:
+   - mutexes from 0 up to (N-1)-levels
+   - Global lock
+3) exception AE_AML_MUTEX_ORDER is expected for each Acquire of (2)
+
+m389:
+Exception on Release.
+Release the mutex twice.
+Attempt to Release free mutex: Acquire, Release, Release.
+Exception is expected on the second Release.
+Do it for all level mutexes and Global lock too.
+
+m07b:
+Exception on Release.
+Attempt to Release clean mutex which was never Acquired.
+
+m38a:
+Exception on Release.
+Break the sequence of Acquiring mutexes while Releasing them,
+jump over the level. Invalid sequence of Releases:
+  1) Take level from range (N>=1 & N<=15)
+  2) Acquire mutexes of all levels from 0 up to N
+  3) Try to Release any mutex:
+     - in the level range from (N-1) down to 0
+     - Global lock
+  4) Do 1-3 for all levels in range (N>=1 & N<=15)
+
+m38d:
+Check up that the Releasing of the same level mutexes
+can be performed in an arbitrary order, independently
+on the order they were Acquired.
+For each level separately, one by one -
+Acquire all for one level then Release them all and
+then only go to the next level.
+Involve the Global lock too.
+
+m07d:
+Check up that the Releasing of the same level mutexes
+can be performed in an arbitrary order, independently
+on the order they were Acquired.
+Cross through all the levels -
+at first Acquire all for all levels then Release them all.
+
+m07a:
+Multiply owning the same ACPI mutex.
+Acquire the same mutex arg2 times, then Release it (arg2+1) times,
+expect exception on the last Release.
+The repeated Acquire are made with TimeoutValue equal to zero.
+
+m07e:
+Acquire/Release combination #1
+
+m08b:
+Check the life after AE_AML_MUTEX_ORDER exception on Acquire.
+  1)     Acquire     N-th level mutex MUX-N
+  2) run Acquire (N-2)-th level mutex MUX-(N-2) and get AE_AML_MUTEX_ORDER exception
+  3) run Acquire (N-1)-th level mutex MUX-(N-1) and get AE_AML_MUTEX_ORDER exception
+  4)     Acquire                mutex MUX-N and check that no exception on this operation
+  5)     Release                mutex MUX-N and check that no exception on this operation
+  6)     Release                mutex MUX-N and check that no exception on this operation
+  7)     do 1-6 for all N in range 2-15 levels
+  8)     check additionally that all the mutexes are free (run Release and
+         get AE_AML_MUTEX_NOT_ACQUIRED exception for all the mutexes of all levels)
+  9)     Acquire all mutexes of all levels and check that no exceptions
+ 10)     Release all mutexes of all levels and check that no exceptions
+ 11)     check additionally that all the mutexes are free (see 8)
+ 12)     do it for GL mode too
+ 13)     do additional Acquire of MUX-(N-2) and MUX-(N-1) before Acquire of MUX-N (Release them later)
+
+m08d:
+Check the life after AE_AML_MUTEX_ORDER exception on Release.
+  1)     Acquire     (N-1)-th level mutex MUX-(N-1)
+  2)     Acquire       (N)-th level mutex MUX-N
+  3) run Release     (N-1)-th level mutex MUX-(N-1) and get AE_AML_MUTEX_ORDER exception
+  4)     Release       (N)-th level mutex MUX-N     and check that no exception on this operation
+  5)     Release     (N-1)-th level mutex MUX-(N-1) and check that no exception on this operation
+  6)     do 1-5 for all N in range 1-15 levels
+  7)     check additionally that all the mutexes are free (run Release and
+         get AE_AML_MUTEX_NOT_ACQUIRED exception for all the mutexes of all levels)
+  8)     Acquire all mutexes of all levels and check that no exceptions
+  9)     Release all mutexes of all levels and check that no exceptions
+ 10)     check additionally that all the mutexes are free (see 7)
+ 11)     do it for GL mode too
+
+m07f:
+Check the life after AE_AML_MUTEX_ORDER exception on Release.
+Similar to the m08d but trying to heal situation by
+Acquiring/Release operations applied to the greater
+level so changing the current level upper than all the
+currently Acquired levels so don't expect exceptions on
+the following Release operations applied in the correct
+inverse order to all the Acquired mutexes.
+(for the current 20060828 ACPICA this doesn't help).
+
+m0b9:
+Different ways to Acquire/Release mutexes.
+ 1) Acquire and Release operations are in a global level AML code
+
+m07c:
+Different ways to Acquire/Release mutexes.
+ 2) Acquire and Release operations are in the same method
+ 3) Acquire and Release operations are in different methods
+
+xxxx:
+To check that the current level is not anyhow affected by the
+invalid operations (which caused exception or returned FAIL).
+Such checkings are present in m08b and m08d tests.
+From m08b:
+  1)     Acquire     N-th level mutex MUX-N
+  2) run Acquire (N-2)-th level mutex MUX-(N-2) and get AE_AML_MUTEX_ORDER exception
+  3) run Acquire (N-1)-th level mutex MUX-(N-1) and get AE_AML_MUTEX_ORDER exception
+The step 3 checks that the invalid operation Acquire
+performed on step 2 doesn't affect the current level.
+From m08d:
+  1)     Acquire     (N-1)-th level mutex MUX-(N-1)
+  2)     Acquire       (N)-th level mutex MUX-N
+  3) run Release     (N-1)-th level mutex MUX-(N-1) and get AE_AML_MUTEX_ORDER exception
+  4)     Release       (N)-th level mutex MUX-N     and check that no exception on this operation
+The step 4 checks that the invalid operation Release
+performed on step 3 doesn't affect the current level.
+
+m0ba:
+Acquire/Release operations enclosed in other operations.
+
+badasl-m103:
+Exception on Acquire.
+Access to inappropriate type data.
+
+
+// #################################################################
+
+
+

@@ -1,0 +1,13 @@
+
+all:		compile_test_case
+
+install:	install_test_case
+
+clean:	clobber
+
+clobber:	FORCE
+		$(RM) *.aml
+
+include $(TOP)/Makefile.def
+
+FORCE:

@@ -1,0 +1,477 @@
+   Result Object Complex test specification
+
+   I. Test goals
+
+   The intention of the test is to verify all the ASL grammar
+rules of specifying, receiving and processing of Result objects
+in ASL operators. The main goal of the test is checking that saving
+of Result objects in target (destination) ones for the next use is
+provided as determined by the Advanced Configuration and Power Interface
+(ACPI) Specification and there are no side effects. Temporary existence
+of the initial Result object while there are any objects referred to it
+can be a subject for another test.
+
+   The chapters of ACPI Specification which the test specification
+is based on are enumerated in the Appendix I.
+
+   The document represents a wide range of testing aspects and describes
+using of them in tests.
+
+   There are the following main issues in Result object processing:
+
+ - intermediate creation of an object of a specified type as a copy
+   of the immediate Source Object or the result either of some operator
+   or a called method,
+
+ - deletion of the result object if it is not used after the method
+   invocation or processing of any ASL operator (not considered in this
+   test)
+
+ - deletion of the existing target object on storing a new one
+   (disregard of both target object was specified by its Name or by
+   a reference to it and kind of storing - Store, CopyObject, optional):
+    = to Named Object which is not Field object
+    = to initialized method LocalX (ArgX) object
+    = to the initialized Elements of a Package
+
+ - creation of an object of a specified type, if none target object
+   exists or it was deleted, the cases:
+    = declaration of a Named Object of any type
+    = declaration of the Elements of a Package
+    = storing to Named Object which is not Field object
+    = storing to the Elements of a Package
+    = storing to an ArgX object containing a reference
+    = storing to method LocalX object (or ArgX object not
+	  containing a reference)
+
+ - overwriting of the existing object on storing a new one to any
+   Field object (Buffer Field or Field Unit) specified by
+    = Name of some Object of the relevant type
+    = a reference to some Named Object of the relevant type
+    = an indexed reference to a byte of some Buffer or String
+	  Named Object
+    = an indexed reference to a byte of some Buffer or String
+	  Elements of a Package
+
+ - overwriting of the existing Package Object on storing a new one
+
+ - none of implicit result conversion:
+    = if the target of Store() is a initialized method local or argument
+	  (LocalX or ArgX),
+    = if the target of Store() is an initialized Elements of a Package,
+    = on copying by means of CopyObject() when target is not Field object,
+    = on optional storing if the ASL operator is one of the explicit
+	  conversion operators (ToString, ToInteger, etc.)
+
+ - implicit result conversion on storing to the target of a fixed type
+   such as a Named object or Field object
+    = in Store operator
+    = on optional storing in any operator besides the explicit conversion
+	  operators
+    = on internal storing in Increment and Decrement operators
+    = on copying by means of CopyObject() when target is Field object,
+
+ - an exception should occur if implicit result conversion is impossible:
+    = the data type of destination is not relevant to type of the result
+    = String to Integer conversion when number of significant hex digits
+	  is more than 8 for 32-bit Integers or 16 for 64-bit Integers
+    = Buffer to String conversion when buffer contains more than 67 bytes
+
+ - an exception should occur on an attempt to write into a literal constant,
+
+ - storing any object to a constant is a noop, not an error
+
+   II. The implicit Result conversion rules
+
+   There are following cases to apply Result conversion:
+ - Integer (DDB Handle) to String
+ - Integer (DDB Handle) to Buffer
+ - Integer (DDB Handle) to Buffer Field
+ - Integer (DDB Handle) to Field Unit
+ - String to Integer
+ - String to Buffer
+ - String to Buffer Field
+ - String to Field Unit
+ - Buffer to Integer
+ - Buffer to String
+ - Buffer to Buffer Field
+ - Buffer to Field Unit
+ - Package to Package
+
+   Particularities of the conversion are enumerated in the Appendix II.
+
+   III. Additional special questions
+
+   There are several additional questions related to the issues above:
+ - consequences of deletion - should or not any references to the deleted
+   object be being applied to the new one or somehow else:
+    = a reference to a whole object obtained through Refof (Condrefof)
+	= a reference to some part of a object obtained through creation of
+	  a field or Index operator
+ - consequences of overwriting on shortening of memory occupied by an
+   Object (String, Package (Buffer can not be shortened?))- should or
+   not any references to the released part of the object be somehow being
+   applied,
+ - any source objects should be different from the resulting object
+   (new created or old modified) so that modification or deletion of
+   the target should not corrupt the source objects and otherwise,
+ - all corner cases of making a copy of the result object should
+   be evaluated, they include (especially cases when there is no need
+   in result object conversion):
+    = size of the either result or target object is zero
+    = size of the either result or target String object is 200
+    = size of the either result or target Package object is 255
+    = result object is shorter than target one
+    = result object is longer than target one
+    = sizes of the both result and target objects are the same
+ - all corner cases of applying the result object conversion rules should
+   be evaluated, they include:
+    = String to Buffer conversion of zero length and 200 bytes length strings
+    = String to Integer conversion of 16 (8) length hexadecimal strings
+    = Buffer to String conversion of zero length and 67 bytes length buffers
+ - particularities of Integer representation on 32-bit/64-bit modes
+   should be taken into account,
+ - the special AML object type - reference (Indexed Reference) - should
+   be verified.
+ - references, obtained through the NameString as an element of a Package
+   should be verified,
+ - some cases of applying both the source operand conversion and the result
+   conversion rules should be evaluated,
+ - some cases of using the same object both as the source operand(s) and
+   the target object,
+ - storing to Argx particularity should be evaluated: in this case ArgX
+   effectively becomes a LocalX,
+ - simultaneous storing by the Store operator and optional storing in any
+   other operator in both the same and different target objects.
+
+   IV. Enumeration of test aspects
+
+   So, wide variety of the different aspects can be considered on testing.
+
+1. All three ways to store a copy of some object:
+   - Store operator
+       Store(Expr(Src0, ...), Dst0)
+   - CopyObject operator
+       CopyObject(Expr(Src0, ...), Dst0)
+   - Internal storing in the Increment/Decrement operators
+       Increment(Dst0)
+   - Optional storing when the ASL operator is one of the explicit
+	 conversion operators (ToString, ToInteger, etc.)
+       ToBuffer(Src0, Dst0)
+   - Any other operator with optional storing
+       Op(Expr(Src0, ...), Dst0)
+
+2. Objects of all ASL data types should be exercised as destinations
+   to store result including objects containing an reference.
+
+3. Destinations should be represented by all possible ways:
+   - Named Object
+   - Method ArgX Object
+   - Method LocalX Object
+   - Reference to Named Object, Method ArgX and LocalX Object:
+     = immediate ArgX
+	 = Derefof(Source of reference)
+   - Indexed reference to Elements of Package, Buffer and String:
+     = immediate ArgX
+     = immediate Index(...)
+	 = Derefof(Source of reference)
+   - Reference, obtained through the NameString as an element of a Package
+
+4. Objects of all ASL data types should be exercised as result objects
+   to store including objects containing an reference.
+
+5. Obtaining of the result objects should be represented by all
+   possible ways:
+   - Result object can be represented immediately by Source Object as:
+     = Data Image
+     = Named Object
+     = Method ArgX Object
+     = Method LocalX Object
+   - Source Objects can be represented by reference and used through
+     Derefof to be obtained as Result object:
+     = immediate Refof for
+       ~ Named Object
+       ~ Method ArgX Object
+       ~ Method LocalX Object
+     = intermediate Object containing reference obtained through Refof
+	   or CondRefof:
+       ~ Named Object
+       ~ Method ArgX Object
+       ~ Method LocalX Object
+	   ~ Element of a Package
+     = Reference returned by called Method and obtained by any
+	   enumerated way
+   - Source Objects can be represented as Element of some complex
+     objects (String, Buffer, Package) and used through Derefof to
+	 be obtained as Result object:
+     = immediate Index(...) applied to
+       ~ String
+       ~ Buffer
+       ~ Package
+     = intermediate Object containing reference obtained through Index
+       ~ Named Object
+       ~ Method ArgX Object
+       ~ Method LocalX Object
+	   ~ Element of a Package
+     = Indexed Reference returned by called Method and obtained by any
+	   enumerated way
+   - Result Object returned by called Method and obtained by any
+	 enumerated way
+     = Data Image
+     = Named Object
+     = Method ArgX Object
+     = Method LocalX Object
+     = immediate Derefof for normal Reference
+     = immediate Derefof for Indexed Reference
+   - immediate Result Object returned by any Operator
+     = Op(Expr(Src0, ...) => Object
+   - types of Source Objects should be chosen so that different kinds of
+     implicit source operand conversion rules were used.
+
+   V. Order of testing actions
+
+   Testing actions should be performed in the next order:
+
+   - choose a way to store a copy of some object:
+     = Store operator
+     = CopyObject operator
+     = Internal storing in the Increment/Decrement operators
+     = Optional storing when the ASL operator is one of the explicit
+	   conversion operators (ToString, ToInteger, etc.)
+     = Any operator with optional storing
+
+   - choose a type of the Object to store into:
+     = Uninitialized
+     = Integer
+     = String
+     = Buffer
+     = Package
+	 ...
+
+   - choose a value of the Object to store into
+
+   - choose kind of the Object to store into:
+     = Named Object
+     = Method ArgX Object
+     = Method LocalX Object
+     = Reference to Named Object, Method ArgX and LocalX Object:
+       ~ immediate ArgX
+	   ~ Derefof(Source of reference)
+     = Indexed reference to Elements of Package, Buffer and String:
+       ~ immediate ArgX
+       ~ immediate Index(...)
+	   ~ Derefof(Source of reference)
+
+   - determine the destination Object to store into: it should exist
+     and be initialized or reinitialized with the chosen value (Dst0)
+
+   - choose a way to obtain some result object (Expr):
+     = Data Image
+     = Named Object
+     = Method ArgX Object
+     = Method LocalX Object
+     = Derefof of immediate Refof
+     = Derefof of intermediate Object
+     = Derefof of Reference returned by called Method
+     = Derefof of immediate Index(...)
+     = Derefof of intermediate Object containing Indexed reference
+     = Derefof of Indexed Reference returned by called Method
+	 = Result Object returned by called Method
+     = Result Object returned by any Operator (Op)
+
+   - choose a type of the result Object
+
+   - choose specific source objects to obtain the result Object of
+     the specified type: it should exist and be initialized (Src0, ...)
+
+   - choose a benchmark value according to a storing expression,
+     chosen source objects, the value of the target object and
+	 relevant result conversion rule (if any) - Bval
+
+   - check that the destination Object Dst0 is properly initialized
+
+   - perform storing expression:
+       Store(Expr(Src0, ...), Dst0)
+       CopyObject(Expr(Src0, ...), Dst0)
+       Op(Expr(Src0, ...), Dst0)
+
+   - check that the benchmark value Bval is equal to the updated
+     destination Object Dst0:
+
+   - check that the source objects are not updated:
+
+   - update the destination Object again and check that the source
+     objects are not updated
+
+   - repeat test action for all variety of test aspects
+
+   Additional efforts should be spent to check:
+   - consequences of deletion,
+   - consequences of overwriting
+   - corner cases
+
+   VI. Design strategy
+
+   Thus the storing of a copy of an Object will be verified
+for all possible conditions that could appear in valid AML code.
+The only problem is that implementation of all testing aspects
+can require too much efforts. So, the minimal set of testing
+aspects to verify should be determined. This set must include
+verifying of the following issues:
+ - all ways to store a copy of some object:
+   - Store operator
+   - CopyObject operator
+   - Internal storing in the Increment/Decrement operators
+   - Particular optional storing when the ASL operator is one
+     of the explicit conversion operators (ToString, ToInteger, etc.)
+   - The other operators with normal optional storing
+ - implicit result conversion rules for all possible conversions
+ - storing of result objects represented immediately as:
+     = Data Image
+     = Named Object
+     = Method ArgX Object
+     = Method LocalX Object
+	 = returned by called Method
+ - storing of result objects obtained by immediate Derefof of reference
+   (it should be obtained by Refof, Condrefof, Index or be returned by
+   called Method) to:
+     = Named Object
+     = Method ArgX Object
+     = Method LocalX Object
+	 = Element of a Package
+ - storing of immediate Result Object returned by several Operators
+     = CondRefOf(any) => Boolean
+	 = Not      (int) => Integer
+	 = ToBuffer ({int|str|buf}) => Buffer
+	 = Add      (int, int) => Integer
+	 = Concatenate({int|str|buf}, {int|str|buf})
+	   => ComputationalData
+     = Index    ({str|buf|pkg}, int) => ObjectReference
+	 = Mid      ({str|buf}, int, int) => Buffer or String
+
+
+Appendix I. Chapters of ACPI Specification involved in the test.
+
+   The test specification is based on the following chapters of 
+ACPI Specification, Revision 3.0:
+ 5.5.2.2   Arguments
+ 5.5.2.3   Method Calling Convention
+ 5.5.2.4   Local Variables and Locally Created Data Objects
+ 17.2.2    ASL Literal Constants,
+ 17.2.5.2  Explicit Data Type Conversions,
+ 17.2.5.3  Implicit Data Type Conversions,
+ 17.2.5.5  Implicit Result Object Conversion,
+ 17.2.5.6  Data Types and Type Conversions,
+ 17.2.5.7  Data Type Conversion Rules,
+ 17.2.5.8  Rules for Storing and Copying Objects,
+ 17.2.5.9  Rules for Reading and Writing Objects,
+ 17.5.5    Argx (Method Argument Data Objects)
+ 17.5.9    Buffer (Declare Buffer Object)
+ 17.5.13   CondRefOf (Create Object Reference Conditionally)
+ 17.5.15   CopyObject (Copy and Store Object)
+ 17.5.24   Decrement (Integer Decrement)
+ 17.5.27   DerefOf (Dereference an Object Reference)
+ 17.5.52   Increment (Integer Increment)
+ 17.5.53   Index (Indexed Reference To Member Object)
+ 17.5.54   IndexField (Declare Index/Data Fields)
+ 17.5.69   Localx (Method Local Data Objects)
+ 17.5.80   Name (Declare Named Object)
+ 17.5.89   OperationRegion (Declare Operation Region)
+ 17.5.91   Package (Declare Package Object)
+ 17.5.97   RefOf (Create Object Reference)
+ 17.5.102  Return (Return from Method Execution)
+ 17.5.113  Store (Store an Object)
+ The other ASL Operator Reference chapters allowing optional storing
+ and/or providing Result objects.
+ The chapters dealing with creation of Buffer Field, Field Unit
+ and objects of the other types.
+
+
+Appendix II. The implicit Result conversion rules
+
+	There are none cases to apply conversion to Buffer Field,
+Field Unit or Package to Package on Source conversion therefore
+they should be enumerated here (others are reviewed in the Source
+Operand complex test specification):
+
+ - Integer (DDB Handle) to Buffer Field
+   The Integer overwrites the entire Buffer Field. If the integer is
+   smaller than the size of the buffer field, it is zero-extended. If
+   the integer is larger than the size of the buffer field, the upper
+   bits are truncated.
+ - Integer (DDB Handle) to Field Unit
+   The Integer overwrites the entire Field Unit. If the integer is smaller
+   than the size of the Field Unit, it is zero-extended. If the integer is
+   larger than the size of the Field Unit, the upper bits are truncated
+ - String to Buffer Field
+   The string is treated as a buffer. If this buffer is smaller than
+   the size of the buffer field, it is zero extended. If the buffer is
+   larger than the size of the buffer field, the upper bits are truncated.
+ - String to Field Unit
+   Each character of the string is written, starting with the first, to
+   the Field Unit. If the Field Unit is less than eight bits, then the
+   upper bits of each character are lost. If the Field Unit is greater
+   than eight bits, then the additional bits are zeroed.
+ - Buffer to Buffer Field (see String to Buffer Field)
+ - Buffer to Field Unit
+   The entire contents of the buffer are copied to the Field Unit.
+   If the buffer is larger (in bits) than the size of the Field Unit,
+   it is broken into pieces and completely written to the Field Unit,
+   lower chunks first. If the buffer (or the last piece of the buffer,
+   if broken up) is smaller than the size of the Field Unit, it is zero
+   extended before being written.
+ - Package to Package
+   If no package object exists, a new package object is created.
+   If the package already exists, it is completely overwritten and
+   truncated or extended to accommodate the source package exactly.
+   Any and all existing valid (non-null) package elements of the target
+   package are deleted, and the entire contents of the source package
+   are copied into the target package.
+
+	There are specific in conversion on writing to other existing objects:
+ - Integer (DDB Handle) to String
+   If the string already exists, it is completely overwritten and
+   truncated or extended to accommodate the converted integer exactly.
+   In either case, the entire integer is converted to a string of
+   hexadecimal ASCII characters.
+ - Integer (DDB Handle) to Buffer
+   If a buffer object already exists, the Integer overwrites the entire
+   Buffer object. If the integer requires more bits than the size of the
+   Buffer, then the integer is truncated before being copied to the Buffer.
+   If the integer contains fewer bits than the size of the buffer, the
+   Integer is zero-extended to fill the entire buffer.
+ - String to Integer
+   The integer is initialized to the value zero and the ASCII string
+   is interpreted as a hexadecimal constant. Each string character
+   is interpreted as a hexadecimal value ('0'-'9', 'A'-'F', 'a'-'f'),
+   starting with the first character as the most significant digit and
+   ending with the first non-hexadecimal character, end-of-string, or
+   when the size of an integer is reached (8 characters for 32-bit
+   integers and 16 characters for 64-bit integers). Note: the first
+   non-hex character terminates the conversion without error, and a
+   "0x" prefix is not allowed.
+ - String to Buffer
+   If a buffer object already exists, it is completely overwritten.
+   If the string is longer than the buffer, the string is truncated
+   before copying. If the string is shorter than the buffer, the
+   remaining buffer bytes are set to zero. In either case, the string
+   is treated as a buffer, with each ASCII string character copied to
+   one buffer byte, including the null terminator.
+ - Buffer to Integer
+   The contents of the buffer are copied to the Integer, starting
+   with the least-significant bit and continuing until the buffer
+   has been completely copied - up to the maximum number of bits in
+   an Integer. The size of an Integer is indicated by the Definition
+   Block table header's Revision field. A Revision field value less
+   than 2 indicates that the size of an Integer is 32-bits. A value
+   greater than or equal to 2 signifies that the size of an Integer
+   is 64-bits.  If the buffer is smaller than the size of an integer,
+   it is zero extended.  If the buffer is larger than the size of an
+   integer, it is truncated.
+ - Buffer to String
+   If the string already exists, it is completely overwritten and
+   truncated or extended to accommodate the converted buffer exactly.
+   The entire contents of the buffer are converted to a string of
+   two-character hexadecimal numbers, each separated by a space.
+   A fatal error is generated if greater than two hundred ASCII
+   characters are created.

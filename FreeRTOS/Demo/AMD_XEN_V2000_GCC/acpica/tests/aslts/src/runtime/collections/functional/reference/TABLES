@@ -1,0 +1,493 @@
+
+   Collection of the functional information about the
+   Object Reference and the call-by-reference convention.
+
+
+
+NOTATIONS:
+
+x   - impossible to generate situation
+c   - expected is a compiler error
+e   - is not caught by compiler but causes exception
++   - expected is a positive result
+?   - should be more investigated
+... - means everywhere below too
+
+        A. ALL THE LEGAL WAYS TO GENERATE REFERENCES
+
+   (means that Debug reports the obtained object like this:
+    [ACPI Debug] Reference: 004D4068)
+                 ^^^^^^^^^^
+
+
+
+
+   TABLE 1: all the legal ways to generate references to the
+            immediate images (constants)
+
+--------------------|---------------------------|-----------|-----------|-----------|
+      Type          |          Examples         |   Index   |   RefOf   | CondRefOf |
+                    |                           |  I     IR |     R     |  C     CR |
+--------------------|---------------------------|-----------|-----------|-----------|
+ 0 Uninitialized    |                           |  x     x  |     x     |  x     x  |
+ 1 Integer          | 0xabcdef                  |  c     c  |     c     |  c     c  |
+ 2 String           | "qwrtu"                   |  +     +  |     c     |  c     c  |
+ 3 Buffer           | Buffer(){7}               |  +     +  |     c     |  c     c  |
+ 4 Package          | Package(){8}              |  +     +  |     c     |  c     c  |
+ 5 Field Unit       | Field(..) {f000,..}       |  c     c  |     c     |  c     c  |
+                    | BankField(..) {bkf0..}    |  c     c  |     c     |  c     c  |
+                    | IndexField(..) {if00..}   |  c     c  |     c     |  c     c  |
+ 6 Device           | Device(d000) {OL}         |  c     c  |     c     |  c     c  |
+ 7 Event            | Event(e000)               |  c     c  |     c     |  c     c  |
+ 8 Method           | Method(m000) {return(0)}  |  c     c  |     c     |  c     c  |
+ 9 Mutex            | Mutex(mx00, 0)            |  c     c  |     c     |  c     c  |
+10 Operation Region | OperationRegion(r000,..)  |  c     c  |     c     |  c     c  |
+11 Power Resource   | PowerResource(pwr0,..){OL}|  c     c  |     c     |  c     c  |
+12 Processor        | Processor(prc0,..){OL}    |  c     c  |     c     |  c     c  |
+13 Thermal Zone     | ThermalZone(tz00){OL}     |  c     c  |     c     |  c     c  |
+14 Buffer Field     | Create*Field(..,bf00)     |  c     c  |     c     |  c     c  |
+15 DDB Handle       |                           |  x     x  |     x     |  x     x  |
+16 Debug Object     | Debug                     |  c     c  |     c     |  c     c  |
+--------------------|---------------------------|-----------|-----------|-----------|
+
+Examples of I:
+
+Store(Index("qwrtyuiop", 5), Local0)
+Store(Index(Buffer() {1,2,3,4,5,6,7,8}, 5), Local0)
+Store(Index(Package() {1,2,3,4,5,6,7,8}, 5), Local0)
+
+Examples of IR:
+
+Store(Index("qwrtyuiop", 5, Local1), Local0)
+Store(Index(Buffer() {1,2,3,4,5,6,7,8}, 5, Local1), Local0)
+Store(Index(Package() {1,2,3,4,5,6,7,8}, 5, Local1), Local0)
+
+
+
+
+   TABLE 2: all the legal ways to generate references to the named objects
+
+--------------------|---------------------------|-----------|-----------|-----------|
+      Type          |          Examples         |   Index   |   RefOf   | CondRefOf |
+                    |                           |  I     IR |     R     |  C     CR |
+--------------------|---------------------------|-----------|-----------|-----------|
+ 0 Uninitialized    |                           |  x     x  |     x     |  x     x  |
+ 1 Integer          | Name(i000, 0xabcdef))     |  ?2004 ?  |     +     |  +     +  |
+ 2 String           | Name(s000, "qwrtu")       |  +     +  |     +     |  +     +  |
+ 3 Buffer           | Name(b000, Buffer(){7})   |  +     +  |     +     |  +     +  |
+ 4 Package          | Name(p000, Package(){8})  |  +     +  |     +     |  +     +  |
+ 5 Field Unit       | Field(..) {f000,..}       |  ?2004 ?  |     +     |  +     +  |
+                    | BankField(..) {bkf0..}    |  ?2004 ?  |     +     |  +     +  |
+                    | IndexField(..) {if00..}   |  ?2004 ?  |     +     |  +     +  |
+ 6 Device           | Device(d000) {OL}         |  c     c  |     +     |  +     +  |
+ 7 Event            | Event(e000)               |  c     c  |     +     |  +     +  |
+ 8 Method           | Method(m000) {return(0)}  |  ?2006 ?  |     +     |  +     +  |
+ 9 Mutex            | Mutex(mx00, 0)            |  c     c  |     +     |  +     +  |
+10 Operation Region | OperationRegion(r000,..)  |  c     c  |     +     |  +     +  |
+11 Power Resource   | PowerResource(pwr0,..){OL}|  c     c  |     +     |  +     +  |
+12 Processor        | Processor(prc0,..){OL}    |  c     c  |     +     |  +     +  |
+13 Thermal Zone     | ThermalZone(tz00){OL}     |  c     c  |     +     |  +     +  |
+14 Buffer Field     | Create*Field(..,bf00)     |  ?2004 ?  |     +     |  +     +  |
+15 DDB Handle       |                           |  x     x  |     x     |  x     x  |
+16 Debug Object     |                           |  x     x  |     x     |  x     x  |
+--------------------|---------------------------|-----------|-----------|-----------|
+
+Examples of I:
+
+Store(Index(s000, 0), Local0)
+Store(Index(b000, 0), Local0)
+Store(Index(p000, 0), Local0)
+
+Examples of IR:
+
+Store(Index(s000, 0, Local1), Local0)
+Store(Index(b000, 0, Local1), Local0)
+Store(Index(p000, 0, Local1), Local0)
+
+Examples of R:
+
+Store(RefOf(i000), Local0)
+Store(RefOf(s000), Local0)
+Store(RefOf(b000), Local0)
+Store(RefOf(p000), Local0)
+Store(RefOf(f000), Local0)
+Store(RefOf(bkf0), Local0)
+Store(RefOf(if00), Local0)
+Store(RefOf(d000), Local0)
+Store(RefOf(e000), Local0)
+Store(RefOf(m000), Local0)
+Store(RefOf(mx00), Local0)
+Store(RefOf(r000), Local0)
+Store(RefOf(pwr0), Local0)
+Store(RefOf(prc0), Local0)
+Store(RefOf(tz00), Local0)
+Store(RefOf(bf00), Local0)
+
+Examples of C:
+
+Store(CondRefOf(i000), Local0)
+Store(CondRefOf(s000), Local0)
+Store(CondRefOf(b000), Local0)
+Store(CondRefOf(p000), Local0)
+Store(CondRefOf(f000), Local0)
+Store(CondRefOf(bkf0), Local0)
+Store(CondRefOf(if00), Local0)
+Store(CondRefOf(d000), Local0)
+Store(CondRefOf(e000), Local0)
+Store(CondRefOf(m000), Local0)
+Store(CondRefOf(mx00), Local0)
+Store(CondRefOf(r000), Local0)
+Store(CondRefOf(pwr0), Local0)
+Store(CondRefOf(prc0), Local0)
+Store(CondRefOf(tz00), Local0)
+Store(CondRefOf(bf00), Local0)
+
+Examples of CR:
+
+Store(CondRefOf(i000, Local1), Local0)
+Store(CondRefOf(s000, Local1), Local0)
+Store(CondRefOf(b000, Local1), Local0)
+Store(CondRefOf(p000, Local1), Local0)
+Store(CondRefOf(f000, Local1), Local0)
+Store(CondRefOf(bkf0, Local1), Local0)
+Store(CondRefOf(if00, Local1), Local0)
+Store(CondRefOf(d000, Local1), Local0)
+Store(CondRefOf(e000, Local1), Local0)
+Store(CondRefOf(m000, Local1), Local0)
+Store(CondRefOf(mx00, Local1), Local0)
+Store(CondRefOf(r000, Local1), Local0)
+Store(CondRefOf(pwr0, Local1), Local0)
+Store(CondRefOf(prc0, Local1), Local0)
+Store(CondRefOf(tz00, Local1), Local0)
+Store(CondRefOf(bf00, Local1), Local0)
+
+
+
+
+   TABLE 3: all the legal ways to generate references to the
+            immediate images (constants) being elements of Package
+
+--------------------|----------------------------|-----------|-----------|-----------|
+      Type          |           Examples         |   Index   |   RefOf   | CondRefOf |
+                    |                            |  I     IR |     R     |  C     CR |
+--------------------|----------------------------|-----------|-----------|-----------|
+ 0 Uninitialized    | Package(1){}               |  +     +  |     x     |  x     x  |
+ 1 Integer          | Package(){0xabcdef}        |  +     +  |     ...   |  ...   ...|
+ 2 String           | Package(){"qwrtu"}         |  +     +  |           |           |
+ 3 Buffer           | Package(){Buffer(){7}}     |  +     +  |           |           |
+ 4 Package          | Package(){Package(){8}}    |  +     +  |           |           |
+ 5 Field Unit       | Package(){Field(f000)}     |  x     x  |           |           |
+                    | Package(){BankField(bkf0)} |  ...   ...|           |           |
+                    | Package(){IndexField(if00)}|           |           |           |
+ 6 Device           | Package(){Device(d000)}    |           |           |           |
+ 7 Event            | Package(){Event(e000)}     |           |           |           |
+ 8 Method           | Package(){Method(m000)}    |           |           |           |
+ 9 Mutex            | Package(){Mutex(mx00)}     |           |           |           |
+10 Operation Region | Package(){OperRegion(r000)}|           |           |           |
+11 Power Resource   | Package(){PwResource(pwr0)}|           |           |           |
+12 Processor        | Package(){Processor(prc0)} |           |           |           |
+13 Thermal Zone     | Package(){ThermZone(tz00)} |           |           |           |
+14 Buffer Field     | Package(){Cr*Field(bf00)}  |           |           |           |
+15 DDB Handle       |                            |           |           |           |
+16 Debug Object     | Package(){Debug}           |           |           |           |
+--------------------|----------------------------|-----------|-----------|-----------|
+
+Examples of I:
+
+Store(Index(Package(1){}, 0), Local0)
+Store(Index(Package(){0xabcdef}, 0), Local0)
+Store(Index(Package(){"qwrtyuiop"}, 0), Local0)
+Store(Index(Package(){Buffer() {1,2,3,4,5,6,7,8,9}}, 0), Local0)
+Store(Index(Package(){Package(){0xabcdef}}, 0), Local0)
+Store(Index(Package(){Package(){"qwrtyuiop"}}, 0), Local0)
+Store(Index(Package(){Package(){Buffer() {1,2,3,4,5,6,7,8,9}}}, 0), Local0)
+Store(Index(Package(){Package(){Package(){0xabcdef}}}, 0), Local0)
+
+Examples of IR:
+
+Store(Index(Package(1){}, 0, Local1), Local0)
+Store(Index(Package(){0xabcdef}, 0, Local1), Local0)
+Store(Index(Package(){"qwrtyuiop"}, 0, Local1), Local0)
+Store(Index(Package(){Buffer() {1,2,3,4,5,6,7,8,9}}, 0, Local1), Local0)
+Store(Index(Package(){Package(){0xabcdef}}, 0, Local1), Local0)
+Store(Index(Package(){Package(){"qwrtyuiop"}}, 0, Local1), Local0)
+Store(Index(Package(){Package(){Buffer() {1,2,3,4,5,6,7,8,9}}}, 0, Local1), Local0)
+Store(Index(Package(){Package(){Package(){0xabcdef}}}, 0, Local1), Local0)
+
+
+
+
+   TABLE 4: all the legal ways to generate references to the
+            named objects being elements of Package
+
+--------------------|---------------------------|-----------|-----------|-----------|
+      Type          |          Examples         |   Index   |   RefOf   | CondRefOf |
+                    |                           |  I     IR |     R     |  C     CR |
+--------------------|---------------------------|-----------|-----------|-----------|
+ 0 Uninitialized    |                           |  x     x  |     x     |  x     x  |
+ 1 Integer          | Package(){i000}           |  +     +  |     ...   |  ...   ...|
+ 2 String           | Package(){s000}           |  +     +  |           |           |
+ 3 Buffer           | Package(){b000}           |  ...   ...|           |           |
+ 4 Package          | Package(){p000}           |           |           |           |
+ 5 Field Unit       | Package(){f000}           |           |           |           |
+                    | Package(){bkf0}           |           |           |           |
+                    | Package(){if00}           |           |           |           |
+ 6 Device           | Package(){d000}           |           |           |           |
+ 7 Event            | Package(){e000}           |           |           |           |
+ 8 Method           | Package(){m000}           |           |           |           |
+ 9 Mutex            | Package(){mx00}           |           |           |           |
+10 Operation Region | Package(){r000}           |           |           |           |
+11 Power Resource   | Package(){pwr0}           |           |           |           |
+12 Processor        | Package(){prc0}           |           |           |           |
+13 Thermal Zone     | Package(){tz00}           |           |           |           |
+14 Buffer Field     | Package(){bf00}           |           |           |           |
+15 DDB Handle       |                           |  x     x  |           |           |
+16 Debug Object     |                           |  x     x  |           |           |
+--------------------|---------------------------|-----------|-----------|-----------|
+
+
+Examples of I:
+
+Store(Index(Package(){i000}, 0), Local0)
+Store(Index(Package(){s000}, 0), Local0)
+Store(Index(Package(){b000}, 0), Local0)
+Store(Index(Package(){p000}, 0), Local0)
+Store(Index(Package(){f000}, 0), Local0)
+Store(Index(Package(){bkf0}, 0), Local0)
+Store(Index(Package(){if00}, 0), Local0)
+Store(Index(Package(){d000}, 0), Local0)
+Store(Index(Package(){e000}, 0), Local0)
+Store(Index(Package(){m000}, 0), Local0)
+Store(Index(Package(){mx00}, 0), Local0)
+Store(Index(Package(){r000}, 0), Local0)
+Store(Index(Package(){pwr0}, 0), Local0)
+Store(Index(Package(){prc0}, 0), Local0)
+Store(Index(Package(){tz00}, 0), Local0)
+Store(Index(Package(){bf00}, 0), Local0)
+
+Examples of IR:
+
+Store(Index(Package(){i000}, 0, Local1), Local0)
+Store(Index(Package(){s000}, 0, Local1), Local0)
+Store(Index(Package(){b000}, 0, Local1), Local0)
+Store(Index(Package(){p000}, 0, Local1), Local0)
+Store(Index(Package(){f000}, 0, Local1), Local0)
+Store(Index(Package(){bkf0}, 0, Local1), Local0)
+Store(Index(Package(){if00}, 0, Local1), Local0)
+Store(Index(Package(){d000}, 0, Local1), Local0)
+Store(Index(Package(){e000}, 0, Local1), Local0)
+Store(Index(Package(){m000}, 0, Local1), Local0)
+Store(Index(Package(){mx00}, 0, Local1), Local0)
+Store(Index(Package(){r000}, 0, Local1), Local0)
+Store(Index(Package(){pwr0}, 0, Local1), Local0)
+Store(Index(Package(){prc0}, 0, Local1), Local0)
+Store(Index(Package(){tz00}, 0, Local1), Local0)
+Store(Index(Package(){bf00}, 0, Local1), Local0)
+
+
+
+
+   TABLE 5: all the legal ways to generate references to LocalX
+
+--------------------|---------------------------|-----------|-----------|-----------|
+      Type          |          Examples         |   Index   |   RefOf   | CondRefOf |
+                    |                           |  I     IR |     R     |  C     CR |
+--------------------|---------------------------|-----------|-----------|-----------|
+ 0 Uninitialized    | Store(UNIN, Local0); RF(L)|  e     e  |     +     |  +     +  |
+ 1 Integer          | Store(i000, Local0); RF(L)|  e     e  |     +     |  +     +  |
+ 2 String           | Store(s000, Local0); RF(L)|  +     +  |     +     |  +     +  |
+ 3 Buffer           | Store(b000, Local0); RF(L)|  +     +  |     +     |  +     +  |
+ 4 Package          | Store(p000, Local0); RF(L)|  +     +  |     +     |  +     +  |
+ 5 Field Unit       | Store(f000, Local0); RF(L)|  e     e  |     +     |  +     +  |
+                    | Store(bkf0, Local0); RF(L)|  e     e  |     +     |  +     +  |
+                    | Store(if00, Local0); RF(L)|  e     e  |     +     |  +     +  |
+ 6 Device           | Store(d000, Local0); RF(L)|  x     x  |     x     |  x     x  |
+ 7 Event            | Store(e000, Local0); RF(L)|  ...   ...|     ...   |  ...   ...|
+ 8 Method           | Store(m000, Local0); RF(L)|           |           |           |
+ 9 Mutex            | Store(mx00, Local0); RF(L)|           |           |           |
+10 Operation Region | Store(r000, Local0); RF(L)|           |           |           |
+11 Power Resource   | Store(pwr0, Local0); RF(L)|           |           |           |
+12 Processor        | Store(prc0, Local0); RF(L)|           |           |           |
+13 Thermal Zone     | Store(tz00, Local0); RF(L)|           |           |           |
+14 Buffer Field     | Store(bf00, Local0); RF(L)|  e     e  |     +     |  +     +  |
+15 DDB Handle       | Store(HDL,  Local0); RF(L)|           |           |           |
+16 Debug Object     | Store(Debug,Local0); RF(L)|           |           |           |
+--------------------|---------------------------|-----------|-----------|-----------|
+
+
+Examples of I:
+
+Store(s000, Local7)
+Store(Index(Local7, 0), Local0)
+Store(b000, Local7)
+Store(Index(Local7, 0), Local0)
+Store(p000, Local7)
+Store(Index(Local7, 0), Local0)
+
+Examples of IR:
+
+Store(s000, Local7)
+Store(Index(Local7, 0, Local1), Local0)
+Store(b000, Local7)
+Store(Index(Local7, 0, Local1), Local0)
+Store(p000, Local7)
+Store(Index(Local7, 0, Local1), Local0)
+
+Examples of R:
+
+Store(i000, Local7)
+Store(RefOf(Local7), Local0)
+Store(s000, Local7)
+Store(RefOf(Local7), Local0)
+Store(b000, Local7)
+Store(RefOf(Local7), Local0)
+Store(p000, Local7)
+Store(RefOf(Local7), Local0)
+Store(f000, Local7)
+Store(RefOf(Local7), Local0)
+Store(bkf0, Local7)
+Store(RefOf(Local7), Local0)
+Store(if00, Local7)
+Store(RefOf(Local7), Local0)
+
+Examples of C:
+
+Store(i000, Local7)
+Store(CondRefOf(Local7), Local0)
+Store(s000, Local7)
+Store(CondRefOf(Local7), Local0)
+Store(b000, Local7)
+Store(CondRefOf(Local7), Local0)
+Store(p000, Local7)
+Store(CondRefOf(Local7), Local0)
+Store(f000, Local7)
+Store(CondRefOf(Local7), Local0)
+Store(bkf0, Local7)
+Store(CondRefOf(Local7), Local0)
+Store(if00, Local7)
+Store(CondRefOf(Local7), Local0)
+
+Examples of CR:
+
+Store(i000, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+Store(s000, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+Store(b000, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+Store(p000, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+Store(f000, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+Store(bkf0, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+Store(if00, Local7)
+Store(CondRefOf(Local7, Local1), Local0)
+
+
+
+
+   TABLE 6: all the legal ways to generate references to ArgX
+
+--------------------|---------------------------|-----------|-----------|-----------|
+      Type          |          Examples         |   Index   |   RefOf   | CondRefOf |
+                    |                           |  I     IR |     R     |  C     CR |
+--------------------|---------------------------|-----------|-----------|-----------|
+ 0 Uninitialized    | Store(UNIN, Arg0); RF(L)  |  e     e  |     +     |  +     +  |
+ 1 Integer          | Store(i000, Arg0); RF(L)  |  e     e  |     +     |  +     +  |
+ 2 String           | Store(s000, Arg0); RF(L)  |  +     +  |     +     |  +     +  |
+ 3 Buffer           | Store(b000, Arg0); RF(L)  |  +     +  |     +     |  +     +  |
+ 4 Package          | Store(p000, Arg0); RF(L)  |  +     +  |     +     |  +     +  |
+ 5 Field Unit       | Store(f000, Arg0); RF(L)  |  e     e  |     +     |  +     +  |
+                    | Store(bkf0, Arg0); RF(L)  |  e     e  |     +     |  +     +  |
+                    | Store(if00, Arg0); RF(L)  |  e     e  |     +     |  +     +  |
+ 6 Device           | Store(d000, Arg0); RF(L)  |  x     x  |     x     |  x     x  |
+ 7 Event            | Store(e000, Arg0); RF(L)  |  ...   ...|     ...   |  ...   ...|
+ 8 Method           | Store(m000, Arg0); RF(L)  |           |           |           |
+ 9 Mutex            | Store(mx00, Arg0); RF(L)  |           |           |           |
+10 Operation Region | Store(r000, Arg0); RF(L)  |           |           |           |
+11 Power Resource   | Store(pwr0, Arg0); RF(L)  |           |           |           |
+12 Processor        | Store(prc0, Arg0); RF(L)  |           |           |           |
+13 Thermal Zone     | Store(tz00, Arg0); RF(L)  |           |           |           |
+14 Buffer Field     | Store(bf00, Arg0); RF(L)  |  e     e  |     +     |  +     +  |
+15 DDB Handle       | Store(HDL,  Arg0); RF(L)  |           |           |           |
+16 Debug Object     | Store(Debug,Arg0); RF(L)  |           |           |           |
+--------------------|---------------------------|-----------|-----------|-----------|
+
+
+Examples of I:
+
+Store(s000, Arg6)
+Store(Index(Arg6, 0), Local0)
+Store(b000, Arg6)
+Store(Index(Arg6, 0), Local0)
+Store(p000, Arg6)
+Store(Index(Arg6, 0), Local0)
+
+Examples of IR:
+
+Store(s000, Arg6)
+Store(Index(Arg6, 0, Local1), Local0)
+Store(b000, Arg6)
+Store(Index(Arg6, 0, Local1), Local0)
+Store(p000, Arg6)
+Store(Index(Arg6, 0, Local1), Local0)
+
+Examples of R:
+
+Store(i000, Arg6)
+Store(RefOf(Arg6), Local0)
+Store(s000, Arg6)
+Store(RefOf(Arg6), Local0)
+Store(b000, Arg6)
+Store(RefOf(Arg6), Local0)
+Store(p000, Arg6)
+Store(RefOf(Arg6), Local0)
+Store(f000, Arg6)
+Store(RefOf(Arg6), Local0)
+Store(bkf0, Arg6)
+Store(RefOf(Arg6), Local0)
+Store(if00, Arg6)
+Store(RefOf(Arg6), Local0)
+
+Examples of C:
+
+Store(i000, Arg6)
+Store(CondRefOf(Arg6), Local0)
+Store(s000, Arg6)
+Store(CondRefOf(Arg6), Local0)
+Store(b000, Arg6)
+Store(CondRefOf(Arg6), Local0)
+Store(p000, Arg6)
+Store(CondRefOf(Arg6), Local0)
+Store(f000, Arg6)
+Store(CondRefOf(Arg6), Local0)
+Store(bkf0, Arg6)
+Store(CondRefOf(Arg6), Local0)
+Store(if00, Arg6)
+Store(CondRefOf(Arg6), Local0)
+
+Examples of CR:
+
+Store(i000, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+Store(s000, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+Store(b000, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+Store(p000, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+Store(f000, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+Store(bkf0, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+Store(if00, Arg6)
+Store(CondRefOf(Arg6, Local1), Local0)
+
+
+        B. ALL THE LEGAL WAYS TO USE REFERENCES
+
+The ways of using the RefOf and Index References are comprehensively
+specified and commented in the test specification (see file SPEC2).
+
+

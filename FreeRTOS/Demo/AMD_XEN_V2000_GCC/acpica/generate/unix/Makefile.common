@@ -1,0 +1,81 @@
+#
+# Common make for acpica tools and utilities
+#
+
+all:	$(PROGS)
+$(PROGS): FORCE
+	@cd $(BUILD_DIRECTORY_PATH)/$@; \
+	mkdir -p obj; \
+	$(MAKE) || exit "$$?"; \
+	echo "";
+
+#
+# List just shows the status of each tool
+#
+status:	FORCE
+	@for toolname in $(PROGS); do \
+		(cd $(BUILD_DIRECTORY_PATH)/$$toolname; \
+		pwd; \
+		if [ -d "obj" ] ; then \
+			echo "    `ls -1 obj | wc -l` files, `stat -c%s obj/$$toolname` bytes"; \
+		else \
+			echo "    Clean"; \
+		fi; \
+		); \
+	done;
+
+#
+# Simple clean removes all .obj files, but leaves the executables
+# in the local bin directory
+#
+clean:	FORCE
+	@for toolname in $(PROGS); do \
+		(cd $(BUILD_DIRECTORY_PATH)/$$toolname; \
+		pwd; \
+		if [ -d "obj" ] ; then \
+			echo "    Removing `ls -1 obj | wc -l` files"; \
+			rm -r obj; \
+		else \
+			echo "    Clean"; \
+		fi; \
+		); \
+	done;
+
+#
+# Very clean removes all executables and the local bin directory
+#
+veryclean:	FORCE
+	@for toolname in $(PROGS); do \
+		(cd $(BUILD_DIRECTORY_PATH)/$$toolname; \
+		if [ -d "obj" ] ; then \
+			echo "Removing $$toolname:"; \
+			pwd; \
+			$(MAKE) clean; \
+			rmdir obj; \
+			echo ""; \
+		fi; \
+		); \
+		if [ -e "$(BUILD_DIRECTORY_PATH)/bin/$$toolname" ] ; then \
+			rm $(BUILD_DIRECTORY_PATH)/bin/$$toolname; \
+		fi; \
+	done; \
+	if [ -d "bin" ] ; then \
+		rmdir bin; \
+	fi;
+
+install:	FORCE
+	@for toolname in $(PROGS); do \
+		(cd $(BUILD_DIRECTORY_PATH)/$$toolname; \
+		pwd; \
+		if [ -d "obj" ] ; then \
+			$(MAKE) PROG=$$toolname install; \
+		else \
+			echo "    Clean"; \
+		fi; \
+		); \
+	done;
+
+machine:	FORCE
+
+FORCE:
+

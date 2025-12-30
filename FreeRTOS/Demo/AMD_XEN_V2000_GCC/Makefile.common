@@ -1,0 +1,138 @@
+ # Makefile.common
+ #
+ # Copyright (C) 2025 Advanced Micro Devices, Inc. or its affiliates. All Rights Reserved.
+ #
+ # SPDX-License-Identifier: MIT
+ #
+ # Permission is hereby granted, free of charge, to any person obtaining a copy of
+ # this software and associated documentation files (the "Software"), to deal in
+ # the Software without restriction, including without limitation the rights to
+ # use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ # the Software, and to permit persons to whom the Software is furnished to do so,
+ # subject to the following conditions:
+ #
+ # The above copyright notice and this permission notice shall be included in all
+ # copies or substantial portions of the Software.
+ #
+ # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ # FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #
+
+VERSION_HEADER        := $(PROJECT_ROOT)/../include/freertos_version.h
+KERNEL_DIR            := ${FREERTOS_DIR}/Source
+XEN_SRC               := ${PROJECT_ROOT}/../xen/
+
+$(shell rm -f $(VERSION_HEADER))
+BRANCH_NAME := $(shell git describe --tags --exact-match 2>/dev/null || echo "dev")
+FREERTOS_BRANCH_NAME := $(shell cd $(KERNEL_DIR) && git describe --tags --abbrev=0 2>/dev/null || echo "dev")
+FREERTOS_PLUS_BRANCH_NAME := $(shell cd $(FREERTOS_DIR)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI/ && git describe --tags --abbrev=0 2>/dev/null || echo "dev")
+
+INCLUDE_DIRS          += -I${PROJECT_ROOT}/include
+INCLUDE_DIRS          += -I${FREERTOS_DIR}/Demo/Common/include
+INCLUDE_DIRS          += -I${PROJECT_ROOT}/../include
+INCLUDE_DIRS          += -I${KERNEL_DIR}/include
+INCLUDE_DIRS          += -I${PROJECT_ROOT}/../acpica/source/include
+INCLUDE_DIRS          += -I${XEN_SRC}
+INCLUDE_DIRS          += -I${XEN_SRC}/include
+INCLUDE_DIRS          += -I${XEN_SRC}/include/x86
+INCLUDE_DIRS          += -I${FREERTOS_DIR}/../FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI/
+
+SOURCE_FILES           = ${PROJECT_ROOT}/../src/main.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/utils.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/serial.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/IRQ.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/ctype_b_loc.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/ctype_loc.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/io.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/ioapic.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/memory.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/print_vga.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/freertos_acpica.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/freertos_xenbus.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../src/xenbus-watch.c
+
+SOURCE_FILES          += ${PROJECT_ROOT}/../cli/cli.c
+
+SOURCE_FILES          += ${PROJECT_ROOT}/../Support_Files/galileo-support.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../Support_Files/printf.c
+
+# application source files
+SOURCE_FILES          += ${PROJECT_ROOT}/../application/blinky_app.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../application/app_hooks.c
+
+# Demo Test Files related to Queues, Timers and Tasks
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-timer-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-tasknotify-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-tasknotifyarray-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-blockq-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-genqtest-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-qoverwrite-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-qpeek-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-pollq-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-dynamic-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-blocktim-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-countsem-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-semtest-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-eventgroups-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-msgbuffer-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-streambuffer-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-mutex-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-xenbus-read-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-xenbus-ls-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-gnt-test.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-argo-test.c
+
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/test-cmd.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/register_tests.c
+SOURCE_FILES          += ${PROJECT_ROOT}/../tests/run-performance-test.c
+
+# Queues Tasks and Timers
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/list.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/queue.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/tasks.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/timers.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/event_groups.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/croutine.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Source/stream_buffer.c
+
+# Additional Demo Tests for Queues, Tasks and Timers
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/BlockQ.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/blocktim.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/dynamic.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/GenQTest.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/PollQ.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/QPeek.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/QueueOverwrite.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/TaskNotify.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/TaskNotifyArray.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/countsem.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/QueueSet.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/MessageBufferDemo.c
+SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/semtest.c
+
+
+# XEN PVN
+SOURCE_FILES          += ${XEN_SRC}/console.c
+SOURCE_FILES          += ${XEN_SRC}/events.c
+SOURCE_FILES          += ${XEN_SRC}/hypervisor.c
+SOURCE_FILES          += ${XEN_SRC}/time.c
+SOURCE_FILES          += ${XEN_SRC}/mm.c
+SOURCE_FILES          += ${XEN_SRC}/e820.c
+SOURCE_FILES          += ${XEN_SRC}/lib/printf.c
+SOURCE_FILES          += ${XEN_SRC}/lib/string.c
+SOURCE_FILES          += ${XEN_SRC}/gnttab.c
+SOURCE_FILES          += ${XEN_SRC}/gntmap.c
+SOURCE_FILES          += ${XEN_SRC}/argo.c
+
+# FreeRTOS CLI Common Wrapper
+SOURCE_FILES          += ${FREERTOS_DIR}/../FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI/FreeRTOS_CLI.c
+
+$(VERSION_HEADER):
+	@echo "#ifndef FREERTOS_VERSION_H" > $(VERSION_HEADER)
+	@echo "#define FREERTOS_VERSION_H" >> $(VERSION_HEADER)
+	@echo "#define FREERTOS_VERSION \"$(BRANCH_NAME), FreeRTOS:${FREERTOS_BRANCH_NAME}, FreeRTOS-Plus-CLI:${FREERTOS_PLUS_BRANCH_NAME}\"" >> $(VERSION_HEADER)
+	@echo "#endif // FREERTOS_VERSION_H" >> $(VERSION_HEADER)

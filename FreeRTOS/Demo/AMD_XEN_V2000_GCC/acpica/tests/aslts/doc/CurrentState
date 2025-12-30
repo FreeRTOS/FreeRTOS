@@ -1,0 +1,76 @@
+
+Free layout. Some remarks about the current state of the aslts
+test suite vs ACPICA. Written up to 20050729 [Jul 30 2005] ACPICA
+(some stuff can be obsolete nevertheless useful to pay attention
+to the important things).
+================================================================
+
+
+
+MANY TESTS ARE DISABLED:
+
+
+Many pieces of AML tests code are now excluded by means of
+y<xxx> and qXXX disable/enable variables.
+
+aslts/src/runtime/cntl/runmode.asl:
+
+See description of y<xxx> which disable
+many crashing/failing tests executions.
+
+There are 49 such y<xxx> and 6 qXXX/rnXX conditional variables set
+to zero in runmode.asl file now - the relevant tests are disabled
+in order not to cause crashes, hangs etc...
+
+==================================================================
+
+Information to the new Dynamic Object Deletion complex test.
+
+
+aslts/src/runtime/collections/IMPL/ACPICA/tests/dynobj/dynobj.asl:
+
+
+
+1. These tests require support of ACPICA (_TCI).
+   We have not yet delivered it.
+   So, now the result of run is like this below.
+
+- ex main
+Executing \MAIN
+tbxfroot-0267 [12] TbFindTable           : Found table [DSDT]
+[ACPI Debug]  String: [0x0B] "64-bit mode"
+[ACPI Debug]  String: [0x34] "TEST (complex), Dynamic Object Deletion complex test"
+[ACPI Debug]  String: [0x42] "The Test Command interface with the ACPICA (_TCI) is not supported"
+[ACPI Debug]  String: [0x12] "Test DYN0 skipped!"
+[ACPI Debug]  String: [0x29] "Run time (in seconds): 0x0000000000000000"
+[ACPI Debug]  String: [0x38] "The total number of exceptions handled: 0000000000000000"
+[ACPI Debug]  String: [0x1A] "TEST ACPICA: 64-bit : PASS"
+Execution of \MAIN returned object 00326E38 Buflen 10
+  [Integer] = 0000000000000000
+- q
+ utalloc-1049 [03] UtDumpAllocations     : No outstanding allocations.
+
+
+2. Many issues are excluded from execution by the variables (rn01 - rn04).
+   They are set to zeros now.
+   Set them up to non-zeros, run the test and investigate errors:
+
+IMPL/ACPICA/common/icommon.asl:
+
+Name(rn00, 1) // Correct, no any remarks
+Name(rn01, 0) // Investigation needed
+Name(rn02, 0) // Classified as a bug
+Name(rn03, 0) // Causes exception
+Name(rn04, 0) // Regression
+
+3. Many minor issues are to be reported
+   like this:
+
+   1. In optimized mode Add(3, 4)
+      created 4 objects, though 1 is enough
+      as that is in Store(Add(3, 4), i000) case...
+
+
+==================================================================
+
+

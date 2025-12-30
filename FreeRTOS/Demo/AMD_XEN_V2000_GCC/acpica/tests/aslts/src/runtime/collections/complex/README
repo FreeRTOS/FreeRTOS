@@ -1,0 +1,40 @@
+
+CONTENTS
+
+   complex test collection
+
+
+badasl
+
+   ASL-incorrect tests compiled with -f option of ASL.
+   The tests which require utilyzing of the -f option
+   on the ASL compilation stage.
+
+   ASL Compiler:
+      -f  -  Ignore errors, force creation of AML output file(s)
+
+misc
+
+   miscellaneous not systematized tests
+
+operand
+
+   Source Operand complex test
+
+result
+
+   Result Object complex test
+
+provoke
+
+   check operators under the known critical conditions
+
+namespace
+
+   tests for the Name Space component
+
+FULL
+
+   full the complex test collection - all the tests
+   of the complex test collection are compiled together
+   as one DefinitionBlock 

@@ -1,0 +1,59 @@
+Bug List: AML_KB_SUM0 
+      Kernel Bug Tracker 
+            Bug List: AML_KB_SUM0 
+       
+
+Wed Jul 12 05:37:04 PDT 2006
+
+
+
+37 bugs found. ID State Result Category 
+      5314 RESO CODE ACPI 
+      5326 CLOS CODE ACPI 
+      5328 ASSI ACPI 
+      5329 CLOS CODE ACPI 
+      5334 RESO CODE ACPI 
+      5336 CLOS CODE ACPI 
+      5358 RESO CODE ACPI 
+      5359 RESO CODE ACPI 
+      5360 CLOS CODE ACPI 
+      5361 CLOS CODE ACPI 
+      5369 CLOS CODE ACPI 
+      5370 CLOS CODE ACPI 
+      5372 ASSI ACPI 
+      5373 ASSI ACPI 
+      5374 ASSI ACPI 
+      5375 ASSI ACPI 
+      5387 CLOS CODE ACPI 
+      5388 ASSI ACPI 
+      5389 ASSI ACPI 
+      5390 ASSI ACPI 
+      5391 ASSI ACPI 
+      5392 CLOS CODE ACPI 
+      5394 ASSI ACPI 
+      5395 ASSI ACPI 
+      5422 CLOS CODE ACPI 
+      5423 RESO CODE ACPI 
+      5424 RESO CODE ACPI 
+      5425 ASSI ACPI 
+      5426 RESO PATC ACPI 
+      5427 CLOS CODE ACPI 
+      5466 ASSI ACPI 
+      5480 CLOS CODE ACPI 
+      6028 CLOS CODE ACPI 
+      6151 CLOS CODE ACPI 
+      6220 REJE DOCU ACPI 
+      6389 NEED ACPI 
+      6514 CLOS CODE ACPI 
+37 bugs found. 
+
+  Query Page    Enter New Bug    Change Columns    Edit this Query    
+                  Actions: New | Query |  bug #  | Reports  Edit prefs | Log out 
+                  Valery.A.Podrezov@intel.com 
+                  Preset Queries: My Bugs | AML_KB_SUM0 
+
+            This is based on Bugzilla: the Mozilla bug system. For more 
+            information about what Bugzilla is and what it can do, see 
+            bugzilla.org. 
+            Bugzilla version 2.16.10 
+

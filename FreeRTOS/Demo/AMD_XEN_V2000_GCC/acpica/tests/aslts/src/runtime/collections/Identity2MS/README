@@ -1,0 +1,21 @@
+
+CONTENTS
+
+   tests to prove identity of ACPICA to MS
+
+abbu
+
+   Tests applicable to both AcpiExec and MS-abbu utilities
+
+   Interface of these tests allows them both to be run
+   by AcpiExec utility as elements of ASLTS test suite
+   and by abbu utility under MS.
+
+   Due to the current incomplete implementation of ACPI
+   by MS the entire ASLTS test suite can't simply be run
+   by abbu utility under MS.
+
+   This test case is intended to accumulate tests which
+   exercise and verify the fundamental ACPI features.
+   The tests should succeed on both AcpiExec and abbu
+   and thus prove identity of ACPICA and MS.

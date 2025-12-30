@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{D041B261-FCCD-4EA8-B611-6ACF09C51100}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Examples\</OutDir>
+    <IntDir>.\Examples\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\ExamplesDebug\</OutDir>
+    <IntDir>.\ExamplesDebug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>..\..\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;__STDC__;ACPI_EXAMPLE_APP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Examples\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Examples\Examples.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Examples\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Examples\</ProgramDataBaseFileName>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <ConformanceMode>true</ConformanceMode>
+      <CallingConvention>FastCall</CallingConvention>
+      <CompileAs>CompileAsC</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>copy examples\examples.exe ..\..\libraries\examples.exe</Command>
+      <Message>Copying examples to libraries...</Message>
+    </PostBuildEvent>
+    <Midl>
+      <TypeLibraryName>.\Examples\Examples.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Examples\Examples.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Examples\Examples.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>..\..\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_CONSOLE;__STDC__;ACPI_EXAMPLE_APP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\ExamplesDebug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\ExamplesDebug\Examples.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\ExamplesDebug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\ExamplesDebug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <StringPooling>true</StringPooling>
+      <CallingConvention>FastCall</CallingConvention>
+      <CompileAs>CompileAsC</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>copy examplesdebug\examples.exe ..\..\\libraries\examples_dbg.exe</Command>
+      <Message>Copying examples to libraries...</Message>
+    </PostBuildEvent>
+    <Midl>
+      <TypeLibraryName>.\ExamplesDebug\Examples.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\ExamplesDebug\Examples.bsc</OutputFile>
+      <AdditionalOptions> /o"/acpica/generate/msvc2017/ExamplesDebug/Examples.bsc" </AdditionalOptions>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\ExamplesDebug\Examples.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\components\dispatcher\dsargs.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dscontrol.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsdebug.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsfield.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsinit.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsmethod.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsmthdat.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsobject.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsopcode.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dspkginit.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsutils.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswexec.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswload.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswload2.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswscope.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswstate.c" />
+    <ClCompile Include="..\..\source\components\events\evhandler.c" />
+    <ClCompile Include="..\..\source\components\events\evmisc.c" />
+    <ClCompile Include="..\..\source\components\events\evregion.c" />
+    <ClCompile Include="..\..\source\components\events\evrgnini.c" />
+    <ClCompile Include="..\..\source\components\events\evxface.c" />
+    <ClCompile Include="..\..\source\components\events\evxfregn.c" />
+    <ClCompile Include="..\..\source\components\executer\exconcat.c" />
+    <ClCompile Include="..\..\source\components\executer\exconfig.c" />
+    <ClCompile Include="..\..\source\components\executer\exconvrt.c" />
+    <ClCompile Include="..\..\source\components\executer\excreate.c" />
+    <ClCompile Include="..\..\source\components\executer\exdebug.c" />
+    <ClCompile Include="..\..\source\components\executer\exdump.c" />
+    <ClCompile Include="..\..\source\components\executer\exfield.c" />
+    <ClCompile Include="..\..\source\components\executer\exfldio.c" />
+    <ClCompile Include="..\..\source\components\executer\exmisc.c" />
+    <ClCompile Include="..\..\source\components\executer\exmutex.c" />
+    <ClCompile Include="..\..\source\components\executer\exnames.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg1.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg2.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg3.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg6.c" />
+    <ClCompile Include="..\..\source\components\executer\exprep.c" />
+    <ClCompile Include="..\..\source\components\executer\exregion.c" />
+    <ClCompile Include="..\..\source\components\executer\exresnte.c" />
+    <ClCompile Include="..\..\source\components\executer\exresolv.c" />
+    <ClCompile Include="..\..\source\components\executer\exresop.c" />
+    <ClCompile Include="..\..\source\components\executer\exserial.c" />
+    <ClCompile Include="..\..\source\components\executer\exstore.c" />
+    <ClCompile Include="..\..\source\components\executer\exstoren.c" />
+    <ClCompile Include="..\..\source\components\executer\exstorob.c" />
+    <ClCompile Include="..\..\source\components\executer\exsystem.c" />
+    <ClCompile Include="..\..\source\components\executer\extrace.c" />
+    <ClCompile Include="..\..\source\components\executer\exutils.c" />
+    <ClCompile Include="..\..\source\components\hardware\hwpci.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsaccess.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsalloc.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsarguments.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsconvert.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsdump.c" />
+    <ClCompile Include="..\..\source\components\namespace\nseval.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsinit.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsload.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsnames.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsobject.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsparse.c" />
+    <ClCompile Include="..\..\source\components\namespace\nspredef.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsprepkg.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsrepair.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsrepair2.c" />
+    <ClCompile Include="..\..\source\components\namespace\nssearch.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsutils.c" />
+    <ClCompile Include="..\..\source\components\namespace\nswalk.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsxfeval.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsxfname.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsxfobj.c" />
+    <ClCompile Include="..\..\source\components\parser\psargs.c" />
+    <ClCompile Include="..\..\source\components\parser\psloop.c" />
+    <ClCompile Include="..\..\source\components\parser\psobject.c" />
+    <ClCompile Include="..\..\source\components\parser\psopcode.c" />
+    <ClCompile Include="..\..\source\components\parser\psopinfo.c" />
+    <ClCompile Include="..\..\source\components\parser\psparse.c" />
+    <ClCompile Include="..\..\source\components\parser\psscope.c" />
+    <ClCompile Include="..\..\source\components\parser\pstree.c" />
+    <ClCompile Include="..\..\source\components\parser\psutils.c" />
+    <ClCompile Include="..\..\source\components\parser\pswalk.c" />
+    <ClCompile Include="..\..\source\components\parser\psxface.c" />
+    <ClCompile Include="..\..\source\components\tables\tbdata.c" />
+    <ClCompile Include="..\..\source\components\tables\tbfadt.c" />
+    <ClCompile Include="..\..\source\components\tables\tbfind.c" />
+    <ClCompile Include="..\..\source\components\tables\tbinstal.c" />
+    <ClCompile Include="..\..\source\components\tables\tbprint.c" />
+    <ClCompile Include="..\..\source\components\tables\tbutils.c" />
+    <ClCompile Include="..\..\source\components\tables\tbxface.c" />
+    <ClCompile Include="..\..\source\components\tables\tbxfload.c" />
+    <ClCompile Include="..\..\source\components\tables\tbxfroot.c" />
+    <ClCompile Include="..\..\source\components\utilities\utaddress.c" />
+    <ClCompile Include="..\..\source\components\utilities\utalloc.c" />
+    <ClCompile Include="..\..\source\components\utilities\utascii.c" />
+    <ClCompile Include="..\..\source\components\utilities\utbuffer.c" />
+    <ClCompile Include="..\..\source\components\utilities\utcache.c" />
+    <ClCompile Include="..\..\source\components\utilities\utcksum.c" />
+    <ClCompile Include="..\..\source\components\utilities\utclib.c" />
+    <ClCompile Include="..\..\source\components\utilities\utcopy.c" />
+    <ClCompile Include="..\..\source\components\utilities\utdebug.c" />
+    <ClCompile Include="..\..\source\components\utilities\utdecode.c" />
+    <ClCompile Include="..\..\source\components\utilities\utdelete.c" />
+    <ClCompile Include="..\..\source\components\utilities\uterror.c" />
+    <ClCompile Include="..\..\source\components\utilities\uteval.c" />
+    <ClCompile Include="..\..\source\components\utilities\utexcep.c" />
+    <ClCompile Include="..\..\source\components\utilities\utglobal.c" />
+    <ClCompile Include="..\..\source\components\utilities\uthex.c" />
+    <ClCompile Include="..\..\source\components\utilities\utids.c" />
+    <ClCompile Include="..\..\source\components\utilities\utinit.c" />
+    <ClCompile Include="..\..\source\components\utilities\utlock.c" />
+    <ClCompile Include="..\..\source\components\utilities\utmath.c" />
+    <ClCompile Include="..\..\source\components\utilities\utmisc.c" />
+    <ClCompile Include="..\..\source\components\utilities\utmutex.c" />
+    <ClCompile Include="..\..\source\components\utilities\utnonansi.c" />
+    <ClCompile Include="..\..\source\components\utilities\utobject.c" />
+    <ClCompile Include="..\..\source\components\utilities\utosi.c" />
+    <ClCompile Include="..\..\source\components\utilities\utownerid.c" />
+    <ClCompile Include="..\..\source\components\utilities\utpredef.c" />
+    <ClCompile Include="..\..\source\components\utilities\utresrc.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstate.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstring.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstrsuppt.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstrtoul64.c" />
+    <ClCompile Include="..\..\source\components\utilities\uttrack.c" />
+    <ClCompile Include="..\..\source\components\utilities\utxface.c" />
+    <ClCompile Include="..\..\source\components\utilities\utxferror.c" />
+    <ClCompile Include="..\..\source\components\utilities\utxfinit.c" />
+    <ClCompile Include="..\..\source\components\utilities\utxfmutex.c" />
+    <ClCompile Include="..\..\source\os_specific\service_layers\oswinxf.c">
+      <DisableLanguageExtensions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DisableLanguageExtensions>
+      <DisableLanguageExtensions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\examples\examples.c" />
+    <ClCompile Include="..\..\source\tools\examples\exstubs.c" />
+    <ClCompile Include="..\..\source\tools\examples\extables.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\tools\examples\examples.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

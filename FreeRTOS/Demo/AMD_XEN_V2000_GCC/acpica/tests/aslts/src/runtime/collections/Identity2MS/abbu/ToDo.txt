@@ -1,0 +1,55 @@
+remained:
+========
+
+ *   Device
+ *   Power Resource
+ *   Processor
+ *   Thermal Zone
+ *   Method
+
+Fields in all type applications
+String - do it in main_aslts.asl part
+Local & Arg - effectively local, -- what is the behaviour when some type value is passed to it
+
+Scope
+Alias
+
+m000(int,str,buf,pkg,dev,pwr,pr,tz,mth)
+expressions
+
+=======================================================
+// Types, as returned by ObjectType
+Name(c008, 0)	// Uninitialized
+Name(c009, 1)	// Integer
+Name(c00a, 2)	// String
+Name(c00b, 3)	// Buffer
+Name(c00c, 4)	// Package
+Name(c00d, 5)	// Field Unit
+Name(c00e, 6)	// Device
+Name(c00f, 7)	// Event
+Name(c010, 8)	// Method
+Name(c011, 9)	// Mutex
+Name(c012, 10)	// Operation Region
+Name(c013, 11)	// Power Resource
+Name(c014, 12)	// Processor
+Name(c015, 13)	// Thermal Zone
+Name(c016, 14)	// Buffer Field
+Name(c017, 15)	// DDB Handle
+Name(c018, 16)	// Debug Object
+Name(c019, 17)	// LOCAL_REGION_FIELD
+Name(c01a, 18)	// LOCAL_BANK_FIELD
+Name(c01b, 19)	// LOCAL_INDEX_FIELD
+Name(c01c, 20)	// LOCAL_REFERENCE
+Name(c01d, 21)	// LOCAL_ALIAS
+Name(c01e, 22)	// LOCAL_METHOD_ALIAS
+Name(c01f, 23)	// LOCAL_NOTIFY
+Name(c020, 24)	// LOCAL_ADDRESS_HANDLER
+Name(c021, 25)	// LOCAL_RESOURCE
+Name(c022, 26)	// LOCAL_RESOURCE_FIELD
+Name(c023, 27)	// LOCAL_SCOPE
+Name(c024, 28)	// LOCAL_EXTRA
+Name(c025, 29)	// LOCAL_DATA
+Name(c027, 30)	// Number of different types
+==========
+
+Put all abbu-demos into this test case

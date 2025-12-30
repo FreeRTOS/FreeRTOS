@@ -1,0 +1,15 @@
+
+CONTENTS
+
+    service tests
+
+
+condbranches
+
+    This service-test reports failures when some conditional branches,
+    which were introduced for to exclude code causing crashes or hangs or
+    other troubles are disabled (the relevant variables are set to zero).
+    This is for to remind of that bug-fixes are needed and not to forget
+    to enable finally these branches of tests) and is some criteria of
+    completeness - all or not all branches of tests were executed.
+

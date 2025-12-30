@@ -1,0 +1,101 @@
+Bug List: AML_LB_SUM0Linux OS Bugzilla linuxos.sh.intel.com 
+            Bug List: AML_LB_SUM0 
+       
+
+Thu Jul 13 00:19:55 WST 2006
+"Debugging is twice as hard as writing the code in the first place. Therefore, 
+if you write the code as cleverly as possible, you are, by definition, not smart 
+enough to debug it." - Brian W. Kernighan 
+
+
+71 bugs found. ID State Result Comp 
+      341 ASSI Core/Int 
+      342 ASSI Core/Int 
+      343 ASSI Core/Int 
+      344 ASSI Core/Int 
+      345 ASSI Core/Int 
+      346 ASSI Core/Int 
+      347 ASSI Core/Int 
+      348 ASSI Core/Int 
+      349 ASSI Core/Int 
+      350 ASSI Core/Int 
+      351 ASSI Core/Int 
+      352 ASSI Core/Int 
+      353 ASSI Core/Int 
+      354 ASSI Core/Int 
+      371 RESO FIXE ACPI Spe 
+      385 ASSI Core/Int 
+      386 ASSI Core/Int 
+      387 ASSI Core/Int 
+      388 ASSI Core/Int 
+      389 ASSI Core/Int 
+      390 CLOS FIXE Core/Int 
+      391 ASSI Core/Int 
+      392 ASSI Core/Int 
+      393 ASSI Core/Int 
+      394 ASSI iASL Com 
+      395 CLOS FIXE Core/Int 
+      396 CLOS FIXE Core/Int 
+      397 ASSI iASL Com 
+      398 RESO FIXE ACPI Spe 
+      399 ASSI iASL Com 
+      400 RESO FIXE ACPI Spe 
+      401 ASSI iASL Com 
+      402 RESO FIXE ACPI Spe 
+      403 CLOS FIXE Core/Int 
+      404 CLOS FIXE Core/Int 
+      405 CLOS FIXE iASL Com 
+      406 ASSI Core/Int 
+      407 ASSI iASL Com 
+      408 ASSI Core/Int 
+      409 ASSI Core/Int 
+      410 ASSI iASL Com 
+      411 RESO FIXE ACPI Spe 
+      412 RESO FIXE ACPI Spe 
+      413 CLOS FIXE Core/Int 
+      414 RESO FIXE ACPI Spe 
+      415 ASSI iASL Com 
+      416 ASSI iASL Com 
+      417 CLOS FIXE Core/Int 
+      418 CLOS FIXE Core/Int 
+      419 ASSI iASL Com 
+      420 ASSI iASL Com 
+      421 ASSI Core/Int 
+      422 ASSI iASL Com 
+      423 ASSI iASL Com 
+      424 ASSI ACPI Spe 
+      425 RESO INVA iASL Com 
+      426 ASSI Core/Int 
+      427 ASSI Core/Int 
+      428 ASSI Core/Int 
+      429 ASSI Core/Int 
+      430 ASSI Core/Int 
+      431 ASSI Core/Int 
+      432 CLOS FIXE iASL Com 
+      433 CLOS FIXE Core/Int 
+      434 ASSI Core/Int 
+      435 ASSI Core/Int 
+      436 CLOS FIXE iASL Com 
+      437 ASSI iASL Com 
+      438 ASSI iASL Com 
+      440 ASSI Core/Int 
+      441 ASSI iASL Com 
+71 bugs found. 
+
+  Query Page    Enter New Bug    Change Columns    Change Several Bugs at Once   
+ Edit this Query    
+            This is Bugzilla: the Mozilla bug system. For more information about 
+            what Bugzilla is and what it can do, see bugzilla.org. 
+
+                  Actions: New | Query |  bug #  | Reports | My Votes  Edit 
+                  prefs | Log out valery.a.podrezov@intel.com 
+
+
+
+                  Personal Queries: My Bugs | AML_LB_SUM0* 
+
+
+
+                  Shared Queries: 
+
+

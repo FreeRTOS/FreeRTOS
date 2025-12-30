@@ -1,0 +1,175 @@
+
+Now it is a few obsolete.
+
+
+17.2.5.7  Data Type Conversion Rules
+
+
+Buffer -> Buffer Field
+
+       The contents of the buffer are copied to the Buffer Field.
+   1.  If the buffer is smaller than the size of the buffer field,
+       it is zero extended.
+   2.  If the buffer is larger than the size of the buffer field,
+       the upper bits are truncated.
+
+Buffer -> Debug Object
+
+   3.  Each buffer byte is displayed as a hexadecimal integer,
+       delimited by spaces and/or commas.
+
+Buffer -> Field Unit
+
+       The entire contents of the buffer are copied to the Field Unit.
+   4.  If the buffer is larger (in bits) than the size of the Field Unit,
+       it is broken into pieces and completely written to the Field Unit,
+       lower chunks first.
+   5.  If the integer (or the last piece of the integer, if broken up)
+       is smaller or equal in size to the Field Unit, then it is zero
+       extended before being written.	   
+
+Buffer -> Integer
+
+       If no integer object exists, a new integer is created.
+       The contents of the buffer are copied to the Integer,
+       starting with the least-significant bit
+*  6.  and continuing until the buffer has been completely copied
+*  7.  — up to the maximum number of bits in an Integer
+       (64 starting in ACPI 2.0).	   
+
+Buffer -> String
+
+       If no string object exists, a new string is created.
+*  8.  The entire contents of the buffer are converted to a string
+       of two-character hexadecimal numbers, each separated by a space.
+*  9.  A fatal error is generated if greater than two hundred ASCII
+       characters are created.	   
+
+Buffer Field -> [See Rule]
+
+*  10. If the Buffer Field is smaller than or equal to the size
+       of an Integer (in bits), it will be treated as an Integer.
+*  11. Otherwise, it will be treated as a Buffer.
+       (See the conversion rules for the Integer and Buffer data types.)	   
+
+Buffer Field -> Debug Object
+
+   12. Each byte is displayed as hexadecimal integer,
+       delimited by spaces and/or commas	   
+
+DDB Handle ->
+
+*  13. [See Rule]	The object is treated as an Integer
+       (See conversion rules for the Integer data type.)	   
+
+Field Unit ->
+
+*  14. [See Rule]	If the Field Unit is smaller than or equal to the
+       size of an Integer (in bits), it will be treated as an Integer.
+*  15. If the Field Unit is larger than the size of an Integer, it will
+       be treated as a Buffer.
+
+       The size of an Integer is indicated by the Definition Block
+       table header’s Revision field. A Revision field value less than
+       2 indicates that the size of an Integer is 32-bits. A value greater
+       than or equal to 2 signifies that the size of an Integer is 64-bits.
+       (See the conversion rules for the Integer and Buffer data types.)	   
+
+Field Unit -> Debug Object
+
+   16. Each byte is displayed as hexadecimal integer,
+       delimited by spaces and/or commas	   
+
+Integer -> Buffer
+
+*  17. If no buffer object exists, a new buffer object is created
+       based on the size of the integer (4 bytes for 32-bit integers
+       and 8 bytes for 64-bit integers).
+
+       If a buffer object already exists, the Integer overwrites
+       the entire Buffer object.
+   18. If the integer requires more bits than the size of the Buffer,
+       then the integer is truncated before being copied to the Buffer.
+   19. If the integer contains fewer bits than the size of the buffer,
+       the Integer is zero-extended to fill the entire buffer	   
+
+Integer -> Buffer Field
+
+       The Integer overwrites the entire Buffer Field.
+   20. If the integer is smaller than the size of the buffer field,
+       it is zero-extended.
+   21. If the integer is larger than the size of the buffer field,
+       the upper bits are truncated.
+
+Integer -> Debug Object
+
+   22. The integer is displayed as a hexadecimal value.	   
+
+Integer -> Field Unit
+
+       The Integer overwrites the entire Field Unit.
+   23. If the integer is smaller than the size of the buffer field,
+       it is zero-extended.
+   24. If the integer is larger than the size of the buffer field,
+       the upper bits are truncated.	   
+
+Integer -> String
+
+*  25. Creates an ASCII hexadecimal string.	   
+
+Package -> Package
+
+   26. All existing contents (if any) of the target package are deleted,
+       and the contents of the source package are copied into the target
+       package. (In other words, overwrites the same as any other object.)	   
+
+Package -> Debug Object
+
+   27. Each element of the package is displayed based on its type.	   
+
+String -> Buffer
+
+*  28. If no buffer object exists, a new buffer object is created.
+
+       If a buffer object already exists, it is completely overwritten.
+   29. If the string is longer than the buffer, the string is truncated
+       before copying.
+   30. If the string is shorter than the buffer, the buffer size is reduced.
+
+       In either case, the string is treated as a buffer, with each ASCII
+       string character copied to one buffer byte.  	   
+
+String -> Buffer Field
+
+       The string is treated as a buffer.
+   31. If this buffer is smaller than the size of the buffer field,
+       it is zero extended.
+   32. If the buffer is larger than the size of the buffer field,
+       the upper bits are truncated.
+
+String -> Debug Object
+
+   33. Each string character is displayed as an ASCII character	   
+
+String -> Field Unit
+
+       Each character of the string is written, starting with the first,
+       to the Field Unit.
+   34. If the Field Unit is less than eight bits, then the upper bits
+       of each character are lost.
+   35. If the Field Unit is greater than eight bits, then the additional
+       bits are zeroed.	   
+
+String -> Integer
+
+*  36. If no integer object exists, a new integer is created.
+       The ASCII string is interpreted as a hexadecimal constant.
+       Each string character is interpreted as a hexadecimal value,
+       starting with the first hexadecimal ASCII character (‘0’-‘9’,
+       ‘A’-‘F’, ‘a’, ‘f’) as the most significant digit, and ends with
+       the first non-hexadecimal character or end-of-string as the least
+       significant digit.	 
+
+(*) - rules affecting operands (6, 7, 8, 9, 10, 11, 13, 14, 15, 17, 25, 28, 36)
+(+) - rules affecting results ()
+

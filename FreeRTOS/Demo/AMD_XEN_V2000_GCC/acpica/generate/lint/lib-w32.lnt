@@ -1,0 +1,47 @@
+
+//  lib-w32.lnt
+//    PC-lint Library Options File for 32-bit mode windows.h
+
+-d__FLAT__
+-d_WIN32
+-si4
+-sp4
+-esym(14,pLocalHeap)   // variable defined in windows.h
+-e740   // remove 'suspicious cast' messages because these must be
+	// routinely done within Windows.
+-elib(46) // windows.h uses a BYTE as base of bit field.
+-e793       // windows breaks ANSI limits
+
+//  the following functions have their return value typically ignored.
+//  add or subtract from this list as desired.
+-esym(534,RegisterClass,ShowWindow,TranslateMessage,DispatchMessage)
+-esym(534,DrawText,GetTextMetrics,ReleaseDC,TextOut,SetTextAlign)
+-esym(534,SetScrollPos,SelectObject,SetBkMode,SendMessage,MessageBox)
+-esym(534,MessageBoxA,MessageBoxW,PostMessageA,PostMessageW)
+-esym(534,PatBlt,DeleteDC,SetCapture,SetCursor,StretchBlt)
+-esym(534,Rectangle,MoveTo,LineTo,ShowCursor,MoveWindow,SetWindowWord)
+-esym(534,SetPixel,FillRect,DeleteObject,KillTimer,GetProfileString)
+-esym(534,SetWindowLong,SetFocus,SetBkColor,SetTextColor,SetBrushOrg)
+-esym(534,UnrealizeObject,_lclose,Polygon,FrameRect,LoadString)
+-esym(534,GetInstanceData,GlobalUnlock,FreeResource,LoadString)
+-esym(534,DrawIcon,AppendMenu,GetObject,CheckMenuItem,SetClassWord)
+-esym(534,EnableMenuItem,SetMenu,DestroyMenu,TrackPopupMenu)
+-esym(534,AnsiUpper,Arc,BeginPaint,BitBlt,ChangeClipboardChain,Chord)
+-esym(534,CloseClipboard,CombineRgn,DdeClientTransaction,DdeDisconnect)
+-esym(534,DdeFreeStringHandle,DdeGetData,DdeNameService,DdePostAdvise)
+-esym(534,DdeQueryString,DdeUninitialize,DeleteMenu,DeleteMetaFile)
+-esym(534,DestroyWindow,DialogBox,DPtoLP,Ellipse,EmptyClipboard,EnableWindow)
+-esym(534,EnumChildWindows,EnumWindows,Escape,GetClassName,GetDlgItemText)
+-esym(534,GetFileTitle,GetMenuString,GetStrings,GetSystemMenu,GetTextFace)
+-esym(534,GetWindowText,GlobalDeleteAtom,GlobalFree,GlobalGetAtomName)
+-esym(534,LocalFree,LocalUnlock,LockResource,lstrcpy,OpenClipboard)
+-esym(534,Pie,PlayMetaFile,PopFindNextText,PostDataMessage,PostMessage)
+-esym(534,RestoreDC,SaveDC,SelectClipRgn,SendDlgItemMessage,SetClipboardData)
+-esym(534,SetDIBitsToDevice,SetMapMode,SetMapperFlags,SetROP2,SetStretchBltMode)
+-esym(534,SetTextJustification,SetTimer,SetViewportExt,SetViewportOrg)
+-esym(534,SetWindowExt,SetWindowOrg,StretchDIBits,WinExec)
+
+//  Ignored parameters
+-esym(715,lpszCmdParam,lpszCmdLine)
+
+-emacro(648,PSN_*)      // ignore unsigned overflow (0-200U)

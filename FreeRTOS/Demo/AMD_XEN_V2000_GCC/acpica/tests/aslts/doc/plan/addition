@@ -1,0 +1,37 @@
+Free layout to record remarks about additional tests
+to be done ever (some remarks can be obsolete).
+====================================================
+
+1. See file aslts/NOTE for the issues to be verified.
+
+2. At present, no tests which automatically verify the constant folding.
+   The tests can be implemented basing on:
+   - analyzing the output of AML disassembler
+   - our "Test Command Interface with the ACPI
+     implementation (_TCI)" instrumentation
+
+3. It seems that we have no simple tests for
+   Store/Copy without expected conversions:
+   String -->> String
+   Buffer -->> Buffer
+   Package -->> Package
+   ...
+
+4. http://bugzilla.kernel.org/show_bug.cgi?id=5490
+   check exception AE_AML_METHOD_LIMIT
+
+   checking of AE_AML_METHOD_LIMIT limits (32 and 256)
+   should be performed in a separate tests.
+
+5. Do the tests which will show that inappropriate bit-sizes are applied.
+   For example, exoparg2.c: Operand[0]->Buffer.Length - 32-bit
+   while "ACPI_SIZE  Length" - 16/32/64.
+   Bug 124 was about something like that.
+
+6. Multi-threading (now (07.07.2006) started, in progress)
+   to check different functionality of ACPICA in the
+   multi-threading conditions.
+
+7. Continue mt-tests.
+
+8. Compare the raw performance of the two interpreters (MS and ACPICA).

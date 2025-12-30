@@ -1,0 +1,25 @@
+## @file
+# Build description file to ACPICA applications.
+#
+# Copyright (c) 2009 - 2011, Intel Corporation. All rights reserved.<BR>
+# This program and the accompanying materials
+# are licensed and made available under the terms and conditions of the BSD License
+# which accompanies this distribution.  The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  PACKAGE_NAME                   = AcpiPkg
+  PACKAGE_GUID                   = 3ee43d98-2941-11e6-a597-0024e8c6d30e
+  PACKAGE_VERSION                = 0.01
+  DEC_SPECIFICATION              = 0x00010005
+
+[Includes]
+  source/include
+
+[Guids]
+  gAcpiPkgTokenSpaceGuid       = { 0x81c5af5c, 0x2941, 0x11e6, { 0xa5, 0x3d, 0x00, 0x24, 0xe8, 0xc6, 0xd3, 0x0e }}

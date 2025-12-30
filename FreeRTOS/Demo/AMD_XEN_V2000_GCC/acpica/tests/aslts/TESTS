@@ -1,0 +1,141 @@
+     ALL THE RUN-TIME TESTS
+     ======================
+
+   51 - the current total amount of resulting *.aml files in aslts/aml/*/
+        directory.
+
+   Among them are 7 conglomerations of particular tests:
+      complex, exc_operand, exceptions, functional, full,
+      operand, result
+
+   Per-collection list of run-time tests
+
+
+   - Name of test ------ Contents of test ---------------------------------------
+
+   Functional tests, collection #1
+   ______________________________________________________________________________
+ 0 | arithmetic        | Integer arithmetic                                     |
+ 1 | bfield            | Buffer Fields                                          |
+ 2 | constant          | Constants                                              |
+ 3 | control           | Method execution control                               |
+ 4 | descriptor        | Resource Descriptor macros                             |
+ 5 | extern            | ASL compiler controls                                  |
+ 6 | local             | Control method objects                                 |
+ 7 | logic             | Logical operators                                      |
+ 8 | manipulation      | Data type conversion and manipulation                  |
+ 9 | name              | Miscellaneous named object creation                    |
+10 | reference         | Object references                                      |
+11 | region            | Operation Regions                                      |
+12 | synchronization   | Synchronization                                        |
+13 | table             | ACPI table management                                  |
+   |                   |                                                        |
+   | functional        | full the functional test collection - all the tests of |
+   |                   | the functional test collection are compiled together   |
+   |                   | as one DefinitionBlock                                 |
+   ______________________________________________________________________________
+
+   Complex tests, collection #2
+   ______________________________________________________________________________
+
+ 0 | misc              | Miscellaneous not systematized tests                   |
+ 1 | provoke           | Check operators under the known critical conditions    |
+   |                   |                                                        |
+   | operand           | Source Operand tests                                   |
+   |                   |                                                        |
+ 2 |   oarg            |                                                        |
+ 3 |   oconst          |                                                        |
+ 4 |   olocal          |                                                        |
+ 5 |   oreturn         |                                                        |
+ 6 |   onamedloc       |                                                        |
+ 7 |   onamedglob      |                                                        |
+ 8 |   opackageel      |                                                        |
+ 9 |   oreftonamed     |                                                        |
+10 |   oconversion     | (obsolete, update required)                            |
+11 |   oreftopackageel |                                                        |
+   |                   |                                                        |
+   | result            | Result of Operators tests                              |
+   |                   |                                                        |
+12 |   rstore          |                                                        |
+13 |   roptional       |                                                        |
+14 |   rconversion     | (obsolete, update required)                            |
+15 |   rcopyobject     |                                                        |
+16 |   rindecrement    |                                                        |
+17 |   rexplicitconv   |                                                        |
+   |                   |                                                        |
+18 | badasl            | ASL-incorrect tests compiled with -f option of ASL     |
+   |                   |                                                        |
+19 | namespace         | Name Space component tests                             |
+   |                   |                                                        |
+   | complex           | full the complex test collection - all the tests of    |
+   |                   | the complex test collection are compiled together      |
+   |                   | as one DefinitionBlock                                 |
+   ______________________________________________________________________________
+
+   Exceptional conditions tests, collection # 3
+   ______________________________________________________________________________
+
+ 0 | exc               | Initiate and verify exceptional conditions             |
+   |                   |                                                        |
+   | exc_operand       | Exceptions caused by inappropriate type of operands    |
+   |                   |                                                        |
+ 1 |   exc_operand1    | (obsolete, update required)                            |
+ 2 |   exc_operand2    |                                                        |
+   |                   |                                                        |
+   | exc_result        | Exceptions caused by inappropriate type of destination |
+   |                   |                                                        |
+ 3 |   exc_result1     | (obsolete, update required)                            |
+ 4 |   exc_result2     |                                                        |
+   |                   |                                                        |
+ 5 | exc_ref           | Exceptions caused by inappropriate use of references   |
+   |                   |                                                        |
+ 6 | exc_tbl           | Exceptions caused by inappropriate use of table        |
+   |                   | management                                             |
+   |                   |                                                        |
+   | exceptions        | full the exceptional conditions test collection - all  |
+   |                   | the tests of the exceptional conditions test           |
+   |                   | collection are compiled together as one                |
+   |                   | DefinitionBlock                                        |
+   ______________________________________________________________________________
+
+   Bug-demo tests, collection #4
+   ______________________________________________________________________________
+
+ 0 | bdemo             | The tests to demonstrate bugs and prove bug-fixes      |
+ 1 | bdemof            | The same but the tests which require -f option of ASL  |
+   ______________________________________________________________________________
+
+   Service tests, collection #5
+   ______________________________________________________________________________
+
+ 0 | condbranches      | Service-test reports failures when                     |
+   |                   | some conditional branches are disabled.                |
+   ______________________________________________________________________________
+
+   Mt-tests, collection #6
+   ______________________________________________________________________________
+
+ 0 |   mt              | Tests of multi-threading functionality                 |
+   |                   |                                                        |
+   |     mt_mutex      | tests of mutexes                                       |
+   ______________________________________________________________________________
+
+   To prove identity of ACPICA to MS tests, collection #7
+   ______________________________________________________________________________
+
+ 0 |   abbu            | Tests applicable to both AcpiExec and MS-abbu utilities |
+   ______________________________________________________________________________
+
+   Implementation dependent tests, collection #8
+   ______________________________________________________________________________
+
+ 0 |   dynobj          | The ASL Dynamical Object support test                  |
+   ______________________________________________________________________________
+
+   All tests together (functional + complex + exceptions + etc.)
+   ______________________________________________________________________________
+   | full              | full test - all the collections (functional + complex  |
+   |                   | + exceptions + etc.) are compiled together as one      |
+   |                   | DefinitionBlock                                        |
+   ______________________________________________________________________________
+

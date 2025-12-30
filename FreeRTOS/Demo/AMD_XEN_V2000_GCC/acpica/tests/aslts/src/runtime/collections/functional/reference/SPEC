@@ -1,0 +1,2191 @@
+
+     Specification of test of the Object and Index References
+     and the call-by-reference convention.
+
+
+The test verifies most of the relevant important
+cases and combinations but not all.
+
+The layout of test specification:
+
+  The first sentence of each sub-test (say test) specification
+  contains the main purpose of the test and is the most
+  strict part of its specification. The additional
+  infortmation of the test specification are more or
+  less up to date and contains some reflections about
+  the test, they may contain even incorrect or obsolete
+  information, they may be ignored in the actual
+  implementation of the tests.
+
+  We dont delete the specifications of the incorrect
+  tests in order not to attempt to specify them again
+  in the future.
+
+  Some purposes of the tests dont contain the
+  specification of the expected normal behaviour of
+  the feature under testing. This takes place when the
+  ACPI specification doesn't assert anything definitely
+  on that or when an additional investigation involving
+  the BlackBox are needed.
+
+FEATURE:
+
+  The FEATURE entry of test designates briefly the contents
+  of sub-test (test), shows the main purpose of the test and
+  thus serve to avoid specifying the same test repeatedly and
+  simplifies to see the summary coverage of all sub-tests.
+
+  Nevertheless, we dont exclude that some assertions
+  are verified several times in different sub-tests.
+
+  Some actions really verified in test might not be shown
+  in FEATURE, though we were aimed to reflect that.
+
+For improving these specs:
+
+  1) see the text references inserted through the specs below on
+     appropriateness of them and may be remove them at all or catch
+     them here at the top or..
+
+ACPI sections and terms involved:
+
+  5.5.2.3  Method Calling Convention
+
+    Call-by-reference convention
+
+  17.2.5.8   Rules for Storing and Copying Objects
+
+    Table 17-9   Object Storing and Copying Rules
+
+  17.2.5.9   Rules for Reading and Writing Objects
+
+    17.2.5.9.1 ArgX Objects
+    17.2.5.9.2 LocalX Objects
+    17.2.5.9.3 Named Objects
+
+  Operators involved:
+
+    RefOf, CondRefOf, Index, DerefOf,
+    Method, Return,
+    ArgX, LocalX, NamedX,
+    String, Buffer, Package,
+    ObjectType, SizeOf, Alias,
+    Field, IndexField, BankField, CreateField
+
+Note: the implicit conversion of result is verified in the
+      Complex Test of Result, but not verified here.
+
+Note: the {type,size,value} features of the references to all
+      type obects passed to Method (call-by-reference convention)
+      is verified by the (TEST_00.2) entry.
+
+Note: check in tests all the ways of keeping and passing (delivering)
+      References and Objects. Keep into mind while implementing the
+      tests (this may not be mentioned explicitly) that very important
+      is how the object is represented in operation:
+
+      - specify (Object or Reference) immediately
+      - pass them by LocalX
+      - pass by ArgX (intermediate keeping)
+      - pass by NamedX
+      - pass by the element of Package
+      - pass by the Method call (return value)
+      - pass as results of other operators
+
+Note: Field Unit and Buffer Field types passed to Method
+      are being converted to the Integer/Buffer.
+      Use BlackBox for to confirm this feature of Field Unit
+      and Buffer Field.
+
+Improve implementation of tests:
+
+ 1) the tests (sub-tests) specified below may currently be
+    implemented not completely - specification of test may be
+    more wide than the provided implementation of it. So, the
+    ways of improving the tests are implementing the specified
+    write/read operations for all the specified in test types
+    of WRITE/READ operators; implement the specified checkings
+    for all the specified in test types of DATA.
+
+ 2) add different type of name references: \x.x.x, ^x.
+
+ 3) the tests are mostly implemented for Arg0 and Local0.
+    Extend them for Arg{1-6} and Local{1-7} too.
+
+ 4) improve FEATURE entries: the way of improving the test is
+    analysing the implemented sub-tests describing them more exactly
+    by FEATURE entries and then examining the summary coverage of
+    sub-tests basing on the FEATURE entries of them propose the
+    additional sub-tests.
+
+ 5) do additional sub-tests for all the situations which you can
+    think (propose) incorrect implementation.
+
+Global variables assignment applied in the tests:
+
+   c080 - name of test
+   c081 - absolute index of file initiating the checking
+   c082 - flag of test of exceptions
+   c083 - run verification of references (write/read):
+          1 - Store
+          2 - CopyObject
+          3 - both Store and CopyObject
+   c084 - run verification of references (reading)
+   c085 - create the chain of references to LocalX, then dereference them
+   c086 - flag, run test till the first error
+   c087 - apply DeRefOf to ArgX-ObjectReference (but not rely
+          on the automatic dereference):
+          17.2.5.9.1   ArgX Objects
+             1) Read from ArgX parameters
+                ObjectReference - Automatic dereference, return
+                                  the target of the reference.
+                                  Use of DeRefOf returns the same.
+   c088 - test run mode; if non-zero, then run the entire tests,
+          but not only the simple example of test
+   c089 - flag of Reference, object otherwise
+   c08a - the value of the written Integer
+   c08b - do RefOf(ArgX) checkings
+          1 - RefOf
+          2 - CondRefOf
+
+Notation:
+
+   Read,
+   READ_OPERATOR,
+   Read operation       - any access to the object which assumes evaluating
+                          the object
+   Write,
+   WRITE_OPERATOR,
+   Write operation      - designates all the ASL Operators which write results
+
+   ORef                 - the reference obtained by RefOf or CondRefOf
+                          (Object Reference)
+   IRef                 - the reference obtained by Index
+                          (Index Reference)
+
+   ORef-LocalX          - ORef assigned to LocalX
+   IRef-LocalX          - IRef assigned to LocalX
+   ORef-NamedX          - ORef assigned to NamedX
+   IRef-NamedX          - IRef assigned to NamedX
+   ORef-El_of_Package   - ORef assigned to element of Package
+   IRef-El_of_Package   - IRef assigned to element of Package
+   ORef-ArgX            - ORef assigned to ArgX
+   IRef-ArgX            - IRef assigned to ArgX
+
+                          Arguments of Method
+
+   ArgX-Object          - any type Object passed to Method by ArgX
+   ArgX-<type>          - <type> type Object passed to Method by ArgX
+   ArgX-ORef            - ORef passed to Method by ArgX
+   ArgX-IRef            - IRef passed to Method by ArgX
+
+   RefOf                - means both RefOf and CondRefOf operators
+
+   M0                   - start Method of test
+   M1,M2...             - Methods invoked from M0
+   M1-M2-M3             - the chain of invocations of Methods (started from M0)
+
+
+
+=========
+* TEST 00  (description referred to in other test specifications,
+          not applied as a particular test itself).
+=========
+
+
+1. Pass Method with the following:
+
+   a) Constants: types {1-16}
+   b) ArgX {0-6}
+   c) LocalX {0-7}
+   d) Named: types {1-16}
+   e) Immediate result of other operators
+   f) Immediate result of some Method
+   g) Immediate element of Package
+
+   Pass each of the ArgX of invoked Method
+   with each of the {a,b,c,d,e,f,g} values above.
+
+   In cases {b,c} the contents of {ArgX,LocalX}
+   should be each of types {1-16}.
+
+2. Check inside the Method that {types,values,size}
+   of the passed values are as expected.
+
+3. For all the ASL Operators which write results
+   direct the results into ArgX(s) of that Method.
+
+4. Check inside the Method that the types of ArgX(s)
+   after writing into them are as expected.
+
+5. After completion of the Method call, returning
+   from it, check that the original objects are not
+   changed {type,size,value}.
+
+SPEC:
+
+17.2.5.9.1   ArgX Objects
+
+1) Read from ArgX parameters
+   ObjectReference - Automatic dereference, return
+                     the target of the reference.
+                     Use of DeRefOf returns the same.
+
+
+==========
+* TEST 01: Read of ArgX-ORef with DerefOf
+==========
+
+
+SPEC: "Use of DeRefOf returns the same" as "automatic dereference"
+
+Do the same as in test TEST 00 (b,c,d), but before passing
+the objects to Method (M1) make references to them by RefOf
+and pass those References to Method (M1) but not Objects themselves.
+
+Before read operations do one DerefOf of the relevant ArgX.
+
+Read operations are any access (as an operand of any operator)
+to the contents of the object referenced by ArgX-ORef.
+
+Omit all the write operations to ArgX inside the invoked Method.
+
+FEATURE: ArgX-ORef:DerefOf:read
+
+
+==========
+* TEST 02: Read of ArgX-ORef without DerefOf (automatic dereference)
+==========
+
+
+FEATURE: ArgX-ORef:(NO DerefOf):read
+
+SPEC: "automatic dereference"
+
+Do the same as in test TEST 01, but omit DerefOf of the relevant ArgX.
+
+
+==========
+* TEST 03: Read of ArgX-IRef with DerefOf
+==========
+
+
+SPEC: "Use of DeRefOf returns the same" as "automatic dereference"
+
+Do the same as in test TEST 01, but for IRef.
+
+WARNING:
+
+The specification of DerefOf (see below) sounds incorrectly,
+because it works not only with Object Reference (ORef)
+but with IRef as well.
+
+  17.5.27 DerefOf (Dereference an Object Reference)
+
+  If the Source evaluates to an object reference, the actual
+  contents of the object referred to are returned.
+
+FEATURE: ArgX-IRef:DerefOf:read
+
+
+==========
+* TEST 04: Read of ArgX-IRef without DerefOf (automatic dereference)
+==========
+
+
+SPEC: "automatic dereference"
+Do the same as in test TEST 03, but omit DerefOf of the relevant ArgX.
+FEATURE: ArgX-IRef:(NO DerefOf):read
+
+
+==========
+* TEST 05: Write into ArgX-Object
+==========
+
+
+Check that writing into ArgX-Object doesn't change the original objects
+passed to Method {type,size,value}.
+Actions differ the test TEST 01 only with the writing being performed.
+Do all the {1-5} items of TEST 00.
+FEATURE: ArgX-Object:write
+
+
+==========
+* TEST 06: Write into ArgX-ORef
+==========
+
+
+Check that writing into ArgX-ORef
+do change of the original objects {type,size,value}.
+
+Do the same as in test TEST 00 (b,c,d), but before passing
+the objects to Method (M1) make references to them by RefOf
+and pass those References to Method (M1) but not Objects themselves.
+
+Check that the original objects are changed {type,size,value}.
+FEATURE: ArgX-ORef:write
+
+
+==========
+* TEST 07: Write into ArgX-IRef
+==========
+
+
+Check the writing into ArgX-IRef
+(IRef to elements of String, Buffer and Package).
+
+Note (current implementation):
+  (ORef & IRef)
+
+  ArgX-IRef require applying of DerefOf,
+  though DerefOf is specified only for ORef.
+  But, attempts to write into ArgX-IRef fail.
+
+1. Pass Method with the following:
+
+Name(s000, "qwertyuiop")
+Name(b000, Buffer() {1,2,3,4,5,6,7,8,9})
+Name(p000, Package() {10,11,12,13,14,15,16})
+
+Store(Index(s000, 0, Local0), Local1)
+m000(Local0)
+m000(Local1)
+m000(Index(s000, 0, Local0))
+
+Store(Index(b000, 0, Local0), Local1)
+m000(Local0)
+m000(Local1)
+m000(Index(b000, 0, Local0))
+
+Store(Index(p000, 0, Local0), Local1)
+m000(Local0)
+m000(Local1)
+m000(Index(p000, 0, Local0))
+
+Note: use there (and everywhere else) these forms too:
+
+Store(Index(b000, 0), Local1)
+m000(Index(p000, 0))
+
+Do the same actions as in the TEST 00.
+
+5. After completion of the Method call, returning
+   from it, check the original objects {type,size,value}.
+   Use BlackBox for to clarify ACPI specification.
+
+FEATURE: ArgX-IRef:write
+
+
+==========
+* TEST 08: Write into IRef to ArgX-String-Buffer-Package obtained in Method
+==========
+
+
+Check the writing into IRef obtained inside the Method (M1)
+to the elements of the objects passed to it as parameters (ArgX-String,
+ArgX-Buffer, ArgX-Package).
+
+Note (current implementation):
+  (ORef & IRef)
+
+  IRef obtained inside the Method
+  allows to change the original object passed by ArgX.
+  But, there is no way to obtain ORef to the
+  original object and change that original object by
+  writing into reference (see RefOf tests below).
+
+1. Pass Method with the following:
+
+Name(s000, "qwertyuiop")
+Name(b000, Buffer() {1,2,3,4,5,6,7,8,9})
+Name(p000, Package() {10,11,12,13,14,15,16})
+
+m000(s000)
+m000(b000)
+m000(p000)
+
+m000("qwertyuiop")
+m000(Buffer(n){})
+m000(Package(n){})
+
+Do the same actions as in the TEST 00.
+
+3. Obtain the reference to the element of Object
+   passed by ArgX:
+
+      Store(Index(ArgX, 0, Local0), Local1)
+      Index(ArgX, 0)
+
+   and pass it to writing operators as a target reference
+   for all the ASL Operators which write results, like these:
+
+      Store(0x55555, Local0)
+      Store(0x66666, Local1)
+      Store(0x77777, Index(arg0, 0))
+
+5. After completion of the Method call, returning
+   from it, check the original objects {type,size,value}.
+   Use BlackBox for to clarify ACPI specification.
+
+FEATURE: ArgX-String:Index:IRef:write
+FEATURE: ArgX-Buffer:Index:IRef:write
+FEATURE: ArgX-Package:Index:IRef:write
+
+
+==========
+* TEST 09  (no test): Write into FieldUnit of ArgX-OperationRegion obtained in Method
+==========
+
+
+Check the writing into the Field Unit obtained inside the Method (M1)
+to the OperationRegion passed to it as a parameter.
+
+INCORRECT: ASL-gramaticaly incorrect, the test is omitted.
+           Field(arg0, ...) {}
+
+Note: Field Unit passed to Method converts to Integer/Buffer
+      (see the test in complex/misc.asl) thus not requires the
+      test where Field Unit is passed as a parameter.
+      See: Use BlackBox for to confirm this feature of Field Unit.
+
+1. Pass Method with the following:
+
+OperationRegion(r900, SystemMemory, 0x100, 0x100)
+
+m000(r900)
+
+3. Obtain the Field Unit to the OperationRegion passed by ArgX:
+
+   Field(ArgX, ByteAcc, NoLock, Preserve) {f900,8,f901,8,f902,8,f903,8}
+   BankField(ArgX, f901, 0, ByteAcc, NoLock, Preserve) {bn90,4}
+   IndexField(f902, f903, ByteAcc, NoLock, Preserve) {if90,8,if91,8}
+
+   and pass it to writing operators as a target reference
+   for all the ASL Operators which write results.
+
+5. After completion of the Method call, returning
+   from it, check the original objects {value}.
+   Use BlackBox for to clarify ACPI specification.
+
+FEATURE: ArgX-OperationRegion:Field:FieldUnit:write
+
+
+==========
+* TEST 10: Write into BufferField of ArgX-Buffer obtained in Method
+==========
+
+
+Check the writing into the Buffer Field obtained inside the Method (M1)
+to the ArgX-Buffer passed to it as a parameter.
+
+Note: Buffer Field passed to Method converts to Integer/Buffer
+      (see the test in complex/misc.asl) thus not requires the
+      test where Buffer Field is passed as a parameter.
+      See: Use BlackBox for to confirm this feature of Buffer Field.
+
+1. Pass Method with the following:
+
+Name(b000, Buffer() {1,2,3,4,5,6,7,8,9})
+
+m000(b000)
+
+Do the same actions as in the TEST 00.
+
+3. Obtain the Buffer Field to the Buffer passed by ArgX:
+
+   CreateField(ArgX, 0, 8, bf90)
+
+   and pass it to writing operators as a target reference
+   for all the ASL Operators which write results.
+
+5. After completion of the Method call, returning
+   from it, check the original objects {value}.
+   Use BlackBox for to clarify ACPI specification.
+
+FEATURE: ArgX-Buffer:CreateField:BufferField:write
+
+
+SPEC:
+
+17.2.5.9.1   ArgX Objects
+
+1) Read from ArgX parameters
+   Buffer  – ... can create an Index, Field, or Reference to the buffer.
+   Package – ... can create an Index or Reference to the package.
+
+But why don't to create References to all other object types.
+
+Check RefOf of ArgX passed to Method.
+
+
+==========
+* TEST 11: RefOf(ArgX-Object)
+==========
+
+
+Check RefOf of ArgX-Object (ArgX is any type Object).
+
+Start Method (M0) the same as the TEST 00, but inside the invoked Method
+(M1), do RefOf to the ArgX containing the OBJECT. Verify the
+obtained ORef (ObjectType, SizeOf, DerefOf, value).
+
+Write into the obtained ORef and verify result
+(use immediate, ArgX, LocalX and NamedX ways delivering reference
+to the writing operator).
+
+Pass the result of RefOf to another Method (M2) for
+the following calculations as in the original test TEST 00.
+Check that the data referred to by ArgX of (M1) are changed {type,size,value}.
+Check that the original objects (M0) are not changed {type,size,value}.
+
+M0 {Object} --> M1 {RefOf(ArgX);write} --> M2 {write(ArgX)}
+    ^ Unchanged           ^ Changed
+
+Check that M1-LocalX-ORef remains up to date
+after writing into M2-ArgX in M2 and thus updating the
+contents of the object referenced by M1-LocalX.
+
+FEATURE: ArgX-Object:RefOf:ORef:write:read
+FEATURE: ArgX-Object:RefOf:ORef:M2:write:read
+
+
+==========
+* TEST 12: DerefOf(RefOf(ArgX-Object))
+==========
+
+
+Check DerefOf(RefOf) of ArgX-Object (ArgX is any type Object)
+
+FEATURE: ArgX-Object:RefOf:ORef:DerefOf
+
+
+==========
+* TEST 13: RefOf(ArgX-ORef)
+==========
+
+
+Check RefOf of ArgX-ORef.
+
+The same as the TEST 06, but at first do RefOf to the ArgX
+containing the ORef to Object (M1), then pass the result
+of RefOf to another Method (M2) for the following calculations
+as in the original test.
+
+Actions similar to TEST 11.
+
+FEATURE: ArgX-ORef:RefOf:ORef:write:read
+FEATURE: ArgX-ORef:RefOf:ORef:M2:write:read
+
+
+==========
+* TEST 14: DerefOf(RefOf(ArgX-ORef))
+==========
+
+
+Check DerefOf(RefOf) of ArgX-ORef
+FEATURE: ArgX-ORef:RefOf:ORef:DerefOf
+
+
+==========
+* TEST 15: RefOf(ArgX-IRef)
+==========
+
+
+Check RefOf of ArgX-IRef.
+
+The same as the TEST 07, but at first do RefOf to the ArgX
+containing the IRef to Object (M1), then pass the result
+of RefOf to another Method (M2) for the following calculations
+as in the original test.
+
+FEATURE: ArgX-IRef:RefOf:ORef:write:read
+FEATURE: ArgX-IRef:RefOf:ORef:M2:write:read
+
+
+==========
+* TEST 16: DerefOf(RefOf(ArgX-IRef))
+==========
+
+
+Check DerefOf(RefOf) of ArgX-IRef
+FEATURE: ArgX-IRef:RefOf:ORef:DerefOf
+
+
+==========
+* TEST 17: RefOf(ArgX-String-Buffer-Package), check IRef
+==========
+
+
+Check RefOf of ArgX-String, ArgX-Buffer, ArgX-Package
+(check IRef).
+
+The same as the TEST 08, but at first do RefOf to the ArgX
+containing the (String/Buffer/Package) (M1), then pass the result
+of RefOf to another Method (M2) for the following calculations
+as in the original test.
+
+FEATURE: ArgX-String:RefOf:ORef:Index:IRef:write
+FEATURE: ArgX-Buffer:RefOf:ORef:Index:IRef:write
+FEATURE: ArgX-Package:RefOf:ORef:Index:IRef:write
+
+
+==========
+* TEST 18: RefOf(ArgX-OperationRegion), check FieldUnit
+==========
+
+
+Check RefOf of ArgX-OperationRegion
+(check Field Unit based on that OperationRegion).
+
+INCORRECT: ASL-gramaticaly incorrect, the test is omitted.
+           Field(DerefOf(arg0), ...) {}
+           Field(Local0, ...) {}
+           Field(arg0, ...) {}
+
+The same as the TEST 09, but at first do RefOf to the
+ArgX containing the OperationRegion (M1), then pass the result of
+RefOf to another Method (M2) for the following calculations
+as in the original test.
+
+FEATURE: ArgX-OperationRegion:RefOf:ORef:DerefOf:Field:FieldUnit:write
+FEATURE: ArgX-OperationRegion:RefOf:ORef:M2:DerefOf:Field:FieldUnit:write
+
+
+==========
+* TEST 19: RefOf(ArgX-Buffer), check BufferField
+==========
+
+
+Check RefOf of ArgX-Buffer
+(check Buffer Field based on that Buffer).
+
+The same as the TEST 10, but at first do RefOf to the ArgX
+containing the Buffer (M1), then pass the result of RefOf
+to another Method (M2) for the following calculations as in the
+original test.
+
+FEATURE: ArgX-Buffer:RefOf:ORef:CreateField:BufferField:write
+
+==========
+* TEST XX: ArgX-ORef on place of ArgY
+==========
+
+Check ArgX-ORef on the another than actually passed place (ArgY)
+(transfer ArgX to ArgY and run the TEST 06)
+
+FEATURE: ArgX-ORef:write_into_ArgY:write
+
+INCORRECT: not quite correct, because there is no way to
+           "transfer" ArgX-Reference from ArgX to ArgY.
+           In fact, the object associated with ArgX-Reference
+           is copied into ArgY or into the Object associated with
+           ArgY in ArgY-Reference case for any ASL-operation.
+
+           So, the test is transformed into another one (see below).
+
+The same as the TEST 06, but at first write ORef passed
+by Arg0 into Arg1 and then do all the read/write actions with Arg1
+(but not with Arg0).
+
+Method(m000, 2)
+{
+      Store(Arg0,Arg1)
+      CopyObject(Arg0,Arg1)
+      ...
+      Read/Write with Arg1 only
+}
+Method(m001, 2)
+{
+      Store(Arg0,Arg1)
+      CopyObject(Arg0,Arg1)
+      ...
+      Read/Write with Arg1 only
+}
+Store(RefOf(X000), Local0)
+m000(Local0,0)
+m000(RefOf(X000),0)
+...
+Check the value of X000, Y000 and Local0.
+
+Store(RefOf(X000), Local0)
+m001(Local0,0)
+m001(RefOf(X000),0)
+...
+Check the value of X000, Y000 and Local0.
+
+Do the same actions as in the TEST 00.
+
+5. After completion of the Method call, returning
+   from it, check the original object {type,size,value}
+   corresponding to Arg0.
+   Use BlackBox for to clarify ACPI specification.
+
+
+==========
+* TEST 20: Write ArgX to ArgY
+==========
+
+
+Check writing from ArgX to ArgY
+
+FEATURE: Store/CopyObject(ArgX-Object, ArgY-Object)
+FEATURE: Store/CopyObject(ArgX-Object, ArgY-ORef)
+FEATURE: Store/CopyObject(ArgX-Object, ArgY-IRef)
+
+FEATURE: Store/CopyObject(ArgX-ORef, ArgY-Object)
+FEATURE: Store/CopyObject(ArgX-ORef, ArgY-ORef)
+FEATURE: Store/CopyObject(ArgX-ORef, ArgY-IRef)
+
+FEATURE: Store/CopyObject(ArgX-IRef, ArgY-Object)
+FEATURE: Store/CopyObject(ArgX-IRef, ArgY-ORef)
+FEATURE: Store/CopyObject(ArgX-IRef, ArgY-IRef)
+
+
+SPEC:
+
+17.2.5.9.2  LocalX Objects
+  1) Read from LocalX variables
+     ObjectReference - If performing a DeRefOf return the target
+                       of the reference. Otherwise, return the
+                       reference.
+
+==========
+* TEST XX: ArgX-ORef on place of LocalY
+==========
+
+Check that ArgX-ORef being transfer into LocalX lost its features
+(transfer ArgX to LocalX and run the TEST 06).
+
+FEATURE: ArgX-ORef:write_into_LocalX:write
+
+INCORRECT: not quite correct, because there is no way to
+           "transfer" ArgX-Reference from ArgX to LocalX.
+           In fact, the object associated with ArgX-Reference
+           is copied into LocalX (independently on the value
+           of LocalX).
+
+So, the test is transformed into another one (see below).
+
+
+==========
+* TEST 21: Write ArgX to LocalY
+==========
+
+
+Check writing from ArgX to LocalY
+
+FEATURE: Store/CopyObject(ArgX-Object, LocalY)
+FEATURE: Store/CopyObject(ArgX-ORef, LocalY)
+FEATURE: Store/CopyObject(ArgX-IRef, LocalY)
+
+then overwrite LocalY which contains either
+Object or ORef or IRef.
+
+
+==========
+* TEST XX: ArgX-IRef on place of LocalY
+==========
+
+==========
+* TEST 22:
+==========
+
+
+The same as the TEST 21, but pass the
+IRef but not ORef.
+
+Done, in TEST 21. See INCORRECT in TEST 21.
+
+
+==========
+* TEST 23: Write into LocalX-ORef
+==========
+
+
+Generate LocalX-ORef and write to it.
+
+The same as the TEST 21, but obtain the ORef
+immediately and store it into LocalX.
+
+Example:
+  Store(RefOf(b000), Local0)
+  Store(0x11, Local0)
+
+After write operation into LocalX check that the original objects
+are unchanged {type,size,value}.
+
+FEATURE: ORef:write_into_LocalX:write
+
+
+==========
+* TEST 24: Write into LocalX-IRef
+==========
+
+
+The same as the TEST 23, but pass the IRef but not ORef.
+FEATURE: IRef:write_into_LocalX:write
+
+
+==========
+* TEST 25: Write into ArgX filled with ORef to global obtained in Method
+==========
+
+
+Check writing into ArgX which contains ORef to global
+object generated inside the Method (but not passed to it).
+
+The same as the TEST 20, but at first obtain the ORef
+to some global object and put it into ArgX and do all the read/write
+actions with that ArgX.
+
+Check the original object {type,size,value} corresponding to ArgX.
+Use BlackBox for to clarify ACPI specification.
+
+Example:
+  Store(RefOf(i000), ArgX)
+  Store(CondRefOf(i000), ArgX)
+
+FEATURE: ORef-to-global:write_into_ArgX:write
+
+
+==========
+* TEST 26: Write into ArgX filled with ORef to local obtained in Method
+==========
+
+
+Check writing into ArgX which contains ORef to local
+object generated inside the Method (but not passed to it).
+
+The same as the TEST 25 but use not global but local source objects:
+
+   c) LocalX {0-7}
+   d) Named: types {1-16}
+
+Check the original object {type,size,value} corresponding to ArgX.
+Use BlackBox for to clarify ACPI specification.
+
+Example:
+  Store(RefOf(i000), ArgX)
+  Store(CondRefOf(i000), ArgX)
+
+FEATURE: ORef-to-local:write_into_ArgX:write
+
+ISSUE: the same test for IRef
+
+
+SPEC:
+
+17.2.5.9.2 LocalX Objects
+
+17.2.5.8   Rules for Storing and Copying Objects
+
+Method LocalX variable:
+
+The object is copied to the destination with no conversion
+applied. Even if LocalX contains an Object Reference, it is
+overwritten.
+
+
+==========
+* TEST 27: CopyObject Object to LocalX
+==========
+
+
+Local0-Local7 can be written with any type object without any conversion
+(check CopyObject to LocalX).
+
+Write the same LocalX variable (use all the write operators for writing
+into LocalX) with all possible object types and ways of representing
+the source objects. Check that the resulting objects referenced by
+LocalX are the same as the original (or expected) ones {type,size,value}.
+Do these write and check actions for different type objects for the same
+LocalX, so we show that no conversion depending on the previous contents
+of the same LocalX takes place.
+
+Repeat the described checkings for each LocalX: {0-7}.
+
+FEATURE: Object:CopyObject_into_LocalX:verify
+
+
+==========
+* TEST 28: Store Object to LocalX
+==========
+
+
+Check the same as TEST 27 but for Store (check Store to LocalX)
+A set of available for Store types is restricted
+FEATURE: Object:Store_into_LocalX:verify
+
+
+==========
+* TEST 29: CopyObject ORef to LocalX
+==========
+
+
+Local0-Local7 can be written with ORef
+referencing any type object without any conversion.
+
+CopyObject the result of RefOf to LocalX
+
+Example:
+  CopyObject(RefOf(i000), Local0)
+  CopyObject(CondRefOf(i000), Local0)
+
+The same as the TEST 27, but obtain and write the ORef
+into LocalX and verify the contents of LocalX.
+
+FEATURE: ORef:CopyObject_into_LocalX:verify
+
+
+==========
+* TEST 30: Store ORef to LocalX
+==========
+
+
+Store the result of RefOf to LocalX
+(the same as TEST 29 but Store instead of CopyObject).
+
+Example:
+  Store(RefOf(i000), Local0)
+  Store(CondRefOf(i000), Local0)
+
+FEATURE: ORef:Store_into_LocalX:verify
+
+
+==========
+* TEST 31: CopyObject IRef to LocalX
+==========
+
+
+Local0-Local7 can be written with IRef without any conversion.
+
+CopyObject the result of Index to LocalX
+
+Example:
+  CopyObject(Index(s000, 1, Local0), Local1)
+
+The same as the TEST 29, but obtain and write the IRef but not ORef.
+FEATURE: IRef:CopyObject_into_LocalX:verify
+
+
+==========
+* TEST 32: Store IRef to LocalX
+==========
+
+
+Store the result of Index to LocalX
+(the same as TEST 31 but Store instead of CopyObject).
+
+Example:
+  Store(Index(s000, 1, Local0), Local1)
+
+FEATURE: IRef:Store_into_LocalX:verify
+
+
+==========
+* TEST 33: Mix of writing to LocalX
+==========
+
+
+Mix of all the legal ways enumerated in tests (TEST 27 - TEST 32)
+of initializing the LocalX:
+
+Example:
+  Store(RefOf(i000), Local0)
+  Store(CondRefOf(i000), Local0)
+  Store(Index(s000, 1, Local0), Local1)
+  Store(i000, Local0)
+
+  CopyObject(RefOf(i000), Local0)
+  CopyObject(CondRefOf(i000), Local0)
+  CopyObject(Index(s000, 1, Local0), Local1)
+  CopyObject(i000, Local0)
+
+  Add(x, y, Local0)
+  ...
+
+ISSUE: the same test for "initializing the ArgX"
+
+FEATURE: MIX:Object:CopyObject_into_LocalX:verify
+FEATURE: MIX:Object:Store_into_LocalX:verify
+FEATURE: MIX:ORef:CopyObject_into_LocalX:verify
+FEATURE: MIX:ORef:Store_into_LocalX:verify
+FEATURE: MIX:IRef:CopyObject_into_LocalX:verify
+FEATURE: MIX:IRef:Store_into_LocalX:verify
+
+
+SPEC:
+
+17.2.5.9.3   Named Objects
+
+
+==========
+* TEST 34: NamedX of any type
+==========
+
+
+Obtain the NamedX objects of all the types and check their {type,size,value}.
+SEE: it is implemented in name/name.asl
+FEATURE: NamedX:verify {type,size,value}
+
+
+==========
+* TEST 35: ORef and IRef to NamedX of any type
+==========
+
+
+The same as the TEST 34, but obtain and verify the ORef
+and IRef to named objects {type,size,value}.
+
+SEE: it is already verified by the following tests:
+
+TEST 01
+TEST 02
+TEST 03
+TEST 04
+TEST 06
+TEST 07
+
+FEATURE: NamedX:RefOf:ORef:verify {type,size,value}
+FEATURE: NamedX:Index:IRef:verify {type,size,value}
+
+
+==========
+* TEST 36: ArgX-ORef passed to another Method
+==========
+
+
+Check ArgX-ORef being passed further to another Method
+
+The same as the TEST 06, but from inside the Method (M1),
+call to another Method (M2) and pass it with the ArgX of
+(M1) containing the ORef.
+
+FEATURE: ArgX-ORef:M2:write:read
+FEATURE: ArgX-ORef:M2:...:M*:write:read
+
+
+==========
+* TEST 37: ArgX-IRef passed to another Method
+==========
+
+
+Check ArgX-IRef being passed further to another Method
+
+The same as the TEST 36, but for IRef.
+
+FEATURE: ArgX-IRef:M2:write:read
+FEATURE: ArgX-IRef:M2:...:M*:write:read
+
+
+==========
+* TEST 38: Write immediately into result of RefOf(Object)
+==========
+
+
+Check the immediate ORef (to any type object)
+being passed as a target destination of write operators.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, RefOf(ArgX))
+WRITE_OPERATOR(XXXX, RefOf(LocalX))
+WRITE_OPERATOR(XXXX, RefOf(NamedX))
+
+Example:
+  Store(XXX, RefOf(YYY))
+
+Initialize ArgX, LocalX, NamedX cosequetly with each {1-16} type object.
+Do this for all the ASL Operators which write results.
+Use BlackBox for to clarify ACPI specification.
+
+Note:
+though these expressions are applied in other sub-tests,
+nevertheles, this one (and some the following sub-tests
+which verify similar constructions) are supposed and have
+the perpose to verify this ability - immediate use of result
+of the operator generating reference - comprehensively.
+
+FEATURE: write(Object:RefOf:ORef)
+
+
+==========
+* TEST 39: Write immediately into result of Index(String)
+==========
+
+
+Check the immediate IRef to the element of String
+being passed as a target destination of write operators.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, Index(ArgX, 0))
+WRITE_OPERATOR(XXXX, Index(LocalX, 0))
+WRITE_OPERATOR(XXXX, Index(NamedX, 0))
+
+Example:
+  Store(XXX, Index(YYY, 1))
+  Store(XXX, Index(YYY, 1, ArgX))
+  Store(XXX, Index(YYY, 1, LocalX))
+  Store(XXX, Index(YYY, 1, NamedX))
+
+Do this for all the ASL Operators which write results.
+
+FEATURE: write(String:Index:IRef)
+
+
+==========
+* TEST 40: Write immediately into result of Index(Buffer)
+==========
+
+
+Check the immediate IRef to the element of Buffer
+being passed as a target destination of write operators.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, Index(ArgX, 0))
+WRITE_OPERATOR(XXXX, Index(LocalX, 0))
+WRITE_OPERATOR(XXXX, Index(NamedX, 0))
+
+Do this for all the ASL Operators which write results.
+FEATURE: write(Buffer:Index:IRef)
+
+
+==========
+* TEST 41: Store Object immediately into result of Index(Package(){Uninitialized})
+==========
+
+
+Check Store of available type Objects to the immediate IRef
+to the element of Package.
+
+Element of Package is an Uninitialized.
+
+Example:
+  Store(Object, Index(ArgX, 0))
+  Store(Object, Index(LocalX, 0))
+  Store(Object, Index(NamedX, 0))
+
+A set of available for Store types is restricted
+
+FEATURE: Store(Object, Index(Package(){Uninitialized}))
+
+
+==========
+* TEST 42  (no test): CopyObject Object immediately into result of Index(Package(){Uninitialized})
+==========
+
+
+Check CopyObject of any type Objects to the immediate IRef
+to the element of Package.
+
+Element of Package is an Uninitialized.
+
+CURRENTLY: compiler failed CopyObject(xx, Index(xx,xx)), so - no test.
+
+Example:
+  CopyObject(Object, Index(ArgX, 0))
+  CopyObject(Object, Index(LocalX, 0))
+  CopyObject(Object, Index(NamedX, 0))
+
+FEATURE: CopyObject(Object, Index(Package(){Uninitialized}))
+
+
+=========
+* TEST 43: Store ORef immediately into result of Index(Package(){Uninitialized})
+=========
+
+
+Check Store of ORef to the immediate IRef
+to the element of Package.
+
+Element of Package is an Uninitialized.
+
+Example:
+  Store(RefOf(Object), Index(ArgX, 0))
+  Store(RefOf(Object), Index(LocalX, 0))
+  Store(RefOf(Object), Index(NamedX, 0))
+
+FEATURE: Store(RefOf(Object), Index(Package(){Uninitialized}))
+
+
+==========
+* TEST 44: Store IRef immediately into result of Index(Package(){Uninitialized})
+==========
+
+
+Check Store of IRef to the immediate IRef
+to the element of Package.
+
+Element of Package is an Uninitialized.
+
+Example:
+  Store(Index(Object, 0), Index(ArgX, 0))
+  Store(Index(Object, 0), Index(LocalX, 0))
+  Store(Index(Object, 0), Index(NamedX, 0))
+
+FEATURE: Store(Index(Object,x), Index(Package(){Uninitialized}))
+
+
+==========
+* TEST 45: Store immediately into result of Index(Package(){Constants})
+==========
+
+
+Check the immediate IRef to the element of Package
+being passed as a target destination of write operators.
+
+Element of Package is an immediate constant {Integer,String,Buffer,Package}.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, Index(ArgX, 0))
+WRITE_OPERATOR(XXXX, Index(LocalX, 0))
+WRITE_OPERATOR(XXXX, Index(NamedX, 0))
+
+Do this for all the ASL Operators which write results.
+
+FEATURE: write(x, Index(Package(){Constant}))
+
+
+==========
+* TEST 46: Store immediately into result of Index(Package(){NamedX {1-16}})
+==========
+
+Check the immediate IRef to the element of Package
+being passed as a target destination of write operators.
+
+Element of Package is a named object of any type: NamedX {1-16}.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, Index(ArgX, 0))
+WRITE_OPERATOR(XXXX, Index(LocalX, 0))
+WRITE_OPERATOR(XXXX, Index(NamedX, 0))
+
+Do this for all the ASL Operators which write results.
+
+FEATURE: write(x, Index(Package(){NamedX}))
+
+
+==========
+* TEST 47: Store immediately into result of Index(Package(){ORef to NamedX {1-16}})
+==========
+
+
+Check the immediate IRef to the element of Package
+being passed as a target destination of write operators.
+
+Element of Package is a ORef to the named object
+of any type: NamedX {1-16}.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, Index(ArgX, 0))
+WRITE_OPERATOR(XXXX, Index(LocalX, 0))
+WRITE_OPERATOR(XXXX, Index(NamedX, 0))
+
+Do this for all the ASL Operators which write results.
+Check that the relevant elements of Package are properly changed.
+Check that the original data are not changed.
+
+FEATURE: Store(Object, Index(Package(){ORef}))
+
+
+==========
+* TEST 48: Store immediately into result of Index(Package(){IRef})
+==========
+
+
+Check the immediate IRef to the element of Package
+being passed as a target destination of write operators.
+
+Element of Package is an IRef to the element of another
+object: {String, Buffer, Package}.
+
+Do the following:
+
+WRITE_OPERATOR(XXXX, Index(ArgX, 0))
+WRITE_OPERATOR(XXXX, Index(LocalX, 0))
+WRITE_OPERATOR(XXXX, Index(NamedX, 0))
+
+Do this for all the ASL Operators which write results.
+Check that the relevant elements of Package are properly changed.
+Check that the original data are not changed.
+
+Note: TEST 07 checks the writing into IRef passed
+      to Method referencing elements of Package.
+
+FEATURE: Store(Object, Index(Package(){IRef}))
+
+
+==========
+* TEST 49: ORef-LocalX
+==========
+
+FEATURE: Store(RefOf(), LocalX)
+FEATURE: Copy(RefOf(), LocalX)
+
+
+==========
+* TEST 50: ORef-ArgX
+==========
+
+FEATURE: Store(RefOf(), ArgX)
+FEATURE: Copy(RefOf(), ArgX)
+
+SPEC:
+
+5.5.2.3   Method Calling Convention
+
+Generally, the objects passed to a control method via the ArgX
+terms cannot be directly written or modified by the called method.
+In other words, when an ArgX term is used as a target operand in an
+ASL statement, the existing ArgX object is not modified. Instead,
+the new object replaces the existing object and the ArgX term
+effectively becomes a LocalX term.
+
+
+==========
+* TEST 51: ORef-NamedX
+==========
+
+FEATURE: Store(RefOf(), NamedX)
+FEATURE: Copy(RefOf(), NamedX)
+
+
+==========
+* TEST 52: ORef-El_of_Package
+==========
+
+FEATURE: Store(RefOf(), Index())
+FEATURE: Copy(RefOf(), Index())
+
+
+==========
+* TEST 53: IRef-LocalX
+==========
+
+FEATURE: Store(Index(), LocalX)
+FEATURE: Store(LocalX, Index())
+FEATURE: Copy(Index(), LocalX)
+FEATURE: Copy(LocalX, Index())
+
+
+==========
+* TEST 54: IRef-ArgX
+==========
+
+FEATURE: Store(Index(), ArgX)
+FEATURE: Store(ArgX, Index())
+FEATURE: Copy(Index(), ArgX)
+FEATURE: Copy(ArgX, Index())
+
+
+==========
+* TEST 55: IRef-NamedX
+==========
+
+FEATURE: Store(Index(), NamedX)
+FEATURE: Store(NamedX, Index())
+FEATURE: Copy(Index(), NamedX)
+FEATURE: Copy(NamedX, Index())
+
+
+==========
+* TEST 56: IRef-El_of_Package
+==========
+
+FEATURE: Store(Index(), Index())
+FEATURE: Copy(Index(), Index())
+FEATURE: Store(Index(arg0, x), Local0)
+
+
+==========
+* TEST 57: Store total
+==========
+
+
+When this start work the user will feel himself free
+in the way coding its thoughts.
+
+Store(ImageX    , RefOf())
+Store(ArgX      , RefOf())
+Store(LocalX    , RefOf())
+Store(NamedX    , RefOf())
+Store(RefOf()   , RefOf())
+Store(Index()   , RefOf())
+Store(DerefOf() , RefOf())
+
+Store(ImageX    , Index())
+Store(ArgX      , Index())
+Store(LocalX    , Index())
+Store(NamedX    , Index())
+Store(RefOf()   , Index())
+Store(Index()   , Index())
+Store(DerefOf() , Index())
+
+Store(ImageX    , DerefOf())
+Store(ArgX      , DerefOf())
+Store(LocalX    , DerefOf())
+Store(NamedX    , DerefOf())
+Store(RefOf()   , DerefOf())
+Store(Index()   , DerefOf())
+Store(DerefOf() , DerefOf())
+
+Store(ImageX    , ArgX)
+Store(ArgX      , ArgX)
+Store(LocalX    , ArgX)
+Store(NamedX    , ArgX)
+Store(RefOf()   , ArgX)
+Store(Index()   , ArgX)
+Store(DerefOf() , ArgX)
+
+Store(ImageX    , LocalX)
+Store(ArgX      , LocalX)
+Store(LocalX    , LocalX)
+Store(NamedX    , LocalX)
+Store(RefOf()   , LocalX)
+Store(Index()   , LocalX)
+Store(DerefOf() , LocalX)
+
+Store(ImageX    , NamedX)
+Store(ArgX      , NamedX)
+Store(LocalX    , NamedX)
+Store(NamedX    , NamedX)
+Store(RefOf()   , NamedX)
+Store(Index()   , NamedX)
+Store(DerefOf() , NamedX)
+
+Verify all the aspects not including conversion issues.
+Verify all the actions comprehensively enumerated in the
+table. Do this comprehensive test after all the particular
+bugs will be fixed. Now, due to the bugs, it looks difficult.
+Extend in every possible way this test, see top of this spec,
+as far as fixing the bugs.
+
+
+==========
+* TEST 58: CopyObject total
+==========
+
+
+When this start work the user will feel himself free
+in the way coding its thoughts.
+
+Copy(ImageX    , RefOf())
+Copy(ArgX      , RefOf())
+Copy(LocalX    , RefOf())
+Copy(NamedX    , RefOf())
+Copy(RefOf()   , RefOf())
+Copy(Index()   , RefOf())
+Copy(DerefOf() , RefOf())
+
+Copy(ImageX    , Index())
+Copy(ArgX      , Index())
+Copy(LocalX    , Index())
+Copy(NamedX    , Index())
+Copy(RefOf()   , Index())
+Copy(Index()   , Index())
+Copy(DerefOf() , Index())
+
+Copy(ImageX    , DerefOf())
+Copy(ArgX      , DerefOf())
+Copy(LocalX    , DerefOf())
+Copy(NamedX    , DerefOf())
+Copy(RefOf()   , DerefOf())
+Copy(Index()   , DerefOf())
+Copy(DerefOf() , DerefOf())
+
+Copy(ImageX    , ArgX)
+Copy(ArgX      , ArgX)
+Copy(LocalX    , ArgX)
+Copy(NamedX    , ArgX)
+Copy(RefOf()   , ArgX)
+Copy(Index()   , ArgX)
+Copy(DerefOf() , ArgX)
+
+Copy(ImageX    , LocalX)
+Copy(ArgX      , LocalX)
+Copy(LocalX    , LocalX)
+Copy(NamedX    , LocalX)
+Copy(RefOf()   , LocalX)
+Copy(Index()   , LocalX)
+Copy(DerefOf() , LocalX)
+
+Copy(ImageX    , NamedX)
+Copy(ArgX      , NamedX)
+Copy(LocalX    , NamedX)
+Copy(NamedX    , NamedX)
+Copy(RefOf()   , NamedX)
+Copy(Index()   , NamedX)
+Copy(DerefOf() , NamedX)
+
+Verify all the aspects not including conversion issues.
+Verify all the actions comprehensively enumerated in the
+table. Do this comprehensive test after all the particular
+bugs will be fixed. Now, due to the bugs, it looks difficult.
+Extend in every possible way this test, see top of this spec,
+as far as fixing the bugs.
+
+
+==========
+* TEST 59: Mix of Store and CopyObject total
+==========
+
+
+Mix of all the actions enumerated in two tests above.
+Do it after the current bugs fixing.
+
+
+==========
+* TEST 60: Package total
+==========
+
+When this starts work the user will feel himself free
+in the way coding its thoughts.
+
+Do this comprehensive test after all the particular
+bugs will be fixed. Now, due to the bugs, it looks
+difficult.
+Extend in every possible way this test, see top of this spec,
+as far as fixing the bugs.
+
+Duplicate it for Store and Copy.
+
+Concentrate all the issues declaring and accessing
+elements of Package. Would be useful consider the
+particular aspects enumerated below as elements of
+the total table - do (in maximum) all the combinations
+of the elements of the table. Specify as many different
+aspects as possible.
+
+Aspects:
+
+Read immediate image element of Package
+All the ways reading element of Package
+...will be continued
+
+/*
+SEE these and add to "Aspects":
+
+1. Put immediate constant as an element of Package and access it
+   with and without additional DerefOf.
+
+2. Put NamedX {1-16} as an element of Package and access it
+   with and without additional DerefOf.
+
+REMAINED TO DO THESE: 3 and 4
+=====================
+
+3. Put ORef (to any type object) as an element of Package
+   and access it with and without additional DerefOf.
+
+4. Put IRef (to element of String, Buffer, Package)
+   as an element of Package and access it with and without
+   additional DerefOf.
+
+* TEST 6x: Read element of Package without DerefOf
+* TEST 6x: Write element of Package
+* TEST 6x: Read element of Package
+* TEST 6x: Method as an element of Package
+*/
+
+
+==========
+* TEST 61: String total
+==========
+
+
+Do this test similar to "Package total"
+when the major bugs will be fixed.
+
+
+==========
+* TEST 62: Buffer total
+==========
+
+
+Do this test similar to "Package total"
+when the major bugs will be fixed.
+
+
+      THE REFERENCE CALCULATIONS
+      ==========================
+
+
+==========
+* TEST 63: All the legal ways of WRITING ORef reference to target location
+==========
+
+
+All the locations should show the same identical functionality.
+
+NamedX  - types 1-16
+Named_X - types 1-4,6-13,15,16 (except Buffer Field & Field Unit)
+
+    63.0 Store
+
+ 1. Store(RefOf(NamedX), LocalX)
+ 2. Store(RefOf(NamedX), ArgX-Object)
+ 3. CopyObject(
+          RefOf(NamedX), Named_X)
+    Store(RefOf(NamedX), Named_X)
+ 4. Store(RefOf(NamedX), ArgX-ORef-to-LocalX)
+ 5. Store(RefOf(NamedX), ArgX-ORef-to-ArgX)
+ 6. CopyObject(
+          RefOf(NamedX),
+          ArgX-ORef-to-Named_X)
+    Store(RefOf(NamedX), ArgX-ORef-to-Named_X)
+ 7. Store(RefOf(NamedX), ArgX-IRef-to-El_of_Package)
+ 8. Store(RefOf(NamedX), RefOf(Named_X))
+ 9. Store(RefOf(NamedX), Index(Package, 0))
+10. Store(RefOf(NamedX), Method())
+11. Store(RefOf(NamedX), Method(x))
+12. Store(RefOf(NamedX), DerefOf(Expr_resulting_in_ORef))
+
+    63.1 Particular (not all) cases of (12)
+
+13. Store(RefOf(NamedX), DerefOf(ArgX-ORef-to-LocalX))
+14. Store(RefOf(NamedX), DerefOf(ArgX-ORef-to-ArgX))
+15. CopyObject(
+          RefOf(NamedX),
+          ArgX-ORef-to-Named_X)
+    Store(RefOf(NamedX), DerefOf(ArgX-ORef-to-Named_X))
+16. Store(RefOf(NamedX), DerefOf(ArgX-IRef-to-El_of_Package))
+17. Store(RefOf(NamedX), DerefOf(RefOf(Named_X)))
+18. Store(RefOf(NamedX), DerefOf(Index(Package, 0)))
+19. Store(RefOf(NamedX), DerefOf(Method()))
+20. Store(RefOf(NamedX), DerefOf(Method(x)))
+
+    63.2 CopyObject
+
+21. CopyObject(RefOf(NamedX), LocalX)
+22. CopyObject(RefOf(NamedX), ArgX-Object)
+23. CopyObject(RefOf(NamedX), Named_X)
+24. CopyObject(RefOf(NamedX), ArgX-ORef-to-LocalX)
+25. CopyObject(RefOf(NamedX), ArgX-ORef-to-ArgX)
+26. CopyObject(RefOf(NamedX), ArgX-ORef-to-Named_X)
+27. CopyObject(RefOf(NamedX), ArgX-IRef-to-El_of_Package)
+
+    63.3 CopyObject (Compiler failed)
+
+28. CopyObject(RefOf(NamedX), Index(Package, 0))
+
+
+==========
+* TEST 64: All the legal ways of WRITING IRef reference to target location
+==========
+
+
+The same as TEST 63 but Index() instead of RefOf()
+
+Example:
+
+ 1. Store(Index(XXX,0), LocalX)
+
+    XXX - String, Buffer, Package.
+
+Additional are these given by Y below:
+
+ a. Index(x,0,y)
+ b. Store(Index(x,0,y), XXX)
+
+
+==========
+* TEST 65: All the legal SOURCES of ORef reference
+==========
+
+
+Full test.
+Do all the options enumerated in the tables 63.0-63.2.
+Take each element of table 65.x below (XXX) instead of
+RefOf() in 63.0-63.2.
+
+Example:
+
+ 1. Store(XXX, LocalX)
+
+    XXX - all the types of sources of reference
+
+    Types of locations according to the right parts of 63.x tables
+
+    65.0 (from 63.0 Store)
+
+ 1. ORef-LocalX                     // ORef reference assigned to LocalX
+ 2. ORef-ArgX                       // ORef reference assigned to ArgX effectively local
+ 3. ORef-Named_X                    // ORef reference assigned to Named_X
+ 4. ORef-ArgX-ORef-to-LocalX        // ORef reference assigned to LocalX, and ORef reference
+                                    // to that LocalX is passed to Method
+ 5. ORef-ArgX-ORef-to-ArgX          // ORef reference assigned to "ArgX effectively local",
+                                    // and ORef reference to that ArgX is passed to Method
+ 6. ORef-ArgX-ORef-to-Named_X       // ORef reference assigned to Named_X, and ORef reference
+                                    // to that Named_X is passed to Method
+ 7. ORef-ArgX-IRef-to-El_of_Package // ORef reference assigned to the element of Package,
+                                    // and IRef reference to that element is passed to Method
+ 8. RefOf(Named_X)
+ 9. Index(Package, 0)
+10. Method()
+11. Method(x)
+12. DerefOf(Expr_resulting_in_ORef)
+
+    65.1 (from 63.1 Particular (not all) cases of (12))
+
+13. DerefOf(ArgX-ORef-to-LocalX)
+14. DerefOf(ArgX-ORef-to-ArgX)
+15. DerefOf(ArgX-ORef-to-Named_X)
+16. DerefOf(ArgX-IRef-to-El_of_Package)
+17. DerefOf(RefOf(Named_X))
+18. DerefOf(Index(Package, 0))
+19. DerefOf(Method())
+20. DerefOf(Method(x))
+
+Note: DerefOf(X) here means returning some reference pointed by X
+
+
+==========
+* TEST 66: All the legal SOURCES of IRef reference
+==========
+
+
+==========
+* TEST 67: All the legal ways to READ the object pointed to by ORef reference
+==========
+
+
+==========
+* TEST 68: All the legal ways to READ the object pointed to by IRef reference
+==========
+
+
+==========
+* TEST 69: All the legal ways to WRITE to the object pointed to by ORef reference
+==========
+
+
+==========
+* TEST 70: All the legal ways to WRITE to the object pointed to by IRef reference
+==========
+
+
+==========
+* TEST 71: All the legal ways of READ automatic dereference
+==========
+
+
+==========
+* TEST 72: All the legal ways of WRITE automatic dereference
+==========
+
+
+
+
+
+====================================================================
+====  SEE LATER CAREFULLY, SOME OF THE SUB-TESTS BELOW PERHAPS  ====
+====  ARE OLREADY IMPLEMENTED IN THE TESTS ABOVE:               ====
+====================================================================
+
+
+
+
+SPEC:
+
+17.5.102   Return
+
+Arg can be any valid object or reference.
+
+
+==========
+* TEST 73: Return ORef reference
+==========
+
+
+Clarify that the talk is actually about the ORef
+and IRef (otherwise do only fixing of the ACPI
+specification and omit the things below).
+
+Pass the ORef and IRef references
+through the Method without any change only returning it.
+After returning from the Method, check that all the source
+features of the references are unchanged.
+
+
+==========
+* TEST 74: Return IRef reference
+==========
+
+
+SPEC:
+
+17.5.13   CondRefOf
+
+On failure, Destination is unchanged and the execution
+result of this operation is the value False.
+
+
+==========
+* TEST 75:
+==========
+
+
+Run CondRefOf in false conditions and check that FALSE
+is returned and check that Destination is unchanged.
+
+
+SPEC:
+
+17.5.27   DerefOf
+
+If the Source evaluates to a string, the string is
+evaluated as an ASL name (relative to the current scope)
+and the contents of that object are returned.
+
+
+==========
+* TEST 76:
+==========
+
+
+Check the assertion above.
+
+
+SPEC:
+
+17.5.27   DerefOf
+
+If the object specified by Source does not exist
+then a fatal error is generated.
+
+
+==========
+* TEST 77:
+==========
+
+
+Check the assertion above.
+
+
+SPEC:
+
+17.5.86   ObjectType
+
+Notice that if this operation is performed on an
+object reference such as one produced by the Alias,
+Index, or RefOf statements, the object type of the
+base object is returned.
+
+
+==========
+* TEST 78:
+==========
+
+
+The assertion above has been verified for Index and RefOf
+cases by all the tests above by the (TEST_00.2) entry.
+
+Check it for the Alias case in this test.
+
+
+SPEC:
+
+17.5.108   SizeOf
+
+For an object reference, the size of the referenced
+object is returned.
+
+
+==========
+* TEST 79:
+==========
+
+
+Check SizeOf for ORef.
+
+
+==========
+* TEST 80:
+==========
+
+
+Check SizeOf for IRef.
+
+
+==========
+* TEST 81:
+==========
+
+
+Check SizeOf for Alias.
+
+
+SPEC:
+
+17.5.97   RefOf
+
+If the Object does not exist, the result of a RefOf
+operation is fatal.
+
+
+==========
+* TEST 82:
+==========
+
+
+Run RefOf in false conditions and check that exception occurs.
+
+
+==========
+* TEST 83:
+==========
+
+
+All the possible ways to keep/pass/transfer the ORef
+safes all its features.
+
+
+==========
+* TEST 84:
+==========
+
+
+All the possible ways to keep/pass/transfer the IRef
+safes all its features.
+
+
+==========
+* TEST 85:
+==========
+
+
+Exercise the tricky way of writing everywhere.
+Attempt to work with the keeped somewhere references.
+Store everywhere the reference than do DerefOf
+and pass the result immediately to the write operators.
+
+Store(0x12345678, Local0)
+Store(Index(xxx, 0), Local0)
+Store(RefOf(xxx, 0), Local0)
+ORef passed by ArgX
+IRef passed by ArgX
+...
+
+Store(0, Derefof(Refof(Local0)))
+
+
+==========
+* TEST 86:
+==========
+
+
+Check presence/absence of Result conversion while writing
+to ORef.
+
+Do that without details.
+Details are to be exercised in another separate test.
+
+
+==========
+* TEST 87:
+==========
+
+
+Check attempts to keep References in NamedX.
+
+
+==========
+* TEST 88:
+==========
+
+
+Check DerefOf(RefOf(DerefOf(RefOf(ArgX)))
+See the test of exceptions exc_ref.
+
+
+==========
+* TEST 89:
+==========
+
+
+The same as TEST 26 but for IRef.
+
+Example:
+  Store(Index(s000, 1, Arg0), Arg1)
+
+
+==========
+* TEST 90:
+==========
+
+
+Check References to the different relative and root names.
+
+Example:
+  ^XXXX
+  \XXXX.XXXX
+  ...
+
+
+==========
+* TEST 91:
+==========
+
+
+In all the cases specified by tests TEST 38 - TEST 48
+check ObjectType and SizeOf operators and say there that
+DerefOf of these immediate cases is verified in TEST XX - TEST XX
+(no more ability to use immediate result of RefOf/Index).
+
+
+==========
+* TEST 92:
+==========
+
+From: Moore, Robert 
+Sent: Thursday, November 10, 2005 2:35 AM
+To: Podrezov, Valery A; Suietov, Fiodor F
+Subject: FW: Support of Local Reference in the ACPI CA
+
+
+Separately (though such are already):
+put reference into element of Package
+and then write another reference into
+that element of that Package.
+No any correlation must be.
+
+
+
+SEE LATER AND REMOVE THESE RECORDS:
+===================================
+
+/*
+SEE: where these take place, note them:
+FEATURE: write any type reference: Store(RefOf(Int,Str,...TZone,Region), XXXX)
+FEATURE: write into LocalX containing any type Index/RefOf reference: Store(RefOf(Int,Str,...TZone,Region), XXXX)
+*/
+
+/*
+SEE:
+Index(XXXX, x, NamedX)
+DerefOf(NamedX)
+Store(RefOf(XXXX), NamedX))
+DerefOf(NamedX)
+*/
+
+/*
+specify and verify all the ways storing,keeping references
+and the following using of reference
+*/
+
+/*
+1.1.1	RefOf (Create Object Reference)
+Syntax
+RefOf (Object) => ObjectReference
+Arguments
+Object can be any object type (for example, a package, a device object, and so on).
+Description
+Returns an object reference to Object. If the Object does not exist,
+the result of a RefOf operation is fatal. Use the CondRefOf term in
+cases where the Object might not exist. 
+The primary purpose of RefOf() is to allow an object to be passed to
+a method as an argument to the method without the object being evaluated
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+at the time the method was loaded.
+*/
+
+/*
+collect all the ways writing the value by the references
+in the particular test
+*/
+
+/*
+RefOf(ArgX)
+RefOf(LocalX)
+*/
+
+/*
+Remove it!!!!!!!!!!!!!
+TEST 49
+
+Do the same as the tests {TEST 38 - TEST 48},
+but store intermediately the values of both type References,
+RefOf(X) and Index(X), into ArgX, LocalX, NamedX
+before passing them to WRITE_OPERATOR:
+
+Do the following:
+
+Store(RefOf(ArgX), LocalY)
+Store(RefOf(LocalX), LocalY)
+Store(RefOf(NamedX), LocalY)
+Store(Index(ArgX,   0, LocalY), LocalZ)
+Store(Index(LocalX, 0, LocalY), LocalZ)
+Store(Index(NamedX, 0, LocalY), LocalZ)
+
+Store(RefOf(ArgX), ArgY)
+Store(RefOf(LocalX), ArgY)
+Store(RefOf(NamedX), ArgY)
+Store(Index(ArgX,   0, ArgY), ArgZ)
+Store(Index(LocalX, 0, ArgY), ArgZ)
+Store(Index(NamedX, 0, ArgY), ArgZ)
+
+Store(RefOf(ArgX), NamedY)
+Store(RefOf(LocalX), NamedY)
+Store(RefOf(NamedX), NamedY)
+Store(Index(ArgX,   0, NamedY), NamedZ)
+Store(Index(LocalX, 0, NamedY), NamedZ)
+Store(Index(NamedX, 0, NamedY), NamedZ)
+
+WRITE_OPERATOR(XXXX, ArgY)
+WRITE_OPERATOR(XXXX, LocalY)
+WRITE_OPERATOR(XXXX, NamedY)
+
+WRITE_OPERATOR(XXXX, ArgZ)
+WRITE_OPERATOR(XXXX, LocalZ)
+WRITE_OPERATOR(XXXX, NamedZ)
+
+INCORRECT:
+
+  there is no any way, except DerefOf operator, how
+  to use the value of Reference keeped intermediately
+  in any type object.
+
+So, all the write operators:
+
+  WRITE_OPERATOR(XXXX, ArgZ)
+  WRITE_OPERATOR(XXXX, LocalZ)
+  WRITE_OPERATOR(XXXX, NamedZ)
+
+will write into ArgZ, LocalZ and NamedZ but NOT
+into the References containend into them (mean
+containend into ArgZ, LocalZ and NamedZ).
+
+????????????????? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+enumerate here (or specify and implement) the tests which verify:
+  "will write into ArgZ, LocalZ and NamedZ but NOT
+   into the References containend into them"
+????????????????? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+*/
+
+/*
+SEE: 0011_take_this/bugs/0012
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+SEE aslts that all these are implemented.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Store(Index(arg0, V001), i003)
+Store(RefOf(i000), i003)
+
+Store(Index(arg0, V001, Index(p000, 0)), Index(p000, 1))
+Store(RefOf(xxx), RefOf(xxx))
+
+test of printing references to all the possible types:
+*/
+/*
+describe and demo for the implicit
+conversion of String (references to the end of string
+should ???????) - also Packages, Buffers,...
+presence of references to such objects should cause
+exceptions (???????????? !!!!!!!!!!!!).
+*/

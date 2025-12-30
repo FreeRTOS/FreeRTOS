@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{53d8371d-63a2-434d-aaca-93cf651da5a9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Source Files\AcpiHelp">
+      <UniqueIdentifier>{e45b286f-57be-43a4-8a20-fce184c72c82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{3a51e086-2765-4937-a06c-38e5cc4b286b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{aa382080-0f9c-4712-808e-8322d6c258ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6269d0a4-b64a-4db2-bcd2-28d7e46080c7}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{5d459cf3-feff-40fa-a535-331fc768c69a}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="AslCompiler">
+      <UniqueIdentifier>{c3eb069f-93e6-4eba-a651-04f5344689bf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\tools\acpihelp\acpihelp.h">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahamlops.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahaslkey.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahaslops.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahdecode.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahgrammar.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahmain.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\ahids.c">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\ahpredef.c">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\ahtable.c">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\ahuuids.c">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\common\getopt.c">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\os_specific\service_layers\oswinxf.c">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utdebug.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utexcep.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utglobal.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\uthex.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utmath.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utnonansi.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utpredef.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utuuid.c">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahaml.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\tools\acpihelp\ahasl.c">
+      <Filter>Source Files\AcpiHelp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\compiler\aslmessages.c">
+      <Filter>AslCompiler</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

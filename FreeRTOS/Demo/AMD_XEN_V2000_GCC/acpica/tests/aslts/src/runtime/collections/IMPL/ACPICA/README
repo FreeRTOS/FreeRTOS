@@ -1,0 +1,12 @@
+
+CONTENTS
+
+   the tests dependent on ACPICA internal features
+
+common
+
+   common data and methods of tests
+
+tests
+
+   the tests

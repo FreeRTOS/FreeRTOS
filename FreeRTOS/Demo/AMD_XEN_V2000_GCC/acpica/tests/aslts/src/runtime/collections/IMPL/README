@@ -1,0 +1,14 @@
+
+CONTENTS
+
+   Implementation dependent tests.
+   These tests may be based on some internal
+   features of the particular implementation
+   of ACPI.
+
+
+ACPICA
+
+   The tests to be run on ACPICA
+   (will not go on other implementations
+    of ACPI).

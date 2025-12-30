@@ -1,0 +1,53 @@
+
+CONTENTS
+
+   particular run-time test collections
+
+bdemo
+
+   bug demonstrating and proving bug fixes test collection
+
+complex
+
+   complex test collection
+
+exceptions
+
+   exceptional conditions test collection
+
+functional
+
+   functional test collection
+
+mt
+
+   tests of multi-threading functionality (mt-tests)
+
+IMPL
+
+   Implementation dependent tests.
+   These tests may be based on some internal
+   features of the particular implementation
+   of ACPI.
+
+FULL
+
+   full test - all the test collections (functional + complex + exceptions + etc.)
+   compiled together as one DefinitionBlock
+
+service
+
+   service tests
+
+TMP
+
+   the test sample
+
+Identity2MS
+
+   tests to prove identity of ACPICA to MS
+
+Makefile.install
+
+   the uniform targets and rules to perform make-install
+   and other standard features

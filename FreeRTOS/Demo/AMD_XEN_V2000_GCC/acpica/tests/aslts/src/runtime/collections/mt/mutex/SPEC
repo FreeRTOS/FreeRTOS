@@ -1,0 +1,532 @@
+Descriptions of tests
+
+Thread means below the Worker thread
+(if another is not specified explicitly).
+
+Active agents of subject of mt-testing
+(attention to be drawn to in mt-tests).
+
+- Threads
+- Methods (Serialized/non-Serialized)
+- Mutexes (Acquire/Release)
+     - Level of mutex
+     - order of correct dealing with levels
+       1) mix on the same level Acquire {0,1,2}, Release {1,2,0}
+       2) Acquire+Release {0,1,2..,F}, {F..,2,1,0}
+     - Milliseconds to wait
+- Events (Wait/Signal)
+- global lock (_GL)
+- OperationRegion (SystemMemory/SystemIO/PCI_Config/
+                   EmbeddedControl/SMBus/CMOS/PCIBARTarget)
+- Field,BankField,IndexFiled (Lock/NoLock) of different type OperationRegions
+- context (GPE/usual)
+- OS side
+- firmware side
+- Notify
+
+======================== see:
+- invocation (?) -- is not thread (?)
+- can invocation have several different threads?
+- "interpretation of the current invocation could not be
+   transferred to different invocation until the current says
+   - 'ok I complete'"
+========================
+
+Note:
+the Global lock in mt-tests is mutex of 0-th level 1-th index (mux-0-1).
+
+THR-NUMBER:
+this entry describes how many threads are needed for the test, and the role of threads.
+The 0-th thread, so-called Control Thread, is not counted in this entry.
+--------.
+
+
+# ========================= #
+# ===  TEST 001 (mf01)  === #
+# ========================= #
+
+FUNCTION OF EACH WORKER THREAD:
+
+   Acquire one mutex of i-th level, Sleep, then Release it.
+   Check the mutually exclusive ownership of mutex.
+   Do it for all levels.
+   Check that GL behaves as 0-level mutex.
+
+After all threads Acquire/Release each mutex of
+the current level one by one in the same order go
+to the next level. So, from level 0 up to 15.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: arbitrary, all threads do the same
+
+
+DETAILS:
+
+1. The Control thread resets all flags and counters of all mutexes.
+2. The Worker threads do the same actions with each of the same N mutexes of i-th level:
+   - acquire the mutex
+   - check that flag of the mutex is zero (not set up yet)
+   - set up flag of the mutex to the index of this thread
+   - increment the counter of this mutex
+   - fall into sleep for the specified time
+   - wake up
+   - check up flag of the mutex that it was not changed by other threads
+     while this one was sleeping
+   - reset flag of the mutex
+   - release mutex
+3. Control thread after all the worker threads complete with all N mutexes of i-th level:
+   - checks that the counter of each relevant mutex is correct
+   - report errors detected by Worker threads
+   - report other errors
+4. Control thread initiates and Worker threads fulfill actions (2)
+   for mutexes of all levels one after another from 0 up to 15
+   (and GL too).
+
+# ========================= #
+# ===  TEST 002 (mf02)  === #
+# ========================= #
+
+FUNCTION OF EACH WORKER THREAD:
+
+   Acquire mutexes of all levels then Release them in the inverse order.
+
+Check that particular thread is allowed to nestedly acquire mutexes of level not less than the current one.
+The inverse order is true for Releasing mutexes by the particular thread.
+Several mutexes of the same level can be simultaneously owned by the same thread.
+While one thread owns all the mutexes other threads hang on Acquire of the first 0-level mutex
+(because of the same order of mutexes to be Acquired for all threads),
+then after the thread releases all the mutexes another thread starts
+actually owning all the mutexes. All threads own all mutexes in this way.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: arbitrary, all threads do the same
+
+DETAILS:
+
+1. The Worker threads do the same actions described below:
+   - acquire one by one mutexes of all levels from 0 up to 15 (N mutexes per level)
+   - after acquiring the mutex of 15-th level start releaseng them in the inverse order
+   - do the control actions with the flags and counters of mutexes (see comment to mf01)
+
+# ========================= #
+# ===  TEST 003 (mf03)  === #
+# ========================= #
+
+Example 0, taken from the real bug
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL; the test involves only mux-0-1
+THR-NUMBER: arbitrary, odd and even threads fulfill two different methods, N times
+
+
+# ========================= #
+# ===  TEST 004 (mf04)  === #
+# ========================= #
+
+The available levels of mutexes on thread_1 don't depend on mutex levels occupied by other threads
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 2 or greater; only 2 work effectively other sleep
+
+DETAILS:
+
+I.
+
+1. Thread_1 owns mutexes of all levels and fall into sleeping
+2. Thread_2 owns mutexes of all levels too not touching those occuppied by Thread_1
+3. Thread_2 Releases its mutexes
+4. Thread_1 Releases its mutexes
+
+II. Do the same as (I) but {1,2,4,3}.
+
+III.
+
+1. Thread_1 owns one (non-zero level) mutex and falls into sleeping
+2. Thread_2 owns mutexes of all levels not touching that occuppied by Thread_1
+3. Thread_2 Releases its mutex
+4. Thread_1 Releases its mutexes
+
+# ========================= #
+# ===  TEST 005 (mf05)  === #
+# ========================= #
+
+Another thread tries to Release mutex and gets exception
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 2 or greater; only 2 work effectively other sleep
+
+DETAILS:
+
+ 1. Thread_1 owns all-level mutexes and falls into sleeping
+ 2. Thread_2 tries to Release all those mutexes owned by Thread_1
+ 3. Exception is expected
+ 4. Thread_2 owns all-level mutexes (not intersecting with Thread_1)
+ 5. Thread_2 tries again to Release mutexes owned by Thread_1
+ 6. Exception is expected
+ 7. Thread_1 tries to Release mutexes owned by Thread_2
+ 8. Exception is expected
+ 9. Thread_1 Releases its mutexes
+10. Thread_2 Releases its mutexes
+
+# ========================= #
+# ===  TEST 006 (mf06)  === #
+# ========================= #
+
+Modification of TEST 005
+(Another thread tries to Release mutex and gets exception)
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 2 or greater; maximum 4 (min0) work effectively, other sleep
+
+1.Threads thr-1, thr-2, thr-3, thr-4 Acquire mutexes of
+  the same i-th level but different Indexes.
+
+2. Threads        thr-2, thr-3, thr-4 attempt (one by one) to Release mutex of thr-1, and gets exception
+3. Threads thr-1,        thr-3, thr-4 attempt (one by one) to Release mutex of thr-2, and gets exception
+4. Threads thr-1, thr-2,        thr-4 attempt (one by one) to Release mutex of thr-3, and gets exception
+5. Threads thr-1, thr-2, thr-3,       attempt (one by one) to Release mutex of thr-4, and gets exception
+
+6. Threads thr-1, thr-2, thr-3, thr-4 Release their mutexes.
+
+Go to the next level of mutexes.
+
+
+# ========================= #
+# ===  TEST 007 (mf07)  === #
+# ========================= #
+
+Attempt to Acquire mutex of lower than the current level causes exception
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 1 or greater; maximum 4 (min0) work effectively and do the same, other sleep
+
+DETAILS:
+
+All threads do the same not intersecting with mutexes.
+
+ 1. Do below for all levels (N) from 15 up to 0
+ 2. Set up current level (N) to 15
+ 3. Acquire mutexes from 0 to (N-1) levels
+ 4. Release mutexes
+ 5. Acquire mutex of level N
+ 6. Attempt to Acquire mutexes from 0 to (N-1) levels
+ 7. Exception is expected
+ 8. Acquire mutexes from (N+1) to 15 levels
+ 9. Release all mutexes
+10. Acquire mutexes from 0 to (N-1) levels
+11. Release mutexes
+12. Decrement the current level
+13. Go to (3)
+
+# ========================= #
+# ===  TEST 008 (mf08)  === #
+# ========================= #
+
+Threads simultaneously own different mutexes of the same level
+(prove that mutexes of different indexes of the same level allow
+real competition (not one by one owning)).
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 4 or greater; only 4 work effectively other sleep
+
+DETAILS:
+
+   Mapping of ownerships of mutexes {n0,n1,n2,n3} in test
+   by threads {thread_1-thread_2,thread_3,thread_4}:
+
+      x-0-123, x-1-230, x-2-301, x-3-012, x-0-123
+      x - Control thread
+
+x-0-123:
+
+   All threads acquire different mutexes of the same n-th level:
+
+   thread_1  n0_mutex
+   thread_2  n1_mutex
+   thread_3  n2_mutex
+   thread_4  n3_mutex
+
+   - acquire i-th mutex of n-th level (ni_mutex)
+   - check the mutually exclusive ownership of ni_mutex
+   - report that ni_mutex is owned
+   - check that all mutexes are owned by the relevant threads
+
+x-1-230:
+
+   Threads thread_2, thread_3 and thread_4 acquire mutexes
+   n2_mutex, n3_mutex and n0_mutex respectively and hang
+   because all those mutexes are busy by other threads.
+
+   After making sure that threads thread_2, thread_3 and thread_4 hang
+   the thread_1 is initiated to release n0_mutex and acquire n1_mutex.
+
+   It allows thread_4 to own n0_mutex.
+   It releases n3_mutex.
+
+   It allows thread_3 to own n3_mutex.
+   It releases n2_mutex.
+
+   It allows thread_2 to own n2_mutex.
+   It releases n1_mutex.
+
+   It allows thread_1 to own n1_mutex.
+
+x-2-301,
+x-3-012,
+x-0-123: identically to <x-1-230>.
+
+# ========================= #
+# ===  TEST 009 (mf09)  === #
+# ========================= #
+
+Another implementation of TEST 008.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 4 or greater; only 4 work effectively other sleep
+
+# ========================= #
+# ===  TEST 010 (mf10)  === #
+# ========================= #
+
+Threads simultaneously own different mutexes of different levels
+(prove that mutexes of different levels allow real competition
+(not one by one owning)).
+
+Similar to the TEST 008 but mutexes differ with their Levels
+but not Indexes.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 4 or greater; only 4 work effectively other sleep
+
+# ========================= #
+# ===  TEST 011 (mf11)  === #
+# ========================= #
+
+ACPI allows to multiply Acquire the same mutex.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 1 or greater; maximum 4 (min0) work effectively, other sleep
+
+Each thread deals with its set of mutexes not intersecting with other threads.
+
+1. Each thread Acquires successfully its mutex N times (do it for increasing levels 0-15)
+2. Each thread Releases successfully its mutex N times (do it in inverse order, levels 15-0)
+3. Each thread gets exception AE_AML_MUTEX_NOT_ACQUIRED on additional Release
+
+# ========================= #
+# ===  TEST 012 (mf12)  === #
+# ========================= #
+
+ACPI allows to Acquire repeatedly the same mutex over
+the pending requests of other threads to that mutex.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 2 or greater; maximum 4 (min0) work effectively, other sleep
+
+ 1. Thread thr-i Acquires successfully mutex M0 of (i-1)-th index for N times
+ 2. Other threads Acquire M0 too and hang
+ 3. Thread thr-i Acquires successfully mutex M0 for N times again
+ 4. Thread thr-i Releases mutex M0 for 2*N times
+ 5. One of other threads (thr-j) owns M0
+ 6. Thread thr-j Releases M0
+ 7. Do 5-6 items for all 'other' threads
+ 8. Do 1-7 for all threads one by one (so, for 0-3 Indexes of mutex as well)
+ 9. Do 1-8 for all Levels of mutex one by one
+
+# ========================= #
+# ===  TEST 013 (mf13)  === #
+# ========================= #
+
+Acquire the same mutex by the same thread 'many times' (say 256).
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 1 or greater; maximum 4 (min0) work effectively, other sleep
+
+# ========================= #
+# ===  TEST 014 (mf14)  === #
+# ========================= #
+
+Check that all mutexes Acquired by thread and not explicitly Released
+are Released implicitly by ACPICA when the thread completes.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 2 or greater; only 2 work effectively other sleep
+NOTE: the thread with the greatest index terminates at the end of this test
+
+1. Thread thr-N Acquires all the mutexes on all levels
+2. Thread thr-1 tries to Acquire all the same mutexes and gets FAIL (TimeOutValue is not 0xFFFF)
+3. Thread thr-N terminates
+4. Thread thr-1 tries to Acquire all those mutexes again and gets success (TimeOutValue is 0xFFFF)
+5. Thread thr-1 Releases all mutexes
+
+# ========================= #
+# ===  TEST 015 (mf15)  === #
+# ========================= #
+
+Modification of test 014.
+
+GL-LOCK: if GL00 is non-zero, mux-0-1 is GL
+THR-NUMBER: 2 or greater; only 2 work effectively other sleep
+NOTE: the thread with the greatest index terminates at the end of this test
+
+1. Thread thr-N Acquires all the mutexes on all levels
+2. Thread thr-1 tries to Acquire all the same mutexes and gets FAIL (TimeOutValue is not 0xFFFF)
+3. Thread thr-1 tries to Acquire all the same mutexes and hang (TimeOutValue is 0xFFFF)
+4. Thread thr-N terminates
+5. Thread thr-1 owns all those mutexes
+6. Thread thr-1 Releases all mutexes
+
+# ========================= #
+# ===  TEST 016 (mf16)  === #
+# ========================= #
+
+THR-NUMBER: 2 or greater; only 2 work effectively other sleep
+
+1. Thread thr-N
+   - invokes Serialized method MXXX
+   - waits for another thread (thr-1) trying to invoke same method MXXX
+   - falls into sleep (several times)
+   - awakes
+   - check that thr-1 continue hanging trying to get into MXXX
+   - exit MXXX
+2. Check that thr-1 succeeds getting into MXXX
+
+
+# ========================= #
+# ===  TEST 017 (mf17)  === #
+# ========================= #
+
+Modification of test 016.
+
+Similar to test 016 but instead of Serialized method a
+mutex is used for exclisive access to critical section.
+
+
+# ========================= #
+# ===  TEST 018 (mf18)  === #
+# ========================= #
+
+Modification of test 016.
+
+Similar to test 016 check for non-serialized method.
+
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+
+
+
+
+
+========================================= XXXXX:
+acquire mutex on a global level but don't release it -
+check that it is released automatically ???
+(code in initialization of global variables)
+
+
+
+
+
+
+========================================= XXXXX:
+Simulate interconnection between Firmware and OS.
+
+========================================= XXXXX,serialized-method:
+check serialized method (immediately, and
+calls to other methods inside the serialized method)
+
+1) access to  different type data inside serialized method
+========================================= XXXXX, serialized-method:
+try to Acq/Rel mutex of inappropriate level LL from method MT0 of synclevel NN.
+- immediately from that method
+- from invoking more the intermittent methods
+  enclosed statically or only dynamically in that method
+========================================= XXXXX:
+check blocked: check that when one thread fall to sleep
+another can own that mutex ?????????????
+========================================= XXXXX:
+> Fixed a regression where an error was no longer emitted if a control method attempts
+> to create 2 objects of the same name. This once again returns AE_ALREADY_EXISTS.
+> When this exception occurs, it invokes the mechanism that will dynamically serialize the
+> control method to possibly prevent future errors. (BZ 440)
+Test:
+1. thr-1 - come into test and creates the internal object
+2. thr-2 - come in starts creating that same object and gets exception
+3. thr-3 - it should be blocked because method is serialized at step 2
+========================================= XXXXX:
+multi-threading and Switch
+multi-threading and While
+etc..
+========================================= XXXXX:
+Now the mutex tests (in Sinchronization and mt-tests)
+do Acquire/Release mutexes of monotone increasing/decreasing
+levels (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 and inversely).
+Do tests where these levels jump over levels:
+(0, 2, 4, 6, 8,9,10, 12, 14,15 and inversely).
+
+Will it check 'acquisition depth' below?
+
+ACPI_STATUS
+AcpiDsBeginMethodExecution (
+    ACPI_NAMESPACE_NODE     *MethodNode,
+    ACPI_OPERAND_OBJECT     *ObjDesc,
+    ACPI_WALK_STATE         *WalkState)
+{
+        /* Always increase acquisition depth */
+
+        ObjDesc->Method.Mutex->Mutex.AcquisitionDepth++;
+}
+========================================= XXXXX:
+
+
+
+
+======================== work for 2,3,4,5,and more threads:
++ mf01
++ mf02
++ mf03
++ mf04
++ mf05
++ mf06
++ mf07
++ mf08
++ mf09
++ mf10
++ mf11
++ mf12
++ mf13
+======================== work for 2 and more threads:
++ mf01
++ mf02
++ mf03
++ mf04
++ mf05
++ mf06
++ mf07
++ mf08 (4 and greater) run time == 0x10
++ mf09 (4 and greater) run time == 0x60
++ mf10 (4 and greater) run time == 0x60
++ mf11
++ mf12
++ mf13
+========================
++ mf01
++ mf02
++ mf03
++ mf04
++ mf05
++ mf06
++ mf07
++ mf08 (4 and greater) run time == 0x10
++ mf09 (4 and greater) run time == 0x60
++ mf10 (4 and greater) run time == 0x60
++ mf11
++ mf12
++ mf13
+========================
+
+
+
+
+

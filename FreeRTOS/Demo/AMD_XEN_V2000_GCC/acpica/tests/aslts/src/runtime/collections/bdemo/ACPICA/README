@@ -1,0 +1,59 @@
+CONTENTS
+
+   The tests to demonstrate the encountered bugs of ACPICA and
+   prove their actual fixes. Pass of the test means the relevant
+   bug has been fixed. All the useful additional tests designed
+   during the work on bug fixes and related to those bug's nearest
+   conditions could be accumulated here as well.
+
+N      - internal number of bug
+
+N_ASL  - demo test for iASL type bug,
+         no .aml result code is expected or produced,
+         nothing to verify in run-mode.
+         Should be checked separately by running iASl
+         and checking the result of compilation.
+
+N_SPEC - bug of specification
+
+N_ML   - demo test for Memory leak type bug,
+         usually contains the program allowing to compare
+         (to visually observe) the rate of execution before
+         and after fixing the bug
+
+N      - independing on the actual component producing bug #N there
+         is an .aml result code of compilation of test which performs
+         some operations and verifies their results, so should be run.
+         PASS result of run means the bug #N has been fixed.
+
+ASL_RUNTIME
+
+       - when bug of iASL has been fixed add this test to bdemo/bdemo
+         to run it too
+
+ACTION_REQUIRED
+
+       - could not be run automatically,
+         to check this bug-fix some actions are required
+
+DEMO_IMPOSSIBLE
+
+       - impossible to verify bug-fix, so no demo test provided
+
+bdemo
+
+   to compile all the bdemo tests as one DefinitionBlock
+
+bdemof
+
+   to compile all the bdemof tests as one DefinitionBlock
+
+   The tests require utilyzing of the -f option on the ASL
+   compilation stage.
+
+   ASL Compiler:
+
+      -f  -  Ignore errors, force creation of AML output file(s)
+
+
+

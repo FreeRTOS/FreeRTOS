@@ -1,0 +1,9 @@
+
+CONTENTS
+
+   tests of multi-threading functionality (mt-tests)
+
+
+mutex
+
+   the tests of mutexes

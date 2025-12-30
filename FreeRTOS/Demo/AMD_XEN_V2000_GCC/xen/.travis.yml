@@ -1,0 +1,25 @@
+language: c
+dist: trusty
+sudo: required
+# don't test stable branches
+branches:
+    except:
+        - /^stable-.*/
+matrix:
+    include:
+        - compiler: gcc
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - libc6-dev-i386
+            - gcc-5
+            - g++-5
+# we must set CXX manually instead of using 'language: cpp' due to
+# travis-ci/travis-ci#3871
+before_script:
+    - export CXX=${CC/cc/++}
+    - export CXX=${CXX/clang/clang++}
+script:
+    - ./scripts/travis-build

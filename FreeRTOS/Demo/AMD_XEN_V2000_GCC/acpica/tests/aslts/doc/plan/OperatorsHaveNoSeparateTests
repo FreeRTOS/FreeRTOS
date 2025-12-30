@@ -1,0 +1,129 @@
+Friday, April 22, 2005 6:17 PM
+(some stuff can be obsolete)
+==============================
+
+
+   Below are enumerated all the ASL operators
+   (32) which for now have no separate tests.
+
+
+
+   1. Intensively applied in other tests and thus
+      might be considered being already verified.
+
+      Do simple separate test for each of these
+      operators which will be the places where,
+      in the future, the additional sub-tests for
+      these operators, if any, could be located.
+
+ArgX
+LocalX
+Name
+Buffer
+String
+Store
+CopyObject
+
+   2. Indirectly verified
+
+Include
+
+   3. There is no usual way to verify them.
+
+      The tests might be either omitted or could be done
+      basing on the extension of the "memory consumption
+      instrumentation" supplying the ASL tests with the
+      required internal information.
+
+Fatal
+Notify
+
+   4. Can't be verified in our test suite
+
+Load
+Unload
+External
+LoadTable
+BreakPoint
+DefinitionBlock  (each test is represented as this kind block)
+DataTableRegion
+
+   5. It is not worthy of to be definitely verified.
+
+      Do simplest test, check only that execution
+      of this operator doesn't produce exception.
+
+      17.5.83 NoOp Description: This operation has no effect.
+
+      To verify the sentence like the above definitely is too
+      complicated thing - if you have proved it for N conditions
+      it nevertheless can fail in (N+1)-th condition. The relevant
+      test should involve all the possible functionality of the
+      interpreter inserting everywhere this NoOp and verifying
+      everything each time.
+      Apparently, it is not worth the trouble.
+      It is a simple operator and it can be and should be
+      implemented with the care once.
+
+NoOp
+
+   6. Can in principle be ever in the future verified
+      (applying auxiliary script)
+
+      (see e-mail RE:Planning ACPICA validation 19.11.2004,
+       303_test_for_debug attachment for more details)
+
+Debug
+
+   7. Do the simple test, but not comprehensive
+
+      The comprehensive verification of this operator
+      could be conceived based on the following principle
+      - do replacement of all (or most of them, or at least
+      globally declared of them) the objects applied in the
+      test suite by the Aliases to them. This could be done
+      basing on the conditional #if ASL compilation which is
+      not provided now by iASL, and require the separate
+      compilation and run of the test suite.
+
+      Such the comprehensive test would actually show that
+      "AliasObject acts exactly the same as SourceObject"
+      (as far as the test suite actually provides coverage).
+
+      But we have at least one reason for the simple test,
+      but not comprehensive - there is no #if ASL ability,
+      and the second issue is either the verification of
+      this operator is worthy of the considerable and full
+      of work restructurization of the test suite.
+
+      We propose to do the simple test which use only
+      ObjectType (and SizeOf) for verification of each
+      type of SourceObject. One more checking will be
+      the overwritings with the different type object:
+
+          CopyObject(XXX, AliasObject)  --> check SourceObject
+          CopyObject(XXX, SourceObject) --> check AliasObject
+
+      This operator doesn't add functionality, it is only for
+      convenience (but since provided it should be verified).
+
+Alias
+
+   8. Require the new tests designing and implementing
+
+Return
+Method
+Function
+
+Field
+BankField
+IndexField
+OperationRegion
+
+Scope
+Device
+Processor
+ThermalZone
+PowerResource
+
+

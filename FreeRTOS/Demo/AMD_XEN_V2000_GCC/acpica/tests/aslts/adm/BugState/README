@@ -1,0 +1,12 @@
+FILES:
+
+These files are for using in bdemostabs utility as arg3,arg4,arg5.
+See comment to bdemostabs utility in aslts/bin/HOW_TO_USE.
+
+  ALLBUGS             - arg3 - manually prepared description of all bugs,
+                               the features of current state of bugs which
+                               could not be obtained automatically.
+                               NOTE: it should be kept up to date regularly
+
+  BugList_AML_KB_SUM0 - arg4 - kernel bugzilla Bug List file
+  BugList_AML_LB_SUM0 - arg5 - local bugzilla Bug List file

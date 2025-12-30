@@ -1,0 +1,130 @@
+
+CONTENTS
+
+   ACPICA ASL grammar validation Test Suite (ASLTS)
+
+
+   ASLTS verifies, in "hardware-independent" mode, conformity of ACPICA
+ASL compiler and interpreter to the ACPI ASL grammar specification. The
+more common task of ASLTS is to check, in "hardware-independent" mode also,
+all the functionality of ACPICA which can be initiated and then verified
+from inside the test modules coded in ASL. The first local task is performed
+by the test collection named 'functional', to achieve the second one the tests
+of other collections are intended: complex, exceptions, etc. The conditional
+difference between the tests of 'functional' and 'complex' collections is that
+the tests of 'functional' collection checks specific functionality of the
+particular ASL operator while the tests of 'complex' collection verify the
+more common functionality.
+
+   The testing is performed in "hardware-independent" mode without any
+access to ACPI subsystem hardware. In this purpose the AcpiExec utility
+is used which includes the entire ACPICA subsystem and allows to execute
+the AML code and thus verify functionality of ACPICA subsystem.
+
+   The ASL source code is compiled to AML code and then passed to
+AcpiExec utility. In this relation one more type tests are provided,
+so called ASL-compilation control test collection, which check ability
+of ASL compiler to reveal and report incorrect ASL code.
+
+   The tests of the exceptional conditions test collection
+initiate and verify exceptional conditions, check that the
+exceptions occur (or not occur) in the expected specified way.
+
+   The testing is provided in both 32-bit and 64-bit modes
+(option -r of ASL compiler) as well both normal and slack
+modes (option -s of AcpiExec).
+
+
+tmp
+
+   directory is automatically created (if doesn't exist) while installing
+   or running the tests performed by the utility Do
+
+tmp/aml
+
+   directory is automatically created (if doesn't exist) while installing
+   the tests performed by the utility Do and contains 32-bit and 64-bit
+   AML codes of the tests
+
+tmp/RESULTS
+
+   directory is automatically created during the test execution
+   (if doesn't exist) initiated by the Do utility and contains results
+   (so called multi-results) of runs of tests - utility Do performs each
+   run of tests is several modes:
+       32-bit norm mode
+       64-bit norm mode
+       32-bit slack mode
+       32-bit slack mode
+   so the result of run of tests is called multi-result. It is located
+   into RESULTS/<date.time.revision> directory.
+
+bin
+
+   utilities to manager the tests
+
+src
+
+   source code of tests
+
+TESTS
+
+   per-collection list of run-time tests
+
+HOW_TO_INSTALL
+
+   actions needed to prepare the tests for running
+
+HOW_TO_USE
+
+   how to run the tests and explain the result of run
+
+Makefile.def
+
+   the common use targets and rules
+
+Makefile.switch
+
+   the uniform targets and rules to pass commands of make utility
+   to the specified enclosed directories
+
+Makefile
+
+   current directory targets and rules
+
+
+         THE UNIFORM STRUCTURE OF ASLTS SOURCE CODE
+
+The ASLTS source code contains files of the same name
+which are of the same functionality described below.
+
+DECL.asl
+
+   contains all the declarations corresponding to some test
+
+RUN.asl
+
+   contains all the invocations corresponding to some test
+
+MAIN.asl
+
+   contains declaration of DefinitionBlock corresponding to some test;
+   the DefinitionBlock contains method MAIN which is a starting method
+   of the test; as a rule, this file contains the relevant DECL.asl and
+   RUN.asl includes
+
+README
+
+   the brief description of the contents of the inclusive directory
+   (hierarchy of README files explaining the contents of directories)
+
+FULL
+
+   contains declaration of DefinitionBlock corresponding to some test
+   which is conglomeration of several other tests
+
+NOTE
+
+   any notes to not forget something to do etc.
+
+- end

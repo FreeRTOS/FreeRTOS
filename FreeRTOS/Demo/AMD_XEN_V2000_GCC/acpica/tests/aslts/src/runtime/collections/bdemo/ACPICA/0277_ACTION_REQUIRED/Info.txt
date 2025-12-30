@@ -1,0 +1,62 @@
+SUMMARY: Crash of AML interpreter under the specific conditions (see 7466)
+
+See bug -- 7466 (weird battery charge level reported) and its DSDT.
+Evaluation of its \_SB.BAT0._BST method in multi-threading mode results in failure.
+
+
+>-----Original Message-----
+>From: Lebedev, Vladimir P
+>Sent: Monday, December 25, 2006 3:42 PM
+>To: Starikovskiy, Alexey Y
+>Subject: RE: [Bug 7466] weird battery charge level reported - ACPI Error method parse / execution failed
+
+CPU:    0
+EIP:    0060:[<c0207bfb>]    Not tainted VLI
+EFLAGS: 00010282   (2.6.19-gentoo-r2 #1)
+EIP is at acpi_ex_store+0x138/0x245
+eax: 00000000   ebx: dee12c7c   ecx: 00000000   edx: 00000000
+esi: 00000000   edi: 00000000   ebp: dc90a2a4   esp: dd139d74
+ds: 007b   es: 007b   ss: 0068
+Process cat (pid: 5916, ti=dd138000 task=de114070 task.ti=dd138000)
+Stack: c0212461 deba5c00 deba5c00 00000080 c0212cf6 dee12c7c 00000000 deba5d80 
+       deba5d80 deba5c00 c020758b 00000014 00000000 00000003 00000002 deba5c00 
+       00880000 00000088 deba5d80 00000004 00000000 dee12c7c deba5c00 00000000 
+Call Trace:
+ [<c0212461>] acpi_ut_update_object_reference+0xbc/0x123
+ [<c0212cf6>] acpi_ut_create_internal_object_dbg+0x15/0x67
+ [<c020758b>] acpi_ex_opcode_2A_1T_1R+0x374/0x3a0
+ [<c01fdba9>] acpi_ds_exec_end_op+0xc2/0x3d1
+ [<c020c05e>] acpi_ps_get_next_simple_arg+0xe3/0xed
+ [<c020d1ed>] acpi_ps_append_arg+0x16/0x75
+ [<c020ce81>] acpi_ps_parse_loop+0x5bd/0x8d8
+ [<c020c4c6>] acpi_ps_parse_aml+0x60/0x205
+ [<c01ffc30>] acpi_ds_init_aml_walk+0xb4/0xfe
+ [<c020d5ce>] acpi_ps_execute_pass+0x7d/0x90
+ [<c020d6d9>] acpi_ps_execute_method+0xc8/0x157
+ [<c020aa95>] acpi_ns_evaluate+0x9d/0xfc
+ [<c020a6fe>] acpi_evaluate_object+0x120/0x1ca
+ [<c0154573>] seq_open+0x4d/0x63
+ [<c0214e18>] acpi_battery_get_info+0x6e/0x180
+ [<c0142a57>] cp_new_stat64+0xfc/0x10e
+ [<c0215473>] acpi_battery_read_info+0x3b/0x253
+ [<c0154783>] seq_read+0xe7/0x274
+ [<c0143078>] sys_fstat64+0x1e/0x23
+ [<c015469c>] seq_read+0x0/0x274
+ [<c0140c02>] vfs_read+0xa6/0x157
+ [<c0140f87>] sys_read+0x41/0x67
+ [<c0102ae1>] sysenter_past_esp+0x56/0x79
+ =======================
+
+
+ 
+From: Podrezov, Valery A 
+Sent: Monday, December 25, 2006 7:14 PM
+To: Lebedev, Vladimir P; Starikovskiy, Alexey Y; Suietov, Fiodor F
+Subject: RE: [Bug 7466] weird battery charge level reported - ACPI Error method parse / execution failed
+
+It is ours.
+I submitted bug into our local Bugzilla (you are not registered in it):
+Bug 501, Crash of AML interpreter under the specific conditions (see 7466)
+
+Thanks
+ Valery

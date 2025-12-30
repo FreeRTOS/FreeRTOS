@@ -1,0 +1,145 @@
+/*
+    env-vc6.lnt: environment parameters for Microsoft's Visual C++ 6.x
+
+    If you are using the Microsoft Developer Studio and you wish to invoke
+    PC-lint from that environment then add one or more commands to the
+    Tools menu as follows.
+
+    Unit Checkout
+    -------------
+
+    For example, to add a unit check-out facility to the tools menu do
+    the following:
+
+    1.  From the Tools Menu choose "Customize ..."
+        The Customize ... Dialog Box appears
+    2.  Select the "Tools" tab
+    3.  In the  "Menu Contents" box, cursor down to the bottom where
+        you see an open rectangle.  Click on this line which will enable
+        you to enter in a label that will identify the tool.
+        Type "PC-lint (unit check)" or equivalent and hit Enter.
+    4.  You will now be able to edit the fields of this Tool.
+        Modify them so that they approximate the following:
+
+	Command:        C:\LINT\LINT-NT.EXE
+    Arguments:      -i"C:\LINT" -u std.lnt env-vc6.lnt "$(FileName)$(FileExt)"
+	Init. Directory $(FileDir)
+
+	X_Use Output Window __Prompt for arguments __Close window on exit
+
+    5.  Select Close to return to the main environment.
+
+    This will result in the Tools menu containing the additional item
+    "PC-lint (unit check)".  Checking 'X' on 'Use Output Window' is
+    important because in this way you can advance from error to error
+    using the F4 key (Shift F4 to reverse) or, less handily, using the
+    "Next Error" ("Prev Error") entries in the "Search" menu.
+
+    You probably want to advance your new tool upward into the initial
+    position of all tools while you are testing and modifying the command.
+    You can do this by using the stylized up-arrow button that appears
+    on the Tools dialog.
+
+    Note that by providing an "Initial Directory" and a local
+    "$(FileName)S(FileExt)" the containing directory can have a std.lnt that
+    overrides the global std.lnt.  Also file-names in messages are not so long.
+
+    HOWEVER, you may need to use $(FilePath) in place of $(FileName)$(FileExt)
+    if the files are in a directory other that FileDir.  If they are then
+    use of $(FileName) will render Visual Studio incapable of locating
+    the files when bouncing from message to message.
+
+    *Caution* -- You MUST have parentheses with $(Filename)$(FileExt) and
+    $(FileDir) or you will receive an incomprehensible diagnostic.
+    Historically, you did not always need parentheses with VC++, so people have
+    made this mistake.
+
+    Project Check
+    -------------
+
+    You will probably want to create a second item on the Tools menu
+    called "PC-lint (project check)".  For this tool follow the steps
+    1-5 doing exactly the same thing as above except in step 4, the
+    information entered should be:
+
+	Command:            C:\LINT\LINT-NT.EXE
+    Arguments           -i"C:\LINT" std.lnt env-vc6.lnt project.lnt
+	Initial Directory   $(FileDir)
+
+    This will require that the file that you are currently editing reside
+    in a directory that contains a file called 'project.lnt'. This file
+    you will create and maintain yourself; it is a list of the names of
+    the modules (all files except headers) in your project.
+    Such a list can usually be prepared with the help of the DIR command.
+    For example, the following batch command will produce a list of all
+    the .CPP files within a directory:
+
+    DIR /b *.cpp >project.lnt
+
+    If you are using full path names in your visual environment, in order
+    to use the F4 key to bounce to the next error you should give an option
+    to PC-lint to produce full file names.  The option you will need is:
+
+			    +ffn
+
+    If your project spans multiple directories or if multiple
+    projects fit within a single directory the above simple-minded project
+    linting scheme will not work.  Rather do the following.
+    In step 4 enter:
+
+	Command:            C:\LINT\LINT-NT.EXE
+    Arguments           +ffn -i"C:\LINT" std.lnt env-vc6.lnt $(WkspName).lnt
+    Initial Directory   $(WkspDir)
+
+    The WkspDir is only slightly misnamed.  It is actually the project
+    directory and contains a file called NAME.dsp where NAME is the project
+    name.  You will have to create a file NAME.lnt bearing the names of your
+    modules relative to the project directory.  The best way of capturing the
+    names is to use PC-lint itself.
+
+    C:\LINT\LINT-NT  NAME.dsp >NAME.lnt
+
+    where, again, NAME is the name of the project.
+
+	If you are working with a Workspace containing multiple Projects
+	use the following commands for converting .dsp's to .lnt's:
+
+	Command:            C:\LINT\LINT-NT.EXE
+	Arguments:          -v -os(project.lnt) $(WkspName).dsp
+	Initial Directory:  $(WkspDir)
+
+	You will need to set a project as the active project before you can convert
+	its .dsp to a .lnt.  To do so, select Project from the menu bar, then select
+	Set Active Project and choose a Project.  You then click the newly added
+	conversion tool on the tools menu and then lint the project.
+
+    Tool Bar
+    --------
+
+	You also have the option of creating a PC-lint toolbar for your Visual C++
+    IDE.  First create one or more tools as described above.  Then, look at
+    the Tools menu and make note of the icon(s) next to the menu item(s).
+    It's usually a subscripted hammer; remember the subscript(s).
+    Choose Customize from the Tools menu and select the Toolbars tab.
+    Select New... and provide Visual C++ with the toolbar name "PC-lint".
+    Confirm that the checkbox next to this name is selected.  Click the
+    Commands tab.  In the drop-down box labelled Category, choose Tools.
+    Drag the icon(s) corresponding to the PC-lint menu item(s) to your
+    toolbar.  Click Close and you now have your own PC-lint for C/C++ button.
+    (Note: If you change the location of the PC-lint menu item on the Tools
+    menu, you will change the subscript and you will need to change the
+    button(s) on the toolbar.)
+
+ */
+
+
+-"format=%(%F(%l):%) error %n: (%t -- %m)"     //  Messages will contain
+	//  file information (%F), the line number (%l), the
+	//  message number (%n), message type (%t) and message text (%m).
+
+-hF2    //  Make sure we ALWAYS provide file information ('F') and use 2
+	//  lines (line in error plus message).
+
+-width(0) //  don't break messages at any particular width
+-t4       //  Presume that tabs are every 4 stops
++e900     //  issue a message at termination.

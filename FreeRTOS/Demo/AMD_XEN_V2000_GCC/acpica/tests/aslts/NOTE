@@ -1,0 +1,152 @@
+Free layout.
+Any remarks (e.g. not to forget to do something).
+Some information can be obsolete.
+=================================
+
+
+|------------------------------------------------------------------------------|
+runtime/collections/complex/misc/misc.asl:
+don't forget to uncomment switch operator in method m100 after when the bug 73
+will be fixed.
+|------------------------------------------------------------------------------|
+clean up method m218 (crbuffield.asl) after that when errors 65,66,68,69
+(in 32-bit mode) will be investigated and resolved
+|------------------------------------------------------------------------------|
+do up to date COVERAGE files
+|------------------------------------------------------------------------------|
+the tests to check the return code of ASL compiler
+|------------------------------------------------------------------------------|
+additional option of acpiexec is required
+|------------------------------------------------------------------------------|
+1. investigate and report the errors of bfield test run in 32-bit mode:
+
+   "=========== ERRORS SUMMARY (max 255):"
+   "11001041, functional, bfield, crbuffield.asl, 00000041"
+   "11001042, functional, bfield, crbuffield.asl, 00000042"
+   "11001044, functional, bfield, crbuffield.asl, 00000044"
+   "11001045, functional, bfield, crbuffield.asl, 00000045"
+   "=========== END."
+   "TEST ACPICA: 32-bit : FAIL : Errors # 0x00000004"
+
+2. do test: 64-bit constant (I64), 32-bit run mode,
+   Store(I64, Buffer Field (64-bit; <64-bit ; >64-bit))
+   see bfield test, method m218.
+|------------------------------------------------------------------------------|
+aslts/src/runtime/collections/functional/descriptor/register.asl:
+Currently Register macro DescriptorName is not implemented.
+Uncomment fragment of code in Method RT19 when in will be implemented in ACPICA.
+|------------------------------------------------------------------------------|
+file bug on Timer operator again:
+test timing and this:
+[ACPI Debug] String: [0x21] "Run time (in seconds): 0x00000000"
+|------------------------------------------------------------------------------|
+replace "if (LEqual(F64, 1))" by "if (F64)"
+|------------------------------------------------------------------------------|
+see errors:
+"12002003, functional, constant, constants.asl, 00000003"
+"12002006, functional, constant, constants.asl, 00000006"
+|------------------------------------------------------------------------------|
+see summary list of tests run: grammar/TMP/pass/results
+|------------------------------------------------------------------------------|
+NOTE: to handle the opcode of ASLTS release
+|------------------------------------------------------------------------------|
+fix the test CST1 - "(\_REV, Revision"
+|------------------------------------------------------------------------------|
+write email: methods should be able to obtain and return UNINITIALIZED type data
+|------------------------------------------------------------------------------|
+Update the line of HOW_TO_USE file:
+   C. The layout of the particular error message.
+|------------------------------------------------------------------------------|
+!DONE:
+!To generate:
+!aml/32
+!aml/64
+!aml/notoptimized/32
+!aml/notoptimized/64
+|------------------------------------------------------------------------------|
+estimate the run time of each test (on the particular machine) and describe that
+in file TESTS
+|------------------------------------------------------------------------------|
+estimate the run time of full tests and the summary times of their parts
+|------------------------------------------------------------------------------|
+image of integer 0x1234567890abcfed in 32-bit mode would be converted to
+buffer. See this also in relation to bug 74 (?)
+|------------------------------------------------------------------------------|
+do test converting "big constant" 0x1234567890abcfed: Name(,Integer);
+Name(,Buffer); Buffer Field; LocalX; ArgX; ...
+|------------------------------------------------------------------------------|
+see: 2+2=5
+|------------------------------------------------------------------------------|
+Add the test from the demo of Bug 61 into exc.asl test when the relevant bug
+will be fixed. Now it is not safe for the common test run.
+|------------------------------------------------------------------------------|
+Do the test package2.asl or remove the file.
+|------------------------------------------------------------------------------|
+See aslts/reference.asl test, particularly all concerned to Method and
+if those problems were not resolved by reporting Error of compilation
+do the relevant RUNTIME tests! As well for Buffer Fields and Field Units.
+|------------------------------------------------------------------------------|
+Many files contain SEE items at their tops.
+See them and fix what they require!
+|------------------------------------------------------------------------------|
+Don't forget to uncomment ASL code relevant to bugs: y000,y0..., see runmode.asl
+|------------------------------------------------------------------------------|
+UPDATE exc.m084: Implement this test for all the types of objects
+                 (see for example ref.asl files about objects) and
+                 all the types of operators.
+name space, object life time issues
+|------------------------------------------------------------------------------|
+Update the tests in case the change of "Table 17-8 Object Conversion Rules"
+will take place.
+|------------------------------------------------------------------------------|
+1. bdemo/DECL.asl,
+	bdemo/RUN.asl
+
+   Bug demo 144 excluded until the bug 182 is fixed
+
+2. name/DECL.asl,
+	name/RUN.asl
+
+   method.asl and function.asl files excluded until the bug 182 is fixed
+
+3. bdemo of 161 excluded again!!!!!!!!!!!!!!!!!!
+   see test bdemo, concerning bug 161:
+   Note: restore the initial form of the CreateField-s below of bug 161.
+
+   DONE!
+
+4. set yXXX after the relevant bug fixing!
+
+5. change all R0?? to W0??
+
+6. see bdemo 118
+
+7. test Reference: RUN.asl
+   // Uncomment when the most bugs are fixed!
+8.
+Method(m21c, 4)
+	While(lpN0) {
+
+		// Operands
+
+		Multiply(lpC0, 4, Local6)
+                           ^ ????
+		Multiply(lpC0, 6, Local6)
+|------------------------------------------------------------------------------|
+bdemostabs -
+# Extend the PATH variable
+x=`echo "$PATH" | awk -F: '{ for (i=1; i<=NF; i++) { print $i}}' | grep "aslts/bin"`
+BUG_STATE_DIR="$x/bugstate"
+PATH=$PATH:$BUG_STATE_DIR
+
+this works incorrectly when the origin PATH has several "aslts/bin".
+
+|------------------------------------------------------------------------------|
+Statistics (of memory consumption, time of execution, etc.) reported at the end
+of each test and summarized by Do (asltsrun) utility should be further
+generalized and adapted for needs to show improving/regression of memory
+consumption, time execution, etc. to serve the improvement of ACPICA purposes.
+|------------------------------------------------------------------------------|
+|------------------------------------------------------------------------------|
+|------------------------------------------------------------------------------|
+|------------------------------------------------------------------------------|

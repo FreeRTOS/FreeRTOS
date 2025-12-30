@@ -1,0 +1,247 @@
+
+How to execute the run-time tests
+---------------------------------
+
+
+1. Install the tests (see HOW_TO_INSTALL).
+
+
+2. To configure the required/desired set of test cases and the modes of
+   the execution runs, manually edit the settings file:
+
+        aslts/bin/settings
+
+   If necessary, tune the test suite to your current needs by setting the
+   variables SETN and run4. These variables control the test suite options
+   and are contained in this file:
+
+        aslts/src/runtime/cntl/runmode.asl
+
+3. Use the Do utility to run the specified set of tests in all specified
+   modes of execution runs. It supports the automated logging of the results
+   of test runs and allows results to be compared. See comments for the Do
+   utility within the Do script file (aslts/bin/Do).
+
+   a) Set the following environment variables:
+
+        ASL - path to iASL compiler: (example)
+
+            > export ASL="c:/acpica/libraries/iasl.exe"
+
+        acpiexec - path to acpiexec utility: (example)
+
+            > export acpiexec="c:/acpica/libraries/acpiexec.exe"
+
+        acpibin - path to acpibin utility: (example)
+
+            > export acpibin="c:/acpica/libraries/acpibin.exe"
+
+        ASLTSDIR - path to the aslts directory: (example)
+
+            > export ASLTSDIR="c:/acpica/tests/aslts"
+
+   b) Add the following directory to the PATH variable:
+
+        aslts/bin
+
+   c) If necessary, convert all scripts in the aslts/bin directory to unix
+   line endings:
+
+        > d2u aslts/bin/*
+
+   d) Execute "Do" with one of the following commands:
+      (Use 'Do 1' to run all tests)
+
+     0 - Compile and install AML tests
+     1 - Execute all configured tests in all enabled modes
+     2 - Compare two multi-results of two runs of tests
+     3 - Print out the names of all the available test cases
+     4 - Calculate the current state of all bugs and report the summary
+         tables
+     5 - Prepare bdemo summary files of one multi-results directory for all
+         modes
+     6 - Concatenate bdemo summary files of two multi-results
+
+
+4. If desired, any individual AML test can be generated from within its
+   directory by running the iASL compiler on the MAIN.asl file for that test.
+   For example:
+
+        > iASL MAIN.asl
+
+
+5. If desired, any individual AML test can be executed from the aslts/tmp/aml
+   directory by invoking the AcpiExec utility with the name of the AML test
+   and the batch execute option. For example:
+
+        > cd aslts/tmp/aml
+        > acpiexec -b "Execute MAIN" 20090320/nopt/32/arithmetic.aml
+
+
+6. When all tests are executed in batch mode (Do 1), the individual test
+   results are placed in the following directory structure:
+
+    aslts/tmp/RESULTS/
+        <date.time.acpica_version>/
+           norm/                      // normal interpreter mode, no slack
+               32/                    // 32-bit table execution
+               64/                    // 64-bit table execution
+           slack/                     // interpreter slack mode enabled
+               32/                    // 32-bit table execution
+               64/                    // 64-bit table execution
+           summary                    // test execution summary
+
+
+7. After completion, each AML test reports its status as one of the following:
+
+        [PASS|FAIL|BLOCKED|SKIPPED]
+
+   PASS    - Success, no errors encountered in the functionality of the
+             product.
+   FAIL    - The test encountered errors - improper functionality of the
+             product.
+   BLOCKED - The test was blocked (was not run). This option is used for the
+             tests which are temporarily causing abort or hang of execution
+             due to the errors the product.
+   SKIPPED - The test was skipped (was not run). This option is used in case
+             where the result of the test is undefined under the particular
+             conditions.
+
+
+8. How to evaluate the results of the run-time tests.
+
+   A. Successful run.
+
+   After the run is completed, the following summary lines are displayed
+   by ASLTS:
+
+   a) "Run time (in seconds): 0x0000000000000031"
+   b) "The total number of exceptions handled: 0x0000000000000005"
+   c) "TEST ACPICA: 64-bit : PASS"
+
+   Line (a) shows the run time in seconds measured by the ASL Timer operator.
+
+   Line (b) reports the number of exceptions which took place during the test
+   execution.
+
+   Line (c) reports the mode of the run and the summary status:
+       Mode is either 32-bit or 64-bit
+       Status is one of [PASS|FAIL|BLOCKED|SKIPPED]
+
+
+   B. Failed run.
+
+   a) "Run time (in seconds): 0x0000000000000031"
+   b) "The total number of exceptions handled: 0x0000000000000005"
+   c) "TEST ACPICA: 64-bit : FAIL : Errors # 0x0000000000000009"
+
+      The number of errors (9 here) is reported as
+      Errors # 0x0000000000000009".
+
+   C. Example error message:
+
+      "---------- ERROR : 0x000000001903301A, 0x0000000000033017, m503"
+      "TITLE            : Miscellaneous named object creation"
+      "COLLECTION       : functional"
+      "TEST CASE        : name"
+      "TEST             : PCG0"
+      "ERROR,    file   : package.asl"
+      "          index  : 000000000000001A"
+      "CHECKING, file   : package.asl"
+      "          method : m123"
+      "          index  : 0000000000000017"
+      "(r):"
+                          0x0000000000000025
+      "(e):"
+                          0x0000000000000027
+      "---------- END."
+
+   Explanations:
+
+      0x000000001903301A,
+      0x0000000000033017 - two 32-bit words of error opcode
+                           (see "The layout of error opcode" below)
+
+      m503 - This is usually the name of the executing control method (which
+             in turn is usually a conglomeration of subtests) or some brief
+             diagnostic message explanation/designation/naming of the error.
+
+      "TITLE            : The common intention of the test
+      "COLLECTION       : Functional/complex/exceptions/..
+      "TEST CASE        : The name of test case (bfield, arithmetic, opackageel, ...)
+      "TEST             : The name of test (simplest unit reported by diagnostics
+                          and supplied with the satatus line)
+      "ERROR,    file   : The name of file where the error reporting
+                          function (err()) was invoked
+      "          index  : Index of error inside that file where err() was invoked
+                          (each invocation of err() differs with its index)
+      "CHECKING, file   : The name of the file where the checking was initiated
+      "          method : The name of method initiated the checking
+      "          index  : Index of the checking inside the file "CHECKING, file"
+
+      (r): - usually, the following value is a received one
+      (e): - usually, the following value is an expected one
+
+
+   D. The errors (currently 200 max) are summarized as follows at the end of
+      the test output. Example of test "Reference":
+
+      "========= ERRORS SUMMARY (max 200):"
+      "reference, ref50.asl,      0000000000000003, ref50.asl, 0000000000000000, m22c"
+      "reference, datastproc.asl, 000000000000000F, ref50.asl, 0000000000000001, m22c"
+      "reference, ref50.asl,      0000000000000007, ref50.asl, 0000000000000000, m234"
+      "reference, ref50.asl,      0000000000000007, ref50.asl, 0000000000000000, m234"
+      "reference, datastproc.asl, 0000000000000001, ref50.asl, 0000000000000013, m365"
+      "reference, datastproc.asl, 0000000000000001, ref50.asl, 0000000000000015, m365"
+      "reference, datastproc.asl, 0000000000000001, ref50.asl, 0000000000000017, m365"
+      "========= END."
+
+   Explanations:
+
+      "reference, datastproc.asl, 0000000000000001, ref50.asl, 0000000000000017, m365"
+
+      reference        - The name of the test case
+      datastproc.asl   - The name of the file where the error was revealed
+                         and reported by invoking err(..,index,..)
+      0000000000000001 - Index of error inside that (datastproc.asl) file
+      ref50.asl        - The name of file where the checking was initiated
+      0000000000000017 - Index of that checking inside that (ref50.asl) file
+      m365             - Diagnostic message (usually, the name of the method
+                         containing the conglomeration of tests)
+
+      For more information, see the file aslts/TESTS.
+
+
+9. The layout of the error opcode (three 32-bit words)
+
+   0xctfffeee
+   0xmmzzzuuu
+   0xnnnnnnnn
+
+   c - Index of tests collection
+   t - Index of test inside the collection
+   f - Absolute index of the file reporting the error
+   e - Index of error (inside the file)
+   z - Absolute index of the file initiating the checking
+   u - Index of checking
+   n - Name of Method initiating the checking
+   m - Miscellaneous:
+       1) in case of TCLD tests there is an index of bug stored (max 600)
+
+
+How to use ASL-compilation control test collection
+==================================================
+
+The tests for the ASL Compiler to check its ability to detect, report and
+reject wrong ASL code are contained in this directory:
+
+   aslts/src/compilation/collection
+
+At present, no utility is provided to perform automated run and verification
+of these tests.
+
+The tests contain ASL code with compile errors such that no output AML files
+are expected. Expected are Warning and Error messages to be reported by ASL
+Compiler for the incorrect ASL code. When implemented, the utility should
+parse the output of the ASL Compiler for these files to verify the presence
+of the expected messages.

@@ -50,7 +50,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern TCB_t * volatile pxCurrentTCB;
 extern List_t pxReadyTasksLists[ configMAX_PRIORITIES ];
@@ -119,6 +118,7 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 #define taskWAITING_NOTIFICATION        ( ( uint8_t ) 1 )
 #define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
 #define TCB_ARRAY                       10 /* simulate up to 10 tasks: add more if needed */
+#define taskEVENT_LIST_ITEM_VALUE_IN_USE    ( ( uint32_t ) 0x80000000U )
 
 /**
  * @brief CException code for when a configASSERT should be intercepted.
@@ -1503,7 +1503,7 @@ void test_vTaskPrioritySet_success_gt_max_prio( void )
     ptcb = ( TCB_t * ) taskHandle;
 
     /* expectations */
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 3 ],
                                              &( ptcb->xStateListItem ),
                                              pdTRUE );
@@ -1528,7 +1528,7 @@ void test_vTaskPrioritySet_success_call_current_null( void )
     ptcb = ( TCB_t * ) taskHandle;
 
     /* expectations */
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 3 ],
                                              &( ptcb->xStateListItem ),
                                              pdTRUE );
@@ -1638,7 +1638,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio_diff_base( void )
     ptcb = ( TCB_t * ) taskHandle;
     TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, taskHandle2 );
     /* task handle will inherit the priorit of taskHandle2 */
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 3 ],
                                              &( taskHandle->xStateListItem ),
                                              pdFALSE );
@@ -1677,7 +1677,7 @@ void test_vTaskPrioritySet_success_lt_curr_prio_diff_base( void )
     ptcb = ( TCB_t * ) taskHandle;
     TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, taskHandle2 );
     /* task handle will inherit the priorit of taskHandle2 */
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 3 ],
                                              &( taskHandle->xStateListItem ),
                                              pdFALSE );
@@ -3884,7 +3884,7 @@ void test_vTaskPlaceOnUnorderedEventList( void )
     uxSchedulerSuspended = pdTRUE;
 
     /* Expectations */
-    listSET_LIST_ITEM_VALUE_Expect( &ptcb->xEventListItem, 32 | 0x80000000UL );
+    listSET_LIST_ITEM_VALUE_Expect( &ptcb->xEventListItem, 32 | taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listINSERT_END_Expect( &eventList, &ptcb->xEventListItem );
     /* prvAddCurrentTaskToDelayedList */
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
@@ -4031,7 +4031,7 @@ void test_vTaskRemoveFromUnorderedEventList( void )
     ptcb = task_handle;
 
     /* Expectations */
-    listSET_LIST_ITEM_VALUE_Expect( &list_item, xItemValue | 0x80000000UL );
+    listSET_LIST_ITEM_VALUE_Expect( &list_item, xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, tcb );
     listREMOVE_ITEM_Expect( &list_item );
     /* prvResetNextTaskUnblockTime */
@@ -4069,7 +4069,7 @@ void test_vTaskRemoveFromUnorderedEventList_yielding( void )
     TEST_ASSERT_EQUAL( task_handle2, pxCurrentTCB );
 
     /* Expectations */
-    listSET_LIST_ITEM_VALUE_Expect( &list_item, xItemValue | 0x80000000UL );
+    listSET_LIST_ITEM_VALUE_Expect( &list_item, xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listGET_LIST_ITEM_OWNER_ExpectAndReturn( &list_item, tcb );
     /*uxListRemove_ExpectAndReturn( &list_item, pdTRUE ); */
     listREMOVE_ITEM_Expect( &( list_item ) );
@@ -4815,7 +4815,7 @@ void test_vTaskPriorityDisinheritAfterTimeout_success()
     TaskHandle_t mutex_holder;
     UBaseType_t inheritedPriority = 5U;
     /* Tasks at priority 1-3 are ready */
-    UBaseType_t lowPriorityTasksReady = 0xEU;
+    UBaseType_t lowPriorityTasksReady = ( UBaseType_t ) ( ( 1 << 1 ) | ( 1 << 2 ) | ( 1 << 3 ) );
 
     /* Setup */
     create_task_priority = 4;
@@ -4825,7 +4825,7 @@ void test_vTaskPriorityDisinheritAfterTimeout_success()
     /* Now mark task priority 5 as ready */
     uxTopReadyPriority = ( UBaseType_t ) ( ( 1 << inheritedPriority ) | lowPriorityTasksReady );
     /* Expectations */
-    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ inheritedPriority ],
                                              &mutex_holder->xStateListItem,
                                              pdTRUE );
@@ -4848,7 +4848,7 @@ void test_vTaskPriorityDisinheritAfterTimeout_success2()
     TaskHandle_t mutex_holder;
     UBaseType_t inheritedPriority = 6U;
     /* Task at priority 5 is ready */
-    UBaseType_t priorityFiveTaskReady = 0x20U;
+    UBaseType_t priorityFiveTaskReady = ( UBaseType_t ) ( 1 << 5 );
 
     /* Setup */
     create_task_priority = 4;
@@ -4858,7 +4858,7 @@ void test_vTaskPriorityDisinheritAfterTimeout_success2()
     /* Now mark task priority 6 as ready */
     uxTopReadyPriority = ( UBaseType_t ) ( ( 1 << inheritedPriority ) | priorityFiveTaskReady );
     /* Expectations */
-    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ inheritedPriority ],
                                              &mutex_holder->xStateListItem,
                                              pdTRUE );
@@ -4902,7 +4902,7 @@ void test_vTaskPriorityDisinheritAfterTimeout_success4()
     mutex_holder = create_task();
     mutex_holder->uxMutexesHeld = 1;
     /* Expectations */
-    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, 0x80000000UL );
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &mutex_holder->xEventListItem, taskEVENT_LIST_ITEM_VALUE_IN_USE );
     listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ mutex_holder->uxPriority ],
                                              &mutex_holder->xStateListItem,
                                              pdFALSE );

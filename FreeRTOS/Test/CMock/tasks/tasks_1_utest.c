@@ -114,16 +114,16 @@ extern volatile UBaseType_t uxSchedulerSuspended;
         ( list_item2 ).pxContainer = &( list );                          \
     } while( 0 )
 
-#define taskNOT_WAITING_NOTIFICATION    ( ( uint8_t ) 0 )
-#define taskWAITING_NOTIFICATION        ( ( uint8_t ) 1 )
-#define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
-#define TCB_ARRAY                       10 /* simulate up to 10 tasks: add more if needed */
+#define taskNOT_WAITING_NOTIFICATION        ( ( uint8_t ) 0 )
+#define taskWAITING_NOTIFICATION            ( ( uint8_t ) 1 )
+#define taskNOTIFICATION_RECEIVED           ( ( uint8_t ) 2 )
+#define TCB_ARRAY                           10 /* simulate up to 10 tasks: add more if needed */
 #define taskEVENT_LIST_ITEM_VALUE_IN_USE    ( ( uint32_t ) 0x80000000U )
 
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                  0xAA101
+#define configASSERT_E                      0xAA101
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;

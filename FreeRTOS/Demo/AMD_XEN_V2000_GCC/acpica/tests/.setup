@@ -1,0 +1,4 @@
+export ASL="/usr/bin/iasl"
+export acpiexec="/usr/bin/acpiexec"
+export ASLTSDIR="$HOME/acpica/tests/aslts"
+PATH=$PATH:$HOME/acpica/tests/aslts/bin

@@ -1,0 +1,385 @@
+ALLBUGS| Dont remove this line, it is used in the automatic processing of the table!
+|
+| This is a STATE-MANUALLY table.
+|
+|IID COMP    LBZID  KBZID  STATE-MANUALLY     PR    SUMMARY
+|=================================================|
+  0| I     |      |      |                  |     | Logical operators return True equal to One but not Ones
+  1| C     | 419  |      |                  | 100 | The ASL Compiler doesn't allow non-constant TimeoutValue for Acquire
+  2| I     |      |      |                  |     | The elseif operator works incorrectly
+  3| C     | 420  |      |                  | 100 | The ASL Compiler should reject Switch operators with the identical Case operators in it
+  4| I     |      |      |                  |     | Concatenate being invoked in Method M000 changes the type of LocalX of calling Method passed as operand to M000
+  5| I     |      |      |                  |     | Switch operator doesn't provide Default branch
+  6| I     |      |      |                  |     | ToInteger converts a decimal string the same way as a hexadecimal one
+  7| I     |      |      |                  |     | ToString updates the LocalX value (if it is zero) passed as Length parameter
+  8| I     |      |      |                  |     | The type returned by ObjectType for Object created by Field operator is not Field
+  9| I     |      |      |                  |     | Exception on ObjectType passed with not initialized values (in LocalX)
+ 10| I     |      |      |                  |     | ToBuffer transforms operand (in local variable) to reference
+ 11| C     |      |      | FIXED            |     | The ASL Compiler crashes on Create*Field for invalid FieldName parameter
+ 12| I     |      | 5360 | INTEGRATED       |     | DerefOf doesn't evaluate String to Object
+ 13| I     |      |      |                  |     | The type returned by ObjectType for Object created by Create*Field operator is not BufferField
+ 14| I,S   | 421  |      |                  | 100 | Implementation differs the specified Maximal value of MicroSeconds
+ 15| I     |      |      |                  |     | ToDecimalString produces the Strings which have the length greater than expected
+ 16| I     |      |      | REJECTED         |     | Concatenate operator produces the resulting String exceeding 200 symbols without generating exception
+ 17| I     |      |      |                  |     | LEqual works incorrectly for Buffer-operands containing zero
+ 18| I     |      |      |                  |     | LGreater works incorrectly for Buffer-operands containing zero
+ 19| I     |      |      |                  |     | LGreaterEqual works incorrectly for Buffer-operands containing zero
+ 20| I     |      |      |                  |     | LLess works incorrectly for Buffer-operands containing zero
+ 21| I     |      |      |                  |     | LLessEqual works incorrectly for Buffer-operands containing zero
+ 22| I     |      |      |                  |     | LNotEqual works incorrectly for Buffer-operands containing zero
+ 23| I     | 435  |      |                  | 100 | FromBCD/ToBCD works incorrectly in 64-bit mode starting with the large enough values
+ 24| C     |      |      | FIXED            |     | The EISAID doesn't provides input control of "uppercase letter" part (UUU) of EisaIdString
+ 25| S     |      |      | REJECTED         |     | The maximal length exceeding exception should be additionally specified for some operators
+ 26| C     |      |      | REJECTED         |     | The ASL Compiler doesn't forbid images of Strings exceeding maximum
+ 27| I     |      |      |                  |     | Crash of ObjectType for the particular BufferFields
+ 28| I     |      |      |                  |     | No exception on Create*Field for out of Buffer range
+ 29| M     |      |      |                  | 100 | Looks, like Sleep (or Wait) spend less time than specified
+ 30| I     |      |      |                  |     | Crash of ObjectType for the particular Fields
+ 31| C     | 422  |      |                  | 100 | The ASL Compiler doesn't try to detect and reject attempts to use object before its declaration is evaluated
+ 32| C     |      |      | FIXED            |     | The ASL Compiler should reject the same and out of range IRQ numbers (IRQ and IRQNoFlags macros)
+ 33| C     |      |      | FIXED            |     | The ASL-compiler doesn't refuse the same descriptor names present in the same scope (Method)
+ 34| I     |      |      |                  |     | Some data tables are corrupted when _BAS field of FixedIO Resource Descriptor Macro is specified
+ 35| C,S   |      |      | FIXED            |     | The DMA Resource Descriptor Macro (specification, compilation error, to strengthen the ASL Compiler input control)
+ 36| C     |      |      | FIXED            |     | The ASL compiler should reject the VendorShort Resource Descriptor Macro with the out of range bytes number
+ 37| S,C   | 424  |      |                  |     | The Memory24 Resource Descriptor Macro specification should be updated
+ 38| I     | 418  |      | INTEGRATED       |     | LGreater passed with Integer and String works incorrectly in 32-bit mode
+ 39| C     |      |      |                  |     | The ASL Compiler fails on specific expressions with ObjectType
+ 40| I     |      |      |                  |     | Crash on sync-objects reusing
+ 41| I     |      |      |                  |     | ToInteger transforms operand to reference when no conversion is required
+ 42| I     |      |      |                  |     | ToDecimalString transforms operand to reference when no conversion is required
+ 43| I     |      |      |                  |     | ToHexString transforms operand to reference when no conversion is required
+ 44| I     |      |      |                  |     | The ToUUID Macro loses the high hex-digit of each byte
+ 45| I     |      |      |                  |     | Exception on ToDecimalString for Buffer with 51 elements
+ 46| I     |      |      |                  |     | Exception on ToHexString for Buffer with 67 elements
+ 47| M     |      |      |                  | 100 | Timer operator doesn’t provide gradually increased values
+ 48| I     |      |      | REJECTED         |     | No exception on result of Concatenate longer than 210 bytes
+ 49| I     |      |      | REJECTED         |     | No exception on result of ToDecimalString longer than 210 bytes
+ 50| I     |      |      | REJECTED         |     | No exception on result of ToHexString longer than 210 bytes
+ 51| S,C,I | 371  |      |                  |     | Register() macro missing parameter
+ 52| I     |      |      |                  |     | The EdgeLevel offset of Interrupt macro (_HE) is specified as 25-th bit but actually it is implemented as 24-th bit
+ 53| C     |      |      | FIXED            |     | The ASL Compiler doesn't reject the out of range number of interrupts for Interrupt macro
+ 54| I     |      |      |                  |     | All ASL Operators causes exceptions on two immediately passed Buffers
+ 55| C     |      |      | FIXED            |     | The ASL Compiler should reject the same Interrupt numbers (Interrupt macros)
+ 56| C     | 423  |      |                  | 100 | The ASL Compiler generates a one element descriptor for Interrupt macro with the empty InterruptList
+ 57| I     |      |      |                  |     | The standalone Return is processed incorrectly
+ 58| I     | 417  |      | INTEGRATED       |     | Concatenate of two Integers may operates in 32-bit mode as in 64-bit mode
+ 59| I     |      |      |                  |     | String to Buffer conversion doesn't reduce the size of resulting Buffer
+ 60| I     |      |      |                  |     | "Outstanding allocations" on processing the Type Conversion
+ 61| I     |      |      |                  |     | Crash on Store the OperationRegion result returned by Method
+ 62| C     | 436  |      | INTEGRATED       |     | Crash of the iASL Compiler when ASL-code contains a long String declaration
+ 63| I     |      | 5329 | INTEGRATED       |     | String to Integer conversion contradicts new April 2005 Conversion Rules
+ 64| I     |      |      |                  |     | Specific operations should initiate AE_BAD_HEX_CONSTANT exceptions
+ 65| I     |      |      | REJECTED         |     | BufferField type object should be passed to Methods without any conversion (to Buffer or Integer)
+ 66| I     |      |      | REJECTED         |     | FieldUnit type object should be passed to Methods without any conversion (to Buffer or Integer)
+ 67| I     |      |      | REJECTED         |     | BufferField type object should be returned by Methods without any conversion (to Buffer or Integer)
+ 68| I     |      |      | REJECTED         |     | FieldUnit type object should be returned by Methods without any conversion (to Buffer or Integer)
+ 69| I     |      |      |                  |     | Exception on storing the result of Mid operation
+ 70| C     | 425  |      | REJECTED         |     | The ASL Compiler should reject Resource Descriptors where ResourceSourceIndex is present but ResourceSource is omitted
+ 71| C     |      |      | FIXED            |     | The ASL Compiler should reject Resource Descriptors where ResourceSourceIndex is omitted but ResourceSource is present
+ 72| C     |      |      | FIXED            |     | The ASL Compiler program returns improper status after compiling invalid ASL code
+ 73| C     |      |      | FIXED            |     | The ASL Compiler fails and reports a large number of "Recursive method call" remarks
+ 74| I     |      |      |                  |     | Ones is not equal to 0xFFFFFFFF in 32-bit mode
+ 75| C     |      |      |                  |     | Each scope of DefinitionBlock should be supplied with its set of _T_x objects
+ 76| I     |      |      |                  |     | Unexpected dereference of Index reference in Store operator
+ 77| I     |      |      |                  |     | Exception on ToInteger operator under specific conditions
+ 78| I     |      |      |                  |     | Specific expression Derefof(Refof(i000)) causes deletion of object (i000)
+ 79| I     |      |      |                  |     | Specific expression with ToBuffer causes exception
+ 80| C,S   | 416  |      |                  | 100 | The ASL compiler should report Error when the name of Method (but not invocation of it) is specified in expressions
+ 81| C,I,S | 415  |      |                  | 100 | Call to Method immediately passed to ObjectType is evaluated improperly
+ 82| S     | 414  |      |                  | 100 | The Data Type Conversion Rules table should be updated
+ 83| I     |      | 5387 | INTEGRATED       |     | No exception on DerefOf of an arbitrary Source
+ 84| I     |      | 5361 | INTEGRATED       |     | Failed to interpret AML code alternated with Method declarations
+ 85| I     |      |      |                  |     | Exception on DeRefOf operator applied to IRef to Uninitialized element of Package
+ 86| I     |      |      |                  |     | ToString operator produces one "Outstanding allocation"
+ 87| I     |      |      |                  |     | Exception on Switch operator applied to the result of ToBuffer operator
+ 88| S     |      |      | REJECTED         |     | Spec of Match operator should be changed (conversion/null package entries)
+ 89| S     |      |      |                  | 100 | Clarifying what does the ASL Method as an element of Package mean
+ 90| S     | 412  |      |                  | 100 | Spec of Match operator should be changed (conversion/null package entries)
+ 91| S     | 411  |      |                  | 100 | The result of String-to-Buffer conversion should include the string null terminator
+ 92| I     |      |      |                  |     | Invalid result of Index operator passed with the immediate image of Package
+ 93| I     |      |      |                  |     | Invalid result of Index operator passed with the immediate image of Buffer
+ 94| I     |      |      |                  |     | Invalid result of Index operator passed with the immediate image of String
+ 95| I     |      |      |                  |     | Big amount of invocations of Methods causes overlap of OwnerId counter
+ 96| C     | 410  |      |                  | 100 | The ASL Compiler fails to recognize specific Uninitialized LocalX
+ 97| I     |      |      |                  |     | Crash on ObjectType passed with IRef to Method which is an element of Package
+ 98| I     |      |      |                  |     | Crash on a specific AML code
+ 99| I     |      |      |                  |     | The specific sequence of operations dealing with IRef/ORef corrupts the source object
+100| I     |      |      |                  |     | The specific combination of operators aborts execution
+101| C     |      |      |                  |     | The ASL compiler fails to create RefOf reference to Method not returning explicitly any object
+102| I     |      |      |                  |     | The specific combination of operators produces one "Outstanding allocation"
+103| I     |      |      |                  |     | The Method type element of Package is being invoked
+104| I     |      |      |                  |     | The ObjectType operator being passed with the IRef to the Uninitialized element of Package causes crash
+105| I     |      |      |                  |     | The ObjectType operator being passed with the IRef obtained by the specific way causes crash
+106| I     |      | 5388 |                  | 100 | Crash on RefOf(Debug) operation
+107| C     |      |      |                  |     | The ASL Compiler crashes when tries to convert data that can not be converted
+108| C     |      |      | FIXED            |     | The ASL Compiler crashes when the result of ToBCD exceeds the current range of Integer
+109| C     |      |      | FIXED            |     | The ASL Compiler crashes on FromBCD being passed with the invalid data (hex image containing not only decimal digits)
+110| I ML  |      |      | FIXED            |     | The Memory Leak anomaly on a While operator (the first anomaly encountered by PMEMCV instrumentation)
+111| I     |      |      |                  |     | No String to Integer and Buffer to Integer conversions of the Predicate Value in If, ElseIf and While operators
+112| C     |      |      |                  |     | The ASL compiler refuses passing the Named Objects and String constants as a MicroSecs operand of the Stall operator
+113| I     |      | 5389 |                  | 100 | Unexpected dereference of Index reference immediately passed to Method
+114| C     | 407  |      |                  | 100 | Method object as a Source of Index operation is treated by iASL mistakenly as a call to that Method
+115| I     |      | 5390 |                  | 100 | Unexpected dereference of Index reference returned by Method and immediately passed to another Method
+116| C     |      |      | FIXED            |     | The ASL Compiler doesn't recognize attempts to generate IRefs to arbitrary type objects
+117| I     |      |      |                  |     | Modifying the copy of the String obtained by the Store operator modifies the initial String Object also
+118| I     |      | 5328 |                  | 100 | Access to FieldObject element of Package causes exception
+119| I     | 413  |      | INTEGRATED       |     | The Logical operators in 32-bit mode act with 64-bit values
+120| I     |      | 5370 | INTEGRATED       |     | Unexpected exception on Store of Device and ThermalZone elements of Package to Debug operation
+121| I     | 406  |      |                  | 100 | Crash on attempt to deal with the invalid BufferFields (zero NumBits passed to CreateField)
+122| C     | 405  |      | FIXED INTEGRATED |     | The ASL Compiler doesn't report Error/Warning for zero NumBits parameter of CreateField operator
+123| I     | 404  |      | INTEGRATED       |     | No exception when StartIndex in Match operator is equal to or greater than the size of SourcePackage
+124| I     | 403  |      | INTEGRATED       |     | No exception when the Index argument on Index() operator is out of the Source
+125| I     |      |      |                  |     | The Mid operator in 64-bit mode returns non-empty result for improper Index
+126| I     |      | 5372 |                  | 100 | The Read access automatic dereference for RefOf reference doesn't work
+127| I     |      | 5391 |                  | 100 | Unexpectedly CopyObject of immediately passed Index reference is not reference
+128| I     |      | 5392 | INTEGRATED       |     | Copying the RefOf reference to Named object spoils that reference
+129| I,C,S |      |      |                  |     | Creating Package of an arbitrary length, Package & VarPackage
+130| I     |      |      |                  |     | Reference to String works differently to like the references to Buffer and Package work
+131| I     |      | 5394 |                  | 100 | Store to the Index reference immediately returned by Method doesn't work
+132| I     |      | 5373 |                  | 100 | The Read access automatic dereference for Index reference doesn't work
+133| I     |      | 5374 |                  | 100 | The Write access automatic dereference for Index reference doesn't work
+134| I     |      | 5375 |                  | 100 | Writing RefOf reference from inside Method breaks effectively local Arg
+135| I     |      | 5358 |                  |     | Store of Index reference to another element of the same Package causes hang
+136| I     |      |      |                  |     | CopyObject of named Buffer to the longer named Buffer works incorrectly
+137| I     |      |      |                  |     | The Implicit Result Object conversion is mistakenly applied to the optional storing of FromBCD
+138| I     |      |      |                  |     | 8 bytes but not 4 expected ones are written to BufferField in 32-bit mode
+139| I     |      |      |                  |     | DeRefof and Store operations on 64-bit Integers of 32-bit AML table has been loaded modify them
+140| C     |      |      | FIXED            |     | The ASL Compiler doesn't report NumElements being less than the number of elements in the PackageList
+141| S     | 402  |      |                  | 100 | The term 'object reference' in DMA Resource Descriptor Macro specs sounds ambiguously
+142| C     | 401  |      |                  | 100 | The ASL Compiler doesn't support non-empty list of parameters of Function Declaration
+143| C     |      |      |                  |     | The ASL Compiler doesn't support more than two-element long list of ParameterTypes argument of Method
+144| C     |      |      |                  |     | The ASL Compiler doesn't support multiple type list for particular ParameterType of Method
+145| C     |      |      | FIXED            |     | The ASL Compiler should report an error for SyncLevel argument of Method outside of range
+146| C     |      |      |                  |     | The ASL compiler refuses Package in Case operator
+147| S     | 400  |      |                  |     | ProcessorObj Object Type Keyword is not present in ObjectTypeKeyword
+148| C     | 399  |      |                  | 100 | Additional errors to be reported by iASL for Control Method Declaration
+149| S     | 398  |      |                  | 100 | Spec of Function should be clarified
+150| I     |      | 5334 | INTEGRATED       |     | No exception when Serialized Method is run after the higher level mutex acquiring
+151| I     |      |      |                  |     | The zero-length resulting String of Mid operator passed to Concatenate operator causes crash
+152| C     | 394  |      |                  | 100 | Decrease severity of iASL error for non-Computational types in the Computational data positions
+153| I     |      | 5314 |                  |   1 | Source and Target objects after ACPI AML StoreOp behave identically
+154| I     |      |      |                  |     | Exception occurs on attempt to rewrite Device type object passed by ArgX to Method
+155| I     |      |      |                  |     | Global level AML code execution is performed twice
+156| I ML  |      | 5422 | FIXED INTEGRATED |     | Memory leak till the Method exit for each execution of If(TRUE)-Else/ElseIf
+157| C     | 397  |      |                  | 100 | Exception while processing the empty ParameterTypes list of Method
+158| I ML  |      | 5423 | FIXED INTEGRATED |     | Memory leak till the Method exit for each execution of Break
+159| I ML  |      | 5424 | FIXED INTEGRATED |     | Memory leak till the Method exit for each execution of Continue
+160| I     |      |      |                  |     | Attempt to declare Field inside the If scope causes exception
+161| I     |      | 5359 | INTEGRATED       |     | Named object passed as a BitIndex or NumBits to CreateField causes hang
+162| I     |      | 5326 | INTEGRATED       |     | Crash while processing the global level execution exception
+163| I ML  |      | 5425 |                  | 100 | The copy of Device object to LocalX is not ever released
+164| I     |      |      | FIXED            |     | Subtest m22d of Reference test started causing exceptions since 20050526
+165| I ML  |      | 5426 | FIXED INTEGRATED |     | Unnecessary memory allocation for CreateField should be eliminated
+166| I ML  |      | 5427 | INTEGRATED       |     | Releasing memory of the inside Method scopes surrounding Return operation is needed
+167| I     |      |      |                  |     | Manipulation test PASS but started reporting suspicious diagnostic
+168| C,I   |      |      | FIXED            |     | Wrong specific Package obtained for not optimized AML code
+169| I     | 395  |      | INTEGRATED       |     | Improper work of ShiftLeft and ShiftRight operators on Linux in a specific case
+170| I     |      |      | REJECTED         |     | <identical to bug 191> -- see if to rewrite it for Fields but not for BufferFields
+171| I     | 396  |      | INTEGRATED       |     | Improper Integer to String implicit conversion in a specific case
+172| I     |      |      | FIXED            |     | Outstanding allocations to be investigated
+173| I     |      | 5336 | FIXED INTEGRATED |     | Two the same fragments of code should be compacted to one
+174| I     |      |      |                  |     | Inappropriate constant in DescriptorType field of the Descriptor->Address64 structure
+175| I     |      | 5369 | INTEGRATED       |     | Unexpected exception on Store of ThermalZone to Debug operation
+176| I     |      | 5466 |                  | 100 | Store-to-Debug an element of Package having reference to itself results in an infinite loop
+177| I     |      | 5480 | INTEGRATED       |     | Exception BUFFER_LIMIT occurs instead of STRING_LIMIT one
+178| I     | 393  |      |                  | 100 | Unexpected exception occurs on access to the Fields specified by BankField
+179| I     |      |      |                  |     | ConcatenateResTemplate operation falls into an endless loop
+180| C     |      |      |                  |     | Failed to compiler Switch/Case operators
+181| C     |      |      |                  |     | Failed to compiler specific Method
+182| I     |      |      |                  |     | Exception on a specific declarations of objects of the same name
+183| C     |      |      |                  |     | Stack OverFlow of ASL compiler on processing the specific recursive method call
+184| I     |      |      |                  |     | Nesting Methods cause exceptions
+185| I     | 392  |      |                  | 100 | In a slack mode Method should implicitly return zero (0) as a default value
+186| I     | 391  |      |                  | 100 | The predicate value of If/While operations is not implicitly returned in slack mode
+187| I     | 389  |      |                  | 100 | No exception in non-slack mode on attempt to obtain value from Method terminated by the standalone Return
+188| I     | 390  |      | INTEGRATED       |     | ConcatenateResTemplate doesn't consume an empty buffer
+189| I     |      |      |                  |     | The 1-byte buffer passed to ConcatenateResTemplate doesn't cause a run-time error
+190| I     |      |      |                  |     | In ConcatenateResTemplate an operand ending only with the first byte of the end tag doesn't cause a run-time error
+191| I,S   | 388  |      |                  | 100 | CopyObject to Buffer Field specification/implementation should be clarified/fixed
+192| I     | 387  |      |                  | 100 | Incorrect value of Bank register after storing to its banked field
+193| I     | 354  |      |                  | 100 | storing opt. results of Not/NAnd/NOr into Buffer Field in 32-bit mode can soil the higher bits of BF
+194| I     | 386  |      |                  | 100 | Incorrect length of result of ToBuffer in case it is stored into a Named Buffer
+195| I     | 353  |      |                  | 100 | Increment and Decrement of String or Buffer changes the type of operand
+196| I     |      |      |                  |     | Incorrect conversion of String to Integer for ToInteger("0x0x12345678")
+197| I     |      |      |                  |     | No exception occurs for incorrect String-image of Integer passed to ToInteger like "0x 1234"
+198| I     |      | 6028 | INTEGRATED       |     | AML interpretation in 32-bit slack mode becomes unstable after some exceptions
+199| I     |      |      |                  |     | No exception on DerefOf for parameter which is none of ObjectReference/IndexReference/String
+200| I     | 352  |      |                  | 100 | the code path taken after exception in AcpiPsParseLoop is incorrect
+201| I     | 385  |      |                  | 100 | Many Outstanding allocations on ASLTS tests run
+202| I     |      | 6151 | FIXED INTEGRATED |     | The ASLTS test b129 falls into an infinitive loop in a 32-bit slack mode
+203| I     | 348  |      |                  | 100 | ObjectType operation falls into infinite loop for ring of RefOf references
+204| I     | 347  |      |                  | 100 | SizeOf operation falls into infinite loop for ring of RefOf references
+205| I     | 346  |      |                  | 100 | Store-to-Debug operation falls into infinite loop for ring of RefOf references
+206| I     | 345  |      |                  | 100 | ObjectType operation falls into infinite loop for ring of Index references
+207| I     | 344  |      |                  | 100 | SizeOf operation falls into infinite loop for ring of Index references
+208| I     | 343  |      |                  | 100 | Store-to-Debug operation falls into infinite loop for ring of Index references
+209| I     |      | 6220 | REJECTED         |     | Ineffective memory consumption detected by b135 ASLTS tests
+210| I     | 349  |      |                  | 100 | Implicit return objects are not released in Slack Mode
+211| I     |      | 6514 | INTEGRATED       |     | ACPI-CA memory leak due to optionally stored AML Object passed through "child" Method
+212| I     |      | 6389 |                  | 100 | AML interpreter doesn't prevent dead RefOf-references
+213| I     | 342  |      |                  | 100 | abort of AcpiExec on accessing internal object of terminated method by returned IRef
+214| I     | 350  |      |                  | 100 | crash of AcpiExec on repeated CopyObject of OpRegion
+215| I     | 351  |      |                  | 100 | exception on accessing IndexField with IndexName Region Field exceeding 32 bits
+216| I     | 341  |      |                  | 100 | exception AE_NOT_FOUND on CreateField under specific conditions
+217| I     | 409  |      |                  | 100 | Dynamic OpRegion _REG method execution problem
+218| I     | 408  |      |                  | 100 | Access to internal object of Method is lost after returning from the recursive call to that Method
+219| I     | 426  |      |                  | 100 | The result of Interrupt Resource Template macro is incorrect when ResourceSource is omitted
+220| I     | 427  |      |                  | 100 | Inconsistent "Access is available/unavailable" _REG method calls
+221| I     | 428  |      |                  | 100 | AcpiExec improper emulates alternating access to OpRegions covering different ranges
+222| I     | 429  |      |                  | 100 | Alternating access to OpRegions of different Address Spaces issue
+223| I     | 430  |      |                  | 100 | DataTableRegion with the non-constant *String arguments unexpectedly causes an exception or crash
+224| I     | 431  |      |                  | 100 | AcpiExec is unable to emulate access to IndexField Object
+225| C     | 432  |      | FIXED INTEGRATED |     | Crash of the ASL compiler for large Offset or Length in Field Unit list
+226| I     | 433  |      | INTEGRATED       |     | Excessive data is written to the Data field if it is wider than Access Width of the IndexField
+227| C     |      |      | FIXED            |     | The ASL Compiler fails on ASL file which ends up with the symbol of comment '/' without the following '\n'
+228| I     |      | 5395 |                  | 100 | Store to the RefOf reference immediately returned by Method doesn't work
+229| I     | 434  |      |                  | 100 | Clarify what is the proper behaviour in case of the zero length buffer
+230| C     | 437  |      |                  | 100 | ReturnType argument of Method declaration is not supported
+231| C     | 438  |      |                  | 100 | ParameterTypes argument of Method declaration is not supported
+232| I     | 440  |      |                  | 100 | No exception on the repeated declaration
+233| C     | 441  |      |                  | 100 | An invalid non-ASCII letter in declaration passed to ASL Compiler by Include operator causes hang of it
+234| M     | 448  |      |                  | 100 | The UNIX OSL synchronization interfaces should be developed to support testing
+235| M     |      |      |                  | 100 | Acpiexec hangs on absent global lock on Linux, but does not hang on Windows
+236| C     | 453  |      |                  | 100 | The ASL Compiler hangs on incorrect ElseIf
+237| C     | 454  |      |                  | 100 | The ASL Compiler fails to recognize specific Uninitialized LocalX (for Switch)
+238| I,S   | 455  |      |                  | 100 | The jumping over levels in releasing mutexes is not prohibited
+239| I     | 456  |      |                  | 100 | Crash in a slack-multi-threading mode when returning from the method experienced exception
+240| I     | 467  |      |                  | 100 | No exception when not owner thread runs Release of Global lock
+241| I     | 458  |      |                  | 100 | Crash of AML interpreter after an exception in AcpiExReadDataFromField called from AcpiExResolveObjectToValue
+242| I     | 471  |      |                  | 100 | Releasing the mutex the first Acquired on the non-zero level makes Releasing the residuary mutexes of that level impossible
+243| I     | 470  |      |                  | 100 | The normal work with mutexes is broken after the mutex Release order violation
+244| I     | 472  |      |                  | 100 | Acquire/Release in a global level AML code don't work
+245| S     | 459  |      |                  | 100 | Switch statement translation example in ACPI Spec is contradictory
+246| C     | 460  |      |                  | 100 | Switch implementation can cause AE_ALREADY_EXISTS exception when Switch is within While
+247| C     | 461  |      |                  | 100 | ASL compiler incorrectly implements Break within Switch 
+248| I     |      |      |                  | 100 | Incorrect ReferenceCount on Switch operation
+249| I     |      |      |                  | 100 | Strengthen the type control for AcpiExResolveOperands
+250| I     |      |      |                  | 100 | The ReferenceCount mechanism should be added with the internal control
+251| I,C,S | 469  |      |                  | 100 | AE_ALREADY_EXISTS on multi-threading on Switch operator
+252| C     | 468  |      |                  | 100 | ASL compiler crashes on incorrect expression with Switch
+253| M     | 465  |      |                  | 100 | Option -b of AcpiExec should be generalized to run any command of ACPICA debugger in a Batch mode
+254| M     | 466  |      |                  | 100 | Adjust the Threads command of AcpiExec to the actual need of mt-testing
+255| I     | 473  |      |                  | 100 | The multi-threading test mt_mutex/mf07 fails/crashes/hangs on 20060828
+256| I     |      |      |                  | 100 | Removing the useless code increases essentially the rate of interpretation
+257| I     | 480  |      |                  | 100 | Unexpected AE_AML_OPERAND_TYPE when the Object in Load is a Region Field
+258| I     | 481  |      |                  | 100 | Load operator should fail if its Object parameter being a Region is not in SystemMemory
+259| I     | 482  |      |                  | 100 | _REG method execution during Load operator processing issue
+260| I     | 484  |      |                  | 100 | For a DDBHandle Object ObjectType unexpectedly results in AE_AML_INTERNAL
+261| I     | 486  |      |                  | 100 | Crash when DDBHandle parameter of Load is an Indexed Reference
+262| I     | 487  | 7873 | INTEGRATED       |     | Unexpected AE_STACK_OVERFLOW for a method call expression with nested calls
+263| I     | 499  | 7871 | INTEGRATED       |     | The sequence of evaluating operands of expression with the named objects is violated
+264| I     |      |      |                  | 100 | Crash on re-writing named element of Package
+265| I     |      |      |                  | 100 | The second run to method calculating the IRef-to-String expression is evaluated incorrectly
+266| I     |      | 7874 | FIXED INTEGRATED |     | Code of ACPICA which handles AML_NAME_OP as ObjDesc->Reference.Opcode is unused
+267| M     |      |      |                  | 100 | Add the BatchMode with the AcpiTerminate
+268| I     |      |      |                  | 100 | The manner parameters are passed to method in ACPICA contradicts to MS
+269| I     |      |      |                  | 100 | The sequence of evaluating Named object operands passed to method is violated
+270| S     |      |      |                  | 100 | ACPI control method calling convention and MS interpreter don't fit each other
+271| I     |      |      |                  | 100 | CopyObject of Device works incorrectly
+272| I     |      |      |                  | 100 | CopyObject of ThermalZone works incorrectly
+273| I     | 498  |      |                  | 100 | Implementation of LoadTable operator should take into account its RootPathString parameter
+274| I     |      |      |                  | 100 | Named object as element of Package is handled by ACPICA differently than by MS
+275| I     | 500  | 7872 | INTEGRATED       |     | Pop result from bottom principle doesn't work
+276| I     |      |      |                  | 100 | 'Large Reference Count' on AML code with LoadTable/UnLoad in a slack mode
+277| I     | 501  |      |                  | 100 | Crash of AML interpreter under the specific conditions (see 7466)
+278| I     | 508  |      |                  | 100 | Namespace location to be relative" functionality of Load operator issue
+279| C     | 509  |      |                  | 100 | iASL unexpected behavior for the same multiple External
+280| C     | 516  |      |                  | 100 | iASL can unexpectedly emit the "not accessible" error for Source parameter of CondRefof
+281| I     | 576  |      |                  | 100 | Normal strings as the LoadTable parameters can cause the matching table to be not found 
+282| I     | 577  |      |                  | 100 | Crash when the Buffer Object parameter of Load is used after an exception in it 
+283| I     | 578  |      |                  | 100 | When the Object parameter of Load is a Field the checksum of the supplied SSDT should be verified
+284| I     | 579  |      |                  | 100 | An exception should be emitted on Load if the Length field of SSDT exceeds length of its source
+285| I     | 580  |      |                  | 100 | AE_AML_OPERAND_TYPE unexpectedly occurs when the Handle parameter of Unload is a Method call
+286| I     | 581  |      |                  | 100 | After an exception the elements of the Package passed to Unload are unexpectedly deleted
+287| I     | 582  |      |                  | 100 | If any string to match a proper field on LoadTable exceeds field's length an exception should be emitted
+288| C     | 583  |      |                  | 100 | iASL unexpectedly forbids ParameterData of Loadtable to be LocalX or UserTerm
+289| I     | 584  |      |                  | 100 | Search of the table matched Loadtable parameters should be restricted to XSDT
+290| I     | 586  |      |                  | 100 | AcpiExec is unable to emulate Load from OpRegion
+291| C     | 587  |      |                  | 100 | iASL inconsistence on compilation of LoadTable with/without the -oa option
+292| I     | 588  |      |                  | 100 | Different second and third UnLoad execution with the same argument behavior
+293| I     | 585  |      |                  | 100 | Incorrect zero-length Buffer to String conversion 
+294| I     | 589  |      |                  | 100 | _ERR method can not be evaluated when AE_OWNER_ID_LIMIT is emitted
+295| C     | 590  |      |                  | 100 | iASL reports the improper "operator has no effect" warning for LoadTable 
+296| I     | 591  |      |                  | 100 | AE_AML_INTERNAL unexpectedly occurs when the Loadtable ParameterData and its Target differ in the types
+297| I     |      |      |                  | 100 | After AE_LIMIT the further work of ACPICA mutex framework looks unstable
+298| I     |      |      | FIXED INTEGRATED |     | AcpiExOpcode_XA_XT_XR routines assign addresses of released cache objects to WalkState->ResultObj causing further problems
+299| I     |      |      |                  | 100 | Many outstanding allocations on abnormal termination of AcpiDsCallControlMethod
+300| I     |      |      |                  | 100 | Recursive calls to methods with the internal declarations (and Switches) should be provided
+301| I     |      |      |                  | 100 | Recursive calls to methods with the internal declarations (and Switches) causes AE_AML_INTERNAL and crash
+302| I     |      |      |                  | 100 | Scope operation doesn't work for the root node Location
+303| I     |      |      |                  | 100 | Name operation performed from inside the If operation doesn't work for the full-path ObjectName
+304| I     |      |      |                  | 100 | No exception AE_AML_METHOD_LIMIT for the number of method invocations exceeding 255
+305| I     |      |      |                  | 100 | Not owner recursive method call releases global object created by method
+306| I     |      |      |                  | 100 | Complex indirect storing to a LocalX violates the Writing to LocalX Rule
+|=================================================|
+|
+|
+| The symbol of comment is character '|' in the first position of line of file.
+| The column-separator symbol is '|'.
+|
+|
+| The contents of fields of the table:
+|
+| =========
+| COMP    - component the bug relates to:
+|             I    - AML Interpreter
+|             C    - iASL compiler
+|             M    - simulation purposes (OS Layer insertions for simulation purposes only)
+|             U    - utility
+|             S    - specs
+|               ML - memory leak (additional information but not component)
+| IID     - internal ID of bug
+| LBZID   - local bugzilla ID
+| KBZID   - kernel bugzilla ID
+| PR      - priority for fixing the bug. Should be non-empty for each not fixed
+|           bug and empty otherwise:
+|             1 - will be fixed in the first turn
+|             2 - will be fixed in the second turn..
+| SUMMARY - summary. Short description of bug.
+|
+| STATE-MANUALLY - the state of bug set up/confirmed (if needed) manually:
+|           FIXED      - bug is fixed. It is to be filled only when there is no
+|                        ability to create the relevant bdemo test which shows
+|                        the current state of the bug.
+|           REJECTED   - not a bug more. Each rejected bug should be confirmed
+|                        by this entry here.
+|           INTEGRATED - bug-fix is olready integrated. Each fixed bug should be
+|                        confirmed by this entry here that its patch/update is
+|                        integrated.
+| =========
+|
+|
+| COMMENTS:
+|
+| Floating point fix proposed: 29,47
+|
+| About how INTEGRATED was set up:
+|
+|   (did not check the code update, but only PASS of test): 58,119,169,171
+|
+| About how FIXED was set up:
+|
+|   checked out visually: 53
+|
+| About how REJECTED was set up:
+|
+|  88 -- duplicate of 90
+| 170 -- duplicate of 191
+|
+| Specs:
+|
+| 37,51,147:
+| the bugs are filed against specification, so the expected result
+| is fixing ACPI specification. It should be checked out manually
+| that the relevant part of specification is actually fixed/updated.
+| After that write manually INTEGRATED key in the STATE-MANUALLY
+| column of the relevant bug to confirm completion of bug. Some
+| these bugs against specs may nevertheless have the relevant bdemo
+| tests which make use just of the relevant functionality touched
+| by the part of specification. But nevertheless PASS of these
+| tests is not enough to set up INTEGRATED for these bugs of specs.
+
+
+
+
+

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{66BE33E1-849A-42AB-AE4B-2ABBC13CB432}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\AslCompiler\</OutDir>
+    <IntDir>.\AslCompiler\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\AslCompilerDebug\</OutDir>
+    <IntDir>.\AslCompilerDebug\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <StringPooling>true</StringPooling>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <AdditionalIncludeDirectories>..\..\source\include;..\..\source\compiler;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;__STDC__;YY_NEVER_INTERACTIVE;YY_NO_UNISTD_H;ACPI_ASL_COMPILER;ACPI_DISASSEMBLER;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\AslCompiler\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\AslCompiler\AslCompiler.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\AslCompiler\</ObjectFileName>
+      <ProgramDataBaseFileName>.\AslCompiler\</ProgramDataBaseFileName>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <CallingConvention>FastCall</CallingConvention>
+      <CompileAs>CompileAsC</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <BrowseInformation>true</BrowseInformation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>if NOT EXIST ..\..\libraries mkdir ..\..\libraries</Command>
+      <Message>Checking existence of acpica/libraries directory</Message>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy aslcompiler\aslcompiler.exe ..\..\libraries\iasl.exe</Command>
+      <Message>Copying iasl to libraries...</Message>
+    </PostBuildEvent>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\AslCompiler\AslCompiler.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\AslCompiler\AslCompiler.bsc</OutputFile>
+      <AdditionalOptions> /o"/acpica/generate/msvc2017/AslCompiler/AslCompiler.bsc" </AdditionalOptions>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\AslCompiler\AslCompiler.exe</OutputFile>
+      <AdditionalDependencies>setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>..\..\source\include;..\..\source\compiler;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_CONSOLE;__STDC__;YY_NEVER_INTERACTIVE;YY_NO_UNISTD_H;ACPI_ASL_COMPILER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\AslCompilerDebug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\AslCompilerDebug\AslCompiler.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\AslCompilerDebug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\AslCompilerDebug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CallingConvention>FastCall</CallingConvention>
+      <CompileAs>CompileAsC</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <PreLinkEvent>
+      <Command>if NOT EXIST ..\..\libraries mkdir ..\..\libraries</Command>
+      <Message>Checking existence of acpica/libraries directory</Message>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy aslcompilerdebug\aslcompiler.exe ..\..\libraries\iasl_dbg.exe</Command>
+      <Message>Copying iasl to libraries...</Message>
+    </PostBuildEvent>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\AslCompilerDebug\AslCompiler.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\AslCompilerDebug\AslCompiler.bsc</OutputFile>
+      <AdditionalOptions> /o"/acpica/generate/msvc2017/AslCompilerDebug/AslCompiler.bsc" </AdditionalOptions>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\AslCompilerDebug\AslCompiler.exe</OutputFile>
+      <AdditionalDependencies>setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions> /pdb:"/acpica/generate/msvc2017/AslCompilerDebug/AslCompiler.pdb"</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\common\acfileio.c" />
+    <ClCompile Include="..\..\source\common\adfile.c" />
+    <ClCompile Include="..\..\source\common\adisasm.c" />
+    <ClCompile Include="..\..\source\common\adwalk.c" />
+    <ClCompile Include="..\..\source\common\ahids.c" />
+    <ClCompile Include="..\..\source\common\ahpredef.c" />
+    <ClCompile Include="..\..\source\common\ahtable.c" />
+    <ClCompile Include="..\..\source\common\ahuuids.c" />
+    <ClCompile Include="..\..\source\common\cmfsize.c" />
+    <ClCompile Include="..\..\source\common\dmextern.c" />
+    <ClCompile Include="..\..\source\common\dmrestag.c" />
+    <ClCompile Include="..\..\source\common\dmswitch.c" />
+    <ClCompile Include="..\..\source\common\dmtable.c" />
+    <ClCompile Include="..\..\source\common\dmtables.c" />
+    <ClCompile Include="..\..\source\common\dmtbdump.c" />
+    <ClCompile Include="..\..\source\common\dmtbdump1.c" />
+    <ClCompile Include="..\..\source\common\dmtbdump2.c" />
+    <ClCompile Include="..\..\source\common\dmtbdump3.c" />
+    <ClCompile Include="..\..\source\common\dmtbinfo.c" />
+    <ClCompile Include="..\..\source\common\dmtbinfo1.c" />
+    <ClCompile Include="..\..\source\common\dmtbinfo2.c" />
+    <ClCompile Include="..\..\source\common\dmtbinfo3.c" />
+    <ClCompile Include="..\..\source\common\getopt.c" />
+    <ClCompile Include="..\..\source\compiler\aslallocate.c" />
+    <ClCompile Include="..\..\source\compiler\aslanalyze.c" />
+    <ClCompile Include="..\..\source\compiler\aslascii.c" />
+    <ClCompile Include="..\..\source\compiler\aslbtypes.c" />
+    <ClCompile Include="..\..\source\compiler\aslcache.c" />
+    <ClCompile Include="..\..\source\compiler\aslcodegen.c" />
+    <ClCompile Include="..\..\source\compiler\aslcompile.c" />
+    <ClCompile Include="..\..\source\compiler\asldebug.c" />
+    <ClCompile Include="..\..\source\compiler\aslerror.c" />
+    <ClCompile Include="..\..\source\compiler\aslexternal.c" />
+    <ClCompile Include="..\..\source\compiler\aslfileio.c" />
+    <ClCompile Include="..\..\source\compiler\aslfiles.c" />
+    <ClCompile Include="..\..\source\compiler\aslfold.c" />
+    <ClCompile Include="..\..\source\compiler\aslhelp.c" />
+    <ClCompile Include="..\..\source\compiler\aslhex.c" />
+    <ClCompile Include="..\..\source\compiler\asllength.c" />
+    <ClCompile Include="..\..\source\compiler\asllisting.c" />
+    <ClCompile Include="..\..\source\compiler\asllistsup.c" />
+    <ClCompile Include="..\..\source\compiler\aslload.c" />
+    <ClCompile Include="..\..\source\compiler\asllookup.c" />
+    <ClCompile Include="..\..\source\compiler\aslmain.c" />
+    <ClCompile Include="..\..\source\compiler\aslmap.c" />
+    <ClCompile Include="..\..\source\compiler\aslmapenter.c" />
+    <ClCompile Include="..\..\source\compiler\aslmapoutput.c" />
+    <ClCompile Include="..\..\source\compiler\aslmaputils.c" />
+    <ClCompile Include="..\..\source\compiler\aslmessages.c" />
+    <ClCompile Include="..\..\source\compiler\aslmethod.c" />
+    <ClCompile Include="..\..\source\compiler\aslnamesp.c" />
+    <ClCompile Include="..\..\source\compiler\asloffset.c" />
+    <ClCompile Include="..\..\source\compiler\aslopcodes.c" />
+    <ClCompile Include="..\..\source\compiler\asloperands.c" />
+    <ClCompile Include="..\..\source\compiler\aslopt.c" />
+    <ClCompile Include="..\..\source\compiler\asloptions.c" />
+    <ClCompile Include="..\..\source\compiler\aslparseop.c" />
+    <ClCompile Include="..\..\source\compiler\aslpld.c" />
+    <ClCompile Include="..\..\source\compiler\aslpredef.c" />
+    <ClCompile Include="..\..\source\compiler\aslprepkg.c" />
+    <ClCompile Include="..\..\source\compiler\aslprintf.c" />
+    <ClCompile Include="..\..\source\compiler\aslprune.c" />
+    <ClCompile Include="..\..\source\compiler\aslresource.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype1.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype1i.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype2.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype2d.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype2e.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype2q.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype2s.c" />
+    <ClCompile Include="..\..\source\compiler\aslrestype2w.c" />
+    <ClCompile Include="..\..\source\compiler\aslstartup.c" />
+    <ClCompile Include="..\..\source\compiler\aslstubs.c" />
+    <ClCompile Include="..\..\source\compiler\asltransform.c" />
+    <ClCompile Include="..\..\source\compiler\asltree.c" />
+    <ClCompile Include="..\..\source\compiler\aslutils.c" />
+    <ClCompile Include="..\..\source\compiler\asluuid.c" />
+    <ClCompile Include="..\..\source\compiler\aslwalks.c" />
+    <ClCompile Include="..\..\source\compiler\aslxref.c" />
+    <ClCompile Include="..\..\source\compiler\aslxrefout.c" />
+    <ClCompile Include="..\..\source\compiler\cvcompiler.c" />
+    <ClCompile Include="..\..\source\compiler\cvdisasm.c" />
+    <ClCompile Include="..\..\source\compiler\cvparser.c" />
+    <ClCompile Include="..\..\source\compiler\dtcompile.c" />
+    <ClCompile Include="..\..\source\compiler\dtexpress.c" />
+    <ClCompile Include="..\..\source\compiler\dtfield.c" />
+    <ClCompile Include="..\..\source\compiler\dtio.c" />
+    <ClCompile Include="..\..\source\compiler\dtsubtable.c" />
+    <ClCompile Include="..\..\source\compiler\dttable.c" />
+    <ClCompile Include="..\..\source\compiler\dttable1.c" />
+    <ClCompile Include="..\..\source\compiler\dttable2.c" />
+    <ClCompile Include="..\..\source\compiler\dttemplate.c" />
+    <ClCompile Include="..\..\source\compiler\dtutils.c" />
+    <ClCompile Include="..\..\source\compiler\prexpress.c" />
+    <ClCompile Include="..\..\source\compiler\prmacros.c" />
+    <ClCompile Include="..\..\source\compiler\prscan.c" />
+    <ClCompile Include="..\..\source\compiler\prutils.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\DEBUGGER\dbfileio.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmbuffer.c" />
+    <ClCompile Include="..\..\source\components\disassembler\dmcstyle.c" />
+    <ClCompile Include="..\..\source\components\disassembler\dmdeferred.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmnames.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmopcode.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmresrc.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmresrcl.c" />
+    <ClCompile Include="..\..\source\components\disassembler\dmresrcl2.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmresrcs.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\Disassembler\dmutils.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\disassembler\dmwalk.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsargs.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dscontrol.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsfield.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsobject.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsopcode.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dspkginit.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dsutils.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswexec.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswload.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswload2.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswscope.c" />
+    <ClCompile Include="..\..\source\components\dispatcher\dswstate.c" />
+    <ClCompile Include="..\..\source\components\executer\exconcat.c" />
+    <ClCompile Include="..\..\source\components\executer\exconvrt.c" />
+    <ClCompile Include="..\..\source\components\executer\excreate.c" />
+    <ClCompile Include="..\..\source\components\executer\exdump.c" />
+    <ClCompile Include="..\..\source\components\executer\exmisc.c" />
+    <ClCompile Include="..\..\source\components\executer\exmutex.c" />
+    <ClCompile Include="..\..\source\components\executer\exnames.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg1.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg2.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg3.c" />
+    <ClCompile Include="..\..\source\components\executer\exoparg6.c" />
+    <ClCompile Include="..\..\source\components\executer\exprep.c" />
+    <ClCompile Include="..\..\source\components\executer\exregion.c" />
+    <ClCompile Include="..\..\source\components\executer\exresnte.c" />
+    <ClCompile Include="..\..\source\components\executer\exresolv.c" />
+    <ClCompile Include="..\..\source\components\executer\exresop.c" />
+    <ClCompile Include="..\..\source\components\executer\exstore.c" />
+    <ClCompile Include="..\..\source\components\executer\exstoren.c" />
+    <ClCompile Include="..\..\source\components\executer\exstorob.c" />
+    <ClCompile Include="..\..\source\components\executer\exsystem.c" />
+    <ClCompile Include="..\..\source\components\executer\exutils.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsaccess.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsalloc.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsdump.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsnames.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsobject.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\NAMESPACE\nsparse.c" />
+    <ClCompile Include="..\..\source\components\namespace\nssearch.c" />
+    <ClCompile Include="..\..\source\components\namespace\nsutils.c" />
+    <ClCompile Include="..\..\source\components\namespace\nswalk.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\NAMESPACE\nsxfobj.c" />
+    <ClCompile Include="..\..\source\components\parser\psargs.c" />
+    <ClCompile Include="..\..\source\components\parser\psloop.c" />
+    <ClCompile Include="..\..\source\components\parser\psobject.c" />
+    <ClCompile Include="..\..\source\components\parser\psopcode.c" />
+    <ClCompile Include="..\..\source\components\parser\psopinfo.c" />
+    <ClCompile Include="..\..\source\components\parser\psparse.c" />
+    <ClCompile Include="..\..\source\components\parser\psscope.c" />
+    <ClCompile Include="..\..\source\components\parser\pstree.c" />
+    <ClCompile Include="..\..\source\components\parser\psutils.c" />
+    <ClCompile Include="..\..\source\components\parser\pswalk.c" />
+    <ClCompile Include="..\..\source\components\tables\tbdata.c" />
+    <ClCompile Include="..\..\source\components\tables\tbfadt.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\tables\tbinstal.c" />
+    <ClCompile Include="..\..\source\components\tables\tbprint.c" />
+    <ClCompile Include="..\..\source\COMPONENTS\tables\tbutils.c" />
+    <ClCompile Include="..\..\source\components\tables\tbxface.c" />
+    <ClCompile Include="..\..\source\components\tables\tbxfload.c" />
+    <ClCompile Include="..\..\source\components\utilities\utaddress.c" />
+    <ClCompile Include="..\..\source\components\utilities\utalloc.c" />
+    <ClCompile Include="..\..\source\components\utilities\utascii.c" />
+    <ClCompile Include="..\..\source\components\utilities\utbuffer.c" />
+    <ClCompile Include="..\..\source\components\utilities\utcache.c" />
+    <ClCompile Include="..\..\source\components\utilities\utcksum.c" />
+    <ClCompile Include="..\..\source\components\utilities\utcopy.c" />
+    <ClCompile Include="..\..\source\components\utilities\utdebug.c" />
+    <ClCompile Include="..\..\source\components\utilities\utdecode.c" />
+    <ClCompile Include="..\..\source\components\utilities\utdelete.c" />
+    <ClCompile Include="..\..\source\components\utilities\uterror.c" />
+    <ClCompile Include="..\..\source\components\utilities\utexcep.c" />
+    <ClCompile Include="..\..\source\components\utilities\utglobal.c" />
+    <ClCompile Include="..\..\source\components\utilities\uthex.c" />
+    <ClCompile Include="..\..\source\components\utilities\utinit.c" />
+    <ClCompile Include="..\..\source\components\utilities\utlock.c" />
+    <ClCompile Include="..\..\source\components\utilities\utmath.c" />
+    <ClCompile Include="..\..\source\components\utilities\utmisc.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_DEBUG;WIN32;_CONSOLE;YY_NEVER_INTERACTIVE;YY_NO_UNISTD_H;ACPI_ASL_COMPILER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NDEBUG;WIN32;_CONSOLE;YY_NEVER_INTERACTIVE;YY_NO_UNISTD_H;ACPI_ASL_COMPILER;ACPI_DISASSEMBLER;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_STDC__;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\source\components\utilities\utmutex.c" />
+    <ClCompile Include="..\..\source\components\utilities\utnonansi.c" />
+    <ClCompile Include="..\..\source\components\utilities\utobject.c" />
+    <ClCompile Include="..\..\source\components\utilities\utownerid.c" />
+    <ClCompile Include="..\..\source\components\utilities\utpredef.c" />
+    <ClCompile Include="..\..\source\components\utilities\utresdecode.c" />
+    <ClCompile Include="..\..\source\components\utilities\utresrc.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstate.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstring.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstrsuppt.c" />
+    <ClCompile Include="..\..\source\components\utilities\utstrtoul64.c" />
+    <ClCompile Include="..\..\source\components\utilities\utuuid.c" />
+    <ClCompile Include="..\..\source\components\utilities\utxface.c" />
+    <ClCompile Include="..\..\source\components\utilities\utxferror.c" />
+    <ClCompile Include="..\..\source\os_specific\service_layers\oswindir.c" />
+    <ClCompile Include="..\..\source\os_specific\service_layers\oswintbl.c">
+      <DisableLanguageExtensions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DisableLanguageExtensions>
+      <DisableLanguageExtensions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="..\..\source\os_specific\service_layers\oswinxf.c">
+      <DisableLanguageExtensions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DisableLanguageExtensions>
+      <DisableLanguageExtensions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="aslcompiler.l.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level4</WarningLevel>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="aslcompiler.y.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level3</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="dtcompilerparser.l.c" />
+    <ClCompile Include="dtcompilerparser.y.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level3</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="dtparser.l.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level4</WarningLevel>
+      <ConformanceMode Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ConformanceMode>
+    </ClCompile>
+    <ClCompile Include="dtparser.y.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level3</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="prparser.l.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level4</WarningLevel>
+      <ConformanceMode Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ConformanceMode>
+    </ClCompile>
+    <ClCompile Include="prparser.y.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level3</WarningLevel>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\compiler\aslcompiler.h" />
+    <ClInclude Include="..\..\source\compiler\asldefine.h" />
+    <ClInclude Include="..\..\source\compiler\aslglobal.h" />
+    <ClInclude Include="..\..\source\compiler\aslmessages.h" />
+    <ClInclude Include="..\..\source\compiler\asltypes.h" />
+    <ClInclude Include="..\..\source\compiler\dtcompiler.h" />
+    <ClInclude Include="..\..\source\compiler\dttemplate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\source\compiler\aslcompiler.l">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">flex -i -PAslCompiler -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).l.c</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex -i -PAslCompiler -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).l.c</Outputs>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</TreatOutputAsContent>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</LinkObjects>
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\compiler\aslparser.y">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">m4 -P -I%(RootDir)%(Directory) %(FullPath) &gt; aslcompiler.y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Macro-processing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">aslcompiler.y</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">m4 -P -I%(RootDir)%(Directory) %(FullPath) &gt; aslcompiler.y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Macro-processing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">aslcompiler.y</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RelativeDir)asltokens.y;%(RelativeDir)asltypes.y;%(RelativeDir)aslrules.y;%(RelativeDir)aslprimaries.y;%(RelativeDir)aslcstyle.y;%(RelativeDir)aslkeywords.y;%(RelativeDir)aslresources.y;%(RelativeDir)aslhelpers.y;%(RelativeDir)aslsupport.y</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)asltokens.y;%(RelativeDir)asltypes.y;%(RelativeDir)aslrules.y;%(RelativeDir)aslprimaries.y;%(RelativeDir)aslcstyle.y;%(RelativeDir)aslkeywords.y;%(RelativeDir)aslresources.y;%(RelativeDir)aslhelpers.y;%(RelativeDir)aslsupport.y</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\compiler\dtparser.l">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">flex -PDtParser -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).l.c</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex -PDtParser -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).l.c</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\compiler\dtparser.y">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bison -d -l -pDtParser -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bison -d -l -pDtParser -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\compiler\prparser.l">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">flex -PPrParser -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).l.c</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex -PPrParser -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).l.c</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\compiler\prparser.y">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bison -d -l -pPrParser -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bison -d -l -pPrParser -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\source\compiler\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\source\compiler\dtcompilerparser.l">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex -i -PDtCompilerParser -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).l.c</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">flex -i -PDtCompilerParser -o%(Filename).l.c %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Lexing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).l.c</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\compiler\dtcompilerparser.y">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bison -d -l -pDtCompilerParser -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bison -d -l -pDtCompilerParser -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\source\compiler\aslcstyle.y" />
+    <None Include="..\..\source\compiler\aslhelpers.y" />
+    <None Include="..\..\source\compiler\aslkeywords.y" />
+    <None Include="..\..\source\compiler\aslprimaries.y" />
+    <None Include="..\..\source\compiler\aslresources.y" />
+    <None Include="..\..\source\compiler\aslrules.y" />
+    <None Include="..\..\source\compiler\aslsupport.y" />
+    <None Include="..\..\source\compiler\asltokens.y" />
+    <None Include="..\..\source\compiler\asltypes.y" />
+    <CustomBuild Include="aslcompiler.y">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bison -d -l -pAslCompiler -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).y.c;%(Filename).y.h</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bison -d -l -pAslCompiler -v %(FullPath) -vd -o%(Filename).y.c</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Yaccing %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).y.c;%(Filename).y.h;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

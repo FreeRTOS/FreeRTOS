@@ -1,0 +1,62 @@
+## @file
+# acpidump.inf
+#
+#  Copyright (c) 2016, Intel Corporation. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution. The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = acpidump
+  FILE_GUID                      = bf942c9a-2942-11e6-9a64-0024e8c6d30e
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = UefiMain
+
+[Sources]
+  tools/acpidump/apdump.c
+  tools/acpidump/apfiles.c
+  tools/acpidump/apmain.c
+  common/cmfsize.c
+  common/getopt.c
+  os_specific/efi/oseficlib.c
+  os_specific/efi/osefitbl.c
+  os_specific/efi/osefixf.c
+  components/tables/tbprint.c
+  components/tables/tbxfroot.c
+  components/utilities/utascii.c
+  components/utilities/utbuffer.c
+  components/utilities/utclib.c
+  components/utilities/utdebug.c
+  components/utilities/utexcep.c
+  components/utilities/utglobal.c
+  components/utilities/uthex.c
+  components/utilities/utmath.c
+  components/utilities/utnonansi.c
+  components/utilities/utprint.c
+  components/utilities/utstring.c
+  components/utilities/utstrsuppt.c
+  components/utilities/utstrtoul64.c
+  components/utilities/utxferror.c
+
+[Packages]
+  AcpiPkg/AcpiPkg.dec
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  UefiApplicationEntryPoint
+  BaseLib
+
+[BuildOptions]
+  MSFT:*_*_IA32_CC_FLAGS = /GL- /D_EDK2_EFI /DUSE_MS_ABI /D__i386__ /DACPI_DUMP_APP
+  MSFT:*_*_X64_CC_FLAGS  = /GL- /D_EDK2_EFI /DUSE_MS_ABI /D__x86_64__ /DACPI_DUMP_APP
+  GCC:*_*_IA32_CC_FLAGS  = -U__linux__ -U_LINUX -D_EDK2_EFI -DACPI_DUMP_APP -fno-builtin -iwithprefix include
+  GCC:*_*_X64_CC_FLAGS   = -U__linux__ -U_LINUX -D_EDK2_EFI -DACPI_DUMP_APP -fno-builtin -iwithprefix include

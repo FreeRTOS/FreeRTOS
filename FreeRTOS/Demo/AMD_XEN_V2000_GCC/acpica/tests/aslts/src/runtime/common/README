@@ -1,0 +1,33 @@
+
+CONTENTS
+
+   Objects of common use which may be useful in more then one test
+
+conversion
+
+   Objects applicable to Source Operand and Result
+   conversion tests (now not in use)
+
+operations.asl
+
+   Methods allowing to handle particular ASL operators
+
+data.asl
+
+   all the type objects
+
+dataproc.asl
+
+   some common use methods which deal with the data of data.asl file
+
+datastproc.asl
+
+   methods applied to the Standard Data (data of known type and value)
+
+TCI
+
+   the Test Command Interface with the ACPI implemenntation (_TCI).
+   Provides interaction with the ACPI implementation basing on the
+   conditional insertions into ACPI implementation code. By now based
+   on it are implemented (in ACPICA) the memory leak detecting
+   instrumentation and multi-threading testing (just started).

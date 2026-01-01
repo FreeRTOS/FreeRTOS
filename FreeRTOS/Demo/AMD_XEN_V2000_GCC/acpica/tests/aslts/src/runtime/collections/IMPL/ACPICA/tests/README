@@ -1,0 +1,22 @@
+
+CONTENTS
+
+   the tests dependent on ACPICA internal features
+
+
+dynobj
+
+   The ASL Dynamical Object support tests.
+   The tests reflects the current dynamic of using memory
+   during interpretation of different ASL expressions and
+   reports deviation (if any) from the expected structure
+   of memory to be consumed in that process.
+
+
+
+NOTE:
+
+   The test dynobj requires the Test Command Interface with
+   the ACPI implementation (_TCI) to be supported. In case,
+   _TCI is not supported, the test reports the message and
+   exits with PASS.

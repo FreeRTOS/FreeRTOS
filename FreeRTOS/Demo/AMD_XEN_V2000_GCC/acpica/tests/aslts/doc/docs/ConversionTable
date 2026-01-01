@@ -1,0 +1,153 @@
+
+A few obsolete too.
+
+
+
+   ================================================
+   Implicit Source Operand Conversion, Complex test
+   ================================================
+
+                                       Features of target Operands
+                                       -------------------------------
+                                       |Integer  | String  | Buffer  |
+Features of source Operands            |         |         |         |
+----------------------------------------------------------------------
+Integer      |i1| 0x89abcdef           |32/64    |         |         |
+             |i2| 0xfedcba9876543201   |i1 - i4  |i1 - i4  |i1 - i4  |
+             |i3| 0                    |         |         |         |
+             |i4| 0xffffffffffffffff   |         |         |         |
+             |i5| 0xffffffff           |         |         |         |
+----------------------------------------------------------------------
+String     =6|s1| "ba9876"             |32: s1,s2|         |         |
+           =8|s2| "89abcdef"           |64: s1,s3|s4,s5,s6 |s4,s5,s6 |
+          =16|s3| "fedcba9876543201"   |         |         |         |
+           =3|s4| "321"                |exc32:   |         |         |
+         =200|s5|                      | s6,s7,  |         |         |
+           =0|s6| ""                   | s8,sc   |         |         |
+             |s7| "1234q"              |exc64:   |         |         |
+           =9|s8| "987654321"          | s6,s7,  |         |         |
+          =17|s9| "9fedcba9876543210"  | s9,sc   |         |         |
+             |sa| "ffffffffffffffff"   |         |         |         |
+             |sb| "ffffffff"           |         |         |         |
+             |sc| "0xfedcba"           |         |         |         |
+----------------------------------------------------------------------
+Buffer       |b1| B(3){b0,b1,b2}       |32: b1,b2|b1,b4,b7 |b1,b5,b7 |
+             |b2| B(6){b0,b1,...,b5}   |64: b2,b3|         |         |
+             |b3| B(9){b0,b1,...,b8}   |         |exc: b6  |         |
+             |b4| B(200){b0,...,b199}  |         |         |         |
+             |b5| B(257){b0,...,b256}  |         |         |         |
+             |b6| B(201){b0,...,b200}  |         |         |         |
+             |b7| B(0){}               |         |         |         |
+             |b8| B(){ff,ff,ff,ff,     |         |         |         |
+             |  |     ff,ff,ff,ff}     |         |         |         |
+             |b9| B(){ff,ff,ff,ff}     |         |         |         |
+----------------------------------------------------------------------
+Buffer Field |f1| CF(11:23)            |32: f1,f2|32: f5,f6|32: f5,f6|
+             |f2| CF(38:51)            |64: f2,f3|64: f7,f8|64: f7,f8|
+             |f3| CF(101:74)           |         |         |         |
+             |f4| CF(179:0)            |both: f4 |both: f4,|both: f4,|
+             |f5| CF(183:32)           |         |      f9 |      fb |
+             |f6| CF(219:33)           |         |         |         |
+             |f7| CF(257:64)           |         |exc: fa  |         |
+             |f8| CF(325:65)           |         |         |         |
+             |f9| CF(17:67*8)          |         |         |         |
+             |fa| CF(17:68*8)          |         |         |         |
+             |fb| CF(17:257*8)         |         |         |         |
+----------------------------------------------------------------------
+
+Prepare the summary table: which operands which results:
+
+Buffer -> Buffer Field
+ 1:
+ 2:
+Buffer -> Debug Object
+ 3:
+Buffer -> Field Unit
+ 4:
+ 5:
+Buffer -> Integer
+ 6: b1
+ 7: b3
+Buffer -> String
+ 8: b1,b4,b7
+ 9: b6
+Buffer Field -> [See Rule]
+10, 32: f4,f5
+10, 64: f4,f7
+11, 32: f6,f9,fb
+11, 64: f8,f9,fb
+Buffer Field -> Debug Object
+12:
+DDB Handle ->
+13:
+Field Unit ->
+/*
+SEE:
+14, 32: f4,f5
+14, 64: f4,f7
+
+15, 32: f6,f9,fb
+15, 64: f8,f9,fb
+*/
+Field Unit -> Debug Object
+16:
+Integer -> Buffer
+17: i2
+18:
+19:
+Integer -> Buffer Field
+20:
+21:
+Integer -> Debug Object
+22:
+Integer -> Field Unit
+23:
+24:
+Integer -> String
+25, 32: i1, i2
+25, 64: i2
+Package -> Package
+26:
+Package -> Debug Object
+27:
+String -> Buffer
+28: s4,s5,s6
+29:
+30:
+String -> Buffer Field
+31:
+32:
+String -> Debug Object
+33:
+String -> Field Unit
+34:
+35:
+String -> Integer
+36, 32: s2
+36, 64: s3
+
+Coverage of Table 17-8 ("Object Conversion Rules"):
+
+             |Integer        | String        | Buffer        |
+             |               |               |               |
+--------------------------------------------------------------
+             |               |            25 |            17 |
+Integer    32| i1,i2         | i1,i2         |               |
+           64| i2            | i2            | i2            |
+             |               |               |               |
+--------------------------------------------------------------
+             |            36 |               |            28 |
+String     32| s2 exc:s8     |               |               |
+           64| s3 exc:s9     | s4,s5,s6      | s4,s5,s6      |
+             | exc: s6,s7    |               |               |
+--------------------------------------------------------------
+             |           6,7 |           8,9 |               |
+Buffer     32|               |               |               |
+           64| 6:b1 7:b3     |8:b1,b4,b7 9:b6| b1,b5,b7      |
+             |               |               |               |
+--------------------------------------------------------------
+             |            10 |          10,11|          10,11|
+Buffer     32| f4,f5         |14:f4,f5 15:f6 |14:f4,f5 15:f6 |
+Field      64| f4,f7         |14:f4,f7 15:f8 |14:f4,f7 15:f8 |
+             |               |15:f9  exc:fa  |15:fb          |
+--------------------------------------------------------------

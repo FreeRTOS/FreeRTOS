@@ -1,0 +1,821 @@
+Some information can be obsolete.
+
+It was useful when we started designing the tests to
+attempt to gather ideas about the subject of testing
+and approach of testing.
+================================
+
+
+
+
+   Source Operand Complex test specification
+       (guideline of designing the test)
+
+Collection of remarks not intended to constitute the facile
+joined statement. These considerations should be taken into
+account while designing the Source Operand Complex test.
+Some of them are applicable in general while designing the
+ASL tests.
+
+All the ASL declarartions allowed by the ASL compiler have to
+work in compliance with the ACPI specification, in a predictable
+and convenient for users manner (so, ACPI could be changed as well).
+
+Outlined are the subject of testing, the main aspects of it,
+the main points to be concentrated on while designing the test
+and the practical steps which should be performed to achieve the
+worthy coverage of the test. Also the objective difficulties
+which are on that way are explained.
+
+This text is for ourselves in the first order.
+Allow, some statements to be abstract, non-strict and questionable.
+Bilieve, the abstraction will be useful.
+
+Writing the Operand Complex test is quite complicated
+(it is not a functional test were you simply verify each
+feature separately), so after implementing some its part you
+see some ASL functionality is involved by test repeatedly though
+you thought about different things. This text is in particular
+intended to enumerate all the aspects to be verified, and don't
+further hesitate if all them are applied.
+
+The intention of the test is to verify all the grammar rules
+of specifying and delivering operands to operators.
+
+This is a wide range of issues which are simpler to understand and
+embrace given together as a separate particular topic, as a separate
+approach. Each the particular relevant aspect should be given separately,
+the approach of how to test it should be designed and then applied to all
+the ASL operators. Then the next aspect should be taken separately and
+also verified for all the operators. This would allow to concentrate
+deeply on each aspect and to observe the coverage provided by the test
+which would be impossible to do in the contrary case when the
+per-operator tests each contains all the aspects checkings.
+
+All the relevant aspects should be verified for each particular operator
+(or at least for one member of each group of operators divided according
+to the considered aspects of delivering operands to operators if only you
+can found such division to groups). While building the tests we have
+observed many confirmations of the idea that aspects of delivering
+operands to operators can work differently for different operators,
+while being proper for some of them it fails for other.
+
+Minimum functionality of operators should be involved there to prove
+only the fact that operands are delivered to operators correctly.
+To check functionality of operators is up to other tests.
+
+The test should also check that the source values which were
+referred to as parameters were not corrupted by the execution
+of the particular operator, which are the situations being in
+practice revealed by our other tests many times.
+
+The test verifies processing of both the valid operands and
+invalid operands. Building the invalid operand checkings is a simple
+task - pass operator with the inappropriate type operand and check that
+the exception occurs. So, below are mostly about the valid operand checkings.
+
+The valid operand checkings verify all the legal ways of specifying and
+delivering operands to ASL operators. The following section describes the
+essential aspects of that process.
+
+Note: some particularities are obsolete due to the change of ACPI
+      specification since that.
+
+
+   ESSENTIAL ASPECTS OF OPERAND DELIVERING
+   =======================================
+
+IMAGES
+
+  All the vatiety of ways specifying the immediate images of ASL objects
+of all types should be represented. All the types are given in the table
+17-20 of ACPI specification:
+
+     Uninitialized
+   * Integer
+   * String
+   * Buffer
+   * Package
+   * Field Unit
+     Device
+     Event
+     Method
+     Mutex
+     Operation Region
+     Power Resource
+     Processor
+     Thermal Zone
+   * Buffer Field
+     DDB Handle
+
+  (*) - computational types. The table #1 below shows
+        all the variety of computational type images
+   () - the remained types are mostly used in the
+        invalid operand checkings
+
+
+LOCATIONS
+
+  The location of the object in the name space relating
+to the operator where that object is utilized.
+
+  - statically accessible global object
+    located immediately in the DefinitionBlock
+  - statically accessible declared locally in the current scope
+  - statically accessible declared locally in the surrounding upper
+    scope, (1,2,3,...,LOC_LEVELS levels up)
+  - inaccessible statically, declared locally in the sequence
+    of the calling methods, (1,2,3,...,LOC_LEVELS levels up)
+
+  Note: all the functionality of all scope generating concepts:
+        DefinitionBlock, Scope, Device, Method, Function, Processor,
+        PowerResource, ThermalZone,... will be verified in the
+        relevant complex tests, not here.
+
+
+REFERENCES
+
+  References to objects, dereferred then by DeRefOf.
+
+  References by Index
+
+    Index(String,  Index)
+    Index(Buffer,  Index)
+    Index(Package, Index)
+    Index(String,  Index, Destination)
+    Index(Buffer,  Index, Destination)
+    Index(Package, Index, Destination)
+    DerefOf(Index(String,  Index))
+    DerefOf(Index(Buffer,  Index))
+    DerefOf(Index(Package, Index))
+    DerefOf(Index(String,  Index, Destination))
+    DerefOf(Index(Buffer,  Index, Destination))
+    DerefOf(Index(Package, Index, Destination))
+
+  References by RefOf
+
+    RefOf(Integer)
+    RefOf(String)
+    RefOf(Buffer)
+    RefOf(Package)
+    DerefOf(RefOf(Integer))
+    DerefOf(RefOf(String))
+    DerefOf(RefOf(Buffer))
+    DerefOf(RefOf(Package))
+
+  References by CondRefOf
+
+    CondRefOf(Integer)
+    CondRefOf(String)
+    CondRefOf(Buffer)
+    CondRefOf(Package)
+    CondRefOf(Integer, Result)
+    CondRefOf(String,  Result)
+    CondRefOf(Buffer,  Result)
+    CondRefOf(Package, Result)
+    DerefOf(CondRefOf(Integer))
+    DerefOf(CondRefOf(String))
+    DerefOf(CondRefOf(Buffer))
+    DerefOf(CondRefOf(Package))
+    DerefOf(CondRefOf(Integer, Result))
+    DerefOf(CondRefOf(String,  Result))
+    DerefOf(CondRefOf(Buffer,  Result))
+    DerefOf(CondRefOf(Package, Result))
+
+  Note: it was observed earlier that logical operators
+        didn't cause exceptions when using references.
+        This looks incorrect. Keep attention to that.
+        Don't forget to build the test for it.
+
+  Note: specification of Reference test contains more exact list.
+
+EXPRESSIONS
+
+  The way how the object is specified
+for operator in place of operand.
+
+  - immediate image
+  - ArgX
+  - LocalX
+  - NamedX
+  - expression as such, immediate result of other operators
+   (references are some of operators as well) like this:
+      Operator(Operator(Operator(Operator(...))))
+      Operator([Operand,]Operator([Operand,]Operator(...)))
+    Depth: 1,2,3,...,EXP_LEVELS
+  - use execution of other Methods as a kind of expressions as well
+
+  Note: expressions in place of locations for results
+        (Destinations) should be verified in this test
+        as well, because together with the expressions
+        of operands they can influence each other.
+
+  Issue: expressions in result, is that possible to use?
+
+METHODS
+
+- use Methods as elements of expressions
+- use all kind expressions as parameters to Methods 
+
+
+CONVERSION
+
+  The Implicit Source Operand Conversion functionality
+(17.2.5.7 Data Type Conversion Rules) should be verified also.
+
+The table # 1 below proposes the particular values for to initiate
+all the variety of Implicit Source Operand Conversion rules.
+
+
+OPERATORS
+
+   As it was mentioned above, the particular target operator
+can impact delivering operands to it. Thus, we can't build the test
+for only one particular operator but should be bent on building the
+checkings for many (to all is the best) of them or for one member of
+each group (if manage found division). An aspect can work correctly
+while delivering operand to one operator but fail while delivering
+to other.
+
+Pay attention to both:
+
+   - the complete and the reduced forms of operators
+   - the target operators and operators used in expressions
+
+
+MISCELLANEOUS
+
+   Additional miscellaneous features, particular situations
+which should be verified. They are descended from the aspects
+above (as the particular elements of an absolute test (see below)).
+These notes allow to keep additional attention to them. They look
+to be a complicated modes for ACPICA.
+
+Note: add this aspect with more new complicated checkings.
+
+   1. Use the same object more than one time in expressions of
+operands and destinations:
+
+    - in expression of one operand of target operator
+    - in expressions of different operands of the target operator
+    - in expression of one operand and the result is stored into the object
+    - in expressions of different operands of target operator and
+      the result is located into the object...
+    - in other words, continue combinations of these features:
+
+      (one operand)/(some (all) operands)
+      (one operator)/(several operators)
+      (store result in it)/(don't store result in it)...
+
+   2. Pass the object of upper level (or even global) accessible
+statically by ArgX of sequence of calling methods (operand1) and
+specify the same object as another operand immediately by its NameX
+(operand2) and use them both in turn (operand1/operand2) as locations
+for result.
+
+   3. Other cases.
+
+
+   ABSOLUTE TEST ABSTRACTION
+   =========================
+
+   So, all the aspects which can impact delivering operands to operators
+and thus should be verified are these:
+
+  Images
+  Locations
+  References
+  Expressions 
+  Methods 
+  Conversion
+  Operators
+  Miscellaneous
+
+   The more you mix these aspects the more comprehensive test you
+have. Each impact generated and verified by test is a function of
+(N1,N2,N3,N4,N5,N6,N7,N8) parameters. So, to build the total absolute
+comprehensive test we have to build and verify all the possible
+combinations of these input states.
+
+In this case we will miss nothing and the total coverage of testing
+the operand delivering will be achieved.
+
+To build the test as a simple enumeration and verification
+of all possible combinations of given above parameters would be
+the simplest way. Though it would be usually much redundant we
+would be happy and assured that the total coverage would be
+actually achieved.
+
+  Note: what actually is the mix of these (N1-N8) aspects?
+
+
+   REALITY, LIMITATIONS OF ACPICA ASL
+   ==================================
+
+   But there are several limitations of ACPICA ASL which make
+such simplest and the total coverage assured approach (absolute
+test) impossible, because they prevent automated processing.
+About all that below. In consequence of all that, it is remained
+only to rely on the human factor, intuition and skill to achieve
+the worthy coverage of the test.
+
+   Elements of ASL Package could be only Integer, String, Buffer
+and Package type objects. Other type objects could not be represented
+immediately in Package. So, it is impossible to collect all the
+desirable different type objects in Package and then refer them
+in cycle.
+
+   We can't pass Method with the Uninitialized object, so these
+conditions should be also provided by the test as the immediate
+references to the Uninitialized objects which prevents automated
+processing as well.
+
+   One more inconvenience for testing arises from the type conversion
+functionality. Due to that some type objects could not be represented
+not only as elements of Package, but also be passed to Method as parameters
+(Buffer Field, Field Unit, etc..), since they are converted to either Integer
+or Buffer types in the latter case. As a result, these conditions should
+be provided by the test immediately also and can not be referred in cycle.
+
+   The are similar limitations on return from method as well.
+
+   Some groups of operators (Concatenate; Logical operators) have
+particularities of Implicit Source Operand Conversion functionality
+which also restricts uniformity of test for different operators.
+
+   So, we can't run in cycle all the possible desirable combinations
+(and aspects) of operands for all the ASL operators, because the ASL
+limitations don't allow to achieve uniformity of the test building.
+It is impossible to build the test which simply enumerates all
+combinations and so achieve the total coverage. One more, such the
+test will go during the huge boundless time.
+
+   Thus, it is up to the skill of the designer of the test to choose
+the main points to be verified in order to build the test which would
+achieve the worthy coverage for the acceptable time of execution.
+
+   So, maybe, attempt to divide operators on groups according to
+the specific of their operands and one operator of each group verify
+comprehensively, while other members of groups verify in a simplified
+manner. Do that if the run time of the test increases extremely.
+
+   So, because of the ASL limitations described above we can't implement
+the comprehencive test, which would be proven to approximate to the absolute
+test on coverage. But this specification and the tests adhered to it would
+allow us to feel ourselves to be on the firm way to achieve the worthy coverage
+and consider that we have done all needed from our side to achieve the
+comprehencive tests.
+
+   So, due to the limitations of ASL above, we refuse attempts to write the
+common engine which would simplify our work and ensure the high coverage of
+test. Nevertheless, write and apply where possible the common use methods.
+
+
+Bugs of product revealed must be fixed in real time! Very, very much important!
+Basing on the proper functionality provided by the target product you achieve
+more and more deep testing. Once again, it is very much important. Otherwise,
+the testing turns sour.
+
+
+
+   COMPUTATIONAL DATA IMMEDIATE IMAGES
+   ===================================
+
+   The table below contains the recommended variety of immediate images
+for computational types: Integer, String, Buffer, Buffer Field, Field Unit,
+Package. The table pretends to enumerate all the variety of them.
+
+(the Implicit Source Operand Conversion Rules are marked in the table #x
+with (*). They are ... in this table. For example 8,32:b4,b25,b28 means ...)
+
+
+Table 1. Computational data, immediate images
+
+Features of source Operands               Features of target Operands
+
+                              |    Integer     |    String      |    Buffer      |
+==================================================================================
+  |  i1| 0321                 |                |             25 |             17 |
+  |  i2| 9876543210           |                |                |                |
+I |  i3| 0xc179b3fe           |                | 25,32:i3       | 17,32:i3       |
+n |  i4| 0xfe7cb391d650a284   |                | 25,64:i4       | 17,64:i4       |
+t |  i5| 0                    |                |                |                |
+e |  i6| 0xffffffff           |                |                |                |
+g |  i7| 0xffffffffffffffff   |                |                |                |
+e |  i8| 0xabcdef             |                |                |                |
+r |  i9| 0xABCDEF             |                |                |                |
+  | i10| 0xff                 |                |                |                |
+  | i11| 0xffffffffff         |                |                |                |
+----------------------------------------------------------------------------------
+  |  s1| "0321"               |             36 |                |             28 |
+  |  s2| "321"                |                |                |                |
+  |  s3| "ba9876"             | 36,32:s1,s4    |                | 28,32:s1,s14,  |
+  |  s4| "c179b3fe"           | 36,64:s1,s5    |                |       s12      |
+  |  s5| "fe7cb391d650a284"   |                |                | 28,64:s1,s14,  |
+  |  s6| "ffffffff"           | 32:s8(exc)     |                |       s12      |
+S |  s7| "ffffffffffffffff"   | 64:s8(exc)     |                |                |
+t |  s8| "fe7cb391d650a2841"  | 32:s11(exc)    |                |                |
+r |  s9| "9876543210"         | 64:s11(exc)    |                |                |
+i | s10| "0xfe7cb3"           | 32:s12(exc)    |                |                |
+n | s11| "1234q"              | 64:s12(exc)    |                |                |
+g | s12| ""                   | 32:s13(exc)    |                |                |
+  | s13| " "                  | 64:s13(exc)    |                |                |
+  | s14| of size 200 bytes    | 32:s10(exc)    |                |                |
+  |  - | >200, imps, bugs fix | 64:s10(exc)    |                |                |
+  | s15| <all symbols>        |                |                |                |
+  | s16| "abcdef"             |                |                |                |
+  | s17| "ABCDEF"             |                |                |                |
+  | s18| "ff"                 |                |                |                |
+  | s19| "ffffffffff"         |                |                |                |
+----------------------------------------------------------------------------------
+  |  b1| B(1){b0}             |            6,7 |            8,9 |                |
+  |  b2| B(2){b0,b1}          |                |                |                |
+  |  b3| B() {b0,b1,b2}       | 6,32:b6        | 8,32:b6,b20    |                |
+  |  b4| B(2){b0,b1,b2}       | 6,64:b6        | 8,64:b6,b20    |                |
+  |  b5| B(3){b0,b1}          |                |                |                |
+  |  b6| B(3){b0,b1,b2}       | 7,32:b10       | 9,32:b21(exc)  |                |
+  |  b7| B(4){b0,...,b3}      | 7,64:b10       | 9,64:b21(exc)  |                |
+  |  b8| B(5){b0,...,b4}      |                |                |                |
+  |  b9| B(8){b0,...,b7}      |                |   32:b22(exc)  |                |
+  | b10| B(9){b0,b1,...,b8}   |                |   64:b22(exc)  |                |
+  | b11| B(257){b0}           |                |                |                |
+  | b12| B(257){b0,...,b256}  |                |                |                |
+  | b13| B(){b0,...,b256}     |                |                |                |
+  | b14| B(ArgX){=}           |                |                |                |
+B | b15| B(ArgX){<}           |                |                |                |
+u | b16| B(ArgX){>}           |                |                |                |
+f | b17| B(LocalX){=}         |                |                |                |
+f | b18| B(LocalX){<}         |                |                |                |
+e | b19| B(LocalX){>}         |                |                |                |
+r | b20| B(67){b0,...,b66}    |                |                |                |
+  | b21| B(68){b0,...,b67}    |                |                |                |
+  | b22| B(ArgX/LocalX==0){}  |                |                |                |
+  | b23| B(1){}               |                |                |                |
+  | b24| B(5){}               |                |                |                |
+  | b25| B(9){}               |                |                |                |
+  | b26| B(4){0,...,0}        |                |                |                |
+  | b27| B(8){0,...,0}        |                |                |                |
+  | b28| B(1){0xff}           |                |                |                |
+  | b29| B(4){0xff,...,0xff}  |                |                |                |
+  | b30| B(5){0xff,...,0xff}  |                |                |                |
+  | b31| B(8){0xff,...,0xff}  |                |                |                |
+  | b32| B(9){0xff,...,0xff}  |                |                |                |
+  | b33| B(5){0x12,...,0x90}  |                |                |                |
+  | b34| B(3){0xab,0xcd,0xef} |                |                |                |
+  | b35| B(3){0xAB,0xCD,0xEF} |                |                |                |
+  | b36| B(200){b0,...,b199}  |                |                |                |
+  | b37| B(201){b0,...,b200}  |                |                |                |
+----------------------------------------------------------------------------------
+B | bf1| CF(:31)              |             10 |                |             11 |
+u | bf2| CF(:32)              |                |                |                |
+f | bf3| CF(:33)              | 10,32:bf1,bf2  |                | 11,32:bf3      |
+f | bf4| CF(:63)              | 10,64:bf4,bf5  |                | 11,32:bf6      |
+e | bf5| CF(:64)              |                |                |                |
+r | bf6| CF(:65)              |                | 32:bf10(exc)   |                |
+  | bf7| CF(:0)               |                | 64:bf10(exc)   |                |
+F | bf9| CF(:67*8)            |                |                |                |
+i |bf10| CF(:68*8)            |                |                |                |
+e |bf11| CF(:257*8)           |                |                |                |
+l |bf12| BfField,3bytes+{0-16}|                |                |                |
+d |bf13| BfField,7bytes+{0-16}|                |                |                |
+----------------------------------------------------------------------------------
+  | fu1| F(:31)               |             14 |                |             15 |
+F | fu2| F(:32)               |                |                |                |
+i | fu3| F(:33)               | 14,32:fu1,fu2  |                | 15,32:fu3      |
+e | fu4| F(:63)               | 14,64:fu4,fu5  |                | 15,32:fu6      |
+l | fu5| F(:64)               |                |                |                |
+d | fu6| F(:65)               |                | 32:fu10(exc)   |                |
+  | fu7| F(:0)                |                | 64:fu10(exc)   |                |
+U | fu9| F(:67*8)             |                |                |                |
+n |fu10| F(:68*8)             |                |                |                |
+i |fu11| F(:257*8)            |                |                |                |
+t |fu12| Field,3bytes+{0-16}  |                |                |                |
+  |fu13| Field,7bytes+{0-16}  |                |                |                |
+----------------------------------------------------------------------------------
+Package
+==================================================================================
+
+Note: the Implicit Rules were a few changed since that!
+
+
+    START WITH THESE OPERATORS  (and maybe don't go beyond that)
+    ==========================
+
+
+This is a list of operators which are recommended
+to be implemented in the first turn.
+
+List of operators which should be verified completely (all the
+aspects of delivering operands to them should be verified).
+
+One-parameter operators:
+
+   - Increment
+   - Decrement
+   - FindSetLeftBit
+   - one of these: ToBuffer, ToDecimalString,
+                   ToHexString, ToInteger,
+                   ToBCD, FromBCD
+   - Not
+   - SizeOf
+   - Store
+   - CopyObject
+
+   All other one-parameter operators may be verified partially.
+
+Two-parameters operators:
+
+   - Add
+   - Divide
+   - Multiply
+   - LGreater
+   - ToString
+   - Concatenate
+   - ShiftLeft
+   - Lor
+   - NAnd
+   - XOr
+
+   All other two-parameters operators may be verified partially.
+
+Three-parameters operators:
+
+   - Mid
+
+Six-parameters operators:
+
+   - Match
+
+The tests of operands for the following operators
+may be implemented separately in their per-operator tests:
+
+  - If,Elseif
+  - While
+
+The positive (not exceptions) tests of operands for the
+following operators have been done in per-operator tests:
+
+  - Switch, Case
+
+
+   OPERATORS INFO
+   ==============
+
+   The table below contains the list of operators assigned
+with digital indexes in the alphabetical order:
+   - one-parameter    (25 Operators)
+   - two-parameters   (26 Operators)
+   - three-parameters (2  Operators)
+   - six-parameters   (1  Operator)
+
+
+Table 2. Operators
+
+// //////////////////////////////////////////////////////////////////////////
+//
+//      1 parameter (25 Operators)
+//
+//    5 - CondRefOf       (any, Result) => Boolean
+//    6 - CopyObject      (any, Destination) => DataRefObject
+// *  7 - Decrement       (int) => Integer
+//    8 - DerefOf         ({ref|str}) => Object
+// * 11 - FindSetLeftBit  (int, Result) => Integer
+// * 12 - FindSetRightBit (int, Result) => Integer
+// * 13 - FromBCD         (int, Result) => Integer
+// * 14 - Increment       (int) => Integer
+// * 22 - LNot            (int) => Boolean
+// * 31 - Not             (int, Result) => Integer
+//   32 - ObjectType      (any) => Integer
+//   34 - RefOf           (any) => ObjectReference
+//   35 - Release         (mux)
+//   36 - Reset           (evt)
+//   37 - Return          ({any|ref})
+//   40 - Signal          (evt)
+// * 41 - SizeOf          ({int|str|buf|pkg}) => Integer
+// * 42 - Sleep           (int)
+// * 43 - Stall           (int)
+//   44 - Store           (any, Destination) => DataRefObject
+// * 46 - ToBCD           (int, Result) => Integer
+// * 47 - ToBuffer        ({int|str|buf}, Result) => Buffer
+// * 48 - ToDecimalString ({int|str|buf}, Result) => String
+// * 49 - ToHexString     ({int|str|buf}, Result) => String
+// * 50 - ToInteger       ({int|str|buf}, Result) => Integer
+//
+//      2 parameters (26 Operators)
+//
+//    0 - Acquire         (mux, wrd) => Boolean
+// *  1 - Add             (int, int, Result) => Integer
+// *  2 - And             (int, int, Result) => Integer
+// *  3 - Concatenate     ({int|str|buf}, {int|str|buf}, Result) => ComputationalData
+// *  4 - ConcatResTempl  (rtb, rtb, Result) => Buffer
+// *  9 - Divide          (int, int, Remainder, Result) => Integer
+//   15 - Index           ({str|buf|pkg}, int, Destination) => ObjectReference
+// * 16 - LAnd            (int, int) => Boolean
+// * 17 - LEqual          ({int|str|buf}, {int|str|buf}) => Boolean
+// * 18 - LGreater        ({int|str|buf}, {int|str|buf}) => Boolean
+// * 19 - LGreaterEqual   ({int|str|buf}, {int|str|buf}) => Boolean
+// * 20 - LLess           ({int|str|buf}, {int|str|buf}) => Boolean
+// * 21 - LLessEqual      ({int|str|buf}, {int|str|buf}) => Boolean
+// * 23 - LNotEqual       ({int|str|buf}, {int|str|buf}) => Boolean
+// * 24 - LOr             (int, int) => Boolean
+// * 27 - Mod             (int, int, Result) => Integer
+// * 28 - Multiply        (int, int, Result) => Integer
+// * 29 - NAnd            (int, int, Result) => Integer
+// * 30 - NOr             (int, int, Result) => Integer
+// * 33 - Or              (int, int, Result) => Integer
+// * 38 - ShiftLeft       (int, int, Result) => Integer
+// * 39 - ShiftRight      (int, int, Result) => Integer
+// * 45 - Subtract        (int, int, Result) => Integer
+// * 51 - ToString        (buf, int, Result) => String
+// * 52 - Wait            (evt, int) => Boolean
+// * 53 - XOr             (int, int, Result) => Integer
+//
+//      3 parameters (2 Operators)
+//
+//   10 - Fatal           (byt, dwd, int)
+// * 26 - Mid             ({str|buf}, int, int, Result) => Buffer or String
+//
+//      6 parameters (1 Operator)
+//
+// * 25 - Match           (pkg, byt, int, byt, int, int) => Ones | Integer
+//
+//      1 parameter (5 Operators)
+//
+// * 54 - If       (int)
+// * 55 - Elseif   (int)
+//   56 - Switch   ({int|str|buf})
+//   57 - Case     ({int|str|buf|pkg})
+// * 58 - While    (int)
+//
+//  (*) - conversion is expected. Operators which are expected
+//        to have conversion of their operands.
+//
+// //////////////////////////////////////////////////////////////////////////
+
+
+   STRUCTURE OF TEST
+   =================
+
+1. Sub-test for aspect 1, verifications for all operators.
+2. Sub-test for aspect 2, verifications for all operators.
+N. Sub-test for aspect N, verifications for all operators.
+
+The valid operand checkings and invalid operand checkings
+should be structurized as different runs  - no exceptions
+should be exercised during the valid operand checkings
+execution.
+
+
+   TABLE OF AVAILABLE MIX OF ASPECTS
+   =================================
+
+                       1      2      3      4      5      6      7      8
+                       im     loc    ref    exp    mth    conv   oper   misc
+  ----------------------------------------------------------------------------
+  A | Images         |      |      |      |      |      |      |      |      |
+  B | Locations      |      |      |      |      |      |      |      |      |
+  C | References     |      |      |      |      |      |      |      |      |
+  D | Expressions    |      |      |      |      |      |      |      |      |
+  E | Methods        |      |      |      |      |      |      |      |      |
+  F | Conversion     |      |      |      |      |      |      |      |      |
+  G | Operators      |      |      |      |      |      |      |      |      |
+  H | Miscellaneous  |      |      |      |      |      |      |      |      |
+  ----------------------------------------------------------------------------
+
+  Example: A1 means ...
+  Note: you see, it is not ready.
+
+
+   PARTICULAR INFORMATION
+   ======================
+
+Buffer Field operators should be passed directly only because ASL
+doesn't allow to pass Buffer Field type objects without conversion
+(they are converted to either Integer or Buffer types).
+
+Allocate Buffer Fields for both operands from the same buffer
+(Buffer(20){}). Fill the entire Buffer with the zeros (units),
+then fill the fields with the units (zeros) and check the contents
+of the whole Buffer after Operator completion.
+
+Results should be written into LocalX, not to involve the
+"Implicit Result Object Conversion".
+
+Perhaps, groups of operators can have the same checkings which can
+be handled by the same methods (with different benchmark values) so
+simplifying the designing of tests. But the rest of checkings should
+be provided by the actions individual for the particular operators.
+
+
+   BRIEF RECOMMENDATIONS (summary from above)
+   =====================
+
+   There should be the most important or usually forgotten things
+
+ 1. use all type immediate Images
+ 2. use all type Locations
+ 3. use all type References
+ 4. use all type Expressions
+ 5. use Methods in expressions and expressions as parameters to Methods 
+ 6. initiate all kind of Implicit Source Operand Conversion
+ 7. exercise all Operators
+ 8. apply recommendations given in Miscellaneous section
+ 9. use full and reduced forms of operators (mean optional Results)
+10. use zero length Buffers
+11. use uninitialized elements of Packages
+12. use non-computational elements of Packages to (initiate/NOT initiate)
+    exceptions during conversion (Match..)
+13. use Packages: uninitialized,...,uninitialized,<valid_value>
+14. use all operators - ObjectType, SizeOf and LEqual to verify results
+15. verify all the obtained results
+16. check that the source objects were not corrupted by execution
+    (use all - ObjectType, SizeOf and LEqual)
+17. remember about the NULL symbols of strings
+18. mix different (all) aspects; the more you mix aspects
+    the more comprehensive test you have
+19. add directives into Miscellaneous section and here while
+    increasing your skill of building the test
+20. use the same object (and several such objects)
+    (ArgX,LocalX,Name(X)) in different operands and
+    Destination of the same operator
+21. use the same object (and several such objects)
+    (ArgX,LocalX,Name(X)) in different operands of
+    different operators of the same expression
+22. do the input control (ObjectType, SizeOf, LEqual)
+    of passed values (where needed)
+23. check operators for unacceptable types of operands (exception occur)
+24. for the acceptable types of operands check particular unacceptable
+    values (exception occur)
+25. check that the result is of the same type as the benchmark
+    (use ObjectType, don't be satisfied with LEqual only)
+26. the second operands of Logical operators are converted
+    to the type of the first ones; do the checkings which
+    show and confirm that
+27. conversion of the second operands of Concatenate operator
+    is performed according to the table; do the checkings which
+    show and confirm that
+28. use immediate invocations of operators in place of operands
+    of other operators
+29. each operand of several-operands oprerators should be verified
+30. before running the operation initialize the destination area
+    with the contr-data (zero expected, take unit; unit expected,
+    take zero); so you see that result does actual change
+31. ...
+<END>---------------------------------------------------------<END>
+
+
+/*
+Do the table (or section):
+==========================
+Constants
+Global named objects
+Dynamical named objects
+LocalX
+ArgX
+Element of Buffer
+Element of String
+Element of Package
+   (DerefOf(Index()))
+Return of Method
+Object by reference
+...
+*/
+
+/*
+SEE: update all concerning the Table 17-8 Object Conversion Rules
+     (because specs where changed!):
+     Table 1
+     file: conversion_table
+     tests:...
+*/
+
+/*
+See: LocalX/ArgX
+
+- different size of source operator
+  Integer, 0xff, 0xffff, 0xffffff, ...
+- bit of sign of value
+- all the available symbols (in all positions of 0-9,a-f,A-F)
+- 32/64
+- all unavailable symbols (all except 0-9,a-f,A-F)
+- combinations of all available/unavailable symbols
+- B(ArgX){...}
+- B(LocalX){...}
+- particular test: Store Buffer/Integer into String
+  which (String) is far longer then Buffer/Integer.
+  The String immage will be reduces. Then attempt to
+  work with the rest of String outside of the new its
+  contents (behind the null symbol of String).
+- reference as an element of Package
+- verify 64-bit values in 32-bit mode
+*/
+
+/*
+SEE: pseudo accidental test
+*/
+
+/*
+???????? what in practice are this mix of aspects ???????????
+???????  see is that possible to use expressions in result ??????
+????? uninitialized data of Package - use them ?????
+*/

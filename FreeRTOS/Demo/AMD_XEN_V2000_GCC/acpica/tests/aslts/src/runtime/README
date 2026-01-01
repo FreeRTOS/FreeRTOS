@@ -1,0 +1,18 @@
+
+CONTENTS
+
+   run-time test collections
+
+cntl
+
+   Files provide the common control of test run,
+   provide the uniform structure of all run-time
+   tests.
+
+common
+
+   Objects of common use which may be useful in more then one test
+
+collections
+
+   particular run-time test collections

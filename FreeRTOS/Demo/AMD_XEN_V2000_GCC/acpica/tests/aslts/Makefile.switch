@@ -1,0 +1,66 @@
+# common switch make
+
+ASLTS_VER ?= 00000000
+
+all:	${MDIRS}
+${MDIRS}: FORCE
+	@cd $@; pwd; make
+
+install:	FORCE
+		@r=0; set -e; for d in ${MDIRS}; do \
+			(cd $$d; \
+			if [ $$? -ne 0 ]; then \
+				echo "Bad element of MDIRS: <$$d>"; \
+			else \
+				pwd; \
+				>&2 echo "Begin compiling test package: [$$d]"; \
+				$(MAKE) install ASLTS_MODE=$(ASLTS_MODE) ASLTS_VER=$(ASLTS_VER); \
+				if [ $$? -ne 0 ]; then \
+					r=1; \
+					false; \
+				fi; \
+			fi); \
+			if [ $$r -ne 0 ]; then \
+				exit $r; \
+			fi; \
+			>&2 echo "Compiled test package: [$$d]"; \
+		done
+
+install_n32:
+	$(MAKE) install ASLTS_MODE=n32 ASLTS_VER=$(ASLTS_VER)
+install_n64:
+	$(MAKE) install ASLTS_MODE=n64 ASLTS_VER=$(ASLTS_VER)
+install_o32:
+	$(MAKE) install ASLTS_MODE=o32 ASLTS_VER=$(ASLTS_VER)
+install_o64:
+	$(MAKE) install ASLTS_MODE=o64 ASLTS_VER=$(ASLTS_VER)
+install_aslminus:
+	$(MAKE) install ASLTS_MODE=aslminus ASLTS_VER=$(ASLTS_VER)
+install_aslplus:
+	$(MAKE) install ASLTS_MODE=aslplus ASLTS_VER=$(ASLTS_VER)
+install_aslconvert:
+	$(MAKE) install ASLTS_MODE=aslconvert ASLTS_VER=$(ASLTS_VER)
+
+install_all:	install_n32 install_n64 install_o32 install_o64 install_aslminus install_aslplus install_aslconvert
+
+clean:	FORCE
+		@for d in ${MDIRS}; do \
+			(cd $$d; \
+			if [ $$? -ne 0 ]; then \
+				echo "Bad element of MDIRS: <$$d>"; \
+			else \
+				pwd; make clean; \
+			fi); \
+		done
+
+clobber:	FORCE
+		@for d in ${MDIRS}; do \
+			(cd $$d; \
+			if [ $$? -ne 0 ]; then \
+				echo "Bad element of MDIRS: <$$d>"; \
+			else \
+				pwd; make clobber; \
+			fi); \
+		done
+
+FORCE:

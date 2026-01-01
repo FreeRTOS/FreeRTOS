@@ -1,0 +1,16 @@
+
+CONTENTS
+
+   source code of tests
+
+compilation
+
+   ASL-compilation control test collection. The tests check ability
+   of ASL compiler to reveal and report incorrect ASL code. No AML code
+   is produces in result. The output of compilation should contain all
+   the expected Error/Warning messages.
+
+runtime
+
+   The tests of these collections are correct ASL codes which should
+   be compiled to AML code and then passed to acpiexec utility.

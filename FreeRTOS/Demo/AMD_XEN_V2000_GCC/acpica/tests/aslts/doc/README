@@ -1,0 +1,32 @@
+
+CONTENTS
+
+   miscellaneous descriptive information
+
+docs
+
+   designing the Source Operand Complex test (and similar)
+   was quite complicated work; to concentarate on the main
+   aspects of it and to prove ourselves being on the proper
+   way and break hesitating in details these principles were
+   outlined (file TestOfOperands); principles could be useful
+   in general to design ASL tests
+
+plan
+
+   remaining work, our ideas about which more tests should be
+   designed, the time and priority of work estimation
+
+StoreCopyTestPrototype
+
+   these demo programs may be considered as a prototypes
+   of separate functional tests for CopyObject and Store
+   operators
+
+CurrentState
+
+   remarks about the current state of tests; for example
+   some sub-tests of tests are suppressed due to the fact
+   they cause abort of execution; after fixing the root
+   problems in ACPICA these sub-tests must be enabled;
+   these and similar information about the tests is here

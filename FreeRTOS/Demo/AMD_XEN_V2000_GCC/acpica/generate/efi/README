@@ -1,0 +1,40 @@
+
+                         Build EFI ACPICA Utilities
+
+The EFI porting of the ACPICA utilities can be built with GNU EFI and EDK2.
+However, the porting has only been tested in a Linux environment.
+
+1. Build EFI ACPICA utilities with EDK2 (Linux)
+
+   In a Linux environment, you can build EFI ACPICA utilities by executing
+   the following commands (supposing you are using gcc-4.7):
+
+   # git clone https://github.com/tianocore/edk2
+   # git clone https://github.com/acpica/acpica
+   # cd edk2
+   # (cd BaseTools; make)
+   # source ./edksetup.sh
+   # ln -s ../acpica AcpiPkg
+   # AcpiPkg/generate/efi/edksetup.sh
+   # build -p AcpiPkg/AcpiPkg.dsc -t GCC47
+
+   You can find built EFI binaries (e.x., acpidump.efi) in the following
+   folders:
+     Build/Acpi/DEBUG_GCC47/IA32: i386 targets
+     Build/Acpi/DEBUG_GCC47/X64: x86_64 targets
+
+2. Build EFI ACPICA utilities with GNU EFI (Linux)
+
+   In a Linux environment, you can build EFI ACPICA utilities by executing
+   the following commands:
+
+   # apt-get install gnu-efi
+   # git clone https://github.com/acpica/acpica
+   # cd acpica
+   # make OS=efi
+
+   You can find built EFI binaries (e.x., acpidump.efi) in the following
+   folder:
+     generate/efi/bin
+   It contains i386 targets if it is built on an i386 host, or it contains
+   x86_64 targets if it is built on a x86_64 host.

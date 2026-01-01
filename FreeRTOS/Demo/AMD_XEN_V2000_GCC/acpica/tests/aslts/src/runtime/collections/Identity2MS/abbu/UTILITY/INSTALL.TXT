@@ -1,0 +1,77 @@
+cd C:\Documents and Settings\pva\My Documents\acpi\wk\grammar\ABBU\utility
+==========================================================================
+
+Install instructions for ACPI CA BlackBox Utility on Windows XP.
+
+- Copy everything into a target directory
+
+- Run the ACPI BlackBox Utility (abbu.exe)
+
+- Select Options | Dump DSDT AML to get the current DSDT.AML file
+
+- Use AcpiDump to convert the AML file to a readable format (acpidump DSDT.AML)
+  The default output name is "dsdt.dsl".  
+
+- Create a file extra.asl with the following:
+
+DefinitionBlock("extra.aml", "DSDT", 0x1, "INTEL", "ABCDE", 0x1)
+{
+    Scope(\_SB)
+    {
+        Device(ABBU)
+        {
+            Name(_HID, "ACPIABB0")
+            Method(ENBL)
+            {
+                Return(Zero)
+            }
+
+            Method(TEST)
+            {
+                Return(Zero)
+            }
+
+	    // List all test names here, separated by commas
+	    // It provides a convenient list of tests available on the platform
+	    Name(TSTS, Package()
+	    {
+		"ENBL",
+		"TEST"
+	    })
+        }
+    }
+}
+
+NOTE: The closing bracket of the DefinitionBlock MUST come after the closing bracket of this SB scope.
+      Also, this is a minimum injected code sample.  Added Methods to test specific DSDT functions found
+      in the DSDT.ASL file created earlier.
+
+- Use iasl.exe to compile EXTRA.ASL to create EXTRA.AML.  Use the -i switch to ignore errors
+
+- Run abbu.exe and press the 'Modify DSDT...' button
+
+- Point the Original DSDT path to DSDT.AML - It should be pointing to the file already
+
+- Point the Injected code path to EXTRA.AML - It should be pointing to the file already
+
+- Reboot
+
+- Windows XP should find your new device and want to load a driver.
+  Point it to the directory into which you copied the abbu.sys and abbu.inf files
+
+- Using the abbu.exe in the target directory:
+  - Use the 'Connect Driver' button to connect to the driver
+  - Use the 'Execute Ctrl Method' button to open a dialog box and enter a Method name (i.e. TEST)
+  - The driver will return a DWORD only with the results in the output box.
+
+Use Method(TEST) as a template to create new methods.
+
+TO UNINSTALL:
+=============
+- Use Device Manager to uninstall the 'Intel ACPI Black Box Utility Control Device' under 'System Devices'
+
+- Use Regedit and delete the following Keys:
+    - HKLM\System\CurrentControlSet\Services\Acpi\Parameters\DSDT
+    - HKLM\System\CurrentControlSet\Services\ABBU
+
+- Delete \Windows\System32\Drivers\abbu.sys

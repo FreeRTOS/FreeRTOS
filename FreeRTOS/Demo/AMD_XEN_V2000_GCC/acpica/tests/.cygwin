@@ -1,0 +1,5 @@
+export ASL="c:/acpica/libraries/iasl.exe"
+export acpiexec="c:/acpica/libraries/acpiexec.exe"
+export ASLTSDIR="c:/acpica/tests/aslts"
+PATH=$PATH:/cygdrive/c/acpica/tests/aslts/bin
+PATH=$PATH:/cygdrive/c/acpica/libraries

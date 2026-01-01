@@ -1,0 +1,103 @@
+/*
+ * Access to elements of combined objects
+ *
+ *   Device
+ *   Power Resource
+ *   Processor
+ *   Thermal Zone
+ *   Method (access to internal objects of method,
+ *           in case that access is generated not from
+ *           inside that method looks incorrect)
+ *
+ * All available ways to access internal
+ * elements of combined objects are these:
+ *
+ * - by name (2-4 below):
+ *
+ *   1) ABCD      - through the all tree  (search rules apply)
+ *   2) ^...^ABCD - N parents up          (search rules do not apply)
+ *   3) XYZ.ABCD  - in current scope only (search rules do not apply)
+ *   4) \XYZ.ABCD - absolute path         (search rules do not apply)
+ *    - pass to Local, Arg, immediately to expressions, etc..
+ *
+ * - by RefOf/DerefOf:
+ *
+ *     RefOf(d000.i000)
+ *
+ *  ???????????????????????????????????????????
+ *
+ * - by Index/DerefOf:
+ *
+ *     Index(d000.p000)
+ *
+ *  ???????????????????????????????????????????
+ *
+ * - by Fields:
+ *
+ *     Field
+ *     Index Field
+ *     Bank Field
+ *     Buffer Field
+ *
+ *    Creating fields features:
+ *    - on the same level
+ *    - inside deeper level (inside call to another level method)
+ *    - parent object is on global/local level
+ *    - parent object is inside some compound type object
+ *    Usage fields features:
+ *    - pass by Arg to method
+ *    - Store/Copy intermediately to Local
+ *    - Store/Copy intermediately to Arg (affectively local)
+ *    - Store/Copy intermediately to Named
+ *    - Store/Copy intermediately to Named of compound object
+ *    - pass immediately to expressions
+ *      Note: don't check there the Implicit Conversion Rules
+ *
+ * - Method invocations:
+ *
+ *    - pass to methods (7,6,...) objects of different type
+ *    - in other checkings pass to method not only the object
+ *      immediately participating in checking but also other
+ *      objects including:
+ *      - parent object of element of package,
+ *      - parent object of element of Field,
+ *      - parent object of IRef Reference,
+ *      - parent object of ORef Reference,
+ *      - original compound object of all other type objects above,
+ *      - pass the same object (see above too) to method by several parameters,
+ *      - etc.
+ *
+ * There is no way to specify by ASL code accessing
+ * elements of combined object in case that combined
+ * object is represented by:
+ *
+ * - ArgX
+ * - LocalX
+ * - another Named object where the combined
+ *   object has been copied by CopyObject (see Note below)
+ *
+ *   Note: if the target object where the combined object is
+ *         copied contains some same name object as source object
+ *         then we can expect that after CopyObject operation that
+ *         object will contain new value the same as in source object
+ *         (exotic case of CopyObject usage).
+ *         I will not verify this case, at least now.
+ *
+ * So, there is no much sense to verify behaviour of:
+ *
+ * - RefOf to combined object
+ * - combined object passed by Arg to method
+ * - combined object Stored/CopyObject to LocalX
+ * - combined object Stored/CopyObject to ArgX (effective local)
+ * - combined object Stored/CopyObject to NamedX
+ * - combined object as element of Package
+ *
+ * Exotic (could be done ever):
+ *   All the possible checkings can be implemented (ASL coded)
+ *   to check the behaviour of the object substituted by the
+ *   CopyObject instead of the original one.
+ *   At that the substituted object can be 1) of the same type
+ *   and have a) all the elements the original has and b) not
+ *   all of them are present in the copy and 2) be object of
+ *   some another type than original.
+ */

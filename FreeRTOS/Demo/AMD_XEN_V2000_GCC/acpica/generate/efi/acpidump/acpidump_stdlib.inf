@@ -1,0 +1,66 @@
+## @file
+# acpidump.inf
+#
+#  Copyright (c) 2017, Intel Corporation. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution. The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = acpidump
+  FILE_GUID                      = EAB96253-B448-4855-BE7D-5A95DDECA540
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = ShellCEntryLib
+
+[Sources]
+  tools/acpidump/apdump.c
+  tools/acpidump/apfiles.c
+  tools/acpidump/apmain.c
+  common/cmfsize.c
+  common/getopt.c
+  os_specific/efi/osefitbl.c
+  os_specific/efi/osefixf.c
+  components/tables/tbprint.c
+  components/tables/tbxfroot.c
+  components/utilities/utascii.c
+  components/utilities/utbuffer.c
+  components/utilities/utdebug.c
+  components/utilities/utexcep.c
+  components/utilities/utglobal.c
+  components/utilities/uthex.c
+  components/utilities/utmath.c
+  components/utilities/utnonansi.c
+  components/utilities/utstring.c
+  components/utilities/utstrsuppt.c
+  components/utilities/utstrtoul64.c
+  components/utilities/utxferror.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  StdLib/StdLib.dec
+  ShellPkg/ShellPkg.dec
+  AcpiPkg/AcpiPkg.dec
+  StdLibPrivateInternalFiles/DoNotUse.dec
+
+[LibraryClasses]
+  ShellCEntryLib
+  BaseLib
+  LibC
+  DevMedia
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+
+[BuildOptions]
+  MSFT:*_*_IA32_CC_FLAGS = /D_EDK2_EFI /DACPI_DUMP_APP /DUSE_MS_ABI /DUSE_STDLIB /D__i386__
+  MSFT:*_*_X64_CC_FLAGS  = /D_EDK2_EFI /DACPI_DUMP_APP /DUSE_MS_ABI /DUSE_STDLIB /D__x86_64__
+  GCC:*_*_IA32_CC_FLAGS  = -U__linux__ -U_LINUX -D_EDK2_EFI -DACPI_DUMP_APP -DUSE_STDLIB -fno-builtin -iwithprefix include
+  GCC:*_*_X64_CC_FLAGS   = -U__linux__ -U_LINUX -D_EDK2_EFI -DACPI_DUMP_APP -DUSE_STDLIB -fno-builtin -iwithprefix include

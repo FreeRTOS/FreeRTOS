@@ -1,0 +1,65 @@
+
+How to install the AML tests
+----------------------------
+
+
+There are two ways to install the AML tests in a Unix-like environment:
+
+1.  > cd aslts
+    > make install
+
+2.  > aslts/bin/Do 0 aslts
+
+where 'aslts' is the root directory of the test suite. The base name must
+be exactly 'aslts'.
+
+The generated tests will be located in the aslts/tmp/aml parent directory
+which is created automatically by make-install.
+
+The actual AML code of the individual ASL tests are placed in the following
+subdirectories:
+
+   With compiler optimization:
+
+       aslts/tmp/aml/opt/32
+       aslts/tmp/aml/opt/64
+
+   Without compiler optimization:
+
+       aslts/tmp/aml/nopt/32
+       aslts/tmp/aml/nopt/64
+
+If the directories aslts/tmp/aml/* do not exist they are automatically
+created.
+
+
+SEE ALSO
+
+   aslts/HOW_TO_USE
+   Comments on the Do utility in the bin/README file
+
+
+ENVIRONMENT
+
+   For test generation, the environment variable 'ASL' should be set to the
+   pathname of the iASL compiler.
+
+        For example, for cygwin under windows:
+
+            > export ASL="c:/acpica/libraries/iasl.exe"
+
+
+   For test execution, three additional variables are required:
+
+        acpiexec - path to acpiexec utility: (example)
+
+            > export acpiexec="c:/acpica/libraries/acpiexec.exe"
+
+        acpibin - path to acpibin utility: (example)
+
+            > export acpibin="c:/acpica/libraries/acpibin.exe"
+
+       ASLTSDIR - path to the aslts directory: (example)
+
+            > export ASLTSDIR="c:/acpica/tests/aslts"
+

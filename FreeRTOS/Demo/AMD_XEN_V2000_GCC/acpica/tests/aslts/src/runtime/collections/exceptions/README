@@ -1,0 +1,30 @@
+
+CONTENTS
+
+   exceptional conditions test collection
+
+exc
+
+   initiate and verify exceptional conditions
+
+exc_operand
+
+   exceptions caused by inappropriate type of operands
+
+exc_result
+
+   exceptions caused by inappropriate type of destination
+
+exc_ref
+
+   exceptions caused by inappropriate use of references
+
+exc_tbl
+
+   exceptions caused by inappropriate use of table management
+
+FULL
+
+   full the exceptional conditions test collection - all
+   the tests of the exceptional conditions test collection
+   are compiled together as one DefinitionBlock

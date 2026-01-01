@@ -1,0 +1,63 @@
+
+//  lib-win.lnt
+//    PC-lint Library Options File for windows.h
+
+-printf(w2,wsprintf)   // complains if pointers to wsprintf are not far.
+-printf(w2,wsprintfA)  // ASCII version of wsprintf
+-printf(w2,wsprintfW)  // UNICODE version of wsprintf
+-esym(14,pLocalHeap)   // variable defined in windows.h
+-e740   // remove 'suspicious cast' messages because these must be
+	// routinely done within Windows.
+-e744   // switch has no default, reflects Petzold style
+-elib(46) // windows.h uses a BYTE as base of bit field.
+-elib(1717) // allow null prototypes.
+-e793       // windows breaks ANSI limits
+
+//  the following functions have their return value typically ignored.
+//  add or subtract from this list as desired.
+-esym(534,RegisterClass,ShowWindow,TranslateMessage,DispatchMessage)
+-esym(534,DrawText,GetTextMetrics,ReleaseDC,TextOut,SetTextAlign)
+-esym(534,SetScrollPos,SelectObject,SetBkMode,SendMessage,MessageBox)
+-esym(534,MessageBoxA,MessageBoxW,PostMessageA,PostMessageW)
+-esym(534,PatBlt,DeleteDC,SetCapture,SetCursor,StretchBlt)
+-esym(534,Rectangle,MoveTo,LineTo,ShowCursor,MoveWindow,SetWindowWord)
+-esym(534,SetPixel,FillRect,DeleteObject,KillTimer,GetProfileString)
+-esym(534,SetWindowLong,SetFocus,SetBkColor,SetTextColor,SetBrushOrg)
+-esym(534,UnrealizeObject,_lclose,Polygon,FrameRect,LoadString)
+-esym(534,GetInstanceData,GlobalUnlock,FreeResource,LoadString)
+-esym(534,DrawIcon,AppendMenu,GetObject,CheckMenuItem,SetClassWord)
+-esym(534,EnableMenuItem,SetMenu,DestroyMenu,TrackPopupMenu)
+-esym(534,AnsiUpper,Arc,BeginPaint,BitBlt,ChangeClipboardChain,Chord)
+-esym(534,CloseClipboard,CombineRgn,DdeClientTransaction,DdeDisconnect)
+-esym(534,DdeFreeStringHandle,DdeGetData,DdeNameService,DdePostAdvise)
+-esym(534,DdeQueryString,DdeUninitialize,DeleteMenu,DeleteMetaFile)
+-esym(534,DestroyWindow,DialogBox,DPtoLP,Ellipse,EmptyClipboard,EnableWindow)
+-esym(534,EnumChildWindows,EnumWindows,Escape,GetClassName,GetDlgItemText)
+-esym(534,GetFileTitle,GetMenuString,GetStrings,GetSystemMenu,GetTextFace)
+-esym(534,GetWindowText,GlobalDeleteAtom,GlobalFree,GlobalGetAtomName)
+-esym(534,LocalFree,LocalUnlock,LockResource,lstrcpy,OpenClipboard)
+-esym(534,Pie,PlayMetaFile,PopFindNextText,PostDataMessage,PostMessage)
+-esym(534,RestoreDC,SaveDC,SelectClipRgn,SendDlgItemMessage,SetClipboardData)
+-esym(534,SetDIBitsToDevice,SetMapMode,SetMapperFlags,SetROP2,SetStretchBltMode)
+-esym(534,SetTextJustification,SetTimer,SetViewportExt,SetViewportOrg)
+-esym(534,SetWindowExt,SetWindowOrg,StretchDIBits,WinExec)
+
+//  Ignored parameters
+-esym(715,lpszCmdParam,lpszCmdLine)
+
+// Please Note:
+// We complain (Error 64) when a function declared _export is
+// assigned to a non-export function.  Accordingly you should
+// modify your windows.h so that the declaration of
+//  LONG  (FAR PASCAL *lpfnWndProc)( HWND, WORD, WORD, LONG );
+// within the WNDCLASS struct has an '_export' added as in:
+//  LONG  (FAR PASCAL _export *lpfnWndProc)( HWND, WORD, WORD, LONG );
+// Alternatively use the suffix   '//lint !e64'
+// on the line yielding the Error 64.
+
+// Special Note for DLL's
+// Enable the following option by removing the leading '//'
+// +e934 // report passing near auto pointers to other functions
+// See Petzold, Chapter 19 "Dynamic Link Libraries", Section
+// "The DS != SS Issue", (Windows 3.0, pp 897-902), or
+// (Windows 3.1, pp 929-934).

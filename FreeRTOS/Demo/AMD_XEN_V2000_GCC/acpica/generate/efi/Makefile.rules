@@ -1,0 +1,26 @@
+#
+# Common rules for generation of ACPICA utilities
+#
+# BIN/PROG.efi - Copies the utility to the local bin directory
+# PROG.efi - Converts the shared library into EFI executable
+# PROG.so - Builds the utility into a shared library
+#
+
+
+../$(BINDIR)/$(PROG).efi : $(PROG).efi
+	$(COPYPROG)
+
+$(PROG).efi : $(PROG).so
+	$(OBJCOPYPROG)
+
+$(PROG).so : $(OBJECTS)
+	$(LINKPROG)
+
+$(OBJDIR)/%.o : %.c $(HEADERS) $(ACPICA_HEADERS)
+	$(COMPILEOBJ)
+
+clean :
+	rm -f ../$(BINDIR)/$(PROG).efi
+	rm -f $(PROG).efi
+	rm -f $(PROG).so
+	rm -f $(OBJECTS)

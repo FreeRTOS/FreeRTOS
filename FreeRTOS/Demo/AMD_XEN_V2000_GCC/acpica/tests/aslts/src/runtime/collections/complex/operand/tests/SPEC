@@ -1,0 +1,177 @@
+
+/*
+ * Implicit Source Operand Conversion, complex test
+ *
+ *
+ * Integer to String implicit conversion Cases.
+ * There are following cases when this type of conversion is applied:
+ * - to the Integer second operand of Logical operators when the first
+ *   operand is evaluated as String (LEqual, LGreater, LGreaterEqual,
+ *   LLess, LLessEqual, LNotEqual)
+ * - to the Integer second operand of Concatenate operator when the first
+ *   operand is evaluated as String
+ * - to the Integer elements of an search package of Match operator
+ *   when some MatchObject is evaluated as String
+ * - to the Integer value of Expression of Case statement when
+ *   Expression in Switch is either static String data or explicitly
+ *   converted to String by ToDecimalString, ToHexString or ToString
+ *
+ * Integer to Buffer implicit conversion Cases.
+ * There are following cases when this type of conversion is applied:
+ * - to the Integer second operand of Logical operators when the first
+ *   operand is evaluated as Buffer (LEqual, LGreater, LGreaterEqual,
+ *   LLess, LLessEqual, LNotEqual)
+ * - to both Integer operands of Concatenate operator
+ * - to the Integer second operand of Concatenate operator when the first
+ *   operand is evaluated as Buffer
+ * - to the Integer Source operand of ToString operator
+ * - to the Integer Source operand of Mid operator
+ * - to the Integer elements of an search package of Match operator
+ *   when some MatchObject is evaluated as Buffer
+ * - to the Integer value of Expression of Case statement when
+ *   Expression in Switch is either static Buffer data or explicitly
+ *   converted to Buffer by ToBuffer
+ *
+ * String to Integer implicit conversion Cases.
+ * There are following cases when this type of conversion is applied:
+ * - to the String sole operand of the 1-parameter Integer arithmetic
+ *   operators (Decrement, Increment, FindSetLeftBit, FindSetRightBit, Not)
+ * - to the String sole operand of the LNot Logical Integer operator
+ * - to the String sole operand of the FromBCD and ToBCD conversion operators
+ * - to each String operand of the 2-parameter Integer arithmetic
+ *   operators (Add, And, Divide, Mod, Multiply, NAnd, NOr, Or,
+ *   ShiftLeft, ShiftRight, Subtract, Xor)
+ * - to each String operand of the 2-parameter Logical Integer
+ *   operators LAnd and LOr
+ * - to the String second operand of Logical operators when the first
+ *   operand is evaluated as Integer (LEqual, LGreater, LGreaterEqual,
+ *   LLess, LLessEqual, LNotEqual)
+ * - intermediately to the String second operand of Concatenate operator
+ *   in case the first one is Integer
+ * - to the String Length (second) operand of ToString operator
+ * - to the String Index (second) operand of Index operator
+ * - to the String Arg (third) operand of Fatal operator
+ *   (it can only be checked an exception does not occur)
+ * - to the String Index and Length operands of Mid operator
+ * - to the String StartIndex operand of Match operator
+ * - to the String elements of an search package of Match operator
+ *   when some MatchObject is evaluated as Integer
+ * - to the String sole operand of the Method execution control operators
+ *   (Sleep, Stall)
+ * - to the String TimeoutValue (second) operand of the Acquire operator ???
+ * - to the String TimeoutValue (second) operand of the Wait operator
+ * - to the String value of Predicate of the Method execution control
+ *   statements (If, ElseIf, While)
+ * - to the String value of Expression of Case statement when
+ *   Expression in Switch is evaluated as Integer
+ *
+ * String to Buffer implicit conversion Cases.
+ * There are following cases when this type of conversion is applied:
+ * - to the String second operand of Logical operators when the first
+ *   operand is evaluated as Buffer (LEqual, LGreater, LGreaterEqual,
+ *   LLess, LLessEqual, LNotEqual)
+ * - to the String second operand of Concatenate operator when the first
+ *   operand is evaluated as Buffer
+ * - to the String Source operand of ToString operator (has a visual
+ *   effect in shortening of the String taken the null character.
+ * - to the String elements of an search package of Match operator
+ *   when some MatchObject is evaluated as Buffer
+ * - to the String value of Expression of Case statement when
+ *   Expression in Switch is either static Buffer data or explicitly
+ *   converted to Buffer by ToBuffer
+ *
+ * Buffer to Integer implicit conversion Cases.
+ * There are following cases when this type of conversion is applied:
+ * - to the Buffer sole operand of the 1-parameter Integer arithmetic
+ *   operators (Decrement, Increment, FindSetLeftBit, FindSetRightBit, Not)
+ * - to the Buffer sole operand of the LNot Logical Integer operator
+ * - to the Buffer sole operand of the FromBCD and ToBCD conversion operators
+ * - to each Buffer operand of the 2-parameter Integer arithmetic
+ *   operators (Add, And, Divide, Mod, Multiply, NAnd, NOr, Or,
+ *   ShiftLeft, ShiftRight, Subtract, Xor)
+ * - to each Buffer operand of the 2-parameter Logical Integer
+ *   operators LAnd and LOr
+ * - to the Buffer second operand of Logical operators when the first
+ *   operand is evaluated as Integer (LEqual, LGreater, LGreaterEqual,
+ *   LLess, LLessEqual, LNotEqual)
+ * - intermediately to the Buffer second operand of Concatenate operator
+ *   in case the first one is Integer
+ * - to the Buffer Length (second) operand of ToString operator
+ * - to the Buffer Index (second) operand of Index operator
+ * - to the Buffer Arg (third) operand of Fatal operator
+ *   (it can only be checked an exception does not occur)
+ * - to the Buffer Index and Length operands of Mid operator
+ * - to the Buffer StartIndex operand of Match operator
+ * - to the Buffer elements of an search package of Match operator
+ *   when some MatchObject is evaluated as Integer
+ * - to the Buffer sole operand of the Method execution control operators
+ *   (Sleep, Stall)
+ * - to the Buffer TimeoutValue (second) operand of the Acquire operator ???
+ * - to the Buffer TimeoutValue (second) operand of the Wait operator
+ * - to the Buffer value of Predicate of the Method execution control
+ *   statements (If, ElseIf, While)
+ * - to the Buffer value of Expression of Case statement when
+ *   Expression in Switch is evaluated as Integer
+ *
+ * Buffer to String implicit conversion Cases.
+ * There are following cases when this type of conversion is applied:
+ * - to the Buffer second operand of Logical operators when the first
+ *   operand is evaluated as String (LEqual, LGreater, LGreaterEqual,
+ *   LLess, LLessEqual, LNotEqual)
+ * - to the Buffer second operand of Concatenate operator when the first
+ *   operand is evaluated as String
+ * - to the Buffer elements of an search package of Match operator
+ *   when some MatchObject is evaluated as String
+ * - to the Buffer value of Expression of Case statement when
+ *   Expression in Switch is either static String data or explicitly
+ *   converted to String by ToDecimalString, ToHexString or ToString
+ *
+ * Buffer field to Integer implicit conversion Cases.
+ * First, Buffer field is evaluated either as Integer or as Buffer.
+ * Conversion only takes place for Buffer in which case 
+ * Buffer to Integer test constructions should be used.
+ *
+ * Buffer field to Buffer implicit conversion Cases.
+ * First, Buffer field is evaluated either as Integer or as Buffer.
+ * Conversion only takes place for Integer in which case 
+ * Integer to Buffer test constructions should be used.
+ *
+ * Buffer field to String implicit conversion Cases.
+ * First, Buffer field is evaluated either as Integer or as Buffer
+ * For Integer case Integer to String test constructions should be used.
+ * For Buffer case Buffer to String test constructions should be used.
+ *
+ * Field unit implicit conversion is considered similar to
+ * Buffer field one.
+ *
+ * Note 1: Only an expression that is evaluated to a constant 
+ *         can be used as the Expression of Case
+ *
+ * Note 2: So as initial elements of a package are either constant
+ *         data or name strings then check of implicit conversion
+ *         applied to the elements of the search package of Match
+ *         operator is limited to a data images case.
+ *
+ * Note 3: So as the Buffer field and Field unit data are Named Objects
+ *         by definition then check of implicit conversion applied to these
+ *         data types is limited to a case when Named Objects can be used.
+ *
+ * Cases when there are more than one operand for implicit conversion
+ * - when the  first operand of Concatenate operator is Integer,
+ *   there are additional conversions besides this Integer to Buffer:
+ *    = String to Integer conversion if second operand is String
+ *    = Buffer to Integer conversion if second operand is Buffer
+ *    = Integer to Buffer conversion of the converted second operand
+ *
+ *
+ * EXCEPTIONAL Conditions during implicit conversion
+ *
+ * String to Integer implicit conversion Cases.
+ *
+ * Buffer to String implicit conversion Cases.
+ *
+ * Buffer field to String implicit conversion Cases.
+ *
+ * Field unit to String implicit conversion Cases.
+ *
+ */

@@ -1,0 +1,33 @@
+
+CONTENTS
+
+    Functional test collection
+
+    The following directories contain the functional tests
+    of groups of ASL operators.
+
+    Name of directory       Name of group of ASL operators
+     (name of test)
+   ___________________________________________________________
+ 0 | arithmetic      | Integer arithmetic                    |
+ 1 | bfield          | Buffer Fields                         |
+ 2 | constant        | Constants                             |
+ 3 | control         | Method execution control              |
+ 4 | descriptor      | Resource Descriptor macros            |
+ 5 | extern          | ASL compiler controls                 |
+ 6 | local           | Control method objects                |
+ 7 | logic           | Logical operators                     |
+ 8 | manipulation    | Data type conversion and manipulation |
+ 9 | name            | Miscellaneous named object creation   |
+10 | reference       | Object references                     |
+11 | region          | Operation Regions                     |
+12 | synchronization | Synchronization                       |
+13 | table           | ACPI table management                 |
+14 | module          | Module level code execution           |
+   ___________________________________________________________
+
+FULL
+
+   full the functional test collection - all the tests of
+   the functional test collection are compiled together as
+   one DefinitionBlock

@@ -78,6 +78,9 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_utils.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_utils.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

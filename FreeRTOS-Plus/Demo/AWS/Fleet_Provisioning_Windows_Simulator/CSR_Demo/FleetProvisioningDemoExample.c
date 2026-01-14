@@ -606,8 +606,6 @@ int prvFleetProvisioningTask( void * pvParameters )
             {
                 LogError( ( "Failed to generate Key and Certificate Signing Request." ) );
             }
-
-            xPkcs11CloseSession( xP11Session );
         }
 
         /**** Connect to AWS IoT Core with provisioning claim credentials *****/
@@ -824,6 +822,8 @@ int prvFleetProvisioningTask( void * pvParameters )
         }
 
         /**** Retry in case of failure ****************************************/
+
+        xPkcs11CloseSession(xP11Session);
 
         /* Increment the demo run count. */
         ulDemoRunCount++;

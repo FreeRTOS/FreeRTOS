@@ -392,7 +392,6 @@ bool xPkcs11CloseSession( CK_SESSION_HANDLE xP11Session )
         xResult = xFunctionList->C_CloseSession( xP11Session );
     }
 
-
     return( xResult == CKR_OK );
 }
 

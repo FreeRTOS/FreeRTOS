@@ -823,7 +823,7 @@ int prvFleetProvisioningTask( void * pvParameters )
 
         /**** Retry in case of failure ****************************************/
 
-        xPkcs11CloseSession(xP11Session);
+        xPkcs11CloseSession( xP11Session );
 
         /* Increment the demo run count. */
         ulDemoRunCount++;

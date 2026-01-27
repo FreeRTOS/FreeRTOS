@@ -809,7 +809,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
             xMqttSessionEstablished = true;
         }
 
-        if( xReturnStatus == pdFAIL )
+        if( xReturnStatus != pdFAIL )
         {
             /* Check if session is present and if there are any outgoing publishes
              * that need to resend. This is only valid if the broker is

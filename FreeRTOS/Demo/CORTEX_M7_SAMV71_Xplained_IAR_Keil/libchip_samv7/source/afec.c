@@ -449,7 +449,7 @@ void AFEC_SetAnalogOffset( Afec *pAFE, uint32_t dwChannel,uint32_t aoffset )
 {
     assert( dwChannel < 12 ) ;
     pAFE->AFEC_CSELR = dwChannel;
-    pAFE->AFEC_COCR = (aoffset & AFEC_COCR_AOFF_Msk);;
+    pAFE->AFEC_COCR = (aoffset & AFEC_COCR_AOFF_Msk);
 }
 
 /**

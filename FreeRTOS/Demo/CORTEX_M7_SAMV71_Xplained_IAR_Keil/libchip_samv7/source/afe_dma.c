@@ -157,7 +157,7 @@ static uint8_t _Afe_configureLinkList(Afec *pAfeHw, void *pXdmad, AfeCmd *pComma
     xdmadRxCfg.mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
         XDMA_UBC_NDE_FETCH_EN|
         XDMA_UBC_NDEN_UPDATED |
-        pCommand->RxSize;;
+        pCommand->RxSize;
     xdmadRxCfg.mbr_da = (uint32_t)pCommand->pRxBuff;
     xdmadRxCfg.mbr_sa = (uint32_t)&(pAfeHw->AFEC_LCDR);
     xdmadRxCfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
@@ -253,5 +253,5 @@ uint32_t Afe_SendData( AfeDma *pAfed, AfeCmd *pCommand)
     if (XDMAD_StartTransfer( pAfed->pXdmad, afeDmaRxChannel )) 
         return AFE_ERROR_LOCK;
 
-    return AFE_OK;;
+    return AFE_OK;
 }

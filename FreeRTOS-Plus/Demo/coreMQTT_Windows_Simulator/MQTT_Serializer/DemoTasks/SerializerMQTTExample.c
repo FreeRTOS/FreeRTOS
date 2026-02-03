@@ -169,6 +169,11 @@
  */
 #define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS        ( 3 )
 
+/**
+ * @brief Per the MQTT spec, the max packet size  can be of  max remaining length + 5 bytes
+ */
+#define MQTT_MAX_PACKET_SIZE                        ( 268435460U )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -205,9 +210,11 @@ static Socket_t prvConnectToServerWithBackoffRetries( void );
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
  * @param[in, out] xMQTTSocket is a TCP socket that is connected to an MQTT broker.
+ * @param[in,out] connectionProperties Pointer to the structure containing MQTT connection 
+ * parameters. This may be updated internally (e.g., client-generated values).
  *
  */
-static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket );
+static void prvCreateMQTTConnectionWithBroker(Socket_t xMQTTSocket, MQTTConnectionProperties_t* connectionProperties); 
 
 /**
  * @brief Performs a graceful shutdown and close of the socket passed in as its
@@ -234,8 +241,10 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket );
  *
  * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
+ * @param[in,out] connectionProperties Pointer to the structure containing MQTT connection 
+ * parameters. This may be updated internally (e.g., client-generated values).
  */
-static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket );
+static void prvMQTTSubscribeWithBackoffRetries(Socket_t xMQTTSocket, MQTTConnectionProperties_t* connectionProperties); 
 
 /**
  * @brief Function to update variable #xTopicFilterContext with status
@@ -305,8 +314,10 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  *
  * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
+ * @param[in,out] connectionProperties Pointer to the structure containing MQTT connection 
+ * parameters. This may be updated internally (e.g., client-generated values)
  */
-static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket );
+static void prvMQTTProcessIncomingPacket(Socket_t xMQTTSocket, MQTTConnectionProperties_t* connectionProperties); 
 
 /**
  * @brief The transport receive wrapper function supplied to the MQTT library for
@@ -414,6 +425,12 @@ static void prvMQTTDemoTask( void * pvParameters )
     Socket_t xMQTTSocket;
     uint32_t ulPublishCount = 0U, ulTopicCount = 0U;
     const uint32_t ulMaxPublishCount = 5UL;
+    MQTTConnectionProperties_t connectionProperties; 
+
+    /* If only using serializer functions, it is important to call MQTT_InitConnect to initialize values of
+    * connectionProperties to their default values.
+    */
+    MQTT_InitConnect(&connectionProperties); 
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -445,14 +462,14 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Sends an MQTT Connect packet over the already connected TCP socket
          * xMQTTSocket, and waits for connection acknowledgment (CONNACK) packet. */
         LogInfo( ( "Creating an MQTT connection to %s.", democonfigMQTT_BROKER_ENDPOINT ) );
-        prvCreateMQTTConnectionWithBroker( xMQTTSocket );
+        prvCreateMQTTConnectionWithBroker( xMQTTSocket, &connectionProperties);
 
         /**************************** Subscribe. ******************************/
 
         /* If the server rejected the subscription request, attempt to resubscribe
          * to the topic. Attempts are made according to the exponential backoff
          * retry strategy declared in backoff_algorithm.h. */
-        prvMQTTSubscribeWithBackoffRetries( xMQTTSocket );
+        prvMQTTSubscribeWithBackoffRetries( xMQTTSocket, &connectionProperties);
 
         /**************************** Publish and Keep-Alive Loop. ******************************/
         /* Publish messages with QoS0, send and process keep-alive messages. */
@@ -464,7 +481,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             /* Process incoming publish echo, since application subscribed to the same
              * topic the broker will send publish message back to the application. */
             LogInfo( ( "Attempt to receive publish message from broker." ) );
-            prvMQTTProcessIncomingPacket( xMQTTSocket );
+            prvMQTTProcessIncomingPacket( xMQTTSocket, &connectionProperties );
 
             /* Leave Connection Idle for some time */
             LogInfo( ( "Keeping Connection Idle.\r\n" ) );
@@ -475,7 +492,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             prvMQTTKeepAlive( xMQTTSocket );
 
             /* Process Incoming packet from the broker */
-            prvMQTTProcessIncomingPacket( xMQTTSocket );
+            prvMQTTProcessIncomingPacket( xMQTTSocket, &connectionProperties);
         }
 
         /************************ Unsubscribe from the topic. **************************/
@@ -483,7 +500,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvMQTTUnsubscribeFromTopic( xMQTTSocket );
 
         /* Process Incoming packet from the broker. */
-        prvMQTTProcessIncomingPacket( xMQTTSocket );
+        prvMQTTProcessIncomingPacket( xMQTTSocket, &connectionProperties);
 
         /**************************** Disconnect. ******************************/
 
@@ -705,7 +722,7 @@ static Socket_t prvConnectToServerWithBackoffRetries()
 }
 /*-----------------------------------------------------------*/
 
-static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
+static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket , MQTTConnectionProperties_t * connectionProperties )
 {
     BaseType_t xStatus;
     size_t xRemainingLength;
@@ -713,7 +730,6 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     MQTTStatus_t xResult;
     MQTTPacketInfo_t xIncomingPacket;
     MQTTConnectInfo_t xConnectInfo;
-    uint16_t usPacketId;
     bool xSessionPresent;
     NetworkContext_t xNetworkContext;
 
@@ -746,6 +762,8 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * Last Will and Testament is not used in this demo. It is passed as NULL. */
     xResult = MQTT_GetConnectPacketSize( &xConnectInfo,
                                          NULL,
+                                         NULL,
+                                         NULL,
                                          &xRemainingLength,
                                          &xPacketSize );
 
@@ -755,6 +773,8 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 
     /* Serialize MQTT connect packet into the provided buffer. */
     xResult = MQTT_SerializeConnect( &xConnectInfo,
+                                     NULL,
+                                     NULL, 
                                      NULL,
                                      xRemainingLength,
                                      &xBuffer );
@@ -793,9 +813,8 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     configASSERT( xStatus == ( BaseType_t ) xIncomingPacket.remainingLength );
 
     xIncomingPacket.pRemainingData = xBuffer.pBuffer;
-    xResult = MQTT_DeserializeAck( &xIncomingPacket,
-                                   &usPacketId,
-                                   &xSessionPresent );
+
+    xResult = MQTT_DeserializeAck( &xIncomingPacket, NULL, &xSessionPresent, NULL, NULL, connectionProperties );
 
     /* Log this convenient demo information before asserting if the result is
      * successful. */
@@ -832,8 +851,10 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 
     xResult = MQTT_GetSubscribePacketSize( xMQTTSubscription,
                                            sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                           NULL,
                                            &xRemainingLength,
-                                           &xPacketSize );
+                                           &xPacketSize,
+                                           MQTT_MAX_PACKET_SIZE);
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xResult == MQTTSuccess );
@@ -847,6 +868,7 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
     /* Serialize subscribe into statically allocated ucSharedBuffer. */
     xResult = MQTT_SerializeSubscribe( xMQTTSubscription,
                                        sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                       NULL,
                                        usSubscribePacketIdentifier,
                                        xRemainingLength,
                                        &xBuffer );
@@ -863,7 +885,7 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 }
 /*-----------------------------------------------------------*/
 
-static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
+static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket, MQTTConnectionProperties_t * connectionProperties )
 {
     uint32_t ulTopicCount = 0U;
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
@@ -898,7 +920,7 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
          * receiving Publish message before subscribe ack is zero; but application
          * must be ready to receive any packet.  This demo uses the generic packet
          * processing function everywhere to highlight this fact. */
-        prvMQTTProcessIncomingPacket( xMQTTSocket );
+        prvMQTTProcessIncomingPacket( xMQTTSocket, connectionProperties);
 
         /* Reset flag before checking suback responses. */
         xFailedSubscribeToTopic = false;
@@ -947,6 +969,8 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     uint8_t * pucPayload = NULL;
     uint32_t ulTopicCount = 0U;
     size_t ulSize = 0U;
+    MQTTStatus_t xResult; 
+    size_t propertyLength = 0; 
 
     /* Check if the pxPacketInfo contains a valid SUBACK packet. */
     configASSERT( pxPacketInfo != NULL );
@@ -957,12 +981,26 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
      * packet identifier and at least 1 return code. */
     configASSERT( pxPacketInfo->remainingLength >= 3U );
 
-    /* According to the MQTT 3.1.1 protocol specification, the "Remaining Length" field is a
-     * length of the variable header (2 bytes) plus the length of the payload.
-     * Therefore, we add 2 positions for the starting address of the payload, and
-     * subtract 2 bytes from the remaining length for the length of the payload.*/
-    pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) );
-    ulSize = pxPacketInfo->remainingLength - sizeof( uint16_t );
+    /* According to the MQTT 5.0 specification, the "Remaining Length" field represents the
+    * combined length of the variable header and the payload. In a SUBACK packet, the variable
+    * header consists of the Packet Identifier (2 bytes) followed by the properties.
+    *
+    * To locate the start of the payload:
+    * - Skip the 2-byte Packet Identifier.
+    * - Then skip the properties, whose total length is decoded using the
+    *   decodeSubackPropertyLength() function.
+    *
+    * The payload starts immediately after the properties.
+    * Its size is calculated by subtracting the size of the variable header
+    * (2 bytes for Packet ID + property length) from the remaining length.
+    */
+
+    xResult = decodeSubackPropertyLength( &pxPacketInfo->pRemainingData[sizeof(uint16_t)],
+                                         pxPacketInfo->remainingLength,
+                                         &propertyLength);
+
+    pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) ) + propertyLength ;
+    ulSize = pxPacketInfo->remainingLength - sizeof( uint16_t ) - propertyLength ;
 
     for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {
@@ -1006,8 +1044,10 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
 
     /* Find out length of Publish packet size. */
     xResult = MQTT_GetPublishPacketSize( &xMQTTPublishInfo,
+                                         NULL,
                                          &xRemainingLength,
-                                         &xPacketSize );
+                                         &xPacketSize,
+                                         MQTT_MAX_PACKET_SIZE);
     configASSERT( xResult == MQTTSuccess );
 
     /* Make sure the packet size is less than static buffer size. */
@@ -1017,6 +1057,7 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
      * be sent directly in order to avoid copying it into the buffer.
      * QOS0 does not make use of packet identifier, therefore value of 0 is used */
     xResult = MQTT_SerializePublishHeader( &xMQTTPublishInfo,
+                                           NULL,
                                            0,
                                            xRemainingLength,
                                            &xBuffer,
@@ -1059,8 +1100,10 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 
     xResult = MQTT_GetUnsubscribePacketSize( xMQTTSubscription,
                                              sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                             NULL,
                                              &xRemainingLength,
-                                             &xPacketSize );
+                                             &xPacketSize,
+                                             MQTT_MAX_PACKET_SIZE);
     configASSERT( xResult == MQTTSuccess );
     /* Make sure the packet size is less than static buffer size */
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
@@ -1072,6 +1115,7 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 
     xResult = MQTT_SerializeUnsubscribe( xMQTTSubscription,
                                          sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                         NULL,
                                          usUnsubscribePacketIdentifier,
                                          xRemainingLength,
                                          &xBuffer );
@@ -1112,13 +1156,21 @@ static void prvMQTTDisconnect( Socket_t xMQTTSocket )
     MQTTStatus_t xResult;
     BaseType_t xStatus;
     size_t xPacketSize;
+    size_t remainingLength;
 
     /* Calculate DISCONNECT packet size. */
-    xResult = MQTT_GetDisconnectPacketSize( &xPacketSize );
+    xResult = MQTT_GetDisconnectPacketSize( NULL, 
+                                            &remainingLength, 
+                                            &xPacketSize, 
+                                            MQTT_MAX_PACKET_SIZE,
+                                            MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION);
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xPacketSize <= mqttexampleSHARED_BUFFER_SIZE );
 
-    xResult = MQTT_SerializeDisconnect( &xBuffer );
+    xResult = MQTT_SerializeDisconnect( NULL, 
+                                        MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION, 
+                                        remainingLength,
+                                        &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
     xStatus = FreeRTOS_send( xMQTTSocket,
@@ -1165,6 +1217,31 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             LogInfo( ( "Ping Response successfully received." ) );
             break;
 
+        case MQTT_PACKET_TYPE_PUBACK:
+            LogInfo(("PUBACK received for packet ID %u.\r\n", usPacketId));
+            break;
+
+        case MQTT_PACKET_TYPE_PUBREC:
+            LogInfo(("PUBREC received for packet id %u.\n\n",
+                usPacketId));
+            break;
+
+        case MQTT_PACKET_TYPE_PUBREL:
+            LogInfo(("PUBREL received for packet id %u.\n\n",
+                usPacketId));
+            break;
+
+        case MQTT_PACKET_TYPE_PUBCOMP:
+            /* Nothing to be done from application as library handles
+             * PUBCOMP. */
+            LogInfo(("PUBCOMP received for packet id %u.\n\n",
+                usPacketId));
+            break;
+
+        case MQTT_PACKET_TYPE_DISCONNECT:
+            LogInfo(("Disconnect Packet Received. ")); 
+            break; 
+
         /* Any other packet type is invalid. */
         default:
             LogWarn( ( "prvMQTTProcessResponse() called with unknown packet type:(%02X).",
@@ -1204,7 +1281,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 /*-----------------------------------------------------------*/
 
-static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
+static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket, MQTTConnectionProperties_t * connectionProperties )
 {
     MQTTStatus_t xResult;
     MQTTPacketInfo_t xIncomingPacket;
@@ -1212,6 +1289,7 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
     MQTTPublishInfo_t xPublishInfo;
     uint16_t usPacketId;
     NetworkContext_t xNetworkContext;
+    MQTTReasonCodeInfo_t xDisconnectReasonCode = { 0 }; 
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -1246,14 +1324,27 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
             xIncomingPacket.pRemainingData = xBuffer.pBuffer;
         }
 
-        /* Check if the incoming packet is a publish packet. */
-        if( ( xIncomingPacket.type & 0xf0 ) == MQTT_PACKET_TYPE_PUBLISH )
+        if ( ( xIncomingPacket.type & 0xf0 ) == MQTT_PACKET_TYPE_PUBLISH)
         {
-            xResult = MQTT_DeserializePublish( &xIncomingPacket, &usPacketId, &xPublishInfo );
+            xResult = MQTT_DeserializePublish( &xIncomingPacket, 
+                                               &usPacketId,
+                                               &xPublishInfo, 
+                                               NULL, 
+                                               MQTT_MAX_PACKET_SIZE,
+                                               0);
             configASSERT( xResult == MQTTSuccess );
 
             /* Process incoming Publish message. */
-            prvMQTTProcessIncomingPublish( &xPublishInfo );
+            prvMQTTProcessIncomingPublish(&xPublishInfo);
+        }
+        else if ((xIncomingPacket.type & 0xf0) == MQTT_PACKET_TYPE_DISCONNECT)
+        {
+            xResult = MQTT_DeserializeDisconnect( &xIncomingPacket,
+                                                  connectionProperties->maxPacketSize,
+                                                  &xDisconnectReasonCode,
+                                                  NULL ); 
+            configASSERT(xResult == MQTTSuccess);
+            prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
         }
         else
         {
@@ -1262,25 +1353,25 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
              * packet. Session present is only valid for a CONNACK. CONNACK is not
              * expected to be received here. Hence pass NULL for pointer to session
              * present. */
-            xResult = MQTT_DeserializeAck( &xIncomingPacket, &usPacketId, NULL );
-            configASSERT( xResult == MQTTSuccess );
+            MQTTReasonCodeInfo_t reasonCodes;
 
-            if( xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK )
+            xResult = MQTT_DeserializeAck( &xIncomingPacket, &usPacketId,NULL, &reasonCodes, NULL, connectionProperties );
+
+            if (xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK)
             {
-                prvMQTTUpdateSubAckStatus( &xIncomingPacket );
-
+                prvMQTTUpdateSubAckStatus(&xIncomingPacket);
                 /* #MQTTServerRefused is returned when the broker refuses the client
                  * to subscribe to a specific topic filter. */
-                configASSERT( xResult == MQTTSuccess || xResult == MQTTServerRefused );
+                configASSERT(xResult == MQTTSuccess || xResult == MQTTServerRefused);
             }
             else
             {
-                configASSERT( xResult == MQTTSuccess );
+                configASSERT(xResult == MQTTSuccess);
             }
-
             /* Process the response. */
-            prvMQTTProcessResponse( &xIncomingPacket, usPacketId );
+            prvMQTTProcessResponse(&xIncomingPacket, usPacketId);
         }
+
     }
 }
 

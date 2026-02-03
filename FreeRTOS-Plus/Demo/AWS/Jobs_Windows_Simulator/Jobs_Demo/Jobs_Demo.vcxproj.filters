@@ -105,6 +105,9 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_utils.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Source\AWS\jobs\source\include\jobs.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
       <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_utils.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

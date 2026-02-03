@@ -407,10 +407,16 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  * @param[in] pxMQTTContext MQTT context pointer.
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
+ * @param[in] pReasonCode Pointer to the reason code to be sent in the Publish-ack packets
+ * @param[in] pxSendPropsBuffer Buffer to send properties to the broker. 
+ * @param[in] pxGetPropsBuffer Buffer to receive properties from the broker. 
  */
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
-                              MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo );
+static bool prvEventCallback( MQTTContext_t* pxMQTTContext,
+                              MQTTPacketInfo_t* pxPacketInfo,
+                              MQTTDeserializedInfo_t* pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t* pReasonCode,
+                              MQTTPropBuilder_t* pxSendPropsBuffer,
+                              MQTTPropBuilder_t* pxGetPropsBuffer);
 
 /**
  * @brief Call #MQTT_ProcessLoop in a loop for the duration of a timeout or
@@ -636,10 +642,12 @@ static void prvMQTTDemoTask( void * pvParameters )
          * TCP connection. There is no corresponding response for the disconnect
          * packet. After sending disconnect, client must close the network
          * connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n",
-                   democonfigMQTT_BROKER_ENDPOINT ) );
-        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
-        configASSERT( xMQTTStatus == MQTTSuccess );
+        LogInfo(("Disconnecting the MQTT connection with %s.\r\n",
+            democonfigMQTT_BROKER_ENDPOINT));
+
+
+        xMQTTStatus = MQTT_Disconnect(&xMQTTContext, NULL, MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION);
+        configASSERT(xMQTTStatus == MQTTSuccess);
 
         /* Close the network connection.  */
         TLS_FreeRTOS_Disconnect( &xNetworkContext );
@@ -799,7 +807,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                     pOutgoingPublishRecords,
                                     mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
                                     pIncomingPublishRecords,
-                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN, 
+                                    NULL, 0);
     configASSERT( xResult == MQTTSuccess );
 
     /* Some fields are not used in this demo so start with everything at 0. */
@@ -855,7 +864,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                             &xConnectInfo,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent );
+                            &xSessionPresent, NULL, NULL );
     configASSERT( xResult == MQTTSuccess );
 
     /* Successfully established and MQTT connection with the broker. */
@@ -904,6 +913,10 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     xMQTTSubscription[ 0 ].qos = MQTTQoS1;
     xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+    xMQTTSubscription[ 0 ].noLocalOption = false;
+    xMQTTSubscription[ 0 ].retainHandlingOption = 1;
+    xMQTTSubscription[ 0 ].retainAsPublishedOption = true;
+
 
     /* Initialize context for backoff retry attempts if SUBSCRIBE request fails. */
     BackoffAlgorithm_InitializeParams( &xRetryParams,
@@ -924,7 +937,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         xResult = MQTT_Subscribe( pxMQTTContext,
                                   xMQTTSubscription,
                                   sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                  usSubscribePacketIdentifier );
+                                  usSubscribePacketIdentifier, NULL );
         configASSERT( xResult == MQTTSuccess );
 
         LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n", mqttexampleTOPIC ) );
@@ -1006,7 +1019,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
     /* Send PUBLISH packet. Packet ID is not used for a QoS1 publish. */
-    xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
+    xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier, NULL );
 
     configASSERT( xResult == MQTTSuccess );
 }
@@ -1036,7 +1049,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     xResult = MQTT_Unsubscribe( pxMQTTContext,
                                 xMQTTSubscription,
                                 sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                usUnsubscribePacketIdentifier );
+                                usUnsubscribePacketIdentifier, NULL );
 
     configASSERT( xResult == MQTTSuccess );
 }
@@ -1128,9 +1141,12 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 /*-----------------------------------------------------------*/
 
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
-                              MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo )
+static bool prvEventCallback( MQTTContext_t* pxMQTTContext,
+                              MQTTPacketInfo_t* pxPacketInfo,
+                              MQTTDeserializedInfo_t* pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t* pReasonCode,
+                              MQTTPropBuilder_t* pxSendPropsBuffer,
+                              MQTTPropBuilder_t* pxGetPropsBuffer)
 {
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;
@@ -1143,6 +1159,7 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
     {
         prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }
+    return true; 
 }
 
 /*-----------------------------------------------------------*/

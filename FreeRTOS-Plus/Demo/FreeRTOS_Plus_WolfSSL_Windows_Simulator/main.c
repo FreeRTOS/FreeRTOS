@@ -28,6 +28,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/* Windows includes. */
+#include <windows.h>
+
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 #include "task.h"

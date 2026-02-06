@@ -187,7 +187,7 @@
  *
  *  while(1) {
  *      ret = I2S_writeReclaim(handle, &pDesc);
- *      pDesc->bufPtr  = &hello;;
+ *      pDesc->bufPtr  = &hello;
  *      pDesc->bufSize = sizeof(hello);
  *      ret = I2S_writeIssue(handle, pDesc);
  *  }

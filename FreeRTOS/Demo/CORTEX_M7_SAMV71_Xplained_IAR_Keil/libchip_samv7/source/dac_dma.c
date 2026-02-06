@@ -226,7 +226,7 @@ uint32_t Dac_SendData( DacDma *pDacd, DacCmd *pCommand)
     /* Start DMA TX */
     if (XDMAD_StartTransfer( pDacd->pXdmad, dacDmaTxChannel )) 
         return DAC_ERROR_LOCK;
-    return DAC_OK;;
+    return DAC_OK;
 }
 
 

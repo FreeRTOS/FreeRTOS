@@ -76,7 +76,7 @@
             if( pxServer != NULL )
             {
                 struct freertos_sockaddr xAddress;
-                BaseType_t xNoTimeout = 0;
+                TickType_t xNoTimeout = 0;
                 BaseType_t xIndex;
 
                 memset( pxServer, '\0', xSize );
@@ -112,8 +112,8 @@
                             FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );
                             FreeRTOS_listen( xSocket, pxConfigs[ xIndex ].xBackLog );
 
-                            FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xNoTimeout, sizeof( BaseType_t ) );
-                            FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xNoTimeout, sizeof( BaseType_t ) );
+                            FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xNoTimeout, sizeof( TickType_t ) );
+                            FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xNoTimeout, sizeof( TickType_t ) );
 
                             #if ( ipconfigHTTP_RX_BUFSIZE > 0 )
                             {

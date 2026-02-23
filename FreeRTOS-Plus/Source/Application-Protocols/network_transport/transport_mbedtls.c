@@ -639,6 +639,12 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
     mbedtls_entropy_init( pEntropyContext );
     mbedtls_ctr_drbg_init( pCtrDrbgContext );
 
+    #if defined( MBEDTLS_PSA_CRYPTO_C )
+        mbedtls_mutex_init( &mbedtls_threading_key_slot_mutex );
+        mbedtls_mutex_init( &mbedtls_threading_psa_globaldata_mutex );
+        mbedtls_mutex_init( &mbedtls_threading_psa_rngdata_mutex );
+    #endif
+
     if( mbedtlsError != 0 )
     {
         LogError( ( "Failed to add entropy source: mbedTLSError= %s : %s.",

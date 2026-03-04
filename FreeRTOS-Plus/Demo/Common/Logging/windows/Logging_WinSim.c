@@ -42,6 +42,9 @@
 #include <io.h>
 #include <ctype.h>
 
+/* Windows includes. */
+#include <windows.h>
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"

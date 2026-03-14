@@ -320,9 +320,12 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
+static bool prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo );
+                              MQTTDeserializedInfo_t * pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer );
 
 /**
  * @brief Call #MQTT_ProcessLoop in a loop for the duration of a timeout or
@@ -415,6 +418,11 @@ static MQTTPubAckInfo_t pOutgoingPublishRecords[ mqttexampleOUTGOING_PUBLISH_REC
  *
  */
 static MQTTPubAckInfo_t pIncomingPublishRecords[ mqttexampleINCOMING_PUBLISH_RECORD_LEN ];
+
+/**
+ * @brief Static buffer used to store properties for outgoing publish ACK packets.
+ */
+static uint8_t ucAckPropsBuffer[ 500 ];
 
 /*-----------------------------------------------------------*/
 
@@ -555,7 +563,18 @@ static void prvMQTTDemoTask( void * pvParameters )
          * There is no corresponding response expected from the broker. After sending the
          * disconnect request, the client must close the network connection. */
         LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
+        {
+            MQTTPropBuilder_t xDisconnectProps;
+            uint8_t ucDisconnectPropsBuf[ 200 ];
+            MQTTSuccessFailReasonCode_t xReasonCode = MQTT_REASON_DISCONNECT_NORMAL_DISCONNECTION;
+
+            xMQTTStatus = MQTTPropertyBuilder_Init( &xDisconnectProps, ucDisconnectPropsBuf, sizeof( ucDisconnectPropsBuf ) );
+            configASSERT( xMQTTStatus == MQTTSuccess );
+            xMQTTStatus = MQTTPropAdd_ReasonString( &xDisconnectProps, "Normal disconnect", strlen( "Normal disconnect" ), &( uint8_t ){ MQTT_PACKET_TYPE_DISCONNECT } );
+            configASSERT( xMQTTStatus == MQTTSuccess );
+
+            xMQTTStatus = MQTT_Disconnect( &xMQTTContext, &xDisconnectProps, &xReasonCode );
+        }
         configASSERT( xMQTTStatus == MQTTSuccess );
 
         /* Close the network connection.  */
@@ -642,6 +661,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     MQTTConnectInfo_t xConnectInfo;
     bool xSessionPresent;
     TransportInterface_t xTransport;
+    MQTTPropBuilder_t xConnectProps;
+    uint8_t ucConnectPropsBuf[ 200 ];
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -661,7 +682,9 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                     pOutgoingPublishRecords,
                                     mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
                                     pIncomingPublishRecords,
-                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN,
+                                    ucAckPropsBuffer,
+                                    sizeof( ucAckPropsBuffer ) );
     configASSERT( xResult == MQTTSuccess );
 
     /* Some fields are not used in this demo so start with everything at 0. */
@@ -685,11 +708,20 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
      * is passed as NULL. */
+    xResult = MQTTPropertyBuilder_Init( &xConnectProps, ucConnectPropsBuf, sizeof( ucConnectPropsBuf ) );
+    configASSERT( xResult == MQTTSuccess );
+    xResult = MQTTPropAdd_SessionExpiry( &xConnectProps, 3600U, &( uint8_t ){ MQTT_PACKET_TYPE_CONNECT } );
+    configASSERT( xResult == MQTTSuccess );
+    xResult = MQTTPropAdd_ReceiveMax( &xConnectProps, 10U, &( uint8_t ){ MQTT_PACKET_TYPE_CONNECT } );
+    configASSERT( xResult == MQTTSuccess );
+
     xResult = MQTT_Connect( pxMQTTContext,
                             &xConnectInfo,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent );
+                            &xSessionPresent,
+                            &xConnectProps,
+                            NULL );
     configASSERT( xResult == MQTTSuccess );
 
     /* Successfully established and MQTT connection with the broker. */
@@ -726,6 +758,8 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
     bool xFailedSubscribeToTopic = false;
     uint32_t ulTopicCount = 0U;
+    MQTTPropBuilder_t xSubProps;
+    uint8_t ucSubPropsBuf[ 200 ];
 
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -739,6 +773,9 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         xMQTTSubscription[ ulTopicCount ].qos = MQTTQoS2;
         xMQTTSubscription[ ulTopicCount ].pTopicFilter = xTopicFilterContext[ ulTopicCount ].pcTopicFilter;
         xMQTTSubscription[ ulTopicCount ].topicFilterLength = ( uint16_t ) strlen( xTopicFilterContext[ ulTopicCount ].pcTopicFilter );
+        xMQTTSubscription[ ulTopicCount ].noLocalOption = false;
+        xMQTTSubscription[ ulTopicCount ].retainAsPublishedOption = true;
+        xMQTTSubscription[ ulTopicCount ].retainHandlingOption = retainSendOnSub;
     }
 
     /* Initialize context for backoff retry attempts if SUBSCRIBE request fails. */
@@ -756,10 +793,16 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
          * will expect all the messages it sends to the broker to be sent back to it
          * from the broker. This demo uses QOS2 in Subscribe, therefore, the Publish
          * messages received from the broker will have QOS2. */
+        xResult = MQTTPropertyBuilder_Init( &xSubProps, ucSubPropsBuf, sizeof( ucSubPropsBuf ) );
+        configASSERT( xResult == MQTTSuccess );
+        xResult = MQTTPropAdd_SubscriptionId( &xSubProps, 1U, &( uint8_t ){ MQTT_PACKET_TYPE_SUBSCRIBE } );
+        configASSERT( xResult == MQTTSuccess );
+
         xResult = MQTT_Subscribe( pxMQTTContext,
                                   xMQTTSubscription,
                                   sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                  usSubscribePacketIdentifier );
+                                  usSubscribePacketIdentifier,
+                                  &xSubProps );
         configASSERT( xResult == MQTTSuccess );
 
         for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
@@ -825,6 +868,9 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
     MQTTStatus_t xResult;
     MQTTPublishInfo_t xMQTTPublishInfo;
     uint32_t ulTopicCount;
+    MQTTPropBuilder_t xPubProps;
+    uint8_t ucPubPropsBuf[ 200 ];
+    MQTTUserProperty_t xUserProp;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -833,6 +879,21 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
 
     for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
+        /* Re-initialize the property builder for each publish. */
+        xResult = MQTTPropertyBuilder_Init( &xPubProps, ucPubPropsBuf, sizeof( ucPubPropsBuf ) );
+        configASSERT( xResult == MQTTSuccess );
+        xResult = MQTTPropAdd_PayloadFormat( &xPubProps, 1U, &( uint8_t ){ MQTT_PACKET_TYPE_PUBLISH } );
+        configASSERT( xResult == MQTTSuccess );
+        xResult = MQTTPropAdd_MessageExpiry( &xPubProps, 300U, &( uint8_t ){ MQTT_PACKET_TYPE_PUBLISH } );
+        configASSERT( xResult == MQTTSuccess );
+
+        xUserProp.pKey = "demo";
+        xUserProp.keyLength = strlen( "demo" );
+        xUserProp.pValue = "plaintext";
+        xUserProp.valueLength = strlen( "plaintext" );
+        xResult = MQTTPropAdd_UserProp( &xPubProps, &xUserProp, &( uint8_t ){ MQTT_PACKET_TYPE_PUBLISH } );
+        configASSERT( xResult == MQTTSuccess );
+
         /* Some fields are not used by this demo so start with everything at 0. */
         ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
@@ -849,7 +910,7 @@ static void prvMQTTPublishToTopics( MQTTContext_t * pxMQTTContext )
 
         LogInfo( ( "Publishing to the MQTT topic %s.\r\n", xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
         /* Send PUBLISH packet. */
-        xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
+        xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier, &xPubProps );
         configASSERT( xResult == MQTTSuccess );
     }
 }
@@ -860,6 +921,9 @@ static void prvMQTTUnsubscribeFromTopics( MQTTContext_t * pxMQTTContext )
     MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
     uint32_t ulTopicCount;
+    MQTTPropBuilder_t xUnsubProps;
+    uint8_t ucUnsubPropsBuf[ 200 ];
+    MQTTUserProperty_t xUserProp;
 
     /* Some fields are not used by this demo so start with everything at 0. */
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -880,10 +944,21 @@ static void prvMQTTUnsubscribeFromTopics( MQTTContext_t * pxMQTTContext )
     configASSERT( usUnsubscribePacketIdentifier != 0 );
 
     /* Send UNSUBSCRIBE packet. */
+    xResult = MQTTPropertyBuilder_Init( &xUnsubProps, ucUnsubPropsBuf, sizeof( ucUnsubPropsBuf ) );
+    configASSERT( xResult == MQTTSuccess );
+
+    xUserProp.pKey = "reason";
+    xUserProp.keyLength = strlen( "reason" );
+    xUserProp.pValue = "demo-complete";
+    xUserProp.valueLength = strlen( "demo-complete" );
+    xResult = MQTTPropAdd_UserProp( &xUnsubProps, &xUserProp, &( uint8_t ){ MQTT_PACKET_TYPE_UNSUBSCRIBE } );
+    configASSERT( xResult == MQTTSuccess );
+
     xResult = MQTT_Unsubscribe( pxMQTTContext,
                                 xMQTTSubscription,
                                 sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                usUnsubscribePacketIdentifier );
+                                usUnsubscribePacketIdentifier,
+                                &xUnsubProps );
 
     configASSERT( xResult == MQTTSuccess );
 }
@@ -959,6 +1034,10 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                        usPacketId ) );
             break;
 
+        case MQTT_PACKET_TYPE_DISCONNECT:
+            LogInfo( ( "Server initiated disconnect received.\r\n" ) );
+            break;
+
         /* Any other packet type is invalid. */
         default:
             LogWarn( ( "prvMQTTProcessResponse() called with unknown packet type:(%02X).\r\n",
@@ -1013,12 +1092,22 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 /*-----------------------------------------------------------*/
 
-static void prvEventCallback( MQTTContext_t * pxMQTTContext,
+static bool prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo )
+                              MQTTDeserializedInfo_t * pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer )
 {
+    uint8_t ucPropertyType;
+    size_t ulPropIndex;
+    MQTTUserProperty_t xUserProp;
+    MQTTStatus_t xPropStatus;
+
     /* The MQTT context is not used in this function. */
     ( void ) pxMQTTContext;
+    ( void ) pxReasonCode;
+    ( void ) pxSendPropsBuffer;
 
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
@@ -1026,10 +1115,49 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                    pxDeserializedInfo->packetIdentifier ) );
         prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
     }
+    else if( pxPacketInfo->type == MQTT_PACKET_TYPE_DISCONNECT )
+    {
+        LogInfo( ( "Server-initiated DISCONNECT received. Reason code: 0x%02X.\r\n",
+                   ( pxDeserializedInfo->pReasonCode != NULL ) ? pxDeserializedInfo->pReasonCode->reasonCode[ 0 ] : 0U ) );
+    }
     else
     {
         prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }
+
+    /* Iterate through incoming properties if available. */
+    if( pxGetPropsBuffer != NULL )
+    {
+        ulPropIndex = 0;
+
+        while( ulPropIndex < pxGetPropsBuffer->currentIndex )
+        {
+            xPropStatus = MQTT_GetNextPropertyType( pxGetPropsBuffer, &ulPropIndex, &ucPropertyType );
+
+            if( xPropStatus != MQTTSuccess )
+            {
+                break;
+            }
+
+            if( ucPropertyType == MQTT_USER_PROPERTY_ID )
+            {
+                xPropStatus = MQTTPropGet_UserProp( pxGetPropsBuffer, &ulPropIndex, &xUserProp );
+
+                if( xPropStatus == MQTTSuccess )
+                {
+                    LogInfo( ( "User Property: key=%.*s, value=%.*s",
+                               ( int ) xUserProp.keyLength, xUserProp.pKey,
+                               ( int ) xUserProp.valueLength, xUserProp.pValue ) );
+                }
+            }
+            else
+            {
+                MQTT_SkipNextProperty( pxGetPropsBuffer, &ulPropIndex );
+            }
+        }
+    }
+
+    return true;
 }
 
 /*-----------------------------------------------------------*/

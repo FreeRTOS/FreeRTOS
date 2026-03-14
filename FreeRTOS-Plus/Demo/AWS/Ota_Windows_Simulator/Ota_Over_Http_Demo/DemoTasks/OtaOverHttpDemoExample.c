@@ -1652,7 +1652,9 @@ static MQTTStatus_t prvMQTTConnect( bool xCleanSession )
                             &xConnectInfo,
                             NULL,
                             otaexampleCONNACK_RECV_TIMEOUT_MS,
-                            &xSessionPresent );
+                            &xSessionPresent,
+                            NULL,
+                            NULL );
 
     LogInfo( ( "Session present: %d\n", xSessionPresent ) );
 

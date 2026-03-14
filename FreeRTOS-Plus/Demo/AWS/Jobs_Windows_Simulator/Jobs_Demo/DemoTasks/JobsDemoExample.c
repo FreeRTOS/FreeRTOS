@@ -346,9 +346,12 @@ static JobActionType prvGetAction( const char * pcAction,
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
+static bool prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo );
+                              MQTTDeserializedInfo_t * pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer );
 
 /**
  * @brief Process payload from NextJobExecutionChanged and DescribeJobExecution
@@ -688,13 +691,19 @@ static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
  * function to determine whether the incoming message is a Jobs message
  * or not. If it is, it handles the message depending on the message type.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
+static bool prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo )
+                              MQTTDeserializedInfo_t * pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer )
 {
     uint16_t usPacketIdentifier;
 
     ( void ) pxMqttContext;
+    ( void ) pxReasonCode;
+    ( void ) pxSendPropsBuffer;
+    ( void ) pxGetPropsBuffer;
 
     configASSERT( pxDeserializedInfo != NULL );
     configASSERT( pxMqttContext != NULL );
@@ -822,6 +831,8 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
     {
         vHandleOtherIncomingPacket( pxPacketInfo, usPacketIdentifier );
     }
+
+    return true;
 }
 
 /*-----------------------------------------------------------*/

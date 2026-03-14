@@ -316,9 +316,12 @@ static BaseType_t xShadowDeleted = pdFALSE;
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
  * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
+static bool prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo );
+                              MQTTDeserializedInfo_t * pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer );
 
 /**
  * @brief Process payload from /update/delta topic.
@@ -688,9 +691,12 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
  * function to determine whether the incoming message is a device shadow message
  * or not. If it is, it handles the message depending on the message type.
  */
-static void prvEventCallback( MQTTContext_t * pxMqttContext,
+static bool prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              MQTTDeserializedInfo_t * pxDeserializedInfo )
+                              MQTTDeserializedInfo_t * pxDeserializedInfo,
+                              MQTTSuccessFailReasonCode_t * pxReasonCode,
+                              MQTTPropBuilder_t * pxSendPropsBuffer,
+                              MQTTPropBuilder_t * pxGetPropsBuffer )
 {
     ShadowMessageType_t messageType = ShadowMessageTypeMaxNum;
     const char * pcThingName = NULL;
@@ -700,6 +706,9 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
     uint16_t usPacketIdentifier;
 
     ( void ) pxMqttContext;
+    ( void ) pxReasonCode;
+    ( void ) pxSendPropsBuffer;
+    ( void ) pxGetPropsBuffer;
 
     configASSERT( pxDeserializedInfo != NULL );
     configASSERT( pxMqttContext != NULL );
@@ -769,6 +778,8 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
     {
         vHandleOtherIncomingPacket( pxPacketInfo, usPacketIdentifier );
     }
+
+    return true;
 }
 /*-----------------------------------------------------------*/
 

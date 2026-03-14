@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_prop_serializer.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_prop_deserializer.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer_private.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_rng_pkcs11.c" />

@@ -63,6 +63,15 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
       <Filter>Libraries\coreMQTT</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_prop_serializer.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_prop_deserializer.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer_private.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>Libraries\Backoff Algorithm</Filter>
     </ClCompile>

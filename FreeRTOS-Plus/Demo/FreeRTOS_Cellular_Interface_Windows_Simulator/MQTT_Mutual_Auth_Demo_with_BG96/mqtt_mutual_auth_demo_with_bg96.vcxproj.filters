@@ -120,6 +120,15 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
       <Filter>Additional Libraries\coreMQTT</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_prop_serializer.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_prop_deserializer.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer_private.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96.c">
       <Filter>Additional Libraries\FreeRTOS Cellular Interface\module</Filter>
     </ClCompile>

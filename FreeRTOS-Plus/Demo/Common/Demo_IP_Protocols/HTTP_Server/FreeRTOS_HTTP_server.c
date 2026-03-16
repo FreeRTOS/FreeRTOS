@@ -297,6 +297,9 @@
 
         if( pxClient->pxFileHandle == NULL )
         {
+            snprintf( pxClient->pxParent->pcExtraContents, sizeof( pxClient->pxParent->pcExtraContents ),
+                      "Content-Length: 0\r\n" );
+
             /* "404 File not found". */
             xRc = prvSendReply( pxClient, WEB_NOT_FOUND );
         }

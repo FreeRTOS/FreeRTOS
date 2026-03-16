@@ -791,7 +791,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
  *
  * The helper functions this demo uses for MQTT operations have internal
  * loops to process incoming messages. Those are not the focus of this demo
- * and therefor, are placed in a separate file shadow_demo_helpers.c.
+ * and therefore, are placed in a separate file shadow_demo_helpers.c.
  */
 void prvShadowDemoTask( void * pvParameters )
 {

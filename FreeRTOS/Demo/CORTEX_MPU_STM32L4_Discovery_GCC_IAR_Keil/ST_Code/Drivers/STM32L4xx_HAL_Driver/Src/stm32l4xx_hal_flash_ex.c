@@ -1249,7 +1249,7 @@ static void FLASH_OB_GetPCROP(uint32_t * PCROPConfig, uint32_t * PCROPStartAddr,
       *PCROPStartAddr = (reg_value << 4) + FLASH_BASE;
 
       reg_value     = (READ_REG(FLASH->PCROP2ER) & FLASH_PCROP2ER_PCROP2_END);
-      *PCROPEndAddr = (reg_value << 4) + FLASH_BASE + 0xFU;;
+      *PCROPEndAddr = (reg_value << 4) + FLASH_BASE + 0xFU;
     }
     else
     {

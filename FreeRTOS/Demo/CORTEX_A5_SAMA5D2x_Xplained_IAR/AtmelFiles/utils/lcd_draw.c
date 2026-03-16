@@ -591,11 +591,11 @@ void lcdd_draw_string_with_bgcolor(uint32_t x, uint32_t y,
 
 	while (*p_string) {
 		if (*p_string == '\n') {
-			y += height + char_space;;
+			y += height + char_space;
 			x = xorg;
 		} else {
 			lcdd_draw_char_with_bgcolor(x, y, *p_string, fontColor, bgColor);
-			x += width + char_space;;
+			x += width + char_space;
 		}
 		p_string++;
 	}

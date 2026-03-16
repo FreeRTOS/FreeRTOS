@@ -741,7 +741,7 @@ ALT_STATUS_CODE alt_dma_program_DMAMOV(ALT_DMA_PROGRAM_t * pgm,
     uint8_t * buffer = pgm->program + pgm->buffer_start + pgm->code_size;
 
     // Assemble DMAMOV
-    buffer[0] = 0xbc;;
+    buffer[0] = 0xbc;
     buffer[1] = rd_mask;
     buffer[2] = (uint8_t)((val >>  0) & 0xff);
     buffer[3] = (uint8_t)((val >>  8) & 0xff);

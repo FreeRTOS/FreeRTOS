@@ -773,7 +773,7 @@ s32 XSdPs_Change_ClkFreq(XSdPs *InstancePtr, u32 SelFreq)
 				XSDPS_CLK_CTRL_OFFSET);
 	while((ReadReg & XSDPS_CC_INT_CLK_STABLE_MASK) == 0U) {
 		ReadReg = XSdPs_ReadReg16(InstancePtr->Config.BaseAddress,
-					XSDPS_CLK_CTRL_OFFSET);;
+					XSDPS_CLK_CTRL_OFFSET);
 	}
 
 	/* Enable SD clock */

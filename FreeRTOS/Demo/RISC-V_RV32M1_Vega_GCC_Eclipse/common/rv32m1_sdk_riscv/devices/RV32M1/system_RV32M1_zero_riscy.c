@@ -526,7 +526,7 @@ void EVENT_SetIRQPriority(IRQn_Type IRQn, uint8_t intPriority)
 
 bool SystemInISR(void)
 {
-    return ((EVENT_UNIT->INTPTENACTIVE) != 0);;
+    return ((EVENT_UNIT->INTPTENACTIVE) != 0);
 }
 
 void EVENT_SystemReset(void)

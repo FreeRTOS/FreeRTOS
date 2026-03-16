@@ -244,5 +244,5 @@ uint32_t Afe_SendData( AfeDma *pAfed, AfeCmd *pCommand)
 	if (XDMAD_StartTransfer( pAfed->pXdmad, afeDmaRxChannel )) 
 		return AFE_ERROR_LOCK;
 
-	return AFE_OK;;
+	return AFE_OK;
 }

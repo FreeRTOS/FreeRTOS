@@ -34,12 +34,22 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
-SemaphoreHandle_t xStdioMutex;
-StaticSemaphore_t xStdioMutexBuffer;
+#include "console.h"
+
+static SemaphoreHandle_t xStdioMutex;
+static StaticSemaphore_t xStdioMutexBuffer;
 
 void console_init( void )
 {
-    xStdioMutex = xSemaphoreCreateMutexStatic( &xStdioMutexBuffer );
+    #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    {
+        xStdioMutex = xSemaphoreCreateMutexStatic( &xStdioMutexBuffer );
+    }
+    #else /* if( configSUPPORT_STATIC_ALLOCATION == 1 ) */
+    {
+        xStdioMutex = xSemaphoreCreateMutex();
+    }
+    #endif /* if( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 }
 
 void console_print( const char * fmt,
@@ -53,6 +63,7 @@ void console_print( const char * fmt,
 
     vprintf( fmt, vargs );
 
+    xSemaphoreGive( xStdioMutex );
 
     va_end( vargs );
 }

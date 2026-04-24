@@ -320,7 +320,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
         if( mbedtlsError != PSA_SUCCESS )
         {
-            LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
+            LogError( ( "Failed to initialize PSA Crypto implementation: %d", ( int ) mbedtlsError ) );
             returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
         }
         else

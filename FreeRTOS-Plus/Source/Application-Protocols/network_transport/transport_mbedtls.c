@@ -659,7 +659,7 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
 
             if( mbedtlsError != PSA_SUCCESS )
             {
-                LogError( ( "Failed to initialize PSA Crypto implementation: %s", ( int ) mbedtlsError ) );
+                LogError( ( "Failed to initialize PSA Crypto implementation: %d", ( int ) mbedtlsError ) );
                 returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
             }
         }
@@ -832,8 +832,8 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
             /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
             LogInfo( ( "(Network connection %p) TLS close-notify sent; "
                        "received %s as the TLS status can be ignored for close-notify.",
-                       ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE",
-                       pNetworkContext ) );
+                       pNetworkContext,
+                       ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE" ) );
         }
 
         /* Call socket shutdown function to close connection. */

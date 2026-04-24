@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git submodule *)",
-      "Bash(git checkout *)"
-    ]
-  }
-}

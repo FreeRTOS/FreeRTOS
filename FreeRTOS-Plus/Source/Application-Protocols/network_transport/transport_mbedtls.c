@@ -832,7 +832,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
             /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
             LogInfo( ( "(Network connection %p) TLS close-notify sent; "
                        "received %s as the TLS status can be ignored for close-notify.",
-                       pNetworkContext,
+                       ( void * ) pNetworkContext,
                        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE" ) );
         }
 

@@ -390,6 +390,7 @@ static void prvObjectGeneration( void )
     vWriteHexBytesToConsole( "Public Key in Hex Format",
                              pxDerPublicKey,
                              ulDerPublicKeyLength );
+    vPortFree( pxDerPublicKey );
     configPRINTF( ( "---------Finished Generating Objects---------" ) );
     vEnd( hSession, pxSlotId );
 }

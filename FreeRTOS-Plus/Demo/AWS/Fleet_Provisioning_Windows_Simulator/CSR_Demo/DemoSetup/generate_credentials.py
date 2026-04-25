@@ -116,9 +116,12 @@ def generate_priv_keys_and_certs(write_der_keys):
     print("Private Key Pem:\n{0}\n".format(root_prv_key_pem.decode("utf-8")))
     print("Root CA Cert Pem:\n{0}\n".format(root_ca_cert_pem.decode("utf-8")))
 
-    open(ROOT_CA_PRIV_KEY_FILE, "wb").write(root_prv_key_pem)
-    open(ROOT_CA_PUB_KEY_FILE, "wb").write(root_pub_key_pem)
-    open(ROOT_CA_CERT_FILE, "wb").write(root_ca_cert_pem)
+    with open(ROOT_CA_PRIV_KEY_FILE, "wb") as f:
+        f.write(root_prv_key_pem)
+    with open(ROOT_CA_PUB_KEY_FILE, "wb") as f:
+        f.write(root_pub_key_pem)
+    with open(ROOT_CA_CERT_FILE, "wb") as f:
+        f.write(root_ca_cert_pem)
 
     print(f"Wrote PEM Encoded Root Private Key to:\n\t{ROOT_CA_PRIV_KEY_FILE}")
     print(f"Wrote PEM Encoded Root Public Key to:\n\t{ROOT_CA_PUB_KEY_FILE}")
@@ -180,9 +183,12 @@ def generate_priv_keys_and_certs(write_der_keys):
     print("Claim Private Key Pem:\n{0}\n".format(claim_prv_key_pem.decode("utf-8")))
     print("Claim Cert Pem:\n{0}\n".format(claim_cert_pem.decode("utf-8")))
 
-    open(CLAIM_PRIV_KEY_FILE, "wb").write(claim_pub_key_pem)
-    open(CLAIM_PUB_KEY_FILE, "wb").write(claim_prv_key_pem)
-    open(CLAIM_CERT_FILE, "wb").write(claim_cert_pem)
+    with open(CLAIM_PRIV_KEY_FILE, "wb") as f:
+        f.write(claim_prv_key_pem)
+    with open(CLAIM_PUB_KEY_FILE, "wb") as f:
+        f.write(claim_pub_key_pem)
+    with open(CLAIM_CERT_FILE, "wb") as f:
+        f.write(claim_cert_pem)
 
     print(f"Wrote PEM Encoded Claim Private Key to:\n\t{CLAIM_PRIV_KEY_FILE}")
     print(f"Wrote PEM Encoded Claim Public Key to:\n\t{CLAIM_PUB_KEY_FILE}")

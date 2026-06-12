@@ -137,7 +137,7 @@ static TimerHandle_t xIncrementingIndexTimer = NULL;
 static TimerHandle_t xNotifyWhileSuspendedTimer = NULL;
 
 /* Used by the pseudo random number generating function. */
-static size_t uxNextRand = 0;
+static uint32_t uxNextRand = 0;
 
 /* Used to communicate when to send a task notification to the tick hook tests. */
 static volatile BaseType_t xSendNotificationFromISR = pdFALSE;
@@ -166,7 +166,7 @@ void vStartTaskNotifyArrayTask( void )
                  &xTaskToNotify );                   /* Used to pass a handle to the task out if needed, otherwise set to NULL. */
 
     /* Pseudo seed the random number generator. */
-    uxNextRand = ( size_t ) prvRand;
+    uxNextRand = ( uint32_t ) prvRand;
 }
 /*-----------------------------------------------------------*/
 
@@ -1209,10 +1209,10 @@ BaseType_t xAreTaskNotificationArrayTasksStillRunning( void )
 
 static UBaseType_t prvRand( void )
 {
-    const size_t uxMultiplier = ( size_t ) 0x015a4e35, uxIncrement = ( size_t ) 1;
+    const uint32_t uxMultiplier = ( uint32_t ) 0x015a4e35, uxIncrement = ( uint32_t ) 1;
 
     /* Utility function to generate a pseudo random number. */
     uxNextRand = ( uxMultiplier * uxNextRand ) + uxIncrement;
-    return( ( uxNextRand >> 16 ) & ( ( size_t ) 0x7fff ) );
+    return( ( uxNextRand >> 16 ) & ( ( uint32_t ) 0x7fff ) );
 }
 /*-----------------------------------------------------------*/

@@ -167,7 +167,7 @@ def safe_make_folder(i):
     '''Makes a folder (and its parents) if not present'''
     try:
         os.makedirs(i)
-    except:
+    except Exception:
         pass
 
 

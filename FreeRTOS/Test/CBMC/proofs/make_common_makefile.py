@@ -30,7 +30,7 @@ import os
 import argparse
 
 def cleanup_whitespace(string):
-    return re.sub('\s+', ' ', string.strip())
+    return re.sub(r'\s+', ' ', string.strip())
 
 ################################################################
 # Operating system specific values
@@ -83,9 +83,9 @@ def patch_compile_output(opsys, line, key, value):
 
     if key in ["COMPILE_ONLY", "COMPILE_LINK"] and value is not None:
         if value[-1] == '/Fo':
-            return re.sub('/Fo\s+', '/Fo', line)
+            return re.sub(r'/Fo\s+', '/Fo', line)
         if value[-1] == '/Fe':
-            return re.sub('/Fe\s+', '/Fe', line)
+            return re.sub(r'/Fe\s+', '/Fe', line)
     return line
 
 ################################################################
@@ -181,7 +181,7 @@ def write_makefile(opsys, template, defines, makefile):
     with open(template) as _template:
         for line in _template:
             line = patch_path_separator(opsys, line)
-            keys = re.findall('@(\w+)@', line)
+            keys = re.findall(r'@(\w+)@', line)
             values = [find_definition(key, defines) for key in keys]
             for key, value in zip(keys, values):
                 if value is not None:

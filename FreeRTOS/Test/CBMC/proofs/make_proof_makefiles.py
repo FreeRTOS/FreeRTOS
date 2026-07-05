@@ -121,7 +121,7 @@ def prolog():
 
                 On Windows ->
 
-                H_INC = /Imy\cool\directory
+                H_INC = /Imy\\cool\\directory
                 H_DEF = /DHALF=/2
 
         When invoked, this script walks the directory tree looking for files

@@ -29,4 +29,5 @@
   :strippables:
     - PRIVILEGED_FUNCTION
     - portDONT_DISCARD
+    - '(?:BaseType_t\s+xTimerDelete\s*\([\s\w,\n\t]*\)[\s\w,\n\t]*\s*;\s*)'
   :treat_externs: :include

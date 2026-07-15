@@ -201,6 +201,7 @@ BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput,
         /* The command was found, but the number of parameters with the command
          * was incorrect. */
         strncpy( pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.\r\n\r\n", xWriteBufferLen );
+        pcWriteBuffer[ xWriteBufferLen - 1 ] = '\0';
         pxCommand = NULL;
     }
     else if( pxCommand != NULL )
@@ -220,6 +221,7 @@ BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput,
     {
         /* pxCommand was NULL, the command was not found. */
         strncpy( pcWriteBuffer, "Command not recognised.  Enter 'help' to view a list of available commands.\r\n\r\n", xWriteBufferLen );
+        pcWriteBuffer[ xWriteBufferLen - 1 ] = '\0';
         xReturn = pdFALSE;
     }
 
@@ -340,6 +342,7 @@ static BaseType_t prvHelpCommand( char * pcWriteBuffer,
     /* Return the next command help string, before moving the pointer on to
      * the next command in the list. */
     strncpy( pcWriteBuffer, pxCommand->pxCommandLineDefinition->pcHelpString, xWriteBufferLen );
+    pcWriteBuffer[ xWriteBufferLen - 1 ] = '\0';
     pxCommand = pxCommand->pxNext;
 
     if( pxCommand == NULL )

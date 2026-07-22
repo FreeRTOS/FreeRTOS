@@ -290,6 +290,14 @@ void td_task_addFakeTaskWaitingToReceiveFromQueue( QueueHandle_t xQueue )
     vListInsert( pxTasksWaitingToReceive, &fakeTaskListItem );
 }
 
+void td_task_removeFakeTaskFromList( void )
+{
+    if( listLIST_ITEM_CONTAINER( &fakeTaskListItem ) != NULL )
+    {
+        uxListRemove( &fakeTaskListItem );
+    }
+}
+
 TickType_t td_task_getFakeTaskPriority( void )
 {
     return( configMAX_PRIORITIES - fakeTaskListItem.xItemValue );

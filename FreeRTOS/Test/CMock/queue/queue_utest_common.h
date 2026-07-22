@@ -327,6 +327,13 @@ void td_task_addFakeTaskWaitingToSendToQueue( QueueHandle_t xQueue );
 void td_task_addFakeTaskWaitingToReceiveFromQueue( QueueHandle_t xQueue );
 
 /**
+ * @brief Remove the fake task from whatever waiting list it is currently in.
+ * @details This should be called before deleting a queue that has a fake task
+ * in one of its waiting lists (xTasksWaitingToSend or xTasksWaitingToReceive).
+ */
+void td_task_removeFakeTaskFromList( void );
+
+/**
  * @brief Test double for xTaskCheckForTimeOut
  */
 BaseType_t td_task_xTaskCheckForTimeOutStub( TimeOut_t * const pxTimeOut,

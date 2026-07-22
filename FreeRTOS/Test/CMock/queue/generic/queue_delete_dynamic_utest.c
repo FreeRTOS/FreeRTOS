@@ -129,3 +129,74 @@ void test_vQueueDelete_full( void )
     vQueueDelete( xQueue );
     TEST_ASSERT_EQUAL_PTR( ( void * ) xQueue, getLastFreedAddress() );
 }
+
+/**
+ * @brief Test vQueueDelete asserts when tasks are waiting to send and waiting to receive
+ * @details Verify that vQueueDelete triggers a configASSERT when both the
+ * xTasksWaitingToSend and xTasksWaitingToReceive lists are non-empty.
+ * @coverage vQueueDelete
+ */
+void test_vQueueDelete_assert_tasks_waiting_to_send_and_receive( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    /* Add a fake task to the WaitingToSend list */
+    td_task_addFakeTaskWaitingToSendToQueue( xQueue );
+
+    /* Expect the assert to fire due to non-empty WaitingToSend list */
+    EXPECT_ASSERT_BREAK( vQueueDelete( xQueue ) );
+
+    /* Clean up the fake task from the list */
+    td_task_removeFakeTaskFromList();
+
+    /* Now add a fake task to WaitingToReceive and verify that assert fires too */
+    td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
+
+    EXPECT_ASSERT_BREAK( vQueueDelete( xQueue ) );
+
+    /* Clean up and delete */
+    td_task_removeFakeTaskFromList();
+    vQueueDelete( xQueue );
+}
+
+/**
+ * @brief Test vQueueDelete asserts when tasks are waiting to send only
+ * @details Verify that vQueueDelete triggers a configASSERT when the
+ * xTasksWaitingToSend list is non-empty.
+ * @coverage vQueueDelete
+ */
+void test_vQueueDelete_assert_tasks_waiting_to_send( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    /* Add a fake task to the WaitingToSend list */
+    td_task_addFakeTaskWaitingToSendToQueue( xQueue );
+
+    /* Expect the assert to fire due to non-empty WaitingToSend list */
+    EXPECT_ASSERT_BREAK( vQueueDelete( xQueue ) );
+
+    /* Clean up and delete */
+    td_task_removeFakeTaskFromList();
+    vQueueDelete( xQueue );
+}
+
+/**
+ * @brief Test vQueueDelete asserts when tasks are waiting to receive only
+ * @details Verify that vQueueDelete triggers a configASSERT when the
+ * xTasksWaitingToReceive list is non-empty.
+ * @coverage vQueueDelete
+ */
+void test_vQueueDelete_assert_tasks_waiting_to_receive( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+
+    /* Add a fake task to the WaitingToReceive list */
+    td_task_addFakeTaskWaitingToReceiveFromQueue( xQueue );
+
+    /* Expect the assert to fire due to non-empty WaitingToReceive list */
+    EXPECT_ASSERT_BREAK( vQueueDelete( xQueue ) );
+
+    /* Clean up and delete */
+    td_task_removeFakeTaskFromList();
+    vQueueDelete( xQueue );
+}

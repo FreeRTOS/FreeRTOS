@@ -540,6 +540,9 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout_high_prio_waiting(
 
     TEST_ASSERT_EQUAL( TICKS_TO_WAIT + 1, td_task_getCount_YieldFromTaskResumeAll() );
 
+    /* Remove the fake task from the waiting list before deleting the semaphore */
+    td_task_removeFakeTaskFromList();
+
     vSemaphoreDelete( xSemaphore );
 }
 

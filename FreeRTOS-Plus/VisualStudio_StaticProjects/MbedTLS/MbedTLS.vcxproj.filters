@@ -293,9 +293,6 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\lms.h">
       <Filter>MbedTLS Headers\mbedtls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\mbedtls_config.h">
-      <Filter>MbedTLS Headers\mbedtls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md.h">
       <Filter>MbedTLS Headers\mbedtls</Filter>
     </ClInclude>
@@ -468,6 +465,9 @@
       <Filter>MbedTLS Headers\psa</Filter>
     </ClInclude>
     <ClInclude Include="mbedtls_config_v3.5.1.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\mbedtls_config.h">
+      <Filter>MbedTLS Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mbedtls_freertos_port.c" />
@@ -787,6 +787,9 @@
       <Filter>MbedTLS Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_csr.c">
+      <Filter>MbedTLS Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_ecc.c">
       <Filter>MbedTLS Source</Filter>
     </ClCompile>
   </ItemGroup>

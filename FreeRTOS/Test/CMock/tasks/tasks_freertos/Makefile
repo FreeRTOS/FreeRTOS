@@ -55,6 +55,12 @@ CPPFLAGS           +=   -I ../
 # List any addiitonal flags needed by the compiler
 CFLAGS             +=
 
+# sed script which comments out a member of xSTATIC_TCB, and the pattern used
+# to confirm that it was applied to the generated FreeRTOS.h.
+TCB_MEMBER         :=   StaticListItem_t xDummy3\[ 2 \];
+TCB_SHRINK_SED     :=   /^typedef struct xSTATIC_TCB$$/,/^} StaticTask_t;$$/s|^\( *\)\($(TCB_MEMBER)\)$$|\1/* \2 */|
+TCB_SHRINK_CHECK   :=   /\* $(TCB_MEMBER) \*/
+
 export
 # Make variables available to included makefile
 
@@ -65,7 +71,14 @@ $(MOCK_FILES_FP) :
     -mkdir -p $(SCRATCH_DIR)/cpp
     cp $(LOCAL_DIR)/FreeRTOSConfig.h $(SCRATCH_DIR)/include/FreeRTOSConfig.h
     cp $(LOCAL_DIR)/FreeRTOSConfig.h $(SCRATCH_DIR)/include/FreeRTOSConfig.def
-    cp $(LOCAL_DIR)/FreeRTOS.h $(SCRATCH_DIR)/include/
+    # This suite covers the configASSERT in xTaskCreateStatic which verifies
+    # that sizeof( StaticTask_t ) equals sizeof( TCB_t ). Generate FreeRTOS.h
+    # from the kernel one with a member of xSTATIC_TCB commented out so that
+    # the two sizes differ. Generating this header, instead of keeping a
+    # modified copy of it in this directory, keeps the suite from breaking
+    # every time FreeRTOS.h changes in the kernel.
+    sed '$(TCB_SHRINK_SED)' $(KERNEL_DIR)/include/FreeRTOS.h > $(SCRATCH_DIR)/include/FreeRTOS.h
+    grep -q '$(TCB_SHRINK_CHECK)' $(SCRATCH_DIR)/include/FreeRTOS.h || { echo 'Failed to shrink StaticTask_t in the generated FreeRTOS.h - has xSTATIC_TCB changed in the kernel?' ; exit 1 ; }
     sed -i '/#ifndef FREERTOS_CONFIG_H/d' $(SCRATCH_DIR)/include/FreeRTOSConfig.def
     sed -i '/#define FREERTOS_CONFIG_H/d' $(SCRATCH_DIR)/include/FreeRTOSConfig.def
     sed -i '/#endif/d' $(SCRATCH_DIR)/include/FreeRTOSConfig.def

@@ -93,9 +93,9 @@
     }
 
 /* xQueueAddToSet() dereferences the queue set handle to confirm that the object
- * really is a queue set, so passing NULL is API misuse rather than something the
- * kernel defends against.  When the queue set allocation fails, leave the queue
- * outside of any set - its pxQueueSetContainer is already NULL at this point. */
+* really is a queue set, so passing NULL is API misuse rather than something the
+* kernel defends against.  When the queue set allocation fails, leave the queue
+* outside of any set - its pxQueueSetContainer is already NULL at this point. */
     void vAddToUnconstrainedQueueSet( QueueHandle_t xQueue )
     {
         QueueSetHandle_t xSet = xUnconstrainedQueueSet();

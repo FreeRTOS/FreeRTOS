@@ -16,7 +16,7 @@ jobs:
     permissions:
       id-token: write
     name: Auto Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Tool Setup
         uses: actions/setup-python@v2

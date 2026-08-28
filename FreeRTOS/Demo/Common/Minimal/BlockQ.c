@@ -105,72 +105,95 @@ void vStartBlockingQueueTasks( UBaseType_t uxPriority )
 
     /* First create the structure used to pass parameters to the consumer tasks. */
     pxQueueParameters1 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
+    configASSERT( pxQueueParameters1 != NULL );
 
-    /* Create the queue used by the first two tasks to pass the incrementing number.
-     * Pass a pointer to the queue in the parameter structure. */
-    pxQueueParameters1->xQueue = xQueueCreate( uxQueueSize1, ( UBaseType_t ) sizeof( uint16_t ) );
+    if( pxQueueParameters1 != NULL )
+    {
+        /* Create the queue used by the first two tasks to pass the incrementing number.
+         * Pass a pointer to the queue in the parameter structure. */
+        pxQueueParameters1->xQueue = xQueueCreate( uxQueueSize1, ( UBaseType_t ) sizeof( uint16_t ) );
 
-    /* The consumer is created first so gets a block time as described above. */
-    pxQueueParameters1->xBlockTime = xBlockTime;
+        /* The consumer is created first so gets a block time as described above. */
+        pxQueueParameters1->xBlockTime = xBlockTime;
 
-    /* Pass in the variable that this task is going to increment so we can check it
-     * is still running. */
-    pxQueueParameters1->psCheckVariable = &( sBlockingConsumerCount[ 0 ] );
+        /* Pass in the variable that this task is going to increment so we can check it
+         * is still running. */
+        pxQueueParameters1->psCheckVariable = &( sBlockingConsumerCount[ 0 ] );
 
-    /* Create the structure used to pass parameters to the producer task. */
-    pxQueueParameters2 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
+        /* Create the structure used to pass parameters to the producer task. */
+        pxQueueParameters2 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
+        configASSERT( pxQueueParameters2 != NULL );
 
-    /* Pass the queue to this task also, using the parameter structure. */
-    pxQueueParameters2->xQueue = pxQueueParameters1->xQueue;
+        if( pxQueueParameters2 != NULL )
+        {
+            /* Pass the queue to this task also, using the parameter structure. */
+            pxQueueParameters2->xQueue = pxQueueParameters1->xQueue;
 
-    /* The producer is not going to block - as soon as it posts the consumer will
-     * wake and remove the item so the producer should always have room to post. */
-    pxQueueParameters2->xBlockTime = xDontBlock;
+            /* The producer is not going to block - as soon as it posts the consumer will
+             * wake and remove the item so the producer should always have room to post. */
+            pxQueueParameters2->xBlockTime = xDontBlock;
 
-    /* Pass in the variable that this task is going to increment so we can check
-     * it is still running. */
-    pxQueueParameters2->psCheckVariable = &( sBlockingProducerCount[ 0 ] );
+            /* Pass in the variable that this task is going to increment so we can check
+             * it is still running. */
+            pxQueueParameters2->psCheckVariable = &( sBlockingProducerCount[ 0 ] );
 
-
-    /* Note the producer has a lower priority than the consumer when the tasks are
-     * spawned. */
-    xTaskCreate( vBlockingQueueConsumer, "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
-    xTaskCreate( vBlockingQueueProducer, "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
-
-
+            /* Note the producer has a lower priority than the consumer when the tasks are
+             * spawned. */
+            xTaskCreate( vBlockingQueueConsumer, "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
+            xTaskCreate( vBlockingQueueProducer, "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
+        }
+    }
 
     /* Create the second two tasks as described at the top of the file.   This uses
      * the same mechanism but reverses the task priorities. */
 
     pxQueueParameters3 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-    pxQueueParameters3->xQueue = xQueueCreate( uxQueueSize1, ( UBaseType_t ) sizeof( uint16_t ) );
-    pxQueueParameters3->xBlockTime = xDontBlock;
-    pxQueueParameters3->psCheckVariable = &( sBlockingProducerCount[ 1 ] );
+    configASSERT( pxQueueParameters3 != NULL );
 
-    pxQueueParameters4 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-    pxQueueParameters4->xQueue = pxQueueParameters3->xQueue;
-    pxQueueParameters4->xBlockTime = xBlockTime;
-    pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
+    if( pxQueueParameters3 != NULL )
+    {
+        pxQueueParameters3->xQueue = xQueueCreate( uxQueueSize1, ( UBaseType_t ) sizeof( uint16_t ) );
+        pxQueueParameters3->xBlockTime = xDontBlock;
+        pxQueueParameters3->psCheckVariable = &( sBlockingProducerCount[ 1 ] );
 
-    xTaskCreate( vBlockingQueueConsumer, "QConsB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
-    xTaskCreate( vBlockingQueueProducer, "QProdB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+        pxQueueParameters4 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
+        configASSERT( pxQueueParameters4 != NULL );
 
+        if( pxQueueParameters4 != NULL )
+        {
+            pxQueueParameters4->xQueue = pxQueueParameters3->xQueue;
+            pxQueueParameters4->xBlockTime = xBlockTime;
+            pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
 
+            xTaskCreate( vBlockingQueueConsumer, "QConsB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
+            xTaskCreate( vBlockingQueueProducer, "QProdB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+        }
+    }
 
     /* Create the last two tasks as described above.  The mechanism is again just
      * the same.  This time both parameter structures are given a block time. */
     pxQueueParameters5 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-    pxQueueParameters5->xQueue = xQueueCreate( uxQueueSize5, ( UBaseType_t ) sizeof( uint16_t ) );
-    pxQueueParameters5->xBlockTime = xBlockTime;
-    pxQueueParameters5->psCheckVariable = &( sBlockingProducerCount[ 2 ] );
+    configASSERT( pxQueueParameters5 != NULL );
 
-    pxQueueParameters6 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-    pxQueueParameters6->xQueue = pxQueueParameters5->xQueue;
-    pxQueueParameters6->xBlockTime = xBlockTime;
-    pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );
+    if( pxQueueParameters5 != NULL )
+    {
+        pxQueueParameters5->xQueue = xQueueCreate( uxQueueSize5, ( UBaseType_t ) sizeof( uint16_t ) );
+        pxQueueParameters5->xBlockTime = xBlockTime;
+        pxQueueParameters5->psCheckVariable = &( sBlockingProducerCount[ 2 ] );
 
-    xTaskCreate( vBlockingQueueProducer, "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
-    xTaskCreate( vBlockingQueueConsumer, "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
+        pxQueueParameters6 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
+        configASSERT( pxQueueParameters6 != NULL );
+
+        if( pxQueueParameters6 != NULL )
+        {
+            pxQueueParameters6->xQueue = pxQueueParameters5->xQueue;
+            pxQueueParameters6->xBlockTime = xBlockTime;
+            pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );
+
+            xTaskCreate( vBlockingQueueProducer, "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
+            xTaskCreate( vBlockingQueueConsumer, "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 

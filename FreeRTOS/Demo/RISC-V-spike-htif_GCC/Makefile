@@ -8,11 +8,11 @@ DEBUG ?= 0
 BASE_ADDRESS ?= 0x80000000
 
 ifeq ($(XLEN), 64)
-    MARCH = rv64ima
+    MARCH = rv64ima_zicsr
     MABI = lp64
 	STACK_SIZE = 600
 else
-    MARCH = rv32ima
+    MARCH = rv32ima_zicsr
     MABI = ilp32
 	STACK_SIZE = 300
 endif

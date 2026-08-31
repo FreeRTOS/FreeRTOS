@@ -1,0 +1,3 @@
+# ESP32-family-specific overrides on top of sdkconfig.defaults.
+# Future targets land their own sdkconfig.defaults.<target> alongside this file;
+# `idf.py set-target <target>` picks up the matching one automatically.

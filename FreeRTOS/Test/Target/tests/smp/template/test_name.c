@@ -35,17 +35,28 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Unity testing includes. */
-#include "unity.h"
+/*-----------------------------------------------------------*/
+
+#ifndef TEST_CONFIG_H
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
+
+/* Include test_setting_config.h here if the target needs to override any of
+ * the test framework macros defined in test_default_setting_config.h, e.g.
+ * to use a test framework other than Unity. Set configTARGET_TEST_USE_CUSTOM_SETTING
+ * to 1 in the target's FreeRTOSConfig.h to enable this. */
+#if ( configTARGET_TEST_USE_CUSTOM_SETTING == 1 )
+    #include "test_setting_config.h"
+#endif
+
+/* Fills in the default test framework macros, e.g. testBEGIN_FUNCTION, for
+ * any that were not overridden above. */
+#include "test_default_setting_config.h"
 
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
-#endif
-
-#ifndef TEST_CONFIG_H
-    #error test_config.h must be included at the end of FreeRTOSConfig.h.
 #endif
 
 /*-----------------------------------------------------------*/
@@ -63,14 +74,14 @@
 /*-----------------------------------------------------------*/
 
 /* Runs before every test, put init calls here. */
-void setUp( void )
+testSETUP_FUNCTION_PROTOTYPE( setUp )
 {
     /* Create FreeRTOS resources required for the test. */
 }
 /*-----------------------------------------------------------*/
 
 /* Runs after every test, put clean-up calls here. */
-void tearDown( void )
+testTEARDOWN_FUNCTION_PROTOTYPE( tearDown )
 {
     /* Delete all the FreeRTOS resources created in setUp. */
 }
@@ -86,12 +97,12 @@ void Test_TestCaseName( void )
 
 /* Function that runs the test case. This function must be called
  * from a FreeRTOS task. */
-void vRunTestCaseName( void )
+testENTRY_FUNCTION_PROTOTYPE( vRunTestCaseName )
 {
-    UNITY_BEGIN();
+    testBEGIN_FUNCTION();
 
-    RUN_TEST( Test_TestCaseName );
+    testRUN_TEST_CASE_FUNCTION( Test_TestCaseName );
 
-    UNITY_END();
+    testEND_FUNCTION();
 }
 /*-----------------------------------------------------------*/

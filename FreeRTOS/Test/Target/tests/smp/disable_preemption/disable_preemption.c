@@ -48,8 +48,15 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Unit testing support functions. */
-#include "unity.h"
+#ifndef TEST_CONFIG_H
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
+
+#if ( configTARGET_TEST_USE_CUSTOM_SETTING == 1 )
+    #include "test_setting_config.h"
+#endif
+
+#include "test_default_setting_config.h"
 /*-----------------------------------------------------------*/
 
 /**
@@ -207,7 +214,7 @@ void Test_DisablePreemption( void )
 /*-----------------------------------------------------------*/
 
 /* Runs before every test, put init calls here. */
-void setUp( void )
+testSETUP_FUNCTION_PROTOTYPE( setUp )
 {
     uint32_t i;
 
@@ -220,7 +227,7 @@ void setUp( void )
 /*-----------------------------------------------------------*/
 
 /* Runs after every test, put clean-up calls here. */
-void tearDown( void )
+testTEARDOWN_FUNCTION_PROTOTYPE( tearDown )
 {
     uint32_t i;
 
@@ -239,12 +246,12 @@ void tearDown( void )
 /**
  * @brief Entry point for test runner to run disable preemption test.
  */
-void vRunDisablePreemptionTest( void )
+testENTRY_FUNCTION_PROTOTYPE( vRunDisablePreemptionTest )
 {
-    UNITY_BEGIN();
+    testBEGIN_FUNCTION();
 
-    RUN_TEST( Test_DisablePreemption );
+    testRUN_TEST_CASE_FUNCTION( Test_DisablePreemption );
 
-    UNITY_END();
+    testEND_FUNCTION();
 }
 /*-----------------------------------------------------------*/

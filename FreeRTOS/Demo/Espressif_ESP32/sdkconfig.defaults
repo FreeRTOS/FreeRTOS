@@ -1,0 +1,62 @@
+# Base configuration for the FreeRTOS Common/Minimal demo on Espressif
+# targets.
+
+# Dual-core SMP scheduling.
+CONFIG_FREERTOS_SMP=y
+CONFIG_FREERTOS_UNICORE=n
+
+# Several Common/Minimal tests embed single-priority scheduler
+# assumptions (they inspect a peer task's state immediately after
+# creating or resuming it).  Default to configRUN_MULTIPLE_PRIORITIES=0
+# so those checks are valid; the multi-priority sweep config exercises
+# the alternative scheduling model separately.
+CONFIG_FREERTOS_RUN_MULTIPLE_PRIORITIES=n
+
+# Common/Minimal timing assumes 1 kHz tick.
+CONFIG_FREERTOS_HZ=1000
+
+# Primitives the demo depends on.
+CONFIG_FREERTOS_USE_TRACE_FACILITY=y
+CONFIG_FREERTOS_USE_TICK_HOOK=y
+CONFIG_FREERTOS_USE_IDLE_HOOK=y
+CONFIG_FREERTOS_SUPPORT_STATIC_ALLOCATION=y
+CONFIG_FREERTOS_USE_TIMERS=y
+CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=n
+
+# The Common/Minimal TimerDemo requires the timer service (daemon) task to run
+# at a higher priority than its timer test task, which it creates at
+# configTIMER_TASK_PRIORITY - 1 (see TimerDemo.c).  ESP-IDF defaults the daemon
+# to priority 1, so that expression collapses to idle priority, where the test
+# task is starved on a loaded SMP system and the one-shot reset checks in Test 6
+# occasionally fail.  Run the daemon near the top of the range (as generic
+# FreeRTOS demos do) so the test task is high yet still below the daemon.
+CONFIG_FREERTOS_TIMER_TASK_PRIORITY=24
+
+# Common/Minimal sources rely on the legacy API spellings (eTaskStateGet,
+# xTaskHandle, ...) that this option keeps available as aliases.
+CONFIG_FREERTOS_ENABLE_BACKWARD_COMPATIBILITY=y
+CONFIG_FREERTOS_QUEUE_REGISTRY_SIZE=20
+
+# Demo creates many tasks; widen the task-name limit.
+CONFIG_FREERTOS_MAX_TASK_NAME_LEN=17
+
+# Stack headroom.
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=8192
+CONFIG_FREERTOS_TIMER_TASK_STACK_DEPTH=3000
+CONFIG_FREERTOS_IDLE_TASK_STACKSIZE=2048
+
+# The task WDT would fire while idle hook work runs.
+CONFIG_ESP_TASK_WDT_INIT=n
+
+# Keep stdout clean so the per-test PASS/FAIL/IGNORED lines are easy to
+# grep from a serial monitor.
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+CONFIG_LOG_TIMESTAMP_SOURCE_RTOS=y
+
+# Coredump partition for post-mortem analysis.
+CONFIG_ESP_COREDUMP_ENABLE_TO_FLASH=y
+CONFIG_ESP_COREDUMP_DATA_FORMAT_ELF=y
+CONFIG_ESP_COREDUMP_CHECKSUM_CRC32=y
+CONFIG_ESP_COREDUMP_LOGS=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"

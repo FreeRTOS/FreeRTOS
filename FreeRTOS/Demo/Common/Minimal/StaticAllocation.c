@@ -577,7 +577,11 @@
     static void prvCreateAndDeleteStaticallyAllocatedTimers( void )
     {
         TimerHandle_t xTimer;
-        UBaseType_t uxVariableToIncrement;
+
+/* Passed to the timer as its ID, so it has to outlive the timer: xTimerDelete()
+ * only queues the delete, so a callback can still reach this address after this
+ * function returns.  Only one task calls this function. */
+        static UBaseType_t uxVariableToIncrement;
         const TickType_t xTimerPeriod = pdMS_TO_TICKS( 20 );
         BaseType_t xReturned;
 
@@ -621,11 +625,16 @@
         vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
 
         /* By now the timer should have expired staticMAX_TIMER_CALLBACK_EXECUTIONS
-         * times, and then stopped itself. */
-        if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
-        {
-            xErrorOccurred = __LINE__;
-        }
+         * times, and then stopped itself.  xTimerStart() only posts a command, so
+         * the period starts when the timer service task processes it - which has
+         * happened by now only where a higher priority task cannot run at the
+         * same time as this one. */
+        #if ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 )
+            if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
+            {
+                xErrorOccurred = __LINE__;
+            }
+        #endif
 
         /* Finished with the timer, delete it. */
         xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
@@ -663,10 +672,12 @@
 
             vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
 
-            if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
-            {
-                xErrorOccurred = __LINE__;
-            }
+            #if ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 )
+                if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
+                {
+                    xErrorOccurred = __LINE__;
+                }
+            #endif
 
             xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
 
@@ -729,10 +740,11 @@
 
 /* The variable that will hold the TCB of tasks created by this function.  See
  * the comments above the declaration of the xCreatorTaskTCBBuffer variable for
- * more information.  NOTE:  This is not static so relies on the tasks that use it
- * being deleted before this function returns and deallocates its stack.  That will
- * only be the case if configUSE_PREEMPTION is set to 1. */
-        StaticTask_t xTCBBuffer;
+ * more information.  This is static because vTaskDelete() only tears a task down
+ * immediately when that task is not running: with more than one core the created
+ * task can still be running on the other core, leaving the kernel referencing a
+ * control block whose stack frame has been reused. */
+        static StaticTask_t xTCBBuffer;
 
 /* This buffer that will be used as the stack of tasks created by this function.
  * See the comments above the declaration of the uxCreatorTaskStackBuffer[] array
@@ -759,12 +771,15 @@
         {
             xErrorOccurred = __LINE__;
         }
-        else if( eTaskGetState( xCreatedTask ) != eSuspended )
-        {
-            /* The created task had a higher priority so should have executed and
-             * suspended itself by now. */
-            xErrorOccurred = __LINE__;
-        }
+
+        #if ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 )
+            else if( eTaskGetState( xCreatedTask ) != eSuspended )
+            {
+                /* The created task had a higher priority so should have executed and
+                 * suspended itself by now. */
+                xErrorOccurred = __LINE__;
+            }
+        #endif
         else
         {
             vTaskDelete( xCreatedTask );
@@ -785,10 +800,12 @@
                 uxTaskPriorityGet( NULL ) + 1, /* The priority of the task. */
                 &xCreatedTask );               /* Handle of the task being created. */
 
-            if( eTaskGetState( xCreatedTask ) != eSuspended )
-            {
-                xErrorOccurred = __LINE__;
-            }
+            #if ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 )
+                if( eTaskGetState( xCreatedTask ) != eSuspended )
+                {
+                    xErrorOccurred = __LINE__;
+                }
+            #endif
 
             configASSERT( xReturned == pdPASS );
 

@@ -1012,7 +1012,16 @@ void vPeriodicStreamBufferProcessing( void )
 
     /* Called from the tick interrupt hook.  If the global stream buffer
      * variable is not NULL then the prvInterruptTriggerTest() task expects a byte
-     * to be sent to the stream buffer on each tick interrupt. */
+     * to be sent to the stream buffer on each tick interrupt.
+     *
+     * With more than one core the NULL check and the send must not interleave
+     * with prvInterruptTriggerLevelTest() assigning NULL and deleting the buffer
+     * on the other core.  On a single core this interrupt already runs to
+     * completion with respect to that task, and this runs on every tick. */
+    #if ( configNUMBER_OF_CORES > 1 )
+        UBaseType_t uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+    #endif
+
     if( xInterruptStreamBuffer != NULL )
     {
         /* One character from the pcDataSentFromInterrupt string is sent on each
@@ -1030,6 +1039,10 @@ void vPeriodicStreamBufferProcessing( void )
         /* Start at the beginning of the string being sent again. */
         xNextChar = 0;
     }
+
+    #if ( configNUMBER_OF_CORES > 1 )
+        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -1110,10 +1123,17 @@ static void prvInterruptTriggerLevelTest( void * pvParameters )
                      * buffer before this task called xStreamBufferReceive(), but
                      * if that is the case then xBytesReceived will only every be
                      * 0 as the interrupt will only have executed once. */
-                    if( xBytesReceived != 1 )
-                    {
-                        xErrorDetected = pdTRUE;
-                    }
+
+                    /* Only one byte can have arrived where nothing runs between
+                     * this task resetting the buffer and the receive above.  With
+                     * more than one core this task can be preempted across
+                     * several ticks, so the count measures scheduling latency. */
+                    #if ( configNUMBER_OF_CORES == 1 )
+                        if( xBytesReceived != 1 )
+                        {
+                            xErrorDetected = pdTRUE;
+                        }
+                    #endif
                 }
             }
             else if( xTriggerLevel < xReadBlockTime )
@@ -1152,10 +1172,13 @@ static void prvInterruptTriggerLevelTest( void * pvParameters )
                  * unless this task is running a too low a priority. */
                 if( xBytesReceived < xReadBlockTime )
                 {
-                    if( xBytesReceived != 1 )
-                    {
-                        xErrorDetected = pdTRUE;
-                    }
+                    /* Single core only, as above. */
+                    #if ( configNUMBER_OF_CORES == 1 )
+                        if( xBytesReceived != 1 )
+                        {
+                            xErrorDetected = pdTRUE;
+                        }
+                    #endif
                 }
                 else if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
                 {

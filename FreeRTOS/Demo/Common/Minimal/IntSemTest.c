@@ -175,8 +175,14 @@ static void vInterruptMutexMasterTask( void * pvParameters )
 static void prvTakeAndGiveInTheSameOrder( void )
 {
     /* Ensure the slave is suspended, and that this task is running at the
-     * lower priority as expected as the start conditions. */
-    #if ( INCLUDE_eTaskGetState == 1 )
+     * lower priority as expected as the start conditions.
+     *
+     * The peer-state assertions below hold on a single core only.  A task that
+     * has published its suspended state has not necessarily left
+     * vTaskSuspend(), and priority inheritance raises the holder to the
+     * waiter's priority inside xSemaphoreTake() before the waiter blocks - so
+     * on another core the peer is legitimately seen still running. */
+    #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
     {
         configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
     }
@@ -199,7 +205,7 @@ static void prvTakeAndGiveInTheSameOrder( void )
 
     /* The slave has the higher priority so should now have executed and
      * blocked on the semaphore. */
-    #if ( INCLUDE_eTaskGetState == 1 )
+    #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
     {
         configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
     }
@@ -263,7 +269,7 @@ static void prvTakeAndGiveInTheSameOrder( void )
         xErrorDetected = __LINE__;
     }
 
-    #if ( INCLUDE_eTaskGetState == 1 )
+    #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
     {
         configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
     }
@@ -278,7 +284,7 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
 {
     /* Ensure the slave is suspended, and that this task is running at the
      * lower priority as expected as the start conditions. */
-    #if ( INCLUDE_eTaskGetState == 1 )
+    #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
     {
         configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
     }
@@ -301,7 +307,7 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
 
     /* The slave has the higher priority so should now have executed and
      * blocked on the semaphore. */
-    #if ( INCLUDE_eTaskGetState == 1 )
+    #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
     {
         configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
     }

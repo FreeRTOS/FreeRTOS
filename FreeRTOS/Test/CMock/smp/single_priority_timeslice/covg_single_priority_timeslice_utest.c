@@ -671,3 +671,170 @@ void test_coverage_prvSelectHighestPriorityTask_affinity_task_yield_pending( voi
     /* TN+1 is selected to run on core 0. */
     TEST_ASSERT_EQUAL( 0, xTaskTCBs[ configNUMBER_OF_CORES + 1 ].xTaskRunState );
 }
+
+/* @brief prvSelectHighestPriorityTask - task that is runnable on no core.
+ *
+ * A ready task with an empty core affinity mask can never be selected by any
+ * core.  Verify that such a task does not pin uxTopReadyPriority - the core
+ * must select the ready task at the lower priority instead of falling back to
+ * an idle task and starving every lower priority task that is eligible to run.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * #if ( configUSE_CORE_AFFINITY == 1 )
+ * {
+ *     if( pxTCB->uxCoreAffinityMask != ( UBaseType_t ) 0U )
+ *     {
+ *         xDecrementTopPriority = pdFALSE;
+ *     }
+ *     ...
+ * }
+ * @endcode
+ * ( pxTCB->uxCoreAffinityMask != ( UBaseType_t ) 0U ) is false for every task
+ * in the highest priority ready list.
+ */
+void test_coverage_prvSelectHighestPriorityTask_unrunnable_task_does_not_pin_top_priority( void )
+{
+    TCB_t xTaskTCBs[ configNUMBER_OF_CORES + 2 ] = { 0 };
+    uint32_t i = 0;
+
+    /* Setup the variables and structure. */
+
+    /* Initialize the ready lists and set top ready priority to the priority of
+     * the task that is runnable on no core. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY + 1 ] ) );
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY + 2 ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY + 2;
+    uxCurrentNumberOfTasks = 0;
+
+    /* Create core numbers running idle task. */
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
+    {
+        vCreateStaticTestTaskAffinity( &xTaskTCBs[ i ],
+                                       ( ( 1U << configNUMBER_OF_CORES ) - 1U ),
+                                       tskIDLE_PRIORITY,
+                                       i,
+                                       pdTRUE );
+        listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCBs[ i ].xStateListItem );
+    }
+
+    /* Create one ready task that is eligible to run on every core. */
+    vCreateStaticTestTaskAffinity( &xTaskTCBs[ configNUMBER_OF_CORES ],
+                                   ( ( 1U << configNUMBER_OF_CORES ) - 1U ),
+                                   tskIDLE_PRIORITY + 1,
+                                   taskTASK_NOT_RUNNING,
+                                   pdFALSE );
+    listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY + 1 ], &xTaskTCBs[ configNUMBER_OF_CORES ].xStateListItem );
+
+    /* Create one ready task that is runnable on no core. */
+    vCreateStaticTestTaskAffinity( &xTaskTCBs[ configNUMBER_OF_CORES + 1 ],
+                                   0U,
+                                   tskIDLE_PRIORITY + 2,
+                                   taskTASK_NOT_RUNNING,
+                                   pdFALSE );
+    listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY + 2 ], &xTaskTCBs[ configNUMBER_OF_CORES + 1 ].xStateListItem );
+
+    /* The ready list has the following status.
+     * Ready list [ 0 ] : T0(0), T1(1), ..., TN-1(N-1).
+     * Ready list [ 1 ] : TN.
+     * Ready list [ 2 ] : TN+1 ( runnable on no core ). */
+
+    /* API calls. Select task for core 0. */
+    prvSelectHighestPriorityTask( 0 );
+
+    /* Validations.*/
+
+    /* The unrunnable task must not pin uxTopReadyPriority. */
+    TEST_ASSERT_EQUAL( tskIDLE_PRIORITY + 1, uxTopReadyPriority );
+    /* TN is selected to run on core 0 instead of falling back to an idle task. */
+    TEST_ASSERT_EQUAL_PTR( &xTaskTCBs[ configNUMBER_OF_CORES ], pxCurrentTCBs[ 0 ] );
+    TEST_ASSERT_EQUAL( 0, xTaskTCBs[ configNUMBER_OF_CORES ].xTaskRunState );
+    /* TN+1 is still runnable on no core. */
+    TEST_ASSERT_EQUAL( taskTASK_NOT_RUNNING, xTaskTCBs[ configNUMBER_OF_CORES + 1 ].xTaskRunState );
+}
+
+/* @brief vTaskCoreAffinitySet - empty core affinity mask.
+ *
+ * Setting an empty core affinity mask would make a ready task runnable on no
+ * core.  Verify that the call is a no-op and the task keeps its current core
+ * affinity mask.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxCoreAffinityMask != ( UBaseType_t ) 0U )
+ * {
+ *     ...
+ * }
+ * else
+ * {
+ *     mtCOVERAGE_TEST_MARKER();
+ * }
+ * @endcode
+ * ( uxCoreAffinityMask != ( UBaseType_t ) 0U ) is false.
+ */
+void test_coverage_vTaskCoreAffinitySet_zero_mask_is_noop( void )
+{
+    TCB_t xTaskTCB = { 0 };
+
+    /* Setup the variables and structure. */
+    vListInitialise( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) );
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    uxCurrentNumberOfTasks = 0;
+
+    vCreateStaticTestTaskAffinity( &xTaskTCB,
+                                   ( ( 1U << configNUMBER_OF_CORES ) - 1U ),
+                                   tskIDLE_PRIORITY,
+                                   taskTASK_NOT_RUNNING,
+                                   pdFALSE );
+    listINSERT_END( &pxReadyTasksLists[ tskIDLE_PRIORITY ], &xTaskTCB.xStateListItem );
+
+    /* API call. */
+    vTaskCoreAffinitySet( &xTaskTCB, 0 );
+
+    /* Validations.  The task keeps its previous core affinity mask. */
+    TEST_ASSERT_EQUAL( ( ( 1U << configNUMBER_OF_CORES ) - 1U ), xTaskTCB.uxCoreAffinityMask );
+}
+
+/* @brief xTaskCreateAffinitySet - empty core affinity mask.
+ *
+ * Creating a task with an empty core affinity mask would make it runnable on
+ * no core.  Verify that the task is created with configTASK_DEFAULT_CORE_AFFINITY
+ * instead.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * if( uxCoreAffinityMask != ( UBaseType_t ) 0U )
+ * {
+ *     pxNewTCB->uxCoreAffinityMask = uxCoreAffinityMask;
+ * }
+ * else
+ * {
+ *     pxNewTCB->uxCoreAffinityMask = configTASK_DEFAULT_CORE_AFFINITY;
+ * }
+ * @endcode
+ * ( uxCoreAffinityMask != ( UBaseType_t ) 0U ) is false.
+ */
+void test_coverage_xTaskCreateAffinitySet_zero_mask_uses_default_affinity( void )
+{
+    TaskHandle_t xTaskHandle = NULL;
+    BaseType_t xReturn;
+    UBaseType_t i;
+
+    /* Setup the variables and structure. */
+    for( i = 0; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+    {
+        vListInitialise( &( pxReadyTasksLists[ i ] ) );
+    }
+
+    uxTopReadyPriority = tskIDLE_PRIORITY;
+    uxCurrentNumberOfTasks = 0;
+
+    /* API call. */
+    xReturn = xTaskCreateAffinitySet( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE, NULL, 2, 0, &xTaskHandle );
+
+    /* Validations. */
+    TEST_ASSERT_EQUAL( pdPASS, xReturn );
+    TEST_ASSERT_NOT_NULL( xTaskHandle );
+    TEST_ASSERT_EQUAL( configTASK_DEFAULT_CORE_AFFINITY, vTaskCoreAffinityGet( xTaskHandle ) );
+}

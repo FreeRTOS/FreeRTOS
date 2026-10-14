@@ -554,6 +554,7 @@ void test_vTaskDelete_assert_schedulerSuspended( void )
 
     start_scheduler();
 
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -675,6 +676,7 @@ void test_vTaskSuspend_assert_scheduler_suspended_neq_zero( void )
     TCB_t * ptcb = create_task();
 
     uxSchedulerSuspended = 1;
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( 1 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -977,6 +979,7 @@ void test_prvCheckTasksWaitingTermination_assert_out_of_bound_ucStaticallyAlloca
 
     ptcb->ucStaticallyAllocated = 3; /* out of range value */
 
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );

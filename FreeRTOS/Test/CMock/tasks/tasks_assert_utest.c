@@ -605,6 +605,45 @@ void test_vTaskDelayUntil_assert_uxSchedulerSuspended_neq_1( void )
 }
 
 /*!
+ * @brief This test ensures that the code asserts if pxPreviousWakeTime is equal
+ *        to NULL
+ */
+void test_xTaskPeriodicDelay_assert_pxPreviousWakeTime_NULL( void )
+{
+    EXPECT_ASSERT_BREAK( xTaskPeriodicDelay( NULL, 23 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if xTimeIncrement is equal to
+ *        zero
+ */
+void test_xTaskPeriodicDelay_assert_xTimeIncrement_eq_zero( void )
+{
+    TickType_t xPreviousWakeTime;
+
+    EXPECT_ASSERT_BREAK( xTaskPeriodicDelay( &xPreviousWakeTime, 0 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
+ * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
+ *        equal to 1
+ */
+void test_xTaskPeriodicDelay_assert_uxSchedulerSuspended_neq_1( void )
+{
+    TickType_t xPreviousWakeTime;
+
+    vTaskSuspendAll();
+
+    EXPECT_ASSERT_BREAK( xTaskPeriodicDelay( &xPreviousWakeTime, 6 ) );
+
+    validate_and_clear_assertions();
+}
+
+/*!
  * @brief This test ensures that the code asserts if uxSchedulerSuspended is not
  *        equal to 1
  */

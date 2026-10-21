@@ -112,8 +112,18 @@ void harness()
         xQueue->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
         xQueue->xTasksWaitingToSend.uxNumberOfItems = nondet_UBaseType_t();
         #if ( configUSE_QUEUE_SETS == 1 )
-            xQueueAddToSet( xQueue, xUnconstrainedQueueSet() );
-        #endif
+            QueueSetHandle_t xSet = xUnconstrainedQueueSet();
+
+            /* xQueueAddToSet() dereferences the queue set handle to confirm that
+             * the object really is a queue set, so passing NULL is API misuse
+             * rather than something the kernel defends against.  When the queue
+             * set allocation fails, leave the queue outside of any set - its
+             * pxQueueSetContainer is already NULL at this point. */
+            if( xSet != NULL )
+            {
+                xQueueAddToSet( xQueue, xSet );
+            }
+        #endif /* if ( configUSE_QUEUE_SETS == 1 ) */
         prvUnlockQueue( xQueue );
     }
 }

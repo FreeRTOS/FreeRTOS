@@ -91,6 +91,20 @@
 
         return xSet;
     }
+
+/* xQueueAddToSet() dereferences the queue set handle to confirm that the object
+* really is a queue set, so passing NULL is API misuse rather than something the
+* kernel defends against.  When the queue set allocation fails, leave the queue
+* outside of any set - its pxQueueSetContainer is already NULL at this point. */
+    void vAddToUnconstrainedQueueSet( QueueHandle_t xQueue )
+    {
+        QueueSetHandle_t xSet = xUnconstrainedQueueSet();
+
+        if( xSet != NULL )
+        {
+            xQueueAddToSet( xQueue, xSet );
+        }
+    }
 #endif /* if ( configUSE_QUEUE_SETS == 1 ) */
 
 /* Create a mostly unconstrained Queue but bound the max item size.
@@ -126,7 +140,7 @@ QueueHandle_t xUnconstrainedQueueBoundedItemSize( UBaseType_t uxItemSizeBound )
         xQueue->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
         xQueue->xTasksWaitingToSend.uxNumberOfItems = nondet_UBaseType_t();
         #if ( configUSE_QUEUE_SETS == 1 )
-            xQueueAddToSet( xQueue, xUnconstrainedQueueSet() );
+            vAddToUnconstrainedQueueSet( xQueue );
         #endif
     }
 
@@ -163,7 +177,7 @@ QueueHandle_t xUnconstrainedQueue( void )
         xQueue->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
         xQueue->xTasksWaitingToSend.uxNumberOfItems = nondet_UBaseType_t();
         #if ( configUSE_QUEUE_SETS == 1 )
-            xQueueAddToSet( xQueue, xUnconstrainedQueueSet() );
+            vAddToUnconstrainedQueueSet( xQueue );
         #endif
     }
 
@@ -190,7 +204,7 @@ QueueHandle_t xUnconstrainedMutex( void )
         xQueue->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
         xQueue->xTasksWaitingToSend.uxNumberOfItems = nondet_UBaseType_t();
         #if ( configUSE_QUEUE_SETS == 1 )
-            xQueueAddToSet( xQueue, xUnconstrainedQueueSet() );
+            vAddToUnconstrainedQueueSet( xQueue );
         #endif
     }
 

@@ -3581,3 +3581,164 @@ void test_task_create_task_set_affinity_async_yield( void )
     /* Verify that the task core task can run on core 1. */
     verifySmpTask( &xCoreTaskHandle, eRunning, 1 );
 }
+
+/* Record cross-core yield requests without delivering them. This allows a task
+ * on another core to yield voluntarily while the original request is pending. */
+static UBaseType_t uxPendingReassignYields;
+
+static void prvRecordReassignYield( int xCoreID,
+                                    int cmock_num_calls )
+{
+    ( void ) cmock_num_calls;
+
+    uxPendingReassignYields |= ( ( UBaseType_t ) 1U << xCoreID );
+}
+
+static void prvTestReassignAfterVoluntaryYield( UBaseType_t uxAffinityMask,
+                                                BaseType_t xDisablePreemption,
+                                                BaseType_t xExpectedYieldCore )
+{
+    TaskHandle_t xTaskHandles[ configNUMBER_OF_CORES + 1 ] = { NULL };
+    const BaseType_t xLastCore = configNUMBER_OF_CORES - 1;
+    const UBaseType_t uxOriginalYieldMask = ( UBaseType_t ) 1U << xLastCore;
+    UBaseType_t uxPriority;
+    BaseType_t xCoreID;
+
+    /* Fill all but the last two cores with priority 5 tasks. The remaining
+     * cores run at priorities 4 and 3, with one additional priority 3 task ready. */
+    for( xCoreID = 0; xCoreID <= configNUMBER_OF_CORES; xCoreID++ )
+    {
+        if( xCoreID == 1 )
+        {
+            uxPriority = 4;
+        }
+        else if( xCoreID >= xLastCore )
+        {
+            uxPriority = 3;
+        }
+        else
+        {
+            uxPriority = 5;
+        }
+
+        TEST_ASSERT_EQUAL( pdPASS, xTaskCreate( vSmpTestTask, "SMP Task", configMINIMAL_STACK_SIZE,
+                                                NULL, uxPriority, &xTaskHandles[ xCoreID ] ) );
+    }
+
+    vTaskStartScheduler();
+
+    /* The priority 4 task follows the priority 5 tasks in the initial selection.
+     * Use its actual core rather than depending on the order of equal priorities. */
+    xCoreID = configNUMBER_OF_CORES - 2;
+    verifySmpTask( &xTaskHandles[ 1 ], eRunning, xCoreID );
+    verifySmpTask( &xTaskHandles[ xLastCore ], eRunning, xLastCore );
+
+    /* Constrain the task that will be displaced, not the incoming task. */
+    vTaskCoreAffinitySet( xTaskHandles[ 1 ], uxAffinityMask );
+
+    if( xDisablePreemption != pdFALSE )
+    {
+        vTaskPreemptionDisable( xTaskHandles[ 0 ] );
+    }
+
+    vTaskPrioritySet( xTaskHandles[ 1 ], 6 );
+
+    commonAsyncCoreYieldSetup();
+    uxPendingReassignYields = 0;
+    vFakePortYieldCore_StubWithCallback( prvRecordReassignYield );
+    vSetCurrentCore( xCoreID );
+
+    /* Request a yield on the lowest priority core, but leave it undelivered. */
+    vTaskPrioritySet( xTaskHandles[ configNUMBER_OF_CORES ], 6 );
+    TEST_ASSERT_EQUAL( uxOriginalYieldMask, uxPendingReassignYields );
+
+    /* The current task voluntarily yields to the equal priority ready task.
+    * Its former core need not be the lowest priority core for that task. */
+    taskYIELD();
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, xCoreID );
+    verifySmpTask( &xTaskHandles[ 1 ], eReady, taskTASK_NOT_RUNNING );
+
+    if( xExpectedYieldCore >= 0 )
+    {
+        TEST_ASSERT_EQUAL( uxOriginalYieldMask | ( ( UBaseType_t ) 1U << xExpectedYieldCore ),
+                           uxPendingReassignYields );
+
+        /* Deliver the new request first. The displaced task must run there
+         * without waiting for the original request on the lowest priority core. */
+        uxPendingReassignYields &= ~( ( UBaseType_t ) 1U << xExpectedYieldCore );
+        vSetCurrentCore( xExpectedYieldCore );
+        vTaskSwitchContext( xExpectedYieldCore );
+        verifySmpTask( &xTaskHandles[ 1 ], eRunning, xExpectedYieldCore );
+    }
+    else
+    {
+        TEST_ASSERT_EQUAL( uxOriginalYieldMask, uxPendingReassignYields );
+    }
+
+    /* Deliver the original request and ensure both priority 6 tasks run. */
+    uxPendingReassignYields &= ~uxOriginalYieldMask;
+    vSetCurrentCore( xLastCore );
+    vTaskSwitchContext( xLastCore );
+    verifySmpTask( &xTaskHandles[ configNUMBER_OF_CORES ], eRunning, xCoreID );
+
+    if( xExpectedYieldCore >= 0 )
+    {
+        verifySmpTask( &xTaskHandles[ 1 ], eRunning, xExpectedYieldCore );
+    }
+    else
+    {
+        verifySmpTask( &xTaskHandles[ 1 ], eRunning, xLastCore );
+    }
+
+    TEST_ASSERT_EQUAL( 0, uxPendingReassignYields );
+}
+
+/**
+ * @brief A voluntarily displaced task can preempt another eligible core while
+ * an earlier cross-core yield request is pending (FreeRTOS-Kernel #1506).
+ *
+ * Requires at least three cores. The ready task has affinity to every core, so
+ * subtracting its affinity would incorrectly exclude all remaining candidates.
+ */
+void test_task_reassign_after_voluntary_yield_with_pending_core_yield( void )
+{
+    prvTestReassignAfterVoluntaryYield( tskNO_AFFINITY, pdFALSE, configNUMBER_OF_CORES - 3 );
+}
+
+/**
+ * @brief Reassignment must use the displaced task's affinity. Both tasks can run
+ * on core 0, even though the incoming task initially requested another core.
+ */
+void test_task_reassign_after_voluntary_yield_respects_affinity( void )
+{
+    const UBaseType_t uxAffinityMask = ( ( UBaseType_t ) 1U << 0 ) |
+                                       ( ( UBaseType_t ) 1U << ( configNUMBER_OF_CORES - 2 ) ) |
+                                       ( ( UBaseType_t ) 1U << ( configNUMBER_OF_CORES - 1 ) );
+
+    prvTestReassignAfterVoluntaryYield( uxAffinityMask, pdFALSE, 0 );
+}
+
+/**
+ * @brief A displaced task cannot request a yield on a core outside its affinity.
+ * It waits for the original request when that is its only remaining candidate.
+ */
+void test_task_reassign_after_voluntary_yield_no_other_eligible_core( void )
+{
+    const UBaseType_t uxAffinityMask = ( ( UBaseType_t ) 1U << ( configNUMBER_OF_CORES - 2 ) ) |
+                                       ( ( UBaseType_t ) 1U << ( configNUMBER_OF_CORES - 1 ) );
+
+    prvTestReassignAfterVoluntaryYield( uxAffinityMask, pdFALSE, -1 );
+}
+
+/**
+ * @brief A displaced task must not preempt a task that disabled preemption,
+ * even when that task runs at a lower priority on an affinity-allowed core.
+ */
+void test_task_reassign_after_voluntary_yield_respects_preemption_disable( void )
+{
+    const UBaseType_t uxAffinityMask = ( ( UBaseType_t ) 1U << 0 ) |
+                                       ( ( UBaseType_t ) 1U << ( configNUMBER_OF_CORES - 2 ) ) |
+                                       ( ( UBaseType_t ) 1U << ( configNUMBER_OF_CORES - 1 ) );
+
+    prvTestReassignAfterVoluntaryYield( uxAffinityMask, pdTRUE, -1 );
+}

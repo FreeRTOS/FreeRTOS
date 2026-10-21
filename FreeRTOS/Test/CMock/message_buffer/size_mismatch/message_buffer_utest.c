@@ -195,6 +195,61 @@ static void validate_and_clear_assertions( void )
 
 /* ==============================  Test Cases  ============================== */
 
+/**
+ * @brief Discard returns the full payload length with a uint8_t length header.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_uint8_length( void )
+{
+    uint8_t ucFirst[ UINT8_MAX ] = { 0xA5 };
+    const uint8_t ucSecond[] = { 0x00, 0x12, 0xFF };
+    uint8_t ucReceived[ sizeof( ucSecond ) ] = { 0 };
+    size_t xSpaceBeforeDiscard;
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreate( UINT8_MAX + 16U );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucFirst ), xMessageBufferSend( xMessageBuffer, ucFirst, sizeof( ucFirst ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xMessageBufferSend( xMessageBuffer, ucSecond, sizeof( ucSecond ), 0 ) );
+    xSpaceBeforeDiscard = xMessageBufferSpacesAvailable( xMessageBuffer );
+
+    TEST_ASSERT_EQUAL( UINT8_MAX, xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( xSpaceBeforeDiscard + sizeof( ucFirst ) + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucSecond, ucReceived, sizeof( ucSecond ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Discard a wrapped payload whose length header is one byte wide.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_uint8_wrapped_payload( void )
+{
+    StaticMessageBuffer_t xStaticMessageBuffer;
+    uint8_t ucStorage[ 32 ] = { 0 };
+    uint8_t ucPadding[ 28 ] = { 0xA5 };
+    const uint8_t ucData[] = { 0x00, 0x12, 0xFF };
+    uint8_t ucReceived[ sizeof( ucPadding ) ] = { 0 };
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreateStatic( sizeof( ucStorage ), ucStorage, &xStaticMessageBuffer );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucPadding ), xMessageBufferSend( xMessageBuffer, ucPadding, sizeof( ucPadding ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucPadding ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+
+    /* The length byte occupies offset 29; the three payload bytes wrap. */
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xMessageBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xMessageBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucData, ucReceived, sizeof( ucData ) );
+    TEST_ASSERT_EQUAL( sizeof( ucStorage ) - 1U, xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
 
 /**
  * @brief assert if xDataLengthBytes does not fit in

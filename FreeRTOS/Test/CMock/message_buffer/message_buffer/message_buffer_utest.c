@@ -320,7 +320,273 @@ static void validate_and_clear_assertions( void )
     assertionFailed = 0;
 }
 
+/**
+ * @brief Discard the full message while a sender is waiting for space.
+ */
+static BaseType_t messageBufferDiscardCallback( UBaseType_t uxIndexToWaitOn,
+                                                uint32_t ulBitsToClearOnEntry,
+                                                uint32_t ulBitsToClearOnExit,
+                                                uint32_t * pulNotificationValue,
+                                                TickType_t xTicksToWait,
+                                                int cmock_num_calls )
+{
+    TEST_ASSERT_EQUAL( 2U, uxIndexToWaitOn );
+    TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_WAIT_TICKS, xTicksToWait );
+    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xMessageBufferDiscard( xMessageBuffer ) );
+    return pdTRUE;
+}
+
+/**
+ * @brief Move the ring using public APIs, then discard across a selected boundary.
+ */
+static void validate_message_buffer_discard_wrap( size_t xInitialOffset,
+                                                  size_t xDiscardLength )
+{
+    StaticMessageBuffer_t xStaticMessageBuffer;
+    uint8_t ucStorage[ TEST_MESSAGE_BUFFER_SIZE + 1U ] = { 0 };
+    uint8_t ucData[ TEST_MESSAGE_BUFFER_SIZE ] = { 0xA5 };
+    const uint8_t ucFollowingMessage[] = { 0x11, 0x00, 0xFF };
+    uint8_t ucReceived[ TEST_MESSAGE_BUFFER_SIZE ] = { 0 };
+    size_t xPaddingLength = xInitialOffset - TEST_MESSAGE_METADATA_SIZE;
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreateStatic( sizeof( ucStorage ), ucStorage, &xStaticMessageBuffer );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+
+    /* After sending and receiving padding, both ring positions are at the
+     * requested offset. No private stream buffer fields are modified. */
+    TEST_ASSERT_EQUAL( xPaddingLength, xMessageBufferSend( xMessageBuffer, ucData, xPaddingLength, 0 ) );
+    TEST_ASSERT_EQUAL( xPaddingLength, xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL( xDiscardLength, xMessageBufferSend( xMessageBuffer, ucData, xDiscardLength, 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucFollowingMessage ), xMessageBufferSend( xMessageBuffer, ucFollowingMessage, sizeof( ucFollowingMessage ), 0 ) );
+
+    TEST_ASSERT_EQUAL( xDiscardLength, xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucFollowingMessage ), xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucFollowingMessage ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucFollowingMessage, ucReceived, sizeof( ucFollowingMessage ) );
+    TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief The discard receive tuple must not consume stream or batching data.
+ */
+static void validate_message_buffer_discard_non_message( StreamBufferHandle_t xBuffer )
+{
+    const uint8_t ucData[] = { 0x12, 0x00, 0x34, 0xFF };
+    uint8_t ucReceived[ sizeof( ucData ) ] = { 0 };
+
+    TEST_ASSERT_NOT_NULL( xBuffer );
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xStreamBufferSend( xBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( 0, xMessageBufferDiscard( xBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xStreamBufferBytesAvailable( xBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xStreamBufferReceive( xBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucData, ucReceived, sizeof( ucData ) );
+    vStreamBufferDelete( xBuffer );
+}
+
 /* ==============================  Test Cases  ============================== */
+
+/**
+ * @brief An empty discard returns immediately, without task notification calls.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_empty( void )
+{
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( 0, xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Discard the first message only after a too-small receive leaves it queued.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_preserves_following_message( void )
+{
+    const uint8_t ucFirst[] = { 0x11, 0x22, 0x33, 0x44 };
+    const uint8_t ucSecond[] = { 0x00, 0xFF, 0x55 };
+    uint8_t ucReceived[ sizeof( ucFirst ) ] = { 0xA5, 0xA5, 0xA5, 0xA5 };
+    const uint8_t ucUnchanged[] = { 0xA5, 0xA5, 0xA5, 0xA5 };
+    size_t xSpaceBeforeDiscard;
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucFirst ), xMessageBufferSend( xMessageBuffer, ucFirst, sizeof( ucFirst ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xMessageBufferSend( xMessageBuffer, ucSecond, sizeof( ucSecond ), 0 ) );
+
+    TEST_ASSERT_EQUAL( 0, xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucFirst ) - 1U, 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucUnchanged, ucReceived, sizeof( ucReceived ) );
+    TEST_ASSERT_EQUAL( sizeof( ucFirst ), xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
+    xSpaceBeforeDiscard = xMessageBufferSpacesAvailable( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucFirst ), xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( xSpaceBeforeDiscard + sizeof( ucFirst ) + TEST_MESSAGE_METADATA_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucSecond, ucReceived, sizeof( ucSecond ) );
+    TEST_ASSERT_EQUAL( 0, xMessageBufferDiscard( xMessageBuffer ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Discarding the smallest message restores all space.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_one_byte( void )
+{
+    uint8_t ucData = 0xA5;
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xMessageBuffer, &ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xMessageBufferIsEmpty( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Discarding a full buffer permits another maximum-size send.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_full( void )
+{
+    uint8_t ucData[ TEST_MAX_MESSAGE_SIZE ] = { 0xA5 };
+    uint8_t ucReceived[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xMessageBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( 0, xMessageBufferSpacesAvailable( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferDiscard( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xMessageBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucData, ucReceived, sizeof( ucData ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief The first message length header straddles the ring boundary.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_wrapped_length_header( void )
+{
+    validate_message_buffer_discard_wrap( TEST_MESSAGE_BUFFER_SIZE, 5U );
+}
+
+/**
+ * @brief The first message payload straddles the ring boundary.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_wrapped_payload( void )
+{
+    validate_message_buffer_discard_wrap( TEST_MESSAGE_BUFFER_SIZE - TEST_MESSAGE_METADATA_SIZE, 5U );
+}
+
+/**
+ * @brief The discarded payload ends exactly at the ring boundary.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_payload_ends_at_boundary( void )
+{
+    validate_message_buffer_discard_wrap( TEST_MESSAGE_BUFFER_SIZE - TEST_MESSAGE_METADATA_SIZE - 4U, 5U );
+}
+
+/**
+ * @brief The reserved discard tuple must leave a normal stream unchanged.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_stream_unchanged( void )
+{
+    validate_message_buffer_discard_non_message( xStreamBufferCreate( TEST_MESSAGE_BUFFER_SIZE, 1U ) );
+}
+
+/**
+ * @brief The reserved discard tuple must leave a batching stream unchanged.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_batching_stream_unchanged( void )
+{
+    validate_message_buffer_discard_non_message( xStreamBatchingBufferCreate( TEST_MESSAGE_BUFFER_SIZE, 1U ) );
+}
+
+/**
+ * @brief Discard notifies the blocked writer through its configured index.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_unblocks_sender( void )
+{
+    uint8_t ucFirst[ TEST_MAX_MESSAGE_SIZE ] = { 0xA5 };
+    const uint8_t ucSecond[] = { 0x00, 0x12, 0xFF };
+    uint8_t ucReceived[ sizeof( ucSecond ) ] = { 0 };
+
+    vTaskSetTimeOutState_Ignore();
+    xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
+    xTaskGetCurrentTaskHandle_IgnoreAndReturn( senderTask );
+    xTaskGenericNotifyWait_StubWithCallback( messageBufferDiscardCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    vStreamBufferSetStreamBufferNotificationIndex( xMessageBuffer, 2U );
+    TEST_ASSERT_EQUAL( sizeof( ucFirst ), xMessageBufferSend( xMessageBuffer, ucFirst, sizeof( ucFirst ), 0 ) );
+    xTaskGenericNotify_ExpectAndReturn( senderTask, 2U, 0, eNoAction, NULL, pdPASS );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xMessageBufferSend( xMessageBuffer, ucSecond, sizeof( ucSecond ), TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
+    TEST_ASSERT_EQUAL( sizeof( ucSecond ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucSecond, ucReceived, sizeof( ucSecond ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief A zero-sized receive with a real destination retains the head message.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_preserves_zero_sized_receive( void )
+{
+    const uint8_t ucData[] = { 0x00, 0xA5 };
+    uint8_t ucReceived[ sizeof( ucData ) ] = { 0 };
+
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xMessageBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( 0, xMessageBufferReceive( xMessageBuffer, ucReceived, 0, 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferReceive( xMessageBuffer, ucReceived, sizeof( ucReceived ), 0 ) );
+    TEST_ASSERT_EQUAL_MEMORY( ucData, ucReceived, sizeof( ucData ) );
+    vMessageBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Only the nonblocking NULL/zero combination is a discard request.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_preserves_invalid_receive_assertions( void )
+{
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferReceive( xMessageBuffer, NULL, 1U, 0 ) );
+    validate_and_clear_assertions();
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferReceive( xMessageBuffer, NULL, 0, 1U ) );
+    validate_and_clear_assertions();
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferDiscard( NULL ) );
+    validate_and_clear_assertions();
+    vMessageBufferDelete( xMessageBuffer );
+}
 
 /**
  * @brief Validates that message buffer of sample test size is created successfully.

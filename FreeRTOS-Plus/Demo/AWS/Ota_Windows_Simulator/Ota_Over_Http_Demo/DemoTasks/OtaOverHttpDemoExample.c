@@ -1104,6 +1104,13 @@ static void prvMqttJobCallback( void * pvIncomingPublishCallbackContext,
 
     LogInfo( ( "Received job message callback, size %ld.\n\n", pxPublishInfo->payloadLength ) );
 
+    if( pxPublishInfo->payloadLength > sizeof( eventBuffer[ 0 ].data ) )
+    {
+        LogError( ( "Received OTA job message is too large to buffer: %lu bytes; dropping.",
+                    ( unsigned long ) pxPublishInfo->payloadLength ) );
+        return;
+    }
+
     pData = prvOTAEventBufferGet();
 
     if( pData != NULL )
@@ -1151,6 +1158,13 @@ static void prvMqttDataCallback( void * pvIncomingPublishCallbackContext,
     ( void ) pvIncomingPublishCallbackContext;
 
     LogInfo( ( "Received data message callback, size %zu.\n\n", pxPublishInfo->payloadLength ) );
+
+    if( pxPublishInfo->payloadLength > sizeof( eventBuffer[ 0 ].data ) )
+    {
+        LogError( ( "Received OTA data message is too large to buffer: %lu bytes; dropping.",
+                    ( unsigned long ) pxPublishInfo->payloadLength ) );
+        return;
+    }
 
     pxData = prvOTAEventBufferGet();
 
@@ -1806,6 +1820,14 @@ static OtaHttpStatus_t handleHttpResponse( const HTTPResponse_t * pResponse )
     switch( pResponse->statusCode )
     {
         case HTTP_RESPONSE_PARTIAL_CONTENT:
+
+            if( pResponse->bodyLen > sizeof( eventBuffer[ 0 ].data ) )
+            {
+                LogError( ( "Received OTA data block is too large to buffer: %lu bytes; dropping.",
+                            ( unsigned long ) pResponse->bodyLen ) );
+                break;
+            }
+
             /* Get buffer to send event & data. */
             pData = prvOTAEventBufferGet();
 

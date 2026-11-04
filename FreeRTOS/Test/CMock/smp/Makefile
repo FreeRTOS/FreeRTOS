@@ -16,6 +16,12 @@ SUITES	+=	multiple_priorities_no_timeslice_mock
 # SUITS for configASSERT
 SUITES	+=	config_assert
 
+# Run-time statistics characterization for both scheduler implementations.
+SUITES += run_time_stats_1core_32bit
+SUITES += run_time_stats_1core_64bit
+SUITES += run_time_stats_2core_32bit
+SUITES += run_time_stats_2core_64bit
+
 # PROJECT and SUITE variables are determined based on path like so:
 #   $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)
 PROJECT :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))

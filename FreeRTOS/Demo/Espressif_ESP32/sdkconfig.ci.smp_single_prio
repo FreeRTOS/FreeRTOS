@@ -1,0 +1,4 @@
+# Sweep: dual-core, single-priority scheduling.
+#
+# This is what sdkconfig.defaults already selects; the file exists so every
+# sweep can be named uniformly by CI.

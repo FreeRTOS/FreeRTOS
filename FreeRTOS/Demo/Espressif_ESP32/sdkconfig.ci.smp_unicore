@@ -1,0 +1,3 @@
+# Sweep: SMP scheduler, single core.
+
+CONFIG_FREERTOS_UNICORE=y

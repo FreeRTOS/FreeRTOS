@@ -1,0 +1,3 @@
+# Sweep: dual-core, multi-priority scheduling.
+
+CONFIG_FREERTOS_RUN_MULTIPLE_PRIORITIES=y

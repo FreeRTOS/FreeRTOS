@@ -127,12 +127,20 @@
     }                                                                                                                                   \
 
 
+/* With more than one core a task can receive from the queue at the same time as
+ * this interrupt, so finding it empty is a legitimate outcome, not an error. */
+#if ( configNUMBER_OF_CORES > 1 )
+    #define intqEMPTY_RX_ERROR()
+#else
+    #define intqEMPTY_RX_ERROR()    prvQueueAccessLogError( __LINE__ )
+#endif
+
 /* Receive a value from the normally empty queue.  This is called from within
  * an interrupt. */
 #define timerNORMALLY_EMPTY_RX()                                                                         \
     if( xQueueReceiveFromISR( xNormallyEmptyQueue, &uxRxedValue, &xHigherPriorityTaskWoken ) != pdPASS ) \
     {                                                                                                    \
-        prvQueueAccessLogError( __LINE__ );                                                              \
+        intqEMPTY_RX_ERROR();                                                                            \
     }                                                                                                    \
     else                                                                                                 \
     {                                                                                                    \
@@ -199,6 +207,12 @@ static void prvQueueAccessLogError( UBaseType_t uxLine );
 
 void vStartInterruptQueueTasks( void )
 {
+    /* The queues are created before the tasks: the tasks below start by
+     * accessing them, and with more than one core the first task created runs
+     * on the other core while this function is still executing. */
+    xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
+    xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
+
     /* Start the test tasks. */
     xTaskCreate( prvHigherPriorityNormallyEmptyTask, "H1QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask1 );
     xTaskCreate( prvHigherPriorityNormallyEmptyTask, "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
@@ -206,11 +220,6 @@ void vStartInterruptQueueTasks( void )
     xTaskCreate( prv1stHigherPriorityNormallyFullTask, "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
     xTaskCreate( prv2ndHigherPriorityNormallyFullTask, "H2QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
     xTaskCreate( prvLowerPriorityNormallyFullTask, "L2QRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
-
-    /* Create the queues that are accessed by multiple tasks and multiple
-     * interrupts. */
-    xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
-    xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
 
     /* vQueueAddToRegistry() adds the queue to the queue registry, if one is
      * in use.  The queue registry is provided as a means for kernel aware
@@ -408,11 +417,17 @@ static void prvLowerPriorityNormallyEmptyTask( void * pvParameters )
         if( xQueueReceive( xNormallyEmptyQueue, &uxRxed, intqONE_TICK_DELAY ) != errQUEUE_EMPTY )
         {
             /* A value should only be obtained when the high priority task is
-             * suspended. */
-            if( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended )
-            {
-                prvQueueAccessLogError( __LINE__ );
-            }
+             * suspended.  The peer frees the queue before it finishes suspending,
+             * and this task raises its own priority around each send, so with
+             * more than one core the two run at the same time and the peer is
+             * seen part way through suspending.  The queue integrity checks
+             * below keep the coverage there. */
+            #if ( configNUMBER_OF_CORES == 1 )
+                if( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended )
+                {
+                    prvQueueAccessLogError( __LINE__ );
+                }
+            #endif
 
             prvRecordValue_NormallyEmpty( uxRxed, intqLOW_PRIORITY_TASK );
 
@@ -608,11 +623,15 @@ static void prvLowerPriorityNormallyFullTask( void * pvParameters )
     {
         if( xQueueSend( xNormallyFullQueue, &uxTxed, intqONE_TICK_DELAY ) != errQUEUE_FULL )
         {
-            /* Should only succeed when the higher priority task is suspended */
-            if( eTaskGetState( xHighPriorityNormallyFullTask1 ) != eSuspended )
-            {
-                prvQueueAccessLogError( __LINE__ );
-            }
+            /* Should only succeed when the higher priority task is suspended.
+             * Single core only, for the same reason as
+             * prvLowerPriorityNormallyEmptyTask() above. */
+            #if ( configNUMBER_OF_CORES == 1 )
+                if( eTaskGetState( xHighPriorityNormallyFullTask1 ) != eSuspended )
+                {
+                    prvQueueAccessLogError( __LINE__ );
+                }
+            #endif
 
             vTaskResume( xHighPriorityNormallyFullTask1 );
             uxLowPriorityLoops2++;

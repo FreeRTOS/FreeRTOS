@@ -278,6 +278,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcKernelPortSnapshotConfig\.h.*',
     r'.*/MicroZed_hw_platform.*',
     r'.*/ThirdParty/.*',
+    r'.*/Espressif_ESP32/sdkconfig.*',
     r'.*/WinPCap/.*',
     r'.*/DRIVERS/.*',
     r'.*/FreeRTOS-Plus-Trace/.*',

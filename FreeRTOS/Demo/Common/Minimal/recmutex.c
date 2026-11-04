@@ -280,7 +280,9 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
          * happen when the controlling task is also suspended. */
         if( xSemaphoreTakeRecursive( xMutex, recmuNO_DELAY ) == pdPASS )
         {
-            #if ( INCLUDE_eTaskGetState == 1 )
+            /* A peer that has published its suspended state has not necessarily
+            * left vTaskSuspend() yet, so on another core it is seen running. */
+            #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
             {
                 configASSERT( eTaskGetState( xControllingTaskHandle ) == eSuspended );
                 configASSERT( eTaskGetState( xBlockingTaskHandle ) == eSuspended );
@@ -331,7 +333,11 @@ static void prvRecursiveMutexPollingTask( void * pvParameters )
                 }
                 #endif /* INCLUDE_uxTaskPriorityGet */
 
-                #if ( INCLUDE_eTaskGetState == 1 )
+                /* Priority inheritance raises the holder to the waiter's
+                 * priority inside xSemaphoreTake() before the waiter blocks, so
+                 * on another core the holder legitimately sees it still
+                 * running. */
+                #if ( INCLUDE_eTaskGetState == 1 ) && ( configNUMBER_OF_CORES == 1 )
                 {
                     configASSERT( eTaskGetState( xControllingTaskHandle ) == eBlocked );
                     configASSERT( eTaskGetState( xBlockingTaskHandle ) == eBlocked );

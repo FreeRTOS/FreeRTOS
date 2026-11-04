@@ -136,9 +136,14 @@
 
     void vCreateAbortDelayTasks( void )
     {
-        /* Create the two test tasks described above. */
+        /* Create the two test tasks described above.  Each task starts by looking
+         * the other up by name, so neither may run until both exist - with more
+         * than one core the first task created would otherwise start on the other
+         * core while this function is still executing. */
+        vTaskSuspendAll();
         xTaskCreate( prvControllingTask, pcControllingTaskName, configMINIMAL_STACK_SIZE, NULL, abtCONTROLLING_PRIORITY, NULL );
         xTaskCreate( prvBlockingTask, pcBlockingTaskName, configMINIMAL_STACK_SIZE, NULL, abtBLOCKING_PRIORITY, NULL );
+        ( void ) xTaskResumeAll();
     }
 /*-----------------------------------------------------------*/
 

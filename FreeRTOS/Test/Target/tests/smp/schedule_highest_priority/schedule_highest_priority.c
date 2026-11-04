@@ -45,9 +45,12 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "test_macro_definitions.h"
 
-/* Unit testing support functions. */
-#include "unity.h"
+#ifndef TEST_CONFIG_H
+    #error test_config.h must be included at the end of FreeRTOSConfig.h.
+#endif
+
 /*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
@@ -163,7 +166,7 @@ void Test_ScheduleHighestPriority( void )
 /**
  * @brief Runs before every test, put init calls here.
  */
-void setUp( void )
+testSETUP_FUNCTION_PROTOTYPE( setUp )
 {
     uint32_t i;
     BaseType_t xTaskCreationResult;
@@ -191,7 +194,7 @@ void setUp( void )
 /**
  * @brief Runs after every test, put clean-up calls here.
  */
-void tearDown( void )
+testTEARDOWN_FUNCTION_PROTOTYPE( tearDown )
 {
     uint32_t i;
 
@@ -209,12 +212,12 @@ void tearDown( void )
 /**
  * @brief Entry point for test runner to run highest priority test.
  */
-void vRunScheduleHighestPriorityTest( void )
+testENTRY_FUNCTION_PROTOTYPE( vRunScheduleHighestPriorityTest )
 {
-    UNITY_BEGIN();
+    testBEGIN_FUNCTION();
 
-    RUN_TEST( Test_ScheduleHighestPriority );
+    testRUN_TEST_CASE_FUNCTION( Test_ScheduleHighestPriority );
 
-    UNITY_END();
+    testEND_FUNCTION();
 }
 /*-----------------------------------------------------------*/

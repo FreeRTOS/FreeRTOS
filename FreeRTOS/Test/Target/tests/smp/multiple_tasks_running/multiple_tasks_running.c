@@ -38,14 +38,13 @@
 /* Kernel includes. */
 #include "FreeRTOS.h" /* Must come first. */
 #include "task.h"     /* RTOS task related API prototypes. */
-
-/* Unity includes. */
-#include "unity.h"
-/*-----------------------------------------------------------*/
+#include "test_macro_definitions.h"
 
 #ifndef TEST_CONFIG_H
     #error test_config.h must be included at the end of FreeRTOSConfig.h.
 #endif
+
+/*-----------------------------------------------------------*/
 
 #if ( configNUMBER_OF_CORES < 2 )
     #error This test is for FreeRTOS SMP and therefore, requires at least 2 cores.
@@ -109,7 +108,7 @@ static void prvEverRunningTask( void * pvParameters )
 /*-----------------------------------------------------------*/
 
 /* Runs before every test, put init calls here. */
-void setUp( void )
+testSETUP_FUNCTION_PROTOTYPE( setUp )
 {
     int i;
     BaseType_t xTaskCreationResult;
@@ -130,7 +129,7 @@ void setUp( void )
 /*-----------------------------------------------------------*/
 
 /* Runs after every test, put clean-up calls here. */
-void tearDown( void )
+testTEARDOWN_FUNCTION_PROTOTYPE( tearDown )
 {
     int i;
 
@@ -145,12 +144,12 @@ void tearDown( void )
 }
 /*-----------------------------------------------------------*/
 
-void vRunMultipleTasksRunningTest( void )
+testENTRY_FUNCTION_PROTOTYPE( vRunMultipleTasksRunningTest )
 {
-    UNITY_BEGIN();
+    testBEGIN_FUNCTION();
 
-    RUN_TEST( Test_MultipleTasksRunning );
+    testRUN_TEST_CASE_FUNCTION( Test_MultipleTasksRunning );
 
-    UNITY_END();
+    testEND_FUNCTION();
 }
 /*-----------------------------------------------------------*/

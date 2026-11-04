@@ -716,10 +716,10 @@ BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
     {
         if( cellularSocketHandle != NULL )
         {
-            ( void ) Cellular_SocketClose( CellularHandle, cellularSocketHandle );
             ( void ) Cellular_SocketRegisterDataReadyCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
             ( void ) Cellular_SocketRegisterSocketOpenCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
             ( void ) Cellular_SocketRegisterClosedCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
+            ( void ) Cellular_SocketClose( CellularHandle, cellularSocketHandle );
 
             if( pCellularSocketContext != NULL )
             {
@@ -780,6 +780,10 @@ void TCP_Sockets_Disconnect( Socket_t xSocket )
                 LogDebug( ( "%u bytes received in close", recvLength ) );
             } while( ( recvLength != 0 ) && ( cellularSocketStatus == CELLULAR_SUCCESS ) );
 
+            ( void ) Cellular_SocketRegisterDataReadyCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
+            ( void ) Cellular_SocketRegisterSocketOpenCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
+            ( void ) Cellular_SocketRegisterClosedCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
+
             /* Close sockets. */
             if( Cellular_SocketClose( CellularHandle, cellularSocketHandle ) != CELLULAR_SUCCESS )
             {
@@ -787,9 +791,6 @@ void TCP_Sockets_Disconnect( Socket_t xSocket )
                 retClose = TCP_SOCKETS_ERRNO_ERROR;
             }
 
-            ( void ) Cellular_SocketRegisterDataReadyCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
-            ( void ) Cellular_SocketRegisterSocketOpenCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
-            ( void ) Cellular_SocketRegisterClosedCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
             pCellularSocketContext->cellularSocketHandle = NULL;
         }
 

@@ -222,6 +222,60 @@ void test_xQueueAddToSet_QueueNotEmpty( void )
 }
 
 /**
+ * @brief Test xQueueAddToSet with a queue set handle that refers to a queue
+ * whose item size is too small to hold a queue handle.
+ * @coverage xQueueAddToSet
+ */
+void test_xQueueAddToSet_ItemSizeTooSmall( void )
+{
+    /* A queue of single bytes cannot be a queue set. */
+    QueueHandle_t xNotAQueueSet = xQueueCreate( 1, sizeof( uint8_t ) );
+
+    QueueSetHandle_t xQueueSet = xQueueCreateSet( 1 );
+
+    QueueHandle_t xQueue = xQueueCreate( 1, 0 );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xQueueAddToSet( xQueue, ( QueueSetHandle_t ) xNotAQueueSet ) );
+
+    /* Verify that the queue was not added to the rejected set. A queue that is
+     * a member of a set cannot be added to another one. */
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueAddToSet( xQueue, xQueueSet ) );
+
+    ( void ) xQueueRemoveFromSet( xQueue, xQueueSet );
+    vQueueDelete( xNotAQueueSet );
+    vQueueDelete( xQueueSet );
+    vQueueDelete( xQueue );
+}
+
+/**
+ * @brief Test xQueueAddToSet with a queue set handle that refers to a queue
+ * whose item size is larger than a queue handle.
+ * @coverage xQueueAddToSet
+ */
+void test_xQueueAddToSet_ItemSizeTooLarge( void )
+{
+    /* An item larger than a queue handle would make
+     * prvNotifyQueueSetContainer() copy past the end of the queue handle it
+     * sends to the set. */
+    QueueHandle_t xNotAQueueSet = xQueueCreate( 1, 2 * sizeof( QueueHandle_t ) );
+
+    QueueSetHandle_t xQueueSet = xQueueCreateSet( 1 );
+
+    QueueHandle_t xQueue = xQueueCreate( 1, 0 );
+
+    TEST_ASSERT_EQUAL( pdFALSE, xQueueAddToSet( xQueue, ( QueueSetHandle_t ) xNotAQueueSet ) );
+
+    /* Verify that the queue was not added to the rejected set. A queue that is
+     * a member of a set cannot be added to another one. */
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueAddToSet( xQueue, xQueueSet ) );
+
+    ( void ) xQueueRemoveFromSet( xQueue, xQueueSet );
+    vQueueDelete( xNotAQueueSet );
+    vQueueDelete( xQueueSet );
+    vQueueDelete( xQueue );
+}
+
+/**
  * @brief Test xQueueSelectFromSet with multiple queues in a set.
  * @coverage xQueueSelectFromSet
  */
@@ -353,6 +407,96 @@ void test_xQueueSelectFromSetFromISR( void )
     vQueueDelete( xQueue1 );
     vQueueDelete( xQueue2 );
     vQueueDelete( xQueue3 );
+}
+
+/**
+ * @brief Test xQueueSelectFromSet with a handle to a queue whose item size is
+ * too small to hold a queue handle.
+ * @coverage xQueueSelectFromSet
+ */
+void test_xQueueSelectFromSet_ItemSizeTooSmall( void )
+{
+    /* A queue of single bytes cannot be a queue set. */
+    QueueHandle_t xNotAQueueSet = xQueueCreate( 1, sizeof( uint8_t ) );
+
+    uint8_t ucTestVal = 0xAB;
+
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xNotAQueueSet, &ucTestVal, 0 ) );
+
+    /* Verify that no item is returned and that the queued item is left alone. */
+    TEST_ASSERT_EQUAL( NULL, xQueueSelectFromSet( ( QueueSetHandle_t ) xNotAQueueSet, 0 ) );
+    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xNotAQueueSet ) );
+
+    vQueueDelete( xNotAQueueSet );
+}
+
+/**
+ * @brief Test xQueueSelectFromSet with a handle to a queue whose item size is
+ * larger than a queue handle.
+ * @coverage xQueueSelectFromSet
+ */
+void test_xQueueSelectFromSet_ItemSizeTooLarge( void )
+{
+    /* An item larger than a queue handle would overflow the handle that
+     * xQueueSelectFromSet receives into. */
+    QueueHandle_t xNotAQueueSet = xQueueCreate( 1, 2 * sizeof( QueueHandle_t ) );
+
+    uint8_t ucTestVal[ 2 * sizeof( QueueHandle_t ) ];
+
+    memset( ucTestVal, 0xAB, sizeof( ucTestVal ) );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xNotAQueueSet, ucTestVal, 0 ) );
+
+    /* Verify that no item is returned and that the queued item is left alone. */
+    TEST_ASSERT_EQUAL( NULL, xQueueSelectFromSet( ( QueueSetHandle_t ) xNotAQueueSet, 0 ) );
+    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xNotAQueueSet ) );
+
+    vQueueDelete( xNotAQueueSet );
+}
+
+/**
+ * @brief Test xQueueSelectFromSetFromISR with a handle to a queue whose item
+ * size is too small to hold a queue handle.
+ * @coverage xQueueSelectFromSetFromISR
+ */
+void test_xQueueSelectFromSetFromISR_ItemSizeTooSmall( void )
+{
+    /* A queue of single bytes cannot be a queue set. */
+    QueueHandle_t xNotAQueueSet = xQueueCreate( 1, sizeof( uint8_t ) );
+
+    uint8_t ucTestVal = 0xAB;
+
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xNotAQueueSet, &ucTestVal, 0 ) );
+
+    /* Verify that no item is returned and that the queued item is left alone. */
+    TEST_ASSERT_EQUAL( NULL, xQueueSelectFromSetFromISR( ( QueueSetHandle_t ) xNotAQueueSet ) );
+    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xNotAQueueSet ) );
+
+    vQueueDelete( xNotAQueueSet );
+}
+
+/**
+ * @brief Test xQueueSelectFromSetFromISR with a handle to a queue whose item
+ * size is larger than a queue handle.
+ * @coverage xQueueSelectFromSetFromISR
+ */
+void test_xQueueSelectFromSetFromISR_ItemSizeTooLarge( void )
+{
+    /* An item larger than a queue handle would overflow the handle that
+     * xQueueSelectFromSetFromISR receives into. */
+    QueueHandle_t xNotAQueueSet = xQueueCreate( 1, 2 * sizeof( QueueHandle_t ) );
+
+    uint8_t ucTestVal[ 2 * sizeof( QueueHandle_t ) ];
+
+    memset( ucTestVal, 0xAB, sizeof( ucTestVal ) );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xNotAQueueSet, ucTestVal, 0 ) );
+
+    /* Verify that no item is returned and that the queued item is left alone. */
+    TEST_ASSERT_EQUAL( NULL, xQueueSelectFromSetFromISR( ( QueueSetHandle_t ) xNotAQueueSet ) );
+    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xNotAQueueSet ) );
+
+    vQueueDelete( xNotAQueueSet );
 }
 
 /**

@@ -234,6 +234,8 @@ void test_coverage_vTaskSuspend_scheduler_running_false( void )
     xSchedulerRunning = pdFALSE;
 
     vFakePortEnterCriticalSection_Expect();
+    /* The xTasksWaitingTermination membership check of vTaskSuspend(). */
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -272,6 +274,8 @@ void test_coverage_vTaskSuspend_running_state_below_range( void )
     xSchedulerRunning = pdFALSE;
 
     vFakePortEnterCriticalSection_Expect();
+    /* The xTasksWaitingTermination membership check of vTaskSuspend(). */
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -309,6 +313,8 @@ void test_coverage_vTaskSuspend_running_state_above_range( void )
     pxCurrentTCBs[ 0 ]->xTaskRunState = configNUMBER_OF_CORES + 1;
 
     vFakePortEnterCriticalSection_Expect();
+    /* The xTasksWaitingTermination membership check of vTaskSuspend(). */
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();

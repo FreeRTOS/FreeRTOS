@@ -496,6 +496,9 @@ static void block_task( TaskHandle_t task_to_block )
     TCB_t * tcb_to_block = task_to_block;
 
     TEST_ASSERT_EQUAL( pxCurrentTCB, task_to_block );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &tcb_to_block->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &tcb_to_block->xStateListItem, 1 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcb_to_block->xEventListItem,
                                              &xSuspendedTaskList );
@@ -894,6 +897,9 @@ void test_vTaskDelete_success_current_task( void )
     xSchedulerRunning = pdTRUE;
 
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -914,6 +920,9 @@ void test_vTaskDelete_success_current_task_ready_empty( void )
     xSchedulerRunning = pdTRUE;
 
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ], 0 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
@@ -935,6 +944,9 @@ void test_vTaskDelete_success_current_task_ready_empty_null_task( void )
     xSchedulerRunning = pdTRUE;
 
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ], 1 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
@@ -955,6 +967,9 @@ void test_vTaskDelete_success_current_task_yield( void )
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -973,6 +988,9 @@ void test_vTaskDelete_success_not_current_task( void )
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xPendingReadyList );
@@ -995,6 +1013,9 @@ void test_vTaskDelete_success_not_current_task_no_yield( void )
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xPendingReadyList );
@@ -1009,6 +1030,36 @@ void test_vTaskDelete_success_not_current_task_no_yield( void )
     TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( 0, uxDeletedTasksWaitingCleanUp );
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
+}
+
+/**
+ * @brief vTaskDelete - task that is already deleted but not yet freed.
+ *
+ * A task in xTasksWaitingTermination has been deleted but its memory has not
+ * yet been freed by the idle task.  Deleting the task again must be a no-op -
+ * it must not change the list membership of the task or
+ * uxDeletedTasksWaitingCleanUp, and it must not free the TCB.
+ */
+void test_vTaskDelete_delete_pending_task( void )
+{
+    /* Setup */
+    ptcb = ( TCB_t * ) create_task();
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+
+    /* The task is already deleted and waiting for the idle task to free it. */
+    uxDeletedTasksWaitingCleanUp = 1;
+    pxCurrentTCB = NULL;
+
+    /* Expectations - only the membership check, nothing else. */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    /* API call */
+    vTaskDelete( ptcb );
+    /* Validations */
+    ASSERT_TASK_DELETE_NOT_CALLED();
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+    TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
 }
 
 /**
@@ -1064,6 +1115,7 @@ void test_prvCheckTasksWaitingTermination_delete_waiting_task( void )
     uxCurrentNumberOfTasks = 1;
 
     /* Expectations. */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 1 );
     listGET_OWNER_OF_HEAD_ENTRY_ExpectAnyArgsAndReturn( ptcb );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
     vPortFree_Expect( stack );
@@ -1075,6 +1127,43 @@ void test_prvCheckTasksWaitingTermination_delete_waiting_task( void )
     /* Validation. */
     TEST_ASSERT_EQUAL( uxDeletedTasksWaitingCleanUp, 0 );
     TEST_ASSERT_EQUAL( uxCurrentNumberOfTasks, 0 );
+}
+
+/**
+ * @brief prvCheckTasksWaitingTermination - cleanup counter drift.
+ *
+ * uxDeletedTasksWaitingCleanUp is greater than the length of
+ * xTasksWaitingTermination.  The idle task must not read the head entry of the
+ * empty list - such an entry has no owner.  The counter is repaired instead so
+ * the loop cannot dereference a non-existent owner.
+ *
+ * <b>Coverage</b>
+ * @code{c}
+ * else
+ * {
+ *     configASSERT( uxDeletedTasksWaitingCleanUp == listCURRENT_LIST_LENGTH( &xTasksWaitingTermination ) );
+ *     uxDeletedTasksWaitingCleanUp = 0;
+ * }
+ * @endcode
+ */
+void test_prvCheckTasksWaitingTermination_counter_drift( void )
+{
+    /* Setup the variables and structure.  The counter is not zero but
+     * xTasksWaitingTermination is empty. */
+    uxDeletedTasksWaitingCleanUp = 1;
+    uxCurrentNumberOfTasks = 1;
+
+    /* Expectations.  The length is evaluated twice: once by the guard and once
+     * by the configASSERT comparison. */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 0 );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 0 );
+
+    /* API Call. */
+    prvCheckTasksWaitingTermination();
+
+    /* Validation. */
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+    TEST_ASSERT_EQUAL( 0, uxDeletedTasksWaitingCleanUp );
 }
 
 void test_vTaskStartScheduler_success( void )
@@ -1148,6 +1237,9 @@ void test_vTaskEndScheduler_success()
     /* Expectations. */
     /* Delete the timer task. */
     xTimerGetTimerDaemonTaskHandle_ExpectAndReturn( pTimerTaskTCB );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &pTimerTaskTCB->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &pTimerTaskTCB->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &pTimerTaskTCB->xEventListItem, NULL );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
@@ -1155,6 +1247,9 @@ void test_vTaskEndScheduler_success()
     vPortFree_ExpectAnyArgs();
 
     /* Delete the idle task. */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &pIdleTaskTCB->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &pIdleTaskTCB->xStateListItem, pdPASS );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &pIdleTaskTCB->xEventListItem, NULL );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
@@ -2637,6 +2732,9 @@ void test_vTaskSuspend_success( void )
     TEST_ASSERT_EQUAL_PTR( ptcb, pxCurrentTCB );
     xSchedulerRunning = pdFALSE;
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
     /* taskRESET_READY_PRIORITY */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -2662,6 +2760,9 @@ void test_vTaskSuspend_success_sched_running( void )
     TEST_ASSERT_EQUAL_PTR( ptcb, pxCurrentTCB );
     xSchedulerRunning = pdTRUE;
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
     /* taskRESET_READY_PRIORITY */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -2690,6 +2791,9 @@ void test_vTaskSuspend_success_sched_running_not_curr( void )
     TEST_ASSERT_EQUAL_PTR( task_handle2, pxCurrentTCB );
     xSchedulerRunning = pdTRUE;
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 0 );
     /* taskRESET_READY_PRIORITY */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
@@ -2717,6 +2821,9 @@ void test_vTaskSuspend_success_switch_context( void )
     uxSchedulerSuspended = pdTRUE;
     ptcb->ucNotifyState[ 0 ] = 1; /* taskWAITING_NOTIFICATION */
     /* Expectations */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xSuspendedTaskList );
@@ -2729,6 +2836,38 @@ void test_vTaskSuspend_success_switch_context( void )
     /* Validations */
     ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
     TEST_ASSERT_EQUAL( 0, ptcb->ucNotifyState[ 0 ] );
+}
+
+/**
+ * @brief vTaskSuspend - task that is already deleted but not yet freed.
+ *
+ * A task in xTasksWaitingTermination has been deleted but its memory has not
+ * yet been freed by the idle task.  Suspending the task must be a no-op -
+ * moving its state item to the suspended list would take it off
+ * xTasksWaitingTermination without decrementing uxDeletedTasksWaitingCleanUp.
+ */
+void test_vTaskSuspend_delete_pending_task( void )
+{
+    TaskHandle_t task_handle, task_handle2;
+
+    create_task_priority = 3;
+    task_handle = create_task();
+    create_task_priority = 5;
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    TEST_ASSERT_EQUAL_PTR( task_handle2, pxCurrentTCB );
+
+    /* The task is already deleted and waiting for the idle task to free it. */
+    uxDeletedTasksWaitingCleanUp = 1;
+
+    /* Expectations - only the membership check, nothing else. */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    /* API Call */
+    vTaskSuspend( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
 }
 
 void test_vTaskResume_fail_null_handle( void )
@@ -3769,6 +3908,9 @@ void test_xTaskAbortDelay_success_notdelayed( void )
     ptcb = task_handle;
 
     /* Expectations 1*/
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xSuspendedTaskList );
@@ -4184,6 +4326,9 @@ void test_xTaskRemoveFromEventList_sched_suspended( void )
     ptcb = task_handle; /* unblocked */
 
     /* block the higher priority task */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xTasksWaitingTermination,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
     uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, 1 );
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xSuspendedTaskList );

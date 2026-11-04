@@ -385,6 +385,10 @@ void test_vTaskDelete_assert_scheduler_suspended_eq_1( void )
     xSchedulerRunning = pdTRUE;
 
     vFakePortEnterCriticalSection_Expect();
+
+    /* The xTasksWaitingTermination membership check of vTaskDelete() /
+     * vTaskSuspend(). */
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();
@@ -433,6 +437,10 @@ void test_vTaskSuspend_assert_schedulersuspended_ne_zero( void )
     uxSchedulerSuspended = 1; /* asserts the code */
 
     vFakePortEnterCriticalSection_Expect();
+
+    /* The xTasksWaitingTermination membership check of vTaskDelete() /
+     * vTaskSuspend(). */
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     uxListRemove_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_ITEM_CONTAINER_ExpectAnyArgsAndReturn( NULL );
     vListInsertEnd_ExpectAnyArgs();

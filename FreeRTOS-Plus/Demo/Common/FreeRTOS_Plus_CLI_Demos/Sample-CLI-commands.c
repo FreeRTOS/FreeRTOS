@@ -210,34 +210,59 @@ static BaseType_t prvTaskStatsCommand( char * pcWriteBuffer,
 {
     const char * const pcHeader = "     State   Priority  Stack    #\r\n************************************************\r\n";
     BaseType_t xSpacePadding;
+    size_t uxUsed = 0;
+    int iWritten;
 
     /* Remove compile time warnings about unused parameters, and check the
-     * write buffer is not NULL.  NOTE - for simplicity, this example assumes the
-     * write buffer length is adequate, so does not check for buffer overflows. */
+     * write buffer is not NULL. */
     ( void ) pcCommandString;
-    ( void ) xWriteBufferLen;
     configASSERT( pcWriteBuffer );
+    configASSERT( configMAX_TASK_NAME_LEN > 3 );
 
-    /* Generate a table of task stats. */
-    strcpy( pcWriteBuffer, "Task" );
-    pcWriteBuffer += strlen( pcWriteBuffer );
+    if( xWriteBufferLen == 0U )
+    {
+        return pdFALSE;
+    }
+
+    /* Generate a table of task stats, respecting xWriteBufferLen. */
+    iWritten = snprintf( pcWriteBuffer, xWriteBufferLen, "Task" );
+
+    if( ( iWritten < 0 ) || ( ( size_t ) iWritten >= xWriteBufferLen ) )
+    {
+        return pdFALSE;
+    }
+
+    uxUsed = ( size_t ) iWritten;
 
     /* Minus three for the null terminator and half the number of characters in
      * "Task" so the column lines up with the centre of the heading. */
-    configASSERT( configMAX_TASK_NAME_LEN > 3 );
-
-    for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+    for( xSpacePadding = ( BaseType_t ) strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
     {
-        /* Add a space to align columns after the task's name. */
-        *pcWriteBuffer = ' ';
-        pcWriteBuffer++;
+        if( ( uxUsed + 1U ) >= xWriteBufferLen )
+        {
+            pcWriteBuffer[ xWriteBufferLen - 1U ] = 0x00;
+            return pdFALSE;
+        }
 
-        /* Ensure always terminated. */
-        *pcWriteBuffer = 0x00;
+        /* Add a space to align columns after the task's name. */
+        pcWriteBuffer[ uxUsed ] = ' ';
+        uxUsed++;
+        pcWriteBuffer[ uxUsed ] = 0x00;
     }
 
-    strcpy( pcWriteBuffer, pcHeader );
-    vTaskList( pcWriteBuffer + strlen( pcHeader ) );
+    iWritten = snprintf( pcWriteBuffer + uxUsed, xWriteBufferLen - uxUsed, "%s", pcHeader );
+
+    if( ( iWritten < 0 ) || ( ( size_t ) iWritten >= ( xWriteBufferLen - uxUsed ) ) )
+    {
+        return pdFALSE;
+    }
+
+    uxUsed += ( size_t ) iWritten;
+
+    if( uxUsed < xWriteBufferLen )
+    {
+        vTaskListTasks( pcWriteBuffer + uxUsed, xWriteBufferLen - uxUsed );
+    }
 
     /* There is no more data to return after this single string, so return
      * pdFALSE. */
@@ -276,34 +301,60 @@ static BaseType_t prvTaskStatsCommand( char * pcWriteBuffer,
     {
         const char * const pcHeader = "  Abs Time      % Time\r\n****************************************\r\n";
         BaseType_t xSpacePadding;
+        size_t uxUsed = 0;
+        int iWritten;
 
         /* Remove compile time warnings about unused parameters, and check the
-         * write buffer is not NULL.  NOTE - for simplicity, this example assumes the
-         * write buffer length is adequate, so does not check for buffer overflows. */
+         * write buffer is not NULL. */
         ( void ) pcCommandString;
-        ( void ) xWriteBufferLen;
         configASSERT( pcWriteBuffer );
 
-        /* Generate a table of task stats. */
-        strcpy( pcWriteBuffer, "Task" );
-        pcWriteBuffer += strlen( pcWriteBuffer );
-
-        /* Pad the string "task" with however many bytes necessary to make it the
-         * length of a task name.  Minus three for the null terminator and half the
-         * number of characters in	"Task" so the column lines up with the centre of
-         * the heading. */
-        for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+        if( xWriteBufferLen == 0U )
         {
-            /* Add a space to align columns after the task's name. */
-            *pcWriteBuffer = ' ';
-            pcWriteBuffer++;
-
-            /* Ensure always terminated. */
-            *pcWriteBuffer = 0x00;
+            return pdFALSE;
         }
 
-        strcpy( pcWriteBuffer, pcHeader );
-        vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
+        /* Generate a table of run time stats, respecting xWriteBufferLen. */
+        iWritten = snprintf( pcWriteBuffer, xWriteBufferLen, "Task" );
+
+        if( ( iWritten < 0 ) || ( ( size_t ) iWritten >= xWriteBufferLen ) )
+        {
+            return pdFALSE;
+        }
+
+        uxUsed = ( size_t ) iWritten;
+
+        /* Pad the string "Task" with however many bytes necessary to make it the
+         * length of a task name.  Minus three for the null terminator and half the
+         * number of characters in "Task" so the column lines up with the centre of
+         * the heading. */
+        for( xSpacePadding = ( BaseType_t ) strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+        {
+            if( ( uxUsed + 1U ) >= xWriteBufferLen )
+            {
+                pcWriteBuffer[ xWriteBufferLen - 1U ] = 0x00;
+                return pdFALSE;
+            }
+
+            /* Add a space to align columns after the task's name. */
+            pcWriteBuffer[ uxUsed ] = ' ';
+            uxUsed++;
+            pcWriteBuffer[ uxUsed ] = 0x00;
+        }
+
+        iWritten = snprintf( pcWriteBuffer + uxUsed, xWriteBufferLen - uxUsed, "%s", pcHeader );
+
+        if( ( iWritten < 0 ) || ( ( size_t ) iWritten >= ( xWriteBufferLen - uxUsed ) ) )
+        {
+            return pdFALSE;
+        }
+
+        uxUsed += ( size_t ) iWritten;
+
+        if( uxUsed < xWriteBufferLen )
+        {
+            vTaskGetRunTimeStatistics( pcWriteBuffer + uxUsed, xWriteBufferLen - uxUsed );
+        }
 
         /* There is no more data to return after this single string, so return
          * pdFALSE. */
@@ -322,17 +373,15 @@ static BaseType_t prvThreeParameterEchoCommand( char * pcWriteBuffer,
     static UBaseType_t uxParameterNumber = 0;
 
     /* Remove compile time warnings about unused parameters, and check the
-     * write buffer is not NULL.  NOTE - for simplicity, this example assumes the
-     * write buffer length is adequate, so does not check for buffer overflows. */
+     * write buffer is not NULL. */
     ( void ) pcCommandString;
-    ( void ) xWriteBufferLen;
     configASSERT( pcWriteBuffer );
 
     if( uxParameterNumber == 0 )
     {
         /* The first time the function is called after the command has been
          * entered just a header string is returned. */
-        sprintf( pcWriteBuffer, "The three parameters were:\r\n" );
+        ( void ) snprintf( pcWriteBuffer, xWriteBufferLen, "The three parameters were:\r\n" );
 
         /* Next time the function is called the first parameter will be echoed
          * back. */
@@ -355,11 +404,36 @@ static BaseType_t prvThreeParameterEchoCommand( char * pcWriteBuffer,
         /* Sanity check something was returned. */
         configASSERT( pcParameter );
 
-        /* Return the parameter string. */
+        /* Return the parameter string, bounded by the remaining write buffer. */
         memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-        sprintf( pcWriteBuffer, "%d: ", ( int ) uxParameterNumber );
-        strncat( pcWriteBuffer, pcParameter, ( size_t ) xParameterStringLength );
-        strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
+        ( void ) snprintf( pcWriteBuffer, xWriteBufferLen, "%d: ", ( int ) uxParameterNumber );
+
+        {
+            size_t uxPrefixLen = strlen( pcWriteBuffer );
+            size_t uxAvail;
+            size_t uxCopy;
+
+            if( uxPrefixLen < xWriteBufferLen )
+            {
+                uxAvail = xWriteBufferLen - uxPrefixLen - 1U;
+
+                uxCopy = ( size_t ) xParameterStringLength;
+
+                if( uxCopy > uxAvail )
+                {
+                    uxCopy = uxAvail;
+                }
+
+                strncat( pcWriteBuffer, pcParameter, uxCopy );
+
+                uxPrefixLen = strlen( pcWriteBuffer );
+
+                if( ( uxPrefixLen + 2U ) < xWriteBufferLen )
+                {
+                    strncat( pcWriteBuffer, "\r\n", ( size_t ) 2 );
+                }
+            }
+        }
 
         /* If this is the last of the three parameters then there are no more
          * strings to return after this one. */
@@ -391,17 +465,15 @@ static BaseType_t prvParameterEchoCommand( char * pcWriteBuffer,
     static UBaseType_t uxParameterNumber = 0;
 
     /* Remove compile time warnings about unused parameters, and check the
-     * write buffer is not NULL.  NOTE - for simplicity, this example assumes the
-     * write buffer length is adequate, so does not check for buffer overflows. */
+     * write buffer is not NULL. */
     ( void ) pcCommandString;
-    ( void ) xWriteBufferLen;
     configASSERT( pcWriteBuffer );
 
     if( uxParameterNumber == 0 )
     {
         /* The first time the function is called after the command has been
          * entered just a header string is returned. */
-        sprintf( pcWriteBuffer, "The parameters were:\r\n" );
+        ( void ) snprintf( pcWriteBuffer, xWriteBufferLen, "The parameters were:\r\n" );
 
         /* Next time the function is called the first parameter will be echoed
          * back. */
@@ -423,11 +495,36 @@ static BaseType_t prvParameterEchoCommand( char * pcWriteBuffer,
 
         if( pcParameter != NULL )
         {
-            /* Return the parameter string. */
+            /* Return the parameter string, bounded by the remaining write buffer. */
             memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-            sprintf( pcWriteBuffer, "%d: ", ( int ) uxParameterNumber );
-            strncat( pcWriteBuffer, ( char * ) pcParameter, ( size_t ) xParameterStringLength );
-            strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
+            ( void ) snprintf( pcWriteBuffer, xWriteBufferLen, "%d: ", ( int ) uxParameterNumber );
+
+            {
+                size_t uxPrefixLen = strlen( pcWriteBuffer );
+                size_t uxAvail;
+                size_t uxCopy;
+
+                if( uxPrefixLen < xWriteBufferLen )
+                {
+                    uxAvail = xWriteBufferLen - uxPrefixLen - 1U;
+
+                    uxCopy = ( size_t ) xParameterStringLength;
+
+                    if( uxCopy > uxAvail )
+                    {
+                        uxCopy = uxAvail;
+                    }
+
+                    strncat( pcWriteBuffer, ( char * ) pcParameter, uxCopy );
+
+                    uxPrefixLen = strlen( pcWriteBuffer );
+
+                    if( ( uxPrefixLen + 2U ) < xWriteBufferLen )
+                    {
+                        strncat( pcWriteBuffer, "\r\n", ( size_t ) 2 );
+                    }
+                }
+            }
 
             /* There might be more parameters to return after this one. */
             xReturn = pdTRUE;

@@ -212,6 +212,8 @@ void test_prvYieldForTask_assert_critical_nesting_lteq_zero( void )
     uxCoreAffinityMask = ( 1 << ( configNUMBER_OF_CORES - 1 ) );
 
     vFakePortEnterCriticalSection_Expect();
+    /* The ready list membership check of vTaskCoreAffinitySet. */
+    listIS_CONTAINED_WITHIN_ExpectAnyArgsAndReturn( pdFALSE );
     vFakePortGetCoreID_ExpectAndReturn( 0 );
 
     EXPECT_ASSERT_BREAK( vTaskCoreAffinitySet( pxCurrentTCBs[ 0 ],

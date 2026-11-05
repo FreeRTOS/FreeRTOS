@@ -313,9 +313,22 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
 
       - env:
+          stepName: Install Zlib
+        name: ${{ env.stepName }}
+        run: |
+          # ${{ env.stepName }}
+          echo "::group::${{ env.stepName }}"
+          vcpkg install zlib:x64-windows
+          echo "::endgroup::"
+          echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
+
+      - env:
           stepName: Install Glib
         name: ${{ env.stepName }}
         working-directory: FreeRTOS-Plus\ThirdParty\glib
+        env:
+          CMAKE_PREFIX_PATH: C:\vcpkg\installed\x64-windows
+          PKG_CONFIG_PATH: C:\vcpkg\installed\x64-windows\lib\pkgconfig
         run: |
           # ${{ env.stepName }}
           echo "::group::${{ env.stepName }}"
@@ -327,7 +340,7 @@ jobs:
           Pop-Location
 
           pip install meson
-          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release --cmake-prefix-path="C:\vcpkg\installed\x64-windows"
           meson compile -C build
 
           echo "::endgroup::"
@@ -418,9 +431,22 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
 
       - env:
+          stepName: Install Zlib
+        name: ${{ env.stepName }}
+        run: |
+          # ${{ env.stepName }}
+          echo "::group::${{ env.stepName }}"
+          vcpkg install zlib:x64-windows
+          echo "::endgroup::"
+          echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
+
+      - env:
           stepName: Install Glib
         name: ${{ env.stepName }}
         working-directory: FreeRTOS-Plus\ThirdParty\glib
+        env:
+          CMAKE_PREFIX_PATH: C:\vcpkg\installed\x64-windows
+          PKG_CONFIG_PATH: C:\vcpkg\installed\x64-windows\lib\pkgconfig
         run: |
           # ${{ env.stepName }}
           echo "::group::${{ env.stepName }}"
@@ -432,7 +458,7 @@ jobs:
           Pop-Location
 
           pip install meson
-          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release --cmake-prefix-path="C:\vcpkg\installed\x64-windows"
           meson compile -C build
 
           echo "::endgroup::"
@@ -1215,9 +1241,22 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
 
       - env:
+          stepName: Install Zlib
+        name: ${{ env.stepName }}
+        run: |
+          # ${{ env.stepName }}
+          echo "::group::${{ env.stepName }}"
+          vcpkg install zlib:x64-windows
+          echo "::endgroup::"
+          echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
+
+      - env:
           stepName: Install Glib
         name: ${{ env.stepName }}
         working-directory: FreeRTOS-Plus\ThirdParty\glib
+        env:
+          CMAKE_PREFIX_PATH: C:\vcpkg\installed\x64-windows
+          PKG_CONFIG_PATH: C:\vcpkg\installed\x64-windows\lib\pkgconfig
         run: |
           # ${{ env.stepName }}
           echo "::group::${{ env.stepName }}"
@@ -1229,7 +1268,7 @@ jobs:
           Pop-Location
 
           pip install meson
-          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release
+          meson setup build --backend=vs2019 -Dselinux=disabled -Dxattr=false -Dbsymbolic_functions=false -Dtests=false -Dglib_debug=disabled -Dglib_assert=false --buildtype=release --cmake-prefix-path="C:\vcpkg\installed\x64-windows"
           meson compile -C build
 
           echo "::endgroup::"
@@ -1237,7 +1276,7 @@ jobs:
             echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
             exit 0
           }else {
-            echo "${{ env.pwshPass }} ${{ env.stepName }} ${{ env.pwshEnd }}"
+            echo "${{ env.pwshFail }} ${{ env.stepName }} ${{ env.pwshEnd }}"
             exit 1
           }
 

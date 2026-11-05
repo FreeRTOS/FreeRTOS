@@ -54,6 +54,9 @@
 #include <time.h>
 #include <errno.h>
 #include <string.h>
+/* POSIX headers: required for timeval/fd_set on Alpine/musl */
+#include <sys/time.h>
+#include <sys/select.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"

@@ -122,6 +122,12 @@
 #endif
 
 
+#if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && ( democonfigUSE_AWS_IOT_CORE_BROKER == 1 )
+    #define mqttexampleUSE_AWS_IOT_CORE_BROKER    ( 1 )
+#else
+    #define mqttexampleUSE_AWS_IOT_CORE_BROKER    ( 0 )
+#endif
+
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
     #ifndef democonfigROOT_CA_PEM
         #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
@@ -152,7 +158,7 @@
 
 /* AWS IoT MQTT broker port needs to be 443 for client authentication based on
  * username/password. */
-        #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
+        #if ( mqttexampleUSE_AWS_IOT_CORE_BROKER == 1 ) && democonfigMQTT_BROKER_PORT != 443
             #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
         #endif
     #endif /* ifndef democonfigCLIENT_USERNAME */
@@ -566,11 +572,11 @@ static MQTTStatus_t prvMQTTConnect( bool xCleanSession )
      * be moved inside the agent. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_INTERVAL_SECONDS;
 
-    #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && defined( democonfigCLIENT_USERNAME )
+    #if ( mqttexampleUSE_AWS_IOT_CORE_BROKER == 1 ) && defined( democonfigCLIENT_USERNAME )
         /* Append metrics string when connecting to AWS IoT Core with custom auth */
         xConnectInfo.pUserName = democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING;
         xConnectInfo.userNameLength = strlen( democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING );
-    #elif defined( democonfigUSE_AWS_IOT_CORE_BROKER )
+    #elif ( mqttexampleUSE_AWS_IOT_CORE_BROKER == 1 )
         /* If no username is needed, only send the metrics string */
         xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
         xConnectInfo.userNameLength = strlen( AWS_IOT_METRICS_STRING );
@@ -723,7 +729,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         NetworkCredentials_t xNetworkCredentials = { 0 };
 
-        #if defined( democonfigUSE_AWS_IOT_CORE_BROKER )
+        #if ( mqttexampleUSE_AWS_IOT_CORE_BROKER == 1 )
         #if defined( democonfigCLIENT_USERNAME )
 
             /*
@@ -761,9 +767,9 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
             xNetworkCredentials.pAlpnProtos = NULL;
         #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
         #endif /* democonfigMQTT_BROKER_PORT != 443U */
-        #else /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
+        #else /* mqttexampleUSE_AWS_IOT_CORE_BROKER == 0 */
             xNetworkCredentials.pAlpnProtos = NULL;
-    #endif /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
+    #endif /* mqttexampleUSE_AWS_IOT_CORE_BROKER == 0 */
 
     /* Set the credentials for establishing a TLS connection. */
     xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;

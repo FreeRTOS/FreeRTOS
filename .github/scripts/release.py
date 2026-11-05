@@ -179,7 +179,7 @@ class BaseRelease:
             self.repo.get_release(self.tag).delete_release()
         except UnknownObjectException:
             info('A release endpoint does not exist for "%s". No need to erase.' % self.tag)
-        except:
+        except Exception:
             assert False, 'Encountered error while trying to delete git release endpoint'
 
     def rollbackAutoCommits(self, n_autocommits=2, n_search=25):

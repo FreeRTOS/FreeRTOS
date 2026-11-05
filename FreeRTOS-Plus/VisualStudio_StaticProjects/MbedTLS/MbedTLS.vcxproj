@@ -217,6 +217,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs7.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkparse.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkwrite.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_ecc.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_wrap.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform_util.c" />

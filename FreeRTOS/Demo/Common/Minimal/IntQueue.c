@@ -168,6 +168,9 @@ static volatile UBaseType_t uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0, 
  * intqHIGH_PRIORITY_TASK1, that receive from the normally empty queue. */
 static volatile UBaseType_t uxNormallyEmptyTask2Loops = 0, uxNormallyEmptyLowTaskLoops = 0;
 
+/* Set while intqHIGH_PRIORITY_TASK1 waits in prvWaitForNormallyEmptyReceivers(). */
+static volatile BaseType_t xWaitingForReceivers = pdFALSE;
+
 /* Any unexpected behaviour sets xErrorStatus to fail and log the line that
  * caused the error in xErrorLine. */
 static BaseType_t xErrorStatus = pdPASS;
@@ -289,8 +292,11 @@ static void prvQueueAccessLogError( UBaseType_t uxLine )
 #if ( configNUMBER_OF_CORES > 1 )
     static void prvWaitForNormallyEmptyReceivers( void )
     {
-        UBaseType_t uxTask2Loops = uxNormallyEmptyTask2Loops;
-        UBaseType_t uxLowTaskLoops = uxNormallyEmptyLowTaskLoops;
+        UBaseType_t uxTask2Loops, uxLowTaskLoops;
+
+        xWaitingForReceivers = pdTRUE;
+        uxTask2Loops = uxNormallyEmptyTask2Loops;
+        uxLowTaskLoops = uxNormallyEmptyLowTaskLoops;
 
         /* With more than one core a task can be preempted after it takes a
          * value from the queue and before it records the value, so the check
@@ -306,6 +312,8 @@ static void prvQueueAccessLogError( UBaseType_t uxLine )
         {
             vTaskDelay( intqONE_TICK_DELAY );
         }
+
+        xWaitingForReceivers = pdFALSE;
     }
 #endif /* if ( configNUMBER_OF_CORES > 1 ) */
 /*-----------------------------------------------------------*/
@@ -460,13 +468,22 @@ static void prvLowerPriorityNormallyEmptyTask( void * pvParameters )
         if( xQueueReceive( xNormallyEmptyQueue, &uxRxed, intqONE_TICK_DELAY ) != errQUEUE_EMPTY )
         {
             /* A value should only be obtained when the high priority task is
-             * suspended.  The peer frees the queue before it finishes suspending,
-             * and this task raises its own priority around each send, so with
-             * more than one core the two run at the same time and the peer is
-             * seen part way through suspending.  The queue integrity checks
-             * below keep the coverage there. */
-            #if ( configNUMBER_OF_CORES == 1 )
-                if( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended )
+             * suspended.  With one core this task cannot run while the high
+             * priority task runs.  With more than one core and
+             * configRUN_MULTIPLE_PRIORITIES set to 0, tasks of different
+             * priorities do not run at the same time, so the same holds.  With
+             * configRUN_MULTIPLE_PRIORITIES set to 1 the two run at the same
+             * time and the peer is seen part way through suspending, so the
+             * queue integrity checks below keep the coverage there.
+             *
+             * While the high priority task waits in
+             * prvWaitForNormallyEmptyReceivers() it is blocked, not suspended,
+             * so values received in that window are not checked.  The flag
+             * cannot clear between the receive and the check, as this task
+             * advances its loop counter only after the check. */
+            #if ( ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 ) )
+                if( ( xWaitingForReceivers == pdFALSE ) &&
+                    ( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended ) )
                 {
                     prvQueueAccessLogError( __LINE__ );
                 }
@@ -669,9 +686,9 @@ static void prvLowerPriorityNormallyFullTask( void * pvParameters )
         if( xQueueSend( xNormallyFullQueue, &uxTxed, intqONE_TICK_DELAY ) != errQUEUE_FULL )
         {
             /* Should only succeed when the higher priority task is suspended.
-             * Single core only, for the same reason as
-             * prvLowerPriorityNormallyEmptyTask() above. */
-            #if ( configNUMBER_OF_CORES == 1 )
+             * Checked under the same conditions, and for the same reasons, as
+             * in prvLowerPriorityNormallyEmptyTask() above. */
+            #if ( ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 ) )
                 if( eTaskGetState( xHighPriorityNormallyFullTask1 ) != eSuspended )
                 {
                     prvQueueAccessLogError( __LINE__ );

@@ -491,8 +491,13 @@ void vInterruptSemaphorePeriodicTest( void )
              * in the other gives for code coverage reasons. */
             xSemaphoreGiveFromISR( xISRMutex, NULL );
 
-            /* Second give attempt should fail. */
-            configASSERT( xSemaphoreGiveFromISR( xISRMutex, &xHigherPriorityTaskWoken ) == pdFAIL );
+            /* Second give attempt should fail.  On more than one core the
+             * master task can take the mutex between the two gives. */
+            #if ( configNUMBER_OF_CORES == 1 )
+                {
+                    configASSERT( xSemaphoreGiveFromISR( xISRMutex, &xHigherPriorityTaskWoken ) == pdFAIL );
+                }
+            #endif /* configNUMBER_OF_CORES */
         }
 
         if( xOkToGiveCountingSemaphore != pdFALSE )

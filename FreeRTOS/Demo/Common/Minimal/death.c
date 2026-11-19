@@ -75,8 +75,14 @@ static volatile UBaseType_t uxTasksRunningAtStart = 0;
  * Under heavy load the idle task might not get much processing time, so it would
  * be legitimate for several tasks to remain undeleted for a short period.  There
  * may also be a few other unexpected tasks if, for example, the tasks that test
- * static allocation are also being used. */
-static const UBaseType_t uxMaxNumberOfExtraTasksRunning = 3;
+ * static allocation are also being used.  The worst case is the two suicidal
+ * tasks, plus on more than one core the two tasks the static allocation tests
+ * delete while they still run on another core, plus one awaiting the Idle task. */
+#if ( configNUMBER_OF_CORES == 1 )
+    static const UBaseType_t uxMaxNumberOfExtraTasksRunning = 3;
+#else
+    static const UBaseType_t uxMaxNumberOfExtraTasksRunning = 5;
+#endif /* configNUMBER_OF_CORES */
 
 /* Used to store a handle to the task that should be killed by a suicidal task,
  * before it kills itself. */

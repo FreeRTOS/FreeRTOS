@@ -156,7 +156,7 @@ $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_%_utest.c      \
 # Build tasks.o from tasks.i with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
 $(SCRATCH_DIR)/%/$(PROJECT).o : $(SCRATCH_DIR)/%/$(PROJECT).i | directories
-        $(CC) -c $< $(CFLAGS) $(COVERAGE_OPTS) -o $@
+        $(CC) -c $< $(CPPFLAGS) $(CFLAGS) $(COVERAGE_OPTS) -o $@
 
 # Build tasks.i from tasks.c with the custom FreeRTOSConfig.h and place it in
 # its configuration directory

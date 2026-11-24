@@ -1162,7 +1162,7 @@ static void prvAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer )
 
     uxTimerID = ( size_t ) pvTimerGetTimerID( pxExpiredTimer );
 
-    if( uxTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
+    if( uxTimerID < ( configTIMER_QUEUE_LENGTH + 1 ) )
     {
         ( ucAutoReloadTimerCounters[ uxTimerID ] )++;
 

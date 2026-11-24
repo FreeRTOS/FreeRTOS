@@ -14,7 +14,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@master
       with:
-        python-version: 3.8
+        python-version: '3.15'
     - name: Install packages
       run: |
           sudo apt-get install lcov cflow ruby doxygen build-essential unifdef
@@ -55,7 +55,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@master
       with:
-        python-version: 3.8
+        python-version: '3.15'
     - name: Install packages
       run: |
           sudo apt-get install lcov cflow ruby doxygen build-essential unifdef

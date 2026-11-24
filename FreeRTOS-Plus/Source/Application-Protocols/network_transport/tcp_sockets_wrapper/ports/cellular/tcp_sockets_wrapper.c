@@ -633,7 +633,6 @@ BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
         if( pCellularSocketContext == NULL )
         {
             LogError( ( "Failed to allocate new socket context." ) );
-            ( void ) Cellular_SocketClose( CellularHandle, cellularSocketHandle );
             retConnect = TCP_SOCKETS_ERRNO_ENOMEM;
         }
         else

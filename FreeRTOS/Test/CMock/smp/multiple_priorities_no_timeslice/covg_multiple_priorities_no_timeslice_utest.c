@@ -3003,6 +3003,7 @@ void test_coverage_prvCheckTasksWaitingTermination_delete_not_running_task( void
     uxCurrentNumberOfTasks = 1;
 
     pxTaskTCB = pvPortMalloc( sizeof( TCB_t ) );
+    memset( pxTaskTCB, 0, sizeof( *pxTaskTCB ) );
     pxTaskTCB->pxStack = pvPortMalloc( configMINIMAL_STACK_SIZE );
     pxTaskTCB->xTaskRunState = taskTASK_NOT_RUNNING;
     pxTaskTCB->xStateListItem.pvOwner = pxTaskTCB;

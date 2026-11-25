@@ -393,6 +393,7 @@ void commonSetUp( void )
     pxDelayedTaskList = NULL;
 
     xCurrentCoreId = 0;
+    memset( xCoreYields, 0x00, sizeof( xCoreYields ) );
     memset( xTaskLockCount, 0x00, sizeof( xTaskLockCount ) );
     memset( xIsrLockCount, 0x00, sizeof( xIsrLockCount ) );
 }

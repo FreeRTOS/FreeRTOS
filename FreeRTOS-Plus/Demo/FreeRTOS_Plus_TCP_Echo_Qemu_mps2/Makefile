@@ -86,9 +86,10 @@ $(BUILD_DIR)/$(BIN): $(OBJ_FILES)
 	$(CC) $(CFLAGS) $(LDFLAGS) $+ -o $(@)
 	$(SIZE) $(@)
 
-%.d: %.c
-	@set -e; rm -f $@; \
-	$(CC) -M $(CPPFLAGS) $< > $@.$$$$; \
+$(BUILD_DIR)/%.d: %.c
+	mkdir -p $(@D)
+	set -e; rm -f $@; \
+	$(CC) -M $(INCLUDE_DIRS) $(CPPFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 

@@ -33,6 +33,7 @@
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "stream_buffer.h"
+#include "message_buffer.h"
 
 /* Test includes. */
 #include "unity.h"
@@ -337,6 +338,66 @@ int suiteTearDown( int numFailures )
 
 
 /* ==============================  Test Cases  ============================== */
+
+/**
+ * @brief Discard invokes the receive callback once, in task context.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_CallbackInvoked( void )
+{
+    uint8_t ucData[ TEST_STREAM_BUFFER_TRIGGER_LEVEL ] = { 0xA5 };
+
+    xStreamBuffer = xMessageBufferCreateWithCallback( TEST_STREAM_BUFFER_SIZE,
+                                                      NULL,
+                                                      receiveCompletedStub );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xStreamBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferDiscard( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 1, receiveCallbackInvoked );
+    TEST_ASSERT_EQUAL( 0, receiveCallbackInvokedFromISR );
+    TEST_ASSERT_EQUAL( 1, defaultCallbackInvoked );
+
+    /* Repeating discard on the now-empty buffer must not invoke a callback. */
+    TEST_ASSERT_EQUAL( 0, xMessageBufferDiscard( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 1, receiveCallbackInvoked );
+    vMessageBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief An empty discard must neither call the receive callback nor block.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_CallbackNotInvoked( void )
+{
+    xStreamBuffer = xMessageBufferCreateWithCallback( TEST_STREAM_BUFFER_SIZE,
+                                                      NULL,
+                                                      receiveCompletedStub );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+    TEST_ASSERT_EQUAL( 0, xMessageBufferDiscard( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 0, receiveCallbackInvoked );
+    TEST_ASSERT_EQUAL( 0, receiveCallbackInvokedFromISR );
+    TEST_ASSERT_EQUAL( 0, defaultCallbackInvoked );
+    vMessageBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief A NULL receive callback retains the configured default completion hook.
+ * @coverage xStreamBufferReceive
+ */
+void test_xMessageBufferDiscard_DefaultCallbackInvoked( void )
+{
+    uint8_t ucData[ TEST_STREAM_BUFFER_TRIGGER_LEVEL ] = { 0xA5 };
+
+    xStreamBuffer = xMessageBufferCreateWithCallback( TEST_STREAM_BUFFER_SIZE, NULL, NULL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferSend( xStreamBuffer, ucData, sizeof( ucData ), 0 ) );
+    TEST_ASSERT_EQUAL( 1, defaultCallbackInvoked );
+    TEST_ASSERT_EQUAL( sizeof( ucData ), xMessageBufferDiscard( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 1, receiveCallbackInvoked );
+    TEST_ASSERT_EQUAL( 0, receiveCallbackInvokedFromISR );
+    TEST_ASSERT_EQUAL( 2, defaultCallbackInvoked );
+    vMessageBufferDelete( xStreamBuffer );
+}
 
 /**
  * @brief Tests backwards compatibility with the existing API. Calling StreamBufferCreate() should

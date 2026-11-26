@@ -1,0 +1,10 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "main_full.c"
+    INCLUDE_DIRS
+        "."
+    PRIV_REQUIRES
+        freertos
+        freertos_demo
+)

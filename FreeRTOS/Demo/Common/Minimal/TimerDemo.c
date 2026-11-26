@@ -329,8 +329,13 @@ static void prvTest1_CreateTimersWithoutSchedulerRunning( void )
         xTestStatus = pdFAIL;
         configASSERT( xTestStatus );
     }
-    else
+    else if( xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED )
     {
+        /* The command queue only stays full while the scheduler has not been
+         * started, as stated above - the timer service task has not run to drain
+         * it.  Where vStartTimerDemoTask() is instead called with the scheduler
+         * already running, the service task consumes each command as it is
+         * submitted and this start legitimately succeeds. */
         if( xTimerStart( xAutoReloadTimers[ xTimer ], portMAX_DELAY ) == pdPASS )
         {
             /* This time it would not be expected that the timer could be

@@ -583,6 +583,7 @@
     {
         QueueSetMemberHandle_t xActivatedQueue;
         uint32_t ulReceived;
+        UBaseType_t uxSavedInterruptStatus;
 
         /* See if any of the queues in the set contain data. */
         xActivatedQueue = xQueueSelectFromSetFromISR( xQueueSet );
@@ -597,8 +598,12 @@
                 xQueueSetTasksStatus = pdFAIL;
             }
 
-            /* Ensure the value received was the value expected. */
+            /* Ensure the value received was the value expected.  The bookkeeping
+             * this performs is shared with the tasks and, unlike the queue set
+             * access above, is not covered by the queue's own locking. */
+            uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
             prvCheckReceivedValue( ulReceived );
+            taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
         }
     }
 /*-----------------------------------------------------------*/

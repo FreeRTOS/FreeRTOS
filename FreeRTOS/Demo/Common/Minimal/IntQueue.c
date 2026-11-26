@@ -127,12 +127,20 @@
     }                                                                                                                                   \
 
 
+/* With more than one core a task can receive from the queue at the same time as
+ * this interrupt, so finding it empty is a legitimate outcome, not an error. */
+#if ( configNUMBER_OF_CORES > 1 )
+    #define intqEMPTY_RX_ERROR()
+#else
+    #define intqEMPTY_RX_ERROR()    prvQueueAccessLogError( __LINE__ )
+#endif
+
 /* Receive a value from the normally empty queue.  This is called from within
  * an interrupt. */
 #define timerNORMALLY_EMPTY_RX()                                                                         \
     if( xQueueReceiveFromISR( xNormallyEmptyQueue, &uxRxedValue, &xHigherPriorityTaskWoken ) != pdPASS ) \
     {                                                                                                    \
-        prvQueueAccessLogError( __LINE__ );                                                              \
+        intqEMPTY_RX_ERROR();                                                                            \
     }                                                                                                    \
     else                                                                                                 \
     {                                                                                                    \
@@ -155,6 +163,13 @@ static QueueHandle_t xNormallyEmptyQueue, xNormallyFullQueue;
 
 /* Variables used to detect a stall in one of the tasks. */
 static volatile UBaseType_t uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0, uxLowPriorityLoops1 = 0, uxLowPriorityLoops2 = 0;
+
+/* Incremented once per loop by the two tasks, other than
+ * intqHIGH_PRIORITY_TASK1, that receive from the normally empty queue. */
+static volatile UBaseType_t uxNormallyEmptyTask2Loops = 0, uxNormallyEmptyLowTaskLoops = 0;
+
+/* Set while intqHIGH_PRIORITY_TASK1 waits in prvWaitForNormallyEmptyReceivers(). */
+static volatile BaseType_t xWaitingForReceivers = pdFALSE;
 
 /* Any unexpected behaviour sets xErrorStatus to fail and log the line that
  * caused the error in xErrorLine. */
@@ -195,10 +210,22 @@ static void prvRecordValue_NormallyFull( UBaseType_t uxValue,
 /* Logs the line on which an error occurred. */
 static void prvQueueAccessLogError( UBaseType_t uxLine );
 
+/* Waits until every value taken from the normally empty queue has been
+ * recorded. */
+#if ( configNUMBER_OF_CORES > 1 )
+    static void prvWaitForNormallyEmptyReceivers( void );
+#endif
+
 /*-----------------------------------------------------------*/
 
 void vStartInterruptQueueTasks( void )
 {
+    /* The queues are created before the tasks: the tasks below start by
+     * accessing them, and with more than one core the first task created runs
+     * on the other core while this function is still executing. */
+    xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
+    xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
+
     /* Start the test tasks. */
     xTaskCreate( prvHigherPriorityNormallyEmptyTask, "H1QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask1 );
     xTaskCreate( prvHigherPriorityNormallyEmptyTask, "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
@@ -206,11 +233,6 @@ void vStartInterruptQueueTasks( void )
     xTaskCreate( prv1stHigherPriorityNormallyFullTask, "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
     xTaskCreate( prv2ndHigherPriorityNormallyFullTask, "H2QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
     xTaskCreate( prvLowerPriorityNormallyFullTask, "L2QRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
-
-    /* Create the queues that are accessed by multiple tasks and multiple
-     * interrupts. */
-    xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
-    xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( UBaseType_t ) sizeof( UBaseType_t ) );
 
     /* vQueueAddToRegistry() adds the queue to the queue registry, if one is
      * in use.  The queue registry is provided as a means for kernel aware
@@ -267,6 +289,35 @@ static void prvQueueAccessLogError( UBaseType_t uxLine )
 }
 /*-----------------------------------------------------------*/
 
+#if ( configNUMBER_OF_CORES > 1 )
+    static void prvWaitForNormallyEmptyReceivers( void )
+    {
+        UBaseType_t uxTask2Loops, uxLowTaskLoops;
+
+        xWaitingForReceivers = pdTRUE;
+        uxTask2Loops = uxNormallyEmptyTask2Loops;
+        uxLowTaskLoops = uxNormallyEmptyLowTaskLoops;
+
+        /* With more than one core a task can be preempted after it takes a
+         * value from the queue and before it records the value, so the check
+         * would find the value missing.  Once each receiving task has completed
+         * a loop, every value taken before this point has been recorded.  The
+         * values still in the queue are above intqNUM_VALUES_TO_LOG, as
+         * intqVALUE_OVERRUN exceeds the queue length, so they are not
+         * recorded.  The delay only lets the lower priority task run, the
+         * counters provide the ordering.  The wait is not bounded here, as a
+         * receiver that never completes a loop stops uxHighPriorityLoops1, which
+         * xAreIntQueueTasksStillRunning() reports. */
+        while( ( uxNormallyEmptyTask2Loops == uxTask2Loops ) || ( uxNormallyEmptyLowTaskLoops == uxLowTaskLoops ) )
+        {
+            vTaskDelay( intqONE_TICK_DELAY );
+        }
+
+        xWaitingForReceivers = pdFALSE;
+    }
+#endif /* if ( configNUMBER_OF_CORES > 1 ) */
+/*-----------------------------------------------------------*/
+
 static void prvHigherPriorityNormallyEmptyTask( void * pvParameters )
 {
     UBaseType_t uxRxed, ux, uxTask1, uxTask2, uxInterrupts, uxErrorCount1 = 0, uxErrorCount2 = 0;
@@ -294,6 +345,11 @@ static void prvHigherPriorityNormallyEmptyTask( void * pvParameters )
             prvRecordValue_NormallyEmpty( uxRxed, ( UBaseType_t ) pvParameters );
         }
 
+        if( ( UBaseType_t ) pvParameters == intqHIGH_PRIORITY_TASK2 )
+        {
+            uxNormallyEmptyTask2Loops++;
+        }
+
         /* Ensure the other task running this code gets a chance to execute. */
         taskYIELD();
 
@@ -302,6 +358,10 @@ static void prvHigherPriorityNormallyEmptyTask( void * pvParameters )
             /* Have we received all the expected values? */
             if( uxValueForNormallyEmptyQueue > ( intqNUM_VALUES_TO_LOG + intqVALUE_OVERRUN ) )
             {
+                #if ( configNUMBER_OF_CORES > 1 )
+                    prvWaitForNormallyEmptyReceivers();
+                #endif
+
                 vTaskSuspend( xHighPriorityNormallyEmptyTask2 );
 
                 uxTask1 = 0;
@@ -408,11 +468,26 @@ static void prvLowerPriorityNormallyEmptyTask( void * pvParameters )
         if( xQueueReceive( xNormallyEmptyQueue, &uxRxed, intqONE_TICK_DELAY ) != errQUEUE_EMPTY )
         {
             /* A value should only be obtained when the high priority task is
-             * suspended. */
-            if( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended )
-            {
-                prvQueueAccessLogError( __LINE__ );
-            }
+             * suspended.  With one core this task cannot run while the high
+             * priority task runs.  With more than one core and
+             * configRUN_MULTIPLE_PRIORITIES set to 0, tasks of different
+             * priorities do not run at the same time, so the same holds.  With
+             * configRUN_MULTIPLE_PRIORITIES set to 1 the two run at the same
+             * time and the peer is seen part way through suspending, so the
+             * queue integrity checks below keep the coverage there.
+             *
+             * While the high priority task waits in
+             * prvWaitForNormallyEmptyReceivers() it is blocked, not suspended,
+             * so values received in that window are not checked.  The flag
+             * cannot clear between the receive and the check, as this task
+             * advances its loop counter only after the check. */
+            #if ( ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 ) )
+                if( ( xWaitingForReceivers == pdFALSE ) &&
+                    ( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended ) )
+                {
+                    prvQueueAccessLogError( __LINE__ );
+                }
+            #endif
 
             prvRecordValue_NormallyEmpty( uxRxed, intqLOW_PRIORITY_TASK );
 
@@ -440,6 +515,8 @@ static void prvLowerPriorityNormallyEmptyTask( void * pvParameters )
 
             vTaskPrioritySet( NULL, intqLOWER_PRIORITY );
         }
+
+        uxNormallyEmptyLowTaskLoops++;
     }
 }
 /*-----------------------------------------------------------*/
@@ -608,11 +685,15 @@ static void prvLowerPriorityNormallyFullTask( void * pvParameters )
     {
         if( xQueueSend( xNormallyFullQueue, &uxTxed, intqONE_TICK_DELAY ) != errQUEUE_FULL )
         {
-            /* Should only succeed when the higher priority task is suspended */
-            if( eTaskGetState( xHighPriorityNormallyFullTask1 ) != eSuspended )
-            {
-                prvQueueAccessLogError( __LINE__ );
-            }
+            /* Should only succeed when the higher priority task is suspended.
+             * Checked under the same conditions, and for the same reasons, as
+             * in prvLowerPriorityNormallyEmptyTask() above. */
+            #if ( ( configNUMBER_OF_CORES == 1 ) || ( configRUN_MULTIPLE_PRIORITIES == 0 ) )
+                if( eTaskGetState( xHighPriorityNormallyFullTask1 ) != eSuspended )
+                {
+                    prvQueueAccessLogError( __LINE__ );
+                }
+            #endif
 
             vTaskResume( xHighPriorityNormallyFullTask1 );
             uxLowPriorityLoops2++;

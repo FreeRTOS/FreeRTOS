@@ -219,6 +219,14 @@ static portTASK_FUNCTION( prvSemaphoreTest, pvParameters )
                 sError = pdTRUE;
             }
 
+            /* A polling task that takes the semaphore again at once leaves the
+             * other polling task only the ticks that preempt it between the give
+             * and the next take, so it yields to let that task take it. */
+            if( pxParameters->xBlockTime == ( TickType_t ) 0 )
+            {
+                taskYIELD();
+            }
+
             if( sError == pdFALSE )
             {
                 if( sCheckVariableToUse < semtstNUM_TASKS )
